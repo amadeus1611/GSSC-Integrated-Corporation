@@ -43,24 +43,34 @@ what they believe, what's new, then the way in. We use the same five beats:
 Every inner page follows a shorter version: statement → substance → proof
 → one next step.
 
-## 3. The dynamic header
+## 3. The dynamic header (modelled on anthropic.com, verified in a browser)
 
-- **At the very top of any page:** the full horizontal lockup
-  (`brand_assets.header`: star + GSSC) at about 44 px tall, generous
-  padding, and a transparent background over paper.
-- **After about 24 px of scroll:** the lockup condenses. The wordmark slides
-  and fades into the star, leaving just the mark (`seal`) at about 28 px.
-  The bar shrinks, gains a paper-coloured backdrop blur and one hairline.
-  Duration 600 ms, soft-close ease.
-- **Back at the top:** it expands again, and the wordmark slides back out
-  of the star.
-- **Scrolling down fast:** the header tucks away. Any upward scroll brings
-  it back (the reader never hunts for navigation).
-- **Built with** CSS scroll-driven animation on `scroll(root)`, with a
-  30-line JS fallback. No layout shift: the header's box never changes
-  height in the flow.
+Observed on anthropic.com, 2026-09-23 (Chromium, 1440 px): the nav bar is
+sticky and **always visible**. At the very top the logo is the full
+"ANTHROPIC" wordmark; once you scroll, it condenses to the "A\\" mark, and
+scrolling back to the very top restores the full wordmark. The bar never
+hides. GSSC follows the same pattern:
+
+- **Very top of the page:** the full horizontal lockup (`brand_assets.header`:
+  star + GSSC), transparent over the paper.
+- **Scrolled at all:** the wordmark slides into the star and fades, leaving
+  the mark (`seal`). The bar gains a paper-toned backdrop blur and one
+  hairline. It stays on screen.
+- **Back at the top:** the wordmark slides back out.
+- **Scroll-linked, not triggered:** across the first ~120 px of scroll the
+  condensing is scrubbed, so halfway up it sits halfway between states. Past
+  that it holds the compact state.
+- The bar's height never changes in the flow, so nothing on the page jumps.
 
 ## 4. Scroll-driven text and assets (the catalogue)
+
+**Terms.** *Scroll-linked* (or *scroll-driven*, *scrubbed*) animation is
+tied to the scroll position itself: scroll halfway and it is halfway; scroll
+back and it rewinds. *Scroll-triggered* animation plays once when an element
+arrives and then runs on its own clock. GSSC uses **scroll-linked** for
+anything the reader should feel they control (headline motion, the
+Instrument, the rail, the header), and triggered only for small one-off
+settles (a milestone clicking into place).
 
 All of these are enhancements: without them, the same content sits still
 and fully readable.
@@ -88,6 +98,68 @@ and fully readable.
    like dusk.
 9. **Reading progress.** A 1 px gold hairline under the header grows with
    reading position on long pages (case notes).
+
+## 4A. Premium on every screen
+
+Mobile is designed first, not squeezed from desktop. The premium feeling
+comes from spacing, proportion and restraint, and those survive on any
+screen.
+
+**Mobile (390 px class):**
+- 24 px side margins. Headline at about 40 px Baskerville, 1.08 leading,
+  balanced wrap. Section spacing about 120 px, so the page breathes as
+  much as on desktop, proportionally.
+- One idea per screen height. Nothing is crammed into a sidebar; the
+  desktop's side-by-side sticky layouts become stacked chapters with the
+  object pinned above the text.
+- The Instrument keeps its full motion with a lighter level of detail
+  (fewer facets, same silhouette). It responds to touch-drag and gentle
+  phone tilt, and it scrubs with scroll exactly like desktop.
+- Touch targets at least 48 px, in a thumb-reachable bottom zone for the
+  primary action. The menu opens as a full-screen paper sheet with large
+  Baskerville links that settle in one by one with the soft close.
+- No hover-only information: every hover detail has a tap equivalent.
+
+**Desktop (1440 px class):**
+- A 12-column editorial grid, max text measure about 68 characters, wide
+  asymmetric whitespace. The object and the text share the stage side by
+  side.
+- The Instrument at full detail; the cursor tilts it and lifts layers on
+  hover.
+- Optimised: the 3D pauses off-screen, the pixel ratio is capped, fonts
+  are subset and preloaded, and nothing blocks first paint.
+
+**Both:** the same palette, type, easing and rhythm. The QA screenshots
+at 390, 834 and 1440 px are reviewed side by side at every stage.
+
+## 4B. The inquiry form (premium, one question at a time)
+
+A form that feels like a conversation with a concierge, not a web form.
+
+- **Layout:** one question per step, large Baskerville prompt ("What do
+  you need coordinated?"), and an answer field set as a single hairline
+  underline in Inter. Progress is a thin gold line across the top, not
+  numbered dots.
+- **Steps:** (1) name and organisation, (2) the requirement, choosing
+  from the capability list as elegant toggles with "Something else", (3)
+  site and city, (4) timeline (a quiet choice of ranges), (5) a free
+  description, (6) email and mobile, (7) a review page that reads back
+  the inquiry as a composed paragraph before sending.
+- **Motion:** each step leaves upward and the next arrives with the soft
+  close. Back navigation rewinds, like the scroll-linked motion.
+- **Keyboard and phone:** Enter advances, Shift+Tab goes back; mobile
+  shows the right keyboard for each field (email, tel). Autofill works.
+  With JavaScript off, it is one elegant long form that still submits.
+- **Validation:** gentle and inline ("A reply needs an email or mobile
+  number"). Never red alarm text, never a lost answer.
+- **Sending:** a Cloudflare Pages Function emails management@gsscph.com
+  a clean summary and sends the inquirer a composed acknowledgement.
+  Spam protection is Cloudflare Turnstile (invisible, no puzzles).
+  Later, each inquiry can also land in a 365 list.
+- **Confirmation:** the page settles to a still: "Thank you. Your inquiry
+  is with our management team," with the star seating into place.
+- **Privacy:** only what is needed, a clear note on how it's used, and no
+  third-party form service holding client inquiries.
 
 ## 5. The Instrument: layers (capability chapters)
 
