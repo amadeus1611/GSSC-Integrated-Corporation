@@ -42,7 +42,12 @@ a{color:inherit}
 
 /* ---------------------------------------------------------------- spine stripe and margin rail (master chrome) */
 .spine,.rail{transition:opacity 900ms var(--soft-close)}
-body.on-night .spine,body.on-night .rail{opacity:0}
+/* the margins step out as a dark stage arrives (spine draws up and slides left, the rail slides right)
+   and step back in, a beat apart, on paper */
+.spine{transform-origin:50% 100%;transition:opacity 700ms var(--soft-close),transform 1100ms var(--soft-close)}
+.rail{transition:opacity 700ms var(--soft-close) 120ms,transform 1100ms var(--soft-close) 120ms}
+body.on-night .spine{opacity:0;transform:translateX(-18px) scaleY(.35)}
+body.on-night .rail{opacity:0;transform:translateX(18px)}
 .spine{position:fixed;left:calc(var(--gutter) * .38);top:140px;bottom:120px;width:3px;z-index:3;pointer-events:none;
   background:linear-gradient(to bottom,var(--navy-deep) 0%,var(--navy-deep) 60%,var(--gold-primary) 60%,var(--gold-primary) 85%,var(--slate) 85%,var(--slate) 100%)}
 .rail{position:fixed;right:calc(var(--gutter) * .3);top:140px;bottom:120px;width:28px;z-index:3;pointer-events:none;color:var(--mid-grey);
@@ -58,11 +63,15 @@ body.on-night .rail{color:rgba(243,236,218,.45)} body.on-night .rail-index{color
 .bar{position:fixed;inset:0 0 auto 0;z-index:50;padding-top:env(safe-area-inset-top,0px);color:var(--navy-dark)}
 .bar::before{content:"";position:absolute;inset:0;background:rgba(250,248,243,.86);opacity:var(--h);
   -webkit-backdrop-filter:blur(16px) saturate(1.15);backdrop-filter:blur(16px) saturate(1.15);transition:background 600ms var(--soft-close)}
-.bar-row{position:relative;max-width:var(--maxw);margin-inline:auto;padding-inline:var(--gutter);height:68px;display:flex;align-items:center;justify-content:space-between;gap:24px}
+.bar-row{position:relative;max-width:var(--maxw);margin-inline:auto;padding-inline:var(--gutter);height:68px;transition:height 900ms var(--soft-close);display:flex;align-items:center;justify-content:space-between;gap:24px}
 .lock{display:flex;align-items:center;text-decoration:none;height:40px}
 .lock .mark{height:32px;width:32px;flex:none;transform:rotate(calc(var(--h) * -45deg))}
 .lock .word{height:19px;width:auto;margin-left:calc(12px - var(--h) * 12px);clip-path:inset(0 calc(var(--h) * 100%) 0 0);
-  opacity:calc(1 - var(--h) * 1.1);transform:translateX(calc(var(--h) * -16px));transition:filter 600ms var(--soft-close)}
+  opacity:calc(1 - var(--h) * 1.1);transform:translateX(calc(var(--h) * -16px)) scaleX(calc(1 - var(--h) * .06));transform-origin:left center;
+  filter:blur(calc(var(--hv,0) * 2.4px));transition:filter 600ms var(--soft-close)}
+.lock{position:relative}
+.lock::after{content:"";position:absolute;left:44px;right:0;bottom:-7px;border-bottom:1px solid var(--gold-primary);
+  transform-origin:left;transform:scaleX(calc(1 - var(--h2) * 1.4));opacity:calc(.8 - var(--h2) * 1.2)}
 .nav{display:flex;align-items:center;gap:calc(30px - var(--h2) * 6px);transform:translateX(calc(var(--h2) * 4px))}
 .nav a:not(.btn){font:500 11.5px/1 var(--f-body);letter-spacing:var(--tracked-cap);text-transform:uppercase;text-decoration:none;
   padding:8px 0;border-bottom:1px solid transparent;transition:border-color 600ms var(--soft-close),color 600ms var(--soft-close)}
@@ -86,8 +95,14 @@ body.on-night .bar{color:var(--on-night)}
 body.on-night .bar::before{background:rgba(9,23,61,.72)}
 body.on-night .lock .word{filter:brightness(0) invert(.94) sepia(.2)}
 body.on-night .btn:hover{background:var(--gold-primary);border-color:var(--gold-primary);color:var(--navy-dark)}
-body.on-field .bar::before{background:transparent;-webkit-backdrop-filter:none;backdrop-filter:none}
-body.on-night .mast-rule,body.on-night .dateline{opacity:0}
+body.on-night .bar-row{height:56px}
+body.on-night .lock .mark{height:28px;width:28px}
+.lock .mark{transition:height 900ms var(--soft-close),width 900ms var(--soft-close)}
+body.on-field .bar::before{background:linear-gradient(to bottom,rgba(5,11,30,.55),rgba(5,11,30,0));-webkit-backdrop-filter:none;backdrop-filter:none;opacity:1}
+body.on-night .mast-rule{opacity:1!important}
+body.on-night .mast-rule::after{border-color:rgba(200,164,77,.38);opacity:1}
+body.on-field .mast-rule::after{border-color:rgba(230,212,167,.22)}
+body.on-night .dateline{opacity:0}
 body.on-night .dateline div{border-top-color:rgba(243,236,218,.18);color:var(--on-night-2)}
 @media (max-width:860px){ .nav a:not(.btn){display:none} .nav .btn[href]{display:none} .index-btn{display:inline-flex} .dateline div span:nth-child(2){display:none} }
 
@@ -164,18 +179,32 @@ h1.title .it{font-style:italic;letter-spacing:-.02em}
 .field-stage{position:relative;height:320vh}
 .field-pin{position:sticky;top:0;height:100vh;height:100svh;overflow:hidden}
 .panel{position:absolute;inset:0;background:var(--navy-dark);
-  clip-path:inset(var(--it,15%) var(--is,var(--gutter)) var(--ib,11%) var(--is,var(--gutter)) round var(--r))}
+  /* the figure opens to full bleed through a feathered mask: the edges soften as they leave the
+     margins, the way a lens loses its vignette, instead of a hard crop sliding outward */
+  --fe:calc(2px + var(--feather,0) * 90px);
+  -webkit-mask-image:linear-gradient(to right,transparent var(--is,var(--gutter)),#000 calc(var(--is,var(--gutter)) + var(--fe)),#000 calc(100% - var(--is,var(--gutter)) - var(--fe)),transparent calc(100% - var(--is,var(--gutter)))),
+    linear-gradient(to bottom,transparent var(--it,15%),#000 calc(var(--it,15%) + var(--fe)),#000 calc(100% - var(--ib,11%) - var(--fe) - var(--leave,0) * 38vh),transparent calc(100% - var(--ib,11%)));
+  -webkit-mask-composite:source-in;
+  mask-image:linear-gradient(to right,transparent var(--is,var(--gutter)),#000 calc(var(--is,var(--gutter)) + var(--fe)),#000 calc(100% - var(--is,var(--gutter)) - var(--fe)),transparent calc(100% - var(--is,var(--gutter)))),
+    linear-gradient(to bottom,transparent var(--it,15%),#000 calc(var(--it,15%) + var(--fe)),#000 calc(100% - var(--ib,11%) - var(--fe) - var(--leave,0) * 38vh),transparent calc(100% - var(--ib,11%)));
+  mask-composite:intersect}
 .panel canvas{position:absolute;inset:0;width:100%;height:100%;display:block;touch-action:pan-y}
 .panel .seat{position:absolute;left:50%;top:50%;width:clamp(64px,7vw,104px);pointer-events:none;
   transform:translate(-50%,-50%) scale(calc(.7 + var(--st,0) * .3)) rotate(calc((1 - var(--st,0)) * -45deg));opacity:var(--st,0);
   filter:drop-shadow(0 6px 24px rgba(200,164,77,.28))}
 .field-cap{position:absolute;left:0;right:0;bottom:calc(11% - 44px);opacity:calc(1 - var(--open,0) * 2.2)}
-.panel-label{position:absolute;margin:0;left:calc(var(--is,var(--gutter)) + 24px);right:calc(var(--is,var(--gutter)) + 24px);top:calc(var(--it,15%) + 20px);
+.panel-label{position:absolute;margin:0;left:calc(var(--is,var(--gutter)) + 24px);right:calc(var(--is,var(--gutter)) + 24px);top:max(calc(var(--it,15%) + 20px),calc(76px + env(safe-area-inset-top,0px)));
   display:flex;justify-content:space-between;gap:12px;font:600 10.5px/1.3 var(--f-body);letter-spacing:var(--tracked);text-transform:uppercase;
   color:rgba(230,212,167,.8);pointer-events:none}
 .panel-label span:last-child{color:rgba(243,236,218,.5);font-weight:500;letter-spacing:var(--tracked-tight)}
 
 /* ---------------------------------------------------------------- sections on paper */
+/* printer's marks: every paper section carries registration crosses at its top corners, as a proof sheet does */
+.sec::before,.sec::after{content:"";position:absolute;top:calc(var(--u) * 7);width:13px;height:13px;opacity:.5;
+  background:linear-gradient(var(--hairline),var(--hairline)) center/1px 100% no-repeat,linear-gradient(var(--hairline),var(--hairline)) center/100% 1px no-repeat}
+.sec::before{left:calc(var(--gutter) - 26px)} .sec::after{right:calc(var(--gutter) - 26px)}
+.ghost{position:absolute;right:var(--gutter);top:calc(var(--u) * 9);font:400 clamp(120px,15vw,240px)/1 var(--f-display);font-feature-settings:"onum" 1;
+  color:rgba(9,23,61,.035);pointer-events:none;transform:translateY(calc(var(--gp,0) * -60px));letter-spacing:-.04em}
 .sec{padding-block:calc(var(--u) * 16) calc(var(--u) * 14);position:relative}
 .grid12{display:grid;grid-template-columns:repeat(12,minmax(0,1fr));column-gap:24px;row-gap:calc(var(--u) * 5);align-items:start}
 .span-all{grid-column:1 / -1} .col-a{grid-column:1 / span 6} .col-b{grid-column:8 / -1}
@@ -223,31 +252,68 @@ table.dt tbody tr:hover td{background:rgba(230,212,167,.24);transition-duration:
 .statement-by::before{content:"";width:48px;border-top:var(--rule-medium) solid var(--gold-primary);align-self:center}
 @media (max-width:860px){ .statement .kicker,.ink,.statement-by{grid-column:1 / -1} }
 
-/* Fig. 3: where accountability sits (structural diagram, scroll-drawn) */
-.acct{margin-top:calc(var(--u) * 14);display:grid;grid-template-columns:repeat(12,minmax(0,1fr));column-gap:24px;row-gap:32px;align-items:start}
-.acct-copy{grid-column:1 / span 4;position:sticky;top:120px}
-.acct-title{margin:14px 0 14px;font:400 clamp(26px,2.4vw,34px)/1.15 var(--f-display);letter-spacing:var(--compressed);color:var(--navy-dark)}
-.acct-body{margin:0;font-size:15.5px;color:var(--slate);max-width:34ch}
-.acct-key{margin:26px 0 0;border-top:var(--rule-medium) solid var(--navy-dark)}
-.acct-key div{display:flex;justify-content:space-between;gap:12px;padding:10px 0;border-bottom:var(--rule-hair) solid var(--hairline)}
-.acct-key dt{font:600 10.5px/1.4 var(--f-body);letter-spacing:var(--tracked-cap);text-transform:uppercase;color:var(--navy-dark)}
-.acct-key dd{margin:0;font:400 16px/1.2 var(--f-display);font-feature-settings:"tnum" 1,"lnum" 1;color:var(--navy-dark)}
-.acct-key .k dt,.acct-key .k dd{color:var(--mid-grey);font:500 10.5px/1.4 var(--f-body);letter-spacing:var(--tracked-tight);text-transform:uppercase}
-.acct-fig{grid-column:6 / -1;margin:0}
-.acct-fig svg{width:100%;height:auto;display:block;overflow:visible}
-.acct-fig .ax-t{font:600 10.5px var(--f-body);letter-spacing:.18em;text-transform:uppercase;fill:var(--navy-dark)}
-.acct-fig .ax-r{stroke:var(--navy-dark);stroke-width:1}
-.acct-fig .node rect{fill:var(--ivory);stroke:var(--navy-dark);stroke-width:1}
-.acct-fig .node text{font:500 11px var(--f-body);letter-spacing:.12em;text-transform:uppercase;fill:var(--navy-dark);text-anchor:middle}
-.acct-fig .node.gssc rect{fill:var(--navy-dark)} .acct-fig .node.gssc text{fill:var(--ivory)}
-.acct-fig .ln{fill:none;stroke:var(--slate);stroke-width:1;stroke-dasharray:var(--len);stroke-dashoffset:calc(var(--len) * (1 - var(--d,1)))}
-.acct-fig .lines-b .ln{stroke:var(--navy-dark)}
-.acct-fig .one{fill:none;stroke:var(--gold-primary);stroke-width:2;stroke-dasharray:58;stroke-dashoffset:calc(58 * (1 - var(--d,1)))}
-.acct-fig .disc rect{fill:var(--ivory-deep);stroke:var(--hairline)}
-.acct-fig .disc text{font:400 12.5px var(--f-display);fill:var(--navy-dark)}
-.acct-fig .disc .no{font:400 12px var(--f-display);font-feature-settings:"onum" 1;fill:var(--gold-deep)}
-.acct-fig figcaption{margin-top:18px}
-@media (max-width:960px){ .acct-copy{grid-column:1 / -1;position:static} .acct-fig{grid-column:1 / -1} }
+/* Fig. 3: the system flow (two lanes, a firewall, a travelling token; drawn by scroll) */
+.flow{margin-top:calc(var(--u) * 16)}
+.flow-head{display:grid;grid-template-columns:repeat(12,minmax(0,1fr));column-gap:24px;row-gap:18px;align-items:end;margin-bottom:calc(var(--u) * 5)}
+.flow-head > div{grid-column:1 / span 6} .flow-body{grid-column:8 / -1;margin:0;font-size:15.5px;color:var(--slate)}
+.flow-title{margin:14px 0 0;font:400 clamp(26px,2.5vw,36px)/1.16 var(--f-display);letter-spacing:var(--compressed);color:var(--navy-dark);text-wrap:balance}
+.flow-fig{margin:0}
+.flow-fig svg{width:100%;height:auto;display:block;overflow:visible}
+.flow-fig .lane{fill:rgba(243,239,228,.55)} .flow-fig .lane.in{fill:rgba(9,23,61,.035)}
+.flow-fig .lane-t{font:600 10.5px var(--f-body);letter-spacing:.18em;text-transform:uppercase;fill:var(--slate)}
+.flow-fig .wall{stroke:var(--gold-deep);stroke-width:1;stroke-dasharray:3 5}
+.flow-fig .wall-t{font:italic 400 13px var(--f-display);fill:var(--gold-deep)}
+.flow-fig .track{fill:none;stroke:var(--hairline);stroke-width:1}
+.flow-fig .run{fill:none;stroke:var(--navy-dark);stroke-width:1.5}
+.flow-fig .nd rect{fill:var(--ivory);stroke:var(--hairline);stroke-width:1;transition:stroke 700ms var(--soft-close),fill 700ms var(--soft-close)}
+.flow-fig .nd .n{font:400 13px var(--f-display);font-feature-settings:"onum" 1;fill:var(--hairline);transition:fill 700ms var(--soft-close)}
+.flow-fig .nd .t{font:500 12.5px var(--f-body);fill:var(--mid-grey);transition:fill 700ms var(--soft-close)}
+.flow-fig .nd .s{font:italic 400 11.5px var(--f-display);fill:var(--mid-grey);opacity:0;transition:opacity 700ms var(--soft-close)}
+.flow-fig .nd.on rect{stroke:var(--navy-dark)} .flow-fig .nd.on .n{fill:var(--gold-deep)} .flow-fig .nd.on .t{fill:var(--navy-dark)} .flow-fig .nd.on .s{opacity:1}
+.flow-fig .nd.gate rect{stroke-dasharray:3 3} .flow-fig .nd.gate.on rect{stroke:var(--gold-deep);fill:rgba(230,212,167,.25)}
+.flow-fig .tok{fill:var(--gold-primary)} .flow-fig .tok-h{fill:none;stroke:var(--gold-primary);stroke-width:1;opacity:.5}
+@media (max-width:960px){ .flow-head > div,.flow-body{grid-column:1 / -1} }
+
+/* the economics: a model the reader can move; two series, labelled, with its sources beneath */
+.econ-grid{display:grid;grid-template-columns:repeat(12,minmax(0,1fr));column-gap:24px;row-gap:32px;align-items:start}
+.econ-ctl{grid-column:1 / span 4;position:sticky;top:110px;border-top:var(--rule-medium) solid var(--navy-dark)}
+.ctl{padding:18px 0 16px;border-bottom:var(--rule-hair) solid var(--hairline)}
+.ctl label{display:flex;justify-content:space-between;align-items:baseline;gap:12px;font:600 10.5px/1.4 var(--f-body);letter-spacing:var(--tracked-cap);text-transform:uppercase;color:var(--navy-dark)}
+.ctl output{font:400 21px/1 var(--f-display);letter-spacing:var(--tracked-num);text-transform:none;font-feature-settings:"lnum" 1,"tnum" 1}
+.ctl input[type=range]{-webkit-appearance:none;appearance:none;width:100%;margin:16px 0 0;height:18px;background:transparent;cursor:pointer}
+.ctl input[type=range]::-webkit-slider-runnable-track{height:1px;background:linear-gradient(to right,var(--navy-dark) var(--f,50%),var(--hairline) var(--f,50%))}
+.ctl input[type=range]::-moz-range-track{height:1px;background:var(--hairline)}
+.ctl input[type=range]::-moz-range-progress{height:1px;background:var(--navy-dark)}
+.ctl input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:12px;height:12px;margin-top:-6px;border-radius:1px;background:var(--ivory);border:1.5px solid var(--navy-dark);transform:rotate(45deg)}
+.ctl input[type=range]::-moz-range-thumb{width:10px;height:10px;border-radius:1px;background:var(--ivory);border:1.5px solid var(--navy-dark);transform:rotate(45deg)}
+.ctl .hint{display:block;margin-top:8px;font:italic 400 13px/1.4 var(--f-display);color:var(--slate)}
+.econ-out{grid-column:6 / -1}
+.econ-hero{display:grid;grid-template-columns:1fr 1fr 1fr;border-top:var(--rule-medium) solid var(--navy-dark);border-bottom:var(--rule-hair) solid var(--hairline)}
+.econ-hero > div{padding:20px 18px 18px 0} .econ-hero > div + div{padding-left:18px;border-left:var(--rule-hair) solid var(--hairline)}
+.econ-hero .v{display:block;font:400 clamp(24px,2.6vw,38px)/1.05 var(--f-display);letter-spacing:var(--tracked-num);color:var(--navy-dark);font-feature-settings:"lnum" 1,"tnum" 1;white-space:nowrap}
+.econ-hero .l{display:block;margin-top:10px;font:600 10.5px/1.45 var(--f-body);letter-spacing:var(--tracked-cap);text-transform:uppercase;color:var(--slate)}
+.econ-hero .d .v{color:#2a4a9e} .econ-hero .c .v{color:var(--gold-deep)}
+.econ-legend{display:flex;gap:26px;margin:26px 0 8px;font:600 10.5px/1 var(--f-body);letter-spacing:var(--tracked-cap);text-transform:uppercase;color:var(--navy-dark)}
+.econ-legend span{display:inline-flex;align-items:center;gap:10px}
+.econ-legend i{display:inline-block;width:18px;height:8px;border-radius:1px}
+.bars{display:grid;gap:0}
+.brow{display:grid;grid-template-columns:minmax(150px,1.1fr) 3fr;column-gap:18px;align-items:center;padding:14px 0;border-bottom:var(--rule-hair) solid var(--hairline)}
+.brow .k{font:400 16px/1.3 var(--f-display);color:var(--navy-dark)} .brow .k small{display:block;margin-top:4px;font:500 11.5px/1.4 var(--f-body);color:var(--mid-grey)}
+.bpair{display:grid;gap:5px}
+.eb{position:relative;height:16px;display:flex;align-items:center}
+.eb b{display:block;height:100%;border-radius:1px 2px 2px 1px;width:calc(var(--w,0) * var(--grow,1) * 100%);min-width:2px;transition:width 900ms var(--soft-close)}
+.eb.d b{background:#2a4a9e} .eb.c b{background:var(--gold-deep)}
+.eb em{margin-left:10px;font:500 12.5px/1 var(--f-body);font-style:normal;font-feature-settings:"tnum" 1;color:var(--ink);white-space:nowrap}
+.eb.c em.x{font:italic 400 13px/1 var(--f-display);color:var(--slate)}
+.econ-note{margin:16px 0 0;font:italic 400 14px/1.5 var(--f-display);color:var(--slate);max-width:62ch}
+.econ-src{margin-top:28px}
+.econ-src summary{cursor:pointer;list-style:none;display:flex;justify-content:space-between;align-items:center;padding:12px 0;border-top:var(--rule-medium) solid var(--navy-dark);border-bottom:var(--rule-hair) solid var(--hairline);
+  font:600 10.5px/1 var(--f-body);letter-spacing:var(--tracked-cap);text-transform:uppercase;color:var(--navy-dark)}
+.econ-src summary::-webkit-details-marker{display:none}
+.econ-src summary::after{content:"+";font:400 18px/1 var(--f-display);transition:transform 600ms var(--soft-close)} .econ-src[open] summary::after{transform:rotate(45deg)}
+.econ-src table.dt{min-width:0;margin-top:0} .econ-src table.dt td{font-size:14px;padding:12px 12px}
+.econ-src a{color:var(--navy-dark);text-decoration:underline;text-decoration-color:var(--gold-primary);text-underline-offset:3px}
+@media (max-width:960px){ .econ-ctl,.econ-out{grid-column:1 / -1} .econ-ctl{position:static} .econ-hero{grid-template-columns:1fr} .econ-hero > div + div{padding-left:0;border-left:0;border-top:var(--rule-hair) solid var(--hairline)} .brow{grid-template-columns:1fr} }
 
 /* Fig. 4: the record (real dates from kernel 01_identity) */
 .tl{margin:0 0 8px}
@@ -270,7 +336,11 @@ table.dt tbody tr:hover td{background:rgba(230,212,167,.24);transition-duration:
 @media (max-width:700px){ .acct-fig svg{min-width:680px} .tl svg{min-width:820px} .dia-scroll{margin-inline:calc(var(--gutter) * -1);padding-inline:var(--gutter)} }
 
 /* ---------------------------------------------------------------- Fig. 2: the Instrument (night stage) */
-.night{background:var(--navy-dark);color:var(--on-night)}
+.night{background:var(--navy-dark);color:var(--on-night);position:relative}
+.night::before{content:"";position:absolute;left:0;right:0;top:0;height:42vh;z-index:3;pointer-events:none;
+  background:linear-gradient(to bottom,var(--ivory) 0%,rgba(250,248,243,.72) 18%,rgba(9,23,61,0) 100%)}
+.inst-stage::after{content:"";position:absolute;left:0;right:0;bottom:0;height:40vh;z-index:3;pointer-events:none;
+  background:linear-gradient(to top,var(--ivory) 0%,rgba(250,248,243,.7) 20%,rgba(9,23,61,0) 100%)}
 .inst-stage{position:relative;height:720vh}
 .inst-pin{position:sticky;top:0;height:100vh;height:100svh;overflow:hidden;background:radial-gradient(90% 70% at 62% 58%, #10204c 0%, var(--navy-dark) 62%, #060f2a 100%)}
 .inst-pin::after{content:"";position:absolute;inset:0;pointer-events:none;opacity:.5;mix-blend-mode:overlay;
@@ -336,6 +406,7 @@ table.dt tbody tr:hover td{background:rgba(230,212,167,.24);transition-duration:
     <nav class="nav" aria-label="Primary">
       <a href="#capabilities">Capabilities</a>
       <a href="#engagement">Engagement</a>
+      <a href="#economics">Economics</a>
       <a href="#verification">Verification</a>
       <a class="btn" href="#inquire">Inquire</a>
       <button class="btn index-btn" type="button" id="indexBtn" aria-expanded="false" aria-controls="sheet">Index</button>
@@ -350,8 +421,9 @@ table.dt tbody tr:hover td{background:rgba(230,212,167,.24);transition-duration:
   <p class="kicker">Contents</p>
   <a class="toc-row" href="#capabilities"><span class="n">I</span><span class="t">Capabilities</span><span class="lead"></span><span class="f">02</span></a>
   <a class="toc-row" href="#engagement"><span class="n">II</span><span class="t">Engagement</span><span class="lead"></span><span class="f">03</span></a>
-  <a class="toc-row" href="#verification"><span class="n">III</span><span class="t">Verification</span><span class="lead"></span><span class="f">04</span></a>
-  <a class="toc-row" href="#inquire"><span class="n">IV</span><span class="t">Inquire</span><span class="lead"></span><span class="f">05</span></a>
+  <a class="toc-row" href="#economics"><span class="n">III</span><span class="t">Economics</span><span class="lead"></span><span class="f">04</span></a>
+  <a class="toc-row" href="#verification"><span class="n">IV</span><span class="t">Verification</span><span class="lead"></span><span class="f">05</span></a>
+  <a class="toc-row" href="#inquire"><span class="n">V</span><span class="t">Inquire</span><span class="lead"></span><span class="f">06</span></a>
 </nav>
 
 <main id="top">
@@ -385,6 +457,7 @@ table.dt tbody tr:hover td{background:rgba(230,212,167,.24);transition-duration:
   </section>
 
   <section class="sec wrap" id="capabilities" data-rail="I · Capabilities" data-index="I">
+    <span class="ghost" aria-hidden="true">I</span>
     <div class="chs">
       <div class="chs-stamp"><span class="chs-numeral">I</span><span class="chs-dash">—</span><span class="chs-cat" data-rise>Capabilities</span></div>
       <h2 class="chs-title" data-rise>Six disciplines under one accountable programme.</h2>
@@ -404,33 +477,15 @@ table.dt tbody tr:hover td{background:rgba(230,212,167,.24);transition-duration:
         </tbody>
       </table>
     </div>
-    <div class="acct">
-      <div class="acct-copy">
-        <p class="kicker" data-rise>Fig. 3 · Where accountability sits</p>
-        <h3 class="acct-title" data-rise>Six contracts, or one.</h3>
-        <p class="acct-body" data-rise>Buying the six disciplines directly leaves the client holding six contracts, six invoices and six points of contact, and the gaps between them. Through GSSC the same programme is one contract, one invoice and one point of contact, and the gaps are ours.</p>
-        <dl class="acct-key" data-rise><div><dt>Direct</dt><dd>6 · 6 · 6</dd></div><div><dt>Through GSSC</dt><dd>1 · 1 · 1</dd></div><div class="k"><dt>Read as</dt><dd>contracts · invoices · contacts</dd></div></dl>
+    <div class="flow" id="flow">
+      <div class="flow-head">
+        <div><p class="kicker" data-rise>Fig. 3 · How an engagement moves through GSSC</p>
+        <h3 class="flow-title" data-rise>Everything inside the line is ours to carry. Only the quotation crosses it.</h3></div>
+        <p class="flow-body" data-rise>Research, pricing and the management decision happen inside GSSC, under the kernel's controls. Before anything reaches the client it passes the firewall, where supplier names, costs and margins are removed. What crosses is one quotation, and from acceptance to turnover, one line of accountability. Every decision is written to the record.</p>
       </div>
-      <figure class="acct-fig" id="acct" aria-label="Diagram: a client buying six disciplines directly holds six lines of accountability; through GSSC the client holds one line, and GSSC holds the six.">
-        <div class="dia-scroll"><svg viewBox="0 0 720 420" role="img"><title>Six lines of accountability direct, one through GSSC</title>
-          <g class="panel-a" transform="translate(0,0)">
-            <text x="0" y="16" class="ax-t">Direct</text>
-            <line x1="0" y1="30" x2="330" y2="30" class="ax-r"/>
-            <g class="node client"><rect x="0" y="198" width="92" height="30" rx="2"/><text x="46" y="218">Client</text></g>
-            <g class="lines-a"></g>
-            <g class="discs-a"></g>
-          </g>
-          <g class="panel-b" transform="translate(390,0)">
-            <text x="0" y="16" class="ax-t">Through GSSC</text>
-            <line x1="0" y1="30" x2="330" y2="30" class="ax-r"/>
-            <g class="node client"><rect x="0" y="198" width="92" height="30" rx="2"/><text x="46" y="218">Client</text></g>
-            <path class="one" d="M92 213 L150 213"/>
-            <g class="node gssc"><rect x="150" y="196" width="64" height="34" rx="2"/><text x="182" y="218">GSSC</text></g>
-            <g class="lines-b"></g>
-            <g class="discs-b"></g>
-          </g>
-        </svg></div>
-        <figcaption class="figcaption"><b>Fig. 3</b><i>Illustrative, drawn for the six disciplines in the register above. Each line is one contract and one point of contact.</i></figcaption>
+      <figure class="flow-fig" aria-label="Flow: inquiry, then inside GSSC research, pricing, decision and firewall, then quotation, acceptance, delivery and turnover to the client, and the record inside GSSC.">
+        <div class="dia-scroll"><svg id="flowSvg" role="img"><title>The GSSC engagement flow across the firewall</title></svg></div>
+        <figcaption class="figcaption"><b>Fig. 3</b><i>The path lights as you read. It follows the execution protocol: research, commercial and firewall gates before any client release.</i></figcaption>
       </figure>
     </div>
   </section>
@@ -453,6 +508,7 @@ table.dt tbody tr:hover td{background:rgba(230,212,167,.24);transition-duration:
   </section>
 
   <section class="sec wrap" id="engagement" data-rail="II · Engagement" data-index="II">
+    <span class="ghost" aria-hidden="true">II</span>
     <div class="chs">
       <div class="chs-stamp"><span class="chs-numeral">II</span><span class="chs-dash">—</span><span class="chs-cat" data-rise>Engagement</span></div>
       <h2 class="chs-title" data-rise>From requirement to turnover, one controlled path.</h2>
@@ -468,9 +524,45 @@ table.dt tbody tr:hover td{background:rgba(230,212,167,.24);transition-duration:
     </div>
   </section>
 
-  <section class="sec wrap" id="verification" data-rail="III · Verification" data-index="III">
+  <section class="sec wrap" id="economics" data-rail="III · Economics" data-index="III">
+    <span class="ghost" aria-hidden="true">III</span>
     <div class="chs">
-      <div class="chs-stamp"><span class="chs-numeral">III</span><span class="chs-dash">—</span><span class="chs-cat" data-rise>Verification</span></div>
+      <div class="chs-stamp"><span class="chs-numeral">III</span><span class="chs-dash">—</span><span class="chs-cat" data-rise>Economics</span></div>
+      <h2 class="chs-title" data-rise>What coordinating it yourself costs.</h2>
+      <p class="chs-descriptor" data-rise>A client who buys each discipline separately also buys the work of holding them together: the purchase orders, the invoices, the hours on the phone and the rework that falls between trades. Move the figures to your programme.</p>
+      <div class="chs-rule" data-rise></div>
+    </div>
+    <div class="econ-grid" id="econ">
+      <div class="econ-ctl">
+        <div class="ctl"><label for="eV">Programme value <output id="oV"></output></label><input id="eV" type="range" min="1" max="50" step="0.5" value="5"><span class="hint">Total contract value across all disciplines</span></div>
+        <div class="ctl"><label for="eN">Disciplines <output id="oN"></output></label><input id="eN" type="range" min="2" max="10" step="1" value="6"><span class="hint">Separate suppliers the client would otherwise contract</span></div>
+        <div class="ctl"><label for="eM">Duration <output id="oM"></output></label><input id="eM" type="range" min="1" max="12" step="1" value="4"><span class="hint">Months from mobilisation to turnover</span></div>
+      </div>
+      <div class="econ-out">
+        <div class="econ-hero">
+          <div class="d"><span class="v" id="hD">—</span><span class="l">Carried by the client, buying direct</span></div>
+          <div class="c"><span class="v" id="hC">—</span><span class="l">Carried by the client, one coordinator</span></div>
+          <div><span class="v" id="hS">—</span><span class="l">Overhead lifted off the client · share of programme</span></div>
+        </div>
+        <div class="econ-legend" aria-hidden="true"><span><i style="background:#2a4a9e"></i>Buying direct</span><span><i style="background:var(--gold-deep)"></i>One coordinator</span></div>
+        <div class="bars" id="bars"></div>
+        <p class="econ-note">Illustrative model of the client's own overhead, built from published benchmarks. It excludes the coordinator's fee, which GSSC quotes per engagement, so read it as what one point of accountability lifts off your side of the table.</p>
+        <details class="econ-src"><summary>Assumptions and sources</summary>
+          <div class="dt-wrap"><table class="dt"><thead><tr><th>Line</th><th>Assumption</th><th>Source</th></tr></thead><tbody>
+            <tr><td class="name">Invoices</td><td>One invoice per supplier per month, at ₱1,344 each (US$21.40 median cost to process an AP invoice, at ₱62.80)</td><td><a href="https://www.apqc.org/resource-library/resource/total-cost-process-accounts-payable-invoice-processed">APQC</a> · <a href="https://www.bsp.gov.ph/statistics/external/tab12_pus.aspx">BSP rate, 22 Sep 2026</a></td></tr>
+            <tr><td class="name">Purchase orders</td><td>Two per supplier (award and one change), at ₱2,135 each (US$34, the midpoint of US$14–54)</td><td><a href="https://www.apqc.org/resource-library/resource/how-efficient-your-procurement-process-benchmarks-reveal-wide-performance">APQC</a></td></tr>
+            <tr><td class="name">Coordination time</td><td>Three hours a week per supplier of a manager's time, at ₱346 an hour (₱720,000 a year over 2,080 hours)</td><td><a href="https://www.payscale.com/research/PH/Job=Project_Manager%2C_Construction/Salary/038fa076/Manila-Project-Management">PayScale PH</a></td></tr>
+            <tr><td class="name">Interface rework</td><td>Rework averages 5% of project cost, 17% of it from communication failures between trades: 0.85% of programme value, carried by the client when no one owns the interfaces</td><td><a href="https://www.planradar.com/us/cost-of-rework-construction/">CII via PlanRadar</a></td></tr>
+          </tbody></table></div>
+        </details>
+      </div>
+    </div>
+  </section>
+
+  <section class="sec wrap" id="verification" data-rail="IV · Verification" data-index="IV">
+    <span class="ghost" aria-hidden="true">IV</span>
+    <div class="chs">
+      <div class="chs-stamp"><span class="chs-numeral">IV</span><span class="chs-dash">—</span><span class="chs-cat" data-rise>Verification</span></div>
       <h2 class="chs-title" data-rise>Registered, documented, accountable.</h2>
       <p class="chs-descriptor" data-rise>The records a counterparty checks first, stated as they appear on the government-issued certificates.</p>
       <div class="chs-rule" data-rise></div>
@@ -504,10 +596,10 @@ table.dt tbody tr:hover td{background:rgba(230,212,167,.24);transition-duration:
     </div>
   </section>
 
-  <section class="close night" id="inquire" data-rail="IV · Inquire" data-index="IV">
+  <section class="close night" id="inquire" data-rail="V · Inquire" data-index="V">
     <div class="wrap">
       <div class="chs">
-        <div class="chs-stamp"><span class="chs-numeral">IV</span><span class="chs-dash">—</span><span class="chs-cat" data-rise>Inquire</span></div>
+        <div class="chs-stamp"><span class="chs-numeral">V</span><span class="chs-dash">—</span><span class="chs-cat" data-rise>Inquire</span></div>
         <h2 class="chs-title" data-rise>Tell us what needs coordinating. We answer for the whole of it.</h2>
         <div class="chs-rule" data-rise></div>
       </div>
@@ -518,7 +610,7 @@ table.dt tbody tr:hover td{background:rgba(230,212,167,.24);transition-duration:
       <footer class="colophon">
         <span class="fl">Company · Edition I<br>gsscph.com</span>
         <span class="cc"><img src="{{SEAL}}" alt=""><b>GSSC Integrated Corporation</b>management@gsscph.com · (033) 339-7472 · +63 928 370 3574</span>
-        <span class="fr">v</span>
+        <span class="fr">vi</span>
       </footer>
     </div>
   </section>
@@ -788,7 +880,15 @@ function buildInstrument(){
   const add = (obj, radius) => { const p = new T.Group(); p.add(obj); group.add(p); parts.push({g: p, radius}); return p; };
   { const g = new T.Group();
     g.add(new T.Mesh(new T.TorusGeometry(3.6, .11, 24, 240), M.navyMetal));
-    const base = new T.Mesh(new T.CylinderGeometry(3.62, 3.62, .12, 160, 1), M.navyMetal); base.rotation.x = Math.PI / 2; base.position.z = -.12; g.add(base);
+    // the dial: a guilloché field (engine-turned waves), engraved into the navy
+    const gc = document.createElement('canvas'); gc.width = gc.height = 1024; const gx = gc.getContext('2d');
+    gx.fillStyle = '#1b2d62'; gx.fillRect(0, 0, 1024, 1024); gx.translate(512, 512);
+    for (let r = 30; r < 512; r += 5.5) { gx.beginPath();
+      for (let a = 0; a <= Math.PI * 2 + .01; a += .01) { const rr = r + Math.sin(a * 24 + r * .06) * 3.2; gx.lineTo(Math.cos(a) * rr, Math.sin(a) * rr); }
+      gx.strokeStyle = `rgba(${150 + (r % 3) * 20},${170 + (r % 3) * 15},230,.16)`; gx.lineWidth = 1.1; gx.stroke(); }
+    const gtex = new T.CanvasTexture(gc); gtex.anisotropy = renderer.capabilities.getMaxAnisotropy();
+    const dial = new T.MeshPhysicalMaterial({map: gtex, bumpMap: gtex, bumpScale: .006, metalness: .55, roughness: .46, clearcoat: .3, clearcoatRoughness: .3, envMapIntensity: .7});
+    const base = new T.Mesh(new T.CylinderGeometry(3.62, 3.62, .12, 160, 1), [M.navyMetal, dial, M.navyMetal]); base.rotation.x = Math.PI / 2; base.position.z = -.12; g.add(base);
     // a soft contact shadow under the case, so the instrument sits in the room rather than floating in it
     const sc = document.createElement('canvas'); sc.width = sc.height = 128; const sx = sc.getContext('2d');
     const gr = sx.createRadialGradient(64, 64, 20, 64, 64, 64); gr.addColorStop(0, 'rgba(0,0,0,.55)'); gr.addColorStop(1, 'rgba(0,0,0,0)');
@@ -832,7 +932,7 @@ function buildInstrument(){
 function sizeInst(){
   if (!three) return;
   const w = iv.clientWidth, h = iv.clientHeight;
-  three.renderer.setPixelRatio(Math.min(devicePixelRatio || 1, 2)); three.renderer.setSize(w, h, false);
+  three.renderer.setPixelRatio(Math.min(Math.max(devicePixelRatio || 1, 1) * 1.5, 2.5)); three.renderer.setSize(w, h, false);
   three.cam.aspect = w / h; three.cam.updateProjectionMatrix(); svgL.setAttribute('viewBox', `0 0 ${w} ${h}`);
 }
 const iptr = {x: 0, y: 0};
@@ -900,29 +1000,87 @@ function drawInstrument(t, q, dt){
 }
 
 /* ------------------------------------------------ Fig. 3 and Fig. 4 (built from data, drawn by scroll) */
-const DISC = ['Sourcing & procurement', 'Site execution', 'Supply programmes', 'Management consultancy', 'Business support', 'Compliance & documentation'];
-const ROM = ['I', 'II', 'III', 'IV', 'V', 'VI'];
-const acct = document.getElementById('acct');
-(() => {
-  const svg = 'http://www.w3.org/2000/svg', el = (n, a) => { const e = document.createElementNS(svg, n); for (const k in a) e.setAttribute(k, a[k]); return e; };
-  const put = (panel, fromX, fromY, x0) => {
-    const lines = acct.querySelector(`.lines-${panel}`), discs = acct.querySelector(`.discs-${panel}`);
-    DISC.forEach((d, i) => {
-      const y = 62 + i * 56, x = x0;
-      const path = `M${fromX} ${fromY} C${fromX + 50} ${fromY} ${x - 60} ${y + 14} ${x} ${y + 14}`;
-      const ln = el('path', {d: path, class: 'ln'}); lines.appendChild(ln);
-      const L = ln.getTotalLength ? Math.ceil(ln.getTotalLength()) : 300; ln.style.setProperty('--len', L);
-      const g = el('g', {class: 'disc'}); g.appendChild(el('rect', {x, y, width: 330 - x + (panel === 'a' ? 0 : 0), height: 28, rx: 2}));
-      const no = el('text', {x: x + 10, y: y + 19, class: 'no'}); no.textContent = ROM[i]; g.appendChild(no);
-      const tx = el('text', {x: x + 38, y: y + 19}); tx.textContent = d; g.appendChild(tx);
-      const tt = el('title', {}); tt.textContent = panel === 'a' ? `${d}: a separate contract and point of contact held by the client` : `${d}: held by GSSC under the one engagement`; g.appendChild(tt);
-      discs.appendChild(g);
-    });
-  };
-  put('a', 92, 213, 150); put('b', 214, 213, 244);
-  acct.querySelectorAll('.discs-b rect').forEach(r => r.setAttribute('width', 330 - 244 + 0));
-  acct.querySelectorAll('.discs-b text:not(.no)').forEach(t => { t.textContent = t.textContent.split(' ')[0].replace('&', ''); });
-})();
+/* Fig. 3: the engagement flow. Laid out from data for the reader's width (two rows on a wide screen,
+   two columns on a phone), drawn by scroll, with a gold token that travels the path. */
+const FLOW = [
+  ['c', 'Inquiry', 'The requirement'], ['i', 'Research', 'Canvass & rates'], ['i', 'Pricing', 'Cost build-up'],
+  ['i', 'Decision', 'Management gate'], ['w', 'Firewall', 'Nothing leaks'], ['c', 'Quotation', 'One document'],
+  ['c', 'Acceptance', 'One gate'], ['c', 'Delivery', 'One lead on site'], ['c', 'Turnover', 'Signed handover'], ['i', 'Record', 'Every decision'],
+];
+const flowSvg = document.getElementById('flowSvg'), flowFig = document.getElementById('flow');
+let flowGeo = null;
+function layoutFlow(){
+  const narrow = flowFig.clientWidth < 700, NW = narrow ? 150 : 106, NH = 58;
+  let W, H, pos, wall, lanes;
+  if (!narrow) {
+    W = 1200; H = 390; const wy = 200, top = 70, bot = 272;
+    pos = FLOW.map((f, i) => ({x: 22 + i * 118, y: f[0] === 'c' ? top : f[0] === 'i' ? bot : wy - NH / 2}));
+    wall = `<line class="wall" x1="0" y1="${wy}" x2="${W}" y2="${wy}"/><text class="wall-t" x="${W}" y="${wy - 8}" text-anchor="end">The firewall · supplier names, costs and margins never cross</text>`;
+    lanes = `<rect class="lane" x="0" y="30" width="${W}" height="${wy - 30}" rx="2"/><rect class="lane in" x="0" y="${wy}" width="${W}" height="${H - wy - 6}" rx="2"/>
+      <text class="lane-t" x="10" y="22">Client-facing</text><text class="lane-t" x="10" y="${H + 12}">Inside GSSC · kernel-governed</text>`;
+  } else {
+    W = 360; H = 20 + FLOW.length * 76; const wx = 180;
+    pos = FLOW.map((f, i) => ({x: f[0] === 'c' ? 8 : f[0] === 'i' ? 202 : wx - NW / 2, y: 30 + i * 76}));
+    wall = `<line class="wall" x1="${wx}" y1="0" x2="${wx}" y2="${H}"/>`;
+    lanes = `<rect class="lane" x="0" y="0" width="${wx}" height="${H}" rx="2"/><rect class="lane in" x="${wx}" y="0" width="${W - wx}" height="${H}" rx="2"/>
+      <text class="lane-t" x="8" y="-10">Client</text><text class="lane-t" x="${W}" y="-10" text-anchor="end">Inside GSSC</text>`;
+  }
+  const C = pos.map(q => ({x: q.x + NW / 2, y: q.y + NH / 2}));
+  // an orthogonal path through every node centre; cumulative length recorded at each node
+  let d = `M${C[0].x} ${C[0].y}`, len = 0; const at = [0];
+  for (let i = 1; i < C.length; i++) {
+    const a = C[i - 1], b = C[i];
+    if (!narrow) { const mx = (a.x + b.x) / 2; d += ` L${mx} ${a.y} L${mx} ${b.y} L${b.x} ${b.y}`; }
+    else { const my = (a.y + b.y) / 2; d += ` L${a.x} ${my} L${b.x} ${my} L${b.x} ${b.y}`; }
+    len += Math.abs(b.x - a.x) + Math.abs(b.y - a.y); at.push(len);
+  }
+  const nodes = FLOW.map((f, i) => `<g class="nd${f[0] === 'w' ? ' gate' : ''}" transform="translate(${pos[i].x},${pos[i].y})"><title>${f[1]}: ${f[2]}</title>
+    <rect width="${NW}" height="${NH}" rx="2"/><text class="n" x="10" y="20">${String(i + 1).padStart(2, '0')}</text>
+    <text class="t" x="10" y="38">${f[1]}</text><text class="s" x="10" y="51">${f[2]}</text></g>`).join('');
+  flowSvg.setAttribute('viewBox', narrow ? `0 -24 ${W} ${H + 30}` : `0 0 ${W} ${H + 20}`);
+  flowSvg.style.minWidth = '0';
+  flowSvg.innerHTML = `<title>The GSSC engagement flow across the firewall</title>${lanes}${wall}<path class="track" d="${d}"/><path class="run" d="${d}" stroke-dasharray="${len}" stroke-dashoffset="${len}"/>${nodes}<circle class="tok-h" r="9"/><circle class="tok" r="4"/>`;
+  const path = flowSvg.querySelector('.run');
+  flowGeo = {path, len, at, nodes: [...flowSvg.querySelectorAll('.nd')], tok: flowSvg.querySelector('.tok'), halo: flowSvg.querySelector('.tok-h'), p: 0};
+}
+layoutFlow();
+
+/* the economics model: every figure traces to the assumptions table beneath it */
+const E$ = {inv: 1344, po: 2135, hr: 346, hrsWk: 3, rework: .0085};
+const eV = document.getElementById('eV'), eN = document.getElementById('eN'), eM = document.getElementById('eM');
+const barsEl = document.getElementById('bars'), econEl = document.getElementById('econ');
+const php = v => '₱' + Math.round(v).toLocaleString('en-PH');
+const ROWS = [['Invoices processed', 'one per supplier, per month'], ['Purchase orders', 'award and one change each'],
+              ['Coordination time', 'a manager’s hours on the interfaces'], ['Interface rework', 'the gaps between trades']];
+barsEl.innerHTML = ROWS.map(([k, s]) => `<div class="brow"><div class="k">${k}<small>${s}</small></div><div class="bpair">
+  <div class="eb d"><b></b><em></em></div><div class="eb c"><b></b><em></em></div></div></div>`).join('');
+const barD = [...barsEl.querySelectorAll('.eb.d')], barC = [...barsEl.querySelectorAll('.eb.c')];
+const hero = {D: document.getElementById('hD'), C: document.getElementById('hC'), S: document.getElementById('hS')};
+const econ = {tD: 0, tC: 0, sD: 0, sC: 0, share: 0};
+function model(){
+  const V = +eV.value * 1e6, N = +eN.value, M = +eM.value, wk = M * 4.33;
+  document.getElementById('oV').textContent = '₱' + (+eV.value).toLocaleString('en-PH', {maximumFractionDigits: 1}) + 'M';
+  document.getElementById('oN').textContent = N; document.getElementById('oM').textContent = M + (M === 1 ? ' month' : ' months');
+  for (const el of [eV, eN, eM]) el.style.setProperty('--f', ((el.value - el.min) / (el.max - el.min) * 100) + '%');
+  const d = [N * M * E$.inv, N * 2 * E$.po, E$.hrsWk * wk * N * E$.hr, E$.rework * V];
+  const c = [M * E$.inv, 2 * E$.po, E$.hrsWk * wk * E$.hr, 0];
+  const max = Math.max(...d);
+  d.forEach((v, i) => { barD[i].style.setProperty('--w', v / max); barD[i].querySelector('em').textContent = php(v);
+    barD[i].title = `Buying direct: ${php(v)}`; });
+  c.forEach((v, i) => { barC[i].style.setProperty('--w', v / max); const em = barC[i].querySelector('em');
+    em.textContent = i === 3 ? 'Held by the coordinator' : php(v); em.classList.toggle('x', i === 3);
+    barC[i].title = i === 3 ? 'The interfaces belong to the coordinator under one contract' : `One coordinator: ${php(v)}`; });
+  econ.tD = d.reduce((a, b) => a + b); econ.tC = c.reduce((a, b) => a + b); econ.share = (econ.tD - econ.tC) / V;
+}
+for (const el of [eV, eN, eM]) el.addEventListener('input', model);
+model();
+
+/* the dateline keeps Iloilo time */
+const clockEl = document.querySelector('.dateline div span:nth-child(2)');
+const tick = () => { clockEl.textContent = 'Iloilo City · ' + new Intl.DateTimeFormat('en-PH', {timeZone: 'Asia/Manila', hour: '2-digit', minute: '2-digit', hour12: false}).format(new Date()) + ' PHT'; };
+tick(); setInterval(tick, 15000);
+const ghosts = [...document.querySelectorAll('.ghost')];
+
 const tl = document.getElementById('tl');
 (() => {
   const svg = 'http://www.w3.org/2000/svg', ticks = tl.querySelector('.tl-ticks'), X = d => 40 + (d - 1) / 29 * 1120;
@@ -949,10 +1107,13 @@ function frame(t){
   const scrolled = Math.max(0, -topEl.getBoundingClientRect().top), target = clamp(scrolled / 180);
   H1 += (target - H1) * (1 - Math.exp(-dt / 110)); H2 += (target - H2) * (1 - Math.exp(-dt / 260));
   root.style.setProperty('--h', ease(H1).toFixed(4)); root.style.setProperty('--h2', ease(H2).toFixed(4));
+  root.style.setProperty('--hv', clamp(Math.abs(target - H1) * 5).toFixed(3));   // a touch of motion blur while the wordmark travels
   const fr = fieldStage.getBoundingClientRect(), span = fieldStage.offsetHeight - vh;
   const open = clamp((-fr.top + vh * .6) / vh), conv = clamp((-fr.top - vh * .45) / (span - vh * .45));
   const eo = ease(open), inset = Math.min(104, Math.max(20, vw * .06));
   for (const el of [panel, panelLabel]) { el.style.setProperty('--it', lerp(15, 0, eo) + '%'); el.style.setProperty('--is', lerp(inset, 0, eo) + 'px'); }
+  panel.style.setProperty('--feather', (1 - eo).toFixed(3));
+  panel.style.setProperty('--leave', ease(clamp((vh - fr.bottom) / (vh * .55))).toFixed(3));
   panel.style.setProperty('--ib', lerp(11, 0, eo) + '%');
   fieldStage.style.setProperty('--open', eo.toFixed(4));
   panel.style.setProperty('--st', ease(clamp((conv - .7) / .3)).toFixed(4));
@@ -966,7 +1127,20 @@ function frame(t){
     el.style.setProperty('--p', ease(clamp((vh * .96 - r.top) / (vh * .34))).toFixed(3)); }
   { const r = ink.getBoundingClientRect(), pr = clamp((vh * .82 - r.top) / (r.height + vh * .3)), n = inkWords.length;
     inkWords.forEach((w, i) => w.style.setProperty('--wp', clamp(pr * n * 1.08 - i).toFixed(2))); }
-  { const r = acct.getBoundingClientRect(); acct.style.setProperty('--d', ease(clamp((vh * .8 - r.top) / (vh * .7))).toFixed(4)); }
+  if (flowGeo) { const r = flowFig.getBoundingClientRect(), target = clamp((vh * .78 - r.top) / (r.height + vh * .15));
+    flowGeo.p += (target - flowGeo.p) * (1 - Math.exp(-dt / 180));
+    const L = flowGeo.len * flowGeo.p, pt = flowGeo.path.getPointAtLength(L);
+    flowGeo.path.setAttribute('stroke-dashoffset', (flowGeo.len - L).toFixed(1));
+    for (const c of [flowGeo.tok, flowGeo.halo]) { c.setAttribute('cx', pt.x.toFixed(1)); c.setAttribute('cy', pt.y.toFixed(1)); }
+    flowGeo.halo.setAttribute('r', (8 + 3 * Math.sin(t * .003)).toFixed(2));
+    flowGeo.nodes.forEach((n, i) => n.classList.toggle('on', L >= flowGeo.at[i] - 2)); }
+  { const r = econEl.getBoundingClientRect(), g = ease(clamp((vh * .85 - r.top) / (vh * .5)));
+    barsEl.style.setProperty('--grow', g.toFixed(3));
+    const k = 1 - Math.exp(-dt / 260);
+    econ.sD += (econ.tD * g - econ.sD) * k; econ.sC += (econ.tC * g - econ.sC) * k;
+    hero.D.textContent = php(econ.sD); hero.C.textContent = php(econ.sC);
+    hero.S.textContent = php(Math.max(0, econ.sD - econ.sC)) + ' · ' + (econ.share * 100 * g).toFixed(1) + '%'; }
+  for (const gh of ghosts) { const r = gh.parentElement.getBoundingClientRect(); gh.style.setProperty('--gp', clamp((vh - r.top) / (r.height + vh)).toFixed(3)); }
   { const r = tl.getBoundingClientRect(), d = ease(clamp((vh * .82 - r.top) / (vh * .55))); tl.style.setProperty('--d', d.toFixed(4));
     tl.querySelectorAll('.tl-ev').forEach(e => e.classList.toggle('on', d >= (+e.dataset.day - 1) / 29)); }
   const probe = 40;
@@ -977,7 +1151,7 @@ function frame(t){
   if (cur && railCopy.textContent !== cur.dataset.rail) { railCopy.textContent = cur.dataset.rail; railIndex.textContent = cur.dataset.index; }
   if (!REDUCE) requestAnimationFrame(frame);
 }
-addEventListener('resize', () => { vw = innerWidth; vh = innerHeight; sizeField(); sizeInst(); });
+addEventListener('resize', () => { vw = innerWidth; vh = innerHeight; sizeField(); sizeInst(); layoutFlow(); });
 three = buildInstrument(); sizeInst();
 if (REDUCE) {
   panel.style.setProperty('--it', '0%'); panel.style.setProperty('--ib', '0%'); panel.style.setProperty('--is', '0px');
