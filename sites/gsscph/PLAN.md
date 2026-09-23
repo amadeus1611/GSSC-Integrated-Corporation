@@ -43,6 +43,54 @@ what they believe, what's new, then the way in. We use the same five beats:
 Every inner page follows a shorter version: statement → substance → proof
 → one next step.
 
+## 2A. The hero artwork and the Instrument (two separate centrepieces)
+
+Observed on anthropic.com (2026-09-23, 1440 px): headline left, short
+statement right, then a full-width rounded artwork panel (textured,
+painterly: a yellow paper collage with a word set into it; lower down, a
+dusk-gradient horizon), then cards, a mission list and a dark footer. The
+artwork is what makes it feel like a gallery rather than a company page.
+
+**1. The hero artwork: "the Chart"** (top of the home page, centre)
+- Headline left in Baskerville, a short statement right (Anthropic's
+  arrangement). Below them sits a full-width panel with softly rounded
+  corners.
+- The panel is a generative artwork in our palette, inspired by old
+  portolan sea charts. Those charts were drawn as webs of fine *rhumb
+  lines* radiating from compass roses, and our star is a compass rose. Fine
+  engraved navy and gold lines radiate from several small stars across a
+  textured paper-and-dusk ground (paper grain, a navy-to-gold horizon,
+  faint coastline strata). One word is set large in Baskerville, the way
+  Anthropic sets "discover": for example *coordinate* or *assemble*.
+- It is alive but slow: the lines draw themselves in on load. The cursor
+  gently bends the nearest rhumb lines toward it and lets them relax back
+  with the soft close. On a phone, tilt does the same.
+- **Scroll-linked:** as you scroll past, the horizon rises, the lines
+  converge toward one gold star, and the panel hands off to the Instrument
+  below. Scroll back up and it all rewinds.
+- Generated in code (WebGL shader plus drawn lines), so it's unique to
+  GSSC, weighs little and costs nothing. A still frame is the fallback.
+
+**2. The Instrument, exploded vertically** (lower, the capabilities chapter)
+- The GSSC star, assembled, arrives in the centre as the Chart's lines
+  converge into it.
+- **Scroll-linked exploded view:** as you scroll down, the Instrument tilts
+  to a three-quarter view and its parts separate *vertically*, like a watch
+  or an engineering drawing taken apart along its axis:
+  bezel → graduated scale → faceted plates → gold meridian → inner ring →
+  spokes → the star. Each part floats apart with a fine leader line to its
+  label (the capability it stands for, per §5).
+- Scroll halfway and it's halfway apart; scroll back up and it
+  re-assembles through every in-between position. At the end of the
+  chapter it closes with the soft close and the star seats.
+- The section is pinned while this happens, so the page doesn't run away
+  from the object. On a phone the parts separate in a tighter vertical
+  stack with labels below each part.
+
+The order on the home page: header → headline + statement → **the Chart**
+→ **the Instrument (exploded view)** → engagement rail → proof → inquire →
+night footer.
+
 ## 3. The dynamic header (modelled on anthropic.com, verified in a browser)
 
 Observed on anthropic.com, 2026-09-23 (Chromium, 1440 px): the nav bar is
