@@ -25,6 +25,30 @@ Deliberately recreate that look on desktop too:
 - **Check against a real phone recording:** match the grain size,
   softness and cadence Duke saw.
 
+### Film defects, art-directed (Duke: "deliberate, not accident")
+
+Every flaw is authored, restrained, and the same on every device and
+frame rate. None of it may come from real lag or low resolution.
+
+- **Grain:** fine, luminance-weighted (stronger in shadows), re-seeded
+  every film frame.
+- **Gate weave:** sub-pixel frame drift, about 0.3px.
+- **Exposure flicker:** about ±1.5% per frame.
+- **Halation:** a warm glow bleeding from the brightest gold edges.
+- **Vignette:** a soft lens falloff at the corners.
+- **Rare dust and hair:** a speck or fibre crossing for 1–2 frames,
+  no more than once every 8–12 s.
+- **Faint vertical scratch:** occasional, very low opacity, for 3–6
+  frames.
+- **Scene cuts:** a light-leak warmth at the edge when a pinned scene
+  begins, fading within a second.
+- **Scope:** everything lives in one shared shader or overlay with named
+  intensity tokens (e.g. `--grain`, `--weave`, `--flicker`, `--dust`),
+  so it can be tuned as one look. Apply it only to the artwork (lava,
+  compass, night stages), never to text or UI.
+- **Reduced motion:** a still grain frame, with no dust, flicker or
+  weave.
+
 ## 2. Mobile bugs to fix first
 
 - **Fig. 4 (the June 2026 timeline) is cut off on mobile.** Redraw it as a
