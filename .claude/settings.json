@@ -1,0 +1,16 @@
+{
+  "hooks": {
+    "Stop": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python3 \"$CLAUDE_PROJECT_DIR/gssc-system/runtime/stop_gate.py\"",
+            "timeout": 180,
+            "statusMessage": "Verifying GSSC documents..."
+          }
+        ]
+      }
+    ]
+  }
+}

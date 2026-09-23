@@ -12,6 +12,45 @@ session, what changed, why, what's still open.
 
 ---
 
+## 2026-09-23 (8) — signatory rule made dynamic; verification enforced by hook
+
+**By:** Claude Code (Opus 5.5 session), at Duke's direction.
+
+**Decisions from Duke:** he is the default signatory; when a document
+needs a second GSSC signature, who signs is chosen for that document, not
+fixed to Michael C. Silla. Counsel clauses stay with the lawyer.
+
+**Done:**
+- `build_derivative.py --second-signatory <officer key>` fills
+  `{{GSSC_SIGNATORY_2:name}}` / `{{GSSC_SIGNATORY_2:titles}}` from
+  02_governance, so names and titles cannot drift from the record. It
+  hard-stops when a slot exists and no one was chosen (listing the
+  officers), when the President is chosen as his own second, and when
+  the flag is passed to a document without a slot. All four tested.
+- Dynamic slots: CMSA instrumental witness for GSSC; the joint-signature
+  clauses of the Board Resolution and Secretary's Certificate.
+  Office-bound signatures stay literal (Corporate Secretary signs the
+  Secretary's Certificate and certifies the Board Resolution).
+- `derivatives/build.json` — per-document build settings (the committed
+  example builds use Michael C. Silla as second signatory) and the
+  documented audit exceptions.
+- `runtime/verify_all.py` — preflight + build + render + 14 audits for
+  every document in ~22s; `--check` also fails when a committed `.html`
+  differs from a fresh build (tested with a hand-edited output) and
+  reports exceptions that start passing.
+- `runtime/stop_gate.py` + `.claude/settings.json` Stop hook — a session
+  cannot end with uncommitted `gssc-system/` changes that fail
+  `verify_all.py --check`. Loop-guarded; steps aside when Playwright or
+  the brand fonts are unavailable. Pipe-tested: pass, loop guard, and a
+  real block on a stale output.
+- `docs/proposals/kernel_next_release.json` — the 02_governance amendment
+  (approved in principle) plus the four runtime defects, ready to cut as
+  one versioned release. Not applied to the package here: it is authored
+  in the M365 system and carries declared hashes.
+
+**Open:** cut the next kernel release (in 365, or here as a deliberate
+versioned release) from the proposal file.
+
 ## 2026-09-23 (7) — premium pass executed: every document rebuilt on the master itself
 
 **By:** Claude Code (Opus 5.5 session), executing

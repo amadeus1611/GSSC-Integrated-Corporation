@@ -44,13 +44,23 @@ in this repository.
   exactly that and lost the master's premium detail). A derivative may add
   one style element with NEW class names only; the builder hard-stops on a
   reused master class name.
-- A document is done only when `runtime/render_check.py` PASSES (real fonts,
-  no overflow, no text collision) and the `gssc_runtime.py` audits pass or
-  fail only for a reason recorded in `MAINTENANCE_LOG.md`. Look at the
-  rendered pages; audits alone have missed real bugs here twice.
-- Signatories: Duke Y. Demayo (President) signs alone where one GSSC
-  signature is needed; Michael C. Silla alone signs Secretary's
-  Certificates; both sign where an instrument needs two officers.
+- `python3 gssc-system/runtime/verify_all.py` is the one command that
+  rebuilds and verifies every document (preflight, build, rendered QA with
+  real fonts, 14 kernel audits). A new document goes into
+  `gssc-system/derivatives/build.json`; an audit may fail only if
+  build.json records why. Look at the rendered pages too; audits alone have
+  missed real bugs here.
+- A project Stop hook (`.claude/settings.json` → `runtime/stop_gate.py`)
+  blocks ending a session while `gssc-system/` has uncommitted changes that
+  fail `verify_all.py --check`. Fix the cause; don't disable the hook.
+- Signatories (Duke Y. Demayo, 2026-09-23): the President is the default
+  and signs alone where one GSSC signature is needed. When a second GSSC
+  signature is needed, ASK who signs for that document and build with
+  `--second-signatory <02_governance officer key>`; never assume Michael.
+  Office-bound signatures stay fixed: the Corporate Secretary alone signs a
+  Secretary's Certificate and certifies minutes.
+- Pending kernel changes live in `gssc-system/docs/proposals/`; apply them
+  only as a deliberate versioned release, never as a quiet package edit.
 - Log any non-trivial change to `gssc-system/` — what changed, why, what's
   still open — as a new dated entry at the top of
   `gssc-system/MAINTENANCE_LOG.md`. This is the running memory of this

@@ -1,0 +1,26 @@
+{
+  "role": "Proposed changes for the next GSSC kernel release (after 2.16.1)",
+  "status": "APPROVED IN PRINCIPLE by Duke Y. Demayo 2026-09-23 (item 1); items 2-5 proposed. Not applied here: the package is authored in the M365 system and carries declared hashes, so the release must be cut there (or here deliberately, as one versioned release) to avoid two diverging packages.",
+  "changes": [
+    {
+      "id": 1,
+      "module": "02_governance",
+      "type": "doctrine amendment",
+      "replace": "Ronnie S. del Castillo authority_basis: 'default signatory for client-facing instruments (corporate profile, proposals, cover letters)'",
+      "with": {
+        "signatory_policy": {
+          "default_signatory": "duke_y_demayo",
+          "rule": "Duke Y. Demayo, President, signs every GSSC instrument that needs one GSSC signature.",
+          "second_signatory": "Chosen per document, from active_officers, whenever an instrument needs a second GSSC signature. Never the default signatory.",
+          "office_bound": "Signatures that belong to an office are not substitutable: the Corporate Secretary alone signs a Secretary's Certificate and certifies minutes (09_legal_doctrine).",
+          "implemented_by": "gssc-system/runtime/build_derivative.py --second-signatory"
+        }
+      },
+      "also_update": ["execution_protocol Section 24 'default client-facing signatory is the Chief Executive Officer' -> the President per 02_governance.signatory_policy"]
+    },
+    {"id": 2, "module": "runtime extract_sections", "type": "defect", "detail": "Pairs a CHS stamp with the next <h2>, so an <h3> CHS title swallows the following section's title. Match the title element inside the same .chs block."},
+    {"id": 3, "module": "runtime futureproof check 7", "type": "defect", "detail": "Treats a registered component absent from a DERIVATIVE as a stale registry entry. Apply the staleness check to the master only."},
+    {"id": 4, "module": "runtime governanceaudit", "type": "defect", "detail": "Requires >=1 GSSC signoff. Exempt documents whose data-doc-type is notarial_acknowledgment."},
+    {"id": 5, "module": "runtime tocgen", "type": "defect", "detail": "Matches the literal class=\"toc-block\"; match the class token instead."}
+  ]
+}

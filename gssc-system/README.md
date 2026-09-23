@@ -96,11 +96,29 @@ SVG), `sig-card`, `table.dt` (with `reference-total`/`decision-total`
 rows on `p-commercial`), `tiers`, `gate gate-refined` and `signoff`
 (both only on `p3` pages), `colophon colophon-docket`.
 
-Signatory rule (Duke Y. Demayo, 2026-09-23): the President signs alone
-wherever one GSSC signature is needed; Michael C. Silla alone signs every
-Secretary's Certificate; where an instrument needs two officers, both
-sign in their own capacity. Notarial acknowledgments are built into the
-CMSA, Secretary's Certificate and Board Resolution.
+Signatory rule (Duke Y. Demayo, 2026-09-23): the President is the default
+and signs alone wherever one GSSC signature is needed. A second GSSC
+signature is chosen per document — sources write
+`{{GSSC_SIGNATORY_2:name}}` / `{{GSSC_SIGNATORY_2:titles}}` and the builder
+fills them from 02_governance when run with
+`--second-signatory <officer key>` (it refuses to build without one, and
+refuses the President). Office-bound signatures stay fixed: the Corporate
+Secretary alone signs a Secretary's Certificate and certifies minutes.
+Notarial acknowledgments are built into the CMSA, Secretary's Certificate
+and Board Resolution.
+
+To verify everything at once:
+
+```bash
+python3 gssc-system/runtime/verify_all.py           # rebuild all documents, then verify
+python3 gssc-system/runtime/verify_all.py --check   # also fail if a committed .html is stale
+```
+
+Each document's build settings (including its second signatory) and any
+audit failure accepted for a documented reason live in
+`derivatives/build.json`. A project Stop hook runs the `--check` form
+whenever `gssc-system/` has uncommitted changes. Pending kernel changes
+are in `docs/proposals/kernel_next_release.json`.
 
 ## Running it
 

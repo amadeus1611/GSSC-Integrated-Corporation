@@ -19,8 +19,16 @@ Source format (<name>.src.html):
                                                       as the one appended style element)
     <body data-...>...</body>
 
+Signatories (Duke Y. Demayo, 2026-09-23): the President is the default and is
+written literally. A second signatory, where a document needs one, is chosen
+per document at build time -- the source writes {{GSSC_SIGNATORY_2:name}} and
+{{GSSC_SIGNATORY_2:titles}} and the builder resolves them from kernel
+02_governance.active_officers, so a name and its titles can never drift from
+the governance record. Office-bound signatures (the Corporate Secretary on a
+Secretary's Certificate or a minutes certification) stay literal.
+
 Usage:
-    python3 build_derivative.py <src.html> -o <out.html> [--package PATH]
+    python3 build_derivative.py <src.html> -o <out.html> [--second-signatory KEY] [--package PATH]
 Exit 0 = built and verified, 1 = hard stop.
 """
 import argparse
@@ -33,6 +41,7 @@ import sys
 
 HERE = pathlib.Path(__file__).resolve().parent
 DEFAULT_PKG = HERE.parent / "package" / "GSSC_Master_Package_v2_16_1.json"
+PRIMARY_SIGNATORY = "duke_y_demayo"
 STYLE_RE = re.compile(r"<style\b[^>]*>.*?</style>", re.S)
 
 
@@ -50,6 +59,7 @@ def main():
     ap.add_argument("src")
     ap.add_argument("-o", "--out", required=True)
     ap.add_argument("--package", default=str(DEFAULT_PKG))
+    ap.add_argument("--second-signatory", help="02_governance active_officers key for the second signature")
     a = ap.parse_args()
 
     pkg = json.load(open(a.package, encoding="utf-8"))
@@ -73,6 +83,20 @@ def main():
         return fail("a derivative may append ONE style element (Module 10 additive_rule)")
     if dstyles and ":root" in dstyles[0]:
         return fail("derivative tokens belong on a scoped class, not :root (Module 10 additive_rule)")
+
+    officers = pkg["kernel"]["02_governance"]["active_officers"]
+    if "{{GSSC_SIGNATORY_2:" in src:
+        key = a.second_signatory
+        if key not in officers:
+            return fail("this document needs a second signatory: pass --second-signatory with one of %s"
+                        % ", ".join(k for k in officers if k != PRIMARY_SIGNATORY))
+        if key == PRIMARY_SIGNATORY:
+            return fail("the second signatory must be someone other than the President (the default signatory)")
+        src = (src.replace("{{GSSC_SIGNATORY_2:name}}", officers[key]["name"])
+                  .replace("{{GSSC_SIGNATORY_2:titles}}", " · ".join(officers[key]["titles"])))
+        body = re.search(r"<body\b.*?</body>", src, re.S)
+    elif a.second_signatory:
+        return fail("--second-signatory given but this document has no second-signatory slot")
 
     head_end = master.index("</head>")
     head = master[:head_end]
