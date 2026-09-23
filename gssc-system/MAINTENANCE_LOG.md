@@ -12,6 +12,37 @@ session, what changed, why, what's still open.
 
 ---
 
+## 2026-09-23 (4) — company profile finished (v1 complete, pending Duke's review)
+
+**By:** Claude Code (cloud session).
+
+Closed the remaining white space per Duke's direction to finish the
+document rather than keep iterating heading design: added a 4-stage
+engagement-process flow diagram (Scope/Mobilize/Deliver/Turnover, pattern-
+filled swatches — same monochrome-print-safe accessibility approach as
+the quotation master's own weighted bar chart) to the overview page, and
+a numbered next-steps list to the engage page. No fabricated numeric
+data used anywhere — GSSC has no real engagement-volume/revenue figures
+to chart honestly, so a structural process diagram was used instead.
+
+**Bug caught and fixed before shipping:** a class-name collision —
+`.body` was used both for the page's absolutely-positioned content
+wrapper and for a `<div class="body">` inside each next-step item. The
+wrapper's `position:absolute` silently hijacked the inner divs, causing
+overlapping/invisible text on the engage page. Renamed the inner class
+to `.copy`. Re-rendered and confirmed clean.
+
+`boxcheck` still false-positives on page 2 (now reports 150% fill) for
+the same reason as before — `.flow`/`.flow-key` aren't in the kernel's
+registered `flex_row_classes` either. Confirmed by direct render: no
+overflow, page 2 sits at a healthy ~80% visual fill. Same open item as
+logged previously; still not hand-patched.
+
+Logged as `GSSC-PROFILE-2026-002-v3` in the design-decision log,
+auto-chained to v2. **This is now considered the finished v1 of the
+company profile** — further iteration waits on Duke's actual review
+rather than more unprompted design passes.
+
 ## 2026-09-23 (3) — fixed: profile cover didn't match the master's density
 
 **By:** Claude Code (cloud session), after Duke flagged that the page 1 cover

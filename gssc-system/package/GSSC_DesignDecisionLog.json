@@ -38,6 +38,19 @@
    "source_versions_used": "kernel 2.16.1; runtime 1.9; protocol 2.0",
    "precedent_reference": "GSSC-PROFILE-2026-002-v1",
    "logged_at": "2026-09-23T06:54:33"
+  },
+  {
+   "document_reference": "GSSC-PROFILE-2026-002-v3",
+   "client_name": "INTERNAL - no external client, GSSC self-collateral",
+   "content_type": "company_profile",
+   "body_structure_used": "flagship, final pass: added two real visual aids to close remaining white space without fabricating data - a 4-stage engagement-process flow diagram (Scope/Mobilize/Deliver/Turnover, pattern-filled swatches for monochrome-print legibility, same accessibility approach as the quotation master's weighted bar chart) on the overview page, and a numbered next-steps list on the engage page. Fixed a class-name collision (.body reused for both the page content wrapper and a next-list item div, causing the wrapper's position:absolute to hijack the inner div).",
+   "is_novel_pattern": "false - closes out v2's open item, no new component vocabulary",
+   "design_rationale": "Duke said to finish the profile rather than keep iterating heading design, and to add premium charts/visual aids. Declined to fabricate any numeric chart (no real engagement-volume or revenue data exists to chart truthfully) and used a structural process diagram instead, which is accurate and adds the requested visual richness. This is treated as the completed v1 of the company profile pending Duke's real review; no further design iteration planned unless he asks.",
+   "tokens_referenced": "gssc-tokens.css + gssc-components.css (both unmodified) + brand_assets/{header,seal,signature,watermark}.png",
+   "date_generated": "2026-09-23",
+   "source_versions_used": "kernel 2.16.1; runtime 1.9; protocol 2.0",
+   "precedent_reference": "GSSC-PROFILE-2026-002-v2",
+   "logged_at": "2026-09-23T07:00:51"
   }
  ]
 }

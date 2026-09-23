@@ -111,6 +111,32 @@ html,body{background:#e5e3dc;font-family:var(--f-body);color:var(--ink);
   letter-spacing:var(--tracked-tight);}
 .signoff .role{font-size:8px;color:var(--slate);letter-spacing:var(--tracked-tight);
   text-transform:uppercase;margin-top:2px;}
+
+.flow{display:flex;gap:0;margin:28px 0 8px;width:var(--body-col);}
+.flow .step{flex:1;position:relative;padding:0 14px 0 0;}
+.flow .step:last-child{padding-right:0;}
+.flow .swatch{width:100%;height:5px;margin-bottom:10px;}
+.flow .swatch.solid{background:var(--navy-deep);}
+.flow .swatch.dot{background-image:radial-gradient(var(--teal-deep) 1.1px,transparent 1.1px);
+  background-size:5px 5px;background-color:var(--ivory-deep);}
+.flow .swatch.cross{background-image:repeating-linear-gradient(45deg,var(--clay) 0 1.2px,transparent 1.2px 5px),
+  repeating-linear-gradient(-45deg,var(--clay) 0 1.2px,transparent 1.2px 5px);}
+.flow .swatch.diag{background-image:repeating-linear-gradient(45deg,var(--gold-deep) 0 1.2px,transparent 1.2px 5px);}
+.flow .n{font-family:var(--f-display);font-size:9px;color:var(--gold-deep);font-weight:700;}
+.flow .t{font-size:9.5px;font-weight:600;color:var(--navy-dark);margin:3px 0 5px;}
+.flow .d{font-size:8px;line-height:1.5;color:var(--slate);}
+.flow-key{display:flex;gap:20px;margin-top:14px;font-size:7px;letter-spacing:var(--tracked-tight);
+  text-transform:uppercase;color:var(--mid-grey);width:var(--body-col);flex-wrap:wrap;}
+.flow-key span{display:inline-flex;align-items:center;gap:5px;}
+.flow-key i{width:9px;height:9px;display:inline-block;}
+
+.next-list{margin-top:26px;width:var(--body-col);}
+.next-list .item{display:flex;gap:14px;padding:13px 0;border-bottom:var(--border-thin);}
+.next-list .item .idx{font-family:var(--f-display);font-size:17px;color:var(--gold-deep);
+  width:24px;flex:none;}
+.next-list .item .copy{flex:1;}
+.next-list .item .t{font-size:9.5px;font-weight:600;color:var(--navy-dark);}
+.next-list .item .d{margin-top:3px;font-size:8.5px;line-height:1.5;color:var(--slate);}
 </style>
 </head>
 <body data-doc-type="company_profile" data-governing-module="08_document_doctrine"
@@ -214,6 +240,24 @@ html,body{background:#e5e3dc;font-family:var(--f-body);color:var(--ink);
       <div class="row"><span class="rn">03</span><span class="rt">Capabilities</span><span class="rd">The service categories GSSC coordinates and delivers</span><span class="rp">03</span></div>
       <div class="row"><span class="rn">04</span><span class="rt">Governance</span><span class="rd">Active officers and corporate authority</span><span class="rp">04</span></div>
       <div class="row"><span class="rn">05</span><span class="rt">Engage GSSC</span><span class="rd">Registration, contact, and next steps</span><span class="rp">05</span></div>
+    </div>
+
+    <div class="sec-head" style="margin-top:26px;">
+      <h2 style="font-size:16px;">How a program runs</h2>
+      <div class="sub">Every engagement moves through the same four controlled stages, whatever the category of work.</div>
+      <div class="rule-full"></div>
+    </div>
+    <div class="flow">
+      <div class="step"><div class="swatch solid"></div><div class="n">01</div><div class="t">Scope</div><div class="d">Requirement defined, quotation accepted, notice to proceed issued.</div></div>
+      <div class="step"><div class="swatch dot"></div><div class="n">02</div><div class="t">Mobilize</div><div class="d">Sourcing and site coordination begin under the accountable program lead.</div></div>
+      <div class="step"><div class="swatch cross"></div><div class="n">03</div><div class="t">Deliver</div><div class="d">Coordinated execution with progressive quality checks on site.</div></div>
+      <div class="step"><div class="swatch diag"></div><div class="n">04</div><div class="t">Turnover</div><div class="d">Documentation compiled, acceptance signed, support window opens.</div></div>
+    </div>
+    <div class="flow-key">
+      <span><i style="background:var(--navy-deep);"></i>Scope</span>
+      <span><i style="background-image:radial-gradient(var(--teal-deep) 1.1px,transparent 1.1px);background-size:4px 4px;background-color:var(--ivory-deep);"></i>Mobilize</span>
+      <span><i style="background-image:repeating-linear-gradient(45deg,var(--clay) 0 1px,transparent 1px 4px),repeating-linear-gradient(-45deg,var(--clay) 0 1px,transparent 1px 4px);"></i>Deliver</span>
+      <span><i style="background-image:repeating-linear-gradient(45deg,var(--gold-deep) 0 1px,transparent 1px 4px);"></i>Turnover</span>
     </div>
   </main>
 
@@ -429,6 +473,12 @@ html,body{background:#e5e3dc;font-family:var(--f-body);color:var(--ink);
       <div class="row"><span class="k">Landline</span><span class="v">(033) 339-7472</span></div>
       <div class="row"><span class="k">Mobile</span><span class="v">+63 928 370 3574</span></div>
       <div class="row"><span class="k">Website</span><span class="v">gsscph.com</span></div>
+    </div>
+
+    <div class="next-list">
+      <div class="item"><span class="idx">01</span><div class="copy"><div class="t">Share the requirement</div><div class="d">A short scope conversation — category, site, timeline — with the program lead.</div></div></div>
+      <div class="item"><span class="idx">02</span><div class="copy"><div class="t">Receive a scoped quotation</div><div class="d">Bundled work packages, approved pricing, and stated assumptions, reconciled to the request.</div></div></div>
+      <div class="item"><span class="idx">03</span><div class="copy"><div class="t">One accountable program</div><div class="d">A single point of contact through mobilization, delivery, and turnover.</div></div></div>
     </div>
 
     <div class="signoff">
