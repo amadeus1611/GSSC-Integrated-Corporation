@@ -86,6 +86,29 @@ Maximum redo count before stopping to ask Duke: __.
 4. Write `/canvass` first, run it on the Belmont brief, review the ledger with Duke.
 5. Only then write `/price-quotation` from what the first run taught us.
 
+## Future needs (hypothesized 2026-09-23 — revisit as jobs accumulate)
+**Priority first:** 1 price memory · 4 approval trail · 7 the 365 connection. They compound.
+
+Near term (first few clients)
+1. Price memory across clients: a shared price history (item, supplier, date, staleness) seeded by every canvass.
+2. Supplier registry, INTERNAL ONLY: contacts, reliability, past prices; firewall module 04 keeps it out of outputs.
+3. A document per job stage: SOW, PO, NTP, invoice, delivery receipt, turnover certificate on the master system.
+4. Approval trail: who approved which price or decision, and when, recorded as evidence.
+
+Medium term (several jobs at once)
+5. Portfolio view: all clients' stage, blockers, value, deadlines, built from the HANDOFF.md files.
+6. Job cost tracking: quoted vs actual per job, feeding back into price memory.
+7. The 365 connection: SharePoint, Outlook, Teams connectors, so staff never need Claude Code.
+8. BIR and compliance calendar: 2551Q, withholding filings, permit renewals, from kernel 01_identity tax setup.
+9. Staff roles and access: finance/supplier data vs client documents; likely a separate private repo for `clients/`.
+
+Longer term
+10. Website fed from the kernel's identity data (07_website_doctrine), so the site never contradicts the documents.
+11. Case notes from finished jobs (08_document_doctrine case_note), feeding the profile and proposals.
+12. R&D sandbox: new services tested and costed before entering the capability list.
+13. Backups and continuity: offsite mirror, known-good restore, a second person who can operate the system.
+14. Agent measurement: monthly roll-up of the effort/redo log to tune tiers and rewrite weak skills.
+
 ## Constraints to remember
 - Research is limited by the environment's network allowlist; local supplier
   quotes may still come from staff canvass or 365 files. Mark anything
