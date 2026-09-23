@@ -1,0 +1,67 @@
+{
+  "brand": "EXPIRA AI Systems",
+  "token_format": "{{EXPIRA_ASSET:<name>}}",
+  "modeled_on": "GSSC_Kernel 2.18.0 brand_assets (03_brand, Execution Protocol 28C)",
+  "colors": {
+    "ink": "#0B1A3F",
+    "slate": "#2C3549",
+    "deep": "#09101E",
+    "gold": "#AE8A47"
+  },
+  "type": {
+    "wordmark": "EXPIRA native stencil serif (Canva source, EXPIRA_Native_Logo-Pack)",
+    "descriptor": "Cinzel 700, tracked caps"
+  },
+  "brand_assets": {
+    "header": {
+      "file": "header.png",
+      "mime_type": "image/png",
+      "width": 1236,
+      "height": 177,
+      "background": "transparent",
+      "sha256_of_decoded_image": "7ce923847134ebd67635161d6d20b63ae0215609dce6bbe58528f754b3a065f6",
+      "template_use": true,
+      "role": "masthead lockup: mark + wordmark, horizontal"
+    },
+    "seal": {
+      "file": "seal.png",
+      "mime_type": "image/png",
+      "width": 728,
+      "height": 225,
+      "background": "transparent",
+      "sha256_of_decoded_image": "e3cf4244c89eacf126947ebe13ded10e93e60ca53184607c00fbf382d0c6e628",
+      "template_use": true,
+      "role": "mark only (footer seal / favicon source)"
+    },
+    "signature": {
+      "file": "signature.png",
+      "mime_type": "image/png",
+      "width": 1175,
+      "height": 153,
+      "background": "transparent",
+      "sha256_of_decoded_image": "ea03368080eed2619581e171b7706db2144310703108e2f73aba41609a28a6c3",
+      "template_use": true,
+      "role": "wordmark + AI SYSTEMS descriptor (signature block)"
+    },
+    "watermark": {
+      "file": "watermark.png",
+      "mime_type": "image/png",
+      "width": 1108,
+      "height": 707,
+      "background": "transparent",
+      "sha256_of_decoded_image": "15bf5bbad352c8eeb06af56b6861076c78a53046628ec85e7d86839119cb25df",
+      "template_use": true,
+      "role": "stacked mark over wordmark (page watermark; apply opacity in CSS)"
+    },
+    "wordmark": {
+      "file": "wordmark.png",
+      "mime_type": "image/png",
+      "width": 1208,
+      "height": 279,
+      "background": "transparent",
+      "sha256_of_decoded_image": "8596f80c1b1a5f6c520e3c32efc57f17950dd29157333b8cec439000d41c2dc5",
+      "template_use": false,
+      "role": "wordmark only (library asset, not placed by default)"
+    }
+  }
+}
