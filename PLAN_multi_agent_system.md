@@ -52,6 +52,40 @@ First build steps: folder skeleton; agent files with effort tiers; skills
 `/canvass` and `/price-quotation`; a firewall check on `outputs/` before
 release; the tier/redo log.
 
+## Agent roster (draft; all Opus 5.5)
+| Agent | Effort tiers | Tools | Does | Never |
+|---|---|---|---|---|
+| research | medium / high | web, read, write in `research/` | canvass materials, labour rates, logistics; one row per figure with its source | touch `outputs/` |
+| finance | high | read, write in `finance/` | cost build-up, pricing under kernel execution protocol §14–15 | write client-facing text |
+| decision | medium / high | read, write in `decisions/` | options memo: recommendation, trade-offs, risks | approve anything |
+| legal | high | read only + write in `decisions/` | clause and risk review against 09_legal_doctrine | draft counsel-reserved clauses |
+| builder | medium | read, write, bash | client-safe documents via `build_derivative.py` | bypass `verify_all.py` |
+| reviewer | medium | read, bash | checks each stage's output before handoff | edit files |
+| firewall | low | read, grep | scans `outputs/` for supplier names, costs, margins (module 04) | release on any hit |
+
+## Research ledger format (research/*.csv)
+`item, spec, unit, qty, price_php, source (supplier/URL/staff canvass), date,
+verified (yes/no), notes` — one row per price. Anything unverified is flagged
+and stays out of final pricing unless Duke accepts it.
+
+## Skills to write
+- `/canvass <client>`: read the brief, split items across research agents,
+  merge into one ledger, flag gaps.
+- `/price-quotation <client>`: ledger → finance build-up → decision memo →
+  stop for Duke's approval → firewall scan → build the quotation → update HANDOFF.md.
+- `/handoff`: rewrite HANDOFF.md (done, in progress, blocked, next step, who decides).
+
+## Escalation thresholds (Duke to set)
+Amount above which finance/decision go to the high tier: PHP ____.
+Maximum redo count before stopping to ask Duke: __.
+
+## First session checklist
+1. Duke supplies the Belmont brief (scope, site, timeline, contact).
+2. Update the existing agent files to Opus 5.5; add the tiered agents above.
+3. Create `clients/belmont-hotel-iloilo/` skeleton + its CLAUDE.md.
+4. Write `/canvass` first, run it on the Belmont brief, review the ledger with Duke.
+5. Only then write `/price-quotation` from what the first run taught us.
+
 ## Constraints to remember
 - Research is limited by the environment's network allowlist; local supplier
   quotes may still come from staff canvass or 365 files. Mark anything
