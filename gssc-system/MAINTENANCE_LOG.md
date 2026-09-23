@@ -12,6 +12,50 @@ session, what changed, why, what's still open.
 
 ---
 
+## 2026-09-23 (9) — kernel 2.17.0 prepared: native logo pack + approved proposals
+
+**By:** Claude Code (Opus 5.5 session). **Approved by:** Duke Y. Demayo,
+President ("I approve it"): cut the release here, bring the JSON container
+to its final form; he updates the Copilot/365 side afterwards.
+
+**Source:** Canva design `GSSC_Native_Logo-Pack` (DAHLkhKRfrg, 5 pages,
+2000×2000). Mapping: p1 mark → `seal`; p2 stacked lockup → `watermark`;
+p3 wordmark → new `wordmark` (library asset, not placed by the master);
+p4 horizontal lockup → `header`; p5 full-name lockup → `signature`.
+
+**Done (committed, verified on the current 2.16.1 package):**
+- Runtime 2.0 (`runtime/gssc_runtime.py`): proposals 2–5 fixed. CHS titles
+  are read in their own block at h2 or h3; tocgen matches the `toc-block`
+  class token; futureproof registry staleness is judged against the master
+  only; governanceaudit exempts `signatory_policy.no_gssc_signoff_doc_types`;
+  preflight accepts `template_use: false` library assets and fails if the
+  template places one. The certificate and resolution exceptions left
+  `build.json`. The acknowledgment keeps one until the package carries
+  `signatory_policy`.
+- `release/cut_release_2_17_0.py`: the release as one deterministic script.
+  It rebuilds brand_assets from the pack (trimmed, about 5× the render
+  size), adds 03_brand `logo_system`, 02_governance `signatory_policy`
+  (proposal 1), protocol 2.7 (§24 default signatory, library assets in
+  §03/§28C, §43 check 6, a version block), and a 13_changelog entry
+  marking 2.17.0 current (adopted by Duke; 2.9.0 and 2.16.1 superseded).
+  It then recomputes every manifest and assembly hash, re-extracts
+  `docs/`, and repoints the tools. Dry run with stand-in images: preflight
+  PASS, and all 6 documents pass all 14 audits with no exceptions.
+
+**Blocked:** the environment's network policy denies
+`export-download.canva.com`, so the pack's PNGs can't be fetched here yet.
+
+**Next (one pass once the host is allowed):** export the pack from Canva
+→ `release/logo_pack/p1..p5.png` → `python3 release/cut_release_2_17_0.py
+--pack release/logo_pack` → `runtime/verify_all.py` → check the rendered
+pages → remove `GSSC_Master_Package_v2_16_1.json` → update the
+README/CLAUDE.md package name → commit. Check page 5 at full resolution
+first: its Canva thumbnail looks like "Corporation" overlaps itself.
+
+**Open:** board resolution reference for the adoption (the adoption_record
+field is left empty); protocol prose for Sections 44–46; the 365/Copilot
+copy of the package moves to 2.17.0 on Duke's side.
+
 ## 2026-09-23 (8) — signatory rule made dynamic; verification enforced by hook
 
 **By:** Claude Code (Opus 5.5 session), at Duke's direction.

@@ -1,19 +1,16 @@
 {
   "role": "GSSC derivative build manifest -- read by runtime/verify_all.py",
-  "note": "second_signatory is chosen per real document (Duke Y. Demayo is always the default signatory). The values below are the example builds committed to this repo. expected_audit_failures lists kernel runtime checks that fail for a documented master-scope reason (MAINTENANCE_LOG 2026-09-23 (7)); any OTHER failure, or an exception that starts passing, is reported.",
+  "note": "second_signatory is chosen per real document (Duke Y. Demayo is always the default signatory). The values below are the example builds committed to this repo. expected_audit_failures lists kernel runtime checks that fail for a documented reason; any OTHER failure, or an exception that starts passing, is reported. Kernel 2.17.0 (runtime 2.0) fixed the futureproof and governanceaudit defects that the certificate, resolution and acknowledgment used to carry here.",
   "documents": [
     {"src": "quotation/GSSC-QUOTATION-MASTER-v1.src.html", "out": "quotation/GSSC-QUOTATION-MASTER-v1.html"},
     {"src": "company-profile/GSSC-PROFILE-2026-002-v4.src.html", "out": "company-profile/GSSC-PROFILE-2026-002-v4.html"},
     {"src": "contract-sample/GSSC-CMSA-TEMPLATE-v2.src.html", "out": "contract-sample/GSSC-CMSA-TEMPLATE-v2.html",
      "second_signatory": "michael_c_silla"},
     {"src": "secretary-certificate/GSSC-SECCERT-TEMPLATE-v2.src.html", "out": "secretary-certificate/GSSC-SECCERT-TEMPLATE-v2.html",
-     "second_signatory": "michael_c_silla",
-     "expected_audit_failures": {"futureproof": "check 7 requires every registered component; a 3-page certificate correctly has no contents block (Section 34 trigger not met)"}},
+     "second_signatory": "michael_c_silla"},
     {"src": "board-resolution/GSSC-BOARDRES-TEMPLATE-v2.src.html", "out": "board-resolution/GSSC-BOARDRES-TEMPLATE-v2.html",
-     "second_signatory": "michael_c_silla",
-     "expected_audit_failures": {"futureproof": "check 7 requires every registered component; a resolution correctly has no contents block or sig-card"}},
+     "second_signatory": "michael_c_silla"},
     {"src": "notarial-instrument/GSSC-NOTARIAL-ACK-TEMPLATE-v2.src.html", "out": "notarial-instrument/GSSC-NOTARIAL-ACK-TEMPLATE-v2.html",
-     "expected_audit_failures": {"futureproof": "check 7 requires every registered component; a one-page acknowledgment has none of them",
-                                 "governanceaudit": "requires a GSSC signoff; a notary's page is signed by the notary, not a GSSC officer"}}
+     "expected_audit_failures": {"governanceaudit": "requires a GSSC signoff; a notary's page is signed by the notary. Exempt from kernel 2.17.0 (02_governance.signatory_policy.no_gssc_signoff_doc_types); release/cut_release_2_17_0.py removes this line."}}
   ]
 }

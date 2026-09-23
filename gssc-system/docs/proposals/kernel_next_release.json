@@ -1,6 +1,6 @@
 {
   "role": "Proposed changes for the next GSSC kernel release (after 2.16.1)",
-  "status": "APPROVED IN PRINCIPLE by Duke Y. Demayo 2026-09-23 (item 1); items 2-5 proposed. Not applied here: the package is authored in the M365 system and carries declared hashes, so the release must be cut there (or here deliberately, as one versioned release) to avoid two diverging packages.",
+  "status": "APPROVED by Duke Y. Demayo 2026-09-23 as kernel 2.17.0, cut here deliberately as one versioned release (release/cut_release_2_17_0.py). Items 2-5 are in runtime 2.0; item 1 lands in the package when the release is cut. Duke carries 2.17.0 into the M365 copy afterwards.",
   "changes": [
     {
       "id": 1,

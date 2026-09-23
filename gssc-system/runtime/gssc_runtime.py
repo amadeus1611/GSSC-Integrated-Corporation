@@ -43,7 +43,7 @@ document_type_system (design audit), kernel Module 15 memory_mandate
 """
 import json, base64, hashlib, re, math, sys, argparse, datetime
 
-RUNTIME_VERSION = "1.9"
+RUNTIME_VERSION = "2.0"
 # The package declares its own contract: every key listed in manifest.parts must
 # exist. This keeps the runtime forward- and backward-compatible instead of
 # hardcoding a part list that drifts out of date -- the exact failure mode that
@@ -125,7 +125,15 @@ def preflight(pkg, verbose=True):
               f"{a.get('pixel_width')}x{a.get('pixel_height')}px {len(raw):,}B")
     toks=set(re.findall(r'\{\{GSSC_ASSET:([a-z_]+)\}\}', html))
     r.add('every token resolves to an asset', toks<=set(pkg.get('brand_assets',{})), ','.join(sorted(toks)) or 'none')
-    r.add('no orphaned assets', set(pkg.get('brand_assets',{}))<=toks)
+    # LIBRARY ASSETS (runtime 2.0). The logo system registers variants the
+    # quotation master does not place (the stand-alone wordmark). Those declare
+    # template_use false; every asset that claims a template role must still
+    # be placed, so a dropped token remains an orphan and fails here.
+    lib={n for n,a in pkg.get('brand_assets',{}).items() if a.get('template_use') is False}
+    r.add('no orphaned assets', (set(pkg.get('brand_assets',{}))-lib)<=toks,
+          ('library-only: '+','.join(sorted(lib))) if lib else '')
+    r.add('no library-only asset is placed by the template', not (lib & toks),
+          ','.join(sorted(lib & toks)))
     # declared hashes
     parts={p['key']:p for p in m.get('parts',[])}
     for key,fn in [('kernel',lambda: _h_obj(k)),
@@ -918,11 +926,16 @@ def extract_sections(doc, pkg=None, indexable_only=True):
         for m in re.finditer(
                 r'<div class="chs[^"]*"[^>]*data-chs-category="([^"]*)"[^>]*>\s*'
                 r'<div class="chs-stamp">\s*<span class="chs-numeral">([^<]*)</span>.*?'
-                r'<h2 class="chs-title">([^<]*)</h2>'
+                r'<(h[23]) class="chs-title">([^<]*)</\3>'
                 r'(?:\s*<p class="chs-descriptor">([^<]*)</p>)?', seg, re.S):
+            # SAME-BLOCK TITLE (runtime 2.0). Through 1.9 this matched a literal
+            # <h2 class="chs-title">, so a CHS block titled with <h3> was paired
+            # with the NEXT block's <h2> title and that section vanished from
+            # the index. The title element is now read inside the same block,
+            # at either heading level.
             found.append({'page': pi, 'folio': folio, 'source': 'chs', 'category': m.group(1),
-                          'existing_numeral': m.group(2).strip(), 'title': m.group(3).strip(),
-                          'descriptor': (m.group(4) or '').strip()})
+                          'existing_numeral': m.group(2).strip(), 'title': m.group(4).strip(),
+                          'descriptor': (m.group(5) or '').strip()})
         if any(f['page'] == pi for f in found):
             continue
         for m in re.finditer(
@@ -978,7 +991,9 @@ def tocgen(pkg, path, verbose=True):
     entries = generate_toc(pkg, sections)
     want, why = toc_should_generate(pkg, sections)
     consistent = [s['existing_numeral'] for s in sections] == [e['numeral'] for e in entries]
-    present = 'class="toc-block"' in doc
+    # CLASS TOKEN (runtime 2.0): 1.9 matched the literal attribute class="toc-block",
+    # so a contents block carrying any second class read as absent.
+    present = bool(re.search(r'class="(?:[^"]*\s)?toc-block(?:\s[^"]*)?"', doc))
     if verbose:
         print('TABLE OF CONTENTS (Section 34)')
         print('-' * 54)
@@ -2379,14 +2394,25 @@ def governanceaudit(pkg, path=None, verbose=True):
         return False, rows
 
     doc = open(path, encoding='utf-8').read()
+    # NOTARIAL EXEMPTION (runtime 2.0). A stand-alone notarial acknowledgment
+    # is signed by the notary public, not by a GSSC officer, so it correctly
+    # carries no GSSC signoff. Through 1.9 it failed this audit by construction.
+    # Any signoff it DOES carry is still checked against Module 02.
+    dt = re.search(r'<body[^>]*\bdata-doc-type="([^"]*)"', doc)
+    notarial = bool(dt) and dt.group(1) in gov.get('signatory_policy', {}).get(
+        'no_gssc_signoff_doc_types', [])
     # MULTI-BLOCK (1.7). 1.6 used re.search and checked only the FIRST signature
     # block. A two-party instrument -- a CMSA, an SMSA, a countersigned
     # acceptance -- carries two or more, and every one after the first went
     # unchecked. findall iterates all of them; the loop below reports per block.
     blocks = re.findall(r'<div class="sig-name">([^<]*)</div>\s*'
                         r'<div class="sig-title">([^<]*)</div>', doc, re.S)
-    add('at least one rendered signoff block is present and parseable', bool(blocks),
-        '%d block(s) found' % len(blocks))
+    if notarial and not blocks:
+        add('document type carries no GSSC signoff by doctrine (02_governance.signatory_policy)',
+            True, dt.group(1))
+    else:
+        add('at least one rendered signoff block is present and parseable', bool(blocks),
+            '%d block(s) found' % len(blocks))
     m = blocks[0] if blocks else None
     if not blocks:
         ok = all(c for _, c, _ in rows)
@@ -2714,12 +2740,26 @@ def futureproof(pkg, path=None, verbose=True):
 
         # 7. Registered flex/grid components actually exist in the document,
         #    so a stale registry entry is visible rather than quietly inert.
+        #    MASTER ONLY (runtime 2.0). Staleness is a property of the registry
+        #    against the master that defines the components. Through 1.9 it was
+        #    also applied to derivatives, which failed every short instrument by
+        #    construction: a one-page acknowledgment correctly has no contents
+        #    block or sig-card. A derivative is identified by the provenance
+        #    comment build_derivative.py writes, or by a data-template-role
+        #    other than the universal master's.
         declared_flex = set(rbm.get('flex_row_classes', []))
         present = {c for c in declared_flex if 'class="%s' % c in doc or ' %s"' % c in doc
                    or '%s ' % c in doc}
-        stale = sorted(declared_flex - present)
-        add('no registered flex-row class is stale', not stale,
-            str(stale) or '%d registered, all present' % len(declared_flex))
+        role = re.search(r'data-template-role="([^"]*)"', doc)
+        is_master = (role is None or role.group(1) == 'UNIVERSAL_QUOTATION_MASTER')
+        if is_master:
+            stale = sorted(declared_flex - present)
+            add('no registered flex-row class is stale', not stale,
+                str(stale) or '%d registered, all present' % len(declared_flex))
+        else:
+            add('registry staleness is judged against the master, not this derivative', True,
+                '%s: %d of %d registered flex-row classes used'
+                % (role.group(1), len(present), len(declared_flex)))
 
     ok = all(c for _, c, _ in rows)
     if verbose:
