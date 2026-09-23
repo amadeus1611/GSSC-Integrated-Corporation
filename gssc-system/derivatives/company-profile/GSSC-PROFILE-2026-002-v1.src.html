@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8"/>
 <title>GSSC Integrated Corporation — Company Profile</title>
-<!--GSSC-PROFILE-2026-002-v1.html | derivative of the GSSC design system (gssc-system/design-tokens/gssc-tokens.css) | governed by 08_document_doctrine (company_profile, tier 1 flagship) and 03_brand (editorial minimalism, closed 17-color palette, 5-step type scale) | assembled by runtime/assemble_derivative.py — do not hand-edit the :root block below, edit design-tokens/gssc-tokens.css and reassemble.-->
+<!--GSSC-PROFILE-2026-002-v2.html | derivative of the GSSC design system (gssc-system/design-tokens/) | governed by 08_document_doctrine (company_profile, tier 1 flagship) and 03_brand (editorial minimalism, closed 17-color palette, 5-step type scale) | assembled by runtime/assemble_derivative.py — do not hand-edit the :root block or the shared component rules below; edit design-tokens/gssc-tokens.css and gssc-components.css and reassemble. v2: rebuilt on the master's actual component vocabulary (margin-rail, kicker/title/dek, drop-cap lede, pull-quote, colophon) after v1 was found to have reinvented thinner look-alike components instead of reusing the real ones.-->
 <link href="https://fonts.googleapis.com" rel="preconnect"/>
 <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
 <link href="https://fonts.googleapis.com/css2?family=Libre+Baskerville:ital,wght@0,400;0,700;1,400;1,700&amp;family=Inter:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet"/>
@@ -21,8 +21,6 @@ html,body{background:#e5e3dc;font-family:var(--f-body);color:var(--ink);
   .page:last-child{page-break-after:auto;}
   *{-webkit-print-color-adjust:exact !important;print-color-adjust:exact !important;}
 }
-
-/* ---- shared chrome: identical mechanism to the quotation master ---- */
 .page{position:relative;width:var(--page-w);height:var(--page-h);background:var(--ivory);
   margin:24px auto;overflow:hidden;box-shadow:0 2px 24px rgba(0,0,0,.12);
   font-size:var(--fs-body);line-height:var(--lh-body);color:var(--ink);}
@@ -35,73 +33,16 @@ html,body{background:#e5e3dc;font-family:var(--f-body);color:var(--ink);
 .watermark{position:absolute;inset:0;background-image:url("{{GSSC_ASSET:watermark}}");
   background-position:center 50%;background-size:500px auto;background-repeat:no-repeat;
   opacity:var(--watermark-opacity);pointer-events:none;z-index:0;}
+.body{position:absolute;left:var(--margin-left);right:var(--margin-right);
+  top:var(--margin-top);bottom:var(--margin-bot);z-index:1;overflow:hidden;
+  padding-top:30px;}
 
-.masthead{position:absolute;top:0;left:0;right:0;height:var(--margin-top);
-  padding:24px var(--margin-right) 30px var(--margin-left);
-  display:flex;align-items:flex-end;justify-content:space-between;z-index:3;}
-.masthead::after{content:"";position:absolute;left:var(--margin-left);right:var(--margin-right);
-  bottom:16px;border-bottom:var(--border-med);}
-.masthead .logo{height:38px;width:auto;display:block;content:url("{{GSSC_ASSET:header}}");}
-.masthead .doc-id{text-align:right;font-size:var(--fs-caption);color:var(--slate);
-  letter-spacing:var(--tracked);text-transform:uppercase;line-height:1.5;}
-.masthead .doc-id b{display:block;color:var(--navy-dark);font-size:9px;
-  letter-spacing:var(--tracked-cap);}
+/*__GSSC_COMPONENTS__*/
 
-.footer{position:absolute;left:0;right:0;bottom:0;height:var(--margin-bot);
-  padding:22px var(--margin-right) 26px var(--margin-left);
-  display:flex;align-items:flex-start;justify-content:space-between;z-index:3;}
-.footer::before{content:"";position:absolute;left:var(--margin-left);right:var(--margin-right);
-  top:16px;border-top:var(--border-hair);}
-.footer .tag{font-size:var(--fs-imprint);letter-spacing:var(--tracked-cap);
-  text-transform:uppercase;color:var(--mid-grey);line-height:1.6;}
-.footer .tag b{display:block;color:var(--slate);}
-.footer .seal-block{text-align:center;opacity:var(--footer-seal-opacity);}
-.footer .seal-block img{height:30px;width:auto;display:block;margin:0 auto 4px;
-  content:url("{{GSSC_ASSET:seal}}");}
-.footer .seal-block .name{font-size:8px;font-weight:700;letter-spacing:var(--tracked-cap);
-  color:var(--navy-dark);text-transform:uppercase;}
-.footer .seal-block .sub{font-size:7px;color:var(--slate);margin-top:1px;}
-.footer .page-no{text-align:right;font-size:9px;color:var(--slate);
-  display:flex;align-items:center;gap:8px;}
-.footer .page-no .num{font-family:var(--f-display);font-size:15px;color:var(--navy-dark);
-  font-weight:700;}
-.footer .rail{position:absolute;left:0;bottom:0;height:3px;width:100%;display:flex;}
-.footer .rail i{display:block;height:100%;}
-.footer .rail .a{width:60%;background:var(--gold-primary);}
-.footer .rail .b{width:6%;background:var(--navy-dark);}
-.footer .rail .c{width:34%;background:transparent;}
+.masthead .logo{content:url("{{GSSC_ASSET:header}}");}
+.footer-seal{background-image:url("{{GSSC_ASSET:seal}}");}
 
-.content{position:absolute;left:var(--margin-left);right:var(--margin-right);
-  top:var(--margin-top);bottom:var(--margin-bot);z-index:1;overflow:hidden;}
-.rail-label{position:absolute;right:24px;top:var(--margin-top);bottom:var(--margin-bot);
-  writing-mode:vertical-rl;font-size:8px;letter-spacing:var(--tracked-cap);
-  text-transform:uppercase;color:var(--mid-grey);display:flex;align-items:flex-end;
-  justify-content:flex-end;padding-bottom:4px;z-index:2;}
-.folio{position:absolute;right:24px;bottom:calc(var(--margin-bot) + 14px);
-  font-family:var(--f-display);font-size:11px;color:var(--slate);z-index:2;}
-
-/* ---- profile-specific components ---- */
-.eyebrow{display:flex;align-items:center;gap:10px;margin-bottom:14px;}
-.eyebrow .rule{width:22px;height:1px;background:var(--gold-deep);}
-.eyebrow span{font-size:var(--fs-kicker);letter-spacing:var(--tracked-cap);
-  text-transform:uppercase;color:var(--gold-deep);font-weight:600;}
-
-.hero{position:absolute;left:0;right:0;top:220px;bottom:200px;
-  display:flex;flex-direction:column;justify-content:center;}
-.hero .eyebrow{margin-bottom:22px;}
-.hero h1{font-family:var(--f-display);font-weight:400;font-style:normal;
-  font-size:50px;line-height:1.08;color:var(--navy-dark);max-width:460px;
-  letter-spacing:-0.005em;}
-.hero h1 em{font-style:italic;color:var(--gold-deep);}
-.hero .dek{margin-top:24px;max-width:420px;font-size:var(--fs-dek);
-  line-height:var(--lh-lede);color:var(--slate);font-style:italic;
-  font-family:var(--f-display);}
-.hero .meta{margin-top:40px;display:flex;gap:36px;}
-.hero .meta div{font-size:8.5px;letter-spacing:var(--tracked);text-transform:uppercase;
-  color:var(--mid-grey);}
-.hero .meta div b{display:block;color:var(--navy-dark);font-size:10px;
-  letter-spacing:normal;text-transform:none;font-weight:600;margin-bottom:2px;}
-
+/* ---- profile-specific: sections beyond the quotation vocabulary ---- */
 .sec-head{margin-bottom:20px;}
 .sec-head .num{font-family:var(--f-display);font-size:13px;color:var(--gold-deep);
   font-weight:700;margin-right:8px;}
@@ -112,15 +53,14 @@ html,body{background:#e5e3dc;font-family:var(--f-body);color:var(--ink);
 .rule-full{border-top:var(--border-hair);margin-top:12px;}
 
 .stat-row{display:flex;gap:0;margin:26px 0 30px;border-top:var(--border-hair);
-  border-bottom:var(--border-hair);}
-.stat-row div{flex:1;padding:14px 16px;border-right:var(--border-thin);}
-.stat-row div:last-child{border-right:none;}
+  border-bottom:var(--border-hair);width:var(--body-col);}
+.stat-row div{flex:1;padding:14px 16px 14px 0;}
 .stat-row .n{font-family:var(--f-display);font-size:26px;color:var(--navy-dark);
   font-weight:700;line-height:1;}
 .stat-row .l{margin-top:6px;font-size:8px;letter-spacing:var(--tracked-tight);
   text-transform:uppercase;color:var(--slate);}
 
-.toc-list{margin-top:8px;}
+.toc-list{margin-top:8px;width:var(--body-col);}
 .toc-list .row{display:flex;align-items:baseline;gap:10px;padding:11px 0;
   border-bottom:var(--border-thin);}
 .toc-list .row .rn{font-family:var(--f-display);font-size:12px;color:var(--gold-deep);
@@ -129,19 +69,8 @@ html,body{background:#e5e3dc;font-family:var(--f-body);color:var(--ink);
 .toc-list .row .rd{font-size:8.5px;color:var(--slate);flex:2;}
 .toc-list .row .rp{font-family:var(--f-display);font-size:11px;color:var(--slate);}
 
-.prose{font-size:var(--fs-body);line-height:var(--lh-body);color:var(--ink);
-  max-width:var(--body-col);}
-.prose + .prose{margin-top:10px;}
-.pull{margin:22px 0;padding:16px 0 16px 18px;border-left:2px solid var(--gold-primary);
-  font-family:var(--f-display);font-style:italic;font-size:var(--fs-pull);
-  line-height:1.4;color:var(--navy-dark);max-width:480px;}
-.pull .attr{display:block;margin-top:8px;font-family:var(--f-body);font-style:normal;
-  font-size:8px;letter-spacing:var(--tracked-cap);text-transform:uppercase;
-  color:var(--gold-deep);font-weight:600;}
-
-.cap-grid{display:grid;grid-template-columns:1fr 1fr;gap:0;margin-top:16px;}
+.cap-grid{display:grid;grid-template-columns:1fr 1fr;gap:0;margin-top:16px;width:var(--body-col);}
 .cap-group{padding:14px 22px 14px 0;border-bottom:var(--border-thin);}
-.cap-group:nth-child(odd){padding-right:22px;}
 .cap-group:nth-child(even){padding-left:22px;border-left:var(--border-thin);}
 .cap-group h3{font-size:8.5px;letter-spacing:var(--tracked-cap);text-transform:uppercase;
   color:var(--gold-deep);font-weight:700;margin-bottom:8px;}
@@ -151,9 +80,8 @@ html,body{background:#e5e3dc;font-family:var(--f-body);color:var(--ink);
 .cap-group li::before{content:"";position:absolute;left:0;top:7px;width:4px;height:4px;
   background:var(--navy-deep);}
 
-.officer-grid{display:grid;grid-template-columns:1fr 1fr;gap:0;margin-top:18px;}
+.officer-grid{display:grid;grid-template-columns:1fr 1fr;gap:0;margin-top:18px;width:var(--body-col);}
 .officer{padding:18px 22px 18px 0;border-bottom:var(--border-hair);}
-.officer:nth-child(odd){padding-right:22px;}
 .officer:nth-child(even){padding-left:22px;border-left:var(--border-hair);}
 .officer .name{font-family:var(--f-display);font-size:15px;color:var(--navy-dark);
   font-weight:700;}
@@ -161,7 +89,7 @@ html,body{background:#e5e3dc;font-family:var(--f-body);color:var(--ink);
   text-transform:uppercase;color:var(--gold-deep);font-weight:600;}
 .officer .note{margin-top:7px;font-size:8.5px;line-height:1.5;color:var(--slate);}
 
-.contact-block{margin-top:20px;}
+.contact-block{margin-top:20px;width:var(--body-col);}
 .contact-block .row{display:flex;gap:14px;padding:9px 0;border-bottom:var(--border-thin);
   font-size:9.5px;}
 .contact-block .row .k{width:88px;flex:none;letter-spacing:var(--tracked-tight);
@@ -169,7 +97,7 @@ html,body{background:#e5e3dc;font-family:var(--f-body);color:var(--ink);
 .contact-block .row .v{color:var(--navy-dark);font-weight:500;}
 
 .compliance{margin-top:24px;padding:14px 16px;background:var(--row-alt);
-  border-left:2px solid var(--slate);}
+  border-left:2px solid var(--slate);width:var(--body-col);}
 .compliance .h{font-size:7.5px;letter-spacing:var(--tracked-cap);text-transform:uppercase;
   color:var(--slate);font-weight:700;margin-bottom:6px;}
 .compliance .g{font-size:8.5px;color:var(--ink);line-height:1.7;}
@@ -186,52 +114,89 @@ html,body{background:#e5e3dc;font-family:var(--f-body);color:var(--ink);
 </style>
 </head>
 <body data-doc-type="company_profile" data-governing-module="08_document_doctrine"
-      data-template-role="COMPANY_PROFILE_MASTER" data-template-version="1.0">
+      data-template-role="COMPANY_PROFILE_MASTER" data-template-version="2.0">
 
 <!-- ============================== PAGE 1 — COVER ============================== -->
 <section class="page">
   <div class="watermark"></div>
-  <div class="masthead">
-    <img class="logo" alt="GSSC Integrated Corporation"/>
-    <div class="doc-id"><b>COMPANY PROFILE</b>GSSC-PROFILE-2026-002 · V1<br/>ILOILO CITY, PHILIPPINES</div>
-  </div>
-
-  <div class="hero">
-    <div class="eyebrow"><span class="rule" style="background:var(--gold-deep);height:1px;width:22px;"></span><span>GSSC INTEGRATED CORPORATION</span></div>
-    <h1>A single point of<br/>accountability for<br/><em>integrated</em> programs.</h1>
-    <p class="dek">Super-sourcing, management consultancy, and business support — coordinated under one accountable roof, from Iloilo City.</p>
-    <div class="meta">
-      <div>Founded<b>2026</b></div>
-      <div>Headquarters<b>Iloilo City, PH</b></div>
-      <div>Registration<b>SEC · Non-VAT</b></div>
+  <div class="margin-rail">
+    <div class="margin-rail-rule"></div>
+    <div class="margin-rail-copy">
+      <span class="margin-rail-section">Company Profile</span>
+      <span class="margin-rail-dot">·</span>
+      <span class="margin-rail-descriptor">GSSC · Institutional</span>
     </div>
+    <div class="margin-rail-index">01</div>
   </div>
+  <header class="masthead">
+    <img class="logo" alt="GSSC Integrated Corporation"/>
+    <div class="meta">
+      <div class="doctype">Company Profile</div>
+      <div>GSSC-PROFILE-2026-002 · V2</div>
+      <div>23 September 2026 · Iloilo City</div>
+    </div>
+  </header>
 
-  <div class="footer">
-    <div class="rail"><i class="a"></i><i class="b"></i><i class="c"></i></div>
-    <div class="tag"><b>Company Profile</b>Prepared for institutional review</div>
-    <div class="seal-block"><img alt="GSSC seal"/><div class="name">GSSC Integrated</div><div class="sub">Corporation</div></div>
-    <div class="page-no"><span class="num">01</span></div>
-  </div>
+  <main class="body">
+    <div class="kicker">Volume I · Institutional Introduction · GSSC Integrated Corporation</div>
+    <h1 class="title">A single point of accountability for integrated programs.</h1>
+    <p class="dek">Super-sourcing, management consultancy, and business support — coordinated under one accountable roof, from Iloilo City, Philippines.</p>
+    <div class="caption-date">
+      <span>Prepared for · Institutional Review</span>
+      <span>Registration · SEC · Non-VAT</span>
+    </div>
+    <p class="lede">GSSC Integrated Corporation exists to remove a specific kind of friction: the one a client absorbs when a single program depends on several separately managed suppliers, each accountable for a slice of the outcome and none for the whole of it. GSSC sits in that gap as one accountable partner.</p>
+    <p class="bt">Rather than positioning as a single-trade supplier, GSSC coordinates, integrates, and sources across varied requirements — spanning strategic sourcing, site execution, specialty supply programs, and open-category bespoke work — so a client manages one relationship instead of a shifting list of vendors.</p>
+    <div class="pull">Coordination, integration, sourcing, and accountable delivery across varied requirements.<span class="attrib">— GSSC positioning · differentiator</span></div>
+    <p class="bt">The pages that follow set out how that accountability is structured in practice: the categories GSSC coordinates, the officers who hold recorded authority for the corporation, and the single point of contact through which every engagement runs.</p>
+  </main>
+
+  <footer class="colophon">
+    <div class="footer-rail"></div>
+    <div class="footer-zone footer-left">
+      <div class="footer-eyebrow">Company Profile</div>
+      <div class="footer-imprint">Prepared for institutional review</div>
+    </div>
+    <div class="footer-zone footer-center">
+      <div class="footer-seal"></div>
+      <div class="footer-primary">GSSC Integrated Corporation</div>
+      <div class="footer-secondary">Regus · Iloilo Business Park</div>
+    </div>
+    <div class="footer-zone footer-right">
+      <div class="footer-page-label">Page</div>
+      <div class="footer-page-number">01</div>
+    </div>
+  </footer>
 </section>
 
 <!-- ============================== PAGE 2 — OVERVIEW / TOC ============================== -->
 <section class="page">
   <div class="watermark"></div>
-  <div class="masthead">
-    <img class="logo" alt="GSSC Integrated Corporation"/>
-    <div class="doc-id"><b>COMPANY PROFILE</b>GSSC-PROFILE-2026-002 · V1</div>
+  <div class="margin-rail">
+    <div class="margin-rail-rule"></div>
+    <div class="margin-rail-copy">
+      <span class="margin-rail-section">Company Profile</span>
+      <span class="margin-rail-dot">·</span>
+      <span class="margin-rail-descriptor">Overview</span>
+    </div>
+    <div class="margin-rail-index">02</div>
   </div>
-  <div class="rail-label">COMPANY PROFILE · OVERVIEW</div>
+  <header class="masthead">
+    <img class="logo" alt="GSSC Integrated Corporation"/>
+    <div class="meta">
+      <div class="doctype">Company Profile</div>
+      <div>GSSC-PROFILE-2026-002 · V2</div>
+    </div>
+  </header>
 
-  <div class="content">
+  <main class="body">
     <div class="sec-head">
       <span class="num">01</span><h2>Overview</h2>
       <div class="sub">Who we are, how the profile is organized, and what each section covers.</div>
       <div class="rule-full"></div>
     </div>
 
-    <p class="prose">GSSC Integrated Corporation is a super-sourcing, management consultancy, and business support platform delivering single-point accountability across programs. Rather than positioning as a single-trade supplier, GSSC coordinates, integrates, and sources across varied requirements — so a client manages one accountable partner instead of a shifting list of vendors.</p>
+    <p class="bt" style="margin-top:0;">GSSC Integrated Corporation is a super-sourcing, management consultancy, and business support platform delivering single-point accountability across programs. Rather than positioning as a single-trade supplier, GSSC coordinates, integrates, and sources across varied requirements — so a client manages one accountable partner instead of a shifting list of vendors.</p>
 
     <div class="stat-row">
       <div><div class="n">14</div><div class="l">Capability categories</div></div>
@@ -239,8 +204,6 @@ html,body{background:#e5e3dc;font-family:var(--f-body);color:var(--ink);
       <div><div class="n">1</div><div class="l">Accountable point of contact</div></div>
       <div><div class="n">PH</div><div class="l">Iloilo City, Philippines</div></div>
     </div>
-
-    <div class="pull">Coordination, integration, sourcing, and accountable delivery across varied requirements.<span class="attr">GSSC positioning · differentiator</span></div>
 
     <div class="sec-head" style="margin-top:8px;">
       <h2 style="font-size:16px;">In this profile</h2>
@@ -252,26 +215,47 @@ html,body{background:#e5e3dc;font-family:var(--f-body);color:var(--ink);
       <div class="row"><span class="rn">04</span><span class="rt">Governance</span><span class="rd">Active officers and corporate authority</span><span class="rp">04</span></div>
       <div class="row"><span class="rn">05</span><span class="rt">Engage GSSC</span><span class="rd">Registration, contact, and next steps</span><span class="rp">05</span></div>
     </div>
-  </div>
+  </main>
 
-  <div class="footer">
-    <div class="rail"><i class="a"></i><i class="b"></i><i class="c"></i></div>
-    <div class="tag"><b>GSSC Integrated Corporation</b>management@gsscph.com</div>
-    <div class="seal-block"><img alt="GSSC seal"/><div class="name">GSSC Integrated</div><div class="sub">Corporation</div></div>
-    <div class="page-no"><span class="num">02</span></div>
-  </div>
+  <footer class="colophon">
+    <div class="footer-rail"></div>
+    <div class="footer-zone footer-left">
+      <div class="footer-eyebrow">GSSC Integrated Corporation</div>
+      <div class="footer-imprint">management@gsscph.com</div>
+    </div>
+    <div class="footer-zone footer-center">
+      <div class="footer-seal"></div>
+      <div class="footer-primary">GSSC Integrated Corporation</div>
+      <div class="footer-secondary">Regus · Iloilo Business Park</div>
+    </div>
+    <div class="footer-zone footer-right">
+      <div class="footer-page-label">Page</div>
+      <div class="footer-page-number">02</div>
+    </div>
+  </footer>
 </section>
 
 <!-- ============================== PAGE 3 — CAPABILITIES ============================== -->
 <section class="page">
   <div class="watermark"></div>
-  <div class="masthead">
-    <img class="logo" alt="GSSC Integrated Corporation"/>
-    <div class="doc-id"><b>COMPANY PROFILE</b>GSSC-PROFILE-2026-002 · V1</div>
+  <div class="margin-rail">
+    <div class="margin-rail-rule"></div>
+    <div class="margin-rail-copy">
+      <span class="margin-rail-section">Company Profile</span>
+      <span class="margin-rail-dot">·</span>
+      <span class="margin-rail-descriptor">Capabilities</span>
+    </div>
+    <div class="margin-rail-index">03</div>
   </div>
-  <div class="rail-label">COMPANY PROFILE · CAPABILITIES</div>
+  <header class="masthead">
+    <img class="logo" alt="GSSC Integrated Corporation"/>
+    <div class="meta">
+      <div class="doctype">Company Profile</div>
+      <div>GSSC-PROFILE-2026-002 · V2</div>
+    </div>
+  </header>
 
-  <div class="content">
+  <main class="body">
     <div class="sec-head">
       <span class="num">02</span><h2>Capabilities</h2>
       <div class="sub">Grouped for reading; every engagement scopes the specific categories that apply.</div>
@@ -316,26 +300,47 @@ html,body{background:#e5e3dc;font-family:var(--f-body);color:var(--ink);
     </div>
 
     <div class="pull" style="margin-top:26px;">GSSC coordinates. GSSC delivers. Each program runs as a turnkey scope under one accountable point of contact — not a bundle of separately managed vendors.</div>
-  </div>
+  </main>
 
-  <div class="footer">
-    <div class="rail"><i class="a"></i><i class="b"></i><i class="c"></i></div>
-    <div class="tag"><b>GSSC Integrated Corporation</b>management@gsscph.com</div>
-    <div class="seal-block"><img alt="GSSC seal"/><div class="name">GSSC Integrated</div><div class="sub">Corporation</div></div>
-    <div class="page-no"><span class="num">03</span></div>
-  </div>
+  <footer class="colophon">
+    <div class="footer-rail"></div>
+    <div class="footer-zone footer-left">
+      <div class="footer-eyebrow">GSSC Integrated Corporation</div>
+      <div class="footer-imprint">management@gsscph.com</div>
+    </div>
+    <div class="footer-zone footer-center">
+      <div class="footer-seal"></div>
+      <div class="footer-primary">GSSC Integrated Corporation</div>
+      <div class="footer-secondary">Regus · Iloilo Business Park</div>
+    </div>
+    <div class="footer-zone footer-right">
+      <div class="footer-page-label">Page</div>
+      <div class="footer-page-number">03</div>
+    </div>
+  </footer>
 </section>
 
 <!-- ============================== PAGE 4 — GOVERNANCE ============================== -->
 <section class="page">
   <div class="watermark"></div>
-  <div class="masthead">
-    <img class="logo" alt="GSSC Integrated Corporation"/>
-    <div class="doc-id"><b>COMPANY PROFILE</b>GSSC-PROFILE-2026-002 · V1</div>
+  <div class="margin-rail">
+    <div class="margin-rail-rule"></div>
+    <div class="margin-rail-copy">
+      <span class="margin-rail-section">Company Profile</span>
+      <span class="margin-rail-dot">·</span>
+      <span class="margin-rail-descriptor">Governance</span>
+    </div>
+    <div class="margin-rail-index">04</div>
   </div>
-  <div class="rail-label">COMPANY PROFILE · GOVERNANCE</div>
+  <header class="masthead">
+    <img class="logo" alt="GSSC Integrated Corporation"/>
+    <div class="meta">
+      <div class="doctype">Company Profile</div>
+      <div>GSSC-PROFILE-2026-002 · V2</div>
+    </div>
+  </header>
 
-  <div class="content">
+  <main class="body">
     <div class="sec-head">
       <span class="num">03</span><h2>Governance</h2>
       <div class="sub">Active officers and their recorded authority.</div>
@@ -369,33 +374,54 @@ html,body{background:#e5e3dc;font-family:var(--f-body);color:var(--ink);
       <div class="h">Registered &amp; Compliant</div>
       <div class="g">GSSC Integrated Corporation is registered with the Philippine SEC and BIR, and holds Authority to Print for client invoicing. Registered PSIC activities: 70200 Management consultancy activities · 82990 Business support services. Non-VAT registered; amounts on GSSC instruments are stated accordingly.</div>
     </div>
-  </div>
+  </main>
 
-  <div class="footer">
-    <div class="rail"><i class="a"></i><i class="b"></i><i class="c"></i></div>
-    <div class="tag"><b>GSSC Integrated Corporation</b>management@gsscph.com</div>
-    <div class="seal-block"><img alt="GSSC seal"/><div class="name">GSSC Integrated</div><div class="sub">Corporation</div></div>
-    <div class="page-no"><span class="num">04</span></div>
-  </div>
+  <footer class="colophon">
+    <div class="footer-rail"></div>
+    <div class="footer-zone footer-left">
+      <div class="footer-eyebrow">GSSC Integrated Corporation</div>
+      <div class="footer-imprint">management@gsscph.com</div>
+    </div>
+    <div class="footer-zone footer-center">
+      <div class="footer-seal"></div>
+      <div class="footer-primary">GSSC Integrated Corporation</div>
+      <div class="footer-secondary">Regus · Iloilo Business Park</div>
+    </div>
+    <div class="footer-zone footer-right">
+      <div class="footer-page-label">Page</div>
+      <div class="footer-page-number">04</div>
+    </div>
+  </footer>
 </section>
 
 <!-- ============================== PAGE 5 — ENGAGE / CONTACT ============================== -->
 <section class="page">
   <div class="watermark"></div>
-  <div class="masthead">
-    <img class="logo" alt="GSSC Integrated Corporation"/>
-    <div class="doc-id"><b>COMPANY PROFILE</b>GSSC-PROFILE-2026-002 · V1</div>
+  <div class="margin-rail">
+    <div class="margin-rail-rule"></div>
+    <div class="margin-rail-copy">
+      <span class="margin-rail-section">Company Profile</span>
+      <span class="margin-rail-dot">·</span>
+      <span class="margin-rail-descriptor">Engage</span>
+    </div>
+    <div class="margin-rail-index">05</div>
   </div>
-  <div class="rail-label">COMPANY PROFILE · ENGAGE</div>
+  <header class="masthead">
+    <img class="logo" alt="GSSC Integrated Corporation"/>
+    <div class="meta">
+      <div class="doctype">Company Profile</div>
+      <div>GSSC-PROFILE-2026-002 · V2</div>
+    </div>
+  </header>
 
-  <div class="content">
+  <main class="body">
     <div class="sec-head">
       <span class="num">04</span><h2>Engage GSSC</h2>
       <div class="sub">One accountable point of contact for the next conversation.</div>
       <div class="rule-full"></div>
     </div>
 
-    <p class="prose">GSSC coordinates each engagement from first scope conversation through delivery and turnover, under a single accountable program lead. The details below reach that point of contact directly.</p>
+    <p class="bt" style="margin-top:0;">GSSC coordinates each engagement from first scope conversation through delivery and turnover, under a single accountable program lead. The details below reach that point of contact directly.</p>
 
     <div class="contact-block">
       <div class="row"><span class="k">Office</span><span class="v">Regus, 3F Festive Walk Mall, Iloilo Business Park, Megaworld Boulevard, Mandurriao, Iloilo City 5000, Philippines</span></div>
@@ -411,14 +437,24 @@ html,body{background:#e5e3dc;font-family:var(--f-body);color:var(--ink);
       <div class="org">GSSC Integrated Corporation</div>
       <div class="role">Ronnie S. del Castillo · Chief Executive Officer</div>
     </div>
-  </div>
+  </main>
 
-  <div class="footer">
-    <div class="rail"><i class="a"></i><i class="b"></i><i class="c"></i></div>
-    <div class="tag"><b>GSSC Integrated Corporation</b>Non-VAT · Iloilo City, Philippines</div>
-    <div class="seal-block"><img alt="GSSC seal"/><div class="name">GSSC Integrated</div><div class="sub">Corporation</div></div>
-    <div class="page-no"><span class="num">05</span></div>
-  </div>
+  <footer class="colophon">
+    <div class="footer-rail"></div>
+    <div class="footer-zone footer-left">
+      <div class="footer-eyebrow">GSSC Integrated Corporation</div>
+      <div class="footer-imprint">Non-VAT · Iloilo City, Philippines</div>
+    </div>
+    <div class="footer-zone footer-center">
+      <div class="footer-seal"></div>
+      <div class="footer-primary">GSSC Integrated Corporation</div>
+      <div class="footer-secondary">Regus · Iloilo Business Park</div>
+    </div>
+    <div class="footer-zone footer-right">
+      <div class="footer-page-label">Page</div>
+      <div class="footer-page-number">05</div>
+    </div>
+  </footer>
 </section>
 
 </body>

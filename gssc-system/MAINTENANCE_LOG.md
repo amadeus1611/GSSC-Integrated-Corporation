@@ -12,6 +12,57 @@ session, what changed, why, what's still open.
 
 ---
 
+## 2026-09-23 (3) — fixed: profile cover didn't match the master's density
+
+**By:** Claude Code (cloud session), after Duke flagged that the page 1 cover
+didn't read as premium as the quotation master's cover.
+
+**Root cause:** v1 only extracted the master's *values* into
+`gssc-tokens.css` (colors, sizes, tracking) — it never extracted the
+master's *components*. So the cover reused the right palette and fonts
+but invented parallel, thinner components: a plain eyebrow instead of
+the kicker + hairline rule, no margin-rail, no prepared-for/attention
+block, no drop-cap lede paragraph, no pull-quote. Visually correct
+colors, structurally a different (sparser) document.
+
+**Fix:** measured the master's real components directly —
+`getComputedStyle` against every relevant selector (`.masthead`,
+`.margin-rail` and its children, `.kicker`, `.title`, `.dek`,
+`.caption-date`, `.lede` including its `::first-letter` drop cap, `.bt`,
+`.pull`/`.attrib`, `.colophon` and its footer zones) on the rendered
+reference document, not eyeballed from a screenshot. Added
+`design-tokens/gssc-components.css` as a second shared layer, wired into
+`assemble_derivative.py` via a `/*__GSSC_COMPONENTS__*/` placeholder.
+Rebuilt every page of the profile (not just the cover) on that real
+vocabulary. Also renamed the content wrapper from a made-up `.content`
+div to the master's own `<main class="body">`, which had a side benefit:
+`boxcheck` (the binding overflow gate) had been silently finding 0 pages
+to measure in v1 because it looks for that exact tag — it now actually
+runs.
+
+**That real boxcheck run found a real (narrow) gap:** it reports page 2
+overflowing by 83px. Rendered and screenshotted the page directly —
+there is no overflow, roughly 40% of the page is empty below the
+table-of-contents block. Cause: `boxcheck`'s height estimator has a
+registered list of flex-row classes (`flex_row_classes` in the kernel's
+geometry config) that it knows how to measure correctly; `.stat-row` and
+`.toc-list .row` aren't on that list, so it falls back to a stacking
+estimate that overcounts them. This is left open rather than
+hand-patched — extending that registered list is a real (if small)
+kernel-config decision, not a one-off fix to paper over.
+
+**Re-verified:** `contrastaudit` and `a11yaudit` still PASS on the
+rebuilt file. Design-decision log updated with a real revision entry
+(`GSSC-PROFILE-2026-002-v2`), auto-linked as precedent to v1's entry.
+
+**Open:**
+- Register `.stat-row` / `.toc-list .row` (and any future derivative's
+  flex-row components) in the kernel's `flex_row_classes` config so
+  `boxcheck` stops false-positiving on them — needs a deliberate kernel
+  version bump, not an agent edit to the versioned package.
+- Same white-space question as before on pages 3-5 (now also page 1's
+  lower half) — still open for Duke's call.
+
 ## 2026-09-23 (2) — shared design-token layer + first company-profile derivative
 
 **By:** Claude Code (cloud session), at Duke Demayo's request, after confirming

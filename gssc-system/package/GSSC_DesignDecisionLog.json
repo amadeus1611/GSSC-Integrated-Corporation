@@ -25,6 +25,19 @@
    "source_versions_used": "kernel 2.16.1; runtime 1.9; protocol 2.0",
    "precedent_reference": "NONE -- first logged generation for this client/content-type pair",
    "logged_at": "2026-09-23T06:47:51"
+  },
+  {
+   "document_reference": "GSSC-PROFILE-2026-002-v2",
+   "client_name": "INTERNAL - no external client, GSSC self-collateral",
+   "content_type": "company_profile",
+   "body_structure_used": "flagship, revised: rebuilt v1's cover and every page's chrome onto the master's ACTUAL components (margin-rail, kicker, title, dek, caption-date, drop-cap lede, bt, pull/attrib, colophon) extracted via getComputedStyle against the real hydrated reference, added as design-tokens/gssc-components.css - a second shared layer alongside gssc-tokens.css",
+   "is_novel_pattern": "false - correction of v1, not a new pattern; the components themselves are the master's own, not new inventions",
+   "design_rationale": "Duke flagged that v1's cover did not match the master's premium density. Correct diagnosis: v1 only inherited the master's VALUES via gssc-tokens.css but reinvented parallel, thinner COMPONENTS instead of reusing the real ones. Fixed by measuring the real components off the rendered reference document and extracting them as gssc-components.css, then rebuilding every page on that vocabulary. Renamed the content wrapper to the master's own main.body so boxcheck can actually measure this document - caught a real gap: its flex-row estimator does not yet know .stat-row/.toc-list .row, giving a false-positive overflow on page 2. Confirmed false positive by direct render. The flex_row_classes config fix is left as open kernel work, not hand-patched here.",
+   "tokens_referenced": "gssc-tokens.css (unmodified) + gssc-components.css (new, measured from templates/GSSC_Quotation_Universal_Master_v3_6_HYDRATED_reference.html) + brand_assets/{header,seal,signature,watermark}.png",
+   "date_generated": "2026-09-23",
+   "source_versions_used": "kernel 2.16.1; runtime 1.9; protocol 2.0",
+   "precedent_reference": "GSSC-PROFILE-2026-002-v1",
+   "logged_at": "2026-09-23T06:54:33"
   }
  ]
 }
