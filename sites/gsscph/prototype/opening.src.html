@@ -40,24 +40,6 @@ a{color:inherit}
 :focus-visible{outline:1.5px solid var(--gold-primary);outline-offset:3px;border-radius:var(--r)}
 .wrap{max-width:var(--maxw);margin-inline:auto;padding-inline:var(--gutter)}
 
-/* ---------------------------------------------------------------- spine stripe and margin rail (master chrome) */
-.spine,.rail{transition:opacity 900ms var(--soft-close)}
-/* the margins step out as a dark stage arrives (spine draws up and slides left, the rail slides right)
-   and step back in, a beat apart, on paper */
-.spine{transform-origin:50% 100%;transition:opacity 700ms var(--soft-close),transform 1100ms var(--soft-close)}
-.rail{transition:opacity 700ms var(--soft-close) 120ms,transform 1100ms var(--soft-close) 120ms}
-body.on-night .spine{opacity:0;transform:translateX(-18px) scaleY(.35)}
-body.on-night .rail{opacity:0;transform:translateX(18px)}
-.spine{position:fixed;left:calc(var(--gutter) * .38);top:140px;bottom:120px;width:3px;z-index:3;pointer-events:none;
-  background:linear-gradient(to bottom,var(--navy-deep) 0%,var(--navy-deep) 60%,var(--gold-primary) 60%,var(--gold-primary) 85%,var(--slate) 85%,var(--slate) 100%)}
-.rail{position:fixed;right:calc(var(--gutter) * .3);top:140px;bottom:120px;width:28px;z-index:3;pointer-events:none;color:var(--mid-grey);
-  transition:color 600ms var(--soft-close)}
-.rail-copy{position:absolute;right:6px;top:0;writing-mode:vertical-rl;transform:rotate(180deg);font:600 10px/1 var(--f-body);
-  letter-spacing:var(--tracked);text-transform:uppercase;white-space:nowrap}
-.rail-index{position:absolute;right:4px;bottom:0;font:400 22px/1 var(--f-display);font-feature-settings:"onum" 1;color:rgba(9,23,61,.4);
-  transition:color 600ms var(--soft-close)}
-body.on-night .rail{color:rgba(243,236,218,.45)} body.on-night .rail-index{color:rgba(243,236,218,.45)}
-@media (max-width:1100px){ .rail{display:none} .spine{left:6px;width:2px} }
 
 /* ---------------------------------------------------------------- masthead (header logic from the master) */
 .bar{position:fixed;inset:0 0 auto 0;z-index:50;padding-top:env(safe-area-inset-top,0px);color:var(--navy-dark)}
@@ -176,18 +158,14 @@ h1.title .it{font-style:italic;letter-spacing:-.02em}
 .figcaption i{font:italic 400 14px/1.5 var(--f-display);letter-spacing:0}
 
 /* Fig. 1: the field. Inset figure at rest; opens to full bleed with scroll. Corners stay at the master's 2px. */
-.field-stage{position:relative;height:320vh}
+.field-stage{position:relative;height:250vh}
 .field-pin{position:sticky;top:0;height:100vh;height:100svh;overflow:hidden}
 .panel{position:absolute;inset:0;background:var(--navy-dark);
-  /* the figure opens to full bleed through a feathered mask: the edges soften as they leave the
-     margins, the way a lens loses its vignette, instead of a hard crop sliding outward */
-  --fe:calc(2px + var(--feather,0) * 90px);
-  -webkit-mask-image:linear-gradient(to right,transparent var(--is,var(--gutter)),#000 calc(var(--is,var(--gutter)) + var(--fe)),#000 calc(100% - var(--is,var(--gutter)) - var(--fe)),transparent calc(100% - var(--is,var(--gutter)))),
-    linear-gradient(to bottom,transparent var(--it,15%),#000 calc(var(--it,15%) + var(--fe)),#000 calc(100% - var(--ib,11%) - var(--fe) - var(--leave,0) * 38vh),transparent calc(100% - var(--ib,11%)));
-  -webkit-mask-composite:source-in;
-  mask-image:linear-gradient(to right,transparent var(--is,var(--gutter)),#000 calc(var(--is,var(--gutter)) + var(--fe)),#000 calc(100% - var(--is,var(--gutter)) - var(--fe)),transparent calc(100% - var(--is,var(--gutter)))),
-    linear-gradient(to bottom,transparent var(--it,15%),#000 calc(var(--it,15%) + var(--fe)),#000 calc(100% - var(--ib,11%) - var(--fe) - var(--leave,0) * 38vh),transparent calc(100% - var(--ib,11%)));
-  mask-composite:intersect}
+  clip-path:inset(var(--it,15%) var(--is,var(--gutter)) var(--ib,11%) var(--is,var(--gutter)) round var(--r))}
+/* a soft inner edge while the figure is inset: a few pixels of paper light bleeding into the glass.
+   It thins to nothing as the figure reaches full bleed, so the final frame is truly edge to edge. */
+.panel-edge{position:absolute;top:var(--it,15%);bottom:var(--ib,11%);left:var(--is,var(--gutter));right:var(--is,var(--gutter));pointer-events:none;border-radius:var(--r);
+  box-shadow:inset 0 0 calc(var(--feather,0) * 16px) calc(var(--feather,0) * 1px) rgba(250,248,243,calc(var(--feather,0) * .5))}
 .panel canvas{position:absolute;inset:0;width:100%;height:100%;display:block;touch-action:pan-y}
 .panel .seat{position:absolute;left:50%;top:50%;width:clamp(64px,7vw,104px);pointer-events:none;
   transform:translate(-50%,-50%) scale(calc(.7 + var(--st,0) * .3)) rotate(calc((1 - var(--st,0)) * -45deg));opacity:var(--st,0);
@@ -199,12 +177,36 @@ h1.title .it{font-style:italic;letter-spacing:-.02em}
 .panel-label span:last-child{color:rgba(243,236,218,.5);font-weight:500;letter-spacing:var(--tracked-tight)}
 
 /* ---------------------------------------------------------------- sections on paper */
+/* the spine belongs to the section it measures: a navy, gold and slate rule in the left margin that
+   draws down as the section is read, and is gone with it */
+.sec-line{position:absolute;left:calc(var(--gutter) * .42);top:calc(var(--u) * 16);bottom:calc(var(--u) * 14);width:2px;pointer-events:none;
+  background:linear-gradient(to bottom,var(--navy-deep) 0%,var(--navy-deep) 60%,var(--gold-primary) 60%,var(--gold-primary) 85%,var(--slate) 85%,var(--slate) 100%);
+  transform-origin:top;transform:scaleY(var(--sp,1));opacity:calc(.25 + var(--sp,1) * .75)}
+@media (max-width:760px){ .sec-line{left:8px;width:1.5px} }
+
+/* the guide: the one persistent aid besides the header. Where you are, how far through, what comes next. */
+.guide{position:fixed;z-index:45;right:var(--gutter);top:calc(env(safe-area-inset-top,0px) + 112px - var(--h) * 36px);width:236px;
+  padding:10px 12px 11px;border:1px solid rgba(9,23,61,.16);border-radius:var(--r);background:rgba(250,248,243,.74);
+  -webkit-backdrop-filter:blur(12px);backdrop-filter:blur(12px);color:var(--navy-dark);
+  transition:color 700ms var(--soft-close),background 700ms var(--soft-close),border-color 700ms var(--soft-close)}
+.g-row{display:flex;justify-content:space-between;align-items:baseline;gap:10px;font:600 10px/1.3 var(--f-body);letter-spacing:var(--tracked);text-transform:uppercase}
+.g-fol{font:400 13px/1 var(--f-display);letter-spacing:0;font-feature-settings:"tnum" 1,"lnum" 1;color:var(--mid-grey)}
+.g-bar{margin:9px 0 8px;height:1px;background:rgba(9,23,61,.14);overflow:hidden}
+.g-bar i{display:block;height:100%;background:var(--gold-primary);transform-origin:left;transform:scaleX(var(--gp,0))}
+.g-hint{display:flex;align-items:center;gap:8px;font:italic 400 13px/1.3 var(--f-display);color:var(--slate);text-decoration:none}
+.g-hint::after{content:"";flex:1;height:1px;background:linear-gradient(to right,currentColor,transparent);opacity:.35;transform-origin:left;animation:gpulse 2.8s var(--soft-close) infinite}
+@keyframes gpulse{0%{transform:scaleX(.15);opacity:0}40%{opacity:.4}100%{transform:scaleX(1);opacity:0}}
+a.g-hint:hover{color:var(--navy-dark)}
+body.on-night .guide{color:var(--on-night);background:rgba(9,23,61,.46);border-color:rgba(243,236,218,.16)}
+body.on-night .g-hint,body.on-night .g-fol{color:var(--on-night-2)} body.on-night .g-bar{background:rgba(243,236,218,.14)}
+@media (max-width:860px){ .guide{top:auto;bottom:calc(14px + env(safe-area-inset-bottom,0px));left:var(--gutter);right:var(--gutter);width:auto;padding:8px 12px}
+  .g-bar{margin:6px 0 0} .g-hint{display:none} }
+@media (prefers-reduced-motion:reduce){ .g-hint::after{animation:none} }
+
 /* printer's marks: every paper section carries registration crosses at its top corners, as a proof sheet does */
 .sec::before,.sec::after{content:"";position:absolute;top:calc(var(--u) * 7);width:13px;height:13px;opacity:.5;
   background:linear-gradient(var(--hairline),var(--hairline)) center/1px 100% no-repeat,linear-gradient(var(--hairline),var(--hairline)) center/100% 1px no-repeat}
 .sec::before{left:calc(var(--gutter) - 26px)} .sec::after{right:calc(var(--gutter) - 26px)}
-.ghost{position:absolute;right:var(--gutter);top:calc(var(--u) * 9);font:400 clamp(120px,15vw,240px)/1 var(--f-display);font-feature-settings:"onum" 1;
-  color:rgba(9,23,61,.035);pointer-events:none;transform:translateY(calc(var(--gp,0) * -60px));letter-spacing:-.04em}
 .sec{padding-block:calc(var(--u) * 16) calc(var(--u) * 14);position:relative}
 .grid12{display:grid;grid-template-columns:repeat(12,minmax(0,1fr));column-gap:24px;row-gap:calc(var(--u) * 5);align-items:start}
 .span-all{grid-column:1 / -1} .col-a{grid-column:1 / span 6} .col-b{grid-column:8 / -1}
@@ -337,11 +339,7 @@ table.dt tbody tr:hover td{background:rgba(230,212,167,.24);transition-duration:
 
 /* ---------------------------------------------------------------- Fig. 2: the Instrument (night stage) */
 .night{background:var(--navy-dark);color:var(--on-night);position:relative}
-.night::before{content:"";position:absolute;left:0;right:0;top:0;height:42vh;z-index:3;pointer-events:none;
-  background:linear-gradient(to bottom,var(--ivory) 0%,rgba(250,248,243,.72) 18%,rgba(9,23,61,0) 100%)}
-.inst-stage::after{content:"";position:absolute;left:0;right:0;bottom:0;height:40vh;z-index:3;pointer-events:none;
-  background:linear-gradient(to top,var(--ivory) 0%,rgba(250,248,243,.7) 20%,rgba(9,23,61,0) 100%)}
-.inst-stage{position:relative;height:720vh}
+.inst-stage{position:relative;height:430vh}
 .inst-pin{position:sticky;top:0;height:100vh;height:100svh;overflow:hidden;background:radial-gradient(90% 70% at 62% 58%, #10204c 0%, var(--navy-dark) 62%, #060f2a 100%)}
 .inst-pin::after{content:"";position:absolute;inset:0;pointer-events:none;opacity:.5;mix-blend-mode:overlay;
   background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='240' height='240'><filter id='g'><feTurbulence type='fractalNoise' baseFrequency='.95' numOctaves='3' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 1  0 0 0 0 1  0 0 0 0 1  0 0 0 .16 0'/></filter><rect width='100%' height='100%' filter='url(%23g)'/></svg>")}
@@ -364,7 +362,7 @@ table.dt tbody tr:hover td{background:rgba(230,212,167,.24);transition-duration:
 .now{display:none}
 @media (max-width:860px){
   .inst-copy{left:var(--gutter);right:var(--gutter);top:calc(96px + env(safe-area-inset-top,0px));max-width:none}
-  .inst-copy h2{font-size:26px} .inst-copy p{display:none}
+  .inst-copy h2{font-size:26px} .inst-copy p{display:none} .phase{display:none}
   .tags,.leaders{display:none}
   .now{display:block;position:absolute;left:var(--gutter);right:var(--gutter);bottom:calc(84px + env(safe-area-inset-bottom,0px));
     border-left:1.5px solid var(--gold-primary);padding-left:12px;min-height:48px;margin:0}
@@ -394,8 +392,6 @@ table.dt tbody tr:hover td{background:rgba(230,212,167,.24);transition-duration:
 }
 </style>
 
-<div class="spine" aria-hidden="true"></div>
-<div class="rail" aria-hidden="true"><span class="rail-copy" id="railCopy">Company · Cover</span><span class="rail-index" id="railIndex">i</span></div>
 
 <header class="bar" id="bar">
   <div class="bar-row">
@@ -415,6 +411,8 @@ table.dt tbody tr:hover td{background:rgba(230,212,167,.24);transition-duration:
   <div class="dateline" aria-hidden="true"><div><span>Company · GSSC-WEB-2026 · Edition I</span><span>Iloilo Business Park · Mandurriao</span><span>Iloilo City · Philippines</span></div></div>
   <div class="mast-rule" aria-hidden="true"></div>
 </header>
+
+<aside class="guide" id="guide" aria-label="Reading guide"><div class="g-row"><span id="gSec">Company · Cover</span><span class="g-fol" id="gFol">01 / 08</span></div><div class="g-bar"><i></i></div><a class="g-hint" id="gHint" href="#statement">Scroll to begin</a></aside>
 
 <nav class="sheet" id="sheet" aria-label="Index">
   <button class="btn sheet-close" type="button" id="sheetClose">Close</button>
@@ -439,25 +437,25 @@ table.dt tbody tr:hover td{background:rgba(230,212,167,.24);transition-duration:
     </div>
   </section>
 
-  <section class="field-stage" id="field" aria-label="Figure 1, the field: gold wax under glass that gathers toward your cursor">
+  <section class="field-stage" id="field" data-rail="Fig. 1 · The field" aria-label="Figure 1, the field: gold wax under glass that gathers toward your cursor">
     <div class="field-pin">
       <div class="panel" id="panel">
         <canvas id="fieldCanvas" aria-hidden="true"></canvas>
         <img class="seat" src="{{SEAL}}" alt="">
+        <div class="panel-edge"></div>
       </div>
-      <p class="panel-label" id="panelLabel" aria-hidden="true"><span>Fig. 1 · The field</span><span>Move through it</span></p>
+      <p class="panel-label" id="panelLabel" aria-hidden="true"><span>Fig. 1 · The field</span></p>
       <div class="field-cap wrap"><p class="figcaption"><b>Fig. 1</b><i>Gold wax under glass, lit from below. It gathers toward your hand, lets go slowly, and closes on the seal.</i></p></div>
     </div>
   </section>
 
-  <section class="statement wrap" data-rail="Company · Statement" data-index="i" aria-label="Statement">
+  <section class="statement wrap" id="statement" data-rail="Company · Statement" data-index="i" aria-label="Statement">
     <p class="kicker" data-rise>The position</p>
     <p class="ink" id="ink">We do not supply a part of the programme. We answer for the whole of it, from the first scope conversation to the signed turnover.</p>
     <p class="statement-by" data-rise><span>Duke Y. Demayo</span>President · GSSC Integrated Corporation</p>
   </section>
 
   <section class="sec wrap" id="capabilities" data-rail="I · Capabilities" data-index="I">
-    <span class="ghost" aria-hidden="true">I</span>
     <div class="chs">
       <div class="chs-stamp"><span class="chs-numeral">I</span><span class="chs-dash">—</span><span class="chs-cat" data-rise>Capabilities</span></div>
       <h2 class="chs-title" data-rise>Six disciplines under one accountable programme.</h2>
@@ -508,7 +506,6 @@ table.dt tbody tr:hover td{background:rgba(230,212,167,.24);transition-duration:
   </section>
 
   <section class="sec wrap" id="engagement" data-rail="II · Engagement" data-index="II">
-    <span class="ghost" aria-hidden="true">II</span>
     <div class="chs">
       <div class="chs-stamp"><span class="chs-numeral">II</span><span class="chs-dash">—</span><span class="chs-cat" data-rise>Engagement</span></div>
       <h2 class="chs-title" data-rise>From requirement to turnover, one controlled path.</h2>
@@ -525,7 +522,6 @@ table.dt tbody tr:hover td{background:rgba(230,212,167,.24);transition-duration:
   </section>
 
   <section class="sec wrap" id="economics" data-rail="III · Economics" data-index="III">
-    <span class="ghost" aria-hidden="true">III</span>
     <div class="chs">
       <div class="chs-stamp"><span class="chs-numeral">III</span><span class="chs-dash">—</span><span class="chs-cat" data-rise>Economics</span></div>
       <h2 class="chs-title" data-rise>What coordinating it yourself costs.</h2>
@@ -560,7 +556,6 @@ table.dt tbody tr:hover td{background:rgba(230,212,167,.24);transition-duration:
   </section>
 
   <section class="sec wrap" id="verification" data-rail="IV · Verification" data-index="IV">
-    <span class="ghost" aria-hidden="true">IV</span>
     <div class="chs">
       <div class="chs-stamp"><span class="chs-numeral">IV</span><span class="chs-dash">—</span><span class="chs-cat" data-rise>Verification</span></div>
       <h2 class="chs-title" data-rise>Registered, documented, accountable.</h2>
@@ -867,7 +862,7 @@ function buildInstrument(){
     x.fillStyle = '#808080'; x.fillRect(0, 0, 256, 256);
     for (let i = 0; i < 1400; i++) { const v = 110 + Math.random() * 40 | 0; x.fillStyle = `rgba(${v},${v},${v},.35)`; x.fillRect(Math.random() * 256, Math.random() * 256, 30 + Math.random() * 90, 1); }
     const t = new T.CanvasTexture(c); t.wrapS = t.wrapT = T.RepeatWrapping; t.repeat.set(3, 1); return t; })();
-  const phys = o => new T.MeshPhysicalMaterial(Object.assign({roughnessMap: grain, bumpMap: grain, bumpScale: .0025, envMapIntensity: .75}, o));
+  const phys = o => { delete o.clearcoat; delete o.clearcoatRoughness; return new T.MeshStandardMaterial(Object.assign({roughnessMap: grain, bumpMap: grain, bumpScale: .0025, envMapIntensity: .75}, o)); };
   const M = {
     navyMetal: phys({color: 0x1a2c61, metalness: .62, roughness: .5, clearcoat: .2, clearcoatRoughness: .45}),
     gold: phys({color: 0xc9a553, metalness: .95, roughness: .44}),
@@ -879,11 +874,11 @@ function buildInstrument(){
   const parts = [];
   const add = (obj, radius) => { const p = new T.Group(); p.add(obj); group.add(p); parts.push({g: p, radius}); return p; };
   { const g = new T.Group();
-    g.add(new T.Mesh(new T.TorusGeometry(3.6, .11, 24, 240), M.navyMetal));
+    g.add(new T.Mesh(new T.TorusGeometry(3.6, .11, 18, 160), M.navyMetal));
     // the dial: a guilloché field (engine-turned waves), engraved into the navy
-    const gc = document.createElement('canvas'); gc.width = gc.height = 1024; const gx = gc.getContext('2d');
-    gx.fillStyle = '#1b2d62'; gx.fillRect(0, 0, 1024, 1024); gx.translate(512, 512);
-    for (let r = 30; r < 512; r += 5.5) { gx.beginPath();
+    const gc = document.createElement('canvas'); gc.width = gc.height = 768; const gx = gc.getContext('2d');
+    gx.fillStyle = '#1b2d62'; gx.fillRect(0, 0, 1024, 1024); gx.translate(384, 384);
+    for (let r = 22; r < 384; r += 4.2) { gx.beginPath();
       for (let a = 0; a <= Math.PI * 2 + .01; a += .01) { const rr = r + Math.sin(a * 24 + r * .06) * 3.2; gx.lineTo(Math.cos(a) * rr, Math.sin(a) * rr); }
       gx.strokeStyle = `rgba(${150 + (r % 3) * 20},${170 + (r % 3) * 15},230,.16)`; gx.lineWidth = 1.1; gx.stroke(); }
     const gtex = new T.CanvasTexture(gc); gtex.anisotropy = renderer.capabilities.getMaxAnisotropy();
@@ -897,21 +892,24 @@ function buildInstrument(){
     sh.position.z = -.3; g.add(sh);
     add(g, 3.72); }
   { const g = new T.Group(), t1 = new T.BoxGeometry(.024, .17, .04), t2 = new T.BoxGeometry(.034, .32, .05);
-    for (let i = 0; i < 120; i++) { const L = i % 10 === 0, m = new T.Mesh(L ? t2 : t1, L ? M.gold : M.ivory);
-      const a = i / 120 * Math.PI * 2, r = L ? 3.2 : 3.26; m.position.set(Math.cos(a) * r, Math.sin(a) * r, 0); m.rotation.z = a - Math.PI / 2; g.add(m); }
-    g.add(new T.Mesh(new T.TorusGeometry(3.06, .014, 8, 220), M.goldSatin)); add(g, 3.38); }
-  { const g = new T.Group();
+    // 120 ticks as two instanced draws instead of 120 meshes
+    const im1 = new T.InstancedMesh(t1, M.ivory, 108), im2 = new T.InstancedMesh(t2, M.gold, 12), o = new T.Object3D(); let n1 = 0, n2 = 0;
+    for (let i = 0; i < 120; i++) { const L = i % 10 === 0, a = i / 120 * Math.PI * 2, r = L ? 3.2 : 3.26;
+      o.position.set(Math.cos(a) * r, Math.sin(a) * r, 0); o.rotation.set(0, 0, a - Math.PI / 2); o.updateMatrix();
+      L ? im2.setMatrixAt(n2++, o.matrix) : im1.setMatrixAt(n1++, o.matrix); }
+    g.add(im1, im2);
+    g.add(new T.Mesh(new T.TorusGeometry(3.06, .014, 6, 140), M.goldSatin)); add(g, 3.38); }
+  { const shapes = [];   // eight plates, one geometry, one draw
     for (let i = 0; i < 8; i++) { const s = new T.Shape(), a0 = i * Math.PI / 4 + .03, a1 = (i + 1) * Math.PI / 4 - .03;
-      s.absarc(0, 0, 2.94, a0, a1, false); s.absarc(0, 0, 2.54, a1, a0, true);
-      g.add(new T.Mesh(new T.ExtrudeGeometry(s, {depth: .08, bevelEnabled: true, bevelThickness: .02, bevelSize: .02, bevelSegments: 3, curveSegments: 24}), M.enamel)); }
-    add(g, 2.98); }
-  add(new T.Mesh(new T.TorusGeometry(2.38, .05, 20, 220), M.gold), 2.43);
-  add(new T.Mesh(new T.TorusGeometry(2.0, .07, 20, 200), M.navyMetal), 2.07);
-  { const g = new T.Group();
-    for (let i = 0; i < 16; i++) { const L = i % 2 === 0, len = L ? 1.5 : 1.12;
-      const m = new T.Mesh(new T.BoxGeometry(len, L ? .034 : .02, .034), L ? M.goldSatin : M.ivory);
-      const a = i / 16 * Math.PI * 2 + Math.PI / 16, r = .42 + len / 2; m.position.set(Math.cos(a) * r, Math.sin(a) * r, 0); m.rotation.z = a; g.add(m); }
-    add(g, 1.94); }
+      s.absarc(0, 0, 2.94, a0, a1, false); s.absarc(0, 0, 2.54, a1, a0, true); shapes.push(s); }
+    add(new T.Mesh(new T.ExtrudeGeometry(shapes, {depth: .08, bevelEnabled: true, bevelThickness: .02, bevelSize: .02, bevelSegments: 2, curveSegments: 16}), M.enamel), 2.98); }
+  add(new T.Mesh(new T.TorusGeometry(2.38, .05, 14, 150), M.gold), 2.43);
+  add(new T.Mesh(new T.TorusGeometry(2.0, .07, 14, 140), M.navyMetal), 2.07);
+  { const g = new T.Group(), o = new T.Object3D();
+    const iL = new T.InstancedMesh(new T.BoxGeometry(1.5, .034, .034), M.goldSatin, 8), iS = new T.InstancedMesh(new T.BoxGeometry(1.12, .02, .034), M.ivory, 8);
+    for (let i = 0; i < 16; i++) { const L = i % 2 === 0, len = L ? 1.5 : 1.12, a = i / 16 * Math.PI * 2 + Math.PI / 16, r = .42 + len / 2;
+      o.position.set(Math.cos(a) * r, Math.sin(a) * r, 0); o.rotation.set(0, 0, a); o.updateMatrix(); (L ? iL : iS).setMatrixAt(i >> 1, o.matrix); }
+    g.add(iL, iS); add(g, 1.94); }
   { const pos = [], col = [], cL = new T.Color(0xf6e2a8), cD = new T.Color(0xb68a36), H = .46, V = .36;
     for (let i = 0; i < 8; i++) {
       const a = i * Math.PI / 4 + Math.PI / 2, R = i % 2 ? 1.42 : 2.16;
@@ -932,7 +930,7 @@ function buildInstrument(){
 function sizeInst(){
   if (!three) return;
   const w = iv.clientWidth, h = iv.clientHeight;
-  three.renderer.setPixelRatio(Math.min(Math.max(devicePixelRatio || 1, 1) * 1.5, 2.5)); three.renderer.setSize(w, h, false);
+  three.pr = three.pr || Math.min(devicePixelRatio || 1, 1.5); three.renderer.setPixelRatio(three.pr); three.renderer.setSize(w, h, false);
   three.cam.aspect = w / h; three.cam.updateProjectionMatrix(); svgL.setAttribute('viewBox', `0 0 ${w} ${h}`);
 }
 const iptr = {x: 0, y: 0};
@@ -941,24 +939,21 @@ iv.addEventListener('pointerleave', () => { iptr.x = 0; iptr.y = 0; });
 function drawInstrument(t, q, dt){
   const {renderer, scene, cam, group, parts, leaders, tags} = three;
   const w = iv.clientWidth, h = iv.clientHeight, narrow = vw <= 860, N = parts.length;
-  /* PHASES. Scroll only chooses the phase; each part then travels on its own clock with the soft
-     close, and parts obey the order an exploded drawing needs: they OPEN from the top of the stack
-     down (the star lifts first, so nothing passes through anything) and CLOSE from the bottom up.
-     A fast flick therefore queues the phases instead of skipping them. */
-  const steps = N + 3;                                   // tilt · lift the star..ii · hold · close
-  const step = Math.min(steps - 1, Math.floor(q * steps));
-  const closing = step >= N + 1;
+  /* PHASES, owned by scroll. Every part has its own slice of the pin: the tilt, then each part from
+     the star down, a hold with everything open, then closing from the case up and a final settle.
+     The state follows the scroll position through a short damper, so it is always exactly where the
+     reader is, finishes inside the pin, and rewinds perfectly. Opening top-down and closing bottom-up
+     means no part ever passes through another. */
   const S = three.state || (three.state = {tilt: 0, v: parts.map(() => 0)});
-  const k = 1 - Math.exp(-dt / 360);
-  S.tilt += ((step >= 1 && !closing ? 1 : closing ? .3 : 0) - S.tilt) * k;
-  const lifted = closing ? 0 : clamp(step - 1, 0, N - 1);   // parts up, counted from the top; the case never lifts
-  for (let i = N - 1; i >= 1; i--) {
+  const k = 1 - Math.exp(-dt / 120);
+  const tiltT = ease(clamp(q / .07)) * (1 - .7 * clamp((q - .9) / .07));
+  S.tilt += (tiltT - S.tilt) * k;
+  for (let i = 1; i < N; i++) {
     const fromTop = N - 1 - i;
-    let goal = S.tilt > .7 && fromTop < lifted ? 1 : 0;
-    if (goal && i < N - 1 && S.v[i + 1] < .6) goal = S.v[i];        // wait for the part above to clear
-    if (!goal && i > 1 && S.v[i - 1] > .4) goal = S.v[i];           // wait for the part below to seat
-    S.v[i] += (goal - S.v[i]) * k;
+    const opn = clamp((q - (.07 + fromTop * .085)) / .085), cls = clamp((q - (.66 + (i - 1) * .04)) / .06);
+    S.v[i] += (opn * (1 - cls) - S.v[i]) * k;
   }
+  const closing = q >= .66, lifted = S.v.filter(v => v > .5).length;
   const tilt = ease(S.tilt);
   three.tilt.x += (iptr.y * .16 - three.tilt.x) * .05; three.tilt.y += (iptr.x * .24 - three.tilt.y) * .05;
   group.rotation.x = -1.04 * tilt + three.tilt.x; group.rotation.y = three.tilt.y;
@@ -974,6 +969,8 @@ function drawInstrument(t, q, dt){
   group.position.y = -stack * .58 * Math.sin(1.04 * tilt) * sc - (narrow ? .9 : .35) * tilt;
   cam.position.z = lerp(15, 19, open); cam.lookAt(0, 0, 0);
   renderer.render(scene, cam);
+  three.slow = dt > 26 ? (three.slow || 0) + 1 : Math.max(0, (three.slow || 0) - 1);
+  if (three.slow > 24 && three.pr > 1) { three.pr = 1; renderer.setPixelRatio(1); sizeInst(); three.slow = 0; }
   let cur = -1; for (let i = N - 1; i >= 1; i--) if (E[i] > .5) cur = i;
   three.ticks.forEach((el, i) => el.classList.toggle('on', i === 0 ? tilt > .5 : E[N - i] > .5));
   three.phaseLabel.textContent = closing ? (open > .02 ? 'Closing' : 'Closed') : lifted && cur > 0 ? `Open · ${PARTS[cur][1]}` : tilt > .5 ? 'Tilted' : 'Closed';
@@ -1079,7 +1076,6 @@ model();
 const clockEl = document.querySelector('.dateline div span:nth-child(2)');
 const tick = () => { clockEl.textContent = 'Iloilo City · ' + new Intl.DateTimeFormat('en-PH', {timeZone: 'Asia/Manila', hour: '2-digit', minute: '2-digit', hour12: false}).format(new Date()) + ' PHT'; };
 tick(); setInterval(tick, 15000);
-const ghosts = [...document.querySelectorAll('.ghost')];
 
 const tl = document.getElementById('tl');
 (() => {
@@ -1096,59 +1092,82 @@ const stages = [...document.querySelectorAll('.roadmap .stage')];
 
 /* ------------------------------------------------ the loop: positions are measured from the page */
 const topEl = document.getElementById('top'), roadmap = document.getElementById('roadmap');
-const railCopy = document.getElementById('railCopy'), railIndex = document.getElementById('railIndex');
 const railSecs = [...document.querySelectorAll('[data-rail]')], nightSecs = [...document.querySelectorAll('.night')];
 let last = performance.now(), H1 = 0, H2 = 0;
+// one frame = read every position first, then write; never interleaved, so the browser lays out once
+const secs = railSecs;
+document.querySelectorAll('.sec').forEach(sec => { const l = document.createElement('i'); l.className = 'sec-line'; l.setAttribute('aria-hidden', 'true'); sec.prepend(l); });
+const secLines = [...document.querySelectorAll('.sec-line')];
+const guide = {sec: document.getElementById('gSec'), fol: document.getElementById('gFol'), hint: document.getElementById('gHint'), el: document.getElementById('guide'), last: ''};
+const shortName = el => el.dataset.rail.split('·').pop().trim();
 function frame(t){
   const dt = Math.min(64, t - last); last = t;
   if (lenis) lenis.raf(t);
-  // the header follows scroll through a damped spring: the wordmark leads, the dateline and the nav
-  // settle a beat later, so the fold reads as one motion with a soft close
-  const scrolled = Math.max(0, -topEl.getBoundingClientRect().top), target = clamp(scrolled / 180);
+  // ---- read
+  const topR = topEl.getBoundingClientRect(), fr = fieldStage.getBoundingClientRect(), ir = instStage.getBoundingClientRect();
+  const rr = roadmap.getBoundingClientRect(), inkR = ink.getBoundingClientRect(), flowR = flowFig.getBoundingClientRect();
+  const econR = econEl.getBoundingClientRect(), tlR = tl.getBoundingClientRect();
+  const riseT = rises.map(el => el.getBoundingClientRect().top);
+  const lineR = secLines.map(l => l.parentElement.getBoundingClientRect());
+  const secR = secs.map(el => el.getBoundingClientRect());
+  const nightR = nightSecs.map(el => el.getBoundingClientRect());
+  // ---- header: a damped spring off the scroll; the wordmark leads, the dateline and nav settle a beat later
+  const target = clamp(Math.max(0, -topR.top) / 180);
   H1 += (target - H1) * (1 - Math.exp(-dt / 110)); H2 += (target - H2) * (1 - Math.exp(-dt / 260));
   root.style.setProperty('--h', ease(H1).toFixed(4)); root.style.setProperty('--h2', ease(H2).toFixed(4));
-  root.style.setProperty('--hv', clamp(Math.abs(target - H1) * 5).toFixed(3));   // a touch of motion blur while the wordmark travels
-  const fr = fieldStage.getBoundingClientRect(), span = fieldStage.offsetHeight - vh;
-  const open = clamp((-fr.top + vh * .6) / vh), conv = clamp((-fr.top - vh * .45) / (span - vh * .45));
+  root.style.setProperty('--hv', clamp(Math.abs(target - H1) * 5).toFixed(3));
+  // ---- Fig. 1: opens within the first screen of the pin, has gathered by 80% of it, then holds complete
+  const span = fieldStage.offsetHeight - vh;
+  const open = clamp((-fr.top + vh * .6) / vh), conv = clamp((-fr.top - vh * .3) / ((span - vh * .3) * .8));
   const eo = ease(open), inset = Math.min(104, Math.max(20, vw * .06));
   for (const el of [panel, panelLabel]) { el.style.setProperty('--it', lerp(15, 0, eo) + '%'); el.style.setProperty('--is', lerp(inset, 0, eo) + 'px'); }
-  panel.style.setProperty('--feather', (1 - eo).toFixed(3));
-  panel.style.setProperty('--leave', ease(clamp((vh - fr.bottom) / (vh * .55))).toFixed(3));
-  panel.style.setProperty('--ib', lerp(11, 0, eo) + '%');
+  panel.style.setProperty('--ib', lerp(11, 0, eo) + '%'); panel.style.setProperty('--feather', (1 - eo).toFixed(3));
   fieldStage.style.setProperty('--open', eo.toFixed(4));
-  panel.style.setProperty('--st', ease(clamp((conv - .7) / .3)).toFixed(4));
+  panel.style.setProperty('--st', ease(clamp((conv - .65) / .35)).toFixed(4));
   if (fr.bottom > -40 && fr.top < vh + 40) drawField(t, conv, dt);
-  const ir = instStage.getBoundingClientRect(), inInst = ir.top < vh * .5 && ir.bottom > vh * .5;
-  if (lenis) { lenis.options.lerp = inInst ? .05 : .085; lenis.options.wheelMultiplier = inInst ? .6 : .9; }
-  if (three && ir.bottom > 0 && ir.top < vh) drawInstrument(t, clamp(-ir.top / (instStage.offsetHeight - vh)), dt);
-  const rr = roadmap.getBoundingClientRect(), rm = ease(clamp((vh * .85 - rr.top) / (vh * .6)));
+  // ---- Fig. 2
+  const iq = clamp(-ir.top / (instStage.offsetHeight - vh));
+  if (three && ir.bottom > 0 && ir.top < vh) drawInstrument(t, iq, dt);
+  // ---- paper sections
+  const rm = ease(clamp((vh * .85 - rr.top) / (vh * .6)));
   roadmap.style.setProperty('--rm', rm.toFixed(4)); stages.forEach((st, i) => st.classList.toggle('lit', rm >= i / stages.length + .02));
-  for (const el of rises) { const r = el.getBoundingClientRect(); if (r.top > vh * 1.2 || r.bottom < -vh * .2) continue;
-    el.style.setProperty('--p', ease(clamp((vh * .96 - r.top) / (vh * .34))).toFixed(3)); }
-  { const r = ink.getBoundingClientRect(), pr = clamp((vh * .82 - r.top) / (r.height + vh * .3)), n = inkWords.length;
+  rises.forEach((el, i) => { if (riseT[i] > vh * 1.2 || riseT[i] < -vh) return; el.style.setProperty('--p', ease(clamp((vh * .96 - riseT[i]) / (vh * .34))).toFixed(3)); });
+  { const pr = clamp((vh * .82 - inkR.top) / (inkR.height + vh * .3)), n = inkWords.length;
     inkWords.forEach((w, i) => w.style.setProperty('--wp', clamp(pr * n * 1.08 - i).toFixed(2))); }
-  if (flowGeo) { const r = flowFig.getBoundingClientRect(), target = clamp((vh * .78 - r.top) / (r.height + vh * .15));
-    flowGeo.p += (target - flowGeo.p) * (1 - Math.exp(-dt / 180));
+  secLines.forEach((l, i) => { const r = lineR[i]; l.style.setProperty('--sp', clamp((vh * .7 - r.top) / r.height).toFixed(3)); });
+  if (flowGeo) { const tg = clamp((vh * .78 - flowR.top) / (flowR.height + vh * .15));
+    flowGeo.p += (tg - flowGeo.p) * (1 - Math.exp(-dt / 180));
     const L = flowGeo.len * flowGeo.p, pt = flowGeo.path.getPointAtLength(L);
     flowGeo.path.setAttribute('stroke-dashoffset', (flowGeo.len - L).toFixed(1));
     for (const c of [flowGeo.tok, flowGeo.halo]) { c.setAttribute('cx', pt.x.toFixed(1)); c.setAttribute('cy', pt.y.toFixed(1)); }
     flowGeo.halo.setAttribute('r', (8 + 3 * Math.sin(t * .003)).toFixed(2));
     flowGeo.nodes.forEach((n, i) => n.classList.toggle('on', L >= flowGeo.at[i] - 2)); }
-  { const r = econEl.getBoundingClientRect(), g = ease(clamp((vh * .85 - r.top) / (vh * .5)));
+  { const g = ease(clamp((vh * .85 - econR.top) / (vh * .5)));
     barsEl.style.setProperty('--grow', g.toFixed(3));
     const k = 1 - Math.exp(-dt / 260);
     econ.sD += (econ.tD * g - econ.sD) * k; econ.sC += (econ.tC * g - econ.sC) * k;
     hero.D.textContent = php(econ.sD); hero.C.textContent = php(econ.sC);
     hero.S.textContent = php(Math.max(0, econ.sD - econ.sC)) + ' · ' + (econ.share * 100 * g).toFixed(1) + '%'; }
-  for (const gh of ghosts) { const r = gh.parentElement.getBoundingClientRect(); gh.style.setProperty('--gp', clamp((vh - r.top) / (r.height + vh)).toFixed(3)); }
-  { const r = tl.getBoundingClientRect(), d = ease(clamp((vh * .82 - r.top) / (vh * .55))); tl.style.setProperty('--d', d.toFixed(4));
+  { const d = ease(clamp((vh * .82 - tlR.top) / (vh * .55))); tl.style.setProperty('--d', d.toFixed(4));
     tl.querySelectorAll('.tl-ev').forEach(e => e.classList.toggle('on', d >= (+e.dataset.day - 1) / 29)); }
-  const probe = 40;
-  const onField = fr.top <= probe && fr.bottom > probe && open > .55;
+  // ---- tone
+  const probe = 40, onField = fr.top <= probe && fr.bottom > probe && open > .55;
   body.classList.toggle('on-field', onField);
-  body.classList.toggle('on-night', onField || nightSecs.some(el => { const r = el.getBoundingClientRect(); return r.top <= probe && r.bottom > probe; }));
-  const cur = railSecs.find(el => { const r = el.getBoundingClientRect(); return r.top <= vh * .5 && r.bottom > vh * .5; });
-  if (cur && railCopy.textContent !== cur.dataset.rail) { railCopy.textContent = cur.dataset.rail; railIndex.textContent = cur.dataset.index; }
+  body.classList.toggle('on-night', onField || nightR.some(r => r.top <= probe && r.bottom > probe));
+  // ---- the guide: where you are, how far through it, what comes next
+  let ci = secR.findIndex(r => r.top <= vh * .45 && r.bottom > vh * .45); if (ci < 0) ci = secR[0].top > 0 ? 0 : secs.length - 1;
+  const cr = secR[ci], cp = clamp((vh * .45 - cr.top) / cr.height);
+  guide.el.style.setProperty('--gp', cp.toFixed(3));
+  const nx = secs[ci + 1];
+  let hint, href = nx ? '#' + nx.id : '#top';
+  if (secs[ci] === fieldStage && conv < .98) hint = 'Keep scrolling · the field gathers';
+  else if (secs[ci] === instStage && iq < .97) hint = `Keep scrolling · part ${Math.max(1, Math.min(7, Math.ceil(iq * 7.4)))} of 7`;
+  else if (ci === 0 && cp < .25) hint = 'Scroll to begin';
+  else hint = nx ? 'Next · ' + shortName(nx) : 'Back to the top';
+  const key = ci + hint;
+  if (key !== guide.last) { guide.last = key; guide.sec.textContent = secs[ci].dataset.rail;
+    guide.fol.textContent = String(ci + 1).padStart(2, '0') + ' / ' + String(secs.length).padStart(2, '0');
+    guide.hint.textContent = hint; guide.hint.setAttribute('href', href); }
   if (!REDUCE) requestAnimationFrame(frame);
 }
 addEventListener('resize', () => { vw = innerWidth; vh = innerHeight; sizeField(); sizeInst(); layoutFlow(); });
@@ -1156,7 +1175,7 @@ three = buildInstrument(); sizeInst();
 if (REDUCE) {
   panel.style.setProperty('--it', '0%'); panel.style.setProperty('--ib', '0%'); panel.style.setProperty('--is', '0px');
   drawField(0, 0, 16);
-  if (three) { three.state = {tilt: 1, v: three.parts.map(() => 1)}; drawInstrument(0, .6, 16); }
+  if (three) { three.state = {tilt: 1, v: three.parts.map(() => 1)}; drawInstrument(0, .6, 1e4); }
 } else requestAnimationFrame(frame);
 })();
 </script>
