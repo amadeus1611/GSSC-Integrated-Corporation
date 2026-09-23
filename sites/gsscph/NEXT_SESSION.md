@@ -66,6 +66,68 @@ frame rate. None of it may come from real lag or low resolution.
   - Keep Fig. 3 unpinned on touch devices.
   - Confirm no CSS `scroll-snap` is present.
 
+## 2A. Economics section (Section III): stop the jitter, make it one exhibit
+
+- **The jitter:** the counting hero figures (`#hD`, `#hC`, `#hS`) reflow
+  their labels as digit widths change.
+- **Fix the layout:**
+  - Each figure gets its own fixed-width cell with
+    `font-variant-numeric: tabular-nums lining-nums` and `min-width` sized
+    for the largest value (e.g. `₱9,999,999`).
+  - Labels move to their own row beneath, separated by a hairline, so they
+    never share a line box with a changing number.
+  - Right-align the digits so growth happens to the left. Split the share
+    (`· 3.6%`) into its own fixed cell.
+- **Fix the counting:** round to the nearest ₱100 while counting, landing
+  on the exact value only at rest, so digits don't churn every frame.
+  Update the text at the film cadence (24 fps), not every frame.
+- **Make it one unit, as its own instance** (a sibling of the Fig. 3
+  plate, not a copy):
+  - Set the whole block (controls, figures, bars, note, sources) on its
+    own "ledger" plate.
+  - Where Fig. 3 has a strong top rule and a header strip, this plate gets
+    a double rule (as on a statement of account), a header strip reading
+    "Exhibit III · The cost of coordinating it yourself" with the three
+    inputs summarised live (₱5M · 6 disciplines · 4 months), and a footer
+    strip carrying the result line and the sources toggle.
+  - The controls sit in a recessed ivory-deep column inside the plate, and
+    the results sit on paper-white, like a worksheet beside its ledger.
+  - A fine vertical rule separates them and draws on entry, scroll-linked,
+    like the Fig. 3 connectors.
+  - Consider a stamped "Illustrative" mark in the corner, set in tracked
+    caps inside a 1px frame, rotated −3°.
+
+## 2B. Location: Festive Walk, a scroll-linked panorama
+
+- **Source a real, licensed, high-resolution photograph** of Festive Walk
+  (Iloilo Business Park, Mandurriao), wide and thin (a panorama or a crop
+  of about 4:1). The asset must be rights-clear before it is used:
+  - candidates are Megaworld's press kit (ask for permission), a
+    commissioned shoot, or Wikimedia Commons with a compatible licence,
+    attributed;
+  - never a random web image;
+  - record the source and licence in the repo.
+- **Treatment, in keeping with the site:** duotone into navy and gold
+  (gold highlights, navy shadows) at low contrast, with the film grain and
+  defects from §1. It should read as an archival still, not a stock photo.
+  Kernel 07 discourages generic photography; this is a specific place,
+  treated editorially, so it qualifies.
+- **Scroll-linked ideas (pick one; build the first as a prototype):**
+  1. **Slit reveal:** a thin horizontal band (about 18vh) in which the
+     panorama pans slowly sideways as you scroll, like a camera tracking
+     along the building. A gold hairline pin with a label
+     ("Regus · 3F · Festive Walk Mall") slides in and settles on the
+     office's position.
+  2. **Aperture:** the band opens vertically from a hairline to the full
+     strip, then the image pans and the address types on in tracked caps.
+  3. **Map to photo:** a line-drawn site plan of Iloilo Business Park
+     draws itself, then cross-dissolves into the photograph at the pinned
+     office point.
+- **Details:** placed in Section IV (Verification), beside the principal
+  office text. Coordinates and a "Get directions" link go below as plain
+  text links. The image is lazy-loaded, served as AVIF/WebP with a still
+  poster fallback, and shown static under reduced motion.
+
 ## 3. Then continue the build plan
 
 - Stage 3 (full home page) per `PLAN.md` §7.
