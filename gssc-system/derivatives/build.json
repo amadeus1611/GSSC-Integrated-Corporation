@@ -10,7 +10,6 @@
      "second_signatory": "michael_c_silla"},
     {"src": "board-resolution/GSSC-BOARDRES-TEMPLATE-v2.src.html", "out": "board-resolution/GSSC-BOARDRES-TEMPLATE-v2.html",
      "second_signatory": "michael_c_silla"},
-    {"src": "notarial-instrument/GSSC-NOTARIAL-ACK-TEMPLATE-v2.src.html", "out": "notarial-instrument/GSSC-NOTARIAL-ACK-TEMPLATE-v2.html",
-     "expected_audit_failures": {"governanceaudit": "requires a GSSC signoff; a notary's page is signed by the notary. Exempt from kernel 2.17.0 (02_governance.signatory_policy.no_gssc_signoff_doc_types); release/cut_release_2_17_0.py removes this line."}}
+    {"src": "notarial-instrument/GSSC-NOTARIAL-ACK-TEMPLATE-v2.src.html", "out": "notarial-instrument/GSSC-NOTARIAL-ACK-TEMPLATE-v2.html"}
   ]
 }

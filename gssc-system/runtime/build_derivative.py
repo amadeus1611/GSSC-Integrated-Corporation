@@ -40,7 +40,7 @@ import re
 import sys
 
 HERE = pathlib.Path(__file__).resolve().parent
-DEFAULT_PKG = HERE.parent / "package" / "GSSC_Master_Package_v2_16_1.json"
+DEFAULT_PKG = HERE.parent / "package" / "GSSC_Master_Package_v2_17_0.json"
 PRIMARY_SIGNATORY = "duke_y_demayo"
 STYLE_RE = re.compile(r"<style\b[^>]*>.*?</style>", re.S)
 

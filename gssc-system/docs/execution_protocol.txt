@@ -1,14 +1,14 @@
 GSSC QUOTATION RESEARCH AND EXECUTION PROTOCOL
-Version 2.1 | 25 August 2026
+Version 2.7 | 23 September 2026
 Owner: GSSC Integrated Corporation
 Classification: INTERNAL CONTROL DOCUMENT
-Status: AUTHORITATIVE CONTROL CANDIDATE — READY FOR MANAGEMENT ADOPTION
+Status: AUTHORITATIVE — ADOPTED 23 September 2026 (Duke Y. Demayo, President)
 
 ======================================================================
 00. MACHINE-READABLE CONTROL HEADER
 ======================================================================
 FILE_ROLE: RESEARCH_AND_EXECUTION_PROTOCOL
-PROTOCOL_VERSION: 2.0
+PROTOCOL_VERSION: 2.7
 EXECUTABLE_RUNTIME: GSSC_MASTER_PACKAGE.runtime (gssc_runtime, stdlib-only Python)
 OWNER: GSSC Integrated Corporation
 APPLIES_TO: GSSC PRE-QUOTATION RESEARCH AND QUOTATION CONVERSION
@@ -168,7 +168,9 @@ Manual execution of these checks remains acceptable where Python is unavailable.
   image payloads and must instead decode to their declared MIME type with a
   matching sha256_of_decoded_image.
 - Confirm every {{GSSC_ASSET:name}} token in the template resolves to an entry in
-  brand_assets, and that no brand_assets entry is orphaned.
+  brand_assets, and that no brand_assets entry is orphaned. An entry declaring
+  template_use false is a library asset (Module 03 logo_system): the template
+  must not place it, and it is not an orphan.
 - Record the SHA-256 fingerprints declared in manifest.integrity in the project
   record, and recompute them using manifest.integrity.hash_method.
 - Confirm the quotation source role: finished source-derived master, category
@@ -1353,9 +1355,11 @@ The client-facing closing signature uses the current authorized presentation:
 - The signatory name renders in the GSSC gold accent color.
 - The title line renders in a muted italic beneath the name.
 - The complete signatory block anchors to the bottom of the closing page.
-- The default client-facing signatory is the Chief Executive Officer named as the
-  current signatory in the kernel governance module, unless the specific
-  instrument requires a different verified signatory.
+- The default signatory is the President, per kernel 02_governance
+  signatory_policy: Duke Y. Demayo signs every instrument that needs one GSSC
+  signature. Where a second GSSC signature is needed, the second signatory is
+  chosen for that document and never assumed. Office-bound signatures stay
+  fixed, unless the specific instrument requires a different verified signatory.
 
 This treatment is a controlled typographic and color refinement inside the
 existing signature architecture. It does not move locked geometry, change page
@@ -1669,7 +1673,8 @@ FAILURE CONDITIONS:
 - An unresolved token remains in a client-facing file. HARD STOP.
 - An asset hash does not match its declared value. HARD STOP.
 - A brand_assets entry is orphaned (declared but never referenced). Report it;
-  it indicates the template and the asset repository have diverged.
+  it indicates the template and the asset repository have diverged. Library
+  assets (template_use false) are exempt and must stay unplaced.
 - The hydrated hash does not match the declared verification value. HARD STOP.
 
 STANDALONE RENDERING:
@@ -2520,9 +2525,29 @@ and not the other:
   5. Every signature block is governance-checked, not merely the first.
   6. No registered flex-row or container class is stale, so a registry entry
      that no longer matches the document is visible rather than quietly inert.
+     Judged against the master only: a derivative legitimately uses a subset.
 
 THE PRINCIPLE: a registry that can be extended incompletely will eventually be
 extended incompletely. Complexity is welcome where it buys a guarantee; what is
 not welcome is a declared table that nobody is forced to keep whole.
 
 Executable: gssc_runtime.py futureproof <package.json> --file <built.html>
+
+Version 2.7 -- 23 September 2026 (kernel 2.17.0, runtime 2.0)
+
+- ADOPTED by Duke Y. Demayo, President, 23 September 2026. Kernel 2.17.0 is the current production
+  release; 2.9.0 and the 2.16.1 review candidate are superseded.
+- Native logo pack: every governed logo is re-sourced from the Canva design
+  GSSC_Native_Logo-Pack (DAHLkhKRfrg) at source resolution. The stand-alone wordmark is
+  registered as a library asset (template_use false). Module 03 gains
+  logo_system. Sections 03 and 28C state the library-asset rule.
+- Section 24: the default signatory is the President (02_governance
+  signatory_policy); a second GSSC signatory is chosen per document.
+- Section 41: a notarial acknowledgment carries no GSSC signoff by doctrine and
+  is exempt from the signoff requirement; any signoff it carries is checked.
+- Section 43 check 6 judges registry staleness against the master only.
+- Runtime: CHS titles are read inside their own block at h2 or h3; the contents
+  block is found by class token. Both were defects found building the legal
+  derivatives.
+- The prose specification remains authoritative. Where prose and runtime
+  disagree, the prose governs and the runtime is the defect to be fixed.

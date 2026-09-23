@@ -112,16 +112,20 @@
   "brand_asset_registry": {
     "rule": "Every governed brand image is registered in the package brand_assets repository exactly once, single-encoded, with its decoded-image SHA-256, pixel dimensions and role. An asset that exists only inside a template payload is NOT registered and must be extracted.",
     "assets": {
-      "header": "Masthead wordmark. CSS variable --gssc-logo-header. 500x98 px.",
-      "seal": "Corporate seal. CSS variable --gssc-logo-seal. 196x200 px.",
-      "signature": "Signature lockup. CSS variable --gssc-logo-signature. 600x113 px.",
-      "watermark": "Page watermark, 581x600 px. Named in Execution Protocol Section 22 as locked chrome that must survive every conversion. Registered as a first-class asset in kernel 2.7.0; prior to that release it existed only inside the quotation payload and had no canonical source."
+      "header": "Header lockup (mark + wordmark, horizontal). CSS variable --gssc-logo-header. 1062 x 190 px. Placed by the quotation master.",
+      "seal": "Seal (compass-star mark in ring). CSS variable --gssc-logo-seal. 235 x 240 px. Placed by the quotation master.",
+      "signature": "Signature lockup (wordmark + Integrated Corporation). CSS variable --gssc-logo-signature. 1000 x 147 px. Placed by the quotation master.",
+      "watermark": "Stacked lockup (mark over wordmark). CSS variable --gssc-watermark. 1200 x 1491 px. Placed by the quotation master.",
+      "wordmark": "Wordmark alone. CSS variable --gssc-logo-wordmark. 1200 x 252 px. Library asset, not placed by the master."
     },
     "failure_modes": [
       "A governed brand image embedded in a template but absent from brand_assets",
       "The same asset stored more than once inside one package",
-      "An asset delivered without verifying its declared decoded-image hash"
-    ]
+      "An asset delivered without verifying its declared decoded-image hash",
+      "A logo variant redrawn, recoloured, re-typeset or cropped by hand instead of taken from the registered asset",
+      "A template_use asset left unplaced, or a library-only asset placed by the template"
+    ],
+    "library_asset_rule": "An asset with template_use false is registered for use outside the quotation master (derivatives, website, co-branded pages). The template must not place it; every asset with template_use true must be placed. Preflight enforces both."
   },
   "document_type_system": {
     "status": "hard_default for any derivative built on a GSSC master template",
@@ -477,5 +481,51 @@
         }
       }
     }
+  },
+  "logo_system": {
+    "status": "hard_default from kernel 2.17.0",
+    "source": {
+      "design": "GSSC_Native_Logo-Pack",
+      "design_id": "DAHLkhKRfrg",
+      "export": "PNG, transparent background, 2000 x 2000 px per page",
+      "adopted": "2026-09-23",
+      "adopted_by": "Duke Y. Demayo, President",
+      "note": "The native logo pack replaces the earlier processed rasters (1_processed.png, 3_processed.png, 5_processed.png and the watermark extracted from quotation master v1.7). The artwork is unchanged in design; it is re-exported at source resolution so every placement prints sharp."
+    },
+    "variants": {
+      "mark": {
+        "asset": "seal",
+        "canva_page": 1,
+        "use": "Seal, favicon, social avatar, any square slot."
+      },
+      "stacked_lockup": {
+        "asset": "watermark",
+        "canva_page": 2,
+        "use": "Page watermark, covers, square hero placements."
+      },
+      "wordmark": {
+        "asset": "wordmark",
+        "canva_page": 3,
+        "use": "Narrow or low-height placements where the mark would fall below legibility."
+      },
+      "horizontal_lockup": {
+        "asset": "header",
+        "canva_page": 4,
+        "use": "Masthead and running headers."
+      },
+      "full_name_lockup": {
+        "asset": "signature",
+        "canva_page": 5,
+        "use": "Signature lockup above every signatory name."
+      }
+    },
+    "rules": [
+      "Use the registered asset for its role. Never rebuild a logo from live type, SVG tracing or a screenshot.",
+      "Never recolour, stretch, rotate, outline or add effects. Scale proportionally only.",
+      "The master's render sizes are the minimums for print: header 38px tall, seal 24px, signature lockup 175px wide.",
+      "A new variant enters through the Canva pack and a kernel release, never as a one-off file in a document."
+    ],
+    "colour_parity": "Measured on the Canva export: the wordmark navy is #0d2463 (visual_system.colors.navy) and the bar behind 'Integrated' is #e6d4a7 (gold_light). The logo and the document palette are the same colours.",
+    "resolution_basis": "Target pixel size is about 5x the master's rendered CSS size; 300 dpi print needs about 3.1x."
   }
 }

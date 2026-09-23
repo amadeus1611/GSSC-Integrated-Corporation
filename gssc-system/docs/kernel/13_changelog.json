@@ -6,10 +6,34 @@
   "human_note": "Read last; never rewrite older entries.",
   "log": [
     {
+      "kernel_version": "2.17.0",
+      "release_date": "2026-09-23",
+      "release_status": "production",
+      "current_status": "current",
+      "adopted_by": "Duke Y. Demayo, President",
+      "adopted_on": "2026-09-23",
+      "supersedes": [
+        "2.16.1"
+      ],
+      "summary": "Final-form release. Native logo pack registered at source resolution, the President made the default signatory, and four runtime defects found while building the legal derivatives fixed. Adopted as the production release, superseding 2.9.0.",
+      "changes": [
+        "brand_assets: header, seal, signature and watermark re-sourced from the Canva native logo pack (DAHLkhKRfrg) and sized at about 5x their rendered size; wordmark registered as a fifth, library-only asset.",
+        "03_brand gains logo_system (variants, roles, rules, source) and brand_asset_registry.library_asset_rule.",
+        "02_governance gains signatory_policy: the President signs alone where one GSSC signature is needed; a second signatory is chosen per document; office-bound signatures stay fixed.",
+        "Execution protocol 2.7: Section 24 default signatory, library assets in Sections 03 and 28C, Section 43 check 6 master-only, adoption recorded.",
+        "Runtime 2.0: CHS titles read inside their own block (h2 or h3); tocgen matches the toc-block class token; futureproof registry staleness judged against the master only; governanceaudit exempts signatory_policy.no_gssc_signoff_doc_types; preflight enforces the library-asset rule."
+      ],
+      "known_gaps": [
+        "Floats remain unmodelled by the box model.",
+        "Execution protocol prose for Sections 44-46 (gridbalance, a11yaudit, wiringaudit) is referenced by the runtime but not yet written into the protocol text.",
+        "Still not a rendered screenshot inside the package runtime; the repo's render_check.py and Chrome/Edge print preview remain the final gate before client release."
+      ]
+    },
+    {
       "kernel_version": "2.16.1",
       "release_date": "2026-09-22",
       "release_status": "review_candidate",
-      "current_status": "review_candidate",
+      "current_status": "superseded",
       "supersedes": [
         "2.16.0"
       ],
@@ -261,7 +285,7 @@
       "kernel_version": "2.9.0",
       "release_date": "2026-08-26",
       "release_status": "production",
-      "current_status": "current",
+      "current_status": "superseded",
       "supersedes": [
         "2.8.0"
       ],

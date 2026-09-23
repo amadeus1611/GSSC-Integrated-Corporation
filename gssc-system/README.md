@@ -9,7 +9,7 @@ mirror and maintenance base for that same system — the plan is to keep
 extending it here and eventually re-integrate pieces back into 365.
 
 Nothing here was invented by this repo. It was extracted verbatim from
-`GSSC_Master_Package_v2_16_1.json` (supplied 2026-09-23) and verified
+`GSSC_Master_Package_v2_16_1.json` (supplied 2026-09-23; now released as 2.17.0) and verified
 byte-for-byte against the package's own declared SHA-256 hashes with
 `runtime/gssc_runtime.py preflight` — see **Verifying integrity** below.
 
@@ -18,7 +18,7 @@ byte-for-byte against the package's own declared SHA-256 hashes with
 ```
 gssc-system/
   package/
-    GSSC_Master_Package_v2_16_1.json   canonical package — DO NOT hand-edit
+    GSSC_Master_Package_v2_17_0.json   canonical package — DO NOT hand-edit
     GSSC_DesignDecisionLog.json        the memory store (see below) — grows over time
   runtime/
     gssc_runtime.py                    stdlib-only Python engine (extracted from package.runtime.code)
@@ -39,7 +39,10 @@ gssc-system/
     GSSC_Quotation_Universal_Master_v3_6_HYDRATED_reference.html
                                         a full worked example, synthetic client, for visual reference only
   brand_assets/
-    header.png, seal.png, signature.png, watermark.png   decoded from the package, hash-verified
+    header.png, seal.png, signature.png, watermark.png, wordmark.png   decoded from the package, hash-verified
+  release/
+    cut_release_2_17_0.py              the 2.17.0 release, as a deterministic script
+    logo_pack/p1..p5.png               the Canva native logo pack export it was cut from
   docs/
     kernel/00_meta.json ... 19_accessibility_doctrine.json   the 20 doctrine modules, one file each
     execution_protocol.txt             the governing prose spec (authoritative over the runtime code)
@@ -49,16 +52,17 @@ gssc-system/
 
 ## What this actually is
 
-- **`package/GSSC_Master_Package_v2_16_1.json`** is the single source of
+- **`package/GSSC_Master_Package_v2_17_0.json`** is the single source of
   truth: corporate identity, governance/officer roster, brand rules, IP
   policy, quotation doctrine, legal doctrine, the template engine spec,
   and more, as 20 versioned "kernel modules" (`docs/kernel/*.json`),
   plus the actual quotation template and brand images, plus a runnable
   Python engine that enforces the doctrine against real output.
-- Per the package's own changelog (`docs/kernel/13_changelog.json`),
-  kernel **2.16.1 is a `review_candidate`** — the adopted production
-  release is **2.9.0**. Don't treat 2.16.1 as live policy until someone
-  with authority promotes it; treat it as the draft under review.
+- Kernel **2.17.0 is the current production release**, adopted by Duke Y.
+  Demayo on 2026-09-23. It was cut in this repo by
+  `release/cut_release_2_17_0.py` from 2.16.1: the native logo pack, the
+  President as default signatory, and runtime 2.0. The same package goes
+  into the 365/Copilot copy.
 - The runtime is **stdlib-only Python 3.8+**: no install, no network.
 
 ## Derivatives — how every GSSC document is built
@@ -81,7 +85,7 @@ cd gssc-system/runtime
 python3 build_derivative.py ../derivatives/company-profile/GSSC-PROFILE-2026-002-v4.src.html \
     -o ../derivatives/company-profile/GSSC-PROFILE-2026-002-v4.html
 python3 render_check.py ../derivatives/company-profile/GSSC-PROFILE-2026-002-v4.html --shots /tmp/shots
-python3 gssc_runtime.py designaudit ../package/GSSC_Master_Package_v2_16_1.json \
+python3 gssc_runtime.py designaudit ../package/GSSC_Master_Package_v2_17_0.json \
     --file ../derivatives/company-profile/GSSC-PROFILE-2026-002-v4.html
 ```
 
@@ -126,17 +130,17 @@ are in `docs/proposals/kernel_next_release.json`.
 cd gssc-system/runtime
 
 # verify the package hasn't been corrupted / hand-edited
-python3 gssc_runtime.py preflight ../package/GSSC_Master_Package_v2_16_1.json
+python3 gssc_runtime.py preflight ../package/GSSC_Master_Package_v2_17_0.json
 
 # generate a real quotation and log the decision automatically
-python3 gssc_runtime.py hydrate ../package/GSSC_Master_Package_v2_16_1.json \
+python3 gssc_runtime.py hydrate ../package/GSSC_Master_Package_v2_17_0.json \
     -o out.html --client "Real Client Name" --content-type quotation
 
 # full gate: preflight + clipcheck + hydration
-python3 gssc_runtime.py all ../package/GSSC_Master_Package_v2_16_1.json
+python3 gssc_runtime.py all ../package/GSSC_Master_Package_v2_17_0.json
 
 # design/layout audits against a built file
-python3 gssc_runtime.py designaudit ../package/GSSC_Master_Package_v2_16_1.json --file out.html
+python3 gssc_runtime.py designaudit ../package/GSSC_Master_Package_v2_17_0.json --file out.html
 ```
 
 Run `python3 gssc_runtime.py --help` for the full verb list (figcheck,
@@ -162,7 +166,7 @@ the package's declared hashes.
 
 Rules (from `docs/design_decision_log_spec.json`, Module 15):
 - No seed/fabricated entries — the log starts empty and only grows from
-  genuine document generations. It currently has **0 entries**.
+  genuine document generations.
 - A field that's genuinely unknown is recorded `UNKNOWN`, never guessed.
 - Before generating a document of a kind that's been made before, run
   `precedent` first (Module 15 `read_before_decide`) so the new document
@@ -185,10 +189,10 @@ the same care as the 365 list it will eventually mirror or migrate to.
 
 ```bash
 cd gssc-system/runtime
-python3 gssc_runtime.py preflight ../package/GSSC_Master_Package_v2_16_1.json
+python3 gssc_runtime.py preflight ../package/GSSC_Master_Package_v2_17_0.json
 ```
 
 All parts (kernel, execution_protocol, template payload, brand assets,
 assembly, runtime) must report `[PASS] ... sha256 matches manifest`.
-Run this after any pull that touches `package/GSSC_Master_Package_v2_16_1.json`,
+Run this after any pull that touches `package/GSSC_Master_Package_v2_17_0.json`,
 and before trusting a hydrate output.

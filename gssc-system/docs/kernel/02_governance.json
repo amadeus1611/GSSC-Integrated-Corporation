@@ -11,7 +11,7 @@
         "Chief Executive Officer"
       ],
       "canonical_block": "Ronnie S. del Castillo · Chief Executive Officer · GSSC Integrated Corporation",
-      "authority_basis": "Reflected in the recent General Information Sheet (GIS) amendment restoring the original partnership structure; default signatory for client-facing instruments (corporate profile, proposals, cover letters)."
+      "authority_basis": "Reflected in the recent General Information Sheet (GIS) amendment restoring the original partnership structure. Signs where an instrument or board resolution names the Chief Executive Officer, or when chosen as the second GSSC signatory under signatory_policy."
     },
     "duke_y_demayo": {
       "name": "Duke Y. Demayo",
@@ -54,10 +54,10 @@
   },
   "signatory_authority": {
     "client_facing_documents": [
-      "Ronnie S. del Castillo as Chief Executive Officer for corporate profiles, proposals, and cover letters, subject to controlling board resolutions and the specific instrument."
+      "Duke Y. Demayo as President, per signatory_policy, for corporate profiles, proposals, cover letters and every instrument needing one GSSC signature, subject to controlling board resolutions and the specific instrument."
     ],
     "quotations": [
-      "Ronnie S. del Castillo as Chief Executive Officer, or Duke Y. Demayo as President/COO, subject to controlling board resolutions and the specific instrument."
+      "Duke Y. Demayo as President, per signatory_policy. A second GSSC signatory, where the instrument needs one, is chosen for that document."
     ],
     "secretary_certificates": [
       "Michael C. Silla as Corporate Secretary. The CEO does not sign the Secretary's Certificate itself."
@@ -90,7 +90,9 @@
     "canonical block edited casually",
     "Duke Y. Demayo omitted as President of record on statutory instruments that require the registered President",
     "CIO expanded as Chief Information Officer instead of Chief Investment Officer",
-    "rendered document title borrowed from a different active officer's declared titles (the specific defect Section 41 exists to catch)"
+    "rendered document title borrowed from a different active officer's declared titles (the specific defect Section 41 exists to catch)",
+    "second GSSC signatory assumed instead of asked for that document",
+    "the default signatory also used as the second signatory"
   ],
   "registered_officers_of_record": [
     "Duke Y. Demayo — director/incorporator; President and Principal of record; serves operationally as COO",
@@ -107,5 +109,18 @@
     "RESOLVED 2026-09-21 (kernel 2.14.0): the universal quotation master's own hardcoded signoff block printed Duke Y. Demayo with the title \"Chief Executive Officer · President · Principal\" -- a title that has belonged to Ronnie S. del Castillo since at least kernel 2.1.1. Corrected to \"President · Principal · Chief Operating Officer\", matching active_officers.duke_y_demayo.titles exactly. The signatory NAME was not changed; only the title string. See Section 41 for the durable check."
   ],
   "section_41_measured_note": "Run 2026-09-21 against the real hydrated 2.14.0 derivative: all seven Section 41 checks PASS. Verified by five controls: the corrected build passes; re-injecting the exact original defect (Chief Executive Officer on Duke Y. Demayo) correctly FAILS; a future-only person shown as signatory correctly FAILS; an unrecognised name correctly FAILS; and a genuine SUBSET of the officer's declared titles (President · Principal, dropping COO) correctly PASSES -- proving the check is a real subset/ownership test, not string equality.",
-  "multi_signature_rule": "Section 41 iterates EVERY signature block in a document as of runtime 1.7. Through 1.6 it used a first-match search and checked only the first, so a two-party instrument -- a CMSA, an SMSA, a countersigned acceptance -- had every block after the first unexamined. The universal quotation master carries one block, so this was latent rather than live; it is fixed before the first two-party derivative rather than after it. ENFORCED as of 2.16.0: Section 43 now runs Section 41 and requires the number of signature blocks it examines to equal the number present in the document. Through 1.7 this was \"checked\" by a helper that returned a constant string, so the test was true by construction and would have passed with Section 41 deleted."
+  "multi_signature_rule": "Section 41 iterates EVERY signature block in a document as of runtime 1.7. Through 1.6 it used a first-match search and checked only the first, so a two-party instrument -- a CMSA, an SMSA, a countersigned acceptance -- had every block after the first unexamined. The universal quotation master carries one block, so this was latent rather than live; it is fixed before the first two-party derivative rather than after it. ENFORCED as of 2.16.0: Section 43 now runs Section 41 and requires the number of signature blocks it examines to equal the number present in the document. Through 1.7 this was \"checked\" by a helper that returned a constant string, so the test was true by construction and would have passed with Section 41 deleted.",
+  "signatory_policy": {
+    "adopted": "2026-09-23",
+    "adopted_by": "Duke Y. Demayo, President",
+    "default_signatory": "duke_y_demayo",
+    "rule": "Duke Y. Demayo, President, signs every GSSC instrument that needs one GSSC signature.",
+    "second_signatory": "Chosen per document, from active_officers, whenever an instrument needs a second GSSC signature. Never the default signatory. Never assumed: ask who signs.",
+    "office_bound": "Signatures that belong to an office are not substitutable: the Corporate Secretary alone signs a Secretary's Certificate and certifies minutes (09_legal_doctrine).",
+    "no_gssc_signoff_doc_types": [
+      "notarial_acknowledgment"
+    ],
+    "no_gssc_signoff_note": "A stand-alone notarial acknowledgment is signed by the notary public. Section 41 exempts it from the signoff requirement and still checks any signoff it carries.",
+    "implemented_by": "gssc-system/runtime/build_derivative.py --second-signatory <officer key>"
+  }
 }

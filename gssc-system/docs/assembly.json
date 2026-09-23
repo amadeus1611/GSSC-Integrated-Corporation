@@ -1,5 +1,5 @@
 {
-  "engine_version": "2.16.1",
+  "engine_version": "2.17.0",
   "purpose": "Deterministically reconstruct the full-fidelity quotation master from the tokenized payload and brand_assets.",
   "governing_protocol_section": "28C",
   "token_format": "{{GSSC_ASSET:<name>}} where <name> is a key of brand_assets",
@@ -8,7 +8,7 @@
     "Base64-decode quotation_template_payload_base64 to UTF-8 text.",
     "For each brand_assets entry, verify base64 decodes and its sha256 matches sha256_of_decoded_image.",
     "Replace every {{GSSC_ASSET:name}} token with its replacement_value. Replace tokens only; never edit surrounding markup.",
-    "Confirm zero unresolved tokens remain and that no brand_assets entry went unused.",
+    "Confirm zero unresolved tokens remain, that every brand_assets entry with template_use true was used, and that no template_use false entry was placed.",
     "Compare the result against verification.hydrated_template_sha256. On mismatch, HARD STOP: do not deliver, do not partially repair.",
     "The hydrated file is fully self-contained and renders offline with no external request."
   ],
@@ -20,15 +20,18 @@
   "verification": {
     "tokenized_template_characters": 87288,
     "tokenized_template_sha256": "1f70bfa7a8f38e2c5f080f19b450455d8a23b36b8ff494c28f63163ebef61be5",
-    "hydrated_template_characters": 510756,
-    "hydrated_template_sha256": "2898956c66fe228e669e0c7ea1af82d7c49d3f59aafb86a7bb27cd251f2ab93d",
-    "round_trip_verified_at_build": "2026-09-22",
-    "round_trip_result": "Hydrating the tokenized 2.16.1 template reproduces the built derivative byte-for-byte.",
+    "hydrated_template_characters": 1047336,
+    "hydrated_template_sha256": "26baf4466ee9913ebdb5f6fd4f275ebbfd9451e94342b50575a05b6e26a78bcc",
+    "round_trip_verified_at_build": "2026-09-23",
+    "round_trip_result": "Hydrating the tokenized 2.17.0 template with the native logo pack reproduces this digest.",
     "tokens_expected": [
       "{{GSSC_ASSET:header}}",
       "{{GSSC_ASSET:seal}}",
       "{{GSSC_ASSET:signature}}",
       "{{GSSC_ASSET:watermark}}"
+    ],
+    "library_assets_not_placed": [
+      "wordmark"
     ]
   }
 }

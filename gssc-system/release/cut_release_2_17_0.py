@@ -37,6 +37,8 @@ from PIL import Image
 
 HERE = pathlib.Path(__file__).resolve().parent
 ROOT = HERE.parent
+# Retired from the working tree once 2.17.0 was cut. To re-run the release:
+#   git show 6ac347d:gssc-system/package/GSSC_Master_Package_v2_16_1.json > package/GSSC_Master_Package_v2_16_1.json
 SRC = ROOT / "package" / "GSSC_Master_Package_v2_16_1.json"
 OUT = ROOT / "package" / "GSSC_Master_Package_v2_17_0.json"
 RUNTIME = ROOT / "runtime" / "gssc_runtime.py"
@@ -160,7 +162,10 @@ def cut(pack):
             "The master's render sizes are the minimums for print: header 38px tall, seal 24px, signature lockup 175px wide.",
             "A new variant enters through the Canva pack and a kernel release, never as a one-off file in a document.",
         ],
-        "resolution_basis": "Target pixel size is about 5x the master's rendered CSS size; 300 dpi print needs about 3.1x.",
+        "colour_parity": "Measured on the Canva export: the wordmark navy is #0d2463 (visual_system.colors.navy) "
+                         "and the bar behind 'Integrated' is #e6d4a7 (gold_light). The logo and the document "
+                         "palette are the same colours.",
+        "resolution_basis":"Target pixel size is about 5x the master's rendered CSS size; 300 dpi print needs about 3.1x.",
     }
 
     # ------------------------------------------------------------ 3. 02_governance

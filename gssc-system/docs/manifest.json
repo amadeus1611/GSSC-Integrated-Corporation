@@ -1,25 +1,25 @@
 {
   "package_role": "GSSC_MASTER_PACKAGE",
-  "package_version": "2.16.1",
+  "package_version": "2.17.0",
   "package_format": "single-file JSON container, eight parts, with an embedded executable runtime",
-  "package_built": "2026-09-22",
-  "supersedes": "GSSC_Master_Package_v2_14_0.json",
-  "note": "Design-system release. Adds Module 03 document_type_system and Module 10 component_layer_contract, type_metrics, figure_type_scale, figure_geometry_check and measured_pagination, and ships all of it as runnable runtime commands. Every threshold the runtime enforces is read from this package, so doctrine and enforcement cannot drift apart.",
+  "package_built": "2026-09-23",
+  "supersedes": "GSSC_Master_Package_v2_16_1.json",
+  "note": "Final-form production release, adopted 2026-09-23 by Duke Y. Demayo, President. Native logo pack (Canva DAHLkhKRfrg) at source resolution with the wordmark as a library asset; President as default signatory; runtime 2.0 fixes. Every threshold the runtime enforces is still read from this package.",
   "parts": [
     {
       "key": "kernel",
       "format": "embedded JSON object",
-      "kernel_version": "2.16.1",
-      "sha256": "99089f5ec8d53d701a52995ac3c1e4ae1b393e04a7a9199d3812f72f68085859",
-      "note": "17 modules, 00-16. Design-system doctrine added to 03 and 10 in 2.9.0."
+      "kernel_version": "2.17.0",
+      "sha256": "b434a853cbb3eadae9b1235c3c271c83bfa165667f61af618784825cc45b2459",
+      "note": "20 modules, 00-19. 2.17.0 adds 03 logo_system and 02 signatory_policy."
     },
     {
       "key": "execution_protocol",
       "format": "plain text string",
-      "protocol_version": "2.0",
-      "sha256": "35ffd9d678781cfdcd014df30029c67ff8d15b68f264936a908b84af99cdccb8",
-      "size_bytes": 88293,
-      "note": "Sections 03, 28C and 30 name the executable runtime form. Prose remains authoritative."
+      "protocol_version": "2.7",
+      "sha256": "506104e29ff8e3372fe04e1790464df9d46c4d6560877c739b278f0828ba37af",
+      "size_bytes": 122133,
+      "note": "Adopted 2026-09-23. Section 24 names the President as default signatory."
     },
     {
       "key": "quotation_template_payload_base64",
@@ -33,23 +33,23 @@
     {
       "key": "brand_assets",
       "format": "JSON object, one entry per governed image",
-      "sha256": "a6a1a24e3df5efb3e94497830a1a1789f26a645dafe152461dcb97e7ef6dce4d",
-      "asset_count": 4,
-      "note": "header, seal, signature, watermark. Watermark newly registered in 2.7.0."
+      "sha256": "1a088a9ac322562ba490471e31c0f1e5a03f9e9435db63a2aea2ac7f1c6ad78b",
+      "asset_count": 5,
+      "note": "header, seal, signature, watermark (placed by the master) and wordmark (library only), all from the Canva native logo pack DAHLkhKRfrg."
     },
     {
       "key": "assembly",
       "format": "embedded JSON object",
-      "sha256": "736e735b0aed2aaab88dbd803239842b063b09ec1f2f373d34c7b5f8482c9431",
+      "sha256": "6940ffc75e7c8ded18964719ed4f36aa2719d07ce9db8a2832b158c2eb952a72",
       "note": "Deterministic hydration engine and round-trip verification values."
     },
     {
       "key": "runtime",
       "format": "embedded JSON object with python source string",
-      "runtime_version": "1.1",
-      "sha256": "fd1606e3e877b46c68e18c037957cdf3ee5188935036006b03cb6fa0d544ff94",
-      "code_bytes": 26327,
-      "note": "gssc_runtime v1.1, stdlib only. Adds figcheck, typeaudit, pagefill and designaudit. Exit 0 = PASS, 1 = FAILED."
+      "runtime_version": "2.0",
+      "sha256": "7acc3eef12708a03ef95e4bab9f199e545866329541402d1d36e81243dabf8e0",
+      "code_bytes": 171371,
+      "note": "gssc_runtime 2.0, stdlib only. Exit 0 = PASS, 1 = FAILED."
     },
     {
       "key": "design_decision_log",
@@ -86,14 +86,13 @@
     ]
   },
   "adoption_record": {
-    "execution_protocol_version": "2.0",
-    "status": "NOT YET RECORDED",
-    "required_action": "Record management adoption of the Execution Protocol. Carried as an authoritative candidate from v1.1 through v1.9 without a recorded adoption.",
-    "adopted_by": "",
-    "adopted_on": "",
+    "execution_protocol_version": "2.7",
+    "status": "ADOPTED",
+    "adopted_by": "Duke Y. Demayo, President",
+    "adopted_on": "2026-09-23",
     "board_reference": "",
-    "pending_release": "2.16.1",
-    "pending_status": "review_candidate awaiting GSSC management adoption; 2.9.0 remains the current production release until adopted_by and adopted_on are populated"
+    "basis": "Approval given by the President in the Claude Code maintenance session of 2026-09-23, for the release that brings the package to its final form. A board resolution reference may be added here when one is issued.",
+    "adopted_release": "2.17.0"
   },
   "quickstart": {
     "step_1": "Extract the runtime: see runtime.extraction.",
