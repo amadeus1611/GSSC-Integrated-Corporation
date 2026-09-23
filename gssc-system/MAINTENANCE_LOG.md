@@ -12,6 +12,74 @@ session, what changed, why, what's still open.
 
 ---
 
+## 2026-09-23 (2) — shared design-token layer + first company-profile derivative
+
+**By:** Claude Code (cloud session), at Duke Demayo's request, after confirming
+the extracted runtime reproduces Copilot 365's output byte-for-byte.
+
+**What happened:**
+- Extracted the quotation master's full `:root` (17-color palette, both
+  type scales, tracking tokens, rhythm units, A4 geometry) into
+  `design-tokens/gssc-tokens.css` as the single canonical source. Per
+  Module 03 document_type_system: a derivative inherits these values, it
+  never redeclares or approximates them.
+- Added `runtime/assemble_derivative.py` — a small build step that inlines
+  `gssc-tokens.css` into a `.src.html` template (via a
+  `/*__GSSC_TOKENS__*/` placeholder) and inlines the brand assets as
+  base64 (via `{{GSSC_ASSET:name}}` tokens), producing a self-contained
+  output file. This is the actual mechanism, not just a convention: change
+  a value in `gssc-tokens.css` and re-run the assembler on every
+  derivative to propagate it everywhere at once.
+- Built the first derivative on that layer:
+  `derivatives/company-profile/GSSC-PROFILE-2026-002-v1.{src.,}html` — a
+  5-page company profile (cover, overview, capabilities, governance,
+  engage/contact), governed by `08_document_doctrine` (flagship structure,
+  tier 1) and reusing the quotation master's masthead/footer/watermark/
+  spine-stripe chrome exactly so it reads as the same publisher. Content
+  is sourced only from verified kernel data (`01_identity`, `02_governance`)
+  — no invented facts, no TIN/SEC numbers beyond what firewall Module 04
+  marks always-safe or when-needed-and-justified.
+- Cover kept deliberately content-light (kicker + title + dek + three
+  stat pairs) specifically because Module 18 already measured that a
+  bolder cover treatment overflows once the page carries more copy than
+  that — this sidesteps the known failure instead of re-discovering it.
+- Logged the generation for real via `gssc_runtime.py logwrite` — this is
+  the design-decision log's first genuine (non-test) entry.
+
+**Verified:** rendered all 5 pages via headless Chromium, screenshotted,
+visually checked for overflow/clipping (none — every page has spare
+white space, most under 50% fill by eye). Ran `boxcheck`, `contrastaudit`,
+`a11yaudit` against the built file — all PASS, though see the caveat
+below on `boxcheck`.
+
+**Known gap, not fixed:** `boxcheck` (the binding overflow gate) locates
+page content via a literal `<main class="body">` wrapper, which is
+specific to the quotation master's DOM. My derivative uses `<div
+class="content">` and doesn't match that pattern, so `boxcheck` silently
+found 0 pages to measure and reported a vacuous PASS — not a real
+validation. `contrastaudit` similarly checks a fixed pairing list from
+the kernel's own contrast registry rather than scanning the file's
+actual CSS, so it isn't validating this file's specific color usage
+either (though the same closed palette was used throughout, so the risk
+is low). Generalizing these two audits to work on any GSSC derivative,
+not just the quotation master, is real follow-up work — good scope for
+the architect subagent before more derivatives get built on top of this.
+
+**Open / needs a human:**
+- This is a first pass, not the client-ready version due next week —
+  needs Duke's review on copy, whether the large white-space areas on
+  pages 3–5 should be filled with more content (case notes, a values
+  statement) or kept spacious as an editorial choice.
+- `11_registry.json` (inside the canonical package) already lists a
+  different authoritative profile master (`GSSC-PROFILE-2026-001-v5-pitch.html`)
+  that was never supplied to this repo. This new file has *not* been
+  registered as authoritative anywhere — that's a real kernel-governance
+  decision (which profile is canonical) that belongs to Duke, not to an
+  agent silently editing the versioned package.
+- Legal-document derivatives (secretary certificate, board resolution,
+  notarial page) are still unbuilt — Module 09 doctrine exists for them,
+  no HTML masters do yet.
+
 ## 2026-09-23 — initial extraction into this repo
 
 **By:** Claude Code (cloud session), at Duke Demayo's request.
