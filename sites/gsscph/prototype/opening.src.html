@@ -262,6 +262,10 @@ table.dt tbody tr:hover td{background:rgba(230,212,167,.24);transition-duration:
 .flow-head > div{grid-column:1 / span 6} .flow-body{grid-column:8 / -1;margin:0;font-size:15.5px;color:var(--slate)}
 .flow-title{margin:14px 0 0;font:400 clamp(26px,2.5vw,36px)/1.16 var(--f-display);letter-spacing:var(--compressed);color:var(--navy-dark);text-wrap:balance}
 .flow-fig{margin:0}
+/* on a wide screen the whole figure pins at the centre of the view and plays only while pinned:
+   it starts once all of it is in sight, finishes with room to spare, holds, then releases */
+.flow-track.pinned{height:calc(var(--ph) + 120vh)}
+.flow-track.pinned .flow-fig{position:sticky;top:calc(50vh - var(--ph) / 2 + 30px)}
 /* the plate: Fig. 3 is set like a primary exhibit, with a strong rule above, a header strip and its own ground */
 .flow-plate{border:1px solid var(--hairline);border-top:var(--rule-strong) solid var(--navy-dark);border-radius:0 0 var(--r) var(--r);
   background:linear-gradient(180deg,rgba(243,239,228,.9),rgba(250,248,243,.6) 40%,rgba(243,239,228,.75));box-shadow:0 30px 60px -40px rgba(9,23,61,.28)}
@@ -510,6 +514,7 @@ table.dt tbody tr:hover td{background:rgba(230,212,167,.24);transition-duration:
         <h3 class="flow-title" data-rise>Everything inside the line is ours to carry. Only the quotation crosses it.</h3></div>
         <p class="flow-body" data-rise>Research, pricing and the management decision happen inside GSSC, under the kernel's controls. Before anything reaches the client it passes the firewall, where supplier names, costs and margins are removed. What crosses is one quotation, and from acceptance to turnover, one line of accountability. Every decision is written to the record.</p>
       </div>
+      <div class="flow-track" id="flowTrack">
       <figure class="flow-fig" aria-label="Flow: inquiry, then inside GSSC research, pricing, decision and firewall, then quotation, acceptance, delivery and turnover to the client, and the record inside GSSC.">
         <div class="flow-plate">
           <div class="flow-bar">
@@ -521,6 +526,7 @@ table.dt tbody tr:hover td{background:rgba(230,212,167,.24);transition-duration:
         </div>
         <figcaption class="figcaption"><b>Fig. 3</b><i>The path advances as you read. It follows the execution protocol: research, commercial and firewall gates before any client release.</i></figcaption>
       </figure>
+      </div>
     </div>
   </section>
 
@@ -1110,6 +1116,12 @@ function layoutFlow(){
              nodes: [...flowSvg.querySelectorAll('.nd')], tok: flowSvg.querySelector('.tok'), halo: flowSvg.querySelector('.tok-h'), p: 0, lastStep: -1};
 }
 layoutFlow();
+const flowTrack = document.getElementById('flowTrack');
+function sizeFlowTrack(){
+  const h = flowTrack.querySelector('.flow-fig').offsetHeight, pin = h < innerHeight * .78 && !REDUCE;
+  flowTrack.classList.toggle('pinned', pin); flowTrack.style.setProperty('--ph', h + 'px'); flowGeo.pinned = pin; flowGeo.ph = h;
+}
+sizeFlowTrack();
 
 /* the economics model: every figure traces to the assumptions table beneath it */
 const E$ = {inv: 1344, po: 2135, hr: 346, hrsWk: 3, rework: .0085};
@@ -1177,7 +1189,7 @@ function frame(t){
   if (lenis) lenis.raf(t);
   // ---- read
   const topR = topEl.getBoundingClientRect(), fr = fieldStage.getBoundingClientRect(), ir = instStage.getBoundingClientRect();
-  const rr = roadmap.getBoundingClientRect(), inkR = ink.getBoundingClientRect(), flowR = flowFig.getBoundingClientRect();
+  const rr = roadmap.getBoundingClientRect(), inkR = ink.getBoundingClientRect(), flowR = flowTrack.getBoundingClientRect();
   const econR = econEl.getBoundingClientRect(), tlR = tl.getBoundingClientRect();
   const riseT = rises.map(el => el.getBoundingClientRect().top);
   const lineR = secLines.map(l => l.parentElement.getBoundingClientRect());
@@ -1212,7 +1224,11 @@ function frame(t){
        itself around, 0.6 of a unit), then the connector to the next card draws (1 unit). Scroll sets
        where the sequence is; a short damper keeps it smooth; reversing rewinds it exactly. */
     const G = flowGeo, n = G.nodes.length, NU = .6, total = n * NU + (n - 1);
-    const tg = clamp((vh * .82 - flowR.top) / Math.max(vh * .62, flowR.height * .9));
+    // pinned: progress exists only while the whole figure is held in view (done by 80%, then it holds);
+    // unpinned (phones, where it is taller than the screen): the path follows the reading line
+    let tg;
+    if (G.pinned) { const stickTop = vh / 2 - G.ph / 2 + 30; tg = clamp(clamp((stickTop - flowR.top) / (flowR.height - G.ph)) / .8); }
+    else tg = clamp((vh * .6 - flowR.top) / Math.max(1, flowR.height - vh * .2));
     G.p += (tg - G.p) * (1 - Math.exp(-dt / 160));
     const u = G.p * total; let tokX = G.inP[0].x, tokY = G.inP[0].y, step = 0;
     for (let i = 0; i < n; i++) {
@@ -1262,7 +1278,7 @@ function frame(t){
     guide.hint.textContent = hint; guide.hint.setAttribute('href', href); }
   if (!REDUCE) requestAnimationFrame(frame);
 }
-addEventListener('resize', () => { vw = innerWidth; vh = innerHeight; sizeField(); sizeInst(); layoutFlow(); });
+addEventListener('resize', () => { vw = innerWidth; vh = innerHeight; sizeField(); sizeInst(); layoutFlow(); sizeFlowTrack(); });
 three = buildInstrument(); sizeInst();
 // WARM-UP. Shader programs and textures are otherwise compiled and uploaded on the first draw, which
 // would land exactly when the reader arrives at the compass and stall the page. Do it now, in idle
