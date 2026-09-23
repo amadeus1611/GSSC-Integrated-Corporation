@@ -47,6 +47,15 @@ Fix (same day, Duke: "the compass animations don't load or follow the scroll"):
     never freeze the page.
 - **Verified** in a sandboxed iframe at desktop and phone sizes, with real wheel input.
 
+Fix 2 (Duke: "the lines spazz out"; "it hangs before the compass"):
+- **Leader lines:** labels were re-stacked every frame around whichever parts were visible, so each
+  lift shoved the others. Labels now sit in fixed slots, set once from the fully open frame. Only a
+  line's start follows its part, and the print, lines and labels update together on film frames.
+- **Stall:** entering Section I triggered bulk `createImageBitmap` on all 91 frames: 600+ ms on the main
+  thread and about 360 MB decoded. Frames now download quietly at low priority in idle time. Only a
+  window around the playhead is decoded, off-thread via `img.decode()`, and only decoded frames are
+  drawn. In the sandboxed test, one 52 ms long task remains in the whole compass section.
+
 Still open: §2B (Festive Walk, waiting on an image); `og.jpg` at the domain root; §2C real-device QA
 and performance budget; §3.
 

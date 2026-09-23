@@ -1028,22 +1028,32 @@ function buildInstrument(){
   if (!fx && fc) fc.style.display = 'none';
   // frames: phones get the smaller set; the first frame loads now, the rest when the stage is near
   const set = Math.min(innerWidth, innerHeight * 1.2) * Math.min(devicePixelRatio || 1, 2) > 1300 ? 'd' : 'm';
-  const imgs = new Array(SEQ.frames).fill(null);
-  const load = i => new Promise(res => { const im = new Image(); im.decoding = 'async';
-    // decoded ahead of time (a bitmap where the browser offers one), so showing a frame is a plain blit
-    im.onload = () => (window.createImageBitmap ? createImageBitmap(im) : (im.decode ? im.decode() : Promise.resolve()).then(() => im))
-      .catch(() => im).then(bm => { imgs[i] = bm; res(); }); im.onerror = () => res();
-    im.src = `compass/${set}/f${String(i).padStart(3, '0')}.webp`; });
-  load(0);
+  /* LOADING, without a stall. The frames download at low priority, a few at a time in idle time, once the
+     stage is four screens away. Nothing is decoded in bulk (91 decoded frames would be ~360 MB and, done
+     eagerly, blocked the main thread for over half a second on the way in): img.decode() runs off the
+     main thread for a small window of frames around the playhead only, and only decoded frames are drawn. */
+  const N = SEQ.frames, imgs = new Array(N).fill(null), ready = new Array(N).fill(false), busy = new Array(N).fill(false);
+  const src = i => `compass/${set}/f${String(i).padStart(3, '0')}.webp`;
+  const load = (i, hi) => new Promise(res => { const im = new Image(); im.decoding = 'async'; im.fetchPriority = hi ? 'high' : 'low';
+    im.onload = () => { imgs[i] = im; res(); }; im.onerror = () => res(); im.src = src(i); });
+  let decoding = 0;
+  const decode = i => { if (!imgs[i] || ready[i] || busy[i]) return; busy[i] = true; decoding++;
+    (imgs[i].decode ? imgs[i].decode() : Promise.resolve()).catch(() => {}).then(() => { ready[i] = true; busy[i] = false; decoding--; }); };
+  const want = fi => {   // the playhead and the frames either side of it, nearest first, three decodes in flight at most
+    for (let d = 0; d <= 10 && decoding < 3; d++) for (const j of d ? [fi + d, fi - d] : [fi]) {
+      if (j < 0 || j >= N || !imgs[j] || ready[j] || busy[j]) continue;
+      decode(j); } };
+  load(0, true).then(() => decode(0));
+  const idle = window.requestIdleCallback ? f => requestIdleCallback(f, {timeout: 400}) : f => setTimeout(f, 60);
   let loading = null;
   const loadAll = () => loading || (loading = (async () => {
-    // coarse to fine: every eighth frame first, so a fast scroll always has something close to show
-    const order = []; for (const st of [8, 4, 2, 1]) for (let i = 0; i < SEQ.frames; i += st) if (!order.includes(i)) order.push(i);
-    for (let k = 0; k < order.length; k += 6) await Promise.all(order.slice(k, k + 6).map(i => imgs[i] ? 0 : load(i))); })());
+    // coarse to fine, so a fast scroll always has a frame close by
+    const order = []; for (const st of [8, 4, 2, 1]) for (let i = 0; i < N; i += st) if (!order.includes(i)) order.push(i);
+    for (let k = 0; k < order.length; k += 4) { await new Promise(idle); await Promise.all(order.slice(k, k + 4).map(i => imgs[i] ? 0 : load(i))); } })());
   svgL.innerHTML = PARTS.map(() => '<path fill="none" stroke="rgba(200,164,77,.7)" stroke-width="1"/>').join('');
   tagsEl.innerHTML = PARTS.map(([n, p, c]) => `<div class="tag"><span class="c">${n ? `<em>${n}</em>` : ''}${p}</span><span class="v">${c}</span></div>`).join('');
   phaseEl.innerHTML = PARTS.map(() => '<i></i>').join('') + '<span>Closed</span>';
-  return {ctx, fx, fc, imgs, loadAll, shown: -1, rectKey: '', f: 0,
+  return {ctx, fx, fc, imgs, ready, want, decode, loadAll, shown: -1, rectKey: '', f: 0,
           leaders: [...svgL.children], tags: [...tagsEl.children], ticks: [...phaseEl.querySelectorAll('i')], phaseLabel: phaseEl.querySelector('span'),
           tilt: {x: 0, y: 0}, w: 0, h: 0, k: 1};
 }
@@ -1081,7 +1091,10 @@ function drawInstrument(t, q, dt, newFilm){
   const I = inst, w = I.w, h = I.h, narrow = vw <= 860, N = PARTS.length;
   I.f += (frameFor(q) - I.f) * (1 - Math.exp(-dt / 120));
   let fi = Math.round(clamp(I.f, 0, SEQ.frames - 1));
-  if (!I.imgs[fi]) { let b = -1; for (let d = 1; d < SEQ.frames && b < 0; d++) { if (I.imgs[fi - d]) b = fi - d; else if (I.imgs[fi + d]) b = fi + d; } if (b < 0) return; fi = b; }
+  I.want(fi);
+  if (!I.ready[fi]) { let b = -1; for (let d = 1; d < SEQ.frames && b < 0; d++) { if (I.ready[fi - d]) b = fi - d; else if (I.ready[fi + d]) b = fi + d; } if (b < 0) return; fi = b; }
+  // the print, its leaders and its labels move together, on the film's cadence: one coherent picture per film frame
+  if (!(newFilm || REDUCE || fi !== I.shown)) return;
   I.tilt.x += (iptr.x - I.tilt.x) * .06; I.tilt.y += (iptr.y - I.tilt.y) * .06;
   // where the print sits: beside the copy on a wide screen, centred low on a phone; the cursor drifts it a little
   const size = narrow ? Math.min(w * 1.5, h * .8) : Math.min(h * 1.04, w * .62);
@@ -1109,18 +1122,25 @@ function drawInstrument(t, q, dt, newFilm){
     if (nowEl.__h !== html) { nowEl.__h = html; nowEl.innerHTML = html; }
     return;
   }
-  /* LEADERS. Each line starts on the right-hand rim of its own part, as the renderer recorded it for this
-     exact frame, and labels stack strictly in part order, star at the top down to the case. */
+  /* LEADERS. Each line starts on the right-hand rim of its own part, as the renderer recorded it for the frame
+     on screen. The labels do not move: each has a fixed slot, set once from the fully open frame (star at the
+     top down to the case, never closer than GAP), so a part lifting never pushes another label around. Only
+     the line's start travels with its part; the label fades in and out in place. */
   const colX = w * .72, GAP = 54, A = SEQ.anchors[fi];
   const pts = A.map(([x, y]) => ({x: rect[0] + x * size, y: rect[1] + y * size}));
   const vis = PARTS.map((p, i) => i === 0 ? clamp((open - .15) / .5) : clamp((lift[i] - .35) / .65));
-  const ty = pts.map(p => p.y); let prev = -1e9;
-  for (let i = N - 1; i >= 0; i--) { if (vis[i] <= .01) continue; ty[i] = Math.max(ty[i], prev + GAP); prev = ty[i]; }
+  if (I.slotSize !== size) { I.slotSize = size;
+    const O = SEQ.anchors[SEQ.frames - 1].map(([, y]) => y * size), sl = O.slice(); let prev = -1e9;
+    for (let i = N - 1; i >= 0; i--) { sl[i] = Math.max(O[i], prev + GAP); prev = sl[i]; }
+    const shift = (sl[N - 1] + sl[0]) / 2 - (O[N - 1] + O[0]) / 2;       // keep the column centred on the open instrument
+    I.slots = sl.map(v => v - shift); }
+  const ty = I.slots.map(v => rect[1] + v);
   PARTS.forEach((p, i) => {
     const a = vis[i], {x, y} = pts[i];
-    I.leaders[i].setAttribute('d', a > .01 ? `M${x.toFixed(1)},${y.toFixed(1)} L${(x + 14).toFixed(1)},${y.toFixed(1)} C${x + 60},${y} ${colX - 70},${ty[i]} ${lerp(x + 14, colX - 14, a).toFixed(1)},${ty[i]}` : '');
-    I.leaders[i].setAttribute('stroke-opacity', a.toFixed(3));
-    I.tags[i].style.opacity = a.toFixed(3); I.tags[i].style.transform = `translate(${colX}px, ${(ty[i] - 20).toFixed(1)}px)`;
+    const Y = ty[i].toFixed(1), ex = lerp(x + 14, colX - 14, a);
+    const d = a > .01 ? `M${x.toFixed(1)},${y.toFixed(1)} L${(x + 14).toFixed(1)},${y.toFixed(1)} C${(x + 60).toFixed(1)},${y.toFixed(1)} ${(colX - 70).toFixed(1)},${Y} ${ex.toFixed(1)},${Y}` : '';
+    if (I.leaders[i].__d !== d) { I.leaders[i].__d = d; I.leaders[i].setAttribute('d', d); I.leaders[i].setAttribute('stroke-opacity', a.toFixed(3)); }
+    setVar(I.tags[i], 'opacity', a.toFixed(3)); setVar(I.tags[i], 'transform', `translate(${colX.toFixed(1)}px, ${(ty[i] - 20).toFixed(1)}px)`);
   });
 }
 
@@ -1306,7 +1326,7 @@ function frame(t){
   if (open > .5 && !cut.field) FILM.cut(t); cut.field = open > .5;          // a scene begins: a moment of light leak
   // ---- Fig. 2
   const iq = clamp(-ir.top / (instStage.offsetHeight - vh));
-  if (inst && ir.top < vh * 3) inst.loadAll();
+  if (inst && ir.top < vh * 4) inst.loadAll();
   if (ir.top <= 0 && !cut.inst && ir.bottom > vh) FILM.cut(t); cut.inst = ir.top <= 0 && ir.bottom > vh;
   if (inst && ir.bottom > 0 && ir.top < vh) safely('instrument', () => drawInstrument(t, iq, dt, newFilm));
   // ---- paper sections
@@ -1390,7 +1410,7 @@ if (REDUCE) {
   panel.style.setProperty('--it', '0%'); panel.style.setProperty('--ib', '0%'); panel.style.setProperty('--is', '0px');
   drawField(0, 0, 16);
   FILM.tick(0);
-  if (inst) { inst.loadAll().then(() => { inst.f = SEQ.frames - 1; drawInstrument(0, .55, 1e4, true); }); }
+  if (inst) { const L = SEQ.frames - 1; inst.loadAll().then(() => inst.imgs[L] && inst.imgs[L].decode()).catch(() => {}).then(() => { inst.ready[L] = true; inst.f = L; drawInstrument(0, .55, 1e4, true); }); }
   { econ.sD = econ.tD; econ.sC = econ.tC; hero.D.textContent = php(econ.tD); hero.C.textContent = php(econ.tC);
     hero.S.textContent = php(econ.tD - econ.tC); hero.P.textContent = (econ.share * 100).toFixed(1) + '%'; }
   for (const el of [eV, eN, eM]) el.addEventListener('input', () => { hero.D.textContent = php(econ.tD); hero.C.textContent = php(econ.tC);
