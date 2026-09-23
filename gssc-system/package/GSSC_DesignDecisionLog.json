@@ -51,6 +51,58 @@
    "source_versions_used": "kernel 2.16.1; runtime 1.9; protocol 2.0",
    "precedent_reference": "GSSC-PROFILE-2026-002-v2",
    "logged_at": "2026-09-23T07:00:51"
+  },
+  {
+   "document_reference": "GSSC-SECCERT-TEMPLATE-v1",
+   "client_name": "INTERNAL - reusable template, no client",
+   "content_type": "secretary_certificate",
+   "body_structure_used": "statutory register (Times New Roman, justified, 1.5 spacing, long bond) on the new gssc-legal-components.css shared layer - deliberately NOT the editorial quotation/profile system, per 09_legal_doctrine.formatting.pt_exception",
+   "is_novel_pattern": "true - first legal-register derivative in this repo",
+   "design_rationale": "Built by a builder subagent per Duke's request for structural (not fully detailed) legal derivatives with premium chrome. Signed by Michael C. Silla as Corporate Secretary only, never the CEO, per 09_legal_doctrine's named failure mode. All case-specific facts bracketed as .legal-placeholder; includes a PH notarial acknowledgment block. Verified by direct render; one dead CSS rule removed before shipping.",
+   "tokens_referenced": "gssc-tokens.css (palette only) + gssc-legal-components.css + brand_assets/header.png",
+   "date_generated": "2026-09-23",
+   "source_versions_used": "kernel 2.16.1; runtime 1.9; protocol 2.0",
+   "precedent_reference": "NONE -- first logged generation for this client/content-type pair",
+   "logged_at": "2026-09-23T07:07:38"
+  },
+  {
+   "document_reference": "GSSC-BOARDRES-TEMPLATE-v1",
+   "client_name": "INTERNAL - reusable template, no client",
+   "content_type": "board_resolution",
+   "body_structure_used": "statutory register on gssc-legal-components.css - WHEREAS/RESOLVED clause structure via ol.clauses, Corporate Secretary attestation only",
+   "is_novel_pattern": "true - first board-resolution derivative in this repo",
+   "design_rationale": "Built by a builder subagent alongside the secretary certificate. Explicitly defers third-party proof of the resolution to a companion Secretary's Certificate rather than duplicating that role. Authorized-representative clause references the two doctrine-named representatives (Duke Y. Demayo, Michael C. Silla) as bracketed examples only, not asserted fact. Verified by direct render, no fixes needed.",
+   "tokens_referenced": "gssc-tokens.css (palette only) + gssc-legal-components.css + brand_assets/header.png",
+   "date_generated": "2026-09-23",
+   "source_versions_used": "kernel 2.16.1; runtime 1.9; protocol 2.0",
+   "precedent_reference": "NONE -- first logged generation for this client/content-type pair",
+   "logged_at": "2026-09-23T07:07:38"
+  },
+  {
+   "document_reference": "GSSC-NOTARIAL-ACK-TEMPLATE-v1",
+   "client_name": "INTERNAL - reusable template, no client",
+   "content_type": "notarial_acknowledgment",
+   "body_structure_used": "standalone PH acknowledgment page on gssc-legal-components.css's .legal-notarial block, minimal plain-text identification (no GSSC letterhead branding, since this page attaches to a third party's instrument)",
+   "is_novel_pattern": "true - first notarial derivative in this repo",
+   "design_rationale": "Built by a builder subagent. Venue defaults to Iloilo City and form defaults to Acknowledgment per 09_legal_doctrine. Carries an explicit disclaimer that operative language/identity-evidence requirements need counsel and notary confirmation, per the kernel's own governs-process-not-law hard_stop. Agent found and fixed a caption line-wrap bug (orphaned closing paren) before shipping; verified by direct render.",
+   "tokens_referenced": "gssc-legal-components.css only (no GSSC brand asset used by design)",
+   "date_generated": "2026-09-23",
+   "source_versions_used": "kernel 2.16.1; runtime 1.9; protocol 2.0",
+   "precedent_reference": "NONE -- first logged generation for this client/content-type pair",
+   "logged_at": "2026-09-23T07:07:38"
+  },
+  {
+   "document_reference": "GSSC-CMSA-TEMPLATE-v1",
+   "client_name": "INTERNAL - reusable template, no client",
+   "content_type": "contract_sample",
+   "body_structure_used": "statutory register on gssc-legal-components.css - numbered articles via ol.clauses (Scope, Term, Fees, Confidentiality, Non-Circumvention, Force Majeure, ADR, Governing Law, Misc), two-party signature block",
+   "is_novel_pattern": "true - first contract/CMSA derivative in this repo",
+   "design_rationale": "Built by a builder subagent per architecture.cmsa (signed once per client; POs/NTPs/SOWs reference it without restating terms). Sensitive clauses (confidentiality, non-circumvention, force majeure, ADR, cure/interest mechanics, severability) carry only the recorded defaults (5-year NDA tail, 24-month non-circumvention) plus a visible SUBJECT TO COUNSEL REVIEW flag - no operative legal language drafted, per the hard_stops against casually drafting statutory/force-majeure/ADR wording. GSSC signatory: Ronnie S. del Castillo as CEO (client-facing default per 02_governance), flagged as worth confirming against the master-agreement-specific representative list before real use. Two rendering bugs (text/badge overlap under justified text) found and fixed across two passes - one by the building agent, one caught in orchestrator review.",
+   "tokens_referenced": "gssc-tokens.css (palette only) + gssc-legal-components.css + brand_assets/{header,seal}.png",
+   "date_generated": "2026-09-23",
+   "source_versions_used": "kernel 2.16.1; runtime 1.9; protocol 2.0",
+   "precedent_reference": "NONE -- first logged generation for this client/content-type pair",
+   "logged_at": "2026-09-23T07:07:38"
   }
  ]
 }

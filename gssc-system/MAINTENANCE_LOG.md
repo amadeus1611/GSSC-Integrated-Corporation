@@ -12,6 +12,105 @@ session, what changed, why, what's still open.
 
 ---
 
+## 2026-09-23 (5) — four legal-instrument derivatives, built in parallel by subagents
+
+**By:** four `builder` subagents launched in parallel (secretary certificate,
+board resolution, notarial acknowledgment, CMSA contract sample), with
+this orchestrating session handling shared-file setup beforehand and
+git/logging/verification reconciliation afterward.
+
+**Foundation laid first (by the orchestrator, before delegating):**
+`design-tokens/gssc-legal-components.css` — a deliberately separate
+register from the editorial quotation/profile system, per
+09_legal_doctrine.formatting.pt_exception ("Quotation px rules do not
+override legal-master typography"). Times New Roman, justified, 1.5
+spacing, long bond, plain letterhead, no watermark/margin-rail/drop-caps.
+Wired into `assemble_derivative.py` via a third placeholder. This existed
+before any agent started, so all four builds share one letterhead/
+signature-block/notarial-block system instead of four independent ones.
+
+**What each agent built** (all structural skeletons — bracketed
+`.legal-placeholder` fields for every case-specific fact, no invented
+resolution text, dates, amounts, or operative legal language; each
+carries a counsel-review disclaimer per 09_legal_doctrine's hard_stops):
+
+- `derivatives/secretary-certificate/GSSC-SECCERT-TEMPLATE-v1` — signed
+  by Michael C. Silla, Corporate Secretary, only. Never the CEO — this is
+  a named failure mode in the doctrine itself and the agent flagged it
+  explicitly in the document. Notarial acknowledgment block included.
+- `derivatives/board-resolution/GSSC-BOARDRES-TEMPLATE-v1` — WHEREAS/
+  RESOLVED structure, explicitly hands off third-party proof to a
+  companion Secretary's Certificate rather than duplicating that role.
+- `derivatives/notarial-instrument/GSSC-NOTARIAL-ACK-TEMPLATE-v1` —
+  standalone PH acknowledgment page, deliberately no GSSC branding (it
+  attaches to someone else's instrument). Venue defaults to Iloilo City,
+  form defaults to Acknowledgment, per doctrine.
+- `derivatives/contract-sample/GSSC-CMSA-TEMPLATE-v1` — sample Client
+  Master Services Agreement outline per architecture.cmsa. Sensitive
+  articles (confidentiality, non-circumvention, force majeure, ADR,
+  cure/interest mechanics, severability) carry only the recorded
+  defaults (5-year NDA tail, 24-month non-circumvention) plus a visible
+  "SUBJECT TO COUNSEL REVIEW" flag — no operative legal language drafted.
+
+**Coordination notes (why parallel subagents worked here without
+stepping on each other):** each agent worked in its own new directory
+under `gssc-system/derivatives/` — no path overlap. All four were told
+explicitly not to edit the three shared CSS files, not to touch
+`assemble_derivative.py`, and not to run `gssc_runtime.py logwrite` or
+edit this log — that was reserved for this orchestrating session
+specifically to avoid concurrent writes corrupting the single JSON
+design-decision-log file. All four committed and pushed their own work
+directly (same shared checkout, same branch) rather than staging for the
+orchestrator, which worked cleanly except for normal git interleaving
+(the orchestrator's own `git add`/`commit` occasionally found an agent
+had already committed the same files first — handled by checking
+`git status`/`git log` before each commit, never force-overwriting).
+
+**Bugs found and fixed (real ones, not false-positive audit noise this
+time):**
+- CMSA: a `.review-flag` "SUBJECT TO COUNSEL REVIEW" badge
+  (`display:inline-block` + `white-space:nowrap`) visually overlapped
+  adjacent justified body text in multiple places — the building agent
+  fixed the first-found instance (switched to `display:inline`), but one
+  more (clause 9.5, Severability) still overlapped after that fix. Root
+  cause: `white-space:nowrap` combined with `box-decoration-break:clone`
+  produced a rendering glitch specifically at line-wrap boundaries under
+  `text-align:justify`. Fixed by the orchestrator: removed
+  `white-space:nowrap` so the badge wraps like normal text. Verified
+  clean across all 7 usages by direct render.
+- Notarial page: the building agent found and fixed its own bug (an
+  orphaned closing-parenthesis on the venue caption line) before
+  shipping.
+
+**Verified:** `preflight` clean (package untouched by any of this).
+Each derivative rendered via headless Chromium and visually checked —
+not run through `boxcheck`/`contrastaudit`, since those are calibrated
+to the editorial quotation master's DOM/registered pairings, not the
+legal register's plain Times New Roman layout; visual review was the
+real check here, same as the honest approach taken with the company
+profile's known audit gaps.
+
+**Logged:** all four as genuine (non-test) design-decision-log entries,
+each `is_novel_pattern: true` as the first derivative of its kind in
+this repo.
+
+**Open / needs a human:**
+- CMSA signatory: the agent used Ronnie S. del Castillo (CEO) as the
+  GSSC signatory per the client-facing default, but flagged that
+  `02_governance`'s master-agreement-specific representative list
+  (del Castillo, Demayo, Silla) might mean a different person should
+  sign CMSAs specifically — worth Duke's confirmation before this is
+  used as real precedent.
+- None of these four are registered in `11_registry.json` (inside the
+  versioned package) as authoritative masters — deliberately left to
+  Duke, per the same reasoning as the company profile: registering a
+  new authoritative master is a kernel-governance decision, not
+  something an agent decides silently.
+- All four are structural skeletons only. Every clause marked
+  `SUBJECT TO COUNSEL REVIEW` needs real drafting by qualified
+  Philippine counsel before any of these are used with an actual
+  client, board meeting, or notary.
+
 ## 2026-09-23 (4) — company profile finished (v1 complete, pending Duke's review)
 
 **By:** Claude Code (cloud session).
