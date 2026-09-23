@@ -37,6 +37,16 @@ Done in this session:
   - A crosshair cursor over the artwork only.
   - Meta description, Open Graph, and Organization/LocalBusiness JSON-LD.
 
+Fix (same day, Duke: "the compass animations don't load or follow the scroll"):
+- **Cause:** the hosted preview runs sandboxed, so the frame images count as cross-origin. WebGL
+  `texImage2D` threw, and the exception stopped the frame loop, so nothing followed the scroll.
+- **Fix:**
+  - Frames are drawn by a 2D canvas, and the grade is baked into them (`export_web.py`).
+  - The film layer is a texture-free overlay.
+  - The next frame is booked first and each artwork runs inside `safely()`, so one failure can
+    never freeze the page.
+- **Verified** in a sandboxed iframe at desktop and phone sizes, with real wheel input.
+
 Still open: §2B (Festive Walk, waiting on an image); `og.jpg` at the domain root; §2C real-device QA
 and performance budget; §3.
 

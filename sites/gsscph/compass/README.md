@@ -26,7 +26,9 @@ python ../prototype/build.py
 - Cycles, 32 samples with OpenImageDenoise, AgX (Medium High Contrast), 85mm lens at f/11.
 - Brushed brass with radial anisotropy, navy lacquered metal, cloisonné enamel with a gloss coat, and a guilloché dial (`guilloche.png`, generated).
 - Wear is authored: roughness drift, micro scratches and polished bevels on every edge.
-- Rendered on a transparent film with a shadow catcher. The page composites the frame over its own navy room, then grades it like a print: halation off the gold, lens fringe, a printer-light grade, vignette and the shared film layer.
+- Rendered on a transparent film with a shadow catcher. `export_web.py` bakes the print grade into the WebP frames: halation off the gold only, warm highlights and navy shadows.
+- The page draws each frame with a **2D canvas**, never WebGL. The hosted preview runs sandboxed, where every image counts as cross-origin: WebGL refuses such images, and that error once stopped the whole page following the scroll. A 2D canvas shows them fine.
+- The live film layer (grain, weave, flicker, dust, scratch, leak, vignette) is a separate WebGL canvas that reads no images. It is blended over the print with `mix-blend-mode: overlay`.
 
 ## Sources and licences
 
