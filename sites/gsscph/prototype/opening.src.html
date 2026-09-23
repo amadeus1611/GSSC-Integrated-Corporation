@@ -76,10 +76,9 @@ h1 em{font-style:italic;color:var(--gold-deep)}
 .panel .grain{position:absolute;inset:0;opacity:.22;mix-blend-mode:overlay;pointer-events:none;
   background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='220' height='220'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 1  0 0 0 0 1  0 0 0 0 1  0 0 0 .55 0'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>")}
 .panel canvas{position:absolute;inset:0;width:100%;height:100%;display:block;touch-action:pan-y}
-.panel .word{position:absolute;left:0;right:0;bottom:calc(9% + var(--hz,0)*6%);text-align:center;margin:0;
-  font-family:var(--serif);font-style:italic;font-weight:400;color:#f6efdd;
-  font-size:clamp(64px,13vw,210px);line-height:1;letter-spacing:-.02em;pointer-events:none;
-  opacity:calc(1 - var(--cv,0)*1.4);text-shadow:0 2px 40px rgba(9,23,61,.45)}
+.panel .seat{position:absolute;left:50%;top:50%;width:clamp(72px,9vw,120px);height:auto;pointer-events:none;
+  transform:translate(-50%,-50%) scale(calc(.6 + var(--st,0)*.4)) rotate(calc((1 - var(--st,0))*-45deg));opacity:var(--st,0);
+  filter:drop-shadow(0 8px 30px rgba(200,164,77,.35))}
 .panel .legend{position:absolute;left:calc(var(--is,var(--gutter)) + 28px);top:calc(var(--it,6%) + 26px);
   font:600 10.5px/1.5 var(--sans);letter-spacing:.2em;text-transform:uppercase;color:rgba(230,212,167,.72);margin:0;
   opacity:calc(1 - var(--cv,0)*1.6);right:calc(var(--is,var(--gutter)) + 28px)}
@@ -87,7 +86,7 @@ h1 em{font-style:italic;color:var(--gold-deep)}
 .panel .legend span{display:block;font-weight:400;letter-spacing:.04em;text-transform:none;color:rgba(246,239,221,.55)}
 
 /* ---------------------------------------------------------------- the Instrument */
-.inst-stage{position:relative;height:460vh;background:var(--night);color:#f6efdd}
+.inst-stage{position:relative;height:620vh;background:var(--night);color:#f6efdd}
 .inst-pin{position:sticky;top:0;height:100vh;height:100svh;display:grid;grid-template-columns:minmax(0,0.9fr) minmax(0,1.6fr);
   align-items:center;padding-inline:var(--gutter);overflow:hidden}
 .inst-copy{position:relative;z-index:2;max-width:30rem}
@@ -160,14 +159,14 @@ h1 em{font-style:italic;color:var(--gold-deep)}
     </div>
   </section>
 
-  <section class="chart-stage" id="chart" aria-label="The Chart: an interactive field that answers to your cursor">
+  <section class="chart-stage" id="chart" aria-label="The field: liquid gold that gathers toward your cursor">
     <div class="chart-pin">
       <div class="panel" id="panel">
         <div class="sky"></div>
         <canvas id="field" aria-hidden="true"></canvas>
         <div class="grain"></div>
-        <p class="legend">The Chart<span>Move across the field. It answers like iron filings to a compass.</span></p>
-        <p class="word">assemble</p>
+        <p class="legend">The field<span>Move through it. It gathers toward you, then settles.</span></p>
+        <img class="seat" src="{{SEAL}}" alt="">
       </div>
     </div>
   </section>
@@ -209,72 +208,96 @@ const clamp = (v, a = 0, b = 1) => Math.min(b, Math.max(a, v));
 const lerp = (a, b, t) => a + (b - a) * t;
 const ease = t => 1 - Math.pow(1 - t, 4);                 // soft close
 const inOut = t => t < .5 ? 8*t*t*t*t : 1 - Math.pow(-2*t + 2, 4) / 2;
-let vw = innerWidth, vh = innerHeight, sy = scrollY;       // sy = damped scroll, still scroll-linked
+let vw = innerWidth, vh = innerHeight;
 addEventListener('resize', () => { vw = innerWidth; vh = innerHeight; sizeField(); sizeInst(); });
 
-/* ------------------------------------------------ the Chart: magnetic field */
-const panel = document.getElementById('panel'), cv = document.getElementById('field'), cx = cv.getContext('2d');
+/* ------------------------------------------------ the field: liquid gold (WebGL metaballs) */
+const panel = document.getElementById('panel'), cv = document.getElementById('field'), seat = panel.querySelector('.seat');
 const chartStage = document.getElementById('chart');
-let dpr = 1, W = 0, H = 0, dashes = [], roses = [];
+const gl = cv.getContext('webgl', {antialias: false, premultipliedAlpha: false});
+const NB = 10;
+const FS = `precision highp float;
+uniform vec2 uRes; uniform float uTime, uConv; uniform vec3 uB[${NB}];
+float field(vec2 p){ float f = 0.; for (int i = 0; i < ${NB}; i++){ vec2 d = p - uB[i].xy; f += uB[i].z * uB[i].z / (dot(d, d) + 1e-4); } return f; }
+void main(){
+  vec2 uv = gl_FragCoord.xy / uRes, p = (gl_FragCoord.xy - .5 * uRes) / uRes.y;
+  vec3 top = vec3(.027,.071,.184), bot = vec3(.051,.141,.388);
+  vec3 bg = mix(bot, top, pow(uv.y, .8));
+  float hz = exp(-pow((uv.y - (.02 + uConv * .42)) * 3.0, 2.));
+  bg += vec3(.78,.62,.28) * .22 * hz;
+  // height = sqrt(1 - 1/f): exactly a sphere for a lone blob, a smooth weld where blobs merge
+  float f = field(p), e = 1.5 / uRes.y;
+  float h0 = sqrt(max(0., 1. - 1. / max(f, 1e-3)));
+  float hx = sqrt(max(0., 1. - 1. / max(field(p + vec2(e, 0.)), 1e-3)));
+  float hy = sqrt(max(0., 1. - 1. / max(field(p + vec2(0., e)), 1e-3)));
+  vec2 g = vec2(hx - h0, hy - h0) / e;
+  float body = smoothstep(.96, 1.08, f);
+  vec3 n = normalize(vec3(-g * .075, 1.));
+  vec3 L = normalize(vec3(-.45, .65, .62));
+  float dif = clamp(dot(n, L), 0., 1.), spec = pow(clamp(dot(reflect(-L, n), vec3(0., 0., 1.)), 0., 1.), 28.);
+  vec3 deep = vec3(.42,.29,.10), gold = vec3(.79,.64,.30), light = vec3(.95,.87,.66);
+  vec3 lava = mix(deep, gold, dif) + light * spec * .85;
+  lava = mix(lava, vec3(.05,.10,.27), .18 * (1. - dif));
+  float halo = smoothstep(.28, .96, f) * (1. - body);
+  vec3 col = bg + gold * halo * .16;
+  col = mix(col, lava, body);
+  float gr = fract(sin(dot(gl_FragCoord.xy + fract(uTime * .0001) * 91., vec2(12.9898, 78.233))) * 43758.5453);
+  col += (gr - .5) * .03;
+  gl_FragColor = vec4(col, 1.);
+}`;
+let prog = null, uRes, uTime, uConv, uB;
+if (gl) {
+  const sh = (type, src) => { const o = gl.createShader(type); gl.shaderSource(o, src); gl.compileShader(o); return o; };
+  prog = gl.createProgram();
+  gl.attachShader(prog, sh(gl.VERTEX_SHADER, 'attribute vec2 a; void main(){ gl_Position = vec4(a, 0., 1.); }'));
+  gl.attachShader(prog, sh(gl.FRAGMENT_SHADER, FS)); gl.linkProgram(prog); gl.useProgram(prog);
+  gl.bindBuffer(gl.ARRAY_BUFFER, gl.createBuffer());
+  gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1,-1, 1,-1, -1,1, 1,1]), gl.STATIC_DRAW);
+  const loc = gl.getAttribLocation(prog, 'a'); gl.enableVertexAttribArray(loc); gl.vertexAttribPointer(loc, 2, gl.FLOAT, false, 0, 0);
+  uRes = gl.getUniformLocation(prog, 'uRes'); uTime = gl.getUniformLocation(prog, 'uTime');
+  uConv = gl.getUniformLocation(prog, 'uConv'); uB = gl.getUniformLocation(prog, 'uB');
+}
+let W = 0, H = 0;
 function sizeField(){
-  dpr = Math.min(devicePixelRatio || 1, 2); W = cv.clientWidth; H = cv.clientHeight;
-  cv.width = W * dpr; cv.height = H * dpr; cx.setTransform(dpr, 0, 0, dpr, 0, 0);
-  const s = W < 700 ? 24 : 21; dashes = [];
-  roses = [[W*.18, H*.30], [W*.78, H*.24], [W*.52, H*.70]];
-  for (let y = s/2; y < H; y += s) for (let x = s/2; x < W; x += s) {
-    const jx = x + (Math.random() - .5) * s * .7, jy = y + (Math.random() - .5) * s * .7;
-    let best = 1e9, a0 = 0;
-    for (const [rx, ry] of roses) { const d = Math.hypot(jx - rx, jy - ry); if (d < best) { best = d; a0 = Math.atan2(jy - ry, jx - rx); } }
-    dashes.push({x: jx, y: jy, a0, k: 0, ph: Math.random() * 6.28});
-  }
+  // the lava is soft-edged, so it renders at reduced resolution and the browser upscales it
+  const k = Math.min(devicePixelRatio || 1, 1.5) * (innerWidth < 700 ? .55 : .5);
+  W = Math.max(2, Math.round(cv.clientWidth * k)); H = Math.max(2, Math.round(cv.clientHeight * k));
+  cv.width = W; cv.height = H; if (gl) gl.viewport(0, 0, W, H);
 }
 sizeField();
-const ptr = {x: -1e4, y: -1e4, active: false, last: 0};
-panel.addEventListener('pointermove', e => { const r = cv.getBoundingClientRect(); ptr.x = e.clientX - r.left; ptr.y = e.clientY - r.top; ptr.active = true; ptr.last = performance.now(); });
+// nine drifting blobs on slow Lissajous paths, plus one that follows the pointer
+const blobs = Array.from({length: NB - 1}, (_, i) => ({
+  cx: (i / (NB - 2) - .5) * 1.25, cy: Math.sin(i * 2.1) * .18, ax: .12 + (i % 3) * .05, ay: .1 + (i % 4) * .035,
+  fx: .00007 + i * .000011, fy: .00009 + (i % 5) * .000013, ph: i * 1.7, r: .075 + (i % 4) * .018,
+  ox: 0, oy: 0, x: 0, y: 0}));
+const hand = {x: 0, y: 0, r: 0};
+const ptr = {x: 0, y: 0, active: false, last: 0};
+panel.addEventListener('pointermove', e => { const r = cv.getBoundingClientRect();
+  ptr.x = (e.clientX - r.left - r.width / 2) / r.height; ptr.y = -(e.clientY - r.top - r.height / 2) / r.height;
+  ptr.active = true; ptr.last = performance.now(); });
 panel.addEventListener('pointerleave', () => { ptr.active = false; });
-const BUCKETS = 8;
-function drawField(t, conv){
-  cx.clearRect(0, 0, W, H);
-  // with no pointer for a while (phones, idle desktops) a slow ghost wanders, so the field is never dead
+const ub = new Float32Array(NB * 3);
+function drawField(t, conv, dt){
+  if (!gl) return;
+  const aspect = cv.clientWidth / Math.max(1, cv.clientHeight);
   const idle = !ptr.active || performance.now() - ptr.last > 2600;
-  const gx = idle ? W * (.5 + .32 * Math.sin(t * .00023)) : ptr.x, gy = idle ? H * (.46 + .2 * Math.sin(t * .00031 + 1)) : ptr.y;
-  const R = Math.max(150, Math.min(W, H) * .24), cxx = W * .5, cyy = H * .5;
-  const paths = Array.from({length: BUCKETS}, () => new Path2D());
-  for (const d of dashes) {
-    const dx = d.x - gx, dy = d.y - gy, target = Math.exp(-(dx*dx + dy*dy) / (R*R)) * (idle ? .75 : 1);
-    d.k += (target - d.k) * (target > d.k ? .22 : .035);   // fast in, slow soft release
-    const k = d.k;
-    // rest: rhumb lines from the nearest rose; near the pointer: swing to orbit it
-    let ax = Math.cos(d.a0 + Math.sin(t * .0004 + d.ph) * .08), ay = Math.sin(d.a0 + Math.sin(t * .0004 + d.ph) * .08);
-    const orb = Math.atan2(dy, dx) + Math.PI / 2 * .78;
-    ax = lerp(ax, Math.cos(orb), k); ay = lerp(ay, Math.sin(orb), k);
-    let px = d.x, py = d.y;
-    if (conv > 0) {                                    // converge on the star
-      const c = inOut(conv);
-      px = lerp(d.x, cxx + (d.x - cxx) * .04, c); py = lerp(d.y, cyy + (d.y - cyy) * .04, c);
-      const toC = Math.atan2(cyy - d.y, cxx - d.x); ax = lerp(ax, Math.cos(toC), c); ay = lerp(ay, Math.sin(toC), c);
-    }
-    const n = Math.hypot(ax, ay) || 1, L = 2.2 + 9 * k + conv * 5;
-    const b = Math.min(BUCKETS - 1, Math.floor(Math.max(k, conv * .6) * BUCKETS));
-    paths[b].moveTo(px - ax / n * L, py - ay / n * L); paths[b].lineTo(px + ax / n * L, py + ay / n * L);
-  }
-  cx.lineCap = 'round';
-  for (let b = 0; b < BUCKETS; b++) {
-    const f = b / (BUCKETS - 1);
-    // ink-at-rest (pale ivory on the night ground) warming to gold near the pointer
-    const r = Math.round(lerp(214, 214, f)), g = Math.round(lerp(208, 178, f)), bl = Math.round(lerp(196, 92, f));
-    cx.strokeStyle = `rgba(${r},${g},${bl},${lerp(.16, .95, f)})`; cx.lineWidth = lerp(1, 1.8, f);
-    cx.stroke(paths[b]);
-  }
-  // the three roses: tiny eight-point stars the rhumb lines radiate from
-  cx.fillStyle = `rgba(200,164,77,${.75 * (1 - conv)})`;
-  for (const [rx, ry] of roses) star(cx, rx, ry, 7, 2.2);
-  if (conv > .02) { cx.fillStyle = `rgba(230,212,167,${ease(conv)})`; star(cx, cxx, cyy, 10 + 30 * ease(conv), 3 + 9 * ease(conv)); }
-}
-function star(c, x, y, R, r){
-  c.beginPath();
-  for (let i = 0; i < 16; i++) { const a = i * Math.PI / 8 - Math.PI / 2, rr = i % 2 ? r : (i % 4 ? R * .62 : R); c.lineTo(x + Math.cos(a) * rr, y + Math.sin(a) * rr); }
-  c.closePath(); c.fill();
+  const mx = idle ? Math.sin(t * .00019) * aspect * .32 : ptr.x, my = idle ? Math.sin(t * .00027 + 1) * .16 : ptr.y;
+  const c = inOut(conv), sm = k => 1 - Math.exp(-dt / k);
+  const portrait = aspect < 1, rf = portrait ? .62 : .8, vy = portrait ? 1.9 : 1.15;
+  blobs.forEach((b, i) => {
+    const dx = b.cx * aspect * .8 + Math.sin(t * b.fx + b.ph) * b.ax * aspect, dy = (b.cy + Math.cos(t * b.fy + b.ph) * b.ay) * vy;
+    // near the pointer a blob leans toward it: quick to gather, slow to let go (the soft close)
+    const ddx = mx - dx, ddy = my - dy, w = Math.exp(-(ddx*ddx + ddy*ddy) / .09) * (idle ? .45 : .8);
+    const tx = ddx * w * .55, ty = ddy * w * .55, grow = Math.hypot(tx, ty) > Math.hypot(b.ox, b.oy);
+    b.ox += (tx - b.ox) * sm(grow ? .35 : 1.4); b.oy += (ty - b.oy) * sm(grow ? .35 : 1.4);
+    b.x = lerp(dx + b.ox, 0, c); b.y = lerp(dy + b.oy, 0, c);
+    ub.set([b.x, b.y, lerp(b.r * rf, .062 * rf, c)], i * 3);
+  });
+  hand.x += (mx - hand.x) * sm(.18); hand.y += (my - hand.y) * sm(.18);
+  hand.r += ((idle ? .05 : .085) * rf * (1 - c) - hand.r) * sm(.5);
+  ub.set([hand.x, hand.y, hand.r], (NB - 1) * 3);
+  gl.uniform2f(uRes, W, H); gl.uniform1f(uTime, t); gl.uniform1f(uConv, conv); gl.uniform3fv(uB, ub);
+  gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
 }
 
 /* ------------------------------------------------ the Instrument */
@@ -357,13 +380,27 @@ const iptr = {x: 0, y: 0};
 iv.addEventListener('pointermove', e => { const r = iv.getBoundingClientRect(); iptr.x = (e.clientX - r.left) / r.width - .5; iptr.y = (e.clientY - r.top) / r.height - .5; });
 iv.addEventListener('pointerleave', () => { iptr.x = 0; iptr.y = 0; });
 const v3 = () => new THREE.Vector3();
-function drawInstrument(t, q){
+function drawInstrument(t, q, dt){
   const {renderer, scene, cam, group, parts, leaders, tags} = three;
   const w = iv.clientWidth, h = iv.clientHeight, narrow = vw <= 820;
-  const reassemble = ease(clamp((q - .8) / .17));
-  const tilt = ease(clamp(q / .14)) * (1 - reassemble * .55);
+  // PHASES: the pinned scroll is divided into steps. Scroll only chooses the step;
+  // each part then travels there on its own clock with the soft close, strictly
+  // in order, so a fast flick never skips a part and scrolling back rewinds it.
+  const N = parts.length, steps = N + 3;                      // tilt, 7 parts, hold, close
+  const step = Math.min(steps - 1, Math.floor(q * steps));
+  const closing = step >= N + 2;
+  const S = three.state || (three.state = {tilt: 0, v: parts.map(() => 0)});
+  const k = 1 - Math.exp(-dt / 320);
+  S.tilt += ((step >= 1 && !closing ? 1 : closing ? .45 : 0) - S.tilt) * k;
+  for (let i = 0; i < N; i++) {
+    let goal = !closing && step >= i + 1 && S.tilt > .6 ? 1 : 0;
+    if (goal && i > 0 && S.v[i - 1] < .55) goal = S.v[i];           // open in order, top down
+    if (!goal && i < N - 1 && S.v[i + 1] > .45) goal = S.v[i];      // close in reverse order
+    S.v[i] += (goal - S.v[i]) * k;
+  }
+  const tilt = ease(S.tilt);
   let maxE = 0, current = -1;
-  const E = parts.map((p, i) => { const e = ease(clamp((q - .14 - i * .06) / .2)) * (1 - reassemble); maxE = Math.max(maxE, e); if (e > .5) current = i; return e; });
+  const E = S.v.map((v, i) => { const e = ease(clamp(v)); maxE = Math.max(maxE, e); if (e > .5) current = i; return e; });
   // cursor tilt settles with the soft close
   three.tilt.x += (iptr.y * .22 - three.tilt.x) * .05; three.tilt.y += (iptr.x * .3 - three.tilt.y) * .05;
   group.rotation.x = -1.02 * tilt + three.tilt.x;
@@ -397,29 +434,26 @@ function drawInstrument(t, q){
 }
 
 /* ------------------------------------------------ the loop */
-const bar = document.getElementById('bar'), closeEl = document.getElementById('inquire');
-function sectionProgress(el, span){ const r = el.getBoundingClientRect(); return clamp((-r.top) / span); }
+// Positions are read from the elements themselves, never from window.scrollY:
+// inside some viewers the body, not the window, is the scroller.
+const bar = document.getElementById('bar'), closeEl = document.getElementById('inquire'), topEl = document.getElementById('top');
+let last = performance.now();
 function frame(t){
-  sy += (scrollY - sy) * .14;                              // damped, but always converging on the real position
-  if (Math.abs(scrollY - sy) < .1) sy = scrollY;
-  // header: scroll-linked over the first 140px
-  root.style.setProperty('--h', clamp(sy / 140).toFixed(4));
-  // the Chart: expand to full-bleed, then converge
-  const off = sy - scrollY;                                // apply damping to section progress too
+  const dt = Math.min(64, t - last); last = t;
+  const scrolled = Math.max(0, -topEl.getBoundingClientRect().top);
+  root.style.setProperty('--h', clamp(scrolled / 140).toFixed(4));          // header, scroll-linked
   const cr = chartStage.getBoundingClientRect(), span = chartStage.offsetHeight - vh;
-  const p = clamp((-(cr.top + off) + vh * .55) / (vh * .95));
-  const conv = clamp((-(cr.top + off) - vh * .55) / (span - vh * .55));
-  const ep = ease(p), gut = parseFloat(getComputedStyle(root).getPropertyValue('--gutter')) || 24;
+  const p = clamp((-cr.top + vh * .55) / (vh * .95));
+  const conv = clamp((-cr.top - vh * .55) / (span - vh * .55));
+  const ep = ease(p);
   panel.style.setProperty('--it', lerp(6, 0, ep) + '%'); panel.style.setProperty('--ib', lerp(8, 0, ep) + '%');
   panel.style.setProperty('--is', lerp(Math.min(72, Math.max(20, vw * .05)), 0, ep) + 'px'); panel.style.setProperty('--ir', lerp(28, 0, ep) + 'px');
-  panel.style.setProperty('--hz', ease(conv).toFixed(4)); panel.style.setProperty('--cv', conv.toFixed(4));
-  if (cr.bottom > -50 && cr.top < vh + 50) drawField(t, conv);
-  // the Instrument
+  panel.style.setProperty('--cv', conv.toFixed(4)); panel.style.setProperty('--st', ease(clamp((conv - .72) / .28)).toFixed(4));
+  if (cr.bottom > -50 && cr.top < vh + 50) drawField(t, conv, dt);
   if (three) {
     const ir = instStage.getBoundingClientRect();
-    if (ir.bottom > 0 && ir.top < vh) drawInstrument(t, clamp((-(ir.top + off)) / (instStage.offsetHeight - vh)));
+    if (ir.bottom > 0 && ir.top < vh) drawInstrument(t, clamp(-ir.top / (instStage.offsetHeight - vh)), dt);
   }
-  // header tone: night glass over the dark stages, paper glass elsewhere
   const probe = 36, over = el => { const r = el.getBoundingClientRect(); return r.top <= probe && r.bottom > probe; };
   bar.classList.toggle('dark', (over(chartStage) && p > .55) || over(instStage) || over(closeEl));
   if (!REDUCE) requestAnimationFrame(frame);
@@ -428,8 +462,8 @@ three = buildInstrument(); sizeInst();
 if (REDUCE) {
   // a still, fully designed page: the field at rest, the Instrument opened with every label shown
   panel.style.setProperty('--it', '0%'); panel.style.setProperty('--ib', '0%'); panel.style.setProperty('--is', '0px'); panel.style.setProperty('--ir', '0px');
-  drawField(0, 0);
-  if (three) drawInstrument(0, .62);
+  drawField(0, 0, 16);
+  if (three) { three.state = {tilt: 1, v: three.parts.map(() => 1)}; drawInstrument(0, .7, 16); }
 } else requestAnimationFrame(frame);
 })();
 </script>
