@@ -32,8 +32,9 @@ body{padding:28px 0;}
 .legal-template-notice b{font-style:normal;color:#7a5a00;}
 
 .legal-venue-caption{font-family:"Times New Roman",Times,Georgia,serif;font-size:11pt;
-  line-height:1.6;margin-bottom:16pt;}
-.legal-venue-caption .brace{display:inline-block;width:0.3in;text-align:center;}
+  line-height:1.6;margin-bottom:16pt;text-align:left;}
+.legal-venue-caption .row{display:flex;justify-content:space-between;max-width:4in;}
+.legal-venue-caption .brace{white-space:nowrap;}
 
 .legal-notarial .ack-lead{margin-bottom:12pt;}
 .legal-notarial table.ack-id-table{width:100%;border-collapse:collapse;margin:10pt 0 14pt;
@@ -88,9 +89,9 @@ body{padding:28px 0;}
   <div class="legal-notarial">
 
     <div class="legal-venue-caption">
-      REPUBLIC OF THE PHILIPPINES&nbsp;&nbsp;<span class="brace">)</span><br/>
-      <span class="legal-placeholder">[CITY / MUNICIPALITY]</span>,
-      <span class="legal-placeholder">[PROVINCE]</span>&nbsp;&nbsp;<span class="brace">) S.S.</span>
+      <div class="row"><span>REPUBLIC OF THE PHILIPPINES</span><span class="brace">)</span></div>
+      <div class="row"><span><span class="legal-placeholder">[CITY / MUNICIPALITY]</span>,
+        <span class="legal-placeholder">[PROVINCE]</span></span><span class="brace">) S.S.</span></div>
     </div>
 
     <h2>Acknowledgment</h2>
