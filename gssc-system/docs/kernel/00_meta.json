@@ -7,11 +7,12 @@
   "human_note": "Read this first. The kernel is GSSC's portable operating context, not a template or asset pack.",
   "kernel_identity": {
     "name": "GSSC_Kernel",
-    "kernel_version": "2.17.0",
+    "kernel_version": "2.18.0",
     "release_date": "2026-09-23",
     "owner": "GSSC Integrated Corporation",
     "format": "hybrid JSON",
     "supersedes": [
+      "GSSC_Kernel.json (v2.17.0)",
       "GSSC_Kernel.json (v2.16.1)",
       "GSSC_Kernel.json (v2.16.0)",
       "GSSC_Kernel.json (v2.15.0)",
@@ -68,7 +69,7 @@
     "04_firewall": "external disclosure controls",
     "05_ip": "intellectual-property preservation",
     "06_quotation_doctrine": "quotation engineering and commercial doctrine",
-    "07_website_doctrine": "website, motion, content, and Squarespace doctrine",
+    "07_website_doctrine": "website, motion, content, and delivery doctrine (own coded site)",
     "08_document_doctrine": "profiles, letterheads, case notes, email, presentations, forms",
     "09_legal_doctrine": "legal-handling governance without replacing counsel",
     "10_template_engine": "Mode A Fidelity Cloner and Mode B Deconstruction Engine",

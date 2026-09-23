@@ -20,21 +20,22 @@ in this repository.
 
 ## Working in `gssc-system/`
 
-- The package JSON (`gssc-system/package/GSSC_Master_Package_v2_17_0.json`)
+- The package JSON (`gssc-system/package/GSSC_Master_Package_v2_18_0.json`)
   is a versioned, hash-verified artifact. Don't hand-edit it to patch a
   one-off document — find the doctrine gap, fix the owning kernel
   module, and treat that as a real version bump, documented in
   `gssc-system/MAINTENANCE_LOG.md`.
-- Kernel **2.17.0 is the current production release**, adopted by Duke
-  Y. Demayo on 2026-09-23 (it supersedes 2.9.0 and the 2.16.1 review
-  candidate). It was cut here with `gssc-system/release/cut_release_2_17_0.py`;
-  the next release is cut the same way, as a new script, never by hand.
+- Kernel **2.18.0 is the current production release**, adopted by Duke
+  Y. Demayo on 2026-09-23. 2.17.0 (logo pack, signatory policy) and 2.18.0
+  (website doctrine v2.0: own coded site, no Squarespace) were cut here with
+  `gssc-system/release/cut_release_*.py`; the next release is cut the same
+  way, as a new script, never by hand.
 - Brand logos come from the Canva design `GSSC_Native_Logo-Pack`
   (DAHLkhKRfrg) via kernel 03_brand `logo_system`. Never redraw, recolour
   or crop a logo in a document; a new variant enters through the pack and
   a kernel release.
 - After any change that touches the package, run:
-  `cd gssc-system/runtime && python3 gssc_runtime.py preflight ../package/GSSC_Master_Package_v2_17_0.json`
+  `cd gssc-system/runtime && python3 gssc_runtime.py preflight ../package/GSSC_Master_Package_v2_18_0.json`
   and don't consider the change done until it's a clean PASS.
 - Every real document generation should go through
   `gssc_runtime.py hydrate` (not manual copy/paste of the template) so
@@ -92,7 +93,7 @@ subagent" (or @-mention it) when you want to force a specific one.
 
 ## Things to never do
 
-- Never hand-edit `gssc-system/package/GSSC_Master_Package_v2_17_0.json`
+- Never hand-edit `gssc-system/package/GSSC_Master_Package_v2_18_0.json`
   to fix a single document — fix the doctrine, not the output.
 - Never add seed/fabricated entries to
   `gssc-system/package/GSSC_DesignDecisionLog.json`.

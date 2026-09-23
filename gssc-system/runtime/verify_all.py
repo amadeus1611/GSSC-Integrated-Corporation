@@ -23,7 +23,7 @@ import tempfile
 
 HERE = pathlib.Path(__file__).resolve().parent
 ROOT = HERE.parent
-PKG = ROOT / "package" / "GSSC_Master_Package_v2_17_0.json"
+PKG = ROOT / "package" / "GSSC_Master_Package_v2_18_0.json"
 AUDITS = ["boxcheck", "chsaudit", "numbercheck", "tocgen", "governanceaudit", "colouraudit", "typeaudit",
           "figcheck", "gridbalance", "futureproof", "a11yaudit", "geometryaudit", "parityaudit", "contrastaudit"]
 

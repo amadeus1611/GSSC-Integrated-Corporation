@@ -1,44 +1,68 @@
 {
   "module_id": "07_website_doctrine",
-  "version": "1.0",
+  "version": "2.0",
   "role": "strong_default",
-  "purpose": "Govern gsscph.com visual character, motion, content security, page cohesion, and Squarespace integration.",
-  "human_note": "The website is a flagship credibility artifact: an editorial journal on the web.",
+  "purpose": "Govern gsscph.com: GSSC's own coded site, its visual character, motion, content security, page cohesion and delivery.",
+  "human_note": "The website is a showroom: warm paper, deep ink, generous space and one extraordinary object. It should read as GSSC's print documents brought to life.",
+  "adopted": {
+    "on": "2026-09-23",
+    "by": "Duke Y. Demayo, President",
+    "basis": "Duke's direction to replace the Squarespace site with a site coded from scratch and built with Claude, following the showroom concept."
+  },
   "character": {
-    "core": "Editorial masterpiece",
+    "core": "Editorial showroom",
     "audience": "Executives and decision-makers",
     "principles": [
       "typographic authority",
       "restraint",
       "cohesion with print",
-      "firewall-safe content"
-    ]
+      "firewall-safe content",
+      "one signature object per page at most"
+    ],
+    "narrative_flow": "Each page moves the reader through attention, curiosity, understanding, trust and action, in that order: a statement, the thing that shows it, how it works, the proof, then one clear next step."
   },
   "visual": {
     "inherit": "03_brand",
-    "layout": "Editorial columns and consistent grid; source master determines bleed behavior.",
-    "photography": "Avoid by default.",
-    "assets": "Preserve original CSS-variable/base64 strategy where present."
+    "palette_use": "Paper (ivory, ivory_deep) for grounds, navy for ink, navy_dark for the night stage and footer, gold only for the mark, one rule per section and hover states.",
+    "type": "Libre Baskerville for display and numerals, Inter for body and UI, from the same scale as 03_brand.document_type_system scaled for screens. Headlines use text-wrap: balance.",
+    "layout": "Editorial columns on a consistent grid, very generous vertical space.",
+    "photography": "Avoid by default. Procedural visuals and GSSC's own documents do the showing.",
+    "assets": "Logos come only from brand_assets (03_brand.logo_system). Never redraw a logo."
   },
   "motion": {
-    "current_authoritative_home_behavior": "Static Premium: all substantive content visible on load; only a load-time hero cascade plus restrained hover states.",
-    "scroll_triggered_motion": "Disabled in the current authoritative home master.",
-    "source_master_rule": "Do not reintroduce IntersectionObserver, scroll-linked reveal machinery, or hidden-on-load content unless the user explicitly creates a new versioned master.",
+    "signature": "Fast out, soft close: things move quickly at first and take a long time to settle, like a well-damped car door.",
+    "easing_tokens": {
+      "soft_close": "cubic-bezier(0.16, 1, 0.3, 1)",
+      "release": "cubic-bezier(0.65, 0, 0.35, 1)"
+    },
+    "durations_ms": {
+      "hover_in": 180,
+      "hover_out": 600,
+      "reveal": 1100,
+      "object": "1400-1800"
+    },
+    "scroll_linked": "Allowed as progressive enhancement: pinned sections, scroll-driven transforms, text and assets that follow scroll, the dynamic header.",
+    "content_rule": "Content is NEVER hidden pending motion. Every word and link is present and readable with JavaScript off. Motion only adds on top.",
+    "dynamic_header": "At the very top of a page the header shows the full lockup; once the reader scrolls, it condenses to the mark with the soft-close ease, and expands again at the top.",
+    "reduced_motion": "prefers-reduced-motion receives a still, fully designed page: no scroll-linked transforms, no object animation, no smooth-scroll.",
     "allowed": [
       "load-time hero cascade",
-      "restrained hover states",
-      "motion-reduction support"
+      "scroll-linked transforms as enhancement",
+      "pinned sections",
+      "dynamic header",
+      "pointer-reactive signature object",
+      "restrained hover states"
     ],
     "avoid": [
-      "scroll-triggered reveal",
-      "content hidden pending intersection",
+      "content hidden pending intersection or animation",
       "bounce",
       "elastic easing",
-      "gimmicky parallax",
+      "overshoot",
       "autoplay carousel",
       "attention pulse",
       "fast marquee",
-      "layout-shifting hover"
+      "layout-shifting hover",
+      "scroll-jacking that changes the scroll distance or blocks keyboard and assistive navigation"
     ]
   },
   "content": {
@@ -56,7 +80,8 @@
       "margin language",
       "facility identifiers",
       "generic stock photography"
-    ]
+    ],
+    "identity_source": "Corporate identity, registrations, addresses, contacts and officers are generated from 01_identity and 02_governance at build time, never typed into pages."
   },
   "case_notes": {
     "structure": [
@@ -78,38 +103,38 @@
       "capabilities",
       "how we engage",
       "case notes",
-      "contact"
+      "company",
+      "inquire"
     ],
     "cohesion": "Share typography, color, spacing, motion and asset treatment."
   },
   "implementation": {
-    "platform": "Squarespace",
-    "delivery": "Ready-to-paste blocks preferred.",
-    "css": "Global shared system plus page-scoped or in-block CSS for conflict-prone components.",
-    "backup": "Back up live code before replacement; verify before deleting backup."
+    "platform": "GSSC's own static site, coded from scratch in this repository (sites/gsscph/) and built with Claude Code. Squarespace is retired as the site platform.",
+    "source_of_truth": "The git repository. The live site is a build of it; nothing is edited in a hosting dashboard.",
+    "performance_budget": {
+      "lighthouse_min": 95,
+      "lcp_seconds_4g": 1.8,
+      "signature_object_js_gzip_kb": 180,
+      "target_fps_midrange_phone": 60
+    },
+    "qa": "Rendered screenshots at phone, tablet and desktop widths, and a reduced-motion pass, on every build, with the same discipline as the document system: look at the pages, not only the numbers.",
+    "stack_and_hosting": "Recorded in sites/gsscph/ and decided by build evidence; a change of stack is not a doctrine change."
   },
-  "registered_masters": [
-    "GSSC_Home_Page_v2_6_STATIC.html",
-    "GSSC_Capabilities_v2_6.html",
-    "GSSC_HowWeEngage_v2_8.html"
-  ],
-  "registered_assets": [
-    "GSSC_Website_Base64_Logo_Pack.html",
-    "GSSC_Website_CustomCSS_v1_1_MERGED.html"
-  ],
+  "registered_masters": [],
+  "registered_masters_note": "The v2.x Squarespace masters are legacy (11_registry). The v3 site registers its pages here when stage 3 of the build lands.",
   "failure_modes": [
-    "early animation",
+    "content hidden until an animation or intersection fires",
+    "motion without a reduced-motion equivalent",
     "off-brand photography",
-    "CSS conflicts",
     "public case-note leakage",
-    "regenerated logos",
-    "page-level drift",
-    "scroll-reveal doctrine applied to the v2.6 Static Premium home master",
-    "v2.5 home restored without explicit rollback instruction"
+    "regenerated or redrawn logos",
+    "identity facts typed into a page instead of generated from the kernel",
+    "page-level drift in type, colour or motion",
+    "a change made on the live host instead of in the repository",
+    "a signature object that blocks first paint or misses the performance budget"
   ],
-  "superseded_home_master": {
-    "file": "GSSC_Home_Page_v2_5_FINAL.html",
-    "status": "legacy",
-    "superseded_by": "GSSC_Home_Page_v2_6_STATIC.html"
+  "superseded": {
+    "version": "1.0",
+    "summary": "Static Premium on Squarespace: no scroll-triggered motion, ready-to-paste blocks. Retired 2026-09-23."
   }
 }

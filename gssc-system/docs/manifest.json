@@ -1,17 +1,17 @@
 {
   "package_role": "GSSC_MASTER_PACKAGE",
-  "package_version": "2.17.0",
+  "package_version": "2.18.0",
   "package_format": "single-file JSON container, eight parts, with an embedded executable runtime",
   "package_built": "2026-09-23",
-  "supersedes": "GSSC_Master_Package_v2_16_1.json",
-  "note": "Final-form production release, adopted 2026-09-23 by Duke Y. Demayo, President. Native logo pack (Canva DAHLkhKRfrg) at source resolution with the wordmark as a library asset; President as default signatory; runtime 2.0 fixes. Every threshold the runtime enforces is still read from this package.",
+  "supersedes": "GSSC_Master_Package_v2_17_0.json",
+  "note": "Production release adopted 2026-09-23 by Duke Y. Demayo, President. Website doctrine v2.0: own coded site, Squarespace retired. Everything else carried from 2.17.0 unchanged.",
   "parts": [
     {
       "key": "kernel",
       "format": "embedded JSON object",
-      "kernel_version": "2.17.0",
-      "sha256": "b434a853cbb3eadae9b1235c3c271c83bfa165667f61af618784825cc45b2459",
-      "note": "20 modules, 00-19. 2.17.0 adds 03 logo_system and 02 signatory_policy."
+      "kernel_version": "2.18.0",
+      "sha256": "0ae7259c81b1ab2d26dae91177c54cac62533190278b6eef3f24b8fcacbd6c97",
+      "note": "20 modules, 00-19. 2.18.0 rewrites 07_website_doctrine (v2.0)."
     },
     {
       "key": "execution_protocol",
@@ -92,7 +92,7 @@
     "adopted_on": "2026-09-23",
     "board_reference": "",
     "basis": "Approval given by the President in the Claude Code maintenance session of 2026-09-23, for the release that brings the package to its final form. A board resolution reference may be added here when one is issued.",
-    "adopted_release": "2.17.0"
+    "adopted_release": "2.18.0"
   },
   "quickstart": {
     "step_1": "Extract the runtime: see runtime.extraction.",

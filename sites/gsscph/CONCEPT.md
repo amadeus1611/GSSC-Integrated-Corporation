@@ -1,6 +1,6 @@
 # gsscph.com v3 — concept draft ("the showroom")
 
-Status: DRAFT for Duke's review, 2026-09-23. Nothing is built yet.
+Status: APPROVED DIRECTION, 2026-09-23. Build plan: `PLAN.md`. Nothing is built yet.
 
 ## 1. The idea in one line
 
@@ -132,20 +132,19 @@ contradict the documents (plan item 10).
 - QA like the documents: Playwright screenshots at phone, tablet and
   desktop widths on every build, plus a motion-off pass.
 
-## 9. Decisions Duke needs to make before building
+## 9. Decisions (resolved 2026-09-23)
 
-1. **Doctrine.** Kernel 07 currently mandates "Static Premium", with no
-   scroll-triggered motion and Squarespace blocks. Its own rule allows a
-   new versioned master when the owner explicitly asks. Proposal: add
-   `07_website_doctrine` v2.0 to `docs/proposals/` (scroll-linked motion
-   allowed only as an enhancement, content never hidden, the soft-close
-   easing, the Instrument) and release it with the next kernel version.
-2. **Platform.** Squarespace can't host this well. Proposal: a static site
-   on Cloudflare Pages or Vercel with gsscph.com pointed at it. Squarespace
-   can be retired or kept for email/domain only.
-3. **Instrument layers.** Confirm the capability list the rings represent.
-4. **Current site.** Replace the existing `README.md` site (it is HTML
-   saved as README) once v3 is live, and keep it in git as v2.
+1. **Doctrine:** done. Kernel 2.18.0 rewrote `07_website_doctrine` to v2.0:
+   GSSC's own coded site, scroll-linked motion as enhancement only,
+   the soft-close easing, the dynamic header. Squarespace is retired.
+2. **Platform:** our own site, coded from scratch with Claude. Stack and
+   hosting are in `PLAN.md` (Astro, Three.js, GSAP + CSS scroll-driven
+   animation, Cloudflare Pages).
+3. **Instrument layers and page flow:** follow the attention → curiosity →
+   understanding → trust → action flow of Anthropic's site (`PLAN.md` §2,
+   §5). Final service names confirmed at stage 3.
+4. **Current site:** the `README.md` site is replaced at launch and kept
+   in git as v2.
 
 ## 10. Build stages
 

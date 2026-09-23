@@ -12,6 +12,30 @@ session, what changed, why, what's still open.
 
 ---
 
+## 2026-09-23 (10) — kernel 2.18.0: website doctrine v2.0, Squarespace retired
+
+**By:** Claude Code (Opus 5.5 session). **Directed by:** Duke Y. Demayo:
+"update it to be claude based now... a full scratch new coded fresh site...
+Not squarespace, our own."
+
+**Done:** `release/cut_release_2_18_0.py` → `GSSC_Master_Package_v2_18_0.json`.
+- 07_website_doctrine 1.0 → 2.0. It covers:
+  - the platform: GSSC's own coded site in `sites/gsscph/`, built with
+    Claude Code, with the repo as the source of truth;
+  - showroom character and narrative flow;
+  - the soft-close easing tokens and durations, the dynamic header, and
+    scroll-linked motion allowed as enhancement only (content never
+    hidden; a reduced-motion page is fully designed);
+  - identity generated from 01/02, the performance budget, and rendered QA.
+- 11_registry: the Squarespace home/capabilities/engagement/global-CSS
+  masters and the old base64 logo pack move to legacy; `sites/gsscph/`
+  is registered as the website source.
+- 2.17.0 file retired (it stays in git history). Preflight PASS;
+  verify_all PASS (six documents rebuilt, provenance now reads 2.18.0).
+
+**Open:** the stack is chosen in `sites/gsscph/PLAN.md` from build
+evidence. The v3 pages register in 07 when build stage 3 lands.
+
 ## 2026-09-23 (9) — kernel 2.17.0 released: native logo pack, final form
 
 **By:** Claude Code (Opus 5.5 session). **Approved by:** Duke Y. Demayo,

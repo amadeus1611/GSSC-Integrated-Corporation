@@ -6,10 +6,30 @@
   "human_note": "Read last; never rewrite older entries.",
   "log": [
     {
-      "kernel_version": "2.17.0",
+      "kernel_version": "2.18.0",
       "release_date": "2026-09-23",
       "release_status": "production",
       "current_status": "current",
+      "adopted_by": "Duke Y. Demayo, President",
+      "adopted_on": "2026-09-23",
+      "supersedes": [
+        "2.17.0"
+      ],
+      "summary": "Website doctrine v2.0: gsscph.com becomes GSSC's own site, coded from scratch and built with Claude. Squarespace retired. Scroll-linked motion allowed as enhancement under a soft-close motion language; content is never hidden pending motion.",
+      "changes": [
+        "07_website_doctrine 1.0 -> 2.0: own coded site (sites/gsscph/), showroom character and narrative flow, soft-close easing tokens and durations, dynamic header, scroll-linked motion as progressive enhancement, reduced-motion rule, identity generated from 01/02, performance budget and rendered QA.",
+        "11_registry: the Squarespace home, capabilities, engagement, global CSS and base64 logo pack masters move to legacy; sites/gsscph/ registered as the website source.",
+        "00_meta module_map description for 07 updated."
+      ],
+      "known_gaps": [
+        "The v3 site pages are not registered until build stage 3 lands."
+      ]
+    },
+    {
+      "kernel_version": "2.17.0",
+      "release_date": "2026-09-23",
+      "release_status": "production",
+      "current_status": "superseded",
       "adopted_by": "Duke Y. Demayo, President",
       "adopted_on": "2026-09-23",
       "supersedes": [

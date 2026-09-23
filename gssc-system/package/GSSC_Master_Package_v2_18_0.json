@@ -1,18 +1,18 @@
 {
   "manifest": {
     "package_role": "GSSC_MASTER_PACKAGE",
-    "package_version": "2.17.0",
+    "package_version": "2.18.0",
     "package_format": "single-file JSON container, eight parts, with an embedded executable runtime",
     "package_built": "2026-09-23",
-    "supersedes": "GSSC_Master_Package_v2_16_1.json",
-    "note": "Final-form production release, adopted 2026-09-23 by Duke Y. Demayo, President. Native logo pack (Canva DAHLkhKRfrg) at source resolution with the wordmark as a library asset; President as default signatory; runtime 2.0 fixes. Every threshold the runtime enforces is still read from this package.",
+    "supersedes": "GSSC_Master_Package_v2_17_0.json",
+    "note": "Production release adopted 2026-09-23 by Duke Y. Demayo, President. Website doctrine v2.0: own coded site, Squarespace retired. Everything else carried from 2.17.0 unchanged.",
     "parts": [
       {
         "key": "kernel",
         "format": "embedded JSON object",
-        "kernel_version": "2.17.0",
-        "sha256": "b434a853cbb3eadae9b1235c3c271c83bfa165667f61af618784825cc45b2459",
-        "note": "20 modules, 00-19. 2.17.0 adds 03 logo_system and 02 signatory_policy."
+        "kernel_version": "2.18.0",
+        "sha256": "0ae7259c81b1ab2d26dae91177c54cac62533190278b6eef3f24b8fcacbd6c97",
+        "note": "20 modules, 00-19. 2.18.0 rewrites 07_website_doctrine (v2.0)."
       },
       {
         "key": "execution_protocol",
@@ -93,7 +93,7 @@
       "adopted_on": "2026-09-23",
       "board_reference": "",
       "basis": "Approval given by the President in the Claude Code maintenance session of 2026-09-23, for the release that brings the package to its final form. A board resolution reference may be added here when one is issued.",
-      "adopted_release": "2.17.0"
+      "adopted_release": "2.18.0"
     },
     "quickstart": {
       "step_1": "Extract the runtime: see runtime.extraction.",
@@ -114,11 +114,12 @@
       "human_note": "Read this first. The kernel is GSSC's portable operating context, not a template or asset pack.",
       "kernel_identity": {
         "name": "GSSC_Kernel",
-        "kernel_version": "2.17.0",
+        "kernel_version": "2.18.0",
         "release_date": "2026-09-23",
         "owner": "GSSC Integrated Corporation",
         "format": "hybrid JSON",
         "supersedes": [
+          "GSSC_Kernel.json (v2.17.0)",
           "GSSC_Kernel.json (v2.16.1)",
           "GSSC_Kernel.json (v2.16.0)",
           "GSSC_Kernel.json (v2.15.0)",
@@ -175,7 +176,7 @@
         "04_firewall": "external disclosure controls",
         "05_ip": "intellectual-property preservation",
         "06_quotation_doctrine": "quotation engineering and commercial doctrine",
-        "07_website_doctrine": "website, motion, content, and Squarespace doctrine",
+        "07_website_doctrine": "website, motion, content, and delivery doctrine (own coded site)",
         "08_document_doctrine": "profiles, letterheads, case notes, email, presentations, forms",
         "09_legal_doctrine": "legal-handling governance without replacing counsel",
         "10_template_engine": "Mode A Fidelity Cloner and Mode B Deconstruction Engine",
@@ -1451,45 +1452,69 @@
     },
     "07_website_doctrine": {
       "module_id": "07_website_doctrine",
-      "version": "1.0",
+      "version": "2.0",
       "role": "strong_default",
-      "purpose": "Govern gsscph.com visual character, motion, content security, page cohesion, and Squarespace integration.",
-      "human_note": "The website is a flagship credibility artifact: an editorial journal on the web.",
+      "purpose": "Govern gsscph.com: GSSC's own coded site, its visual character, motion, content security, page cohesion and delivery.",
+      "human_note": "The website is a showroom: warm paper, deep ink, generous space and one extraordinary object. It should read as GSSC's print documents brought to life.",
+      "adopted": {
+        "on": "2026-09-23",
+        "by": "Duke Y. Demayo, President",
+        "basis": "Duke's direction to replace the Squarespace site with a site coded from scratch and built with Claude, following the showroom concept."
+      },
       "character": {
-        "core": "Editorial masterpiece",
+        "core": "Editorial showroom",
         "audience": "Executives and decision-makers",
         "principles": [
           "typographic authority",
           "restraint",
           "cohesion with print",
-          "firewall-safe content"
-        ]
+          "firewall-safe content",
+          "one signature object per page at most"
+        ],
+        "narrative_flow": "Each page moves the reader through attention, curiosity, understanding, trust and action, in that order: a statement, the thing that shows it, how it works, the proof, then one clear next step."
       },
       "visual": {
         "inherit": "03_brand",
-        "layout": "Editorial columns and consistent grid; source master determines bleed behavior.",
-        "photography": "Avoid by default.",
-        "assets": "Preserve original CSS-variable/base64 strategy where present."
+        "palette_use": "Paper (ivory, ivory_deep) for grounds, navy for ink, navy_dark for the night stage and footer, gold only for the mark, one rule per section and hover states.",
+        "type": "Libre Baskerville for display and numerals, Inter for body and UI, from the same scale as 03_brand.document_type_system scaled for screens. Headlines use text-wrap: balance.",
+        "layout": "Editorial columns on a consistent grid, very generous vertical space.",
+        "photography": "Avoid by default. Procedural visuals and GSSC's own documents do the showing.",
+        "assets": "Logos come only from brand_assets (03_brand.logo_system). Never redraw a logo."
       },
       "motion": {
-        "current_authoritative_home_behavior": "Static Premium: all substantive content visible on load; only a load-time hero cascade plus restrained hover states.",
-        "scroll_triggered_motion": "Disabled in the current authoritative home master.",
-        "source_master_rule": "Do not reintroduce IntersectionObserver, scroll-linked reveal machinery, or hidden-on-load content unless the user explicitly creates a new versioned master.",
+        "signature": "Fast out, soft close: things move quickly at first and take a long time to settle, like a well-damped car door.",
+        "easing_tokens": {
+          "soft_close": "cubic-bezier(0.16, 1, 0.3, 1)",
+          "release": "cubic-bezier(0.65, 0, 0.35, 1)"
+        },
+        "durations_ms": {
+          "hover_in": 180,
+          "hover_out": 600,
+          "reveal": 1100,
+          "object": "1400-1800"
+        },
+        "scroll_linked": "Allowed as progressive enhancement: pinned sections, scroll-driven transforms, text and assets that follow scroll, the dynamic header.",
+        "content_rule": "Content is NEVER hidden pending motion. Every word and link is present and readable with JavaScript off. Motion only adds on top.",
+        "dynamic_header": "At the very top of a page the header shows the full lockup; once the reader scrolls, it condenses to the mark with the soft-close ease, and expands again at the top.",
+        "reduced_motion": "prefers-reduced-motion receives a still, fully designed page: no scroll-linked transforms, no object animation, no smooth-scroll.",
         "allowed": [
           "load-time hero cascade",
-          "restrained hover states",
-          "motion-reduction support"
+          "scroll-linked transforms as enhancement",
+          "pinned sections",
+          "dynamic header",
+          "pointer-reactive signature object",
+          "restrained hover states"
         ],
         "avoid": [
-          "scroll-triggered reveal",
-          "content hidden pending intersection",
+          "content hidden pending intersection or animation",
           "bounce",
           "elastic easing",
-          "gimmicky parallax",
+          "overshoot",
           "autoplay carousel",
           "attention pulse",
           "fast marquee",
-          "layout-shifting hover"
+          "layout-shifting hover",
+          "scroll-jacking that changes the scroll distance or blocks keyboard and assistive navigation"
         ]
       },
       "content": {
@@ -1507,7 +1532,8 @@
           "margin language",
           "facility identifiers",
           "generic stock photography"
-        ]
+        ],
+        "identity_source": "Corporate identity, registrations, addresses, contacts and officers are generated from 01_identity and 02_governance at build time, never typed into pages."
       },
       "case_notes": {
         "structure": [
@@ -1529,39 +1555,39 @@
           "capabilities",
           "how we engage",
           "case notes",
-          "contact"
+          "company",
+          "inquire"
         ],
         "cohesion": "Share typography, color, spacing, motion and asset treatment."
       },
       "implementation": {
-        "platform": "Squarespace",
-        "delivery": "Ready-to-paste blocks preferred.",
-        "css": "Global shared system plus page-scoped or in-block CSS for conflict-prone components.",
-        "backup": "Back up live code before replacement; verify before deleting backup."
+        "platform": "GSSC's own static site, coded from scratch in this repository (sites/gsscph/) and built with Claude Code. Squarespace is retired as the site platform.",
+        "source_of_truth": "The git repository. The live site is a build of it; nothing is edited in a hosting dashboard.",
+        "performance_budget": {
+          "lighthouse_min": 95,
+          "lcp_seconds_4g": 1.8,
+          "signature_object_js_gzip_kb": 180,
+          "target_fps_midrange_phone": 60
+        },
+        "qa": "Rendered screenshots at phone, tablet and desktop widths, and a reduced-motion pass, on every build, with the same discipline as the document system: look at the pages, not only the numbers.",
+        "stack_and_hosting": "Recorded in sites/gsscph/ and decided by build evidence; a change of stack is not a doctrine change."
       },
-      "registered_masters": [
-        "GSSC_Home_Page_v2_6_STATIC.html",
-        "GSSC_Capabilities_v2_6.html",
-        "GSSC_HowWeEngage_v2_8.html"
-      ],
-      "registered_assets": [
-        "GSSC_Website_Base64_Logo_Pack.html",
-        "GSSC_Website_CustomCSS_v1_1_MERGED.html"
-      ],
+      "registered_masters": [],
+      "registered_masters_note": "The v2.x Squarespace masters are legacy (11_registry). The v3 site registers its pages here when stage 3 of the build lands.",
       "failure_modes": [
-        "early animation",
+        "content hidden until an animation or intersection fires",
+        "motion without a reduced-motion equivalent",
         "off-brand photography",
-        "CSS conflicts",
         "public case-note leakage",
-        "regenerated logos",
-        "page-level drift",
-        "scroll-reveal doctrine applied to the v2.6 Static Premium home master",
-        "v2.5 home restored without explicit rollback instruction"
+        "regenerated or redrawn logos",
+        "identity facts typed into a page instead of generated from the kernel",
+        "page-level drift in type, colour or motion",
+        "a change made on the live host instead of in the repository",
+        "a signature object that blocks first paint or misses the performance budget"
       ],
-      "superseded_home_master": {
-        "file": "GSSC_Home_Page_v2_5_FINAL.html",
-        "status": "legacy",
-        "superseded_by": "GSSC_Home_Page_v2_6_STATIC.html"
+      "superseded": {
+        "version": "1.0",
+        "summary": "Static Premium on Squarespace: no scroll-triggered motion, ready-to-paste blocks. Retired 2026-09-23."
       }
     },
     "08_document_doctrine": {
@@ -2445,46 +2471,46 @@
         {
           "file": "GSSC_Capabilities_v2_6.html",
           "role": "website_capabilities_master",
-          "status": "authoritative",
+          "status": "legacy",
           "supersedes": [],
           "geometry_baseline": "editorial-web",
           "governing_module": "07_website_doctrine",
           "engine_mode": "mode_B_deconstruction_engine",
           "last_verified": "2026-07-14",
-          "notes": "Current capabilities-page file. Filename version: v2.6. Embedded merged CSS/master-package marker: v2.7. Preserve both facts; do not rename or supersede solely from the internal marker."
+          "notes": "Current capabilities-page file. Filename version: v2.6. Embedded merged CSS/master-package marker: v2.7. Preserve both facts; do not rename or supersede solely from the internal marker. Legacy from kernel 2.18.0: the Squarespace site is retired; kept for content lineage only."
         },
         {
           "file": "GSSC_HowWeEngage_v2_8.html",
           "role": "website_engagement_master",
-          "status": "authoritative",
+          "status": "legacy",
           "supersedes": [],
           "geometry_baseline": "editorial-web",
           "governing_module": "07_website_doctrine",
           "engine_mode": "mode_B_deconstruction_engine",
           "last_verified": "2026-07-14",
-          "notes": "Current engagement master."
+          "notes": "Current engagement master. Legacy from kernel 2.18.0: the Squarespace site is retired; kept for content lineage only."
         },
         {
           "file": "GSSC_Website_Base64_Logo_Pack.html",
           "role": "brand_asset_pack",
-          "status": "authoritative",
+          "status": "legacy",
           "supersedes": [],
           "geometry_baseline": "not_applicable",
           "governing_module": "03_brand",
           "engine_mode": "asset_source",
           "last_verified": "2026-07-14",
-          "notes": "CSS variables for header, seal, and signature assets."
+          "notes": "CSS variables for header, seal, and signature assets. Legacy from kernel 2.18.0: the Squarespace site is retired; kept for content lineage only. Logos now come from brand_assets (03_brand.logo_system)."
         },
         {
           "file": "GSSC_Website_CustomCSS_v1_1_MERGED.html",
           "role": "website_global_css",
-          "status": "authoritative",
+          "status": "legacy",
           "supersedes": [],
           "geometry_baseline": "editorial-web",
           "governing_module": "07_website_doctrine",
           "engine_mode": "source_preservation",
           "last_verified": "2026-07-14",
-          "notes": "Merged global CSS with base64 assets."
+          "notes": "Merged global CSS with base64 assets. Legacy from kernel 2.18.0: the Squarespace site is retired; kept for content lineage only."
         },
         {
           "file": "GSSC_MasterContext_v5_4.json",
@@ -2522,7 +2548,7 @@
         {
           "file": "GSSC_Home_Page_v2_6_STATIC.html",
           "role": "website_home_master",
-          "status": "authoritative",
+          "status": "legacy",
           "supersedes": [
             "GSSC_Home_Page_v2_5_FINAL.html"
           ],
@@ -2530,7 +2556,7 @@
           "governing_module": "07_website_doctrine",
           "engine_mode": "mode_B_deconstruction_engine",
           "last_verified": "2026-07-14",
-          "notes": "Definitive stable replacement: zero scroll-triggered motion; load-time hero cascade and hover states only."
+          "notes": "Definitive stable replacement: zero scroll-triggered motion; load-time hero cascade and hover states only. Legacy from kernel 2.18.0: the Squarespace site is retired; kept for content lineage only."
         },
         {
           "file": "GSSCIntegratedCorporation_CertificateofIncorporation.pdf",
@@ -2783,6 +2809,22 @@
           "engine_mode": "executable",
           "last_verified": "2026-08-25",
           "notes": "gssc_runtime v1.0. Stdlib-only Python implementing Section 03 preflight, Section 28C hydration, Module 10 clip estimation and Module 15 decision-log read/write. Prose specification governs on conflict."
+        },
+        {
+          "file": "sites/gsscph/",
+          "role": "website_source",
+          "status": "in_development",
+          "supersedes": [
+            "GSSC_Home_Page_v2_6_STATIC.html",
+            "GSSC_Capabilities_v2_6.html",
+            "GSSC_HowWeEngage_v2_8.html",
+            "GSSC_Website_CustomCSS_v1_1_MERGED.html"
+          ],
+          "geometry_baseline": "editorial-web-showroom",
+          "governing_module": "07_website_doctrine",
+          "engine_mode": "source_preservation",
+          "last_verified": "2026-09-23",
+          "notes": "GSSC's own coded site (07 v2.0). Concept: sites/gsscph/CONCEPT.md."
         }
       ],
       "planned_roles": [
@@ -3042,10 +3084,30 @@
       "human_note": "Read last; never rewrite older entries.",
       "log": [
         {
-          "kernel_version": "2.17.0",
+          "kernel_version": "2.18.0",
           "release_date": "2026-09-23",
           "release_status": "production",
           "current_status": "current",
+          "adopted_by": "Duke Y. Demayo, President",
+          "adopted_on": "2026-09-23",
+          "supersedes": [
+            "2.17.0"
+          ],
+          "summary": "Website doctrine v2.0: gsscph.com becomes GSSC's own site, coded from scratch and built with Claude. Squarespace retired. Scroll-linked motion allowed as enhancement under a soft-close motion language; content is never hidden pending motion.",
+          "changes": [
+            "07_website_doctrine 1.0 -> 2.0: own coded site (sites/gsscph/), showroom character and narrative flow, soft-close easing tokens and durations, dynamic header, scroll-linked motion as progressive enhancement, reduced-motion rule, identity generated from 01/02, performance budget and rendered QA.",
+            "11_registry: the Squarespace home, capabilities, engagement, global CSS and base64 logo pack masters move to legacy; sites/gsscph/ registered as the website source.",
+            "00_meta module_map description for 07 updated."
+          ],
+          "known_gaps": [
+            "The v3 site pages are not registered until build stage 3 lands."
+          ]
+        },
+        {
+          "kernel_version": "2.17.0",
+          "release_date": "2026-09-23",
+          "release_status": "production",
+          "current_status": "superseded",
           "adopted_by": "Duke Y. Demayo, President",
           "adopted_on": "2026-09-23",
           "supersedes": [

@@ -74,46 +74,46 @@
     {
       "file": "GSSC_Capabilities_v2_6.html",
       "role": "website_capabilities_master",
-      "status": "authoritative",
+      "status": "legacy",
       "supersedes": [],
       "geometry_baseline": "editorial-web",
       "governing_module": "07_website_doctrine",
       "engine_mode": "mode_B_deconstruction_engine",
       "last_verified": "2026-07-14",
-      "notes": "Current capabilities-page file. Filename version: v2.6. Embedded merged CSS/master-package marker: v2.7. Preserve both facts; do not rename or supersede solely from the internal marker."
+      "notes": "Current capabilities-page file. Filename version: v2.6. Embedded merged CSS/master-package marker: v2.7. Preserve both facts; do not rename or supersede solely from the internal marker. Legacy from kernel 2.18.0: the Squarespace site is retired; kept for content lineage only."
     },
     {
       "file": "GSSC_HowWeEngage_v2_8.html",
       "role": "website_engagement_master",
-      "status": "authoritative",
+      "status": "legacy",
       "supersedes": [],
       "geometry_baseline": "editorial-web",
       "governing_module": "07_website_doctrine",
       "engine_mode": "mode_B_deconstruction_engine",
       "last_verified": "2026-07-14",
-      "notes": "Current engagement master."
+      "notes": "Current engagement master. Legacy from kernel 2.18.0: the Squarespace site is retired; kept for content lineage only."
     },
     {
       "file": "GSSC_Website_Base64_Logo_Pack.html",
       "role": "brand_asset_pack",
-      "status": "authoritative",
+      "status": "legacy",
       "supersedes": [],
       "geometry_baseline": "not_applicable",
       "governing_module": "03_brand",
       "engine_mode": "asset_source",
       "last_verified": "2026-07-14",
-      "notes": "CSS variables for header, seal, and signature assets."
+      "notes": "CSS variables for header, seal, and signature assets. Legacy from kernel 2.18.0: the Squarespace site is retired; kept for content lineage only. Logos now come from brand_assets (03_brand.logo_system)."
     },
     {
       "file": "GSSC_Website_CustomCSS_v1_1_MERGED.html",
       "role": "website_global_css",
-      "status": "authoritative",
+      "status": "legacy",
       "supersedes": [],
       "geometry_baseline": "editorial-web",
       "governing_module": "07_website_doctrine",
       "engine_mode": "source_preservation",
       "last_verified": "2026-07-14",
-      "notes": "Merged global CSS with base64 assets."
+      "notes": "Merged global CSS with base64 assets. Legacy from kernel 2.18.0: the Squarespace site is retired; kept for content lineage only."
     },
     {
       "file": "GSSC_MasterContext_v5_4.json",
@@ -151,7 +151,7 @@
     {
       "file": "GSSC_Home_Page_v2_6_STATIC.html",
       "role": "website_home_master",
-      "status": "authoritative",
+      "status": "legacy",
       "supersedes": [
         "GSSC_Home_Page_v2_5_FINAL.html"
       ],
@@ -159,7 +159,7 @@
       "governing_module": "07_website_doctrine",
       "engine_mode": "mode_B_deconstruction_engine",
       "last_verified": "2026-07-14",
-      "notes": "Definitive stable replacement: zero scroll-triggered motion; load-time hero cascade and hover states only."
+      "notes": "Definitive stable replacement: zero scroll-triggered motion; load-time hero cascade and hover states only. Legacy from kernel 2.18.0: the Squarespace site is retired; kept for content lineage only."
     },
     {
       "file": "GSSCIntegratedCorporation_CertificateofIncorporation.pdf",
@@ -412,6 +412,22 @@
       "engine_mode": "executable",
       "last_verified": "2026-08-25",
       "notes": "gssc_runtime v1.0. Stdlib-only Python implementing Section 03 preflight, Section 28C hydration, Module 10 clip estimation and Module 15 decision-log read/write. Prose specification governs on conflict."
+    },
+    {
+      "file": "sites/gsscph/",
+      "role": "website_source",
+      "status": "in_development",
+      "supersedes": [
+        "GSSC_Home_Page_v2_6_STATIC.html",
+        "GSSC_Capabilities_v2_6.html",
+        "GSSC_HowWeEngage_v2_8.html",
+        "GSSC_Website_CustomCSS_v1_1_MERGED.html"
+      ],
+      "geometry_baseline": "editorial-web-showroom",
+      "governing_module": "07_website_doctrine",
+      "engine_mode": "source_preservation",
+      "last_verified": "2026-09-23",
+      "notes": "GSSC's own coded site (07 v2.0). Concept: sites/gsscph/CONCEPT.md."
     }
   ],
   "planned_roles": [
