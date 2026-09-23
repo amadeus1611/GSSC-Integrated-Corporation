@@ -1,0 +1,143 @@
+{
+  "module_id": "14_accounting_compliance",
+  "version": "1.0",
+  "role": "hard_default",
+  "purpose": "Provide a controlled accounting, tax, corporate-reporting, and evidence framework without replacing the company accountant, auditor, counsel, or regulator.",
+  "human_note": "This module governs records and review gates. It does not calculate tax from incomplete facts or certify compliance.",
+  "authoritative_sources": [
+    "Current BIR Form 2303 and BIR notices",
+    "Filed tax returns and payment confirmations",
+    "BIR-authorized invoices and printer records",
+    "Registered books of accounts or approved accounting system records",
+    "SEC certificate, Articles, Bylaws, GIS, AFS and filed amendments",
+    "Executed board and stockholder minutes/resolutions",
+    "Current local permits and employer-agency certificates",
+    "Bank statements and executed bank mandates"
+  ],
+  "registered_tax_forms": {
+    "1702": "annual corporate income-tax return",
+    "1702Q": "quarterly corporate income-tax return",
+    "2551Q": "quarterly percentage-tax return",
+    "0619E": "monthly remittance form for expanded withholding tax",
+    "1601EQ": "quarterly remittance return for expanded withholding tax",
+    "1604E": "annual information return for expanded withholding tax"
+  },
+  "books_and_ledgers": [
+    "general journal",
+    "general ledger",
+    "cash receipts journal",
+    "cash disbursements journal",
+    "sales journal",
+    "purchases journal",
+    "accounts receivable subsidiary ledger",
+    "accounts payable subsidiary ledger",
+    "fixed-asset register",
+    "inventory or materials register when applicable",
+    "withholding-tax register",
+    "tax-return and payment register",
+    "invoice control log",
+    "bank reconciliation file",
+    "share and stock-transfer records maintained under corporate governance"
+  ],
+  "chart_of_accounts_minimum_groups": [
+    "assets",
+    "liabilities",
+    "equity",
+    "revenue",
+    "cost of sales or direct project costs",
+    "operating expenses",
+    "other income and expenses",
+    "taxes payable and tax credits",
+    "related-party accounts where applicable"
+  ],
+  "transaction_controls": [
+    "Every entry requires date, counterparty, description, amount, account coding, project/client code, source document, preparer, reviewer, and approval evidence.",
+    "Separate quotations, contracts, purchase orders, invoices, collections, supplier bills, disbursements, withholding certificates, and bank evidence.",
+    "Do not net client revenue against supplier cost. Record gross transactions according to the applicable accounting framework and accountant-approved policy.",
+    "Use accrual recognition and invoice terminology consistently with the EOPT framework, subject to the accountant’s treatment of each transaction.",
+    "Reconcile invoice numbering, sales ledger, collections, bank deposits, percentage-tax base, and income-tax revenue every close."
+  ],
+  "close_controls": {
+    "monthly": [
+      "bank reconciliation",
+      "accounts receivable and payable aging",
+      "invoice sequence review",
+      "unrecorded liabilities review",
+      "withholding reconciliation",
+      "project profitability review kept INTERNAL_ONLY",
+      "management approval and locked close package"
+    ],
+    "quarterly": [
+      "reconcile 2551Q base to sales ledger",
+      "prepare 1702Q workpapers",
+      "reconcile 0619E/1601EQ and certificates",
+      "review threshold and registration status",
+      "archive filed returns, acknowledgments, and payment evidence"
+    ],
+    "annual": [
+      "year-end closing and adjusting entries",
+      "inventory/fixed-asset verification as applicable",
+      "prepare financial statements under the applicable Philippine reporting framework",
+      "coordinate independent audit if required",
+      "prepare annual income-tax filing",
+      "prepare 1604E and required alphalists",
+      "prepare SEC GIS and AFS filing package",
+      "renew local permits and verify employer-agency records"
+    ]
+  },
+  "filing_rules": [
+    "Build deadlines from the current COR, current BIR/SEC rules, and actual meeting/fiscal dates. Do not hardcode a perpetual compliance calendar in the kernel.",
+    "File required returns even when there is no operation or no tax due if the registration and current rules require filing.",
+    "Preserve electronic filing acknowledgments, payment confirmations, submitted return copies, and reviewer sign-off.",
+    "Escalate late, amended, disputed, or mismatched filings to the accountant and counsel as appropriate."
+  ],
+  "segregation_of_duties": {
+    "preparer": "records and assembles evidence",
+    "reviewer": "checks coding, tax treatment, arithmetic, and completeness",
+    "approver": "authorizes filing/payment or release under corporate authority",
+    "custodian": "locks records, versions, retention evidence, and access history"
+  },
+  "data_classification": {
+    "restricted": [
+      "bank credentials and account numbers",
+      "personal TINs and IDs",
+      "payroll and compensation",
+      "unpublished financial statements",
+      "supplier economics",
+      "beneficial-ownership supporting data"
+    ],
+    "controlled": [
+      "corporate TIN and registrations",
+      "filed returns and payment proofs",
+      "contracts and invoices",
+      "board and stockholder records"
+    ],
+    "public": [
+      "legal name",
+      "business address and public contacts",
+      "high-level Non-VAT status when relevant",
+      "verified public services"
+    ]
+  },
+  "automation_rules": [
+    "AI may classify, draft, reconcile, flag anomalies, and assemble workpapers but may not invent transactions, alter source evidence, approve entries, file returns, or authorize payments without human review.",
+    "Every AI-assisted accounting output must retain source links, confidence or exception flags, preparer identity, reviewer identity, version, timestamp, and immutable audit history.",
+    "Never expose internal margins, supplier costs, bank data, or unpublished financials to client-facing agents or templates."
+  ],
+  "open_verification_items": [
+    "Inspect the current GSSC_CoR.pdf in full and capture exact tax-type start dates and current registered address.",
+    "Obtain and register the current Mayor’s/Business Permit and ancillary permit numbers, validity dates, and issuing offices.",
+    "Inspect underlying SSS, PhilHealth, and Pag-IBIG employer certificates; Pag-IBIG number is not established in the reviewed data.",
+    "Confirm registration and status of books of accounts or approved computerized accounting system.",
+    "Confirm the management-approved public mobile number because +63 928 370 3574 and +63 917 347 4007 both appear in current materials.",
+    "Reconcile current board/officer titles and signatory authorities against executed minutes, resolutions, SEC GIS, and bank mandates.",
+    "Correct all live profiles and templates that state an 8% option or show future-only officers as current."
+  ],
+  "hard_stops": [
+    "no tax-rate claim from memory",
+    "no filing without source workpapers and human approval",
+    "no payment instruction from public/client documents",
+    "no deletion or overwrite of source evidence",
+    "no declaration of full compliance without current certificates and filing proofs"
+  ]
+}

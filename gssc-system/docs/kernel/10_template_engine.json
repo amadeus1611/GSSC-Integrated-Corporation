@@ -1,0 +1,496 @@
+{
+  "module_id": "10_template_engine",
+  "version": "1.0",
+  "role": "strong_default",
+  "purpose": "Provide a general two-mode engine for atomic HTML reproduction and surgical template deconstruction.",
+  "human_note": "The source teaches what to build; the kernel teaches how to treat it.",
+  "philosophy": [
+    "uploaded source is authoritative for fidelity",
+    "preservation precedes modification",
+    "atomic detail is measured or extracted",
+    "extend GSSC systems rather than redesigning them"
+  ],
+  "shared_rules": {
+    "analyze_before_modify": true,
+    "preserve_source": true,
+    "preserve_dom_when_html": true,
+    "preserve_css_when_html": true,
+    "preserve_assets": true,
+    "preserve_geometry": true,
+    "preserve_typography": true,
+    "preserve_spacing": true,
+    "preserve_print_behavior": true,
+    "preserve_watermark_logo_signature_and_stripes": true,
+    "no_prose_rebuild_when_source_available": true,
+    "extend_do_not_restyle": true
+  },
+  "mode_A_fidelity_cloner": {
+    "purpose": "Convert PDF, DOCX, image, scan, or reference HTML into faithful HTML at atomic detail.",
+    "accepts": [
+      "PDF",
+      "DOCX",
+      "HTML",
+      "PNG",
+      "JPG/JPEG",
+      "scan",
+      "rendered reference"
+    ],
+    "workflow": [
+      "ingest",
+      "inventory pages/assets",
+      "measure geometry",
+      "extract text and typography",
+      "extract images/transparency",
+      "map page regions",
+      "reconstruct HTML/CSS",
+      "render",
+      "compare page by page",
+      "iterate measured deltas",
+      "validate print"
+    ],
+    "atomic_dimensions": [
+      "page size",
+      "margins",
+      "coordinates",
+      "columns",
+      "line height",
+      "tracking",
+      "borders",
+      "opacity",
+      "asset bounds",
+      "page breaks"
+    ],
+    "source_rules": {
+      "html": "Preserve usable DOM, CSS cascade, base64, pseudo-elements, required scripts, and print rules.",
+      "pdf": "Render pages for visual comparison; extract vectors/text where possible.",
+      "docx": "Inspect sections, page settings, styles, headers, footers, tables, images and explicit breaks.",
+      "image_or_scan": "OCR text, measure coordinates, preserve image regions where reconstruction is unsafe."
+    },
+    "qa": {
+      "goal": "Visually indistinguishable at intended size and print settings.",
+      "checks": [
+        "page count",
+        "geometry",
+        "typography appearance",
+        "asset positions",
+        "watermark and stripe bounds",
+        "footer placement",
+        "no clipping"
+      ]
+    },
+    "forbidden": [
+      "undisclosed font substitution",
+      "approximate spacing",
+      "invented assets",
+      "remote substitution",
+      "silent normalization",
+      "changed page count",
+      "false exactness claim"
+    ]
+  },
+  "mode_B_deconstruction_engine": {
+    "purpose": "Turn a finished authoritative HTML master into a reusable or tokenized engine without redesigning it.",
+    "accepts": [
+      "authoritative finished HTML master"
+    ],
+    "workflow": [
+      "ingest exact source",
+      "verify master status",
+      "fingerprint source",
+      "inventory DOM/CSS/assets/scripts/print rules",
+      "classify static and variable regions",
+      "define minimal token map",
+      "replace content only",
+      "build derivative",
+      "repopulate original values",
+      "render parity QA",
+      "document token contract"
+    ],
+    "static_regions": [
+      "layout engine",
+      "CSS cascade",
+      "geometry",
+      "margins",
+      "stripe implementation and bounds",
+      "watermark",
+      "logos",
+      "masthead",
+      "footer",
+      "seal",
+      "signature lockup",
+      "print settings",
+      "page-break logic"
+    ],
+    "token_candidates": [
+      "client/recipient",
+      "dates",
+      "reference codes",
+      "titles/subtitles",
+      "lede/body",
+      "pull quote",
+      "program cards/rows",
+      "commercial values",
+      "authorized terms rows",
+      "acceptance body"
+    ],
+    "rules": [
+      "original remains untouched",
+      "derivative cites source fingerprint",
+      "replace approved content only",
+      "canonical signature remains static unless governance changes",
+      "original assets remain",
+      "QA rebuild with original values matches source"
+    ],
+    "qa": {
+      "goal": "Repopulated derivative matches source visually and functionally.",
+      "checks": [
+        "DOM/CSS preservation",
+        "asset equality",
+        "geometry equality",
+        "print equality",
+        "zero unresolved tokens",
+        "no unplanned text changes"
+      ]
+    },
+    "forbidden": [
+      "redesign while tokenizing",
+      "reconstructed CSS",
+      "moved assets",
+      "new decoration",
+      "static-label rewording",
+      "silent page-count changes",
+      "placeholders when originals exist"
+    ]
+  },
+  "mode_selection": {
+    "clone_when": "Reproduction, HTML conversion, visual matching, or faithful copy of a reference.",
+    "deconstruct_when": "Finished HTML master must become reusable, tokenized, generalized, or a kit.",
+    "modify_when": "Surgical versioned edit to an existing master.",
+    "ambiguous": "Inspect context and choose the least-destructive source-preserving mode; state the mode and basis before execution."
+  },
+  "reports": {
+    "preflight": [
+      "file inventory",
+      "classification",
+      "mode",
+      "immutable regions",
+      "risks/unavailable features"
+    ],
+    "completion": [
+      "files produced",
+      "source fingerprint",
+      "mode",
+      "differences",
+      "QA passed",
+      "limitations"
+    ]
+  },
+  "cross_mode_failure_modes": [
+    "prose-driven rebuild",
+    "wrong mode",
+    "assets not loaded",
+    "stripe bounds assumed",
+    "look-alike DOM/CSS substitution",
+    "atomic claim without comparison"
+  ],
+  "layout_budget_reference": {
+    "purpose": "Computable text-overflow risk estimation for the quotation master's fixed, non-responsive A4 geometry. Added to reduce correction iterations by converting a previously qualitative 'will this clip?' judgment into a falsifiable calculation with a stated safety margin.",
+    "honesty_note": "This is a calibrated APPROXIMATION, not a verified per-glyph font-metrics engine and not a rendered screenshot. No headless browser or HTML/CSS rendering engine (Chromium, Playwright, WeasyPrint, wkhtmltopdf) and no working package installer (pip/npm) were found available in the operating environment as of 2026-08-06 -- confirmed by direct search, not assumed. If such a tool becomes available in a future environment, this estimation method should be superseded by literal rendered measurement, and this note updated accordingly per Module 16 non-regression discipline. RE-CONFIRMED 2026-08-25 in a second, independent environment: no Chromium, headless_shell, WeasyPrint, wkhtmltopdf, Prince, pagedjs-cli or Playwright present. LibreOffice IS present, and was tested directly against the hydrated master: it converts to a genuine A4 PDF but imports via the Writer/Web path, which does not implement CSS grid, flexbox, @page, custom properties or transforms. The result loses the masthead, stripe, watermark, cards and signature lockup, breaks the four-page boundaries, and -- critically -- PRINTED the builder-card panel that three separate @media print blocks suppress with display:none !important. LibreOffice is therefore NOT an acceptable client-release conversion path and must not be used as one. Browser print-to-PDF remains the only verified path.",
+    "geometry_constants_px": {
+      "page_height": 1123,
+      "margin_top": 96,
+      "margin_bottom": 120,
+      "body_column_width": 540,
+      "body_padding_by_page": {
+        "p-cover": [
+          38.0,
+          26.0
+        ],
+        "p-contents": [
+          38.0,
+          26.0
+        ],
+        "p2": [
+          32.0,
+          22.0
+        ],
+        "p-commercial": [
+          38.0,
+          26.0
+        ],
+        "p3": [
+          30.0,
+          26.0
+        ],
+        "contract": [
+          30,
+          24
+        ]
+      },
+      "body_padding_by_page_note": "ADVISORY FALLBACK ONLY as of 2.15.0. These keys are ORDINAL -- page1, page2, page3 -- and therefore describe POSITIONS, not pages. Inserting the contents page at position 2 in release 2.10.0 shifted every later page's key by one, so the runtime charged p2's padding to p-contents, p3's to p2, and the generic contract fallback to p3. Measured on the 2.14.0 document: FOUR of five pages carried the wrong padding, 24px of total budget error, undetected across four releases because nothing compared this table against the real cascade. Page padding is now RESOLVED from the stylesheet by the Section 23D cascade resolver. These entries survive only for a page whose padding no rule sets, and Section 42 reports any disagreement between the two on every run. RE-KEYED in 2.15.0: the ordinal keys page1/page2/page3 are DROPPED and replaced by page-class identity keys whose values are read from the stylesheet, practising the rule below rather than merely asserting it. A stale fallback is worse than no fallback, because it looks authoritative.",
+      "position_keyed_data_rule": "No load-bearing value may be keyed by document POSITION. Page order changes every time the design iterates -- an inserted contents page, a new annex, a reordered schedule -- and a position-keyed table silently re-points every entry after the insertion. Key by identity (a page class), or resolve from the document itself."
+    },
+    "font_size_reference_px": {
+      "fs-body": 10.5,
+      "fs-bodyL": 11.5,
+      "fs-title": 42,
+      "fs-dek": 13,
+      "fs-kicker": 8,
+      "fs-caption": 10,
+      "fs-section": 9,
+      "fs-dropcap": 64.0,
+      "fs-numeral": 56.0,
+      "fs-price": 44.0,
+      "fs-pull": 19.0,
+      "fs-folio": 11.0,
+      "fs-imprint": 8.0
+    },
+    "line_height_reference": {
+      "lh-body": 1.58,
+      "lh-display": 1.12,
+      "lh-lede": 1.65,
+      "lh-tight": 1.4
+    },
+    "estimation_formula": {
+      "average_character_width": "0.50 * font_size_px -- a commonly used design heuristic for proportional Latin body text; NOT independently verified against the actual Inter/Libre Baskerville font metrics tables (no internet-fetched font-metrics data available in this environment).",
+      "chars_per_line": "column_width_px / average_character_width_px",
+      "estimated_lines": "ceil(character_count / chars_per_line)",
+      "estimated_block_height_px": "estimated_lines * (font_size_px * line_height_ratio)",
+      "available_budget_px": "(page_height - margin_top - margin_bottom) - page_body_padding_top - page_body_padding_bottom - already_used_px",
+      "safety_margin": "0.85 -- only treat a block as PASS if estimated_block_height_px <= 0.85 * available_budget_px, absorbing kerning/ligature/hyphenation variance not captured by the flat character-width approximation",
+      "verdict": "PASS (within safety margin) if the 0.85-margin test succeeds, else AT-RISK (tighten before finalizing) -- feeds directly into the Section 23 / Execution Protocol content-fit escalation hierarchy, it does not replace it."
+    },
+    "validated_against": "Calibrated and sanity-checked 2026-08-06 against the quotation master's own existing, presumed-working text blocks (Page 1 lede: 301 chars -> estimated 12.8% fill, well within margin; Page 1 dek: 530 chars -> 20.2% fill; Page 2 sig-desc: 286 chars -> 5.8% fill) and against constructed overflow cases (a forced scenario with 2,340 chars against 100px remaining budget correctly returned AT-RISK at 381.6% fill), confirming both the PASS and AT-RISK branches compute correctly, not merely optimistic-by-default.",
+    "scope_limit": "Covers TEXT BLOCK height estimation only, for the COARSE Sections 23A/23C. The binding Section 23D model additionally measures replaced elements (svg and the other declared REPLACED_TAGS) from their own intrinsic geometry as of 2.16.1. Still not a rendered screenshot: floats are unmodelled, and the .lede dropcap shape is not modelled.",
+    "collision_and_balance_reference": {
+      "purpose": "Extends the single-block vertical overflow estimate to genuine 2D geometry: detect unintended overlap between simultaneously-visible elements (grid cells, side-by-side content), flag visual imbalance between elements meant to appear equal-weight, and estimate horizontal overflow risk for fixed-width, non-shrinking elements (e.g. a flex-shrink:0 label). Still not a rendered screenshot -- models element geometry as axis-aligned bounding boxes computed from the template's own fixed CSS constants (column counts, gaps, fixed widths).",
+      "aabb_overlap_test": "Standard axis-aligned bounding-box intersection test: two boxes (x, y, width, height) overlap if and only if ax < bx+bw AND ax+aw > bx AND ay < by+bh AND ay+ah > by. Verified 2026-08-06 against both a deliberately overlapping pair (correctly returned True) and a correctly non-overlapping 2-column pair (correctly returned False) -- both branches confirmed to compute correctly, not a default.",
+      "grid_row_balance_check": {
+        "formula": "For cells sharing a grid row, row height = max(cell heights) (matching real CSS Grid auto-sizing behavior). Imbalance percent = 100 * (max_cell_height - min_cell_height) / min_cell_height within that row.",
+        "threshold": "Flag as VISUALLY UNBALANCED if imbalance exceeds 30% -- an editorial-design heuristic for when a reader would visually notice unequal weight between elements presented as parallel/equivalent choices, not an exact rendered measurement.",
+        "validated_against": "Run 2026-08-06 against the REAL Page 2 research-grid content from this session's own prior dynamic-body-design test output: correctly identified a genuine 33.3% height imbalance between the 'Research Scoping' and 'Data Collection' cells that had not been previously noticed without this tool -- a concrete, real finding, not merely a synthetic demonstration. Also verified against a deliberately extreme forced-imbalance case (699.4%), confirming the threshold correctly fires.",
+        "threshold_pct": 30.0,
+        "executable_note": "The 30% threshold is now read from this field by the runtime rather than hardcoded, so doctrine and enforcement cannot drift."
+      },
+      "fixed_width_horizontal_fit_check": {
+        "purpose": "For an element with a fixed width and flex-shrink:0 (or equivalent non-shrinking constraint), estimate whether given text fits on one line within that width, or how many lines it would wrap to.",
+        "formula": "chars_per_line = allotted_width_px / (0.50 * font_size_px); lines_needed = ceil(character_count / chars_per_line). If wrapping is not permitted by the surrounding CSS (e.g. white-space:nowrap without an ellipsis/scroll allowance) and lines_needed > 1, this is an overflow risk requiring attention before finalizing.",
+        "validated_against": "Tested 2026-08-06 against real Page 3 bar-chart label text at the actual 150px allotted width and 8px font-size: a 33-character label correctly estimated to fit on one line; a 62-character label correctly estimated to require 2 lines."
+      },
+      "usage_note": "These checks feed Stage 4 self-check (15_design_research_engine) as objective data. They inform, but do not replace, the Stage 1 research decision on how to adjust a flagged layout -- see 15_design_research_engine.loop.stage_1_research for the explicit alignment/balance/sizing research scope.",
+      "status": "EXECUTABLE as of 2.16.0. Specified since 2.9.0 with dated validation claims and NO implementing code: a search of the entire 1.7 runtime for an AABB, row-balance or horizontal-fit function returned nothing, and this was the only subsection of layout_budget_reference carrying no `executable` key. The claims described a capability that did not exist.",
+      "executable": "gssc_runtime.py gridbalance <package.json> [--file built.html]",
+      "tests_implemented": {
+        "track_overflow": "Declared grid-template-columns tracks plus gaps must fit the container. Fixed px tracks are taken literally; fr/auto/minmax divide the remainder. This is the test that can actually catch a grid that does not fit.",
+        "aabb_collision": "Axis-aligned bounding-box intersection across every simultaneously-visible box on a page, resolved into ONE page-absolute coordinate space from the same trace the binding box model uses. Out-of-flow absolutely-positioned boxes are included, because out-of-flow content is the only thing normal flow cannot see -- the 2.11.0 footer-overlap shape.",
+        "row_balance": "Cells sharing a grid row and presented as parallel choices must not differ in height by more than threshold_pct.",
+        "horizontal_fit": "An element with a declared px width that is also flex-shrink:0 or white-space:nowrap must fit its text on one line."
+      },
+      "two_self_corrections_on_record": "This section was built twice wrong in its own release session, and both were caught by execution rather than review. (1) The first AABB draft positioned grid cells at ci*(uniform_track+gap), under which adjacent cells TOUCH and can never intersect -- a test structurally incapable of returning True, which is the same failure as no test at all. Proven by direct calculation before it shipped. (2) The second draft laid every grid in its own local space starting at y=0 and then compared boxes across containers, reporting six collisions between .metric-strip and .roadmap on the real contents page; the trace showed them stacked with 75px of clearance and all six false. A check that fires on correct documents is overridden, then ignored, then deleted -- it fails in the same direction as a check that cannot fire, only more expensively. Both drafts were caught only because this release requires BOTH a negative-control fixture AND a real-document run; either alone would have passed one of them.",
+      "scope_limit": "Models element geometry as axis-aligned boxes computed from the document's own resolved cascade. Not a rendered screenshot. A NESTED grid whose page-absolute top cannot be resolved from the trace is EXCLUDED from cross-container comparison and reported as excluded -- never assumed to sit at zero. One such container (.gate-lines) exists in the current master and is reported on every run."
+    },
+    "executable_implementation": "Implemented in the package runtime part as gssc_runtime.clipcheck(). Run: python gssc_runtime.py clipcheck <package>. The scope_limit above is unchanged and still applies: text block height only.",
+    "type_metrics": {
+      "purpose": "Replace the flat 0.50em average-character-width heuristic with a per-character advance model and a greedy word-wrap, because the flat model mis-estimates display type badly. Measured case: a 66-character 42px display line returned a naive 2.49 lines under the flat model and 4 lines under greedy wrap — a 70-pixel error on a single heading, enough to clip a fixed-height page.",
+      "advance_em": {
+        "space": 0.265,
+        "narrow": 0.3,
+        "wide": 0.87,
+        "digit": 0.57,
+        "uppercase": 0.645,
+        "default_lowercase": 0.532
+      },
+      "narrow_set": "ijltfrI.,:;!|'`()[]{}/\\-",
+      "wide_set": "mwMW@%",
+      "serif_multiplier": 1.1,
+      "serif_note": "Libre Baskerville runs wider than Inter at the same size. 1.10 is deliberately conservative: measured against the master's own display lines it over-estimates rather than under-estimates, which is the correct direction of error for a fixed-height page that clips silently.",
+      "safety_factor": 1.06,
+      "safety_note": "Absorbs kerning, ligature and hyphenation variance not captured by advances.",
+      "wrap": "Greedy: break when cur + space + word exceeds the column width.",
+      "honesty_note": "Still a calibrated approximation, not a font-metrics engine and not a rendered screenshot. The 2.8.0 finding stands: no headless browser, WeasyPrint, wkhtmltopdf or Playwright is available, and LibreOffice is not an acceptable conversion path. Browser print-to-PDF remains the only verified path. Supersede this model the moment literal rendered measurement becomes available."
+    },
+    "figure_type_scale": [
+      5.8,
+      6.4,
+      7.0,
+      7.6,
+      8.4,
+      9.4,
+      11.0,
+      13.5,
+      26.0,
+      46.0
+    ],
+    "figure_type_scale_note": "Four steps carry the whole hierarchy inside a chart: 5.8 axis ticks and sub-labels, 6.4 series, legend and value labels, 7.0 values worth reading first, 7.6 figure titles. Snap every emitted size onto this scale with ties resolving upward; a size written directly into markup bypasses the scale and is a defect.",
+    "figure_geometry_check": {
+      "purpose": "Close the gap this module's own scope_limit declares. The text-block estimator covers prose height only; it cannot see a legend that runs past the foot of a chart or an axis label that runs past its right edge.",
+      "method": "Parse every inline SVG, read its viewBox, and bounds-test each text run, rect, line, polyline, polygon and circle against it. Text extent is computed from type_metrics and the element's own text-anchor. Transformed elements are skipped because their extent is not derivable from attributes alone.",
+      "tolerance_px": 1.5,
+      "verdict": "Any element outside the viewBox by more than the tolerance is AT-RISK.",
+      "validated_against": "Run during the 2026-08-26 pre-contract build: caught five real overflows that the text estimator reported as PASS — a benchmark legend 5px below its own viewBox, an hours-axis caption 4px below, and three callout panels overrunning by 18 to 32px. All five were invisible to every check that existed before this release.",
+      "executable": "gssc_runtime.py figcheck <package.json> --file <built.html>"
+    },
+    "scope_extension_2_9_0": "The scope_limit above described the state as of 2.8.0 and is left unrewritten. As of 2.9.0 the image-clipping half of that gap is closed for inline SVG figures by figure_geometry_check. Raster images, CSS rendering defects and font-loading failure remain outside any automated check.",
+    "footer_overlap_detection": {
+      "purpose": "Give the layout budget a resolution it never had: which block crosses the footer, and by how many pixels. clipcheck reports a whole-page aggregate and cannot answer either question.",
+      "method": "Cumulative Y-cursor walk over the flowed body blocks of each page in document order, starting at margin_top plus that page's own body padding-top. Figure heights, table cell type sizes and the declared block separation share the same cursor. Absolutely-positioned locked chrome is excluded from the flow.",
+      "boundaries": {
+        "soft_px": "page_height - margin_bottom - body_padding_bottom (the page's own reserve)",
+        "hard_px": "page_height - margin_bottom (the footer band itself)",
+        "resolved_on_this_master": "hard 1003px; soft 977px or 981px by page"
+      },
+      "chrome_exclusion_note": "Excluding positioned chrome is a correction, not an optimisation. The first prototype included it and mis-attributed a forced overflow to .footer-secondary when the real cause was an injected paragraph several elements earlier.",
+      "executable": "gssc_runtime.py footercheck <package.json>",
+      "validated_against": "Run 2026-09-21 against the real hydrated 2.10.0 derivative: 5 pages, all PASS, tightest headroom +215px on page 5, per-page flowed-block counts [8, 5, 19, 17, 26]. Run against a deliberately injected oversized paragraph: correctly FAILED, naming .bt at y=3091-3141px. Both branches confirmed to compute from real arithmetic, not a default."
+    },
+    "font_size_reference_completeness": "Completed in 2.11.0 from 03_brand.document_type_system.template_root_literals_px. The table previously held 7 of the template's 13 :root size tokens; a lookup for any of the other 6 fell through to fs-body and mis-measured silently.",
+    "measurement_parity": {
+      "purpose": "clipcheck, pagefill and footercheck all measure the same document. Through 2.10.0 they used two different line models and two different class-to-size maps, so they could disagree about the same block.",
+      "one_ruler_rule": "All three resolve font size through _resolve_fs, line height through _resolve_lh, tag scope through _MEASURED_TAGS, and line count through the greedy per-glyph wrap_lines. The flat 0.50em heuristic is retired.",
+      "exact_before_substring": "Class maps are scanned exact-name-first. The 2.10.0 substring scan matched \"title\" inside \"chs-title\", costing every Categorical Header System title at --fs-title 42px against a true --fs-pull 19px: 47.0px charged for a real 21.3px, a 2.21x overestimate on every header in every document.",
+      "h2_inclusion": "pagefill measured p|div|td|th|h1|li|figcaption and omitted h2, so section and contents titles were invisible to page-fill entirely -- the opposite-direction twin of the 42px overcharge.",
+      "container_guard": "Wrapper classes that only nest other measured elements are skipped by name (_CONTAINER_CLASSES). A non-greedy backreferenced match on a wrapper returns a truncated fragment; in 2.10.0 that fragment happened to fall under the len<12 filter, an accidental save rather than a designed one.",
+      "measured_effect": "Run 2026-09-21 against the real hydrated 2.11.0 derivative: 5 pages, all PASS, per-page headroom +205 +818 +553 +553 +276, tightest +205px on page 1. Page 1 headroom moved +350px -> +205px once the Section 38 cover overture was measured at its true 64px rather than the 42px a class-only lookup returned -- the correction is visible in the number. Forced-overflow fixture correctly FAILED, naming .bt at y=3237-3287px. Both branches compute from real arithmetic.",
+      "executable": "gssc_runtime.py designaudit <package.json> --file <built.html>",
+      "section_44_parity": "Section 44 computes no geometry of its own. It reads the per-cell heights, resolved track widths, gaps and container tops that measure_page already derived from the real cascade, so Section 44 and Section 23D cannot disagree about the same grid. Building a second geometry model for the collision test would have reintroduced exactly the two-rulers defect this doctrine exists to prevent."
+    },
+    "resolved_box_model": {
+      "status": "BINDING as of 2.12.0. Sections 23A and 23C are retained as fast coarse passes but no longer decide.",
+      "why": "A human caught a footer overlap on page 1 of the 2.11.0 master by eye, on a page footercheck had reported PASS with +205px headroom. The page overflowed by 216px: a 421px error, in the direction that hides defects rather than inventing them.",
+      "blindnesses_closed": {
+        "margin_and_padding": "Never added at all. Page 1 carries 114px of margin and 36px of padding and borders -- 150px, roughly 18% of the usable page, entirely outside the old estimate.",
+        "max_width": "The old model always wrapped at the 540px body column. The 2.11.0 cover title was max-width:470px: 4 lines at 540px, SIX at 470px, a 143px error on a single element.",
+        "late_cascade": "A hardcoded class map cannot see a property redeclared in a later style block or scoped to a page. This document redeclares .bt for .page.p2 and .body padding three times.",
+        "margin_collapsing": "Adjacent sibling margins collapse to the larger of the two in CSS. Naive summation over-counts."
+      },
+      "method": "Parse the document's own style blocks, resolve :root custom properties, apply the real cascade by (specificity, source order), compute content height from a max-width-aware greedy wrap, add padding and borders, collapse sibling margins.",
+      "case_sensitivity_note": "CSS custom property names are case-sensitive and this stylesheet uses camelCase (--fs-bodyL). Every var() pattern must accept [A-Za-z0-9_-]; a lowercase-only class silently resolves to None and falls back to a default. Found during this build: --fs-bodyL was costing 10.5px instead of 11.5px.",
+      "skip_classes": [
+        "builder-card"
+      ],
+      "container_classes": [
+        "chs",
+        "toc-block",
+        "section",
+        "marker",
+        "label",
+        "sig-card",
+        "signoff",
+        "gate",
+        "colophon",
+        "fig",
+        "fig-legend"
+      ],
+      "container_rule": "A wrapper that only nests other measured elements is skipped; measuring both the wrapper and its children double-counts.",
+      "fill_limit": 1.0,
+      "scope_limit": "Not a rendered screenshot. Floats, flex and grid track sizing are not modelled, and the .lede dropcap shape is not modelled. It closes the four blindnesses named above, which is what produced this defect. IN-FLOW GENERATED CONTENT (a ::before or ::after that is not absolutely positioned and not display:none) is structurally invisible to any DOM-based model, because generated content never appears in the parsed HTML. Section 43 forbids it rather than attempting to model it. Floats remain unmodelled.",
+      "validated_against": "Run 2026-09-21 against the real hydrated 2.13.0 derivative: 5 pages, all PASS, fills 92% 30% 81% 72% 84%, 116 elements measured and ZERO unaccounted across the document. Six controls were run and all discriminated: an unregistered span row with a larger inline child is now measured rather than costed at zero; a categorical series moved within 0.04 luminance of its neighbour correctly FAILED; every series given the same pattern (colour-only encoding) correctly FAILED; a chart element pushed outside its viewBox correctly FAILED; a margin-only regression correctly FAILED on overflow; and the real build correctly PASSED.",
+      "executable": "gssc_runtime.py boxcheck <package.json> --file <built.html>",
+      "engine": "DOM walk (html.parser), runtime 1.5. Replaces the regex scan.",
+      "regex_scan_defect": "The 1.4 engine walked the body with re.finditer over a backreferenced tag pattern. finditer resumes AFTER each match, so any element nested inside an already-matched parent was never visited. Demonstrated on the real page 3 of the 2.12.0 master: the scan visited .chs, .chs-title, .chs-descriptor, .chs-rule, .bt, .sig-card, .sig-tier, .sig-price and .sig-note, and never visited .chs-stamp, .sig-code, .sig-name or .sig-desc -- all real, visible, space-consuming content. A scan that cannot see part of the tree cannot prove coverage of the tree.",
+      "coverage_ledger": "Every element is MEASURED, EXCLUDED by a named declared rule, or recorded as UNACCOUNTED, and boxcheck FAILS on any unaccounted element. This is the durable fix for the defect class behind the 2.11.0 footer overflow, the invisible stamp line and the unresolved table rules: in all of them the model met something it did not understand and quietly continued. Silence is now impossible.",
+      "line_box_driver_rule": "A line box is as tall as its TALLEST inline participant, not the parent block's own font-size. Found in the real document: .toc-row is driven by .toc-title at 13px against a 10.5px parent, and .sig-price by .sig-price-amount at 15px. Both were under-measured before 1.5.",
+      "table_layout_rule": "Table cells in a row lay out SIDE BY SIDE; a row is as tall as its tallest cell, never the sum. Column widths honour a declared width (percentage or px) before falling back to an equal share. Caught by this release's own repass: the first DOM engine stacked cells vertically and reported page 4 at 139% fill, then under-measured the wide column and reported page 5 at 114%.",
+      "flex_row_classes": [
+        "chs-stamp",
+        "toc-row",
+        "sig-price",
+        "caption-date"
+      ],
+      "container_classes_note": "NARROWED as of 2.15.0, to match what the code actually does. Under the 1.4 regex scanner a \"container\" genuinely meant \"skip this box\", because the scanner could not safely recurse into it. The 1.5 DOM engine removed that special case: a container div is now measured through the ordinary block-recursion path and contributes nothing of its own simply BECAUSE IT HAS NO OWN TEXT, not because it is skipped. Traced through every reference: this list is now consumed ONLY by the coverage ledger's inline-content classification, deciding whether a stray inline element counts as covered by an ancestor. Editing it changes coverage reporting, NOT measured height. The name is retained for continuity; this note is the correction.",
+      "supported_layout_modes": [
+        "block",
+        "inline-block",
+        "flex",
+        "inline-flex",
+        "grid",
+        "table",
+        "table-row",
+        "table-cell",
+        "none"
+      ],
+      "layout_mode_support_detail": {
+        "block": "Full. Stacking with margin collapsing.",
+        "flex": "SINGLE-LINE ROWS ONLY, and only for classes registered in flex_row_classes. A wrapping or column-direction flex container is measured as block flow.",
+        "inline-flex": "Same constraint as flex.",
+        "grid": "Row-band measurement from a declared grid-template-columns and gap. Implicit tracks, span, auto-flow:column and named areas are NOT modelled.",
+        "table": "Full. Row height is the tallest cell; column widths honour declared widths.",
+        "none": "Excluded from flow, correctly contributing zero."
+      },
+      "layout_mode_rule": "A component whose display mode is outside supported_layout_modes is measured as ordinary block flow, which is wrong by an amount nobody has bounded. Section 43 fails when the stylesheet uses a mode this list does not name, so adding a new layout primitive forces a deliberate decision -- implement it, or declare the gap -- instead of silently mis-measuring.",
+      "grid_measurement": "Added 2.15.0. A multi-column grid lays children out in ROWS: the block height is the sum of per-row maxima plus row gaps, not the sum of all children. Measured on the real execution page: .gate-lines, a 2-column grid holding four fields, costed 63.0px against a true 15.8px -- 47.2px over-measured. Over-measurement is the safe direction, but a future grid wider than it is tall would be wrong in the UNSAFE direction. Column count and row gap are read from the declared grid-template-columns and gap, never guessed.",
+      "grid_geometry_capture": "As of 2.16.0 the grid branch records per-cell heights, the declared grid-template-columns string, resolved track widths and row gaps into the coverage ledger. 1.7 recorded only counts, which is why Section 44 had nothing to compute from.",
+      "fixed_width_capture": "Elements carrying a declared px width together with flex-shrink:0 or white-space:nowrap are recorded for the Section 44 horizontal-fit test. Resolved from the real cascade, never inferred from a class name.",
+      "soft_fill_limit_pct": 90.0,
+      "soft_fill_limit_note": "A page at or above this fill is not yet wrong, but has no remaining capacity: the next block added to it will overflow. Set at 90% so the cover -- which kernel 2.15.0 already records as having only 72.6px of spare title box -- reports AT CAPACITY on every run rather than being rediscovered each time someone proposes adding to it. The commercial page sat at a true 95.8% for an entire release under a binary pass/fail gate that reported only PASS, until one added block tipped it to 110.2% and 60px into the footer band.",
+      "replaced_elements": {
+        "status": "BINDING as of 2.16.1.",
+        "defect": "Runtime 1.8 and earlier listed svg in SKIP_SUBTREE_TAGS beside script and style, and the DOM builder discarded the whole subtree on sight. script and style render nothing, so discarding them is correct. An <svg> is a REPLACED ELEMENT: it occupies its own intrinsic box exactly like an <img>. Every chart in every document was therefore costed at ZERO by the binding box model.",
+        "measured_consequence": "On the shipped 2.16.0 master, page 4 carried one viewBox=\"0 0 540 190\" chart. boxcheck measured .fig at 52.1px -- its figcaption alone -- and reported the page at 739.0px, 87.7% fill, PASS. True content height 929.0px, 110.2% fill: 86px over budget, content ending at y=1063 against a footer hard line of y=1003. Sixty pixels into the footer band. A 190px error in the direction that hides defects, caught by a human eye and by none of the nineteen audits.",
+        "why_the_ledger_missed_it": "This is the shape of the 2.11.0 incident, which the coverage ledger was built to end. The ledger promises every element is MEASURED, EXCLUDED by a named rule, or UNACCOUNTED -- never silently zero -- and it reported 0 unaccounted on this very page. It was not lying: the element had been deleted by the PARSER before the ledger existed. A coverage ledger cannot account for what was removed upstream of it. That is the real lesson, and it is why the fix is a parse-time guard rather than one more special case.",
+        "rule": "The parser may discard a tag ONLY if it is declared NON_RENDERING_TAGS. Any tag that occupies a box must be declared in REPLACED_TAGS and kept as a stub node carrying its intrinsic dimensions. A replaced element whose height cannot be resolved from its own declared geometry is reported UNACCOUNTED and FAILS the build -- never costed at zero.",
+        "resolution_order": [
+          "explicit CSS or inline-style height in px",
+          "viewBox aspect ratio scaled to the real rendered width",
+          "width/height attribute pair"
+        ],
+        "non_rendering_tags": [
+          "script",
+          "style"
+        ],
+        "replaced_tags": [
+          "svg",
+          "canvas",
+          "video",
+          "iframe",
+          "object",
+          "embed"
+        ],
+        "forward_guard": "Section 43 asserts on every run that the parser discards only declared non-rendering tags, that every replaced element present is declared, and that every <img> resolves a box. A future document using <canvas>, <video> or an unsized <img> meets a named failure instead of a silent zero.",
+        "executable": "gssc_runtime.py boxcheck <package.json> --file <built.html>"
+      }
+    }
+  },
+  "component_layer_contract": {
+    "purpose": "State exactly what a derivative may and may not do to a master, so 'derivative' cannot quietly become 'redesign'.",
+    "carry_verbatim": [
+      "every style element",
+      "the CSS cascade",
+      "A4 geometry and page furniture",
+      "all brand assets, byte-identical",
+      "watermark, stripe, masthead, colophon",
+      "print rules"
+    ],
+    "permitted_substitutions": [
+      "the document title",
+      "the body element's data-* attributes"
+    ],
+    "additive_rule": "A derivative appends ONE style element, declares its tokens on a scoped class rather than :root, and overrides no master rule except the body padding of its own page class. A rule that changes master behaviour belongs in the master, through a version, not in a derivative.",
+    "provenance_rule": "Carry an HTML comment naming the master, the hydration digest it was verified against, and every substitution made. Losslessness that cannot be re-verified from the file itself is a claim, not a property.",
+    "verification": [
+      "every master style element present verbatim",
+      "every brand asset hash unchanged",
+      "no foreign image payload introduced",
+      "no unresolved asset token",
+      "master head reproduced either side of each declared substitution"
+    ]
+  },
+  "measured_pagination": {
+    "purpose": "A master page is an absolutely positioned fixed box with overflow hidden. Content does not reflow and does not warn — it disappears. Pagination must therefore be computed before the file is written, never left to the renderer.",
+    "block_model": "Content is a linear stream of atomic blocks. Each block declares its own rendered height from the declared token metrics, so a page's used height is the sum of its blocks and never an estimate of the page as a whole.",
+    "block_relations": {
+      "glue": "binds a block to the one after it; a section marker is always glued forward so it can never strand at a page foot",
+      "newpage": "forces a block to open a page; used for the execution page and for each annex"
+    },
+    "algorithm": {
+      "pass_1": "Dynamic programme over block order for the FEWEST pages that respect the fill limit, block atomicity and every forced break.",
+      "pass_2": "Second dynamic programme, constrained to exactly that page count, minimising the squared deviation of each page's fill from the mean.",
+      "why_two_passes": "A single objective that trades page count against evenness will add a page to make the fills look tidy. Measured regression before this rule: a 14-page document whose final page carried 18% fill, and a later build that chose 10 pages where 9 sufficed. Page count is decided first and evenness is optimised inside it."
+    },
+    "fill_limit": 0.92,
+    "fill_limit_note": "Of the body budget, as the binding gate. Set at 0.92 rather than 0.955 because the two estimators disagree near the ceiling: a page the block model measured at 93.9% the coarse reconstruction measured at 102.7%. On a page that clips silently, the correct response to estimator disagreement is headroom, not a preferred estimator.",
+    "balance_metric": "Report mean, range, spread and standard deviation across continuous-prose pages, excluding annex openings and the execution page.",
+    "two_estimators": "The binding balance measurement is the builder's own block model, where each block's height is computed from the declared token metrics. The runtime's pagefill is a deliberately coarser second opinion reconstructed from the finished file: it cannot see block boundaries exactly and approximates separation from the declared block gap. Its over-budget test is binding; its spread figure is advisory. A threshold calibrated on one model must never be enforced against the other — that error was made and corrected within this release.",
+    "executable": "gssc_runtime.py pagefill <package.json> --file <built.html>"
+  }
+}

@@ -1,0 +1,189 @@
+{
+  "module_id": "01_identity",
+  "version": "1.0",
+  "role": "canonical_data",
+  "purpose": "Provide one canonical source for stable GSSC corporate facts.",
+  "human_note": "If a company fact conflicts with this module, verify the source before publishing.",
+  "legal": {
+    "legal_name": "GSSC Integrated Corporation",
+    "short_name": "GSSC",
+    "legacy_names_forbidden_external": [
+      "GSSC Integrated Solutions Corporation",
+      "GSSC — company in formation"
+    ]
+  },
+  "registrations": {
+    "sec": {
+      "company_registration_number": "2026060254196-01",
+      "recorded_incorporation_date": "2026-06-10",
+      "source_file": "GSSCIntegratedCorporation_CertificateofIncorporation.pdf",
+      "source_status": "government_issued_certificate",
+      "verification_note": "Company registration number is explicitly present in the SEC certificate. The recorded date is retained from the established GSSC record and should be rechecked against the certificate face if a later exact-date conflict appears."
+    },
+    "bir": {
+      "tin_and_branch_code": "806-700-547-00000",
+      "tin_issuance_date": "2026-06-23",
+      "business_registration_date": "2026-06-23",
+      "ocn": "074RC20260000008487",
+      "registering_office": "RDO 074 — South Iloilo and Guimaras",
+      "revenue_region": "RR 011 — Western Visayas",
+      "office_type": "Head Office",
+      "form": "BIR Form 2303, Revised August 2024",
+      "source_file": "GSSC_CoR.pdf",
+      "source_status": "latest_user_supplied_government_issued_certificate",
+      "supersedes_source": "GSSC_BIR_CertificateofRegistration.pdf showing 010-997-579-000"
+    },
+    "authority_to_print": {
+      "approval_date": "2026-06-23",
+      "outbound_correspondence_number": "074AU20260000011049",
+      "source_email_subject": "BIR: Application for Authority To Print Receipts/Invoices",
+      "source_status": "government_approval_notice"
+    },
+    "psic": [
+      "70200 Management consultancy activities",
+      "82990 Business support services"
+    ],
+    "permit_status": {
+      "status": "recorded_as_current_in_internal_context",
+      "publication_rule": "Do not claim fully permitted or no remaining requirements unless the current Mayor’s/Business Permit and applicable ancillary permits are inspected and valid for the relevant activity and period.",
+      "verification_status": "source_document_not_verified_in_this_kernel_update"
+    },
+    "employer_registrations": {
+      "sss_employer_number": "80-0482548-7-000",
+      "philhealth_employer_number": "011000022869",
+      "pag_ibig_employer_number": null,
+      "source_status": "repeated_in_controlled_GSSC_accreditation_summaries; underlying government certificates not inspected in this update",
+      "publication_rule": "Use only with current supporting employer-registration certificates."
+    }
+  },
+  "tax_posture": {
+    "status": "Non-VAT",
+    "percentage_tax": "Registered for quarterly percentage tax using BIR Form 2551Q. Section 116 generally imposes 3% of gross quarterly sales on qualifying non-VAT persons; have the accountant confirm the applicable base, exclusions, threshold status, and any later amendment for each filing period.",
+    "corporate_income_tax": "Registered for BIR Forms 1702 and 1702Q. Do not describe GSSC as using the 8% income-tax option, which is associated with qualified self-employed individuals rather than this domestic corporation.",
+    "withholding_tax": "Registered for expanded withholding tax forms 0619E, 1601EQ, and 1604E. Apply only to transactions and periods for which withholding is legally required; maintain withholding taxes as trust funds and do not commingle them.",
+    "invoice_phrase": "THIS DOCUMENT IS NOT VALID FOR CLAIM OF INPUT TAX",
+    "invoice_rule": "Use INVOICE terminology and the current BIR-authorized invoice format; do not rely on legacy Official Receipt language.",
+    "quotation_posture": "Client-facing amounts may be stated as PHP on a Non-VAT basis. Do not use “VAT-neutral” as a legal or tax classification.",
+    "source_basis": [
+      "Current BIR taxpayer-registration notice dated 2026-06-23",
+      "Current BIR Form 2303 identified as GSSC_CoR.pdf",
+      "RA 11976 and implementing BIR issuances; verify current law at time of filing"
+    ]
+  },
+  "principal_office": {
+    "full": "Regus, 3F Festive Walk Mall, Iloilo Business Park, Megaworld Boulevard, Mandurriao, Iloilo City 5000",
+    "city": "Iloilo City",
+    "country": "Philippines"
+  },
+  "contact": {
+    "website": "gsscph.com",
+    "email": "management@gsscph.com",
+    "landline": "(033) 339-7472",
+    "mobile": "+63 928 370 3574",
+    "contact_conflict": {
+      "alternate_number_seen": "+63 917 347 4007",
+      "finding": "Appears in a recent quotation and earlier legacy correspondence but conflicts with the SEC/application and multiple current accreditation records.",
+      "control": "Do not auto-replace the canonical mobile. Verify management’s intended public number before the next client release."
+    }
+  },
+  "positioning": {
+    "canonical": "A super-sourcing, management consultancy, and business support platform delivering single-point accountability across programs.",
+    "differentiator": "Coordination, integration, sourcing, and accountable delivery across varied requirements."
+  },
+  "capabilities": [
+    "strategic sourcing and procurement",
+    "management consultancy",
+    "business support",
+    "project integration",
+    "civil and construction-adjacent work",
+    "water filtration and refilling",
+    "diesel supply",
+    "waste programs",
+    "signage and fabrication",
+    "food service",
+    "electrical and mechanical work",
+    "furniture and fixtures",
+    "landscaping",
+    "open-category bespoke requirements"
+  ],
+  "identity_depth": {
+    "long": "Legal name, registrations, tax posture, office, contacts, positioning and capabilities.",
+    "medium": "Legal name, positioning, office and public contacts.",
+    "short": "Legal name, city, email, phone and website.",
+    "one_line": "GSSC Integrated Corporation — a super-sourcing, management consultancy, and business support platform based in Iloilo City, Philippines."
+  },
+  "public_defaults": {
+    "always": [
+      "legal name",
+      "principal office",
+      "public email",
+      "public phone",
+      "website"
+    ],
+    "when_needed": [
+      "BIR TIN and branch code",
+      "SEC company registration number",
+      "TIN issuance date",
+      "BIR business registration date",
+      "PSIC codes",
+      "ATP approval identifiers"
+    ],
+    "never": [
+      "legacy names",
+      "internal routing details"
+    ]
+  },
+  "update_discipline": {
+    "version_bump_required": [
+      "legal name",
+      "TIN",
+      "registrations",
+      "office",
+      "contacts",
+      "tax posture"
+    ],
+    "verify_source": true,
+    "source_priority": "Latest government-issued certificate supplied by the user overrides an older government certificate, profile, summary, memory, or draft."
+  },
+  "failure_modes": [
+    "legacy name published",
+    "contact details drift",
+    "wrong registration date",
+    "TIN exposed on an unnecessary marketing surface",
+    "capabilities narrowed by assumption",
+    "ATP approval date mislabeled as BIR registration date",
+    "superseded TIN copied from an older BIR Certificate of Registration",
+    "profile credential block allowed to override government certificate"
+  ],
+  "data_conflicts": {
+    "superseded_cor": {
+      "value": "010-997-579-000",
+      "status": "superseded_do_not_use",
+      "source_file": "GSSC_BIR_CertificateofRegistration.pdf",
+      "superseded_by": "GSSC_CoR.pdf",
+      "rule": "Do not publish or propagate the superseded TIN. The latest user-supplied BIR Form 2303 controls."
+    },
+    "current_cor": {
+      "tin_and_branch_code": "806-700-547-00000",
+      "tin_issuance_date": "2026-06-23",
+      "business_registration_date": "2026-06-23",
+      "ocn": "074RC20260000008487",
+      "rule": "Use these values unless a later government-issued certificate is supplied."
+    }
+  },
+  "corporate_profile": {
+    "entity_type": "Domestic stock corporation",
+    "classification": "All Filipino; regular",
+    "term": "Perpetual",
+    "taxable_year": "Calendar year, January 1 to December 31",
+    "annual_stockholders_meeting": "June 30, subject to the bylaws and lawful rescheduling",
+    "capital_structure": {
+      "authorized_capital_stock_php": "100000.00",
+      "authorized_common_shares": 10000,
+      "par_value_php": "10.00",
+      "subscribed_capital_stock_php": "25000.00",
+      "paid_up_capital_stock_php": "25000.00"
+    },
+    "source_status": "SEC application summary and incorporation records; verify against the latest SEC records before statutory filing."
+  }
+}

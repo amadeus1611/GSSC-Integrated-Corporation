@@ -1,0 +1,52 @@
+{
+  "module_id": "16_continuous_optimization_discipline",
+  "version": "1.0",
+  "role": "self_improvement_governance",
+  "purpose": "Govern how genuine lessons learned through user interaction become permanent, versioned kernel/protocol doctrine, while strictly preventing subjective preference from being mislabeled as an objective improvement, fix, or optimization.",
+  "human_note": "This module governs changes to the KERNEL AND PROTOCOL THEMSELVES (the governing doctrine), distinct from 15_design_research_engine, which governs per-document body-content decisions. Think of 15 as document-level memory/iteration and 16 as doctrine-level memory/iteration.",
+  "scope": {
+    "governs": "whether and how a suggestion, correction, or discovery arising from a user interaction is captured as new or amended kernel/protocol doctrine",
+    "does_not_govern": "per-document body design decisions (15_design_research_engine) or canonical identity/governance/firewall/IP facts (01/02/04/05, changed only from verified source information per 00_meta.override_tiers)"
+  },
+  "materiality_gate": {
+    "rule": "Before any change is logged or framed as an optimization, fix, or improvement, it must pass ALL of the following. A change failing any test may still be implemented if the user requests it, but MUST be logged as a preference honored, never as a fix or optimization.",
+    "tests": [
+      "OBJECTIVE_BASIS: the change removes or reduces a measurable inefficiency (redundant bytes, redundant computation, an unimplemented doctrine gap, a demonstrated defect or failure) rather than merely reflecting taste or style.",
+      "NO_UNREQUESTED_CONTENT_CHANGE: the change does not alter any information, content, or functional output the user did not ask to change.",
+      "INDEPENDENTLY_VERIFIABLE: the claimed improvement is checked by an objective method (hash comparison, byte-count comparison, structural/schema validation, a passing test) and that check is reported, not merely asserted."
+    ],
+    "failure_mode": "Calling a subjective or preference-driven change an 'optimization' or 'improvement' when it has no measurable, verifiable basis is a hallucination of value and is prohibited. State plainly when a change is preference-only."
+  },
+  "capture_and_versioning": {
+    "rule": "A change that passes the materiality gate becomes permanent doctrine: implement it, version the affected kernel module(s) and/or Execution Protocol section(s) following the existing versioning and changelog discipline (00_meta / 13_changelog and the Protocol's own Section 32 change record), and never silently reintroduce a previously-fixed inefficiency in a later version. If a later version appears to reintroduce a pattern a prior changelog entry fixed, flag the regression explicitly rather than proceeding silently.",
+    "session_continuity": "A genuine lesson learned in one session must not be lost at the end of that session. Capture it into the kernel/protocol itself (this is the mechanism) rather than relying on informal memory of the conversation, so a future session starting fresh from the current kernel/protocol automatically inherits the lesson without needing to rediscover it."
+  },
+  "self_assessment_discipline": {
+    "rule": "When asked for a self-assessment, score, or completeness estimate of the kernel, protocol, or any generated deliverable, ground every component of the score in a concrete, checkable criterion (a specific verified fact, a named remaining gap, a measured byte/percentage figure) rather than an unexplained number. State remaining gaps honestly, including gaps this module itself cannot close (for example, a genuine need for a rendered-pixel verification tool that does not currently exist in the operating environment)."
+  },
+  "priority_relative_to_generalization": {
+    "rule": "While preparing this kernel/package for use as a licensable, generalized derivative, changes that also concretely benefit GSSC's own current, real use (smaller/faster/more reliable files, clearer doctrine, fewer defects) are preferred over abstractions that only matter for a hypothetical future derivative and provide no benefit to GSSC today. Generalization work should not degrade GSSC's own present deliverable quality, correctness, or efficiency."
+  },
+  "failure_modes": [
+    "Labeling a subjective preference change as a fix or optimization in a changelog entry",
+    "Implementing a change that silently alters content or output the user did not request",
+    "Claiming a byte/behavior improvement without independently checking it",
+    "Losing a genuine lesson learned at the end of a session instead of capturing it into kernel/protocol doctrine",
+    "Silently reintroducing a previously-fixed inefficiency in a later version without flagging the regression",
+    "Giving a self-assessment score with no stated, checkable basis for each component"
+  ],
+  "claim_evidence_rule": {
+    "status": "BINDING as of 2.16.0.",
+    "rule": "No kernel doctrine field may assert that a behaviour is implemented, validated, or closes a gap unless the same release adds or updates an executable check that would FAIL if the claim were false, and that check is DEMONSTRATED to discriminate -- shown failing against a negative-control fixture, not only passing against the real document.",
+    "why": "Every defect found in the 2.15.0 audit was this one rule being absent. collision_and_balance_reference claimed three dated validations for code that did not exist. memory_mandate claimed a live write hook for a function with no caller. The runtime header claimed `all` ran geometryaudit and a logwrite verb existed; neither was true. In each case the prose was plausible, internally consistent, and wrong, and nothing could tell.",
+    "discrimination_requirement": "Passing is not evidence. A check that has only ever returned PASS is indistinguishable from a check that cannot return anything else. The first Section 44 AABB draft passed the real document perfectly and was structurally incapable of ever failing.",
+    "false_positive_requirement": "The control runs in BOTH directions. A check that fires on a correct document is overridden, then ignored, then removed. The second Section 44 draft reported six real-looking collisions that were all false.",
+    "executable": "gssc_runtime.py wiringaudit <package.json>  +  the release negative-control suite"
+  },
+  "upstream_deletion_rule": {
+    "status": "BINDING as of 2.16.1.",
+    "rule": "A completeness guarantee is only valid over the inputs it can actually see. Any stage that DROPS, FILTERS or SKIPS content upstream of a coverage check must declare what it drops, and that declaration must itself be audited. Otherwise the coverage check reports full coverage of a reduced input and reads as proof when it is not.",
+    "origin": "The 2.16.0 page-4 footer overlap. The coverage ledger correctly reported 0 unaccounted elements on a page where 190px of chart was invisible, because the parser had already deleted it. Both statements were true simultaneously.",
+    "generalisation": "Ask of every audit: what did this never get to look at? That is where the next defect of this class lives."
+  }
+}

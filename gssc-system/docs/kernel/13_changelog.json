@@ -1,0 +1,713 @@
+{
+  "module_id": "13_changelog",
+  "version": "1.0",
+  "role": "audit_trail",
+  "purpose": "Provide append-only release history.",
+  "human_note": "Read last; never rewrite older entries.",
+  "log": [
+    {
+      "kernel_version": "2.16.1",
+      "release_date": "2026-09-22",
+      "release_status": "review_candidate",
+      "current_status": "review_candidate",
+      "supersedes": [
+        "2.16.0"
+      ],
+      "summary": "Footer-overlap hotfix. A human caught page 4 of the 2.16.0 master crossing the footer. The binding box model had reported it at 87.7% fill, PASS. The page was at 110.2%, 86px over budget and 60px into the footer band. Cause: the DOM parser listed <svg> beside <script> and <style> as a tag to discard, so every chart in every document was costed at zero -- 190px invisible on this page. This is the 2.11.0 incident repeating, and the coverage ledger built to prevent it reported 0 unaccounted, truthfully, because the element had been deleted upstream of it.",
+      "changes": [
+        "Replaced elements (svg, canvas, video, iframe, object, embed) are no longer discarded at parse time. They are kept as stub nodes and measured from their own intrinsic geometry: CSS height, then viewBox aspect ratio scaled to the real rendered width, then width/height attributes. A replaced element whose height cannot be resolved is reported UNACCOUNTED and FAILS -- never zero.",
+        "Section 43 gains a PARSE-TIME COVERAGE guard: the parser may discard only declared non-rendering tags, every replaced element present must be declared, and every <img> must resolve a box. The next unmeasurable construct is a named failure rather than a silent zero.",
+        "Module 16 gains upstream_deletion_rule: a completeness guarantee is only valid over the inputs it can see. Any stage that drops content upstream of a coverage check must declare what it drops. This is the durable lesson -- the ledger was not wrong, it was measuring a reduced input.",
+        "Section 23D gains a SOFT LIMIT (90%). A page at or above it reports PASS (AT CAPACITY) with its remaining spare px. The commercial page sat at a true 95.8% for a full release under a binary gate that said only PASS. The cover now self-reports 72px spare on every run.",
+        "boxcheck prints every replaced element with its resolved height and basis, and prints the footer hard line against the true content end on any overflow.",
+        "LAYOUT: the work-package weighting chart moved from the commercial page to the overview page, chosen by measuring both candidate relocations rather than assuming. Page 4 110.2% -> 80.1%; document fill spread 42.6 -> 12.5 points. The overview page descriptor was corrected to describe the page it now heads.",
+        "Module 18 budget_gate gains capacity_rule and bootstrap gains two routes: read the target page fill BEFORE adding a block, and confirm any figure appears as a measured replaced element. The 2.16.0 measurement existed and was simply not consulted before the edit that broke the page."
+      ],
+      "known_gaps": [
+        "Floats remain unmodelled by the box model.",
+        "Nested grids whose page-absolute top cannot be resolved stay excluded from cross-container AABB and are reported as excluded.",
+        "Still not a rendered screenshot. Chrome/Edge print preview remains the final gate before client release."
+      ]
+    },
+    {
+      "kernel_version": "2.16.0",
+      "release_date": "2026-09-22",
+      "release_status": "review_candidate",
+      "current_status": "superseded",
+      "supersedes": [
+        "2.15.0"
+      ],
+      "summary": "Claim-evidence release. An audit of 2.15.0 found four capabilities the kernel described in the present tense and no code performed: a collision/balance/fit checker specified since 2.9.0 with dated validation claims and no implementing function, a Design Decision Log whose write path had never once been called across four releases while doctrine stated it was live, a geometryaudit the runtime header listed inside `all` that `all` never invoked, and a documented logwrite verb argparse did not accept. Separately, `all` was still letting two coarse passes that doctrine retired at 2.12.0 overturn the binding overflow model -- and on the real master it did, printing OVERALL: FAILED on a document designaudit passed in the same session. All of it is closed by execution, and the rule that would have prevented every one of them is now binding doctrine.",
+      "changes": [
+        "Section 23A/23C retired from the `all` verdict in code, three releases after doctrine retired them in prose. clipcheck and footercheck still print, and a disagreement with the binding Section 23D model is reported as an explicit ADVISORY block rather than silently deciding the build.",
+        "geometryaudit (Section 42) now self-hydrates and votes in `all`. It previously hard-failed without --file while the runtime header listed it as part of a command that supplies no --file; the two statements could not both be true, and the way they were reconciled was that nothing ever called it.",
+        "NEW Section 44 (gridbalance): AABB collision, grid track overflow, grid-row balance and fixed-width horizontal fit. Closes collision_and_balance_reference, which had carried three dated \"validated against\" claims since 2.9.0 for code that did not exist, and which was the only subsection of layout_budget_reference with no executable key.",
+        "Section 44 was built wrong twice in its own session and both were caught by execution. The first AABB draft laid cells at ci*(uniform_track+gap), where adjacent boxes touch and can never intersect -- a test incapable of ever failing. The second compared boxes across containers in their own local coordinate spaces and reported six collisions between .metric-strip and .roadmap that the trace proved were stacked with 75px of clearance. Both failure directions are now negative-controlled.",
+        "NEW Section 45 (a11yaudit) and NEW Module 19: a source-side accessibility floor -- declared language, real title, alt on every image, label or aria-hidden on every figure -- and an honest, one-place statement that browser print-to-PDF emits an UNTAGGED PDF and that no tool capable of fixing that exists in the environment. The gap is disclosed, never implied closed.",
+        "NEW Section 46 (wiringaudit): reads the runtime's own source and asserts that every audit-shaped function is reachable from argparse, called by designaudit, and -- if it needs no derivative -- votes in `all`; that the retired coarse passes have not been re-ANDed into the verdict; and that the Module 15 write path still has a real caller. The two unwired capabilities this release found cannot recur silently.",
+        "Module 15 write path wired to the single genuine generation event (hydrate -o) and the missing logwrite verb restored. Proven by control in both directions: a read-only audit leaves the entry count unchanged, a build raises it by exactly one. The log records builds, not audits.",
+        "NEW 03_brand.component_registry with three registered components -- metric_callout, milestone_roadmap, tier_comparison -- each with declared anatomy, token list, permitted pages, cap rule and cited design basis. All three are grid, a declared measurable layout mode, so the binding box model sees them and Section 44 balance-tests them.",
+        "tier_comparison registered in 06_quotation_doctrine.program_cards. GSSC had produced a three-option quotation before, entirely ad hoc; the anatomy is now inherited rather than reinvented, and inherits the program_cards firewall verbatim.",
+        "Contents page composition: measured at 30.7% fill against a 91.5% cover, the widest spread in the document. The metric strip and roadmap -- both genuinely navigational content -- moved it to 48.9% and narrowed the document spread from 60.8 to 42.6 points. The commercial page moved 73.2% to 87.7%, inside the binding limit.",
+        "Module 16 claim_evidence_rule made BINDING: no doctrine field may assert a behaviour unless the same release adds a check that would fail if the claim were false, demonstrated against a negative control. Passing is not evidence; a check that has only ever passed is indistinguishable from one that cannot fail.",
+        "Registry planned roles now carry planned_since and revisit_by. An open-ended planned role is indistinguishable from an abandoned one.",
+        "Builder hash convention aligned with preflight: the runtime part is hashed as its code string, not as a dict. A builder computing one hash by a second rule produced a package that failed its own preflight -- the same two-places drift class as Sections 37, 41 and 42."
+      ],
+      "known_gaps": [
+        "PDF/UA structure tagging remains out of scope and is disclosed in Module 19; no tagging-capable tool exists in the environment.",
+        "Section 44 excludes nested grids whose page-absolute top cannot be resolved from the trace. One such container (.gate-lines) exists in the current master and is reported as excluded on every run rather than silently assumed.",
+        "pagefill balance remains NOT SCOREABLE: four of five pages are structural openers, leaving a prose sample below the declared minimum. Reported as invalid rather than as a spread that would read as a pass.",
+        "The Design Decision Log begins at this release. Early entries will correctly record no precedent, which is the honest state, not a defect."
+      ]
+    },
+    {
+      "kernel_version": "2.15.0",
+      "release_date": "2026-09-21",
+      "release_status": "review_candidate",
+      "current_status": "superseded",
+      "supersedes": [
+        "2.14.0"
+      ],
+      "summary": "Forward-guard release. Closed all five items of the 2.14.0 polish handoff, and then hypothesised five ways a FUTURE design iteration would break this package and tested each by execution. Four of the five were already real, and one -- ordinal-keyed page padding -- had been silently live since release 2.10.0, wrong on four of five pages, undetected across four releases.",
+      "changes": [
+        "Module 10: page padding now RESOLVES from the stylesheet cascade instead of an ordinal-keyed table. body_padding_by_page was keyed page1/page2/page3 -- by POSITION, not identity -- so inserting the contents page at position 2 in release 2.10.0 shifted every later key by one. The runtime charged p2's padding to p-contents, p3's to p2, and the generic contract fallback to p3: four of five pages wrong, 24px of total budget error, undetected for four releases because nothing compared the table against the cascade.",
+        "Module 10: the fallback table is RE-KEYED from ordinal to page-class identity, with values read from the stylesheet -- practising the new rule rather than only asserting it. Ordinal keys are dropped entirely: a stale fallback is worse than no fallback, because it looks authoritative. Verified by a reorder control: swapping two pages now leaves every page's padding and budget identical, which is precisely what ordinal keying could not survive.",
+        "Module 10: added the general rule that NO LOAD-BEARING VALUE MAY BE KEYED BY DOCUMENT POSITION. Page order changes every time the design iterates; a position-keyed table silently re-points every entry after an insertion. This is the fourth time silence has been the failure mode in this package.",
+        "Module 10: added CSS grid row-band measurement. A multi-column grid lays children out in ROWS, so its height is the sum of per-row maxima plus gaps. Measured on the real execution page: .gate-lines, a 2-column grid of four fields, costed 63.0px against a true 15.8px -- 47.2px over-measured. Over-measurement is the safe direction, but a grid wider than it is tall would be wrong in the unsafe direction.",
+        "Module 10: supported_layout_modes is now declared, as real CSS display keywords, with a per-mode support detail stating exactly what is and is not modelled (flex is single-line rows only; grid does not model span, implicit tracks or named areas). The first attempt declared invented names and Section 43 correctly failed it -- a registry that does not speak the same vocabulary as the thing it governs cannot govern it.",
+        "Module 10: container_classes doctrine corrected to describe what the 1.5 DOM engine actually does. Under the 1.4 regex scanner a container was genuinely skipped; the DOM engine measures it through ordinary block recursion, and it contributes nothing BECAUSE IT HAS NO OWN TEXT. Traced through every reference: the list is consumed only by the coverage ledger's inline classification. Editing it changes coverage reporting, not measured height.",
+        "Module 10: scope_limit now names in-flow generated content as a structural blind spot of any DOM-based model, and Section 43 FORBIDS it rather than attempting to model it.",
+        "Module 03: every palette colour must now be contrast-registered as text or listed as non-text. Eight colours were in neither list. Listing is a decision on the record, so adding a token forces \"is this ever text, and at what size\" to be answered when the token is added rather than discovered in a printed proof.",
+        "Module 03: declared a chart pattern_vocabulary, including two spare names declared ahead of need, so a sixth or seventh series has somewhere to go that is already specified rather than invented at build time -- which is how a series ends up encoded by colour alone.",
+        "Module 02: Section 41 now iterates EVERY signature block. Through 1.6 it used a first-match search, so a two-party instrument would have had every block after the first unexamined. Fixed before the first two-party derivative rather than after it.",
+        "Template: removed the dead .pm-curr component -- the only in-flow, non-absolute, non-hidden generated-content rule in the entire stylesheet. Removed rather than activated, because activating it would deliberately introduce the one construct Section 43 forbids, to no benefit: every price already prints its currency as real, measurable text.",
+        "Runtime 1.7: pagefill now decodes HTML entities, completing the \"one ruler\" unification begun at 1.3. It was the last function measuring raw markup: each &amp; cost five characters instead of one, across 15 occurrences.",
+        "Runtime 1.7: the `all` command now states its real scope in the docstring. It runs only package-level checks; the six that need a built derivative structurally cannot run inside it. Stated because `all` reads as \"everything\" and is not.",
+        "Runtime 1.7: added Section 42 (Page Geometry Parity) and Section 43 (Forward-Compatibility Guard), bringing designaudit to fourteen checks. Section 43 is a set of REGISTRY COMPLETENESS tests on the principle that a registry which can be extended incompletely eventually will be.",
+        "Module 15: the release build now writes a Design Decision Log entry through log_decision(). The write path had existed since early in the project and had never once been called by any build -- the mandate said \"write after every decision\" while nothing wrote. Precedent continuity begins from this release.",
+        "Verified by EIGHT negative controls, two of which found defects in this release's own new code before it sealed: a bounded-regex fix after the forward guard hung on a 46k stylesheet, and an identity-key comparison fix after Section 42 silently stopped comparing anything the moment the re-key landed."
+      ],
+      "known_gaps": [
+        "NOTHING HERE HAS BEEN SEEN RENDERED. No headless browser exists in this environment. The page-padding correction changes measured budgets on four of five pages; those numbers are now right against the stylesheet, but the stylesheet itself has still only ever been verified by eye in a browser print, and not since this change.",
+        "Grid support models explicit columns and row gaps only. grid-column: span, implicit tracks, auto-flow: column and named template areas are NOT modelled and would measure as ordinary rows. Declared in layout_mode_support_detail rather than left implicit.",
+        "Flex support is single-line rows only, for classes explicitly registered in flex_row_classes. A wrapping or column-direction flex container measures as block flow.",
+        "Section 43 tests registry COMPLETENESS, not registry CORRECTNESS. It can prove every palette colour is classified; it cannot prove the classification is the right one.",
+        "Floats remain unmodelled. No float is currently used anywhere in the document, which is why this is still a declared gap rather than a live defect.",
+        "All prior known_gaps carried forward: balance reports measurement_valid=false (four of five pages are structural openers, prose sample n=1); the gold ordinal remains at 3.24:1 by explicit exemption; reading measure remains roughly 75-79 characters per line; Module 18 has no executable per-region validator; header and marginalia boundary cursors remain specified and not built; and management adoption of the Execution Protocol remains unrecorded."
+      ]
+    },
+    {
+      "kernel_version": "2.14.0",
+      "release_date": "2026-09-21",
+      "release_status": "review_candidate",
+      "current_status": "superseded",
+      "supersedes": [
+        "2.13.0"
+      ],
+      "summary": "Governance parity release. The universal quotation master's own hardcoded signoff block printed Duke Y. Demayo with the title \"Chief Executive Officer · President · Principal\" -- a title that has belonged to Ronnie S. del Castillo since at least kernel 2.1.1. Corrected, and a durable check added so governance doctrine and rendered output can no longer silently disagree.",
+      "changes": [
+        "Module 02: corrected the rendered signatory title in the universal quotation master from \"Chief Executive Officer · President · Principal\" to \"President · Principal · Chief Operating Officer\", matching active_officers.duke_y_demayo.titles exactly. The signatory NAME is unchanged -- Duke Y. Demayo remains the signatory shown on this master; only the title string was wrong.",
+        "Module 02: recorded the defect and its resolution directly in known_conflicts, appended per the module's own append-only discipline for prior legacy-file conflicts.",
+        "Runtime 1.6: added governanceaudit and Section 41, folded into designaudit, which now runs twelve checks. Three things are verified, not one: the rendered name resolves to a current active officer; every rendered title belongs to THAT officer; and no rendered title belongs to a DIFFERENT active officer -- the exact shape of the defect found here, where a real, currently-valid title in the document was wrong because it is currently held by someone else.",
+        "Runtime 1.6: verified by execution against the UNMODIFIED 2.13.0 document before any fix was applied. Section 41 correctly failed, naming \"Chief Executive Officer\" as a title borrowed from Ronnie S. del Castillo and printed under Duke Y. Demayo's name -- the defect stated in the customer's own words, confirmed independently by the audit before the correction was made.",
+        "Runtime 1.6: verified by five controls after the fix, not one: the corrected build passes; re-injecting the exact original defect fails; a future-only person shown as signatory fails; an unrecognised name fails; and a genuine subset of declared titles (dropping one title while keeping the rest truthful) correctly passes, proving the check is a real ownership test rather than brittle string equality."
+      ],
+      "known_gaps": [
+        "THIS HAS NOT BEEN SEEN RENDERED. No headless browser exists in this environment. The corrected signature block has not been confirmed by eye in a printed proof.",
+        "Section 41 checks the ONE signoff block this master carries. A future derivative with multiple signature blocks (e.g. a two-party agreement) would need the same pattern applied per block; the section is not yet parameterised for more than one.",
+        "The section trusts that Module 02 itself is current. It cannot detect a stale governance record -- only a rendered document that disagrees with whatever the governance record currently says. Keeping Module 02 itself current remains a human process (formal board action, per the existing role_transition_workflow).",
+        "All prior known_gaps carried forward unchanged: balance reports measurement_valid=false (4 of 5 pages structural openers, prose sample n=1); the gold ordinal remains at 3.24:1 by explicit exemption; reading measure remains roughly 75-79 characters per line; Module 18 has no executable per-region validator; header and marginalia boundary cursors remain specified and not built; the box model does not measure floats, CSS grid track sizing, or in-flow ::before/::after generated content; and management adoption of the Execution Protocol remains unrecorded."
+      ]
+    },
+    {
+      "kernel_version": "2.13.0",
+      "release_date": "2026-09-21",
+      "release_status": "review_candidate",
+      "current_status": "superseded",
+      "supersedes": [
+        "2.12.0"
+      ],
+      "summary": "Coverage and colour release. The overflow checker could not see part of the page it was checking, the selector matcher silently dropped every structural pseudo-class, the tables had lost any perceivable two-tone system, and the chart archetype had been specified for two releases with no palette to select from. All four are closed, and the defect CLASS behind the first two is closed structurally rather than instance by instance.",
+      "changes": [
+        "Module 10: replaced the Section 23D regex scan with a real DOM walk. re.finditer resumes after each match, so any element nested inside an already-matched parent was never visited. Demonstrated on the real page 3 of the 2.12.0 master: the scan visited .chs, .chs-title, .chs-descriptor, .chs-rule, .bt, .sig-card, .sig-tier, .sig-price and .sig-note, and never visited .chs-stamp, .sig-code, .sig-name or .sig-desc -- all real, visible, space-consuming content. A scan that cannot see part of the tree cannot prove coverage of it.",
+        "Module 10: added the coverage ledger and Section 23E. Every element is now MEASURED, EXCLUDED by a named declared rule, or UNACCOUNTED, and boxcheck FAILS on any unaccounted element. This is the durable fix for the class behind the 2.11.0 footer overflow, the invisible stamp line and the unresolved table rules: in every one the model met something it did not understand and quietly continued, producing a confident number wrong in the direction that hides defects.",
+        "Module 10: repaired the selector matcher, which had no pattern for a pseudo-class and silently dropped every one. The failure ran in BOTH directions, verified: .toc-row:first-child and .toc-row:last-child both evaluated true on every row, so source order rather than DOM position decided which rule won; while tr:nth-child(even) td evaluated false on all of them, so a real banding rule never applied at all. An An+B engine now evaluates them against true sibling positions, and a selector this resolver cannot evaluate is recorded and excluded, never assumed.",
+        "Module 10: ancestor context now accepts caller-supplied ancestor classes. 1.4 had no way to express table.dt as a known ancestor, so every `table.dt tbody tr ... td` rule failed its ancestor test and no table styling resolved at all.",
+        "Module 10: three defects found by this release's OWN repasses and fixed before sealing. Table cells were stacked vertically instead of laid out side by side, reporting page 4 at 139% fill. Declared column widths were ignored in favour of an equal share, reporting page 5 at 114%. And a line box was sized by its parent rather than its tallest inline child -- found in the real document on .toc-row, driven by .toc-title at 13px against a 10.5px parent, and on .sig-price at 15px.",
+        "Module 03: added three colour tokens on measurement. The 2.12.0 palette supported a 3-series categorical set and collapsed past it -- mid_grey at 0.2176 luminance sat 0.038 from gold_deep at 0.2558, the classic \"adjacent categories merge in grayscale\" failure. teal_deep and clay occupy luminance slots that were empty and carry hues the palette did not have. mid_grey was the obvious fifth series and was REJECTED on that measurement in favour of gold, which opens the gap to 0.138.",
+        "Module 03: added data_series_palette and Section 39. Categorical, sequential and diverging sets are now declared, with a binding grayscale test (adjacent series at least 0.04 luminance apart), a mandatory non-colour second channel on every series, and a cap of five -- past which the chart is split rather than given more hues.",
+        "Module 03: added table_emphasis_tiers and Section 40. The shipped tables carried one loud row in an otherwise flat document: banding measured 1.055:1 against the paper and the header tint 1.08:1, both past subtle and into invisible, against a decision-total row at 16.47:1. Five declared tiers replace that, banding is raised to a measurable 1.154:1 while staying quiet, the summary tier that never existed is added, and every multi-row table now closes on a declared tier -- the clause table previously had no footer and simply stopped.",
+        "Module 17: Categorical Header System v3.0. The registers were hierarchically correct but visually thin -- the entire event of a header was one 34px gold terminal under a hairline rule. The category word becomes a bordered chip, a short navy rule brackets the header above as well as below, and the tick carries a category accent colour. Hue is never the only signal: the ordinal and the category word both still say it in text.",
+        "Module 17: contents rows gain a category-keyed left tab and weighted ordinals. The ordinal keeps its SUBORDINATE SIZE -- the inversion corrected in 2.11.0 is not reintroduced -- and gains weight and a colour tab instead.",
+        "Module 18: exercised the chart archetype for the first time. It had been fully specified since 2.11.0 and never built against; grep for <svg> on the 2.12.0 master returned zero, so series-to-palette mapping was a declared variable with nothing to select from. A horizontal bar figure now ships on the commercial page in pure inline SVG, no library and no CDN, with 26 elements bounds-tested by figure_geometry_check.",
+        "Runtime 1.5: added colouraudit, folded into designaudit, which now runs eleven checks. Also fixed XML escaping in the chart builder, caught by figcheck on this release's own repass: an unescaped ampersand in a label made the whole figure unparseable, and an unparseable figure is an UNCHECKED figure -- precisely the silent-failure mode this release exists to eliminate."
+      ],
+      "known_gaps": [
+        "NOTHING HERE HAS BEEN SEEN RENDERED. No headless browser exists in this environment. The chart, the table tiers, the header chip and the contents tabs are all reasoned from measurement and precedent, and none has been confirmed by eye. Browser print-to-PDF at A4, margins none, background graphics on, remains the only visual confirmation -- and it is what caught the 2.11.0 overflow that every automated check had passed.",
+        "The measured page fills moved substantially in this release (page 3 from 266.6px to 686.5px, page 5 from 502.6px to 712.4px) because the DOM engine sees content the regex scan could not. These are more honest numbers, not new content -- but they mean earlier fill figures in this package's history were understated and should not be compared directly against these.",
+        "Section 23D still does not model floats, CSS grid track sizing, or true flex distribution beyond the declared one-line row case. A dense grid layout would be measured as ordinary block flow.",
+        "The coverage ledger proves every element was visited and classified. It does not prove the HEIGHT assigned to each one is right -- only that none was silently skipped.",
+        "Balance still reports measurement_valid=false: four of five pages are structural openers, so the prose sample is n=1, below the floor of three.",
+        "The gold ordinal remains at 3.24:1, below the small-text contrast floor, by the explicit exemption recorded at 2.11.0.",
+        "Reading measure remains roughly 75-79 characters per line against Bringhurst's 45-75 comfortable range.",
+        "Module 18 still has no executable per-region validator, and the header and marginalia boundary cursors remain specified and not built.",
+        "Management adoption of the Execution Protocol is still not recorded; the seven open_verification_items in Module 14 remain open."
+      ]
+    },
+    {
+      "kernel_version": "2.12.0",
+      "release_date": "2026-09-21",
+      "release_status": "review_candidate",
+      "current_status": "superseded",
+      "supersedes": [
+        "2.11.0"
+      ],
+      "summary": "Overflow-integrity release. A human caught a footer overlap on page 1 of the 2.11.0 master by eye, on a page the package had reported PASS with 205px of headroom. The page overflowed by 216px. This release reverts the treatment that caused it and replaces the estimate that could not see it with a resolved box model that reads the document's own cascade.",
+      "changes": [
+        "Module 10: added resolved_box_model and Section 23D, now the BINDING overflow gate. Sections 23A and 23C are retained unchanged as fast coarse passes but no longer decide. The new model parses the document's own style blocks, resolves :root custom properties, applies the real cascade by specificity then source order, computes content height from a max-width-aware wrap, adds padding and borders, and collapses sibling margins.",
+        "Module 10: recorded the four blindnesses that produced the defect. Element margin and padding were never added at all -- page 1 carries 114px of margin and 36px of padding and borders, roughly 18% of the usable page, entirely outside the old estimate. max-width was ignored, so the 2.11.0 cover title measured 4 lines at the 540px column when it renders SIX at its declared 470px, a 143px error on one element. Late cascade overrides were invisible to a hardcoded class map. Margin collapsing was not modelled.",
+        "Module 18: REVERTED the Section 38 cover overture introduced at 2.11.0. It raised the cover title from 42px to 64px at max-width:470px, driving page 1 to 1059.4px against an 843px budget. Reverted to the master's own 42px on the full column: 3 lines, 141.1px, page total 770.4px, 91.4% fill, 72.6px spare. Recorded as measured-and-reverted per Module 16 rather than shipped with a rationalisation.",
+        "Module 18: recorded the finding that the cover of this master cannot carry a scale-dissonance overture at its current content load. Measured headroom for the title box is 213.7px; 44px fits with 17px spare and 48px already overflows by 1px, so no size above the original has a safe margin. An overture needs space, not only size, and space on this page would have to come from content, which Section 38 forbids a cover overture from touching. The page must be shortened editorially before any overture is attempted -- a content decision for management, not a design decision inside a template build.",
+        "Module 18: added budget_gate and Section 38A. No archetype treatment at any creativity budget may push a page past its content budget; the page budget outranks every creative latitude in the module, including budget 3. The 2.11.0 overture was reasoned from genuine precedent, was internally coherent, passed every check the package then had, and was still wrong, because nothing connected the creative decision to the page it had to live on.",
+        "Runtime 1.4: added boxcheck, folded into designaudit, which now runs ten checks. Verified by four controls rather than by one agreeing result: re-applying the 2.11.0 overture correctly FAILED at +216.4px; a margin-only regression with no text change correctly FAILED at +341.4px, which the previous model could not have detected at all; a max-width-only regression correctly FAILED at +209.7px; the real build correctly PASSED. Still standard library only.",
+        "Runtime 1.4: fixed a case-sensitivity defect found during this build. CSS custom property names are case-sensitive and this stylesheet uses camelCase (--fs-bodyL); a lowercase-only var() pattern silently resolved to None and fell back to a default, costing the lede at 10.5px instead of 11.5px. Every var() pattern now accepts [A-Za-z0-9_-].",
+        "Build discipline: assertions against CSS now strip comments first. An assertion that the 470px constraint had been removed matched the explanatory comment describing the removal and reported the fix as un-applied. The same comments-versus-declarations mistake was made once before in this project, so the helper is now shared rather than rewritten."
+      ],
+      "known_gaps": [
+        "THE FIX HAS NOT BEEN SEEN RENDERED. No headless browser exists in this environment. Page 1 now measures 91.4% fill, which is correct but tight, and 91.4% of a model is not a proof of a page. Browser print-to-PDF at A4, margins none, background graphics on, checked by eye, remains the only confirmation -- and it is what caught this defect in the first place.",
+        "Section 23D does not model floats, flex or grid track sizing, or the .lede dropcap shape. The contents leader is a flex row and the contents page is the emptiest page in the document, so the risk is currently low, but a dense flex or grid layout would be measured as ordinary block flow and could overflow undetected.",
+        "The coarse passes 23A and 23C remain in the package reporting numbers that are now known to be optimistic. They are retained deliberately as fast pre-checks, but a reader who looks only at footercheck output will still see a headroom figure that does not account for margin, padding or max-width.",
+        "Balance still reports measurement_valid=false: 4 of 5 pages are structural openers so the prose sample is n=1, below the floor of 3.",
+        "The gold ordinal still ships at 3.24:1, below the small-text contrast floor, by explicit exemption recorded at 2.11.0.",
+        "Reading measure remains ~75-79 characters per line against Bringhurst's 45-75.",
+        "Module 18 still has no executable per-region validator, and the header and marginalia boundary cursors remain specified and not built.",
+        "Management adoption of the Execution Protocol is still not recorded; the seven open_verification_items in Module 14 remain open."
+      ]
+    },
+    {
+      "kernel_version": "2.11.0",
+      "release_date": "2026-09-21",
+      "release_status": "review_candidate",
+      "current_status": "superseded",
+      "supersedes": [
+        "2.10.0"
+      ],
+      "summary": "Measurement-parity release. 2.10.0 shipped a footer checker that could not measure the headers 2.10.0 itself introduced, a contents leader that could not render as a leader, a doctrine literal that disagreed with the template by 43px, and the only budget-3 archetype in the kernel with its budget never spent. All ten items of the 2.10.0 audit are closed, and three further defects surfaced by this release's own repasses are closed with them.",
+      "changes": [
+        "Module 10: unified clipcheck, pagefill and footercheck onto one ruler -- one font-size resolver, one line-height resolver, one tag scope, one greedy per-glyph line model. clipcheck had retained the flat 0.50em heuristic that 2.9.0 superseded everywhere else and an open/close tag alternation without a backreference that footercheck had already fixed. Measured on the real master: the flat and per-glyph models disagree on 1 of 97 blocks, a 16.6px error. Small, but the two could disagree on any block and nothing guaranteed they would not.",
+        "Module 10: class maps now resolve exact-name-first. The 2.10.0 substring scan matched \"title\" inside \"chs-title\", costing every Categorical Header System title at --fs-title 42px against a true --fs-pull 19px: 47.0px charged for a real 21.3px, a 2.21x overestimate on every header in every document. Section 23C could not measure the very elements the release that introduced it had added.",
+        "Module 10: added h2 and h3 to the measured tag scope. pagefill measured p|div|td|th|h1|li|figcaption and omitted h2, so section and contents titles were invisible to page-fill entirely -- the opposite-direction twin of the 42px overcharge.",
+        "Module 10: added an explicit container guard. A non-greedy backreferenced match on a nesting wrapper closes at the first inner tag and returns a truncated fragment; in 2.10.0 that fragment happened to fall under the len<12 filter. That was an accidental save, not a designed one, and a longer category word would have started contributing wrong numbers with no test to catch it.",
+        "Module 10: completed font_size_reference_px. It carried 7 of the template's 13 :root size tokens, so a lookup for fs-pull, fs-folio or fs-dropcap fell through to fs-body and mis-measured silently. Found by this release's own second repass: after the chs-title map was corrected to fs-pull, the resolver returned 10.5px because fs-pull did not exist in the table -- a 19px element costed at body size. The correction closed one defect and immediately exposed another beneath it.",
+        "Module 03: declared template_root_literals_px. The template :root and document_type_system.scale_px are two distinct numeric systems that coexisted unreconciled through 2.10.0; typeaudit only ever checked the latter, so the former was outside every audit. Both are retained -- they genuinely govern different layers -- but the template set is now declared and compared on every run.",
+        "Module 03: added contrast_registry and Section 36. Two of the four elements in the CHS stamp shipped below the small-text legibility floor and nothing in the package could see it. The category eyebrow moves mid_grey 3.70:1 -> slate 6.96:1. The gold ordinal stays at 3.24:1 by explicit exemption, on the ground that it is a redundant navigational marker whose value also appears in the contents page and the margin rail, so no information is lost if it reads softly. The figure is now on the record rather than unmeasured.",
+        "Module 03: resolved the section_numeral drift in favour of the shipped 13.0px, not the declared 26.0px. Structural reason: 26px described a numeral that was still the dominant display element of its header, and CHS changed that architecture -- the ordinal is now an eyebrow supporting the title. Restoring 26px would reintroduce the inversion CHS was built to remove. The alternative was available and is recorded as rejected.",
+        "Module 17: CHS v2.0. The contents row was a 3-track grid holding 4 children, so grid auto-placement created an implicit fourth column sized to the leader's own intrinsic content -- empty, height:0. The leader could never stretch and the dot leader could not render as specified. Grid has no primitive for \"let one item consume the space between two others\"; flex-grow does. The row is now a flex row with the leader as its only growing child.",
+        "Module 17: the contents ordinal and title both sat at 13px, separated only by colour -- 1.00:1, contradicting the subordination principle CHS enforces everywhere else. The ordinal drops to --fs-caption 10px: 0.77:1.",
+        "Module 17: declared page_overrides. A class-keyed resolver cannot see a font-size rule scoped by page, so the new cover overture rendered at 64px while every measurement function still costed it at 42px. This was introduced BY the cover work and caught by the new Section 37 parityaudit on its first run against the build that created it.",
+        "Module 18: performed the budget-3 pass on the cover. It was the only budget-3 archetype in the kernel and the only one whose latitude had never been exercised. Treatment is scale dissonance with strict isolation: exactly one element raised, --fs-title 42px -> --fs-dropcap 64px, both already declared, dissonance 4.00:1 -> 6.10:1, every neighbour untouched because the isolation effect holds only while the isolated element remains the exception. No photography: 03_brand.photography.default is \"avoid when possible\". No content added, removed or reworded.",
+        "Runtime 1.3: two new commands, contrastaudit and parityaudit, folded into designaudit, which now runs nine checks. Section 37 exists specifically so the class of defect that produced the 26px-versus-56px drift -- doctrine and implementation disagreeing with nothing comparing them -- is executed against rather than trusted. Still standard library only: no pip, no network, no third-party dependency.",
+        "Recorded a correction to the 2.10.0 audit's own arithmetic: it reported the flat and per-glyph line models as differing 103 vs 79 characters per line. Those are line CAPACITY figures, not rendered line counts; re-measured, the two models return identical counts on 96 of 97 blocks in this master. The fix is still correct -- three functions should not carry two rulers -- but the practical magnitude was overstated and is restated here from measurement."
+      ],
+      "known_gaps": [
+        "No rendered-pixel verification exists in this environment. Unchanged since 2.5.0. Browser print-to-PDF at A4, margins none, background graphics on, checked by eye, remains the only verified route. THE CHS v2.0 CONTENTS LEADER AND THE COVER OVERTURE HAVE NOT BEEN SEEN RENDERED. The leader fix in particular is a reasoned CSS correction to a mechanism proven broken, not a confirmed visual result.",
+        "Balance still reports measurement_valid=false on this derivative: 4 of 5 pages are structural openers so the prose sample is n=1, below the floor of 3. The guard is working as designed, but this release again ships without a usable balance reading for its own master.",
+        "The contents page sits near 10%% fill. Editorially defensible for a contents page and excluded from balance as a structural opener, but not visually confirmed.",
+        "Reading measure remains ~75-79 characters per line against Bringhurst's 45-75 comfortable range. Recorded at 2.10.0 and deliberately not acted on: narrowing the body column is a geometry change touching every page of every derivative and is not safe without a rendered proof.",
+        "scale_px still breaks its own ~1.12 modular ratio at dek (1.398). Recorded, deliberately unchanged -- dek is in live use and re-deriving it would be an unmeasured aesthetic change failing the Module 16 OBJECTIVE_BASIS test.",
+        "The gold ordinal ships at 3.24:1, below the small-text floor, by explicit exemption. That is a decision on the record, not a measurement gap, but it remains a legibility cost accepted rather than eliminated.",
+        "Module 18 still ships as doctrine and a registry. There is no executable per-region validator -- nothing yet checks that a budget-0 signoff region carries no CSS override.",
+        "Header-boundary and marginalia-boundary variants of the Section 23C cursor remain specified and NOT built.",
+        "Management adoption of the Execution Protocol is still not recorded. Carried since v1.1. manifest.adoption_record remains present and unpopulated.",
+        "The seven open_verification_items in 14_accounting_compliance remain open and unchanged."
+      ]
+    },
+    {
+      "kernel_version": "2.10.0",
+      "release_date": "2026-09-21",
+      "release_status": "review_candidate",
+      "current_status": "superseded",
+      "supersedes": [
+        "2.9.0"
+      ],
+      "summary": "Premium systems release. The package could measure whether a page was too full; it could not name the block that crossed the footer. It carried a section header whose ordinal was six times the size of the section title it numbered, and a refined numeral figure that had been written into doctrine in 2.9.0 and never applied to the template. It had no contents page, no categorical numbering, and no way to say how much creative latitude a given region of a page carried. All of it is closed as doctrine and shipped as runnable commands.",
+      "changes": [
+        "Module 03: recorded the doctrine/template drift found by direct comparison. document_type_system.inherited_literals_px.section_numeral declared 26.0px in 2.9.0; the shipped template set the same element at 56px base, 48px on page 2 and 46px on page 3. The literal is retained unrewritten per append-never-rewrite discipline and a cross-reference to Module 17 records where the drift is now closed.",
+        "Module 03: added balance.min_sample_pages = 3 and a sample guard. A fill spread over one page is 0.0 by construction and reads as a pass regardless of the document. Found by this release's own repass: inserting the contents page made four of five pages structural openers and collapsed the prose sample to n=1. The metric is now reported as measurement_valid=false below the floor rather than as a flattering number.",
+        "Module 17 (new): categorical numbering and the Categorical Header System. Seven categories, each declaring style, category word, reset scope, roman ceiling, deterministic fallback, indexability and default register. One header skeleton and six registers -- primary, legal, formal, plate, minor, toc. Measured basis: the legacy header set a 56px ordinal against a 9px title, a 6.22:1 inversion in which the least semantic element on the page outweighed the name of the section it numbered; the primary register sets it at 0.68:1. The legacy 76px ordinal column is removed, returning the title to the full 540px body measure.",
+        "Module 17: indexability, added after this release's own first repass caught the defect. The contents page carries a CHS header in the toc register; an extractor that treated every CHS header as a section indexed the contents page inside its own contents list and shifted every ordinal by one -- the body read I, II, III while the dispatcher produced I, II, III, IV. Categories now declare indexable, and navigational headers declare false.",
+        "Module 17: contents-page build order is binding -- pagination settles first, the contents page is generated second from the settled folios. This was the open gap in the 2.10.0 draft; the build demonstrates it by inserting a page and repaginating all five folios before reading them. Contents ordinals are re-derived through the dispatcher, never copied from the body.",
+        "Module 18 (new): page archetype creativity engine. Nine archetypes on a 0-3 budget scale, resolved region by region, with every locked element naming the module that actually owns it. Motivated by direct inspection: the master's final page carries a fully researchable commercial body and the zero-latitude signoff block on the same sheet, so a page-level creative posture is structurally wrong for this document.",
+        "Module 10: added footer_overlap_detection. Two-tier SOFT/HARD boundary from declared geometry (hard 1003px = 1123 - 120). Excludes absolutely-positioned locked chrome from the cursor; the first prototype included it and mis-attributed a forced overflow to .footer-secondary when the real cause was an injected paragraph several elements earlier.",
+        "Runtime 1.2: fixed a defect that had been silently inert. pagefill() tested for div.dsec > div.n markup that exists nowhere in this master, so the structural-opener exclusion never fired and every page entered the prose balance sample. Measured effect on the 2.9.0 master: 4 of 4 pages counted as prose, spread 28.3pt, reported OUTSIDE the 26pt limit. With the fix and the new contents page, the sample is correctly 1 of 5 pages and the metric now declares itself unscoreable rather than reporting a false pass.",
+        "Runtime 1.2: repaired a second latent preflight defect, found by running the sealed container through its own gate. Runtime 1.1 required exactly one current changelog entry AND required it to equal kernel_identity.kernel_version. Those rules are jointly unsatisfiable for a review candidate, where the identity names the new version while the adopted release -- and therefore the sole current entry -- is still the previous one. That is the exact state 2.1.0, 2.5.0 and 2.7.0 were released in, and with FAIL_CLOSED_ON_UNREADABLE_INPUT set to YES it would halt any compliant run on a package correctly labelled as awaiting adoption. Preflight now requires one current entry, requires the identity to resolve to a real entry, requires that entry to be current or review_candidate, and additionally verifies a review candidate has not self-populated adoption_record. Nothing was relaxed.",
+        "Runtime 1.2: four new commands -- footercheck, chsaudit, numbercheck, tocgen -- plus a fuller designaudit that runs all seven. Every threshold, category and register is read from the package, never hardcoded, so doctrine and enforcement cannot drift apart. Still standard library only: no pip, no network, no third-party dependency.",
+        "Template: rebuilt to v2.0 CHS. 3 legacy headers converted, a contents page inserted at folio 02, all five folios repaginated, and the CHS layer shipped as its own auditable style#gssc-chs-extension. The legacy .marker CSS is preserved byte-for-byte, never deleted, so any unconverted header still renders exactly as before and conversion may be partial.",
+        "Execution Protocol 2.1: added Sections 23C, 33, 33A, 34 and 35. Numbered after the existing change record rather than renumbering it, because the 1.9-to-2.0 entry already records why ambiguous renumbering is a real defect source here. Section 32 remains the change record and is deliberately no longer the final section."
+      ],
+      "known_gaps": [
+        "No rendered-pixel verification exists in this environment. Unchanged since 2.5.0 and re-confirmed at 2.8.0: no headless browser, and LibreOffice remains barred as a client-release path. Browser print-to-PDF at A4, margins none, background graphics on, checked by eye, remains the only verified route. THE CHS HAS NOT BEEN SEEN RENDERED.",
+        "The footer cursor covers flowed text, figures, table cell type and declared block separation. Raster image heights, CSS rendering defects and webfont-loading failure remain outside it, as they remain outside every other check in this package.",
+        "Header-boundary and marginalia-boundary variants of the same cursor are specified as a direct extension and are NOT built.",
+        "Module 18 ships as doctrine and a registry. There is no executable per-region validator -- nothing yet checks that a budget-0 signoff region carries no CSS override.",
+        "The contents page reports 9.8%% fill. That is editorially defensible for a contents page and it is excluded from balance as a structural opener, but it has not been visually confirmed.",
+        "The six CHS registers are a defensible editorial choice, not a measured optimum. What is measured is the closure of the inversion, the token/palette/rhythm closure and the reclaimed measure -- not that 13px is the single correct ordinal size.",
+        "The balance metric is reported measurement_valid=false on this very derivative: with the contents page inserted, four of five pages are structural openers and the prose sample is n=1. That is the guard working as designed, not a pass -- but it does mean this release ships without a usable balance reading for its own master.",
+        "Management adoption of the Execution Protocol is still not recorded. Carried since v1.1. manifest.adoption_record remains present and unpopulated.",
+        "The seven open_verification_items in 14_accounting_compliance remain open and unchanged."
+      ]
+    },
+    {
+      "kernel_version": "2.9.0",
+      "release_date": "2026-08-26",
+      "release_status": "production",
+      "current_status": "current",
+      "supersedes": [
+        "2.8.0"
+      ],
+      "summary": "Design-system release. The package could already prove a derivative was byte-faithful to its master and that its prose fitted the page. It could not say what the type scale was, could not see a chart element running off its own figure, and had no rule for how pages should be balanced. All three gaps are closed as doctrine and shipped as runnable commands.",
+      "changes": [
+        "Module 03: completed the palette registry. It declared 8 colours where the universal master's :root defines 14, so mid-grey, ivory-deep, gold-light, light-grey, paper-white and row-alt were in daily use but outside the registry and therefore unauditable. Verified by set comparison against the hydrated master.",
+        "Module 03: added document_type_system — a five-step type scale, the master's own signature metrics as inherited literals, three tracking tokens, a 4px rhythm on a 2px sub-grid with one 10px block gap, font-fallback parity between figures and prose, and palette closure. Measured basis: a component layer built without this doctrine carried 19 distinct font sizes, 7 letter-spacing values and 8 margin steps; rebuilt against it, the same document carries 4 size tokens, 5 inherited literals, 3 tracking tokens and 6 rhythm steps.",
+        "Module 03: font_fallback_parity records a genuine defect found by inspection, not by taste. Figures carried abbreviated font stacks, so a chart and the paragraph beside it would fall back to different faces whenever the webfont failed to load. Both stacks now reproduce --f-body and --f-display verbatim.",
+        "Module 10: added figure_geometry_check, closing the image-clipping half of the gap this module's own scope_limit declared open since 2.8.0. Element-by-element bounds testing inside every inline SVG. Caught five real overflows during the 2026-08-26 build that the text-block estimator reported as PASS.",
+        "Module 10: added type_metrics — per-character advances plus greedy word wrap, replacing the flat 0.50em heuristic for the purposes of block measurement. The flat model returned a naive 2.49 lines for a 66-character 42px display line that greedy wrap correctly renders as 4, a 70px error on one heading. The original estimation_formula is retained unchanged for the existing clipcheck path.",
+        "Module 10: added measured_pagination — an atomic block model with glue and forced-break relations, and a two-pass dynamic programme that fixes the page count first and only then minimises fill variance within it. Regression it prevents: a single combined objective produced a 14-page document with an 18% final page, and later chose 10 pages where 9 sufficed.",
+        "Module 10: added component_layer_contract, stating what a derivative may carry, substitute and append, so that 'derivative' cannot drift into 'redesign' without a version.",
+        "Module 10: scope_limit is left unrewritten and scope_extension_2_9_0 records what is now covered, per the append-never-rewrite discipline.",
+        "Module 10: measured_pagination.fill_limit set to 0.92 of the body budget. At 0.955 the two estimators disagreed at the ceiling — one page read 93.9% under the block model and 102.7% under the coarse reconstruction. Both documents rebuilt at 0.92 clear both models with margin.",
+        "Runtime 1.1: pagefill reconstructs block separation from the declared block gap rather than counting prose alone, and its balance figure is advisory while its over-budget test is binding. Recorded because the first cut of this release enforced a threshold calibrated on the builder model against the runtime model and wrongly failed a compliant document.",
+        "Runtime 1.1: four new commands — figcheck, typeaudit, pagefill and designaudit — all operating on a built HTML derivative and reading every threshold from the package, so the doctrine and its enforcement cannot drift apart. Still standard library only, no network, no third-party dependency."
+      ],
+      "known_gaps": [
+        "type_metrics remains a calibrated approximation. It is not a font-metrics engine and not a rendered screenshot. The 2.8.0 environment finding is unchanged: no headless browser and no working package installer, and LibreOffice is not an acceptable conversion path. Browser print-to-PDF remains the only verified route.",
+        "figure_geometry_check covers inline SVG only. Raster images, CSS rendering defects, webfont-loading failure and decorative overlap outside SVG remain outside any automated check.",
+        "The balance metric excludes annex openings and the execution page by design. A derivative that is mostly annexes will therefore report balance over a small sample.",
+        "The scale values themselves are a defensible editorial choice, not a measured optimum. What is measured and verified is the reduction in variance and the closure of the stacks, tracking and palette — not that 9.3px is the single correct body size."
+      ]
+    },
+    {
+      "kernel_version": "2.8.0",
+      "release_date": "2026-08-25",
+      "release_status": "production",
+      "current_status": "superseded",
+      "supersedes": [
+        "2.7.0"
+      ],
+      "summary": "Executability release. Converted the package from prose-only doctrine into doctrine that ships with a runnable implementation, gave the Module 15 memory mandate a real persistent store for the first time, and recorded a directly-tested finding that LibreOffice is not an acceptable HTML-to-PDF path for client release.",
+      "changes": [
+        "Added the runtime part: gssc_runtime v1.0, stdlib-only Python implementing the Section 03 preflight, Section 28C hydration, Module 10 layout-budget clip estimation, and Module 15 decision-log read/write. No pip, no network, no third-party dependency.",
+        "The runtime derives the expected package contract from manifest.parts instead of a hardcoded part list. This structurally prevents a repeat of the 2.6.0 defect, in which a hardcoded four-file expectation drifted out of step with the actual package and silently broke the mandatory gate.",
+        "Added the design_decision_log part: canonical schema plus store-resolution config. Implements detection_policy tier 3 (flat structured file) as a SIDECAR beside the package, never inside it, so the versioned control package stays immutable while the log grows per generation. Before this release the memory mandate assumed a Dataverse table that may not have existed, in which case every generation silently fell back to session memory.",
+        "Verified by direct execution, not assertion: the runtime extracted from the built package was run against that same package and returned PASS on the preflight, PASS on all four pages of clip detection, and a byte-identical hydration.",
+        "Recorded a directly-tested renderer finding in 10_template_engine.layout_budget_reference.honesty_note. LibreOffice converts the hydrated master to a genuine 595.3 x 841.9 pt A4 PDF, but via the Writer/Web import path: it loses the masthead, stripe, watermark, work-package cards and signature lockup, misaligns the four-page boundaries, and prints the builder-card panel that three separate @media print blocks suppress with display:none !important. That last behaviour places internal build guidance into a client-facing artifact and is a Section 21 firewall exposure in the output. LibreOffice is now explicitly barred as a client-release conversion path.",
+        "Re-confirmed in a second independent environment that no browser or CSS rendering engine is available, so the Module 10 estimator remains an approximation and the rendered-pixel gap declared in 2.5.0 remains open. Recorded per Module 16 non-regression discipline rather than quietly restating the 2026-08-06 finding.",
+        "Added bootstrap routing for package validation and for HTML-to-PDF conversion.",
+        "Execution Protocol advanced to 2.0: Sections 03, 28C and 30 now name the executable form, and the change record states why the prose remains authoritative where the two disagree."
+      ],
+      "known_gaps": [
+        "The clip estimator still covers TEXT BLOCK HEIGHT ONLY. Image clipping, decorative overlap, CSS rendering defects and font-loading failures remain undetected by any tool in this environment.",
+        "No rendered-pixel verification exists here. Until a headless browser is available in the environment that performs the conversion, client-release PDF must be produced by browser print-to-PDF at A4 with margins none and background graphics enabled, and checked by eye.",
+        "The Design Decision Log is created but EMPTY. It holds no fabricated seed entries by deliberate choice, per the Module 15 rule that metadata is logic-derived from real task facts and never placeholder. Precedent continuity begins at the first real generation run through the runtime.",
+        "Management adoption of the Execution Protocol is still not recorded. Carried as a candidate from v1.1 to v2.0. manifest.adoption_record remains present and unpopulated.",
+        "The seven open_verification_items in 14_accounting_compliance remain open and unchanged. The two externally visible ones are the conflicting public mobile number and live material stating an 8% income-tax option."
+      ]
+    },
+    {
+      "kernel_version": "2.7.0",
+      "release_date": "2026-08-25",
+      "release_status": "production",
+      "current_status": "superseded",
+      "supersedes": [
+        "2.6.0"
+      ],
+      "summary": "Structural integrity release. Repaired a blocking preflight defect that made the Execution Protocol inexecutable against its own package, corrected the kernel self-validation rules that had drifted from the container format, promoted the page watermark to a governed registered asset, and deduplicated all binary assets out of the quotation payload for a measured 33.4% package size reduction with a byte-identical hydration round trip.",
+      "changes": [
+        "Repaired the Section 03 package preflight. It required four control files and tested every decoded payload for a DOCTYPE declaration; the package became a single container on 06 August 2026 and the logos became raw PNG data. All three original checks were executed against the real package before the repair: the four-file check was unsatisfiable and the DOCTYPE test failed on all three logo assets. With FAIL_CLOSED_ON_UNREADABLE_INPUT set to YES this halted any compliant run at the first gate.",
+        "Corrected 12_bootstrap.mandatory_validation.syntax from \"15 top-level modules\" to 17, tied to manifest.integrity.kernel_module_count. The kernel had 17 modules since Modules 15 and 16 were added and would have failed its own mandatory validation if that check were executed literally.",
+        "Corrected three stale registry validation rules: the four-file employee package rule, the Execution Protocol version reference (which still named v1.1 while the document was at v1.8), and the quotation transport payload rule. Added two new rules covering brand_assets integrity and token/asset reconciliation.",
+        "Promoted the page watermark to a governed asset. It is 581x600 px and 166,714 decoded bytes, the largest single asset in the package, named in Execution Protocol Section 22 as locked chrome, and it existed only inside the encoded quotation payload with no canonical source. Added 03_brand.brand_asset_registry.",
+        "Deduplicated binary assets out of the quotation payload. The three logos were stored twice (asset repository and template) and the watermark once inside the template, where template bytes are Base64-encoded a second time on the way into the container. All four are now stored exactly once in brand_assets and referenced as {{GSSC_ASSET:name}} tokens. This implements Execution Protocol Section 28A, which already required single-embed asset deduplication and which the package itself was violating.",
+        "Verified before adoption by SHA-256 round trip: hydrating the tokenized template reproduces the original v1.7 master byte-for-byte (both 480,466 characters, identical digest). Not one character of text, markup, geometry, typography or print rule was altered. This satisfies all three Module 16 materiality tests: measurable byte reduction, no unrequested content change, and an independent check that is reported rather than asserted.",
+        "Added Execution Protocol Section 28C (Asset Hydration and Assembly) and a machine-executable assembly engine in the container, numbered within the existing asset/delivery family so that no existing section reference was renumbered.",
+        "Declared the hash serialization method in manifest.integrity. In kernel 2.6.0 the kernel and logo repository hashes could not be reproduced by any standard serialization, so two of four integrity claims were unverifiable by a third party, contrary to the Module 16 INDEPENDENTLY_VERIFIABLE test.",
+        "Reordered the module keys so 13_changelog precedes 14_accounting_compliance, matching 00_meta.module_map and the changelog instruction to read it last.",
+        "Recorded the closure of the TIN reconciliation opened at version 2.0.1. See known_gaps below. No identity, governance, firewall, IP, accounting or legal fact was changed in this release."
+      ],
+      "known_gaps": [
+        "TIN RECONCILIATION CLOSED: version 2.0.1 recorded TIN 806-700-547-00000 as retired and do-not-use pending reconciliation. Version 2.0.2 restored that number as current on the authority of the BIR Certificate of Registration (Form 2303, Revised August 2024, OCN 074RC20260000008487, RDO 074) and demoted the older 010-997-579-000 registration as superseded. This entry formally closes that reconciliation. The 2.0.1 entry is preserved unedited per append-only discipline; it is superseded, not withdrawn.",
+        "The seven open_verification_items in 14_accounting_compliance remain open and unchanged. Two are externally visible and should be closed first: the public mobile number conflict (+63 928 370 3574 and +63 917 347 4007 both appear in current materials) and live profiles or templates stating an 8% income-tax option or showing future-only officers as current.",
+        "Management adoption of the Execution Protocol is still not recorded. The protocol has been carried as an authoritative candidate from v1.1 through v1.9. manifest.adoption_record is present and unpopulated.",
+        "A literal rendered-pixel verification tool remains unavailable in this environment, unchanged from 2.5.0 and 2.6.0. The 30% grid-imbalance threshold and 0.50em average-character-width heuristic remain stated design approximations.",
+        "Standalone rendering of the STORED template is intentionally no longer possible, by design: the stored form is tokenized. Hydrated output is fully self-contained and offline-portable exactly as before. Any workflow that opened the raw stored payload directly must now hydrate first."
+      ]
+    },
+    {
+      "kernel_version": "2.6.0",
+      "release_date": "2026-08-06",
+      "release_status": "production",
+      "current_status": "superseded",
+      "supersedes": [
+        "2.5.0"
+      ],
+      "summary": "Extended the Layout Budget Calculator with 2D collision/balance detection (10_template_engine.layout_budget_reference.collision_and_balance_reference): AABB overlap testing, grid-row visual-balance checking, and fixed-width horizontal fit estimation. Explicitly connected these objective checks to Module 15 Stage 1 research (spatial alignment/balance/sizing decisions are within research scope) and Stage 4 self-check.",
+      "changes": [
+        "Added collision_and_balance_reference to 10_template_engine.layout_budget_reference: the AABB overlap test formula, a grid-row balance check (row height = max of cell heights, imbalance flagged above a 30% threshold), and a fixed-width horizontal fit check for non-shrinking flex children.",
+        "Verified all three mechanisms with real, checkable tests before adoption: the AABB test correctly returned True for a deliberately overlapping box pair and False for a correctly-spaced pair; the grid-balance check correctly identified a genuine 33.3% imbalance in this session's own prior dynamic-body-design test output (a real finding on real content, not only a synthetic demonstration) and correctly fired at 699.4% on a deliberately extreme forced case; the horizontal-fit check correctly distinguished a 33-character label (fits one line) from a 62-character label (wraps to 2 lines) at the template's real 150px/8px bar-label constants.",
+        "Updated 15_design_research_engine.loop.stage_1_research to explicitly include spatial alignment, relative sizing, and balance between simultaneously-visible elements within its research scope, and to treat a collision/balance-tool finding as an input to that research decision, not a replacement for it.",
+        "Updated 15_design_research_engine.loop.stage_4_selfcheck to apply the new collision/balance checks alongside the existing text-block overflow estimate.",
+        "This addition passes the Module 16 materiality gate: independently verifiable (three separate real/constructed test cases reported), does not alter any document content, and closes a real, previously-acknowledged gap (no multi-element collision or balance detection existed before this release; the prior tool only estimated single-block vertical overflow)."
+      ],
+      "known_gaps": [
+        "A literal rendered-pixel verification tool remains unavailable in this environment -- unchanged from 2.5.0.",
+        "The 30% grid-imbalance threshold and 0.50em average-character-width heuristic are stated design approximations; refine both if authoritative font-metrics data or a real rendering tool becomes available.",
+        "Collision/balance checks currently model grid layouts and fixed-width flex children specifically (the patterns that exist in the current template); a genuinely novel future layout pattern not covered by these two models would need its own geometry formula added at that time."
+      ]
+    },
+    {
+      "kernel_version": "2.5.0",
+      "release_date": "2026-08-06",
+      "release_status": "production",
+      "current_status": "superseded",
+      "supersedes": [
+        "2.4.0"
+      ],
+      "summary": "Added a computable Layout Budget Calculator (10_template_engine.layout_budget_reference) and upgraded 15_design_research_engine's Stage 4 self-check to use it for text-block overflow estimation, converting a previously qualitative judgment into a falsifiable calculation with a stated safety margin.",
+      "changes": [
+        "Added 10_template_engine.layout_budget_reference: geometry constants (page height, margins, body column width, per-page body padding) extracted directly from the quotation master's own CSS, plus font-size and line-height reference tables, and the estimation formula (average character width heuristic, chars-per-line, estimated block height, available budget, 0.85 safety margin, PASS/AT-RISK verdict).",
+        "Verified before adoption: confirmed no headless browser or HTML/CSS rendering engine (Chromium, Playwright, WeasyPrint, wkhtmltopdf) and no working package installer (pip/npm) exist in the operating environment -- checked directly, not assumed. The tool is documented honestly as a calibrated approximation, not a rendered-pixel verification.",
+        "Calibrated and sanity-checked against the master's own existing text blocks (lede, dek, sig-desc) and against constructed forced-overflow scenarios, confirming both the PASS and AT-RISK verdict branches compute correctly using real arithmetic, not an always-true default.",
+        "Upgraded 15_design_research_engine.loop.stage_4_selfcheck to apply this method for text-block height specifically, while explicitly retaining the existing scope limit: non-text visual defects (image clipping, decorative overlap) remain governed only by construction-rule review, not this calculation.",
+        "This addition passes the Module 16 materiality gate: it is independently verifiable (the formula and constants are stated and checkable), it does not alter any document content or output, and it removes a measurable, previously-acknowledged doctrine gap (no computable overflow check existed before this release)."
+      ],
+      "known_gaps": [
+        "A literal rendered-pixel verification tool (headless browser or equivalent) remains unavailable in this environment. The layout budget calculator reduces, but does not eliminate, the need for such a tool.",
+        "The 0.50em average-character-width heuristic is a stated design approximation, not verified against actual Inter/Libre Baskerville font metrics tables -- refine this figure if authoritative font-metrics data or a real rendering tool becomes available."
+      ]
+    },
+    {
+      "kernel_version": "2.4.0",
+      "release_date": "2026-08-06",
+      "release_status": "production",
+      "current_status": "superseded",
+      "supersedes": [
+        "2.3.0"
+      ],
+      "summary": "Added Module 16 (Continuous Optimization & Anti-Hallucination Discipline): a materiality gate distinguishing genuine, verifiable optimizations from subjective preference, permanent doctrine capture for lessons learned, non-regression, and honest self-assessment. Also restructured the logo asset payload from a double-base64-encoded human-browsing hub into a minimal, single-encoded, metadata-preserving asset repository.",
+      "changes": [
+        "Added 16_continuous_optimization_discipline, assigned hard_default override tier (may not be silently relaxed; deliberate revision required, consistent with the discipline it enforces).",
+        "Defined the materiality gate: OBJECTIVE_BASIS, NO_UNREQUESTED_CONTENT_CHANGE, INDEPENDENTLY_VERIFIABLE. A change failing any test may still be implemented on request but must be logged as a preference honored, never as a fix or optimization.",
+        "Defined capture-and-versioning: a change passing the gate becomes permanent doctrine, versioned and changelogged; later versions must not silently reintroduce a previously-fixed inefficiency.",
+        "Defined self-assessment discipline: any completeness/quality score must ground each component in a concrete, checkable criterion, and honestly state remaining gaps including ones this module cannot itself close.",
+        "Defined priority-relative-to-generalization: prefer changes that concretely benefit GSSC's current real use over abstractions that only matter for a hypothetical future derivative.",
+        "Restructured the logo asset payload: replaced the prior double-base64-encoded hub-HTML representation (each image stored 3x internally, then the whole HTML re-encoded as one outer base64 field) with a minimal logo_assets JSON repository -- each image stored exactly once, single-encoded, with its full descriptive metadata (CSS variable, source filename, dimensions, web role, suggested render height) preserved. Verified lossless: repository image hashes match the original 3 unique images exactly. Saved 85,029 chars (~30%) versus the prior representation, on top of the 400,990 chars already saved by the v1.1 hub-internal dedup.",
+        "This restructuring reflects that the logo asset's role inside this package is machine asset lookup for the Kernel/Protocol (Mode A/B decode-and-extract), not human browsing -- the original hub-tool purpose remains valid as a standalone artifact and can be regenerated from this repository on request, but does not need to be carried permanently inside the master package."
+      ],
+      "known_gaps": [
+        "Session-local memory fallback (Module 15, priority tier 5) still has no concrete reference implementation -- unchanged from the 2.3.0 known gap.",
+        "GSSC-specific identity/governance/brand/tax content across modules 01/02/03/04/06/07/08/09/11/14 remains unparameterized -- the acknowledged next generalization phase, not addressed by this release."
+      ]
+    },
+    {
+      "kernel_version": "2.3.0",
+      "release_date": "2026-08-06",
+      "release_status": "production",
+      "current_status": "superseded",
+      "supersedes": [
+        "2.2.1"
+      ],
+      "summary": "Generalized Module 15's memory mandate to be storage-agnostic (multipurpose across whatever persistent memory system a deployment actually has, not just Dataverse/SharePoint) and made iterative improvement an explicit objective, not just precedent reference/divergence.",
+      "changes": [
+        "Rewrote 15_design_research_engine.memory_mandate.policy from MEMORY_BASED_ALWAYS to MEMORY_BASED_ALWAYS_ITERATIVE.",
+        "Added explicit iterative-improvement language to the memory mandate rule: each generation must consider what can be refined relative to the closest precedent, and log that refinement (or the reasoned choice not to refine).",
+        "Replaced the fixed Dataverse/SharePoint-only store definition with a storage-agnostic detection_policy: Dataverse -> SharePoint/equivalent list -> flat JSON/CSV file in any accessible drive -> any other persistent queryable memory system the host model/agent has, all mapped to the same canonical field names. Session-local fallback is permitted only with explicit disclosure that precedent continuity does not survive the session.",
+        "Defined a canonical, storage-neutral field-name set (document_reference, client_name, content_type, body_structure_used, is_novel_pattern, design_rationale, tokens_referenced, date_generated, source_versions_used, precedent_reference) that any backend maps onto.",
+        "Retained GSSC's own concrete Dataverse table (cr746_designdecisionlog) as GSSC's specific instance of the detection policy, explicitly clarified as not the only permitted store -- this is the generalization needed before the package can be adapted into a licensed derivative for a client without Dataverse access."
+      ],
+      "known_gaps": [
+        "Session-local fallback storage (priority tier 5, no persistence) has no concrete reference implementation yet -- only the disclosure requirement is defined."
+      ]
+    },
+    {
+      "kernel_version": "2.2.1",
+      "release_date": "2026-08-06",
+      "release_status": "production",
+      "current_status": "superseded",
+      "supersedes": [
+        "2.2.0"
+      ],
+      "summary": "Cross-referenced the new Execution Protocol Section 28B (channel-failure inline verification render) from the bootstrap routing and output-discipline rules.",
+      "changes": [
+        "Added a 12_bootstrap.output_discipline rule: on any file-delivery tool-call error, apply Execution Protocol Section 28B rather than retrying the same failing channel indefinitely.",
+        "Added a 12_bootstrap.routing entry: 'delivery channel failure' -> Execution Protocol Section 28B.",
+        "No other module content changed. This is a routing/cross-reference update only; the substantive delivery-fallback doctrine lives entirely in the Execution Protocol (Section 28B), consistent with the existing division of authority where the kernel routes and the protocol governs execution detail."
+      ],
+      "known_gaps": []
+    },
+    {
+      "kernel_version": "2.2.0",
+      "release_date": "2026-08-05",
+      "release_status": "production",
+      "current_status": "superseded",
+      "supersedes": [
+        "2.1.1"
+      ],
+      "summary": "Added Module 15, the Design Research & Integration Engine: always-on, memory-based, token-constrained doctrine for body-region content design decisions.",
+      "changes": [
+        "Added 15_design_research_engine: governs how body-region content (text blocks, cards, tables, and any novel visual element) is structured and styled, on every generation, with no complexity threshold.",
+        "Defined the five-stage loop: RESEARCH (evidence-based best-presentation investigation, same anti-fabrication discipline as Execution Protocol Section 05) -> TRANSLATE (hard gate: token-registry-only styling from 03_brand, no raw color/size/spacing values) -> INTEGRATE (editable body region only, per Section 22/23) -> SELFCHECK (construction-rule QA: clipping, overlap, token adherence, chrome untouched) -> SELFFIX (Section 23 escalation order before any geometry reconsideration).",
+        "Defined delegation topology: fleet context routes RESEARCH to the Research specialist agent; single-model licensed/derivative context runs all five stages serially in one reasoning pass. Same doctrine, different execution topology.",
+        "Mandated persistent, memory-based decision-making: never isolated, never a blank-slate generation. Read prior Design Decision Log entries before deciding; write a new entry after every decision.",
+        "Established the Design Decision Log as a new Dataverse table (cr746_designdecisionlog), with an equivalent SharePoint/Drive list permitted as an alternate store. Metadata fields must be populated from real task facts only, never fabricated.",
+        "Constrained any novel visual element (e.g., a chart) to pure HTML/CSS/inline-SVG construction only -- no external JS library, no CDN dependency -- preserving the existing single-file offline portability principle.",
+        "Updated 00_meta: module_range 00-14 -> 00-15, added module to module_map and reading_order (after 10_template_engine), assigned strong_default override tier (may be intentionally varied per deliverable after stating the deviation, consistent with the existing tier)."
+      ],
+      "known_gaps": [
+        "Design Decision Log has zero entries as of this release; precedent-based decisions will have no history to reference until the first generations populate it.",
+        "Self-check (Stage 4) is a construction-rule check only; it cannot verify actual rendered pixels without a browser/screenshot tool, which is not assumed available in either execution topology."
+      ]
+    },
+    {
+      "kernel_version": "2.1.1",
+      "release_date": "2026-07-27",
+      "release_status": "production",
+      "current_status": "superseded",
+      "supersedes": [
+        "2.1.0"
+      ],
+      "summary": "Corporate-governance roster update and signature/delivery doctrine refinement.",
+      "changes": [
+        "Updated Module 02 active officers per the recent GIS amendment restoring the original partnership structure: Ronnie S. del Castillo as Chief Executive Officer; Duke Y. Demayo as President and Principal of record serving operationally as COO; Michael C. Silla as CFO/Corporate Secretary/Treasurer; Shieldon Tirazona as Chief Investment Officer.",
+        "Moved Ronnie S. del Castillo and Shieldon Tirazona from future-only to active officers; future-only now lists only non-operational partners Leo Ollera and Manny Borres.",
+        "Set the default client-facing signatory to Ronnie S. del Castillo, Chief Executive Officer; preserved the rule that the CEO does not sign the Secretary's Certificate itself.",
+        "Recorded that CIO expands to Chief Investment Officer, never Chief Information Officer.",
+        "Updated the design-module canonical signature to the CEO block and captured the styled treatment (integrated logo above the name, gold accent rule, gold signatory name, muted italic title, bottom-anchored block).",
+        "Retained the requirement that statutory and SEC instruments continue to reflect Duke Y. Demayo as President of record."
+      ],
+      "known_gaps": [
+        "Confirm the management-approved public mobile number because +63 928 370 3574 and +63 917 347 4007 both appear in current materials.",
+        "Attach the executed GIS amendment, board resolutions, and Secretary's Certificate evidencing the current officer roster to the corporate evidence register."
+      ]
+    },
+    {
+      "kernel_version": "2.1.0",
+      "release_date": "2026-07-22",
+      "release_status": "review_candidate",
+      "current_status": "superseded",
+      "supersedes": [
+        "2.0.6"
+      ],
+      "summary": "Legal, tax, corporate-governance, accounting-control, documentation, and evidence-hardening update.",
+      "changes": [
+        "Removed the incorrect statement that GSSC, a domestic corporation, exercises an 8% tax option.",
+        "Recorded registered BIR forms 1702, 1702Q, 2551Q, 0619E, 1601EQ, and 1604E.",
+        "Added Module 14 for accounting, close, tax, corporate reporting, evidence, data-classification, and AI-control rules.",
+        "Qualified permit and employer-registration claims by source quality and added open verification items.",
+        "Recorded unresolved public-mobile conflict and governance/signatory conflicts in live documents.",
+        "Added SEC-derived corporate profile facts and stronger authority-evidence rules."
+      ],
+      "known_gaps": [
+        "Inspect the current GSSC_CoR.pdf in full and capture exact tax-type start dates and current registered address.",
+        "Obtain and register the current Mayor’s/Business Permit and ancillary permit numbers, validity dates, and issuing offices.",
+        "Inspect underlying SSS, PhilHealth, and Pag-IBIG employer certificates; Pag-IBIG number is not established in the reviewed data.",
+        "Confirm registration and status of books of accounts or approved computerized accounting system.",
+        "Confirm the management-approved public mobile number because +63 928 370 3574 and +63 917 347 4007 both appear in current materials.",
+        "Reconcile current board/officer titles and signatory authorities against executed minutes, resolutions, SEC GIS, and bank mandates.",
+        "Correct all live profiles and templates that state an 8% option or show future-only officers as current."
+      ]
+    },
+    {
+      "kernel_version": "2.0.6",
+      "release_date": "2026-07-15",
+      "release_status": "production",
+      "current_status": "superseded",
+      "supersedes": [
+        "2.0.5"
+      ],
+      "summary": "Operational filename alignment and starter-prompt correction release.",
+      "changes": [
+        "Changed the starter prompt to load the stable operational filename GSSC_Kernel.json.",
+        "Confirmed GSSC_QuotationTemplate.txt as the authoritative Base64 transport filename.",
+        "Recorded the exact four-file employee package naming scheme in mandatory registry validation.",
+        "Preserved all identity, governance, firewall, quotation, legal, template, registry, and source-priority doctrine from v2.0.5."
+      ],
+      "known_gaps": [
+        "Final Chrome or Edge A4 print-preview QA remains required before client-release promotion of any quotation derivative."
+      ]
+    },
+    {
+      "kernel_version": "2.0.5",
+      "release_date": "2026-07-15",
+      "release_status": "production",
+      "current_status": "superseded",
+      "supersedes": [
+        "2.0.4"
+      ],
+      "summary": "Universal quotation package registration and provenance-lock release.",
+      "changes": [
+        "Registered GSSC_Quotation_Universal_Master_v1_7_PRODUCTION_DETAIL_LOCK.html as the authoritative universal quotation template master.",
+        "Registered GSSC_QuotationTemplate.txt as the strict Base64 transport payload for the universal master.",
+        "Registered GSSC_ExecutionProtocol.txt version 1.1 as review_pending until management adoption is recorded.",
+        "Clarified that GSSC_SignageProgram.html remains authoritative for the signage category role and is not superseded by the universal master.",
+        "Preserved GSSC_Template_Builder_v6_2_kit.html as the v6.2 quotation geometry and template baseline."
+      ],
+      "known_gaps": [
+        "Final Chrome or Edge A4 print-preview QA remains required before client-release promotion of any derivative."
+      ]
+    },
+    {
+      "kernel_version": "2.0.4",
+      "release_date": "2026-07-14",
+      "release_status": "production",
+      "current_status": "superseded",
+      "supersedes": [
+        "2.0.3",
+        "2.0.2",
+        "2.0.1",
+        "2.0 FULL",
+        "2.0 compact draft",
+        "1.1",
+        "1.0"
+      ],
+      "summary": "Final legal-registry freshness and source-wording release.",
+      "changes": [
+        "Promoted CMSA v6.9 to latest review_pending candidate and marked v6.4–v6.8 as legacy candidate predecessors.",
+        "Registered SMSA v7.0 as review_pending candidate and removed its fulfilled planned role.",
+        "Removed stale legal wording implicating older profiles as the source of superseded identifiers.",
+        "Updated bootstrap routing and registry validation for CMSA and SMSA."
+      ],
+      "known_gaps": []
+    },
+    {
+      "kernel_version": "2.0.3",
+      "release_date": "2026-07-14",
+      "release_status": "production",
+      "current_status": "superseded",
+      "supersedes": [
+        "2.0.2",
+        "2.0.1",
+        "2.0 FULL",
+        "2.0 compact draft",
+        "1.1",
+        "1.0"
+      ],
+      "summary": "Final metadata-hardening and registry-completeness release.",
+      "changes": [
+        "Corrected stale old-TIN source wording.",
+        "Separated release_status from current_status; only v2.0.3 is current.",
+        "Registered email v4 authoritative with v2/v3 legacy lineage.",
+        "Registered CMSA v6.8 review_pending with v6.4 legacy lineage.",
+        "Recorded Capabilities filename v2.6 versus embedded package marker v2.7.",
+        "Removed fulfilled email and CMSA planned roles.",
+        "Expanded bootstrap routing and registry QA."
+      ],
+      "known_gaps": []
+    },
+    {
+      "kernel_version": "2.0.2",
+      "release_date": "2026-07-14",
+      "supersedes": [
+        "2.0.1",
+        "2.0 FULL",
+        "2.0 compact draft",
+        "1.1",
+        "1.0"
+      ],
+      "summary": "Latest-COR correction release.",
+      "changes": [
+        "Restored current BIR TIN and branch code 806-700-547-00000 from attached GSSC_CoR.pdf.",
+        "Recorded TIN issuance and business registration date as 2026-06-23.",
+        "Recorded current COR OCN 074RC20260000008487.",
+        "Registered GSSC_CoR.pdf as authoritative and demoted the older 010-997-579-000 COR as superseded.",
+        "Updated legal identifiers, bootstrap validation, provenance, and source-priority rules."
+      ],
+      "known_gaps": [],
+      "release_status": "production",
+      "current_status": "superseded"
+    },
+    {
+      "kernel_version": "2.0.1",
+      "release_date": "2026-07-14",
+      "supersedes": [
+        "2.0 FULL",
+        "2.0 compact draft",
+        "1.1",
+        "1.0"
+      ],
+      "summary": "Canonical-data correction and registry hardening release.",
+      "changes": [
+        "Corrected BIR TIN and branch code to 010-997-579-000 from government Certificate of Registration.",
+        "Separated TIN issuance date, BIR business registration date, and ATP approval date.",
+        "Recorded retired profile TIN 806-700-547-00000 as do-not-use pending reconciliation.",
+        "Added SEC company registration number 2026060254196-01 and government-source provenance.",
+        "Updated planned Ronnie and Shieldon roles to profile-aligned titles while retaining future-only status.",
+        "Promoted GSSC_Home_Page_v2_6_STATIC.html and moved v2.5 home to legacy.",
+        "Updated website motion doctrine to zero scroll-triggered motion for the current home master.",
+        "Registered ATP and Mayor Permit Secretary Certificate candidates as review-pending.",
+        "Registered GSSC_COMPANY_LEGAL.md as authoritative legal-context reference.",
+        "Added conflict-resolution, identity override, duplicate-file, and promotion controls."
+      ],
+      "known_gaps": [
+        "SEC certificate face should remain the final authority if an exact incorporation-date discrepancy is later found.",
+        "Legal candidate masters require their stated review and execution checks before authoritative promotion."
+      ],
+      "release_status": "production",
+      "current_status": "superseded"
+    },
+    {
+      "kernel_version": "2.0 FULL",
+      "release_date": "2026-07-14",
+      "supersedes": [
+        "1.0",
+        "1.1",
+        "2.0 compact draft"
+      ],
+      "summary": "First full production modular kernel with complete doctrine, registry, bootstrap, and two-mode template engine.",
+      "changes": [
+        "14 modules",
+        "Mode A Fidelity Cloner",
+        "Mode B Deconstruction Engine",
+        "firewall and IP hard overrides",
+        "v6.2 quotation doctrine",
+        "website/document/legal doctrine",
+        "identity/governance registry",
+        "file registry",
+        "bootstrap routing",
+        "HTML download wrapper"
+      ],
+      "known_gaps": [
+        "Legal masters await registration after counsel review",
+        "Some document-master roles remain planned"
+      ],
+      "release_status": "production",
+      "current_status": "superseded"
+    },
+    {
+      "kernel_version": "2.0 compact draft",
+      "release_date": "2026-07-14",
+      "summary": "Condensed 907-line derivative; not canonical.",
+      "release_status": "superseded",
+      "current_status": "superseded"
+    },
+    {
+      "kernel_version": "1.1",
+      "release_date": "2026-07-14",
+      "summary": "Expanded foundation kernel.",
+      "release_status": "superseded",
+      "current_status": "superseded"
+    },
+    {
+      "kernel_version": "1.0",
+      "release_date": "2026-07-14",
+      "summary": "Initial proof-of-concept kernel.",
+      "release_status": "superseded",
+      "current_status": "superseded"
+    }
+  ],
+  "discipline": "Append releases; never rewrite history. Correct errors through a superseding version with explicit provenance.",
+  "future": {
+    "2.x": "Additive doctrine and registry refinement",
+    "3.0": "Architecture change only"
+  },
+  "current_release_rule": "Only the entry with current_status=current is authoritative; release_status records original release state."
+}

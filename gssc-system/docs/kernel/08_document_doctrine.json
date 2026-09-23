@@ -1,0 +1,156 @@
+{
+  "module_id": "08_document_doctrine",
+  "version": "1.0",
+  "role": "strong_default",
+  "purpose": "Govern profiles, letterheads, case notes, capability sheets, engagement summaries, email templates, presentations, and operational forms.",
+  "human_note": "If a deliverable is not governed by quotation, website, or legal doctrine, this module governs it.",
+  "scope": [
+    "company profiles",
+    "letterheads",
+    "case notes",
+    "capability sheets",
+    "engagement summaries",
+    "meeting briefs",
+    "email templates",
+    "presentations",
+    "operational forms",
+    "internal drafts"
+  ],
+  "principles": [
+    "editorial",
+    "self-contained",
+    "print-ready",
+    "firewall-safe",
+    "versioned",
+    "source-master derived"
+  ],
+  "structure": {
+    "flagship": "Full editorial cover and governance footer.",
+    "supporting": "Document header, subject, body column and footer.",
+    "operational": "Functional branded header, revision and reference footer."
+  },
+  "geometry": {
+    "default": "A4 portrait or exact source-master geometry",
+    "legal_exception": "Long bond only when the legal master or 09_legal_doctrine requires it."
+  },
+  "footer": [
+    "document reference",
+    "page number",
+    "GSSC contact anchor"
+  ],
+  "typography": {
+    "rule": "Source master first; otherwise inherit 03_brand and relevant doctrine.",
+    "avoid": "Do not flatten source typography into a generic stack."
+  },
+  "assets": {
+    "preserve": [
+      "header logo",
+      "footer seal",
+      "signature lockup",
+      "watermark"
+    ],
+    "delivery": "Use the source method; self-contained HTML/base64 when applicable.",
+    "placement": "Preserve source placement."
+  },
+  "types": {
+    "letterhead": {
+      "role": "Formal correspondence",
+      "elements": [
+        "logo/stripe",
+        "recipient",
+        "subject",
+        "body",
+        "closing",
+        "signatory",
+        "contact footer"
+      ]
+    },
+    "company_profile": {
+      "role": "Tier 1 introduction",
+      "rules": [
+        "verified identity",
+        "active officers only",
+        "firewall-safe capabilities",
+        "print and web integrity"
+      ]
+    },
+    "case_note": {
+      "role": "Capability evidence",
+      "rules": [
+        "no supplier identity",
+        "no unapproved client identity",
+        "no monetary value by default",
+        "challenge-coordination-outcome"
+      ]
+    },
+    "capability_sheet": {
+      "role": "Single-topic summary",
+      "rules": [
+        "standalone branding",
+        "service-category language",
+        "no supplier attribution",
+        "no project pricing"
+      ]
+    },
+    "engagement_summary": {
+      "role": "Client recap",
+      "rules": [
+        "appropriate client naming",
+        "no supplier economics",
+        "values only when approved"
+      ]
+    },
+    "email_template": {
+      "role": "Reusable team shell",
+      "rules": [
+        "Outlook-pasteable HTML",
+        "universally readable light-mode default",
+        "email-safe assets",
+        "team-member fields fillable"
+      ],
+      "authoritative_master": "GSSC-EMAIL-TEMPLATE-Universal-2026-002-v4-OutlookNative.html",
+      "lineage": [
+        "v2 DarkLight — legacy",
+        "v3 LightOnly — legacy",
+        "v4 OutlookNative — authoritative"
+      ]
+    },
+    "presentation": {
+      "role": "Boardroom communication",
+      "rules": [
+        "editorial cover",
+        "typographic hierarchy",
+        "firewall scan",
+        "avoid generic stock photography"
+      ]
+    },
+    "operational_form": {
+      "role": "Internal utility",
+      "rules": [
+        "INTERNAL_ONLY marker when sensitive",
+        "functional first",
+        "firewall scan before external use"
+      ]
+    }
+  },
+  "naming": {
+    "default": "GSSC-{DOCTYPE}-{SUBJECT}-{YYYY}-{NNN}-v{N}.html",
+    "examples": [
+      "GSSC-PROFILE-2026-001-v5-pitch.html",
+      "GSSC-LTR-{Recipient}-{YYYY}-{NNN}-v{N}.html",
+      "GSSC-CAP-{Topic}-{YYYY}-{NNN}-v{N}.html",
+      "GSSC-CASE-{Slug}-{YYYY}-{NNN}-v{N}.html",
+      "GSSC-EMAIL-{Purpose}-v{N}.html"
+    ]
+  },
+  "failure_modes": [
+    "remote asset loss",
+    "typography drift",
+    "wrong cover tier",
+    "signature drift",
+    "case-note leakage",
+    "future-only person shown as current",
+    "email rendering failure",
+    "unscanned operational output"
+  ]
+}

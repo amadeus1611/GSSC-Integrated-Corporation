@@ -1,0 +1,1677 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<title>GSSC Universal Quotation Master · v1.7 · Production Detail Lock</title>
+<!--GSSC_Quotation_Universal_Master_v1_7_PRODUCTION_DETAIL_LOCK.html | TEMPLATE_MASTER — NOT A CLIENT QUOTATION | Complete synthetic working example. Replace demonstration client facts, scope, quantities, dates, prices and terms from approved research. Preserve DOM, CSS, assets, A4 geometry, typography, watermark, stripes, footer, marginalia, acceptance architecture, signature lockup and print rules.-->
+<!--OPTIMIZATION APPLIED 2026-08-05: Section 28A single-embed logo dedup. Header logo (4 masthead instances) now defined once via CSS content:url() on .masthead .logo instead of repeating the base64 payload in 4 separate <img> tags. Lossless, non-redesign, per GSSC Execution Protocol v1.2 Section 28A. Saves ~186,372 chars (~182 KB) versus the prior 4x-repeated encoding. DOM, CSS cascade, geometry, print rules, watermark, footer and signature lockup unchanged.-->
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Libre+Baskerville:ital,wght@0,400;0,700;1,400;1,700&amp;family=Inter:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<style>
+
+:root{
+  --navy-deep:#0d2463; --navy-dark:#09173d;
+  --gold-primary:#c8a44d; --gold-light:#e6d4a7; --gold-deep:#a8862f;
+  --slate:#4f5663; --mid-grey:#7a818d; --light-grey:#d9d9d9;
+  --hairline:#c9c9c4; --ivory:#faf8f3; --ivory-deep:#f3efe4;
+  --paper-white:#ffffff; --ink:#1a1d24; --row-alt:#f5f2e8;
+  --border-strong:1pt solid var(--navy-dark);
+  --border-med:0.75pt solid var(--navy-dark);
+  --border-hair:0.75pt solid var(--hairline);
+  --border-thin:0.5pt solid var(--hairline);
+  --page-w:794px; --page-h:1123px;
+  --margin-top:96px; --margin-bot:120px;
+  --margin-left:80px; --margin-right:134px;
+  --body-col:540px;
+  --stripe-x:38px; --stripe-w:4px;
+  --watermark-opacity:0.028;
+  --f-display:"Libre Baskerville","Hoefler Text",Georgia,"Times New Roman",Times,serif;
+  --f-body:"Inter",-apple-system,BlinkMacSystemFont,"Segoe UI","Helvetica Neue",Arial,sans-serif;
+  --fs-kicker:8px;  --fs-title:42px;  --fs-dek:13px;    --fs-caption:10px;
+  --fs-body:10.5px; --fs-bodyL:11.5px;--fs-dropcap:64px;
+  --fs-numeral:56px;--fs-section:9px; --fs-price:44px;
+  --fs-pull:19px;   --fs-folio:11px;  --fs-imprint:8px;
+  --lh-body:1.58; --lh-display:1.12; --lh-lede:1.65; --lh-tight:1.4;
+  --tracked:0.18em; --tracked-tight:0.12em; --tracked-cap:0.14em; --tracked-num:-0.012em;
+  --sig-lockup-opacity:0.95; --footer-seal-opacity:0.85;
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+html,body{background:#e5e3dc;font-family:var(--f-body);color:var(--ink);
+  -webkit-print-color-adjust:exact !important;print-color-adjust:exact !important;
+  -webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;
+  text-rendering:optimizeLegibility;font-feature-settings:"kern" 1,"liga" 1,"onum" 1;}
+@page{size:A4 portrait;margin:0;}
+@media print{
+  html,body{background:var(--ivory);}
+  .builder-card{display:none !important;}
+  .page{margin:0 !important;box-shadow:none !important;page-break-after:always;}
+  .page:last-child{page-break-after:auto;}
+  *{-webkit-print-color-adjust:exact !important;print-color-adjust:exact !important;}
+}
+.page{position:relative;width:var(--page-w);height:var(--page-h);background:var(--ivory);margin:24px auto;overflow:hidden;box-shadow:0 2px 24px rgba(0,0,0,0.12);font-size:var(--fs-body);line-height:var(--lh-body);color:var(--ink);}
+.page + .page{page-break-before:always;}
+.page::before{content:"";position:absolute;left:var(--stripe-x);top:var(--margin-top);bottom:var(--margin-bot);width:var(--stripe-w);background:linear-gradient(to bottom,var(--navy-deep) 0%,var(--navy-deep) 60%,var(--gold-primary) 60%,var(--gold-primary) 85%,var(--slate) 85%,var(--slate) 100%);z-index:2;}
+.watermark{position:absolute;inset:0;background-image:url("{{GSSC_ASSET:watermark}}");background-position:center 50%;background-size:500px auto;background-repeat:no-repeat;opacity:var(--watermark-opacity);pointer-events:none;z-index:0;}
+
+.masthead{position:absolute;top:0;left:0;right:0;height:var(--margin-top);padding:24px var(--margin-right) 30px var(--margin-left);display:flex;align-items:flex-end;justify-content:space-between;z-index:3;}
+.masthead::after{content:"";position:absolute;left:var(--margin-left);right:var(--margin-right);bottom:16px;border-bottom:var(--border-med);}
+.masthead .logo{height:38px;width:auto;display:block;content:url("{{GSSC_ASSET:header}}");}
+.masthead .meta{text-align:right;font-family:var(--f-body);font-size:var(--fs-imprint);letter-spacing:var(--tracked-tight);text-transform:uppercase;color:var(--slate);line-height:1.7;padding-bottom:6px;}
+.masthead .meta .doctype{color:var(--navy-dark);font-weight:600;letter-spacing:var(--tracked);}
+
+.body{position:absolute;top:var(--margin-top);left:var(--margin-left);width:var(--body-col);bottom:var(--margin-bot);padding:38px 0 26px 0;z-index:4;overflow:visible;}
+
+.kicker{font-family:var(--f-body);font-size:var(--fs-kicker);letter-spacing:var(--tracked);text-transform:uppercase;color:var(--gold-deep);font-weight:600;margin-bottom:16px;}
+h1.title{font-family:var(--f-display);font-weight:400;font-size:var(--fs-title);line-height:var(--lh-display);color:var(--navy-dark);letter-spacing:var(--tracked-num);margin-bottom:18px;font-feature-settings:"kern" 1,"liga" 1,"onum" 1;}
+.dek{font-family:var(--f-display);font-style:italic;font-size:var(--fs-dek);color:var(--slate);line-height:1.55;margin-bottom:22px;max-width:460px;}
+.caption-date{font-family:var(--f-body);font-size:var(--fs-caption);letter-spacing:var(--tracked-tight);text-transform:uppercase;color:var(--mid-grey);display:flex;justify-content:space-between;border-top:var(--border-hair);border-bottom:var(--border-hair);padding:9px 0;margin:0 0 24px 0;}
+.lede{font-family:var(--f-body);font-size:var(--fs-bodyL);line-height:var(--lh-lede);color:var(--ink);margin-bottom:16px;}
+.lede::first-letter{font-family:var(--f-display);font-size:var(--fs-dropcap);color:var(--navy-deep);float:left;line-height:0.88;padding:5px 10px 0 0;font-weight:400;}
+.bt{font-family:var(--f-body);font-size:var(--fs-body);line-height:1.62;color:var(--ink);margin:12px 0;}
+
+.pull{font-family:var(--f-display);font-style:italic;font-size:var(--fs-pull);color:var(--navy-dark);border-left:2px solid var(--gold-primary);padding:4px 0 4px 22px;margin:26px 0 6px 0;line-height:1.45;}
+.pull .attrib{display:block;font-family:var(--f-body);font-style:normal;font-size:9px;letter-spacing:var(--tracked);text-transform:uppercase;color:var(--gold-deep);font-weight:600;margin-top:8px;}
+
+.section{margin:24px 0 12px;page-break-inside:avoid;}
+.section .marker{display:grid;grid-template-columns:76px 1fr auto;align-items:end;column-gap:20px;margin-bottom:20px;}
+.section .marker .num{font-family:var(--f-display);font-size:var(--fs-numeral);color:var(--gold-primary);line-height:1;font-feature-settings:"onum" 1;}
+.section .marker .label{border-bottom:var(--border-hair);padding-bottom:10px;}
+.section .marker .label .sh{display:block;font-family:var(--f-body);font-size:var(--fs-section);font-weight:600;letter-spacing:var(--tracked);text-transform:uppercase;color:var(--navy-dark);margin-bottom:5px;}
+.section .marker .label .sub{font-family:var(--f-display);font-style:italic;font-size:12px;color:var(--slate);}
+.section .marker .fleur{font-family:var(--f-display);font-size:17px;color:var(--gold-primary);align-self:end;padding-bottom:8px;}
+
+.price-moment{margin:22px 0 4px;padding:16px 0 14px;border-top:var(--border-med);border-bottom:var(--border-med);display:flex;align-items:baseline;justify-content:space-between;page-break-inside:avoid;}
+.price-moment .pm-label{font-family:var(--f-body);font-size:var(--fs-kicker);letter-spacing:var(--tracked);text-transform:uppercase;color:var(--mid-grey);font-weight:500;line-height:1.5;}
+.price-moment .pm-amount{font-family:var(--f-display);font-feature-settings:"onum" 1;font-size:var(--fs-price);line-height:1;color:var(--navy-deep);letter-spacing:-0.015em;}
+
+
+.price-caption{font-family:var(--f-display);font-style:italic;font-size:9.5px;color:var(--slate);text-align:right;margin:7px 0 22px 0;line-height:1.4;}
+
+table.dt{width:100%;border-collapse:collapse;margin:14px 0 16px;font-size:var(--fs-body);font-feature-settings:"tnum" 1;page-break-inside:avoid;}
+table.dt thead th{background:var(--ivory-deep);border-top:var(--border-strong);border-bottom:var(--border-med);font-family:var(--f-body);font-size:var(--fs-kicker);letter-spacing:var(--tracked);text-transform:uppercase;color:var(--navy-dark);font-weight:600;padding:8px 10px;text-align:left;}
+table.dt thead th.num{text-align:right;}
+table.dt tbody td{padding:7px 10px;border-bottom:var(--border-thin);vertical-align:top;}
+table.dt tbody tr:nth-child(even) td{background:var(--row-alt);}
+table.dt tbody td.num{text-align:right;font-feature-settings:"tnum" 1;}
+table.dt tbody tr:last-child td{border-bottom:var(--border-med);}
+table.dt tfoot td{padding:9px 10px;font-weight:600;color:var(--navy-deep);border-bottom:var(--border-med);background:var(--ivory-deep);}
+table.dt tfoot td.num{text-align:right;font-feature-settings:"tnum" 1;}
+
+.gate{margin-top:18px;padding-top:12px;border-top:var(--border-med);page-break-inside:avoid;}
+.gate .gate-label{font-family:var(--f-body);font-variant:small-caps;font-size:11px;letter-spacing:0.09em;color:var(--navy-dark);margin-bottom:9px;font-weight:600;}
+.gate .gate-body{font-family:var(--f-body);font-size:9.5px;color:var(--slate);line-height:1.55;margin-bottom:14px;}
+.gate .gate-lines{display:grid;grid-template-columns:1fr 1fr;gap:36px;margin-top:14px;}
+.gate .gate-lines .line{border-bottom:0.75pt solid var(--ink);height:32px;position:relative;}
+.gate .gate-lines .lbl{font-family:var(--f-body);font-size:var(--fs-imprint);letter-spacing:var(--tracked-tight);text-transform:uppercase;color:var(--mid-grey);margin-top:6px;}
+
+.signoff{margin-top:18px;page-break-inside:avoid;}
+.signoff .closing{font-family:var(--f-display);font-style:italic;font-size:11px;color:var(--slate);margin-bottom:13px;}
+.signoff .sig-lockup{width:200px;height:auto;display:block;margin:0 0 6px 0;opacity:var(--sig-lockup-opacity);}
+.signoff .sig-slot{width:260px;height:56px;margin-bottom:2px;display:block;}
+.signoff .sig-image{width:260px;height:auto;display:block;margin-bottom:2px;}
+.signoff .sig-line{border-bottom:0.75pt solid var(--ink);width:280px;margin-bottom:6px;}
+.signoff .sig-name{font-family:var(--f-body);font-size:11px;letter-spacing:var(--tracked);text-transform:uppercase;color:var(--navy-dark);font-weight:600;margin-bottom:2px;}
+.signoff .sig-title{font-family:var(--f-display);font-style:italic;font-variant:small-caps;font-size:10px;color:var(--slate);margin-bottom:2px;}
+.signoff .sig-org{font-family:var(--f-body);font-size:8.5px;letter-spacing:var(--tracked-tight);text-transform:uppercase;color:var(--mid-grey);}
+
+.colophon{position:absolute;left:var(--margin-left);right:var(--margin-right);bottom:30px;height:82px;padding-top:16px;border-top:var(--border-med);z-index:3;text-align:center;}
+.colophon .footer-seal{display:block;clear:both;width:24px;height:24px;margin:0 auto 7px;background-image:url("{{GSSC_ASSET:seal}}");background-size:contain;background-repeat:no-repeat;background-position:center;opacity:var(--footer-seal-opacity);}
+.colophon .center{display:block;text-align:center;font-family:var(--f-body);font-size:8px;letter-spacing:var(--tracked-cap);text-transform:uppercase;color:var(--mid-grey);line-height:1.7;white-space:nowrap;}
+.colophon .folio{position:absolute;bottom:16px;font-family:var(--f-display);font-size:var(--fs-folio);color:var(--slate);font-feature-settings:"onum" 1;}
+.colophon .folio.left{left:0;font-family:var(--f-body);font-size:8px;letter-spacing:var(--tracked-tight);text-transform:uppercase;color:var(--mid-grey);}
+.colophon .folio.right{right:0;}
+
+/* ===== SIGNAGE CARD COMPONENT ===== */
+.sig-card{margin:10px 0;padding:10px 12px;border-left:2px solid var(--gold-primary);background:var(--ivory-deep);page-break-inside:avoid;}
+.sig-card .sig-code{display:block;font-family:var(--f-body);font-size:8px;font-weight:600;color:var(--gold-deep);text-transform:uppercase;letter-spacing:var(--tracked);margin-bottom:3px;}
+.sig-card .sig-name{display:block;font-family:var(--f-display);font-size:12.5px;color:var(--navy-dark);margin-bottom:4px;line-height:1.25;font-weight:400;}
+.sig-card .sig-desc{font-family:var(--f-body);font-size:9px;color:var(--ink);line-height:1.45;margin-bottom:6px;}
+.sig-card .sig-tier{font-family:var(--f-body);font-size:7.5px;color:var(--slate);text-transform:uppercase;letter-spacing:var(--tracked-tight);margin-bottom:3px;}
+.sig-card .sig-price{display:flex;justify-content:space-between;align-items:baseline;border-top:0.5pt solid var(--hairline);padding-top:5px;margin-top:4px;}
+.sig-card .sig-price-label{font-family:var(--f-body);font-size:7.5px;color:var(--mid-grey);text-transform:uppercase;letter-spacing:var(--tracked-tight);}
+.sig-card .sig-price-amount{font-family:var(--f-display);font-size:15px;color:var(--navy-deep);font-weight:400;font-feature-settings:"onum" 1;}
+
+/* ===== PAGE 2 TIGHT OVERRIDES ===== */
+.page.p2 .body{padding:32px 0 22px 0;}
+.page.p2 .section{margin:14px 0 8px;}
+.page.p2 .section .marker{margin-bottom:12px;column-gap:18px;}
+.page.p2 .section .marker .num{font-size:48px;}
+.page.p2 .section .marker .label{padding-bottom:8px;}
+.page.p2 .bt{margin:6px 0;line-height:1.5;font-size:9.5px;}
+.page.p2 table.dt{margin:8px 0 10px;}
+.page.p2 table.dt thead th{padding:5px 8px;font-size:8px;}
+.page.p2 table.dt tbody td{padding:5px 8px;font-size:9.5px;line-height:1.4;}
+.page.p2 table.dt tfoot td{padding:6px 8px;font-size:9.5px;}
+.page.p2 .sig-card{margin:6px 0;padding:8px 12px;}
+.page.p2 .sig-card .sig-name{font-size:12px;margin-bottom:3px;}
+.page.p2 .sig-card .sig-desc{font-size:8.5px;line-height:1.4;margin-bottom:5px;}
+
+/* ===== PAGE 3 TIGHT OVERRIDES (v6.2 locked) ===== */
+.page.p3 .body{padding:30px 0 26px 0;}
+.page.p3 .section{margin:14px 0 6px;}
+.page.p3 .section .marker{margin-bottom:8px;gap:16px;}
+.page.p3 .section .marker .num{font-size:46px;}
+.page.p3 .section .marker .label{padding-bottom:8px;}
+.page.p3 table.dt{margin:6px 0 10px;}
+.page.p3 table.dt thead th{padding:6px 8px;}
+.page.p3 table.dt tbody td{padding:5px 8px;font-size:9.5px;line-height:1.4;}
+.page.p3 table.dt tfoot td{padding:7px 8px;font-size:10px;}
+.page.p3 .gate{margin-top:10px;padding-top:8px;}
+.page.p3 .gate .gate-label{margin-bottom:6px;font-size:10px;}
+.page.p3 .gate .gate-body{font-size:8.5px;line-height:1.45;margin-bottom:8px;}
+.page.p3 .gate .gate-lines{gap:26px;margin-top:8px;}
+.page.p3 .gate .gate-lines .line{height:22px;}
+.page.p3 .gate .gate-lines .lbl{margin-top:4px;}
+.page.p3 .signoff{margin-top:12px;}
+.page.p3 .signoff .closing{font-size:10px;margin-bottom:7px;}
+.page.p3 .signoff .sig-lockup{width:175px;margin:0 0 3px 0;}
+.page.p3 .signoff .sig-slot{width:250px;height:28px;margin-bottom:1px;}
+.page.p3 .signoff .sig-image{width:250px;}
+.page.p3 .signoff .sig-line{width:250px;margin-bottom:5px;}
+.page.p3 .signoff .sig-name{font-size:10.5px;margin-bottom:1px;}
+.page.p3 .signoff .sig-title{font-size:9.5px;margin-bottom:1px;}
+.page.p3 .signoff .sig-org{font-size:8px;}
+
+.builder-card{position:fixed;top:14px;right:14px;width:290px;background:var(--navy-dark);color:#e8e6df;font-family:var(--f-body);font-size:11px;line-height:1.55;padding:16px 18px;border-left:3px solid var(--gold-primary);box-shadow:0 4px 20px rgba(0,0,0,0.25);z-index:9999;border-radius:2px;}
+.builder-card .close-btn{position:absolute;top:8px;right:10px;background:none;border:none;color:var(--gold-light);font-size:16px;cursor:pointer;padding:0;margin:0;width:auto;line-height:1;}
+.builder-card h4{font-family:var(--f-display);font-size:14px;color:var(--gold-light);margin-bottom:10px;padding-right:20px;letter-spacing:0.01em;}
+.builder-card .row{margin-top:8px;}
+.builder-card button.action{margin-top:12px;background:var(--gold-primary);color:var(--navy-dark);border:none;padding:7px 10px;font-family:var(--f-body);font-size:10px;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;cursor:pointer;width:100%;border-radius:1px;transition:background 0.15s ease;}
+.builder-card button.action:hover{background:var(--gold-light);}
+.builder-card.dismissed{display:none;}
+
+/* ===== MODULAR ADDITIONS ===== */
+.sig-note{font-family:var(--f-display);font-style:italic;font-size:8.5px;color:var(--slate);margin-top:5px;line-height:1.4;}
+.page.p2 .sig-note{font-size:8px;margin-top:4px;}
+table.dt .fill{color:var(--hairline);letter-spacing:0.14em;font-family:var(--f-body);text-align:right;font-size:10px;}
+table.dt .fill-cell{border-bottom:0.5pt dotted var(--hairline);}
+table.dt tfoot tr.ref td{background:var(--ivory);color:var(--slate);font-style:italic;font-weight:400;font-size:9px;padding:5px 10px;border-bottom:var(--border-thin);}
+</style>
+<style id="gssc-v2-last-page-refinement">
+/* Surgical v2 refinement: last-page acceptance gate and contact footer only. */
+.page.p3 .gate.gate-refined{
+  position:relative;
+  margin-top:10px;
+  padding:11px 12px 10px 15px;
+  border:0.75pt solid var(--hairline);
+  border-top:1.5pt solid var(--navy-dark);
+  background:linear-gradient(90deg,rgba(200,164,77,.08),rgba(250,248,243,.18) 42%,rgba(250,248,243,0));
+  page-break-inside:avoid;
+}
+.page.p3 .gate.gate-refined::before{
+  content:"";
+  position:absolute;
+  left:-0.75pt;top:-1.5pt;bottom:-0.75pt;
+  width:3px;
+  background:var(--gold-primary);
+}
+.page.p3 .gate-refined .gate-head{
+  display:flex;
+  align-items:baseline;
+  justify-content:space-between;
+  gap:16px;
+  margin-bottom:5px;
+}
+.page.p3 .gate-refined .gate-label{
+  margin:0;
+  font-family:var(--f-display);
+  font-size:11px;
+  font-variant:normal;
+  font-style:italic;
+  font-weight:400;
+  letter-spacing:.01em;
+  text-transform:none;
+  color:var(--navy-dark);
+}
+.page.p3 .gate-refined .gate-mark{
+  font-family:var(--f-body);
+  font-size:7px;
+  line-height:1;
+  letter-spacing:.16em;
+  text-transform:uppercase;
+  color:var(--gold-deep);
+  white-space:nowrap;
+}
+.page.p3 .gate-refined .gate-body{
+  margin:0 0 7px;
+  max-width:100%;
+  font-size:8.25px;
+  line-height:1.42;
+}
+.page.p3 .gate-refined .gate-lines-refined{
+  display:grid;
+  grid-template-columns:1.35fr 1fr .48fr;
+  gap:14px;
+  margin-top:4px;
+}
+.page.p3 .gate-refined .gate-lines-refined .line{height:19px;}
+.page.p3 .gate-refined .gate-lines-refined .lbl{
+  margin-top:3px;
+  font-size:6.75px;
+  letter-spacing:.11em;
+}
+.page.p3 .colophon .center{
+  font-size:7.25px;
+  letter-spacing:.07em;
+  white-space:nowrap;
+}
+</style>
+<style id="gssc-v2-1-footer-safe-fix">
+/* Footer-safe correction: preserve geometry while reserving folio zones. */
+.page .colophon .center,
+.page.p3 .colophon .center{
+  box-sizing:border-box;
+  width:auto;
+  max-width:380px;
+  margin-left:auto;
+  margin-right:auto;
+  padding-left:4px;
+  padding-right:4px;
+  font-size:7px;
+  line-height:1.35;
+  letter-spacing:.055em;
+  white-space:normal;
+  overflow-wrap:normal;
+  word-break:normal;
+}
+.page .colophon .folio.left{max-width:92px;text-align:left;line-height:1.25;}
+.page .colophon .folio.right{min-width:34px;text-align:right;}
+</style>
+<style id="gssc-v2-2-editorial-iteration">
+/* v2.2: spacious client execution fields + unified editorial footer system. */
+.page.p3 .gate-refined .gate-lines-refined{
+  display:grid;
+  grid-template-columns:minmax(0,1fr) 118px;
+  grid-template-areas:
+    "signature date"
+    "name position";
+  column-gap:18px;
+  row-gap:8px;
+  margin-top:5px;
+}
+.page.p3 .gate-refined .gate-field-signature{grid-area:signature;}
+.page.p3 .gate-refined .gate-field-date{grid-area:date;}
+.page.p3 .gate-refined .gate-field-name{grid-area:name;}
+.page.p3 .gate-refined .gate-field-position{grid-area:position;}
+.page.p3 .gate-refined .gate-lines-refined .line{height:22px;}
+.page.p3 .gate-refined .gate-field-signature .line{height:25px;}
+.page.p3 .gate-refined .gate-lines-refined .lbl{
+  margin-top:3px;
+  font-size:6.65px;
+  letter-spacing:.105em;
+}
+
+/* One consistent footer language across all four pages. */
+.page .colophon{
+  height:82px;
+  padding-top:12px;
+  border-top:0.75pt solid var(--navy-dark);
+}
+.page .colophon::before{
+  content:"";
+  position:absolute;
+  top:-0.75pt;
+  left:0;
+  width:52px;
+  height:2px;
+  background:linear-gradient(90deg,var(--gold-primary) 0 68%,var(--navy-dark) 68% 100%);
+}
+.page .colophon .footer-seal{
+  width:21px;
+  height:21px;
+  margin:0 auto 5px;
+  opacity:.82;
+}
+.page .colophon .center,
+.page.p3 .colophon .center{
+  box-sizing:border-box;
+  max-width:366px;
+  margin:0 auto;
+  padding:0 6px;
+  font-family:var(--f-body);
+  font-size:6.85px;
+  line-height:1.35;
+  letter-spacing:.075em;
+  text-transform:uppercase;
+  color:var(--mid-grey);
+  white-space:normal;
+  overflow:visible;
+}
+.page .colophon .folio{
+  bottom:14px;
+}
+.page .colophon .folio.left{
+  left:0;
+  width:94px;
+  max-width:94px;
+  font-size:7.25px;
+  line-height:1.2;
+  letter-spacing:.105em;
+  text-align:left;
+}
+.page .colophon .folio.right{
+  right:0;
+  min-width:38px;
+  text-align:right;
+  color:var(--navy-dark);
+}
+.page .colophon .footer-center-contact{
+  max-width:390px;
+  font-size:6.65px;
+  letter-spacing:.055em;
+  text-transform:none;
+}
+</style>
+<style id="gssc-v2-3-balanced-iteration">
+/* Acceptance fields: human-scale writing lines, not full-cell rules. */
+.page.p3 .gate-refined .gate-lines-refined{
+  grid-template-columns:minmax(0,1fr) 118px;
+  column-gap:18px;
+  row-gap:8px;
+}
+.page.p3 .gate-refined .gate-field{min-width:0;}
+.page.p3 .gate-refined .gate-field .line{
+  height:22px;
+  width:78%;
+  max-width:230px;
+}
+.page.p3 .gate-refined .gate-field-signature .line{
+  height:25px;
+  width:72%;
+  max-width:215px;
+}
+.page.p3 .gate-refined .gate-field-date .line{
+  width:82px;
+  max-width:82px;
+}
+.page.p3 .gate-refined .gate-field-name .line{
+  width:74%;
+  max-width:220px;
+}
+.page.p3 .gate-refined .gate-field-position .line{
+  width:94px;
+  max-width:94px;
+}
+
+/* Unified three-zone editorial docket footer. */
+.page .colophon.colophon-docket{
+  position:absolute;
+  left:var(--margin-left);
+  right:var(--margin-right);
+  bottom:30px;
+  height:82px;
+  padding:12px 0 0;
+  border-top:0;
+  display:grid;
+  grid-template-columns:118px minmax(0,1fr) 54px;
+  align-items:start;
+  z-index:3;
+  text-align:initial;
+}
+.page .colophon-docket::before{display:none;}
+.page .colophon-docket .footer-rail{
+  position:absolute;
+  left:0;right:0;top:0;
+  height:1px;
+  background:var(--navy-dark);
+}
+.page .colophon-docket .footer-rail span{
+  display:block;
+  width:58px;
+  height:3px;
+  transform:translateY(-1px);
+  background:linear-gradient(90deg,var(--gold-primary) 0 72%,var(--navy-dark) 72% 100%);
+}
+.page .colophon-docket .footer-zone{min-width:0;}
+.page .colophon-docket .footer-left{padding-top:4px;text-align:left;}
+.page .colophon-docket .footer-eyebrow{
+  font-family:var(--f-body);
+  font-size:6.8px;
+  line-height:1.2;
+  letter-spacing:.16em;
+  text-transform:uppercase;
+  color:var(--gold-deep);
+  margin-bottom:5px;
+  font-weight:600;
+}
+.page .colophon-docket .footer-imprint{
+  font-family:var(--f-body);
+  font-size:6.8px;
+  line-height:1.25;
+  letter-spacing:.09em;
+  text-transform:uppercase;
+  color:var(--mid-grey);
+}
+.page .colophon-docket .footer-center{
+  padding:0 12px;
+  text-align:center;
+}
+.page .colophon-docket .footer-seal{
+  display:block;
+  width:20px;
+  height:20px;
+  margin:0 auto 4px;
+  opacity:.82;
+}
+.page .colophon-docket .footer-primary,
+.page .colophon-docket .footer-secondary{
+  overflow:hidden;
+  text-overflow:ellipsis;
+  white-space:nowrap;
+}
+.page .colophon-docket .footer-primary{
+  font-family:var(--f-body);
+  font-size:7px;
+  line-height:1.25;
+  letter-spacing:.085em;
+  text-transform:uppercase;
+  color:var(--navy-dark);
+  font-weight:600;
+}
+.page .colophon-docket .footer-secondary{
+  margin-top:2px;
+  font-family:var(--f-body);
+  font-size:6.55px;
+  line-height:1.25;
+  letter-spacing:.045em;
+  color:var(--mid-grey);
+}
+.page .colophon-docket .footer-right{
+  padding-top:1px;
+  text-align:right;
+  border-left:0.75pt solid var(--hairline);
+  padding-left:12px;
+}
+.page .colophon-docket .footer-page-label{
+  font-family:var(--f-body);
+  font-size:6.4px;
+  line-height:1;
+  letter-spacing:.16em;
+  text-transform:uppercase;
+  color:var(--mid-grey);
+  margin-bottom:4px;
+}
+.page .colophon-docket .footer-page-number{
+  font-family:var(--f-display);
+  font-size:17px;
+  line-height:1;
+  color:var(--navy-dark);
+  font-feature-settings:"onum" 1;
+}
+</style>
+<style id="gssc-v2-4-a4-centering-lock">
+/* A4 centering lock.
+   Page width: 794px. Footer bounds: x=80px to x=660px (580px wide).
+   Unequal outer margins require unequal side zones for the visual center to land at x=397px. */
+.page .colophon.colophon-docket{
+  grid-template-columns:108px minmax(0,1fr) 54px;
+  overflow:visible;
+}
+.page .colophon-docket .footer-center{
+  min-width:0;
+  text-align:center;
+}
+.page .colophon-docket .footer-primary,
+.page .colophon-docket .footer-secondary{
+  max-width:100%;
+  overflow:visible;
+  text-overflow:clip;
+  white-space:nowrap;
+}
+@media print{
+  html,body{width:794px;}
+  .page{width:794px;height:1123px;overflow:hidden;}
+  .page .colophon.colophon-docket{
+    left:80px;
+    right:134px;
+    bottom:30px;
+    height:82px;
+  }
+}
+</style>
+<style id="gssc-v2-5-right-marginalia-rail">
+/* Restrained right-margin editorial rail.
+   A4 bounds: x 720–756px; 60px clear of content; 38px clear of paper edge. */
+.page .margin-rail{
+  position:absolute;top:96px;right:38px;bottom:120px;width:36px;
+  z-index:3;pointer-events:none;color:var(--mid-grey);
+}
+.page .margin-rail-rule{
+  position:absolute;top:0;right:0;bottom:0;width:1px;
+  background:rgba(9,23,61,.20);
+}
+.page .margin-rail-rule span{
+  display:block;width:3px;height:70px;transform:translateX(-1px);
+  background:linear-gradient(to bottom,var(--navy-deep) 0 60%,var(--gold-primary) 60% 85%,var(--slate) 85% 100%);
+}
+.page .margin-rail-copy{
+  position:absolute;top:90px;right:9px;display:flex;align-items:center;gap:8px;
+  writing-mode:vertical-rl;transform:rotate(180deg);white-space:nowrap;
+  font-family:var(--f-body);font-size:6.35px;line-height:1;letter-spacing:.145em;text-transform:uppercase;
+}
+.page .margin-rail-section{color:var(--navy-dark);font-weight:600;}
+.page .margin-rail-dot{color:var(--gold-deep);font-size:7.5px;}
+.page .margin-rail-descriptor{color:var(--mid-grey);}
+.page .margin-rail-index{
+  position:absolute;right:7px;bottom:0;font-family:var(--f-display);
+  font-size:15px;line-height:1;color:rgba(9,23,61,.38);font-feature-settings:"onum" 1;
+}
+@media print{
+  .page .margin-rail{top:96px;right:38px;bottom:120px;width:36px;}
+}
+</style>
+<style id="gssc-v2-6-client-release-polish">
+/* Final optical calibration — restrained, balanced and print-safe. */
+.builder-card{display:none !important;}
+.page .margin-rail-rule{background:rgba(9,23,61,.17);}
+.page .margin-rail-rule span{height:62px;}
+.page .margin-rail-copy{font-size:6.25px;letter-spacing:.14em;}
+.page .margin-rail-index{font-size:14.5px;color:rgba(9,23,61,.31);}
+.page .colophon-docket .footer-rail span{width:54px;}
+.page .colophon-docket .footer-seal{opacity:.80;}
+.page.p3 .gate.gate-refined{background:linear-gradient(90deg,rgba(200,164,77,.065),rgba(250,248,243,.14) 42%,rgba(250,248,243,0));}
+@media print{
+  .builder-card{display:none !important;}
+  .page .margin-rail-index{color:rgba(9,23,61,.31);}
+}
+</style>
+<style id="gssc-universal-master-v1-3-targeted-fix">
+/* v1.3: original v1.0 colorway preserved. Only text contrast and page-4 fit corrected. */
+/* Page 2 cards remain the original unfilled editorial cards. */
+.page.p2 .sig-card{background:transparent!important;box-shadow:none!important;}
+.page.p2 .sig-card .sig-desc{color:var(--ink)!important;}
+.page.p2 .sig-card .sig-tier,
+.page.p2 .sig-card .sig-price-label,
+.page.p2 .sig-note{color:var(--slate)!important;}
+.page.p2 .sig-card .sig-name{color:var(--navy-dark)!important;}
+/* Page 4 uses the original palette and geometry; prose must wrap inside the body column. */
+.page.p3 .section{margin-top:18px!important;margin-bottom:8px!important;}
+.page.p3 .section .marker{margin-bottom:12px!important;}
+.page.p3 table.dt{width:100%!important;max-width:100%!important;table-layout:fixed!important;border-collapse:collapse!important;}
+.page.p3 table.dt th,.page.p3 table.dt td{box-sizing:border-box!important;white-space:normal!important;overflow-wrap:break-word!important;word-break:normal!important;text-align:left!important;vertical-align:top!important;}
+.page.p3 table.dt th:nth-child(1),.page.p3 table.dt td:nth-child(1){width:8%!important;white-space:nowrap!important;}
+.page.p3 table.dt th:nth-child(2),.page.p3 table.dt td:nth-child(2){width:20%!important;}
+.page.p3 table.dt th:nth-child(3),.page.p3 table.dt td:nth-child(3){width:72%!important;}
+.page.p3 table.dt th{padding:5px 8px!important;font-size:7.5px!important;line-height:1.2!important;}
+.page.p3 table.dt td{padding:4px 8px!important;font-size:8.25px!important;line-height:1.30!important;color:var(--ink)!important;}
+.page.p3 table.dt tbody tr:nth-child(even) td{background:var(--row-alt)!important;}
+.page.p3 .gate{margin-top:10px!important;padding:11px 14px 9px!important;background:transparent!important;}
+.page.p3 .gate-body{font-size:8.25px!important;line-height:1.35!important;color:var(--slate)!important;}
+.page.p3 .gate-lines{margin-top:8px!important;row-gap:8px!important;}
+.page.p3 .signoff{margin-top:8px!important;}
+/* Watermark intentionally untouched: source asset, opacity and color treatment remain v1.0. */
+</style><style id="gssc-universal-master-v1-5-atomic-polish">
+/* v1.5 atomic editorial polish.
+   Preserves the v1.0 colorway, warm gold watermark, unfilled cards, page
+   geometry, locked typography sizes, marginalia, footer, acceptance and signature. */
+
+/* Optical text rendering — no size or geometry changes. */
+.page{
+  -webkit-font-smoothing:antialiased;
+  text-rendering:optimizeLegibility;
+  font-kerning:normal;
+}
+.meta,.caption-date,.margin-rail-copy,.footer-imprint,.footer-secondary{
+  color:var(--slate);
+}
+.bt,.lede,.sig-card .sig-desc,.page.p3 table.dt td{color:var(--ink);}
+
+/* Section rule: neutral hairline with a very short gold terminal accent. */
+.section .marker .label{position:relative;border-bottom-color:var(--hairline);}
+.section .marker .label::after{
+  content:"";position:absolute;left:0;bottom:-1px;width:34px;height:1px;
+  background:var(--gold-primary);opacity:.92;
+}
+.section .marker .fleur{opacity:.92;transform:translateY(-1px);}
+
+/* Cards: intentionally unfilled; hierarchy comes from edge, spacing and type. */
+.page.p2 .sig-card{
+  background:transparent!important;box-shadow:none!important;
+  border-left-width:2px;border-left-color:var(--gold-primary);
+  border-top:1px solid transparent;border-bottom:1px solid transparent;
+  padding-top:9px;padding-bottom:9px;
+}
+.page.p2 .sig-card + .sig-card{margin-top:9px;}
+.page.p2 .sig-card .sig-code{letter-spacing:.15em;color:var(--gold-deep);}
+.page.p2 .sig-card .sig-name{color:var(--navy-dark);letter-spacing:-.005em;}
+.page.p2 .sig-card .sig-tier{color:var(--slate);letter-spacing:.11em;}
+.page.p2 .sig-card .sig-price{
+  border-top-color:var(--hairline);padding-top:6px;margin-top:5px;
+}
+.page.p2 .sig-card .sig-price-label{color:var(--slate);}
+.page.p2 .sig-card .sig-price-amount{
+  color:var(--navy-deep);font-variant-numeric:tabular-nums lining-nums;
+}
+.page.p2 .sig-note{color:var(--slate);}
+
+/* Tables: stronger outer grammar, quieter internal separators. */
+table.dt{border-spacing:0;font-variant-numeric:tabular-nums lining-nums;}
+table.dt thead th{
+  border-top:1.5px solid var(--navy-dark);
+  border-bottom:1px solid var(--navy-deep);
+  letter-spacing:.13em;
+}
+table.dt thead th:first-child{padding-left:12px;}
+table.dt thead th:last-child{padding-right:12px;}
+table.dt tbody td{border-bottom-color:var(--hairline);}
+table.dt tbody tr:last-child td{border-bottom:1.5px solid var(--navy-dark);}
+table.dt tbody td:first-child{padding-left:12px;}
+table.dt tbody td:last-child{padding-right:12px;}
+table.dt tbody tr:nth-child(even) td{background:var(--row-alt);}
+table.dt tbody tr:hover td{background:inherit;}
+table.dt tfoot td{border-top-color:var(--navy-dark);}
+table.dt .num{text-align:right;font-variant-numeric:tabular-nums lining-nums;}
+
+/* Page 3 commercial total: restrained authority, not a loud sales banner. */
+.page:not(.p3) table.dt tfoot tr:last-child td{
+  border-top:1px solid var(--navy-dark);
+}
+.page:not(.p3) table.dt tfoot tr:last-child td:first-child{
+  color:var(--navy-dark);font-weight:700;
+}
+
+/* Page 4: retain fixed wrapping correction, with quieter legal separators. */
+.page.p3 table.dt thead th{background:var(--ivory-deep);}
+.page.p3 table.dt tbody tr:nth-child(even) td{background:var(--row-alt)!important;}
+.page.p3 table.dt tbody tr:nth-child(odd) td{background:transparent!important;}
+.page.p3 table.dt td:nth-child(2){color:var(--navy-dark)!important;font-weight:500;}
+.page.p3 table.dt td:nth-child(3){color:var(--ink)!important;}
+
+/* Acceptance: one subtle gold datum and cleaner field rhythm. */
+.gate{position:relative;}
+.gate::before{
+  content:"";position:absolute;left:-1px;top:-1px;width:42px;height:2px;
+  background:var(--gold-primary);
+}
+.gate .gate-label{letter-spacing:.01em;}
+.gate .gate-mark{letter-spacing:.15em;}
+.gate .gate-lines .line{border-bottom-color:var(--ink);}
+.gate .gate-lines .lbl{color:var(--slate);letter-spacing:.12em;}
+
+/* Footer and marginalia: precise, quiet terminating details. */
+.colophon{border-top-color:var(--navy-dark);}
+.colophon::before{
+  content:"";position:absolute;left:50%;top:-1px;width:32px;height:1px;
+  transform:translateX(-50%);background:var(--gold-primary);
+}
+.footer-primary,.footer-page-number{color:var(--navy-dark);}
+.footer-eyebrow,.footer-page-label{color:var(--gold-deep);letter-spacing:.13em;}
+.margin-rail-rule span{box-shadow:0 14px 0 var(--gold-primary),0 28px 0 var(--slate);}
+.margin-rail-index{font-variant-numeric:tabular-nums lining-nums;}
+
+@media print{
+  .page{print-color-adjust:exact;-webkit-print-color-adjust:exact;}
+}
+</style><style id="gssc-v1-6-commercial-contrast-pairing">
+/* v1.6 targeted contrast pairing — Page 3 commercial table only.
+   Warm watermark, ivory field, geometry, copy, cards and all other pages unchanged. */
+
+/* Ordinary line items: ink/slate pairing on ivory. */
+.page:nth-of-type(3) table.dt tbody td.fill-cell{
+  color:var(--navy-dark)!important;
+  opacity:1!important;
+  font-weight:500!important;
+  text-shadow:none!important;
+}
+.page:nth-of-type(3) table.dt tbody td:nth-child(4){
+  color:var(--slate)!important;
+  font-weight:600!important;
+}
+.page:nth-of-type(3) table.dt tbody td:nth-child(5){
+  color:var(--navy-dark)!important;
+  font-weight:600!important;
+}
+.page:nth-of-type(3) table.dt tbody td:nth-child(5)::first-line{
+  color:var(--gold-deep);
+}
+
+/* Reference row: slate italic paired with clean ivory. */
+.page:nth-of-type(3) table.dt tfoot tr.ref td{
+  color:var(--slate)!important;
+  opacity:1!important;
+  background:transparent!important;
+}
+.page:nth-of-type(3) table.dt tfoot tr.ref td.num{
+  color:var(--navy-dark)!important;
+  font-weight:500!important;
+}
+
+/* Decision total: navy field + ivory value; gold acts only as the fine accent. */
+.page:nth-of-type(3) table.dt tfoot tr:last-child td{
+  background:var(--navy-dark)!important;
+  color:var(--ivory)!important;
+  opacity:1!important;
+  border-top:0!important;
+  border-bottom:2px solid var(--gold-primary)!important;
+  font-weight:700!important;
+}
+.page:nth-of-type(3) table.dt tfoot tr:last-child td:first-child{
+  border-left:3px solid var(--gold-primary)!important;
+}
+.page:nth-of-type(3) table.dt tfoot tr:last-child td.num,
+.page:nth-of-type(3) table.dt tfoot tr:last-child td.fill-cell{
+  color:var(--ivory)!important;
+  opacity:1!important;
+  letter-spacing:.035em!important;
+  font-variant-numeric:tabular-nums lining-nums!important;
+}
+</style><style id="gssc-v1-7-production-detail-lock">
+/* v1.7 production detail lock: semantic populated values, controlled rules,
+   no-break safeguards and final micro-casing rhythm. No geometry or watermark changes. */
+.no-break,.money{white-space:nowrap!important;}
+.money{display:inline-flex;align-items:baseline;gap:.34em;font-variant-numeric:tabular-nums lining-nums;}
+.money .currency{font-size:.78em;letter-spacing:.10em;text-transform:uppercase;font-weight:600;}
+.money .amount{font-size:1em;letter-spacing:.025em;font-weight:600;}
+
+/* Populated example values are information, never pale form placeholders. */
+.p-commercial td.example-value{opacity:1!important;color:var(--navy-dark)!important;}
+.p-commercial td.quantity-value{color:var(--slate)!important;font-weight:600!important;}
+.p-commercial tbody td.example-value .currency{color:var(--gold-deep)!important;}
+.p-commercial tbody td.example-value .amount{color:var(--navy-dark)!important;}
+
+/* Three-rule grammar: hairline, medium, strong. */
+:root{--rule-hair:0.5px;--rule-medium:1px;--rule-strong:1.5px;}
+.section .marker .label{border-bottom-width:var(--rule-hair)!important;}
+.sig-card .sig-price{border-top-width:var(--rule-hair)!important;}
+table.dt tbody td{border-bottom-width:var(--rule-hair)!important;}
+table.dt thead th{border-top-width:var(--rule-strong)!important;border-bottom-width:var(--rule-medium)!important;}
+table.dt tbody tr:last-child td{border-bottom-width:var(--rule-strong)!important;}
+.colophon{border-top-width:var(--rule-medium)!important;}
+.gate{border-top-width:var(--rule-strong)!important;}
+
+/* Reference is secondary; decision total is conclusive. */
+.p-commercial tfoot tr.reference-total td{background:transparent!important;color:var(--slate)!important;}
+.p-commercial tfoot tr.reference-total td.num{color:var(--navy-dark)!important;}
+.p-commercial tfoot tr.decision-total td{background:var(--navy-dark)!important;color:var(--ivory)!important;border-bottom:1px solid var(--gold-primary)!important;}
+.p-commercial tfoot tr.decision-total td:first-child{border-left:2px solid var(--gold-primary)!important;}
+.p-commercial tfoot tr.decision-total .money .currency,
+.p-commercial tfoot tr.decision-total .money .amount{color:var(--ivory)!important;}
+
+/* Micro-label discipline: uppercase navigation, title-case named scope, sentence-case prose. */
+.meta,.kicker,.caption-date,.section .sh,table.dt thead th,.sig-code,.sig-tier,.sig-price-label,.gate-mark,.gate-field .lbl,.footer-eyebrow,.footer-page-label,.margin-rail-copy{text-transform:uppercase;}
+.sig-price-label{letter-spacing:.105em!important;}
+
+/* Print safeguards. */
+p,.sig-card,table.dt,.gate,.signoff{orphans:2;widows:2;}
+.sig-card,table.dt,.gate,.signoff{break-inside:avoid;page-break-inside:avoid;}
+</style><style id="gssc-chs-extension">:root{--u:4px;--gap:10px;--sub-grid:2px;}
+
+/* ===================================================================
+   GSSC CATEGORICAL HEADER SYSTEM (CHS) v2.0
+   Kernel Module 17 / Execution Protocol Sections 33, 34.
+
+   v2.0 applies punch-list items 4, 6, 7 and 8 of the 2.10.0 audit:
+     - the contents leader is a flex stretch track, not an implicit grid column
+     - the contents ordinal is subordinate to its title (0.77:1)
+     - the category eyebrow moves mid-grey -> slate (3.70:1 -> 6.96:1)
+     - the cover carries a budget-3 overture treatment
+
+   One skeleton, six registers. Every value is a declared token.
+   =================================================================== */
+
+.chs{
+  margin:calc(var(--u) * 5) 0 calc(var(--u) * 3) 0;
+  page-break-inside:avoid;break-inside:avoid;
+}
+.chs + .chs{margin-top:calc(var(--u) * 6);}
+
+/* --- Stamp: the categorical eyebrow. Ordinal, gold tick, category word. --- */
+.chs-stamp{
+  display:flex;align-items:baseline;
+  gap:calc(var(--u) * 2);
+  margin-bottom:calc(var(--u) * 1.5);
+  line-height:var(--lh-tight);
+}
+.chs-numeral{
+  font-family:var(--f-display);
+  font-size:var(--fs-dek);
+  color:var(--gold-deep);
+  letter-spacing:var(--tracked-tight);
+  font-feature-settings:"onum" 1;
+  line-height:1;
+  white-space:nowrap;
+}
+.chs-tick{
+  flex:0 0 auto;
+  width:calc(var(--u) * 3);height:1px;
+  background:var(--gold-primary);
+  opacity:.92;
+  transform:translateY(-3px);
+}
+/* ITEM 7: mid-grey 3.70:1 -> slate 6.96:1 at 8px. */
+.chs-cat{
+  font-family:var(--f-body);
+  font-size:var(--fs-kicker);
+  font-weight:600;
+  letter-spacing:var(--tracked);
+  text-transform:uppercase;
+  color:var(--slate);
+  line-height:1;
+  white-space:nowrap;
+}
+
+/* --- Title: the dominant element, on the full body measure. --- */
+.chs-title{
+  font-family:var(--f-display);
+  font-weight:400;
+  font-size:var(--fs-pull);
+  line-height:var(--lh-display);
+  letter-spacing:var(--tracked-num);
+  color:var(--navy-dark);
+  margin:0;
+  font-feature-settings:"kern" 1,"liga" 1,"onum" 1;
+}
+.chs-descriptor{
+  font-family:var(--f-display);
+  font-style:italic;
+  font-size:var(--fs-caption);
+  line-height:var(--lh-tight);
+  color:var(--slate);
+  margin-top:calc(var(--u) * 1);
+  max-width:460px;
+}
+
+/* --- Rule: the master's own v1.5 grammar, preserved verbatim. --- */
+.chs-rule{
+  position:relative;
+  margin-top:calc(var(--u) * 2.5);
+  border-bottom:var(--rule-hair) solid var(--hairline);
+}
+.chs-rule::after{
+  content:"";position:absolute;left:0;bottom:calc(var(--rule-hair) * -1);
+  width:34px;height:var(--rule-hair);
+  background:var(--gold-primary);opacity:.92;
+}
+
+/* ---------------------- REGISTERS ---------------------- */
+
+.chs--legal .chs-title{
+  font-family:var(--f-body);
+  font-size:var(--fs-dek);
+  font-weight:600;
+  text-transform:uppercase;
+  letter-spacing:var(--tracked-cap);
+  line-height:var(--lh-tight);
+}
+.chs--legal .chs-rule{border-bottom-width:var(--rule-medium);}
+.chs--legal .chs-rule::after{height:var(--rule-medium);bottom:calc(var(--rule-medium) * -1);}
+
+.chs--formal .chs-descriptor{display:none;}
+.chs--formal .chs-rule{border-bottom-width:var(--rule-strong);}
+.chs--formal .chs-rule::after{height:var(--rule-strong);bottom:calc(var(--rule-strong) * -1);}
+.chs--formal .chs-cat{color:var(--navy-dark);}
+
+.chs--plate{margin:calc(var(--u) * 3) 0 calc(var(--u) * 1.5) 0;}
+.chs--plate .chs-numeral{
+  font-family:var(--f-body);font-size:var(--fs-kicker);font-weight:600;
+  letter-spacing:var(--tracked);text-transform:uppercase;color:var(--gold-deep);
+}
+.chs--plate .chs-title{
+  font-family:var(--f-body);font-size:var(--fs-caption);font-weight:600;
+  text-transform:uppercase;letter-spacing:var(--tracked-cap);
+  line-height:var(--lh-tight);color:var(--navy-dark);
+}
+.chs--plate .chs-rule,.chs--plate .chs-descriptor{display:none;}
+
+.chs--minor{margin:calc(var(--u) * 3) 0 calc(var(--u) * 1) 0;}
+.chs--minor .chs-stamp{margin-bottom:0;display:inline-flex;}
+.chs--minor .chs-numeral{
+  font-family:var(--f-body);font-size:var(--fs-kicker);font-weight:600;
+  letter-spacing:var(--tracked);color:var(--gold-deep);
+}
+.chs--minor .chs-title{
+  display:inline;font-family:var(--f-body);font-size:var(--fs-body);
+  font-weight:600;letter-spacing:var(--tracked-tight);
+  color:var(--navy-dark);margin-left:calc(var(--u) * 2);
+}
+.chs--minor .chs-rule,.chs--minor .chs-descriptor{display:none;}
+
+.chs--toc .chs-numeral{font-size:var(--fs-caption);}
+
+/* ---------------------- TABLE OF CONTENTS ----------------------
+   Section 34.
+
+   ITEM 4 RESOLVED. v1.0 declared `grid-template-columns:auto 1fr auto` and then
+   placed FOUR children into it. Grid auto-placement created an implicit fourth
+   column sized to the leader's own intrinsic content -- which is empty and
+   height:0 -- so the leader could never stretch and the dot leader could not
+   render as specified. Grid has no primitive for "let one item eat the remaining
+   space between two others"; flex-grow does exactly that. The row is now a flex
+   row, and the leader is the only growing child. */
+.toc-block{margin-top:calc(var(--u) * 4);}
+.toc-row{
+  display:flex;
+  align-items:baseline;
+  gap:calc(var(--u) * 2.5);
+  padding:calc(var(--u) * 2) 0;
+  border-bottom:var(--rule-hair) solid var(--hairline);
+}
+.toc-row:first-child{border-top:var(--rule-medium) solid var(--navy-dark);}
+.toc-row:last-child{border-bottom-width:var(--rule-medium);border-bottom-color:var(--navy-dark);}
+/* ITEM 6: ordinal subordinate to title, 10px against 13px = 0.77:1. */
+.toc-numeral{
+  flex:0 0 auto;
+  font-family:var(--f-display);font-size:var(--fs-caption);
+  color:var(--gold-deep);letter-spacing:var(--tracked-tight);
+  font-feature-settings:"onum" 1;line-height:var(--lh-tight);
+  min-width:calc(var(--u) * 7);
+}
+.toc-title{
+  flex:0 1 auto;
+  font-family:var(--f-display);font-size:var(--fs-dek);
+  color:var(--navy-dark);line-height:var(--lh-tight);
+  letter-spacing:var(--tracked-num);
+}
+.toc-descriptor{
+  display:block;font-family:var(--f-body);font-style:normal;
+  font-size:var(--fs-kicker);letter-spacing:var(--tracked-tight);
+  color:var(--slate);text-transform:none;
+  margin-top:calc(var(--u) * 1);line-height:var(--lh-tight);
+}
+/* The growing child. Bottom-aligned to the title baseline, dotted in the
+   master's own margin-rail language -- no new leader style is introduced. */
+.toc-leader{
+  flex:1 1 auto;
+  align-self:baseline;
+  height:0;
+  border-bottom:1px dotted rgba(9,23,61,.28);
+  transform:translateY(-3px);
+  min-width:calc(var(--u) * 6);
+}
+.toc-folio{
+  flex:0 0 auto;
+  font-family:var(--f-body);font-size:var(--fs-folio);
+  color:var(--navy-dark);font-variant-numeric:tabular-nums lining-nums;
+  letter-spacing:var(--tracked-tight);line-height:var(--lh-tight);
+}
+
+/* ---------------------- COVER OVERTURE ----------------------
+   Section 38 / Module 18 `cover` archetype, creativity budget 3.
+
+   The only budget-3 archetype in the kernel, and until 2.11.0 the only one whose
+   latitude had never been exercised: page 1 was a stacked text sequence
+   indistinguishable in structure from a budget-2 prose page.
+
+   Precedent basis (Module 15 Stage 1, live check performed 2026-09-21):
+   - SCALE DISSONANCE between display and body is the dominant recurring device in
+     contemporary editorial practice; the cover is specifically the page that has
+     to earn attention before anything else does.
+   - THE ISOLATION EFFECT (von Restorff, 1933) holds only while the isolated
+     element remains the exception. The correct move is therefore to raise ONE
+     element and leave every neighbour untouched -- not to add emphasis.
+
+   Execution, entirely within existing tokens and existing content:
+   - the cover title moves --fs-title 42px -> --fs-dropcap 64px. Both are already
+     declared in the master's :root; no new literal is introduced. Display-to-body
+     dissonance goes from 4.00:1 to 6.10:1.
+   - open space above the title is widened so the raise reads as composition
+     rather than as a bigger font.
+   - the kicker is let down to a hairline-ruled eyebrow so the title is the single
+     entry point.
+   - NOTHING ELSE ON THE PAGE CHANGES. No content is added, removed or reworded,
+     and no photography is introduced -- 03_brand.photography.default is
+     "avoid when possible" and that is respected. */
+.page.p-cover .body .kicker{
+  color:var(--gold-deep);
+  padding-bottom:calc(var(--u) * 2);
+  margin-bottom:calc(var(--u) * 4);
+  border-bottom:var(--rule-hair) solid var(--hairline);
+}
+.page.p-cover .body h1.title{
+  /* REVERTED in 2.12.0. 2.11.0 raised this to var(--fs-dropcap) 64px with
+     max-width:470px as a Section 38 cover overture. Measured by the Section 23D
+     resolved box model: at 470px the 68-character title wraps to SIX lines,
+     430.1px, and drove page 1 to 1059.4px against an 843px budget -- a 216px
+     overflow into the footer band. The overture is not viable on this page:
+     with the existing body content, the title box may occupy at most 213.7px,
+     and 48px already overflows by 1px. Reverted to the master's own 42px on the
+     full column: 3 lines, 141.1px, page total 770.4px, 72.6px spare.
+     Recorded as measured-and-reverted per Module 16, not shipped with a
+     rationalisation. */
+  font-size:var(--fs-title);
+  line-height:var(--lh-display);
+  letter-spacing:var(--tracked-num);
+  margin-bottom:calc(var(--u) * 5);
+}
+.page.p-cover .body .dek{
+  margin-bottom:calc(var(--u) * 5);
+}
+
+/* ---------------------- LEGACY SUPPRESSION ---------------------- */
+.chs .marker{display:none;}
+</style>
+<style id="gssc-design-extension">:root{--teal-deep:#1d4f4a;--clay:#8c4a3f;--row-alt-deep:#ece8dc;}
+
+/* ===================================================================
+   GSSC DESIGN LAYER v3.0  --  kernel 2.13.0
+   Tables, categorical header depth, contents depth, chart primitives.
+
+   Every colour resolves to a token declared in 03_brand.visual_system.
+   Two tokens (teal_deep, clay) and one tint (row_alt_deep) are NEW and
+   are added at kernel level, not invented here.
+   =================================================================== */
+
+/* ---------------------- TABLES: A FOUR-TIER EMPHASIS LADDER ----------------
+   MEASURED BASIS. The shipped banding was #f5f2e8 on #faf8f3 = 1.055:1, and
+   the header tint 1.08:1 -- both past "subtle" and into invisible, while the
+   decision-total row sat alone at 16.47:1. Banding should be restrained, but
+   a distinction meant to be perceived needs to actually be perceivable.
+   row_alt_deep raises the stripe to a measurable value while staying quiet. */
+
+table.dt tbody tr:nth-child(even) td{
+  background:var(--row-alt-deep);
+}
+
+/* Tier 2 -- column header. Tinted ground PLUS a navy rule, so the header is
+   legible as structure without borrowing the decision row's full fill. */
+table.dt thead th{
+  background:var(--ivory-deep);
+  border-top:var(--rule-strong) solid var(--navy-dark);
+  border-bottom:var(--rule-medium) solid var(--navy-dark);
+  color:var(--navy-dark);
+}
+
+/* Tier 3 -- the missing middle. A reference or sub-total row previously read
+   as ordinary body copy; it now carries the gold ground, one step below the
+   decision row and clearly above the body. */
+table.dt tfoot tr.ref td,
+table.dt tfoot tr.reference-total td{
+  background:var(--gold-light);
+  color:var(--navy-dark);
+  font-style:normal;
+  font-weight:600;
+  border-bottom:var(--rule-medium) solid var(--navy-dark);
+}
+table.dt tfoot tr.reference-total td.num{color:var(--navy-dark);}
+
+/* Tier 4 -- unchanged, now the top of a declared ladder. */
+table.dt tfoot tr.decision-total td{
+  background:var(--navy-dark);
+  color:var(--ivory);
+  border-bottom:var(--rule-medium) solid var(--gold-primary);
+}
+table.dt tfoot tr.decision-total td:first-child{
+  border-left:var(--rule-strong) solid var(--gold-primary);
+}
+
+/* A clause/terms table has no monetary total, so it closes on its governing
+   row instead -- every multi-row table now ends on a declared tier rather
+   than simply stopping. */
+table.dt tbody tr.closing-clause td{
+  background:var(--ivory-deep);
+  border-top:var(--rule-medium) solid var(--navy-dark);
+  border-bottom:var(--rule-strong) solid var(--navy-dark);
+  color:var(--navy-dark);
+  font-weight:600;
+}
+
+/* ---------------------- CATEGORICAL HEADER: STRUCTURAL DEPTH ---------------
+   The registers were hierarchically correct but visually thin: one 34px gold
+   terminal under a hairline rule was the entire event. Editorial practice at
+   this tier gives a structural break a deliberate typographic object, not
+   more colour. The category word becomes a CHIP -- its own bordered ground --
+   and the header is bracketed above as well as closed below. */
+
+.chs{position:relative;}
+
+/* The bracket: a short rule above the stamp, mirroring the terminal below,
+   so the header reads as composed rather than merely ended. */
+.chs::before{
+  content:"";position:absolute;left:0;top:calc(var(--u) * -2);
+  width:calc(var(--u) * 6);height:var(--rule-medium);
+  background:var(--navy-dark);
+}
+
+.chs-cat{
+  display:inline-block;
+  padding:calc(var(--u) * 0.5) calc(var(--u) * 1.5);
+  background:var(--ivory-deep);
+  border:var(--rule-hair) solid var(--hairline);
+  color:var(--slate);
+  line-height:var(--lh-tight);
+}
+
+/* Category accent. The tick and the bracket carry the section's category
+   colour, so a reader flipping pages gets a cue to section TYPE as well as
+   ordinal. Hue is never the only signal -- the ordinal and the category word
+   both still say it in text. */
+.chs--primary .chs-tick{background:var(--gold-primary);}
+.chs--legal .chs-tick{background:var(--teal-deep);}
+.chs--legal .chs::before,.chs--legal.chs::before{background:var(--teal-deep);}
+.chs--formal .chs-tick{background:var(--navy-dark);}
+.chs--plate .chs-tick{background:var(--clay);}
+.chs--toc .chs-tick{background:var(--gold-deep);}
+
+/* ---------------------- CONTENTS: CATEGORY-KEYED DEPTH ---------------------
+   The contents page was a well-proportioned but flat list of identical rows.
+   Precedent at this tier anchors each entry with a weighted numeral and a
+   category cue. The ordinal keeps its subordinate SIZE -- the 2.11.0
+   inversion is not reintroduced -- and gains weight and a left tab instead. */
+
+.toc-row{
+  position:relative;
+  padding-left:calc(var(--u) * 3);
+}
+.toc-row::before{
+  content:"";position:absolute;left:0;top:calc(var(--u) * 2);bottom:calc(var(--u) * 2);
+  width:var(--rule-strong);
+  background:var(--gold-primary);
+}
+.toc-row[data-cat="legal_article"]::before{background:var(--teal-deep);}
+.toc-row[data-cat="appendix_annex"]::before{background:var(--clay);}
+
+.toc-numeral{
+  font-weight:600;
+  color:var(--navy-dark);
+}
+.toc-title{font-weight:600;}
+.toc-folio{
+  font-weight:600;
+  min-width:calc(var(--u) * 6);
+  text-align:right;
+}
+
+/* ---------------------- CHART PRIMITIVES -----------------------------------
+   Section 39. Pure inline SVG, no library, no CDN. Colour is paired with a
+   declared pattern on every series so the encoding survives a monochrome
+   printer and colour vision deficiency. */
+.fig{margin:calc(var(--u) * 3) 0 calc(var(--u) * 2) 0;page-break-inside:avoid;}
+.fig figcaption{
+  font-family:var(--f-body);font-size:var(--fs-kicker);
+  letter-spacing:var(--tracked-tight);color:var(--slate);
+  margin-top:calc(var(--u) * 1.5);line-height:var(--lh-tight);
+}
+.fig-legend{
+  display:flex;flex-wrap:wrap;gap:calc(var(--u) * 3);
+  margin-top:calc(var(--u) * 2);
+}
+.fig-key{
+  font-family:var(--f-body);font-size:var(--fs-kicker);
+  letter-spacing:var(--tracked-tight);text-transform:uppercase;
+  color:var(--slate);line-height:var(--lh-tight);
+}
+</style>
+
+<style id="gssc-design-extension-v3-1">
+/* ===================================================================
+   GSSC DESIGN LAYER v3.1  --  kernel 2.16.0
+   Three registered components: metric callout, milestone roadmap,
+   tier comparison. All three are GRID, which is a declared, measurable
+   layout mode (resolved_box_model.supported_layout_modes), so Section
+   23D measures them and Section 44 balance-tests them. A component the
+   box model cannot see is a component that can silently overflow.
+
+   TOKEN DISCIPLINE. Every colour is a declared brand token, every size a
+   declared :root literal, every step a multiple of the 2px sub-grid, and
+   every rule one of the three declared weights. No new value is
+   introduced at component level -- Module 15 stage_2_translate forbids
+   it, and typeaudit fails the build if it happens.
+   =================================================================== */
+
+/* ---------------------- METRIC CALLOUT -------------------------------
+   Research basis: 2026 B2B proposal practice places the few decisive
+   figures -- turnaround, coverage, warranty -- ABOVE the detail rather
+   than inside it, because a reviewer scanning for viability should not
+   have to parse a table to find them. Implemented as the quietest
+   possible object: a hairline-ruled band, no fill, no shadow, no icon.
+   The emphasis is positional, not decorative. */
+.metric-strip{
+  display:grid;
+  grid-template-columns:repeat(3, 1fr);
+  gap:var(--gap);
+  margin:calc(var(--u) * 3) 0 calc(var(--u) * 2) 0;
+  border-top:var(--rule-medium) solid var(--navy-dark);
+  border-bottom:var(--rule-hair) solid var(--hairline);
+  padding:calc(var(--u) * 2) 0;
+}
+.metric{ padding:0; }
+.metric-value{
+  display:block;
+  font-family:var(--f-display);
+  font-size:var(--fs-dek);
+  line-height:1.2;
+  color:var(--navy-dark);
+  font-weight:600;
+  letter-spacing:var(--tracked-tight);
+}
+.metric-label{
+  display:block;
+  font-size:var(--fs-kicker);
+  line-height:1.4;
+  color:var(--slate);
+  letter-spacing:var(--tracked-cap);
+  text-transform:uppercase;
+  margin-top:calc(var(--u) * 0.5);
+}
+
+/* ---------------------- MILESTONE ROADMAP ----------------------------
+   Research basis: a phase sequence read as prose forces the reader to
+   reconstruct order and count; read as a row it is apprehended at once.
+   The device is a single navy rule with numbered stations on it --
+   deliberately the same rule weight and ordinal treatment the
+   Categorical Header System already uses, so the roadmap reads as part
+   of the document's existing numbering grammar rather than as an
+   imported infographic. */
+.roadmap{
+  display:grid;
+  grid-template-columns:repeat(4, 1fr);
+  gap:var(--gap);
+  margin:calc(var(--u) * 3) 0 calc(var(--u) * 2) 0;
+  border-top:var(--rule-strong) solid var(--navy-dark);
+  padding-top:calc(var(--u) * 2);
+}
+.phase{ padding:0; }
+.phase-ord{
+  display:block;
+  font-family:var(--f-display);
+  font-size:var(--fs-caption);
+  line-height:1.2;
+  color:var(--gold-deep);
+  letter-spacing:var(--tracked-num);
+  font-weight:600;
+}
+.phase-name{
+  display:block;
+  font-size:var(--fs-kicker);
+  line-height:1.4;
+  color:var(--navy-dark);
+  text-transform:uppercase;
+  letter-spacing:var(--tracked-cap);
+  font-weight:600;
+  margin-top:calc(var(--u) * 0.5);
+}
+.phase-note{
+  display:block;
+  font-size:var(--fs-kicker);
+  line-height:1.5;
+  color:var(--slate);
+  margin-top:calc(var(--u) * 0.5);
+}
+
+/* ---------------------- TIER COMPARISON ------------------------------
+   Research basis: a single price is a yes/no question; a tiered menu is
+   a which question, and a reviewer who is choosing between options is
+   already past the decision to proceed. GSSC has produced this shape at
+   least once before -- the three-option water filtration set -- entirely
+   ad hoc. Registering the anatomy means the next tiered quotation
+   inherits a reviewed pattern instead of reinventing one.
+
+   The recommended tier borrows tier_3_summary from the table emphasis
+   ladder rather than introducing a fifth emphasis device, so the
+   document has ONE vocabulary for "this row matters more". */
+.tiers{
+  display:grid;
+  grid-template-columns:repeat(3, 1fr);
+  gap:var(--gap);
+  margin:calc(var(--u) * 3) 0 calc(var(--u) * 2) 0;
+}
+.tier{
+  border-top:var(--rule-medium) solid var(--navy-dark);
+  border-bottom:var(--rule-hair) solid var(--hairline);
+  padding:calc(var(--u) * 2) calc(var(--u) * 1.5) calc(var(--u) * 2) 0;
+}
+.tier.tier--recommended{
+  background:var(--gold-light);
+  border-top:var(--rule-strong) solid var(--gold-deep);
+  padding-left:calc(var(--u) * 1.5);
+}
+.tier-rank{
+  display:block;
+  font-size:var(--fs-kicker);
+  line-height:1.4;
+  color:var(--gold-deep);
+  text-transform:uppercase;
+  letter-spacing:var(--tracked-cap);
+  font-weight:600;
+}
+.tier-name{
+  display:block;
+  font-family:var(--f-display);
+  font-size:var(--fs-dek);
+  line-height:1.25;
+  color:var(--navy-dark);
+  font-weight:600;
+  margin-top:calc(var(--u) * 0.5);
+}
+.tier-scope{
+  display:block;
+  font-size:var(--fs-kicker);
+  line-height:1.5;
+  color:var(--slate);
+  margin-top:calc(var(--u) * 1);
+}
+.tier-price{
+  display:block;
+  font-family:var(--f-display);
+  font-size:var(--fs-caption);
+  line-height:1.3;
+  color:var(--navy-dark);
+  font-weight:600;
+  margin-top:calc(var(--u) * 1);
+  padding-top:calc(var(--u) * 1);
+  border-top:var(--rule-hair) solid var(--hairline);
+  letter-spacing:var(--tracked-num);
+}
+</style>
+</head>
+<body data-currency="PHP" data-doc-type="quotation" data-state="TEMPLATE_MASTER" data-template-role="UNIVERSAL_QUOTATION_MASTER" data-template-version="1.7">
+<!-- PAGE 1 - Cover letter -->
+<section class="page p-cover">
+<div class="watermark"></div>
+<aside aria-hidden="true" class="margin-rail">
+<div class="margin-rail-rule"><span></span></div>
+<div class="margin-rail-copy">
+<span class="margin-rail-section">Universal Master</span>
+<span class="margin-rail-dot">·</span>
+<span class="margin-rail-descriptor">GSSC · Working Example</span>
+</div>
+<div class="margin-rail-index">01</div>
+</aside>
+<header class="masthead">
+<img alt="GSSC Integrated Corporation" class="logo"/>
+<div class="meta">
+<div class="doctype">Quotation Master</div>
+<div>GSSC-QUOT-DEMO-GENERAL-2026-000 · Master v1.7</div>
+<div>15 July 2026 · Iloilo City</div>
+</div>
+</header>
+<main class="body">
+<div class="kicker">Volume I · Master 000 · Integrated Supply &amp; Site Support</div>
+<h1 class="title">An Integrated Project Program for Demonstration Client, Iloilo City.</h1>
+<p class="dek">This universal master demonstrates the complete GSSC quotation sequence: define the requirement, position GSSC as the single point of accountability, present bundled work packages, summarize approved pricing, state assumptions, and provide a controlled acceptance gate. The example combines goods, coordination, delivery, execution, quality documentation, and support so it can be adapted to equipment, water, diesel, waste, civil, signage, furniture, landscaping, mechanical, electrical, consultancy, or another approved program.</p>
+<div class="caption-date">
+<span>Prepared for · Demonstration Client</span>
+<span>Attention · Authorized Project Representative</span>
+</div>
+<p class="lede">Illustrative amounts are in Philippine Pesos on a Non-VAT basis. They are not an offer, market quotation, supplier cost, budget, or price recommendation. Replace them only with a management-approved client price after market, labor, logistics, technical, legal, risk, calculation, and firewall review.</p>
+<p class="bt">The following pages demonstrate four reusable commercial building blocks: core supply, mobilization and site execution, quality and turnover documentation, and optional continuity support. Keep only blocks supported by the actual project.</p>
+<div class="pull">One accountable program, clearly defined scope, and one controlled path from approval to delivery.<br/><span class="attrib">— Universal Master Note · Replace for Client Release</span></div>
+<p class="bt">Use the work-package system on the following pages as a model, not a fixed menu. A live quotation may retain, combine, rename, or omit packages according to the approved scope, provided all descriptions, quantities, prices, assumptions, and exclusions remain reconciled and source-supported.</p>
+</main>
+<footer class="colophon colophon-docket">
+<div aria-hidden="true" class="footer-rail"><span></span></div>
+<div class="footer-zone footer-left">
+<div class="footer-eyebrow">UNIVERSAL MASTER</div>
+<div class="footer-imprint">Synthetic Working Example</div>
+</div>
+<div class="footer-zone footer-center">
+<div class="footer-seal"></div>
+<div class="footer-primary no-break">GSSC Integrated Corporation</div>
+<div class="footer-secondary">Regus · Iloilo Business Park</div>
+</div>
+<div class="footer-zone footer-right">
+<div class="footer-page-label">Page</div>
+<div class="footer-page-number">01</div>
+</div>
+</footer>
+</section>
+<!-- PAGE 2 - Illustrative Work Packages + Summary -->
+<section class="page p-contents">
+<div class="watermark"></div>
+<aside aria-hidden="true" class="margin-rail">
+<div class="margin-rail-rule"><span></span></div>
+<div class="margin-rail-copy">
+<span class="margin-rail-section">Quotation Master</span>
+<span class="margin-rail-dot">·</span>
+<span class="margin-rail-descriptor">Contents</span>
+</div>
+<div class="margin-rail-index">02</div>
+</aside>
+<header class="masthead">
+<img alt="GSSC Integrated Corporation" class="logo"/>
+<div class="meta">
+<div class="doctype">Quotation Master</div>
+<div>GSSC-QUOT-DEMO-GENERAL-2026-000 · Master v2.0</div>
+<div>15 July 2026 · Iloilo City</div>
+</div>
+</header>
+<main class="body">
+<div class="chs chs--toc" data-chs-category="toc_entry_ref" data-chs-register="toc"><div class="chs-stamp"><span class="chs-numeral">—</span><span class="chs-tick" aria-hidden="true"></span><span class="chs-cat">Contents</span></div><h2 class="chs-title">Contents</h2><p class="chs-descriptor">Sections, folios, programme commitments and work-package weighting</p><div class="chs-rule" aria-hidden="true"></div></div>
+<p class="bt">This programme is set in three numbered sections. Each opens with its
+categorical header and carries its own folio, so a reviewer can cite a section by
+ordinal or a page by number without ambiguity.</p>
+<div class="toc-block"><div class="toc-row" data-cat="quotation_major_section"><span class="toc-numeral">I</span><span class="toc-title">Illustrative Work Packages<span class="toc-descriptor">Replace with researched, project-specific bundled scope</span></span><span class="toc-leader" aria-hidden="true"></span><span class="toc-folio">03</span></div><div class="toc-row" data-cat="quotation_major_section"><span class="toc-numeral">II</span><span class="toc-title">Commercial Summary<span class="toc-descriptor">Illustrative quantities · approved-price placement</span></span><span class="toc-leader" aria-hidden="true"></span><span class="toc-folio">04</span></div><div class="toc-row" data-cat="quotation_major_section"><span class="toc-numeral">III</span><span class="toc-title">Commercial Terms<span class="toc-descriptor">Replace project variables; retain only supported protections</span></span><span class="toc-leader" aria-hidden="true"></span><span class="toc-folio">05</span></div></div>
+<div class="metric-strip"><div class="metric"><span class="metric-value">Single point</span><span class="metric-label">Accountability</span></div><div class="metric"><span class="metric-value">Four packages</span><span class="metric-label">Programme structure</span></div><div class="metric"><span class="metric-value">Non-VAT</span><span class="metric-label">Pricing basis</span></div></div>
+<p class="bt">The programme runs in four controlled stages. Each stage closes on a documented hand-off, so approval, execution and turnover are separable and individually verifiable. Replace the stage names and notes with the approved project sequence.</p>
+<div class="roadmap"><div class="phase"><span class="phase-ord">01</span><span class="phase-name">Approval</span><span class="phase-note">Scope confirmed, quotation accepted, notice to proceed issued.</span></div><div class="phase"><span class="phase-ord">02</span><span class="phase-name">Supply</span><span class="phase-note">Specification verified, goods procured, incoming inspection recorded.</span></div><div class="phase"><span class="phase-ord">03</span><span class="phase-name">Execution</span><span class="phase-note">Mobilisation, coordinated works, progressive quality checks on site.</span></div><div class="phase"><span class="phase-ord">04</span><span class="phase-name">Turnover</span><span class="phase-note">Documentation compiled, acceptance signed, support window opens.</span></div></div><figure class="fig"><svg viewBox="0 0 540 190" role="img" aria-label="Illustrative work-package weighting"><defs><pattern id="p0" width="4" height="4" patternUnits="userSpaceOnUse"><rect width="4" height="4" fill="#09173d"/></pattern><pattern id="p1" width="4" height="4" patternUnits="userSpaceOnUse"><rect width="4" height="4" fill="#1d4f4a"/><circle cx="2" cy="2" r="0.9" fill="#faf8f3"/></pattern><pattern id="p2" width="4" height="4" patternUnits="userSpaceOnUse"><rect width="4" height="4" fill="#8c4a3f"/><path d="M0,4 l4,-4 M0,0 l4,4" stroke="#faf8f3" stroke-width="0.7"/></pattern><pattern id="p3" width="4" height="4" patternUnits="userSpaceOnUse"><rect width="4" height="4" fill="#a8862f"/><path d="M0,4 l4,-4" stroke="#faf8f3" stroke-width="1"/></pattern></defs><line x1="116" y1="14" x2="116" y2="164" stroke="#09173d" stroke-width="1"/><rect x="116" y="14.0" width="368.0" height="31.5" fill="url(#p0)" stroke="#09173d" stroke-width="0.5"/><text x="110" y="32.1" text-anchor="end" font-family="Inter,-apple-system,BlinkMacSystemFont,Segoe UI,Helvetica Neue,Arial,sans-serif" font-size="7" fill="#4f5663" letter-spacing="0.02em">Core Equipment</text><text x="489.0" y="32.1" font-family="Inter,-apple-system,BlinkMacSystemFont,Segoe UI,Helvetica Neue,Arial,sans-serif" font-size="7" fill="#09173d">PHP 148,000</text><rect x="116" y="53.5" width="238.7" height="31.5" fill="url(#p1)" stroke="#09173d" stroke-width="0.5"/><text x="110" y="71.7" text-anchor="end" font-family="Inter,-apple-system,BlinkMacSystemFont,Segoe UI,Helvetica Neue,Arial,sans-serif" font-size="7" fill="#4f5663" letter-spacing="0.02em">Mobilization</text><text x="359.7" y="71.7" font-family="Inter,-apple-system,BlinkMacSystemFont,Segoe UI,Helvetica Neue,Arial,sans-serif" font-size="7" fill="#09173d">PHP 96,000</text><rect x="116" y="93.0" width="104.4" height="31.5" fill="url(#p2)" stroke="#09173d" stroke-width="0.5"/><text x="110" y="111.2" text-anchor="end" font-family="Inter,-apple-system,BlinkMacSystemFont,Segoe UI,Helvetica Neue,Arial,sans-serif" font-size="7" fill="#4f5663" letter-spacing="0.02em">Quality &amp; Turnover</text><text x="225.4" y="111.2" font-family="Inter,-apple-system,BlinkMacSystemFont,Segoe UI,Helvetica Neue,Arial,sans-serif" font-size="7" fill="#09173d">PHP 42,000</text><rect x="116" y="132.5" width="69.6" height="31.5" fill="url(#p3)" stroke="#09173d" stroke-width="0.5"/><text x="110" y="150.7" text-anchor="end" font-family="Inter,-apple-system,BlinkMacSystemFont,Segoe UI,Helvetica Neue,Arial,sans-serif" font-size="7" fill="#4f5663" letter-spacing="0.02em">Continuity Support</text><text x="190.6" y="150.7" font-family="Inter,-apple-system,BlinkMacSystemFont,Segoe UI,Helvetica Neue,Arial,sans-serif" font-size="7" fill="#09173d">PHP 28,000</text></svg><div class="fig-legend"><span class="fig-key">Core Equipment &middot; solid</span><span class="fig-key">Mobilization &middot; dot</span><span class="fig-key">Quality &amp; Turnover &middot; cross hatch</span><span class="fig-key">Continuity Support &middot; diagonal hatch</span></div><figcaption>FIGURE 1 &middot; Illustrative relative weighting of the four work packages. Synthetic values for demonstration; replace with approved figures. Each series carries a pattern as well as a colour so the encoding survives monochrome print.</figcaption></figure>
+</main>
+<footer class="colophon colophon-docket">
+<div aria-hidden="true" class="footer-rail"><span></span></div>
+<div class="footer-zone footer-left">
+<div class="footer-eyebrow">UNIVERSAL MASTER</div>
+<div class="footer-imprint">Synthetic Working Example</div>
+</div>
+<div class="footer-zone footer-center">
+<div class="footer-seal"></div>
+<div class="footer-primary">Universal Quotation Program</div>
+<div class="footer-secondary">GSSC Integrated Corporation</div>
+</div>
+<div class="footer-zone footer-right">
+<div class="footer-page-label">Page</div>
+<div class="footer-page-number">02</div>
+</div>
+</footer>
+</section>
+<section class="page p2">
+<div class="watermark"></div>
+<aside aria-hidden="true" class="margin-rail">
+<div class="margin-rail-rule"><span></span></div>
+<div class="margin-rail-copy">
+<span class="margin-rail-section">Quotation Master</span>
+<span class="margin-rail-dot">·</span>
+<span class="margin-rail-descriptor">Scope · Work Packages</span>
+</div>
+<div class="margin-rail-index">03</div>
+</aside>
+<header class="masthead">
+<img alt="GSSC Integrated Corporation" class="logo"/>
+<div class="meta">
+<div class="doctype">Quotation Master</div>
+<div>GSSC-QUOT-DEMO-GENERAL-2026-000 · Master v1.7</div>
+<div>15 July 2026 · Iloilo City</div>
+</div>
+</header>
+<main class="body">
+<div class="chs chs--primary" data-chs-category="quotation_major_section" data-chs-register="primary"><div class="chs-stamp"><span class="chs-numeral">I</span><span class="chs-tick" aria-hidden="true"></span><span class="chs-cat">Section</span></div><h2 class="chs-title">Illustrative Work Packages</h2><p class="chs-descriptor">Replace with researched, project-specific bundled scope</p><div class="chs-rule" aria-hidden="true"></div></div>
+<p class="bt">These cards are complete working examples. Retain the anatomy—identifier, title, turnkey description, service standard, bundled Non-VAT price, and assumption note—while replacing every synthetic detail with approved project content.</p>
+<div class="sig-card">
+<span class="sig-code">01</span>
+<span class="sig-name">Core Equipment &amp; Materials Package</span>
+<div class="sig-desc">Illustrative bundled supply for the principal requirement: specified equipment, standard accessories, packing, incoming inspection, and coordinated delivery. Replace with exact brand, model, capacity, materials, dimensions, quantities, compliance references, inclusions, and exclusions.</div>
+<div class="sig-tier">Supply package · Verified specification · Controlled delivery</div>
+<div class="sig-price">
+<span class="sig-price-label">Illustrative · Bundled Package · Non-VAT</span>
+<span class="sig-price-amount">PHP 148,000</span>
+</div>
+<div class="sig-note">Synthetic example amount. Replace with the approved bundled client price.</div>
+</div>
+<div class="sig-card">
+<span class="sig-code">02</span>
+<span class="sig-name">Mobilization &amp; Site Execution Package</span>
+<div class="sig-desc">Illustrative mobilization, site coordination, competent labor, ordinary tools, installation support, access planning, testing assistance, housekeeping, and demobilization. State client-provided access, utilities, permits, shutdown windows, lifting needs, and concealed-condition assumptions.</div>
+<div class="sig-tier">Site package · Coordinated execution · Completion QA</div>
+<div class="sig-price">
+<span class="sig-price-label">Illustrative · Bundled Package · Non-VAT</span>
+<span class="sig-price-amount">PHP 96,000</span>
+</div>
+<div class="sig-note">Use only where site work is supported by the approved scope and qualified parties.</div>
+</div>
+<div class="sig-card">
+<span class="sig-code">03</span>
+<span class="sig-name">Quality, Documentation &amp; Turnover Package</span>
+<div class="sig-desc">Illustrative submittals, delivery records, inspection checklist, test or commissioning record where applicable, operating guidance, warranty register, and turnover summary. Replace with exact verified deliverables.</div>
+<div class="sig-tier">Documented QA · Turnover record · Warranty administration</div>
+<div class="sig-price">
+<span class="sig-price-label">Illustrative · Bundled Package · Non-VAT</span>
+<span class="sig-price-amount">PHP 42,000</span>
+</div>
+<div class="sig-note">Delete unsupported deliverables; never promise certificates or tests not verified.</div>
+</div>
+<div class="sig-card">
+<span class="sig-code">04</span>
+<span class="sig-name">Continuity &amp; Support Package</span>
+<div class="sig-desc">Illustrative optional follow-up, warranty coordination, one post-turnover review, and agreed response routing. Define frequency, response basis, coverage, exclusions, consumables, and chargeable visits.</div>
+<div class="sig-tier">Optional support · Defined service window · Single contact path</div>
+<div class="sig-price">
+<span class="sig-price-label">Illustrative · Bundled Package · Non-VAT</span>
+<span class="sig-price-amount">PHP 28,000</span>
+</div>
+<div class="sig-note">Keep optional only when genuine, deliverable, and separately approved.</div>
+</div>
+</main>
+<footer class="colophon colophon-docket">
+<div aria-hidden="true" class="footer-rail"><span></span></div>
+<div class="footer-zone footer-left">
+<div class="footer-eyebrow">UNIVERSAL MASTER</div>
+<div class="footer-imprint">Synthetic Working Example</div>
+</div>
+<div class="footer-zone footer-center">
+<div class="footer-seal"></div>
+<div class="footer-primary">Universal Quotation Program</div>
+<div class="footer-secondary">GSSC Integrated Corporation</div>
+</div>
+<div class="footer-zone footer-right">
+<div class="footer-page-label">Page</div>
+<div class="footer-page-number">03</div>
+</div>
+</footer>
+</section>
+<!-- PAGE 3 - Order Form -->
+<section class="page p-commercial">
+<div class="watermark"></div>
+<aside aria-hidden="true" class="margin-rail">
+<div class="margin-rail-rule"><span></span></div>
+<div class="margin-rail-copy">
+<span class="margin-rail-section">Quotation Master</span>
+<span class="margin-rail-dot">·</span>
+<span class="margin-rail-descriptor">Selection · Commercial Summary</span>
+</div>
+<div class="margin-rail-index">04</div>
+</aside>
+<header class="masthead">
+<img alt="GSSC Integrated Corporation" class="logo"/>
+<div class="meta">
+<div class="doctype">Quotation Master</div>
+<div>GSSC-QUOT-DEMO-GENERAL-2026-000 · Master v1.7</div>
+<div>15 July 2026 · Iloilo City</div>
+</div>
+</header>
+<main class="body">
+<div class="chs chs--primary" data-chs-category="quotation_major_section" data-chs-register="primary"><div class="chs-stamp"><span class="chs-numeral">II</span><span class="chs-tick" aria-hidden="true"></span><span class="chs-cat">Section</span></div><h2 class="chs-title">Commercial Summary</h2><p class="chs-descriptor">Illustrative quantities · approved-price placement</p><div class="chs-rule" aria-hidden="true"></div></div>
+<p class="bt">Replace every synthetic amount and quantity. Use fixed quantities where the requirement is certain and selectable quantities only when genuinely modular. The final total must independently reconcile with the approved commercial model.</p>
+
+<table class="dt">
+<thead>
+<tr><th>Work Package</th><th>Pricing Basis</th><th class="num">Bundled Price</th><th class="num" style="width:52px">Qty</th><th class="num" style="width:80px">Subtotal</th></tr>
+</thead>
+<tbody>
+<tr><td>Core Equipment &amp; Materials</td><td>Approved bundled scope</td><td class="num example-value"><span class="money no-break"><span class="currency">PHP</span> <span class="amount">148,000</span></span></td><td class="num example-value quantity-value">1</td><td class="num example-value"><span class="money no-break"><span class="currency">PHP</span> <span class="amount">148,000</span></span></td></tr>
+<tr><td>Mobilization &amp; Site Execution</td><td>Approved bundled scope</td><td class="num example-value"><span class="money no-break"><span class="currency">PHP</span> <span class="amount">96,000</span></span></td><td class="num example-value quantity-value">1</td><td class="num example-value"><span class="money no-break"><span class="currency">PHP</span> <span class="amount">96,000</span></span></td></tr>
+<tr><td>Quality, Documentation &amp; Turnover</td><td>Approved bundled scope</td><td class="num example-value"><span class="money no-break"><span class="currency">PHP</span> <span class="amount">42,000</span></span></td><td class="num example-value quantity-value">1</td><td class="num example-value"><span class="money no-break"><span class="currency">PHP</span> <span class="amount">42,000</span></span></td></tr>
+<tr><td>Continuity &amp; Support</td><td>Optional if selected</td><td class="num example-value"><span class="money no-break"><span class="currency">PHP</span> <span class="amount">28,000</span></span></td><td class="num example-value quantity-value">1</td><td class="num example-value"><span class="money no-break"><span class="currency">PHP</span> <span class="amount">28,000</span></span></td></tr>
+</tbody>
+<tfoot>
+<tr class="ref reference-total"><td colspan="4">Illustrative Reference · One of each package</td><td class="num example-value"><span class="money no-break"><span class="currency">PHP</span> <span class="amount">314,000</span></span></td></tr>
+<tr class="decision-total"><td colspan="4">Illustrative Program Total · Turnkey · Non-VAT — replace before release</td><td class="num example-value"><span class="money no-break"><span class="currency">PHP</span> <span class="amount">314,000</span></span></td></tr>
+</tfoot>
+</table>
+<p class="bt" style="font-style:italic;font-size:9px;color:var(--slate);margin-top:8px;">PHP 314,000 is synthetic demonstration content showing hierarchy and total placement. It is not a market benchmark, budget, supplier price, offer, or recommended amount.</p>
+<p class="bt">Where a requirement is genuinely modular, present it as a choice rather than a single figure. The anatomy below is the registered tier form: rank, name, bundled scope, and one Non-VAT amount per tier. Retain at most three tiers.</p>
+<div class="tiers"><div class="tier"><span class="tier-rank">Tier I</span><span class="tier-name">Essential</span><span class="tier-scope">Core supply and delivery against the verified specification, with standard documentation at turnover.</span><span class="tier-price">PHP 148,000 · Non-VAT</span></div><div class="tier tier--recommended"><span class="tier-rank">Tier II · Recommended</span><span class="tier-name">Programme</span><span class="tier-scope">Core supply plus mobilisation, coordinated site execution and progressive quality records.</span><span class="tier-price">PHP 236,000 · Non-VAT</span></div><div class="tier"><span class="tier-rank">Tier III</span><span class="tier-name">Programme + Support</span><span class="tier-scope">The full programme with an extended continuity window and scheduled post-turnover attendance.</span><span class="tier-price">PHP 314,000 · Non-VAT</span></div></div>
+</main>
+<footer class="colophon colophon-docket">
+<div aria-hidden="true" class="footer-rail"><span></span></div>
+<div class="footer-zone footer-left">
+<div class="footer-eyebrow">UNIVERSAL MASTER</div>
+<div class="footer-imprint">Synthetic Working Example</div>
+</div>
+<div class="footer-zone footer-center">
+<div class="footer-seal"></div>
+<div class="footer-primary">Universal Quotation Program</div>
+<div class="footer-secondary">GSSC Integrated Corporation</div>
+</div>
+<div class="footer-zone footer-right">
+<div class="footer-page-label">Page</div>
+<div class="footer-page-number">04</div>
+</div>
+</footer>
+</section>
+<section class="page p3">
+<div class="watermark"></div>
+<aside aria-hidden="true" class="margin-rail">
+<div class="margin-rail-rule"><span></span></div>
+<div class="margin-rail-copy">
+<span class="margin-rail-section">Quotation Master</span>
+<span class="margin-rail-dot">·</span>
+<span class="margin-rail-descriptor">Terms · Acceptance · Release</span>
+</div>
+<div class="margin-rail-index">05</div>
+</aside>
+<header class="masthead">
+<img alt="GSSC Integrated Corporation" class="logo"/>
+<div class="meta">
+<div class="doctype">Quotation Master</div>
+<div>GSSC-QUOT-DEMO-GENERAL-2026-000 · Master v1.7</div>
+<div>15 July 2026 · Iloilo City</div>
+</div>
+</header>
+<main class="body">
+<div class="chs chs--primary" data-chs-category="quotation_major_section" data-chs-register="primary"><div class="chs-stamp"><span class="chs-numeral">III</span><span class="chs-tick" aria-hidden="true"></span><span class="chs-cat">Section</span></div><h2 class="chs-title">Commercial Terms</h2><p class="chs-descriptor">Replace project variables; retain only supported protections</p><div class="chs-rule" aria-hidden="true"></div></div>
+<table class="dt">
+<thead><tr><th>ITEM</th><th>PARTICULARS</th><th class="num">MASTER GUIDANCE</th></tr></thead>
+<tbody>
+<tr><td>Cl. 1</td><td>Validity</td><td>Illustrative validity: thirty (30) calendar days. Replace only when current evidence or the approved project strategy supports another period.</td></tr>
+<tr><td>Cl. 2</td><td>Currency &amp; Tax</td><td>Amounts are in Philippine Pesos on a Non-VAT basis under GSSC’s registered tax status. Internal normalization formulas never enter client content.</td></tr>
+<tr><td>Cl. 3</td><td>Payment</td><td>Use the approved payment tier or project terms. State downpayment, milestones, invoice trigger, due date, and approved retention.</td></tr>
+<tr><td>Cl. 4</td><td>Delivery / Implementation</td><td>Use a supported lead time subject to written approval, site readiness, access, client dependencies, and availability.</td></tr>
+<tr><td>Cl. 5</td><td>Warranty</td><td>State only verified workmanship, manufacturer, product, or project warranty and the applicable exclusions.</td></tr>
+<tr><td>Cl. 6</td><td>Client Responsibilities</td><td>Define relevant access, approvals, measurements, utilities, permits, work windows, storage, security, and client information.</td></tr>
+<tr><td>Cl. 7</td><td>Variations &amp; Concealed Conditions</td><td>Changed quantities, revised specifications, concealed conditions, additional work, or acceleration require written approval and may alter price or schedule.</td></tr>
+<tr class="closing-clause"><td>Cl. 8</td><td>Governing Framework</td><td>Use the applicable agreement, PO, NTP, SOW, and current Philippine legal framework. Refer material legal issues to qualified counsel.</td></tr>
+</tbody>
+</table>
+<div class="gate gate-refined">
+<div class="gate-head">
+<div class="gate-label">Client Acceptance</div>
+<div class="gate-mark">Authorisation to Proceed</div>
+</div>
+<div class="gate-body">For a client-release derivative, replace this paragraph with the exact approved project title, scope reference, total, and commercial terms. This master itself is not for signature and is not an offer.</div>
+<div class="gate-lines gate-lines-refined">
+<div class="gate-field gate-field-signature"><div class="line"></div><div class="lbl">Authorised Client Signature</div></div>
+<div class="gate-field gate-field-date"><div class="line"></div><div class="lbl">Date</div></div>
+<div class="gate-field gate-field-name"><div class="line"></div><div class="lbl">Printed Name</div></div>
+<div class="gate-field gate-field-position"><div class="line"></div><div class="lbl">Position / Authority</div></div>
+</div>
+</div>
+<div class="signoff">
+<div class="closing">With our warm regards,</div>
+<img alt="GSSC Integrated Corporation" class="sig-lockup" src="{{GSSC_ASSET:signature}}"/>
+<!-- Overlay signature.png at .sig-slot when signed version required -->
+<div aria-label="Duke Y. Demayo - signature area preserved" class="sig-slot"></div>
+<div class="sig-line"></div>
+<div class="sig-name">Duke Y. Demayo</div>
+<div class="sig-title">President · Principal · Chief Operating Officer</div>
+<div class="sig-org no-break">GSSC Integrated Corporation</div>
+</div>
+</main>
+<footer class="colophon colophon-docket">
+<div aria-hidden="true" class="footer-rail"><span></span></div>
+<div class="footer-zone footer-left">
+<div class="footer-eyebrow">TEMPLATE CONTROL</div>
+<div class="footer-imprint">Not for Client Signature</div>
+</div>
+<div class="footer-zone footer-center">
+<div class="footer-seal"></div>
+<div class="footer-primary">management@gsscph.com · gsscph.com</div>
+<div class="footer-secondary">(033) 339-7472 · +63 928 370 3574</div>
+</div>
+<div class="footer-zone footer-right">
+<div class="footer-page-label">Page</div>
+<div class="footer-page-number">05</div>
+</div>
+</footer>
+</section>
+<div class="builder-card universal-master-guide" role="note"><strong>UNIVERSAL MASTER · SYNTHETIC WORKING EXAMPLE</strong><br/>Replace all demonstration content from approved project research. Preserve the locked four-page A4 system. This panel does not print.</div></body>
+</html>

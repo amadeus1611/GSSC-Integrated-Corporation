@@ -1,0 +1,281 @@
+{
+  "module_id": "17_numbering_and_toc_system",
+  "version": "1.0",
+  "role": "hard_default",
+  "purpose": "Govern how structural units are numbered, how their headers are set, and when and how a table of contents is generated. Numbering style and header aesthetic are a function of a declared category, not one flat convention.",
+  "human_note": "Read with 03_brand. This module owns the ordinal and the header register; 03_brand still owns the type scale, palette and rhythm those registers draw from.",
+  "scope": {
+    "governs": "ordinals, category words, header registers, contents-page generation and its trigger",
+    "does_not_govern": [
+      "the type scale, palette, tracking and rhythm themselves (03_brand)",
+      "locked chrome: masthead, margins, footer, watermark, marginalia, signature lockup",
+      "what facts may appear in a section (Execution Protocol Sections 05-21)"
+    ]
+  },
+  "categories": {
+    "quotation_major_section": {
+      "style": "roman_upper",
+      "category_word": "Section",
+      "indexable": true,
+      "reset_scope": "document",
+      "roman_ceiling": 39,
+      "fallback_style": "arabic",
+      "default_register": "primary"
+    },
+    "legal_article": {
+      "style": "roman_upper",
+      "category_word": "Article",
+      "prefix": "ARTICLE ",
+      "indexable": true,
+      "reset_scope": "document",
+      "roman_ceiling": 39,
+      "fallback_style": "arabic",
+      "default_register": "legal"
+    },
+    "legal_section": {
+      "style": "arabic",
+      "category_word": "Clause",
+      "indexable": false,
+      "reset_scope": "parent_article",
+      "roman_ceiling": null,
+      "fallback_style": null,
+      "default_register": "minor"
+    },
+    "appendix_annex": {
+      "style": "roman_upper",
+      "category_word": "Appendix",
+      "prefix": "APPENDIX ",
+      "indexable": true,
+      "reset_scope": "document",
+      "roman_ceiling": 39,
+      "fallback_style": "arabic",
+      "default_register": "primary"
+    },
+    "figure_chart": {
+      "style": "arabic",
+      "category_word": "Figure",
+      "prefix": "FIGURE ",
+      "indexable": false,
+      "reset_scope": "document",
+      "roman_ceiling": null,
+      "fallback_style": null,
+      "default_register": "plate"
+    },
+    "toc_entry_ref": {
+      "style": "roman_upper",
+      "category_word": "Contents",
+      "indexable": false,
+      "reset_scope": "document",
+      "roman_ceiling": 39,
+      "fallback_style": "arabic",
+      "default_register": "toc"
+    },
+    "sub_item_minor": {
+      "style": "roman_lower",
+      "category_word": "Item",
+      "indexable": false,
+      "reset_scope": "parent_section",
+      "roman_ceiling": 39,
+      "fallback_style": "arabic",
+      "default_register": "minor"
+    }
+  },
+  "indexable_rule": "A category declares whether its headers belong in a contents list. Navigational and subordinate headers -- toc_entry_ref, figure_chart, legal_section, sub_item_minor -- declare indexable false. Found during the 2.10.0 build's own first repass: the contents page carries a CHS header in the toc register, and an extractor that treated every CHS header as a section indexed the contents page inside its own contents list and shifted every subsequent ordinal by one.",
+  "roman_ceiling_rule": "A roman ordinal past XXXIX is unreadable in a running header. Past a category's declared ceiling the dispatcher falls back to the declared fallback_style. The fallback is deterministic and declared, never a silent truncation.",
+  "categorical_header_system": {
+    "status": "production, introduced 2.10.0",
+    "purpose": "One header skeleton, five quiet registers keyed to category and archetype. Replaces the legacy .section > .marker header.",
+    "skeleton": [
+      "chs-stamp (chs-numeral + chs-tick + chs-cat)",
+      "chs-title",
+      "chs-descriptor",
+      "chs-rule"
+    ],
+    "design_basis": {
+      "doctrine_drift_closed": "Kernel 2.9.0 recorded 03_brand.document_type_system.inherited_literals_px.section_numeral = 26.0px, but the quotation master shipped .section .marker .num at 56px, .page.p2 at 48px and .page.p3 at 46px. The refined numeral was written into doctrine and never applied to the template. CHS closes that drift rather than inventing a new number, and lands below the declared literal at 13px.",
+      "hierarchy_inversion_corrected": "The legacy header set the ordinal at 56px against a --fs-section 9px title: a 6.22:1 ratio in which the least semantic element on the page outweighed the name of the section it numbered. Editorial practice is the reverse -- an eyebrow label supports the heading it introduces and conventionally sits at roughly 40-60% of it, grouped tightly above. CHS primary sets the ordinal at 0.68:1 of the title.",
+      "register_not_ornament": "Editorial work favours consistency over novelty across a sequence of pages; a header treatment that delights once becomes tiring by the tenth. CHS therefore ships one skeleton and five registers rather than five headers.",
+      "measure_reclaimed": "The legacy marker reserved a 76px grid column for the ordinal. The CHS stamp is an eyebrow above the title, so the title now sets on the full 540px body measure."
+    },
+    "registers": {
+      "primary": {
+        "categories": [
+          "quotation_major_section",
+          "appendix_annex"
+        ],
+        "archetypes": [
+          "narrative_prose_body",
+          "appendix_annex_opening",
+          "commercial_schedule"
+        ],
+        "numeral_token": "--fs-dek",
+        "numeral_family": "display",
+        "title_token": "--fs-pull",
+        "title_family": "display",
+        "title_case": "none",
+        "descriptor": true,
+        "rule_weight": "--rule-hair",
+        "gold_tick": true,
+        "note": "Default editorial register. Title dominates; ordinal recedes to a gold jewel."
+      },
+      "legal": {
+        "categories": [
+          "legal_article",
+          "legal_section"
+        ],
+        "archetypes": [
+          "notarial_acknowledgment"
+        ],
+        "numeral_token": "--fs-dek",
+        "numeral_family": "display",
+        "title_token": "--fs-dek",
+        "title_family": "body",
+        "title_case": "uppercase",
+        "descriptor": true,
+        "rule_weight": "--rule-medium",
+        "gold_tick": true,
+        "note": "Flatter, statutory register. Sans uppercase title reads as instrument, not article."
+      },
+      "formal": {
+        "categories": [
+          "quotation_major_section"
+        ],
+        "archetypes": [
+          "signatory_acceptance",
+          "notarial_acknowledgment"
+        ],
+        "numeral_token": "--fs-dek",
+        "numeral_family": "display",
+        "title_token": "--fs-pull",
+        "title_family": "display",
+        "title_case": "none",
+        "descriptor": false,
+        "rule_weight": "--rule-strong",
+        "gold_tick": true,
+        "note": "Zero-latitude archetypes are undecorated: no descriptor, strongest rule."
+      },
+      "plate": {
+        "categories": [
+          "figure_chart"
+        ],
+        "archetypes": [
+          "chart_data_visualisation"
+        ],
+        "numeral_token": "--fs-kicker",
+        "numeral_family": "body",
+        "title_token": "--fs-caption",
+        "title_family": "body",
+        "title_case": "uppercase",
+        "descriptor": false,
+        "rule_weight": null,
+        "gold_tick": false,
+        "note": "No rule: the figure frame already supplies the edge. Two rules would fight."
+      },
+      "minor": {
+        "categories": [
+          "sub_item_minor",
+          "legal_section"
+        ],
+        "archetypes": [
+          "narrative_prose_body"
+        ],
+        "numeral_token": "--fs-kicker",
+        "numeral_family": "body",
+        "title_token": "--fs-body",
+        "title_family": "body",
+        "title_case": "none",
+        "descriptor": false,
+        "rule_weight": null,
+        "gold_tick": false,
+        "note": "Lowest register. Stamp and title share one line; no rule, no descriptor."
+      },
+      "toc": {
+        "categories": [
+          "toc_entry_ref"
+        ],
+        "archetypes": [
+          "table_of_contents"
+        ],
+        "numeral_token": "--fs-caption",
+        "numeral_family": "display",
+        "title_token": "--fs-pull",
+        "title_family": "display",
+        "title_case": "none",
+        "descriptor": true,
+        "rule_weight": "--rule-hair",
+        "gold_tick": true,
+        "note": "Contents opens in the primary proportion so it reads as a peer of the sections it indexes."
+      }
+    },
+    "token_px": {
+      "--fs-kicker": 8.0,
+      "--fs-caption": 10.0,
+      "--fs-body": 10.5,
+      "--fs-dek": 13.0,
+      "--fs-pull": 19.0,
+      "--fs-section": 9.0,
+      "--fs-folio": 11.0,
+      "--fs-dropcap": 64.0,
+      "--fs-title": 42.0
+    },
+    "legacy_inversion": {
+      "numeral_px": 56.0,
+      "title_px": 9.0,
+      "note": "Recorded so the audit can state the before/after ratio from data rather than from memory."
+    },
+    "rhythm": {
+      "unit": 4,
+      "sub_grid": 2,
+      "block_gap": 10
+    },
+    "hard_gates": [
+      "Every size, colour, tracking and rhythm value must resolve to a token already declared in 03_brand or in this module's token_px table.",
+      "No register may set the ordinal larger than the title it numbers.",
+      "The CHS layer ships as its own <style id=\"gssc-chs-extension\"> so it can be audited in isolation.",
+      "Legacy .marker CSS is preserved, never deleted: an unconverted header must still render as before."
+    ],
+    "executable": "gssc_runtime.py chsaudit <package.json> --file <built.html>",
+    "version": "3.0",
+    "page_overrides": {
+      "p-cover": {
+        "title": "--fs-dropcap"
+      }
+    },
+    "page_overrides_note": "A class-keyed resolver cannot see a font-size rule scoped by page. The Section 38 cover overture styles .page.p-cover .body h1.title with --fs-dropcap, so the title renders at 64px while a class-only lookup still costs .title at 42px. That is the same defect class as the chs-title substring overcharge arriving from the other direction, and the cover overture introduced it. Caught by Section 37 parityaudit on its first run against the build that created it. Every page-scoped override is declared here and resolved by the runtime, never inferred.",
+    "v2_changes": {
+      "toc_leader": "The contents row was a 3-track grid holding 4 children, so auto-placement created an implicit fourth column sized to the leader's own intrinsic content -- empty, height:0. The leader could never stretch and the dot leader could not render as specified. Grid has no primitive for \"let one item consume the space between two others\"; flex-grow does. The row is now a flex row and the leader is its only growing child.",
+      "toc_hierarchy": "The contents ordinal and title both sat at --fs-dek 13px, separated only by colour -- 1.00:1, contradicting the subordination principle CHS enforces everywhere else. The ordinal drops to --fs-caption 10px: 0.77:1. Stated reason: a reader looks a section up by TITLE and uses the ordinal only to confirm, so the title leads there for the same reason it leads in a header.",
+      "eyebrow_contrast": "The category eyebrow shipped mid_grey at 3.70:1 against ivory at 8px, below the small-text floor. Moved to slate, 6.96:1, which remains visibly recessive against the navy title."
+    },
+    "token_note": "--fs-title was registered in 2.12.0 when the cover revert returned the cover title to it. Sections 33A and 37 both failed on the first repass of that build until it was registered, which is the intended behaviour: a token in use and absent from the registry is a defect, not a detail.",
+    "v3_changes": {
+      "category_chip": "The category word becomes a bordered chip with its own ground, so it is a visual object rather than letter-spaced text. The registers were hierarchically correct but the entire visual event of a header was one 34px gold terminal.",
+      "bracket": "A short navy rule above the stamp mirrors the terminal below, so a header reads as bracketed rather than only closed.",
+      "category_accent": "The tick carries the category colour -- gold for primary, teal for legal, clay for plate. Hue is never the only signal: the ordinal and the category word both still say it in text."
+    },
+    "toc_depth": "Contents rows gain a category-keyed left tab and weighted ordinals. The ordinal keeps its SUBORDINATE SIZE -- the inversion corrected in 2.11.0 is not reintroduced -- and gains weight and a colour tab instead, so the contents page previews the document's category logic at the one place a reader sees the whole structure at once."
+  },
+  "toc": {
+    "min_sections": 3,
+    "always_for_tiers": [
+      "flagship"
+    ],
+    "never_for_types": [
+      "letterhead",
+      "operational_form",
+      "email_template"
+    ],
+    "build_order_rule": "Pagination settles FIRST, the contents page is generated SECOND from the settled folios. Generating a contents page before the page count is final produces folios that are wrong the moment an annex expands the document -- the gap recorded in the 2.10.0 draft, now a binding rule.",
+    "ordinal_rule": "Contents ordinals are re-derived through the category dispatcher, never copied from whatever numeral happens to be hardcoded in the body, so the contents page self-corrects when a section is inserted or removed.",
+    "leader_rule": "The dot leader reuses the master's own margin-rail dotted language and is implemented as the single flex-growing child of the contents row. It must never be placed as a grid item: an implicit auto-sized column collapses it to zero width, which is exactly how 2.10.0 shipped a leader that could not lead.",
+    "executable": "gssc_runtime.py tocgen <package.json> --file <built.html>"
+  },
+  "failure_modes": [
+    "Scanning for a bare class=\"num\" and picking up the commercial-table right-alignment utility of the same name as if it were a section ordinal.",
+    "Setting an ordinal larger than the title it numbers.",
+    "Introducing a header font size, colour or tracking value outside the declared tokens.",
+    "Generating the contents page before pagination settles.",
+    "Copying body ordinals into the contents page instead of re-deriving them.",
+    "Deleting the legacy .marker rules rather than superseding them."
+  ]
+}

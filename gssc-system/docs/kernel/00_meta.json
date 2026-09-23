@@ -1,0 +1,161 @@
+{
+  "module_id": "00_meta",
+  "version": "1.0",
+  "role": "wrapper",
+  "status": "production",
+  "purpose": "Declare kernel identity, architecture, reading order, override tiers, scope, and loading protocol.",
+  "human_note": "Read this first. The kernel is GSSC's portable operating context, not a template or asset pack.",
+  "kernel_identity": {
+    "name": "GSSC_Kernel",
+    "kernel_version": "2.16.1",
+    "release_date": "2026-09-22",
+    "owner": "GSSC Integrated Corporation",
+    "format": "hybrid JSON",
+    "supersedes": [
+      "GSSC_Kernel.json (v2.16.0)",
+      "GSSC_Kernel.json (v2.15.0)",
+      "GSSC_Kernel.json (v2.14.0)",
+      "GSSC_Kernel.json (v2.13.0)",
+      "GSSC_Kernel.json (v2.12.0)",
+      "GSSC_Kernel.json (v2.11.0)",
+      "GSSC_Kernel.json (v2.10.0)",
+      "GSSC_Kernel.json (v2.9.0)",
+      "GSSC_Kernel.json (v2.8.0)",
+      "GSSC_Kernel.json (v2.7.0)",
+      "GSSC_Kernel.json (v2.6.0)",
+      "GSSC_Kernel.json (v2.5.0)",
+      "GSSC_Kernel.json (v2.4.0)",
+      "GSSC_Kernel.json (v2.3.0)",
+      "GSSC_Kernel.json (v2.2.1)",
+      "GSSC_Kernel.json (v2.2.0)",
+      "GSSC_Kernel.json (v2.1.1)",
+      "GSSC_Kernel.json (v2.1.0)",
+      "GSSC_Kernel.json (v2.0.6)",
+      "GSSC_Kernel_v2_0_5_PRODUCTION.json",
+      "GSSC_Kernel_v2_0_4_PRODUCTION.json",
+      "GSSC_Kernel_v1_0.json",
+      "GSSC_Kernel_v1_1.json",
+      "GSSC_Kernel_v2_0_FULL.json",
+      "GSSC_Kernel_v2_0_1_PRODUCTION.json",
+      "GSSC_Kernel_v2_0_2_PRODUCTION.json",
+      "GSSC_Kernel_v2_0_3_PRODUCTION.json"
+    ],
+    "source_priority": [
+      "Current government-issued certificates and approvals",
+      "Current executed or authoritative corporate records",
+      "Current locked GSSC master files",
+      "Kernel canonical data",
+      "Older profiles, drafts, summaries, and chat memories"
+    ]
+  },
+  "architecture": {
+    "module_range": "00-18",
+    "modular_inside_single_file": true,
+    "doctrine_first": true,
+    "master_files_external": true,
+    "embedded_html_or_base64": false,
+    "principle": "The kernel teaches how to think and handle files; uploaded masters teach what to build.",
+    "conflict_rule": "When sources conflict, do not silently choose a convenient value. Record the conflict, prefer the highest-priority verified source, and prevent lower-priority documents from overriding it.",
+    "current_release_rule": "kernel_identity.kernel_version and the sole changelog entry with current_status=current identify the current production release.",
+    "package_container_rule": "The kernel ships inside GSSC_Master_Package.json alongside the execution protocol, the tokenized quotation payload, the brand_assets repository and the assembly engine. Binary assets are stored exactly once in brand_assets and referenced from the template as {{GSSC_ASSET:name}} tokens; hydration per Execution Protocol Section 28C is mandatory before any render or delivery."
+  },
+  "module_map": {
+    "00_meta": "wrapper and governance map",
+    "01_identity": "canonical corporate identity",
+    "02_governance": "active officers, future-only registry, signatory authority",
+    "03_brand": "editorial design DNA",
+    "04_firewall": "external disclosure controls",
+    "05_ip": "intellectual-property preservation",
+    "06_quotation_doctrine": "quotation engineering and commercial doctrine",
+    "07_website_doctrine": "website, motion, content, and Squarespace doctrine",
+    "08_document_doctrine": "profiles, letterheads, case notes, email, presentations, forms",
+    "09_legal_doctrine": "legal-handling governance without replacing counsel",
+    "10_template_engine": "Mode A Fidelity Cloner and Mode B Deconstruction Engine",
+    "11_registry": "known masters, assets, status, routing, and supersession",
+    "12_bootstrap": "startup protocol and execution routing",
+    "13_changelog": "append-only release history",
+    "14_accounting_compliance": "accounting controls, tax registrations, books, close, filings, evidence, and review gates",
+    "15_design_research_engine": "dynamic body-content design doctrine: always-research, token-translate, memory-based precedent, self-check/self-fix",
+    "16_continuous_optimization_discipline": "self-improvement governance: materiality gate distinguishing genuine optimization from preference, permanent doctrine capture, non-regression, honest self-assessment",
+    "17_numbering_and_toc_system": "categorical numbering, header registers, table of contents",
+    "18_page_archetype_creativity_engine": "region-level creative latitude routing",
+    "19_accessibility_doctrine": "Document accessibility floor; honest scope of what browser print-to-PDF guarantees and what it does not."
+  },
+  "override_tiers": {
+    "hard_override": {
+      "modules": [
+        "04_firewall",
+        "05_ip"
+      ],
+      "rule": "Never silently relax; deliberate kernel revision required."
+    },
+    "hard_default": {
+      "modules": [
+        "09_legal_doctrine",
+        "16_continuous_optimization_discipline",
+        "17_numbering_and_toc_system"
+      ],
+      "rule": "Preserve process and counsel requirements; do not invent legal conclusions."
+    },
+    "strong_default": {
+      "modules": [
+        "03_brand",
+        "06_quotation_doctrine",
+        "07_website_doctrine",
+        "08_document_doctrine",
+        "10_template_engine",
+        "15_design_research_engine",
+        "18_page_archetype_creativity_engine"
+      ],
+      "rule": "May be intentionally varied for a named deliverable after stating the deviation."
+    },
+    "canonical_data": {
+      "modules": [
+        "01_identity",
+        "02_governance",
+        "11_registry"
+      ],
+      "rule": "Change only from verified source information and version the kernel."
+    }
+  },
+  "reading_order": [
+    "00_meta",
+    "01_identity",
+    "02_governance",
+    "03_brand",
+    "04_firewall",
+    "05_ip",
+    "06_quotation_doctrine",
+    "07_website_doctrine",
+    "08_document_doctrine",
+    "09_legal_doctrine",
+    "10_template_engine",
+    "11_registry",
+    "12_bootstrap",
+    "13_changelog",
+    "14_accounting_compliance",
+    "15_design_research_engine",
+    "16_continuous_optimization_discipline",
+    "17_numbering_and_toc_system",
+    "18_page_archetype_creativity_engine",
+    "19_accessibility_doctrine"
+  ],
+  "starter_prompt": "Load GSSC_Kernel.json. Apply its identity, governance, firewall, IP, brand, quotation, website, document, legal, accounting/compliance, template, registry, and bootstrap rules. Inspect uploaded files before acting. Use Mode A for faithful HTML reproduction and Mode B for surgical deconstruction of finished authoritative HTML. Preserve source fidelity. Await my task.",
+  "scope": {
+    "does": [
+      "carry GSSC context across chats",
+      "classify uploaded masters",
+      "route template work",
+      "protect firewall and IP boundaries",
+      "standardize deliverables",
+      "record and resolve authoritative-source conflicts through explicit provenance"
+    ],
+    "does_not": [
+      "contain the actual master HTML files",
+      "contain the actual brand base64 pack",
+      "replace qualified Philippine counsel",
+      "certify regulatory compliance",
+      "remember context not captured in the kernel or current chat"
+    ]
+  }
+}

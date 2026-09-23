@@ -1,0 +1,481 @@
+{
+  "module_id": "03_brand",
+  "version": "1.0",
+  "role": "strong_default",
+  "purpose": "Preserve GSSC's editorial, premium, typographic design DNA.",
+  "human_note": "GSSC should feel authored, not templated.",
+  "positioning": {
+    "voice": "Confident, editorial, restrained, premium",
+    "tone": "Measured, precise, quietly authoritative",
+    "audience": "Executives, principals and decision-makers",
+    "metaphor": "A quarterly journal, not a brochure"
+  },
+  "philosophy": [
+    "Editorial minimalism with typographic authority.",
+    "Every element must earn its place.",
+    "Typography and spacing create hierarchy before color and graphics.",
+    "Preserve existing systems before redesign."
+  ],
+  "visual_system": {
+    "display_family": "Libre Baskerville or source-master equivalent",
+    "body_family": "Inter or source-master equivalent",
+    "colors": {
+      "navy": "#0d2463",
+      "navy_dark": "#09173d",
+      "gold": "#c8a44d",
+      "gold_deep": "#a8862f",
+      "ivory": "#faf8f3",
+      "ink": "#1a1d24",
+      "slate": "#4f5663",
+      "hairline": "#c9c9c4",
+      "gold_light": "#e6d4a7",
+      "mid_grey": "#7a818d",
+      "light_grey": "#d9d9d9",
+      "ivory_deep": "#f3efe4",
+      "paper_white": "#ffffff",
+      "row_alt": "#f5f2e8",
+      "teal_deep": "#1d4f4a",
+      "clay": "#8c4a3f",
+      "row_alt_deep": "#ece8dc"
+    },
+    "rules": [
+      "serif for authority",
+      "sans for clarity",
+      "generous margins",
+      "assets support typography",
+      "source-master geometry wins"
+    ],
+    "colors_note": "Complete against the universal master's :root and ENFORCED as of 2.16.0 by Section 43. The previous note read \"14 of 14 ... verified by extracting every custom property and comparing sets\", which was true when written at 2.9.0 and silently false from the moment teal_deep, clay and row_alt_deep were added -- the kernel declared 17 while the note still said 14. The comparison it describes had been performed once, by hand, and recorded as a standing fact. It is now performed on every run against the real template, so the count cannot go stale again. Found by the 2.16.0 whole-kernel claim sweep, not by noticing the number.",
+    "new_token_basis": "teal_deep, clay and row_alt_deep were added in 2.13.0 on measurement, not taste. The 2.12.0 palette supported a 3-series categorical set and collapsed past it: mid_grey (0.2176 luminance) sat 0.038 from gold_deep (0.2558), the classic \"adjacent categories merge in grayscale\" failure. teal_deep and clay occupy luminance slots that were empty and carry hues the palette did not have, so a 5-series set now separates in grayscale. row_alt_deep exists because the shipped row banding measured 1.055:1 against the paper -- past subtle and into invisible."
+  },
+  "motion": {
+    "character": "Slow, luxurious, intentional",
+    "rules": [
+      "one motion per moment",
+      "calm easing",
+      "viewport-aware reveal where appropriate"
+    ],
+    "avoid": [
+      "bounce",
+      "elastic easing",
+      "gimmicky parallax",
+      "autoplay carousel",
+      "attention pulse",
+      "fast marquee",
+      "layout-shifting hover"
+    ]
+  },
+  "photography": {
+    "default": "Avoid when possible",
+    "allowed_when": [
+      "original rather than generic stock",
+      "firewall-safe",
+      "editorially treated",
+      "properly released when client-related"
+    ]
+  },
+  "voice_rules": {
+    "prefer": [
+      "single-point accountability",
+      "turnkey program",
+      "coordination across disciplines",
+      "signature tier",
+      "under GSSC governance"
+    ],
+    "avoid": [
+      "hype",
+      "startup jargon",
+      "sales urgency",
+      "body-copy exclamation marks",
+      "emoji in formal deliverables"
+    ]
+  },
+  "deliverable_tiers": {
+    "tier_1": [
+      "quotations",
+      "company profile",
+      "website masters",
+      "legal masters"
+    ],
+    "tier_2": [
+      "case notes",
+      "capability sheets",
+      "engagement summaries"
+    ],
+    "tier_3": [
+      "internal drafts",
+      "team documents",
+      "operational forms"
+    ]
+  },
+  "success": "Different GSSC outputs immediately read as one publisher and one institutional identity.",
+  "brand_asset_registry": {
+    "rule": "Every governed brand image is registered in the package brand_assets repository exactly once, single-encoded, with its decoded-image SHA-256, pixel dimensions and role. An asset that exists only inside a template payload is NOT registered and must be extracted.",
+    "assets": {
+      "header": "Masthead wordmark. CSS variable --gssc-logo-header. 500x98 px.",
+      "seal": "Corporate seal. CSS variable --gssc-logo-seal. 196x200 px.",
+      "signature": "Signature lockup. CSS variable --gssc-logo-signature. 600x113 px.",
+      "watermark": "Page watermark, 581x600 px. Named in Execution Protocol Section 22 as locked chrome that must survive every conversion. Registered as a first-class asset in kernel 2.7.0; prior to that release it existed only inside the quotation payload and had no canonical source."
+    },
+    "failure_modes": [
+      "A governed brand image embedded in a template but absent from brand_assets",
+      "The same asset stored more than once inside one package",
+      "An asset delivered without verifying its declared decoded-image hash"
+    ]
+  },
+  "document_type_system": {
+    "status": "hard_default for any derivative built on a GSSC master template",
+    "purpose": "Close the gap that Module 03 previously left open: the visual system named families and colours but never a document type scale, a tracking policy or a vertical rhythm. Every derivative therefore invented its own, and a single build was measured carrying 19 distinct font sizes, 7 tracking values and 8 margin steps in one component layer.",
+    "principle": "A derivative extends the master's system; it does not start a new one. If a value can be inherited from the master, inherit it. If it cannot, it comes from the scale below and nowhere else.",
+    "scale_px": {
+      "micro": 6.6,
+      "small": 7.4,
+      "cap": 8.3,
+      "body": 9.3,
+      "dek": 13.0
+    },
+    "scale_note": "Five steps at roughly a 1.12 ratio. micro carries uppercase tracked labels, legends and folio-scale text; small carries marginal notes and captions; cap carries table cells, callouts and banner bodies; body carries running clause prose; dek carries party names and standfirsts.",
+    "line_heights": {
+      "micro": 1.3,
+      "small": 1.45,
+      "cap": 1.45,
+      "body": 1.5,
+      "dek": 1.2
+    },
+    "inherited_literals_px": {
+      "sig_org": 8.5,
+      "sig_title": 10.0,
+      "sig_name": 11.0,
+      "party_name": 13.0,
+      "section_numeral": 13.0
+    },
+    "inherited_literals_note": "These are the master's own .signoff and .dek values. A signature block in a derivative must read as the same publisher as the signature block in the quotation master, so it reuses those metrics rather than approximating them.",
+    "tracking_tokens": [
+      "--tracked",
+      "--tracked-cap",
+      "--tracked-tight"
+    ],
+    "tracking_rule": "Never type a letter-spacing value. Uppercase labels take --tracked, uppercase headings --tracked-cap, inline chips and micro labels --tracked-tight.",
+    "rhythm_px": {
+      "unit": 4,
+      "sub_grid": 2,
+      "block_gap": 10
+    },
+    "rhythm_rule": "Every vertical margin and pad is a multiple of the 2px sub-grid, and every separation between sibling content blocks is exactly one block_gap. One value for block separation is what makes a long document feel set rather than assembled.",
+    "font_fallback_parity": {
+      "rule": "A figure and the prose beside it must fall back to the same face. Reproduce --f-body and --f-display verbatim inside every SVG font-family; an abbreviated stack is a defect, not a shorthand.",
+      "sans_prefix": "Inter,-apple-system",
+      "serif_prefix": "Libre Baskerville,Hoefler"
+    },
+    "palette_closure": {
+      "rule": "No colour may appear in a derivative that is not in 03_brand.visual_system.colors.",
+      "chrome_exceptions": [
+        "#e5e3dc",
+        "#e8e6df"
+      ],
+      "chrome_note": "Screen surround and builder-card text, both defined by the master itself."
+    },
+    "balance": {
+      "max_spread_points": 26.0,
+      "rule": "Fill spread is measured across continuous-prose pages only. Annex openings and the execution page are deliberately self-contained and are excluded, because forcing them to match a target fill would damage the document to flatter a metric.",
+      "min_sample_pages": 3,
+      "sample_guard_rule": "A fill spread computed over fewer than min_sample_pages continuous-prose pages is arithmetic, not a measurement: at n=1 the spread is 0.0 by construction and reports as within limit regardless of what the document looks like. Below the floor the metric is reported as measurement_valid=false, never as a number. Found by the 2.10.0 build's own repass, when inserting the contents page made four of five pages structural openers."
+    },
+    "geometry_tolerance_px": 1.5,
+    "prohibited": [
+      "Inventing a font size that is not on the scale or inherited from the master.",
+      "Typing a letter-spacing value instead of using a tracking token.",
+      "Introducing a colour outside the brand palette.",
+      "Abbreviating a font stack inside a figure.",
+      "Describing a scale, rhythm or palette change as an optimization without the audit output."
+    ],
+    "categorical_header_system_ref": "Header registers and ordinals are governed by 17_numbering_and_toc_system. inherited_literals_px.section_numeral (26.0px) recorded the refined figure in 2.9.0 but the template shipped 56/48/46px; 2.10.0 closes that drift through the CHS primary register at 13.0px. The literal is retained unrewritten per append-never-rewrite discipline.",
+    "template_root_literals_px": {
+      "--fs-kicker": 8.0,
+      "--fs-title": 42.0,
+      "--fs-dek": 13.0,
+      "--fs-caption": 10.0,
+      "--fs-body": 10.5,
+      "--fs-bodyL": 11.5,
+      "--fs-dropcap": 64.0,
+      "--fs-numeral": 56.0,
+      "--fs-section": 9.0,
+      "--fs-price": 44.0,
+      "--fs-pull": 19.0,
+      "--fs-folio": 11.0,
+      "--fs-imprint": 8.0
+    },
+    "template_root_note": "The master template :root and document_type_system.scale_px are two distinct numeric systems that coexisted unreconciled through 2.10.0: scale_px governs the component extension layer (micro 6.6 / small 7.4 / cap 8.3 / body 9.3 / dek 13.0) while the template itself runs on the larger literals recorded here. typeaudit only ever checked the former, so the latter was outside every audit. Both are retained -- they genuinely govern different layers -- but the template set is now declared, and Section 37 parityaudit compares Module 17 tokens against it on every run.",
+    "contrast_registry": {
+      "small_text_floor": 4.5,
+      "method": "WCAG 2.x relative luminance. Print is not bound by WCAG, but the luminance physics are identical on paper: a pairing below the floor at small size reads faint under office lighting too.",
+      "pairings": {
+        "chs_category_eyebrow": {
+          "fg": "slate",
+          "bg": "ivory",
+          "size_px": 8.0,
+          "note": "CORRECTED in 2.11.0. Shipped mid_grey at 3.70:1, below the floor at 8px. slate reaches 6.96:1 and remains visibly recessive against the navy title, so the eyebrow keeps its supporting role without being faint."
+        },
+        "chs_ordinal": {
+          "fg": "gold_deep",
+          "bg": "ivory",
+          "size_px": 13.0,
+          "exempt_reason": "Redundant navigational marker, retained by explicit decision. The ordinal is not prose: the same value appears in the contents page and the margin rail, so no information is lost if it reads softly. The gold jewel against the navy title is the intended restraint of the register and the reason the treatment was adopted. Measured at 3.24:1 and accepted with that figure on record rather than silently."
+        },
+        "chs_title": {
+          "fg": "navy_dark",
+          "bg": "ivory",
+          "size_px": 19.0
+        },
+        "chs_descriptor": {
+          "fg": "slate",
+          "bg": "ivory",
+          "size_px": 10.0
+        },
+        "toc_title": {
+          "fg": "navy_dark",
+          "bg": "ivory",
+          "size_px": 13.0
+        },
+        "toc_folio": {
+          "fg": "navy_dark",
+          "bg": "ivory",
+          "size_px": 11.0
+        },
+        "toc_ordinal": {
+          "fg": "gold_deep",
+          "bg": "ivory",
+          "size_px": 10.0,
+          "exempt_reason": "Same redundant-marker decision as chs_ordinal; the folio and title carry the information."
+        },
+        "body_prose": {
+          "fg": "ink",
+          "bg": "ivory",
+          "size_px": 10.5
+        },
+        "cover_overture": {
+          "fg": "navy_dark",
+          "bg": "ivory",
+          "size_px": 64.0
+        },
+        "table_band": {
+          "fg": "ink",
+          "bg": "row_alt_deep",
+          "size_px": 9.5
+        },
+        "table_summary_row": {
+          "fg": "navy_dark",
+          "bg": "gold_light",
+          "size_px": 9.5
+        },
+        "chart_series_teal": {
+          "fg": "teal_deep",
+          "bg": "ivory",
+          "size_px": 7.0,
+          "exempt_reason": "Chart fill, not text. Legibility is carried by the declared pattern and the adjacent value label, never by the fill alone."
+        },
+        "chart_series_clay": {
+          "fg": "clay",
+          "bg": "ivory",
+          "size_px": 7.0,
+          "exempt_reason": "Chart fill, not text; same basis as chart_series_teal."
+        }
+      },
+      "non_text_tokens": [
+        "gold",
+        "hairline",
+        "ivory_deep",
+        "light_grey",
+        "mid_grey",
+        "navy",
+        "paper_white",
+        "row_alt"
+      ],
+      "non_text_waiver_rule": "A palette colour is either registered as a text pairing with a measured ratio, or listed here as non-text (a rule, a ground, a chart fill, a decorative stripe). Listing is a DECISION ON THE RECORD, not an exemption from thought: Section 43 fails when a colour is in neither list, so adding a token to the palette forces the question \"is this ever set as text, and at what size\" to be answered at the moment the token is added rather than discovered later in a printed proof."
+    },
+    "scale_ratio_note": "Consecutive ratios across scale_px are 1.121, 1.122, 1.120 then 1.398 at dek. The first three form a clean modular scale close to the classical major second (1.125); dek breaks it. Recorded and deliberately NOT changed in 2.11.0: dek is in live use across the master and every derivative, the 1.398 step is what separates a deck from body copy at a glance, and re-deriving it to ~11.7px would be an unmeasured aesthetic change failing the Module 16 OBJECTIVE_BASIS test. Revisit only with a rendered proof.",
+    "section_numeral_supersession": "Was 26.0px through 2.10.0 while the template shipped 56/48/46px -- a drift that survived a full release because nothing compared doctrine to implementation. 2.11.0 resolves it in favour of the shipped value, 13.0px, for a structural reason: 26px described a numeral that was still the dominant display element of its header. The Categorical Header System changed that architecture -- the ordinal is now an eyebrow that supports the title, not a display figure that competes with it -- so restoring 26px would reintroduce the inversion CHS was built to remove. The alternative (raise the ordinal to 26px and the title proportionally above it) was available and rejected: it would enlarge every section header on every page to preserve a number rather than a principle. Section 37 parityaudit now asserts equality between this literal and the shipped token, so the two can never silently diverge again.",
+    "data_series_palette": {
+      "rule": "Colour never carries meaning alone. Every series declares a pattern as a second channel, so the encoding survives grayscale print and colour vision deficiency.",
+      "grayscale_test": "A palette is valid only if every adjacent pair differs by at least 0.04 relative luminance. Measured and enforced by Section 39.",
+      "categorical": [
+        {
+          "token": "navy_dark",
+          "pattern": "solid"
+        },
+        {
+          "token": "gold_deep",
+          "pattern": "diagonal-hatch"
+        },
+        {
+          "token": "teal_deep",
+          "pattern": "dot"
+        },
+        {
+          "token": "clay",
+          "pattern": "cross-hatch"
+        },
+        {
+          "token": "gold",
+          "pattern": "horizontal-rule"
+        }
+      ],
+      "sequential": [
+        "ivory_deep",
+        "gold_light",
+        "gold",
+        "gold_deep",
+        "navy_dark"
+      ],
+      "diverging": {
+        "low": "navy_dark",
+        "mid": "ivory_deep",
+        "high": "clay"
+      },
+      "max_categorical_series": 5,
+      "note": "Capped at five. Past that, split the chart rather than adding hues -- the sixth series cannot be given a luminance slot that is both distinct from its neighbours and inside the brand.",
+      "pattern_vocabulary": [
+        "solid",
+        "diagonal-hatch",
+        "dot",
+        "cross-hatch",
+        "horizontal-rule",
+        "vertical-rule",
+        "grid-hatch"
+      ],
+      "pattern_vocabulary_rule": "The declared second channel for every series must come from this vocabulary, and the chart builder must implement every name in it. Two spare names (vertical-rule, grid-hatch) are declared ahead of need so a sixth or seventh series has somewhere to go that is already specified, rather than being invented at build time -- which is how a series ends up encoded by colour alone."
+    },
+    "table_emphasis_tiers": {
+      "tier_0_body": {
+        "bg": null,
+        "note": "Default row, paper."
+      },
+      "tier_1_band": {
+        "bg": "row_alt_deep",
+        "note": "Even-row banding. Raised from the near-invisible 1.06:1 tint to a measurable stripe that is still restrained."
+      },
+      "tier_2_header": {
+        "bg": "ivory_deep",
+        "rule": "navy_dark",
+        "note": "Column header: tinted ground plus a navy top rule, so the header reads as a header without a full fill."
+      },
+      "tier_3_summary": {
+        "bg": "gold_light",
+        "note": "Sub-total / reference row. The middle tier that did not exist: previously a reference total was indistinguishable from body copy."
+      },
+      "tier_4_decision": {
+        "bg": "navy_dark",
+        "fg": "ivory",
+        "accent": "gold",
+        "note": "The conclusive row. Unchanged treatment, now the top of a declared ladder rather than an isolated effect."
+      }
+    },
+    "table_tier_basis": "The 2.12.0 tables carried one loud row in an otherwise flat document: banding at 1.06:1 and a header tint at 1.08:1, both functionally invisible, against a decision-total row at 16.47:1. Four declared tiers replace that -- body, banded, header, summary, decision -- so emphasis is a ladder rather than a single effect, and every multi-row table closes on a declared tier.",
+    "component_registry": {
+      "status": "BINDING as of 2.16.0. A component not registered here is not a component; it is an ad hoc block, and the next document will reinvent it.",
+      "token_rule": "Every registered component resolves every colour to 03_brand.visual_system.colors, every size to template_root_literals_px, every step to a multiple of rhythm_px.sub_grid, and every border to one of the three declared rule weights. Module 15 stage_2_translate forbids inventing a value at component level; typeaudit fails the build if one appears.",
+      "layout_rule": "Every registered component uses a layout mode declared in resolved_box_model.supported_layout_modes, so the binding box model can measure it and Section 44 can balance-test it. A component the box model cannot see is a component that can silently overflow.",
+      "components": {
+        "metric_callout": {
+          "classes": [
+            "metric-strip",
+            "metric",
+            "metric-value",
+            "metric-label"
+          ],
+          "layout": "grid, 3 equal tracks",
+          "anatomy": [
+            "value",
+            "label"
+          ],
+          "tokens": [
+            "--fs-dek",
+            "--fs-kicker",
+            "--navy-dark",
+            "--slate",
+            "--rule-medium",
+            "--rule-hair",
+            "--hairline",
+            "--tracked-cap",
+            "--tracked-tight"
+          ],
+          "design_basis": "Convergent 2026 B2B proposal practice places the few decisive figures above the detail rather than inside it, because a reviewer scanning for viability should not have to parse a table to find them. Implemented as a hairline-ruled band with no fill, no shadow and no icon: the emphasis is positional, not decorative, which is what keeps it inside the restrained editorial register.",
+          "permitted_on": [
+            "cover",
+            "table_of_contents",
+            "commercial_schedule"
+          ]
+        },
+        "milestone_roadmap": {
+          "classes": [
+            "roadmap",
+            "phase",
+            "phase-ord",
+            "phase-name",
+            "phase-note"
+          ],
+          "layout": "grid, N equal tracks, N<=4",
+          "anatomy": [
+            "ordinal",
+            "phase name",
+            "phase note"
+          ],
+          "tokens": [
+            "--fs-caption",
+            "--fs-kicker",
+            "--gold-deep",
+            "--navy-dark",
+            "--slate",
+            "--rule-strong",
+            "--tracked-cap",
+            "--tracked-num"
+          ],
+          "design_basis": "A phase sequence read as prose forces the reader to reconstruct order and count; read as a row it is apprehended at once. The device reuses the rule weight and ordinal treatment the Categorical Header System already uses, so it reads as part of the document's existing numbering grammar rather than an imported infographic.",
+          "permitted_on": [
+            "table_of_contents",
+            "narrative_prose_body"
+          ],
+          "cap_rule": "At most four phases. A fifth track drives each cell below a legible measure at --fs-kicker on the 540px body column."
+        },
+        "tier_comparison": {
+          "classes": [
+            "tiers",
+            "tier",
+            "tier--recommended",
+            "tier-rank",
+            "tier-name",
+            "tier-scope",
+            "tier-price"
+          ],
+          "layout": "grid, 3 equal tracks",
+          "anatomy": [
+            "rank",
+            "name",
+            "bundled scope",
+            "one Non-VAT amount"
+          ],
+          "tokens": [
+            "--fs-dek",
+            "--fs-caption",
+            "--fs-kicker",
+            "--navy-dark",
+            "--gold-deep",
+            "--gold-light",
+            "--slate",
+            "--hairline",
+            "--rule-strong",
+            "--rule-medium",
+            "--rule-hair",
+            "--tracked-cap",
+            "--tracked-num"
+          ],
+          "design_basis": "A single price is a yes/no question; a tiered menu is a which question, and a reviewer choosing between options is already past the decision to proceed. GSSC has produced this shape before -- the three-option water filtration set -- entirely ad hoc. Registering the anatomy means the next tiered quotation inherits a reviewed pattern rather than reinventing one.",
+          "emphasis_rule": "The recommended tier borrows tier_3_summary from table_emphasis_tiers rather than introducing a fifth emphasis device, so the document keeps ONE vocabulary for \"this matters more\".",
+          "cap_rule": "At most three tiers. Beyond three the comparison stops reducing the decision and starts being the decision.",
+          "firewall": "Inherits program_cards firewall verbatim: no itemised cost, no supplier attribution, no margin wording. A tier shows one bundled Non-VAT amount and nothing about how it was built.",
+          "balance_rule": "Tiers are presented as parallel choices and are therefore bound by the Section 44 row-balance threshold. Scope prose must be written to comparable length; this is a content constraint the component imposes, enforced by execution."
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,2528 @@
+GSSC QUOTATION RESEARCH AND EXECUTION PROTOCOL
+Version 2.1 | 25 August 2026
+Owner: GSSC Integrated Corporation
+Classification: INTERNAL CONTROL DOCUMENT
+Status: AUTHORITATIVE CONTROL CANDIDATE — READY FOR MANAGEMENT ADOPTION
+
+======================================================================
+00. MACHINE-READABLE CONTROL HEADER
+======================================================================
+FILE_ROLE: RESEARCH_AND_EXECUTION_PROTOCOL
+PROTOCOL_VERSION: 2.0
+EXECUTABLE_RUNTIME: GSSC_MASTER_PACKAGE.runtime (gssc_runtime, stdlib-only Python)
+OWNER: GSSC Integrated Corporation
+APPLIES_TO: GSSC PRE-QUOTATION RESEARCH AND QUOTATION CONVERSION
+GOVERNING_KERNEL: GSSC_MASTER_PACKAGE.kernel; INTERNAL KERNEL VERSION AND CURRENT-STATUS MARKER CONTROL
+AUTHORIZED_TEMPLATE_INPUT: GSSC_MASTER_PACKAGE.quotation_template_payload_base64 (TOKENIZED FORM) OR A LATER EXPRESSLY APPROVED SUCCESSOR
+AUTHORIZED_ASSET_INPUT: GSSC_MASTER_PACKAGE.brand_assets OR A LATER EXPRESSLY APPROVED SUCCESSOR
+ASSET_HYDRATION_REQUIRED: YES
+PACKAGE_FORMAT: SINGLE-FILE JSON CONTAINER
+PRIMARY_OUTPUT_1: INTERNAL RESEARCH DOSSIER
+PRIMARY_OUTPUT_2: CLIENT-SAFE SELF-CONTAINED HTML QUOTATION
+RESEARCH_REQUIRED: YES
+CURRENT_EXTERNAL_VERIFICATION_REQUIRED: YES
+SOURCE_PRESERVATION_REQUIRED: YES
+CLIENT_FIREWALL_REQUIRED: YES
+MANAGEMENT_DECISION_GATE_REQUIRED: YES
+INDEPENDENT_CALCULATION_QA_REQUIRED: YES
+VISUAL_PARITY_QA_REQUIRED: YES
+REDESIGN_ALLOWED: NO
+AUTOMATIC_CLIENT_SENDING_ALLOWED: NO
+DEFAULT_EXECUTION_MODE: RESEARCH_FIRST_THEN_CONTROLLED_CONVERSION
+INSTRUCTION_PRIORITY: APPLY_FILE_CONTENT_NOT_FILENAME
+FAIL_CLOSED_ON_UNREADABLE_INPUT: YES
+PROJECT_DATA_AND_INTERNAL_ECONOMICS_MUST_REMAIN_SEPARATE: YES
+LOCKED_CHROME_PRESERVATION_REQUIRED: YES
+BODY_REGION_ONLY_CONTENT_EDITING: YES
+DELIVERABLE_SIZE_DISCIPLINE_REQUIRED: YES
+SINGLE_EMBED_ASSET_DEDUP_ALLOWED: YES
+OFFICER_ROSTER_SOURCE: GSSC_Kernel.json MODULE 02_governance
+DESIGN_RESEARCH_ENGINE_REQUIRED: YES
+DESIGN_DECISION_LOG_REQUIRED: YES
+DESIGN_DECISION_LOG_STORE: Dataverse table cr746_designdecisionlog OR equivalent SharePoint/Drive list
+CHANNEL_FAILURE_FALLBACK_REQUIRED: YES
+INLINE_VERIFICATION_RENDER_ALLOWED: YES -- SEE SECTION 28B, NARROW EXCEPTION TO THE SECTION 28A NO-BINARY-IN-CHAT RULE
+CONTINUOUS_OPTIMIZATION_DISCIPLINE_REQUIRED: YES -- SEE SECTION 22B AND KERNEL MODULE 16
+LAYOUT_BUDGET_CALCULATOR_AVAILABLE: YES -- SEE SECTION 23A AND KERNEL MODULE 10.layout_budget_reference (TEXT-BLOCK ESTIMATION ONLY, NOT A RENDERED-PIXEL CHECK)
+COLLISION_AND_BALANCE_CHECK_AVAILABLE: YES -- SEE SECTION 23B AND KERNEL MODULE 10.layout_budget_reference.collision_and_balance_reference (2D ESTIMATION, NOT A RENDERED-PIXEL CHECK)
+
+======================================================================
+01. PURPOSE AND OPERATING PRINCIPLE
+======================================================================
+This protocol controls the complete path from a client request to a researched,
+commercially defensible, client-safe GSSC quotation produced from the exact
+attached GSSC template source.
+
+The controlling principle is:
+
+RESEARCH BROADLY. VERIFY CURRENTLY. PRICE INTELLIGENTLY. PROTECT GSSC.
+DISCLOSE SELECTIVELY. PRESERVE THE TEMPLATE EXACTLY. NEVER INVENT.
+
+This protocol has two linked engines:
+
+ENGINE A — Research, costing, risk, legal and commercial positioning.
+ENGINE B — Client-safe extraction and exact source-preserving conversion.
+
+Research determines approved content. The attached authoritative template
+determines the document. Research never authorizes redesign.
+
+The permanent input layers are separate and must not be blended:
+
+1. DOCTRINE LAYER — the current attached GSSC production kernel.
+2. ASSET LAYER — the current attached authorized Base64 logo or asset payload.
+3. STRUCTURE LAYER — the current attached authoritative quotation template.
+4. EXECUTION LAYER — this protocol.
+5. PROJECT LAYER — the current client request, research, specifications,
+   drawings, quotations and supporting evidence.
+
+The internal research dossier and the client quotation are separate outputs.
+Internal economics, supplier information, legal analysis and negotiation limits
+must never leak into the client-safe quotation.
+
+======================================================================
+02. AUTHORITY, PRECEDENCE AND CONFLICT HANDLING
+======================================================================
+Use the following order when sources conflict:
+
+1. Current government-issued certificates, laws, regulations and official
+   regulatory guidance verified for the current task.
+2. Current executed or authoritative corporate records.
+3. Current locked GSSC master files and the attached authoritative template.
+4. Current GSSC production kernel.
+5. The client's current written request and confirmed technical requirements.
+6. Current verified market, supplier and labor evidence.
+7. Clearly labeled reasoned assumptions.
+8. Older profiles, drafts, summaries, prior quotations and chat recollections.
+
+Do not silently choose a convenient value. Record the conflict, identify the
+sources, apply the highest verified authority, and flag any conflict that could
+materially change scope, price, legality, risk or delivery.
+
+A filename containing FINAL does not by itself prove that a document is current,
+executed, approved, notarized or authoritative. Inspect content and status.
+
+Do not allow an older template, profile, quotation or draft to override current
+GSSC identity, governance, tax status, public contacts or firewall rules.
+
+CONTROL RELATIONSHIP:
+
+- The kernel controls canonical identity, governance, firewall, IP, doctrine,
+  registry and source-priority rules.
+- This protocol controls the project research sequence, commercial analysis,
+  management gate, client-safe extraction and conversion workflow.
+- The decoded template controls exact layout, DOM, CSS, assets, geometry and
+  print behavior for the named template role.
+- The project record controls confirmed current scope and management-approved
+  commercial decisions.
+- No layer may silently override a higher-priority control or perform a function
+  assigned to another layer.
+
+======================================================================
+03. STARTUP COMMAND AND REQUIRED FILE INSPECTION
+======================================================================
+Before researching, drafting or modifying any file:
+
+1. Load and apply the attached GSSC production kernel.
+2. Inspect every attachment before acting.
+3. Read brand_assets and inventory the exact assets. Each asset is stored once,
+   single-encoded, with its own decoded-image SHA-256. Verify every asset decodes
+   and that its hash matches the declared value.
+4. Decode the quotation payload and inspect its actual HTML, DOM, CSS, scripts,
+   assets, page geometry, typography, page breaks and print rules. The stored
+   payload is the TOKENIZED template: binary assets appear as {{GSSC_ASSET:name}}
+   placeholders. Hydrate per Section 28C before rendering or delivering anything.
+5. Identify the current client request and all project-specific supporting files.
+6. Classify every input.
+7. Confirm whether the task is research only, preliminary pricing, final
+   conversion, revision, audit or client release.
+8. Use the least-destructive source-preserving operation.
+
+Do not begin the final quotation merely because a template and client name are
+present. Complete the research, commercial, approval and firewall gates first.
+
+If an essential source cannot be read or decoded, stop final conversion, state
+the exact missing or unreadable input, and do not fabricate a replacement.
+
+PACKAGE PREFLIGHT — REQUIRED PASS/FAIL REPORT:
+
+RUN IT, DO NOT READ IT. The package carries an executable implementation of this
+preflight in the runtime part. Extract and run it:
+
+    python gssc_runtime.py preflight GSSC_Master_Package.json
+
+It exits 0 on PASS and 1 on PRECHECK FAILED, and prints one line per check. The
+prose below remains the governing specification; the runtime is its executable
+form. If the two ever disagree, the prose governs and the runtime is the defect.
+Manual execution of these checks remains acceptable where Python is unavailable.
+
+- Confirm the master package is present, readable and valid JSON, and that all
+  six top-level parts are present: manifest, kernel, execution_protocol,
+  quotation_template_payload_base64, brand_assets and assembly.
+- Validate the kernel object and report its internal kernel version.
+- Confirm the kernel has exactly the module count declared in
+  manifest.integrity.kernel_module_count, and exactly one changelog entry
+  marked current.
+- Validate quotation_template_payload_base64 as strict Base64 before decoding.
+- Confirm the decoded TOKENIZED template begins with <!DOCTYPE html> and ends
+  with </html>. Do NOT apply this markup test to brand_assets: those are binary
+  image payloads and must instead decode to their declared MIME type with a
+  matching sha256_of_decoded_image.
+- Confirm every {{GSSC_ASSET:name}} token in the template resolves to an entry in
+  brand_assets, and that no brand_assets entry is orphaned.
+- Record the SHA-256 fingerprints declared in manifest.integrity in the project
+  record, and recompute them using manifest.integrity.hash_method.
+- Confirm the quotation source role: finished source-derived master, category
+  master, geometry baseline, or universal template. Do not assume universality.
+- If the template contains prior project content, treat it as source content to
+  be replaced only in authorized variable regions; never carry prior client,
+  pricing, date, specification or project facts into the new quotation.
+- If any preflight check fails, label the package PRECHECK FAILED and do not
+  proceed to client release.
+
+======================================================================
+04. INPUT CLASSIFICATION AND PROJECT INTAKE
+======================================================================
+Classify each attachment as one of the following:
+
+- governing kernel
+- authoritative quotation master or template payload
+- authorized logo or asset payload
+- client request
+- drawing, measurement or site image
+- bill of quantities or technical specification
+- supplier quotation
+- market reference
+- labor-rate reference
+- legal or regulatory source
+- earlier quotation
+- internal calculation
+- executed agreement, purchase order, NTP or SOW
+- working draft
+- unknown source requiring inspection
+
+Create a PROJECT INTAKE record containing:
+
+- formal client legal name
+- client short name
+- attention person and verified title
+- project or program title
+- location and worksite
+- request date and quotation deadline
+- requested delivery, installation or completion date
+- exact scope requested
+- quantities and units
+- dimensions and measurements
+- required brands, grades, materials, finishes or performance criteria
+- inclusions
+- exclusions
+- client-provided items
+- site conditions
+- procurement requirements
+- required permits, licenses, testing or documentation
+- payment or billing requirements stated by the client
+- warranty requirements
+- requested alternatives or options
+- open questions
+- assumptions requiring approval
+
+Unsupported information must be marked PENDING CONFIRMATION. Never invent a
+quantity, measurement, specification, lead time, legal requirement, warranty,
+commercial term, price or client fact to complete the document.
+
+======================================================================
+05. RESEARCH STANDARD AND SOURCE DISCIPLINE
+======================================================================
+Research must be current, project-specific, geographically relevant and based on
+comparable scope. Use official and primary sources first where available.
+Cross-check material commercial conclusions using multiple independent sources
+when practical.
+
+For every factual or monetary research item, record:
+
+- fact or amount
+- currency
+- tax basis: VAT-inclusive, VAT-exclusive, Non-VAT or unknown
+- source title
+- source publisher or provider
+- source date or observation date
+- geographic basis
+- technical and scope basis
+- whether delivery is included
+- whether installation is included
+- whether warranty is included
+- retail, wholesale, distributor, contractor or turnkey classification
+- verification status
+- confidence: HIGH, MEDIUM or LOW
+- limitations or comparability adjustments
+
+Never combine values with different tax bases without first normalizing and
+showing the arithmetic internally. Never present an unknown tax basis as known.
+Do not fabricate citations, prices, quotations, statutes, wage orders, permits or
+technical standards.
+
+Research is evidence, not authority to overwrite a management-approved amount.
+Once management selects the commercial position, do not silently change it.
+
+======================================================================
+06. MARKET-RATE RESEARCH
+======================================================================
+For each product, service, work package or complete program, investigate:
+
+- local market rate
+- Western Visayas or relevant regional rate
+- Philippine national benchmark where useful
+- low-market reference
+- median or ordinary-market reference
+- upper-market reference
+- premium or turnkey reference
+- material-only price
+- supply-and-delivery price
+- supply-and-install price
+- fully managed turnkey price
+- date and validity of each reference
+- technical comparability
+- brand, grade, capacity, dimensions and performance
+- VAT or Non-VAT basis
+- freight, installation, mobilization, testing and warranty coverage
+- procurement channel and minimum order
+- lead time and availability
+
+Do not compare unlike scopes as if they were equal. A low online material-only
+listing is not a direct comparable to a GSSC turnkey engagement containing
+sourcing, validation, controlled delivery, installation coordination,
+documentation, warranty administration and single-point accountability.
+
+Required market conclusion:
+
+- LOW MARKET REFERENCE
+- MID-MARKET REFERENCE
+- UPPER-MARKET REFERENCE
+- PREMIUM/TURNKEY REFERENCE
+- SCOPE AND TAX NORMALIZATION
+- COMPARABILITY ADJUSTMENTS
+- CONFIDENCE LEVEL
+- RECOMMENDED GSSC MARKET POSITION
+
+======================================================================
+07. SUPPLIER AND ACQUISITION RESEARCH — INTERNAL ONLY
+======================================================================
+Evaluate, where applicable:
+
+- quoted total and line coverage
+- VAT-inclusive, VAT-exclusive, Non-VAT or unknown basis
+- quotation validity
+- stock and availability
+- delivery and freight
+- handling and unloading
+- installation or commissioning support
+- lead time
+- minimum order
+- payment requirements
+- warranty and replacement responsibility
+- returns and defects handling
+- technical compliance
+- capacity and reliability
+- price-change exposure
+- foreign exchange exposure
+- missing line items
+- exclusions
+- likely variation exposure
+- execution and dependency risk
+
+Supplier names, contacts, addresses, quotations, prices, bank information,
+representatives, sourcing routes, comparison-bid arrangements and shadow-bid
+arrangements are INTERNAL ONLY and must never appear in client content.
+
+Do not characterize a supplier quotation as GSSC's actual cost basis unless the
+current internal commercial record expressly confirms that treatment.
+
+======================================================================
+08. MATERIALS, EQUIPMENT AND CONSUMABLES RESEARCH
+======================================================================
+For physical work, identify and quantify where supported:
+
+- principal materials
+- dimensions and measured quantities
+- grades, thicknesses and finishes
+- fittings, fixings and accessories
+- coatings and finishing materials
+- consumables
+- cutting and fabrication loss
+- normal wastage
+- packaging and protection
+- replacement allowance
+- testing materials
+- freight and handling
+- storage
+- tools and equipment
+- lifting or access equipment
+- temporary works
+- disposal and clean-up requirements
+
+Separate the internal analysis into:
+
+DIRECT MATERIALS
+ACCESSORIES AND FIXINGS
+CONSUMABLES
+WASTAGE
+PACKAGING
+FREIGHT
+HANDLING
+EQUIPMENT
+TESTING
+DISPOSAL
+CONTINGENCY
+
+Do not expose internal item-level cost, supplier attribution or margin mechanics
+in the client-facing quotation. Use bundled client-safe scope descriptions and
+approved bundled prices.
+
+======================================================================
+09. LABOR, PRODUCTIVITY AND FULLY BURDENED COST RESEARCH
+======================================================================
+Labor research is mandatory whenever execution requires human work.
+
+Verify for the relevant location and task:
+
+- current applicable statutory wage floor
+- prevailing skilled-trade market rate
+- helper or general-labor market rate
+- foreman or supervisor rate
+- professional service rate where applicable
+- crew composition
+- estimated productive hours and workdays
+- overtime, night, weekend or holiday exposure
+- transportation
+- meals and accommodation where applicable
+- statutory or contractual labor burden where applicable
+- PPE and safety requirements
+- safety officer, permit or induction requirements
+- equipment operator requirements
+- mobilization and demobilization
+- installation difficulty
+- occupied-premises inefficiency
+- restricted work windows
+- access and lifting constraints
+- testing and commissioning labor
+- snagging and rework allowance
+- warranty call-back allowance
+
+Distinguish internally:
+
+1. statutory minimum baseline
+2. actual competitive skilled-market rate
+3. fully burdened internal labor cost
+4. market-facing labor value
+
+Do not price skilled or supervised work automatically at minimum wage. Do not
+invent labor productivity. State assumptions and use conservative allowances
+where current evidence is incomplete.
+
+======================================================================
+10. LOGISTICS, MOBILIZATION AND SITE-COST RESEARCH
+======================================================================
+Assess:
+
+- origin and destination
+- route and verified distance where relevant
+- vehicle type and trip count
+- fuel
+- tolls, parking, ferry and access fees
+- loading and unloading
+- lifting and rigging
+- building permits, gate passes and inductions
+- delivery-hour restrictions
+- staging and storage
+- security
+- traffic or access constraints
+- disposal
+- clean-up
+- return visits
+- failed-delivery risk
+- remobilization risk
+- inter-island or special handling
+- weather exposure
+
+Include logistics and site constraints in the fully loaded internal cost and risk
+analysis. Do not assume free delivery, unrestricted access or a single successful
+visit unless confirmed.
+
+======================================================================
+11. TECHNICAL, SAFETY AND REGULATORY RESEARCH
+======================================================================
+Determine whether the scope requires:
+
+- manufacturer instructions or certifications
+- Philippine National Standards or other applicable standards
+- building, electrical, structural, plumbing, mechanical, sanitary,
+  environmental, food, water, fire or occupational-safety compliance
+- local permits or clearances
+- licensed professionals or accredited contractors
+- approved drawings or calculations
+- product certifications
+- inspection
+- testing and commissioning
+- maintenance instructions
+- warranties
+- operating manuals
+- turnover documentation
+- as-built records
+- safety plans, PPE or method statements
+
+Distinguish GSSC's coordination and business-support role from regulated work.
+Do not state or imply that GSSC or its personnel directly perform regulated work
+for which a required professional license, permit or accreditation has not been
+verified. Where lawful performance requires a qualified or licensed party,
+state that requirement internally and use client-safe wording consistent with
+the contract and verified delivery arrangement.
+
+Flag uncertain compliance questions for qualified Philippine counsel or the
+appropriate licensed professional. Do not invent legal or engineering conclusions.
+
+======================================================================
+12. LEGAL RIGHTS, OBLIGATIONS AND CONTRACTUAL PROTECTION RESEARCH
+======================================================================
+The objective is not to find one-sided arguments. Identify the applicable legal
+and contractual framework, GSSC's legitimate rights, GSSC's obligations, the
+client's obligations, material risks and issues requiring professional review.
+
+Research and evaluate, as applicable:
+
+A. CONTRACT FORMATION AND AUTHORITY
+- authority of the client signatory or representative
+- quotation acceptance mechanics
+- relationship to the CMSA, SOW, PO or NTP
+- mobilization or procurement authorization
+- validity period
+- order of precedence
+- change control and variation orders
+
+B. PAYMENT PROTECTION
+- downpayment or mobilization funding where justified
+- milestone billing
+- invoice trigger
+- due date
+- late-payment treatment
+- suspension rights
+- approved variation reimbursement
+- cancellation costs
+- storage and remobilization
+- client-caused delay
+- retention of title where applicable and legally appropriate
+
+C. SCOPE AND CLIENT DEPENDENCIES
+- accuracy of client-supplied information
+- measurement assumptions
+- site readiness and access
+- utilities and approvals
+- permits and clearances
+- client-selected brands or specifications
+- concealed conditions
+- third-party dependencies
+- inspection and acceptance
+
+D. WARRANTY AND LIABILITY
+- workmanship warranty
+- manufacturer or product warranty
+- consumables
+- misuse
+- unauthorized alterations
+- abnormal or non-conforming site conditions
+- pre-existing defects
+- force majeure
+- repair or replacement process
+- proportionate limitation language subject to the governing agreement and law
+
+E. FAIR DEALING AND PROCUREMENT INTEGRITY
+- truthful descriptions and comparisons
+- sufficient material information
+- no deceptive, unfair or unconscionable conduct
+- no false urgency, scarcity or discount
+- no collusion or misrepresentation of independent bids
+- no hidden material exclusions
+
+F. REGULATED PRICING SCREEN
+- whether the subject is regulated or price-controlled
+- whether emergency controls apply
+- whether special consumer, public-procurement or sector rules apply
+
+Classify each legal conclusion as:
+
+VERIFIED STATUTORY OR REGULATORY REQUIREMENT
+VERIFIED GSSC CONTRACT POSITION
+COMMON COMMERCIAL PROTECTION
+PROJECT-SPECIFIC RECOMMENDATION
+COUNSEL REVIEW REQUIRED
+LICENSED-PROFESSIONAL REVIEW REQUIRED
+NOT APPLICABLE
+
+The kernel and this protocol govern process, not law. Use qualified Philippine
+counsel for legal advice, enforceability conclusions, contested interpretation
+and material final agreement review.
+
+======================================================================
+13. RISK REGISTER
+======================================================================
+Create a project-specific risk register covering, where applicable:
+
+- unclear scope
+- quantity or measurement error
+- price volatility
+- supplier availability
+- labor availability
+- lead-time pressure
+- site-access constraints
+- client-caused delay
+- payment delay
+- technical incompatibility
+- hidden conditions
+- permit or licensing requirements
+- warranty exposure
+- safety exposure
+- weather
+- logistics failure
+- foreign exchange
+- rework
+- cancellation
+- storage
+- third-party dependency
+- reputational risk
+
+For every material risk, record:
+
+RISK
+CAUSE
+PROBABILITY: LOW / MEDIUM / HIGH
+IMPACT: LOW / MEDIUM / HIGH
+COST OR SCHEDULE EFFECT
+MITIGATION
+CONTRACTUAL PROTECTION
+PRICING ALLOWANCE
+OWNER
+RESIDUAL RISK
+
+Do not bury material uncertainty inside contingency. Explain internally what the
+allowance protects against and avoid double-counting the same risk.
+
+======================================================================
+14. COMMERCIAL MODEL AND MAXIMUM SUSTAINABLE PROFIT
+======================================================================
+Commercial objective:
+
+MAXIMIZE SUSTAINABLE, DEFENSIBLE GSSC PROFIT WITHIN VERIFIED MARKET
+CONDITIONS, PROJECT RISK, LEGAL COMPLIANCE, FAIR DEALING, PROCUREMENT
+CREDIBILITY AND THE VALUE OF GSSC'S SINGLE-POINT ACCOUNTABILITY.
+
+Do not use a universal markup. Do not set price solely from supplier cost. Do not
+set price solely from perceived client wealth or inability to compare. Do not
+recommend an arbitrary maximum merely because it may be accepted.
+
+Build the internal fully loaded cost, where supported:
+
+FULLY LOADED INTERNAL COST CALCULATION — ALL APPLICABLE LINES ARE ADDED:
+01 VERIFIED ACQUISITION COST
+02 DIRECT MATERIALS AND CONSUMABLES
+03 WASTAGE
+04 DIRECT LABOR
+05 SUPERVISION
+06 LOGISTICS AND MOBILIZATION
+07 EQUIPMENT
+08 DOCUMENTATION AND COMPLIANCE
+09 PROJECT COORDINATION
+10 PAYMENT-TERM CARRYING COST
+11 WARRANTY RESERVE
+12 EXECUTION-RISK ALLOWANCE
+13 CONTINGENCY
+RESULT = SUM OF APPLICABLE LINES 01 THROUGH 13
+Do not subtract any listed cost merely because a text renderer displays list markers.
+
+Then compare:
+
+- fully loaded internal cost
+- market floor
+- mid-market comparable
+- upper-market comparable
+- premium turnkey comparable
+- verified client budget signal, if any
+- value of bundled GSSC accountability
+- risk-adjusted target
+- procurement credibility
+
+Produce these internal outputs:
+
+1. ABSOLUTE COST FLOOR
+   Below this amount, GSSC should not proceed under the stated assumptions.
+
+2. DEFENSIBLE NEGOTIATION FLOOR
+   Lowest recommended commercial acceptance after scope, risk, payment,
+   warranty and execution obligations.
+
+3. TARGET PRICE
+   Strong price providing healthy compensation for scope, capital and risk.
+
+4. RECOMMENDED CLIENT PRICE
+   Best balance of sustainable profit, market credibility, procurement
+   acceptance and GSSC value.
+
+5. UPPER DEFENSIBLE PRICE
+   Highest position supported by comparable scope, risk or demonstrable value.
+
+6. STRETCH PRICE
+   Use only when supported by genuine premium scope, urgency, scarcity,
+   compressed delivery, unusual risk or additional client value.
+
+7. WALK-AWAY TRIGGERS
+   Scope, payment, liability, schedule, risk or price conditions that make the
+   engagement commercially unacceptable.
+
+Show all arithmetic. Check it independently. Identify tax treatment and rounding.
+Do not expose any of these internal categories in client content.
+
+======================================================================
+15. PRICE JUSTIFICATION ENGINE
+======================================================================
+For the recommended amount, prepare an internal evidence-based justification
+using applicable value factors:
+
+- comparable turnkey market rate
+- complete bundled scope
+- sourcing and technical validation
+- controlled delivery
+- installation or implementation responsibility
+- program and site coordination
+- documentation and turnover
+- warranty administration
+- lead-time commitment
+- risk absorption
+- payment-term exposure
+- reduced client coordination burden
+- single-point accountability
+- after-delivery support
+- avoided fragmentation, delay or rework
+
+Never justify the client price by disclosing supplier cost, margin percentage,
+markup formula, cost basis, sourcing arrangement or shadow/comparison bidding.
+
+Preferred client-safe value expression:
+
+"The amount covers the complete turnkey program under GSSC coordination,
+including the stated scope, controlled delivery, implementation support,
+documentation and single-point accountability."
+
+Adapt the sentence to the verified scope. Do not claim benefits not supported by
+the project record.
+
+======================================================================
+16. DECISION ARCHITECTURE AND ETHICAL COMMERCIAL PERSUASION
+======================================================================
+Use only truthful, reviewable and non-coercive persuasion. Preserve the client's
+ability to make an informed decision.
+
+PERMITTED METHODS:
+
+- anchor against a genuine and comparable market range
+- establish scope and value before presenting price
+- contrast genuine Essential, Recommended and Signature options
+- identify one evidence-based recommended choice
+- reduce unnecessary cognitive load
+- show lifecycle or operational value when supported
+- explain client coordination burden avoided
+- clarify material inclusions and exclusions
+- explain risk transferred to or managed by GSSC
+- use specific, credible approved amounts
+- present a clear acceptance and next-step path
+- use validity periods tied to real source validity or volatility
+- use warranty and accountability as truthful reassurance
+- communicate urgency only when factually supported
+- use calm, confident, precise and non-pressuring language
+
+PROHIBITED METHODS:
+
+- false scarcity
+- fake deadlines
+- fabricated competitor prices
+- invented discounts or savings
+- bait pricing
+- hidden material exclusions
+- emotional pressure or intimidation
+- fear-based unsupported claims
+- misleading comparisons
+- presenting an optional upgrade as legally or technically mandatory
+- exploiting a known client mistake
+- concealing limitations or incompatibility
+- knowingly quoting an unsuitable specification
+- collusion
+- misrepresenting related, coordinated or comparison quotations as independent
+- language designed to prevent informed comparison
+
+Review test:
+
+Would the statement remain accurate and defensible if read together by the
+client's procurement team, legal counsel, auditor and GSSC management?
+
+If not, remove or rewrite it.
+
+======================================================================
+17. OPTION ARCHITECTURE
+======================================================================
+Where genuine alternatives assist the client, options may be structured as:
+
+ESSENTIAL — compliant minimum viable scope.
+RECOMMENDED — best balance of performance, risk and value.
+SIGNATURE — demonstrably higher-performance or more complete scope.
+
+Rules:
+
+- every option must be technically real and deliverable
+- the middle option must not be an artificial decoy
+- differences must be explicit and material
+- quantities and specifications must be comparable
+- the recommended option must be justified
+- do not create options when the client requests one fixed compliant scope
+- do not manipulate totals through hidden omissions
+- apply the firewall to every option
+
+======================================================================
+18. REQUIRED INTERNAL RESEARCH DOSSIER
+======================================================================
+Before final conversion, produce a structured internal dossier with:
+
+A. REQUEST UNDERSTANDING
+B. SOURCE AND FILE INVENTORY
+C. MISSING INFORMATION
+D. TECHNICAL SCOPE
+E. MARKET EVIDENCE
+F. SUPPLIER AND ACQUISITION ANALYSIS
+G. MATERIAL AND EQUIPMENT MODEL
+H. LABOR AND PRODUCTIVITY MODEL
+I. LOGISTICS AND SITE-COST MODEL
+J. COMPLIANCE REQUIREMENTS
+K. LEGAL AND CONTRACTUAL FLAGS
+L. RISK REGISTER
+M. FULLY LOADED COST MODEL
+N. COMMERCIAL PRICE POSITIONS
+O. RECOMMENDED PRICE
+P. NEGOTIATION FLOOR
+Q. UPPER DEFENSIBLE AND STRETCH POSITIONS
+R. WALK-AWAY TRIGGERS
+S. PRICE JUSTIFICATION
+T. CLIENT-SAFE CONTENT MAP
+U. FORBIDDEN INTERNAL CONTENT
+V. SOURCES, DATES, TAX BASES AND CONFIDENCE
+W. MANAGEMENT DECISIONS REQUIRED
+X. QA STATUS
+
+The dossier must clearly display assumptions, unresolved issues and confidence.
+It must be labeled:
+
+INTERNAL ONLY — DO NOT SHARE WITH CLIENT
+
+======================================================================
+19. MANAGEMENT DECISION GATE
+======================================================================
+Research does not automatically authorize client release.
+
+Before final conversion, present:
+
+- recommended commercial position
+- defensible negotiation floor
+- upper defensible position
+- stretch position, if justified
+- key scope and legal assumptions
+- principal risks
+- proposed payment terms
+- proposed delivery and warranty terms
+- open information
+- management decisions required
+
+Use the amount and terms expressly approved in the current project record. Do not
+silently substitute another amount, even if later research finds a different
+reference. Flag the issue and preserve approval control.
+
+If no approval is present, the output remains INTERNAL WORKING or INTERNAL REVIEW.
+It must not be labeled CLIENT RELEASE.
+
+======================================================================
+20. CLIENT-SAFE CONTENT MAP
+======================================================================
+After approval, create a clean content map containing only authorized fields:
+
+CLIENT_LEGAL_NAME
+CLIENT_SHORT_NAME
+ATTENTION_NAME
+ATTENTION_TITLE
+PROJECT_TITLE
+LOCATION
+ISSUE_DATE
+DOCUMENT_REFERENCE
+COVER_KICKER
+COVER_TITLE
+COVER_DEK
+EXECUTIVE_LEDE
+SCOPE_SUMMARY
+PROGRAM_ITEMS
+APPROVED_BUNDLED_PRICES
+APPROVED_TOTAL
+VALIDITY
+DELIVERY_OR_IMPLEMENTATION_PERIOD
+PAYMENT_TERMS
+WARRANTY
+INCLUSIONS
+EXCLUSIONS
+CLIENT_RESPONSIBILITIES
+ACCEPTANCE_TEXT
+PUBLIC_GSSC_IDENTITY
+PUBLIC_GSSC_CONTACTS
+
+Only place supported, approved, client-safe content in this map.
+
+PRIOR-PROJECT CARRYOVER SCAN — REQUIRED:
+
+Search the derivative for every prior client name, prior project title, prior
+reference code, prior date, prior location, prior quantity, prior specification,
+prior amount, prior option label and prior warranty or delivery statement found
+in the decoded source. Every match must be either intentionally retained as an
+approved static element or replaced. Report zero unexplained carryover matches.
+
+If an essential client-safe field is missing, mark it PENDING CONFIRMATION in the
+internal dossier and do not fabricate it in final HTML.
+
+======================================================================
+21. CLIENT-FACING FIREWALL — HARD STOP
+======================================================================
+Never disclose externally:
+
+- supplier names, contacts, addresses or representatives
+- supplier quotations or supplier pricing
+- unit acquisition cost
+- internal labor cost
+- fully loaded internal cost
+- margin percentage or markup logic
+- cost basis
+- internal worksheets or formulas
+- negotiation floor, stretch target or walk-away position
+- shadow-bid or comparison-bid arrangements
+- bank details
+- internal cash-flow information
+- processing facilities, warehouses or logistics routes
+- subcontractor identity unless expressly authorized and necessary
+- internal risk scoring
+- internal legal strategy
+- internal VAT-neutral formulas
+- legacy GSSC names
+- future-only people represented as current
+- unauthorized client identities, project values or site details
+
+Client-facing tax wording must use the current approved GSSC formulation, normally
+stating amounts in PHP on a Non-VAT basis under GSSC's registered tax status.
+Do not expose internal VAT-neutral arithmetic or formula language.
+
+When sensitive information is detected, remove or generalize it from the client
+layer and preserve it only in material clearly marked INTERNAL ONLY.
+
+======================================================================
+22. EXACT TEMPLATE CONVERSION — SOURCE-PRESERVING MODE
+======================================================================
+After research, approval and firewall review:
+
+1. Decode the exact attached quotation template payload.
+2. Decode and use the exact attached authorized asset payload where required.
+3. Treat the decoded quotation HTML as the authoritative source.
+4. Preserve the original file untouched.
+5. Create a versioned derivative.
+6. Replace only approved variable content regions.
+7. Preserve all static architecture and locked elements.
+8. Run parity, print and firewall QA.
+9. Return the completed HTML as a clickable download.
+
+CONTROLLING CONVERSION RULE:
+
+DO NOT RECREATE, APPROXIMATE, IMPROVE, SIMPLIFY, NORMALIZE OR REDESIGN THE
+QUOTATION. MODIFY ONLY AUTHORIZED VARIABLE CONTENT REGIONS. PRESERVE THE
+ORIGINAL DOM, CSS CASCADE, ASSETS, DIMENSIONS, PAGE COUNT, PRINT RULES,
+POSITIONING, TYPOGRAPHY, MARGINS, STRIPE BOUNDS, WATERMARK, FOOTER,
+ACCEPTANCE ARCHITECTURE AND CANONICAL SIGNATURE LOCKUP.
+
+Preserve, without casual alteration:
+
+- A4 geometry and source page dimensions
+- source margins and body column
+- px-based quotation typography
+- page breaks and overflow behavior
+- stripe position and measured bounds
+- watermark and opacity
+- header logo
+- footer seal
+- marginalia or right-rail system
+- page folios and docket footer
+- acceptance panel
+- signature placeholder and canonical signature lockup
+- print-color-adjust behavior
+- source asset dimensions, opacity, transparency and aspect ratio
+
+Never replace available original assets with placeholders or newly generated
+approximations. Never reconstruct the CSS when the original CSS is available.
+Never move assets or add decoration during conversion.
+
+EDITABLE BODY VERSUS LOCKED CHROME — OPERATIONAL BOUNDARY:
+
+Concentrate every authorized change inside the flowing body content region. The
+surrounding document chrome is locked and is not touched during ordinary content
+work.
+
+LOCKED CHROME — DO NOT EDIT DURING CONTENT WORK:
+- page margins and A4 geometry
+- masthead and heading band
+- running footer, seal and page folios
+- watermark and opacity
+- side stripe, marginalia and rails
+- the canonical signature lockup architecture
+
+EDITABLE BODY — AUTHORIZED VARIABLE REGION:
+- kickers, titles, deks and ledes
+- section headings and body prose
+- lists, scope statements and capability descriptions
+- approved amounts, terms and acceptance text inside their existing containers
+- the signatory name, titles and styled treatment defined in Section 24
+
+When adjusting content density, work the body only. Rebalance by tightening
+wording, merging overlapping items or converting suitable prose to lists. Do not
+solve a body-content problem by editing locked chrome.
+
+======================================================================
+22A. DYNAMIC BODY DESIGN -- RESEARCH, TRANSLATE, MEMORY (GOVERNED BY KERNEL MODULE 15)
+======================================================================
+Apply this section for every body-region content decision, on every generation,
+before proceeding to content-fit handling in Section 23. This section governs
+HOW body content is structured and styled; it does not authorize any change to
+locked chrome (masthead, margins, footer, watermark, marginalia, signature
+lockup), which remain governed by Sections 22 and 24 without exception.
+
+TRIGGER -- ALWAYS ON:
+
+Every body-content decision is freshly re-examined every time. There is no
+complexity threshold and no exemption for content with an existing anatomy
+(cards, tables). Re-examination may validly conclude that the existing pattern
+is still correct -- freshness means the decision is genuinely re-made, not that
+the output must differ from the last document produced.
+
+DELEGATION TOPOLOGY:
+
+- Operating inside the GSSC EXPIRA fleet: route the RESEARCH stage below to the
+  Research specialist agent as a genuine subagent delegation.
+- Operating as a licensed/derivative single-model deployment with no fleet
+  available: perform all five stages serially within one reasoning pass. The
+  doctrine is identical in both cases; only the execution topology differs.
+
+FIVE-STAGE LOOP:
+
+1. RESEARCH -- investigate the best way to present this specific content
+   (chart-vs-table-vs-prose selection, arrangement, emphasis), citing the real
+   precedent or pattern basis relied upon. Do not assert a design choice is
+   best practice without a statable basis; this follows the same anti-
+   fabrication discipline as Section 05.
+
+2. TRANSLATE -- re-express whatever Stage 1 recommends using ONLY the existing
+   GSSC token vocabulary (color palette, type scale, rule-weight grammar,
+   spacing rhythm, opacity values already declared in the kernel's brand and
+   quotation/document doctrine). This is a hard gate that never relaxes. A
+   structurally new layout is permitted; a new color, font size, spacing value,
+   or border weight outside the existing token set is not. If no existing
+   token fits, stop and flag for a versioned kernel/brand update rather than
+   inventing an ad hoc value silently.
+
+3. INTEGRATE -- place the translated result inside the editable body region
+   only, respecting the content-fit hierarchy in Section 23.
+
+4. SELF-CHECK -- verify no clipping/overflow, no overlap, every color/size/
+   spacing value traces to a declared token, locked chrome untouched, geometry
+   unchanged. This is a construction-rule check, not a rendered-pixel check; it
+   prevents defects by forcing token-only, geometry-preserving construction.
+
+5. SELF-FIX -- on any Stage 4 failure, apply the Section 23 escalation order
+   (tighten, consolidate, prioritize, flag) before reconsidering geometry. If
+   the failure stems from the Stage 1 choice itself being unworkable, cycle
+   back to Stage 1 with a simpler ask rather than forcing a bad fit.
+
+NOVEL VISUAL ELEMENTS:
+
+Any new visual primitive (chart, comparison graphic, or similar) introduced
+under this section must be constructed in pure HTML/CSS or inline SVG only.
+Do not depend on an external JavaScript charting library or a CDN resource.
+This preserves the single-file, offline, no-external-dependency portability
+already required of the authorized quotation and document masters.
+
+MEMORY MANDATE -- ALWAYS MEMORY-BASED, NEVER ISOLATED, ITERATIVELY IMPROVING:
+
+Never decide in isolation and never treat a generation as a blank first-ever
+instance. Before Stage 1, read relevant prior entries from the Design Decision
+Log for the same client and/or content type. After Stage 5 passes, write a new
+entry. This is mandatory on every generation, not optional. Beyond simple
+reference-or-divergence, treat prior entries as continuous-improvement input:
+explicitly consider what, if anything, can be refined relative to the closest
+relevant precedent, and state that refinement -- or the deliberate, reasoned
+choice not to refine -- in the logged rationale. Each iteration should be at
+least as good as, and where a genuine improvement is identified, better than,
+the last.
+
+Store -- STORAGE-AGNOSTIC: detect and use whatever persistent, queryable
+memory store the current deployment actually has, in this priority order:
+(1) a Dataverse table, using the canonical field set below mapped to that
+deployment's own Dataverse column names; (2) a SharePoint or equivalent list,
+using the same canonical field names as list columns; (3) a flat structured
+file (JSON/CSV) in OneDrive, Drive, or any other accessible file store, using
+the same canonical field names as keys/columns; (4) any other persistent,
+queryable memory system already available to the host model or agent (a
+vector store, database, CRM record, or similar), mapping the same canonical
+fields onto whatever native schema that system exposes. Only if none of the
+above exist may the engine fall back to session-local memory, and it MUST then
+explicitly disclose that no persistent store was available and precedent
+continuity does not survive beyond the current session.
+
+Canonical fields (storage-neutral names): document reference, client name,
+content type, body structure used, is-novel-pattern flag, design rationale,
+tokens referenced, date generated, source versions used, precedent reference.
+
+GSSC's own production deployment maps these to Dataverse table
+cr746_designdecisionlog with columns cr746_document_reference,
+cr746_client_name, cr746_content_type, cr746_body_structure_used,
+cr746_is_novel_pattern, cr746_design_rationale, cr746_tokens_referenced,
+cr746_date_generated, cr746_source_versions_used, cr746_precedent_reference.
+This is GSSC's concrete instance of the detection policy above, not the only
+permitted store: a licensed or derivative deployment is not required to use
+this exact table, prefix, or even Dataverse itself -- it must use some
+persistent store from the priority order above, mapped to the same canonical
+field names, so the doctrine remains portable across whatever memory system
+the host environment actually provides.
+
+Metadata discipline: every logged field must be populated from the actual
+current task -- the real client name, the real content type, the real tokens
+actually used, the real kernel/protocol/template versions in effect. Never a
+fabricated or placeholder value. If a field is genuinely unknown, mark it
+explicitly rather than guessing.
+
+FAILURE CONDITIONS SPECIFIC TO THIS SECTION:
+
+- Inventing a color, size, spacing, or border-weight value outside the
+  existing token set.
+- Touching locked chrome to accommodate a body design decision.
+- Deciding without reading the Design Decision Log first.
+- Fabricating a design-precedent citation.
+- Using an external JS charting library or CDN dependency for a novel visual.
+- Logging fabricated or placeholder metadata to the Design Decision Log.
+
+======================================================================
+22B. CONTINUOUS OPTIMIZATION AND ANTI-HALLUCINATION DISCIPLINE (GOVERNED BY KERNEL MODULE 16)
+======================================================================
+Apply this section whenever a user interaction surfaces a possible correction,
+efficiency gain, or doctrine gap in the kernel or this protocol itself -- as
+distinct from Section 22A, which governs per-document body-content decisions.
+
+MATERIALITY GATE -- REQUIRED BEFORE LABELING ANYTHING AN OPTIMIZATION OR FIX:
+
+A suggested or discovered change may be logged and framed as an optimization,
+fix, or improvement only if it passes ALL of the following:
+
+1. OBJECTIVE BASIS -- it removes or reduces a measurable inefficiency (redundant
+   bytes, redundant computation, an unimplemented doctrine gap, a demonstrated
+   defect or failure), not merely taste or style.
+2. NO UNREQUESTED CONTENT CHANGE -- it does not alter any information, content,
+   or functional output the user did not ask to change.
+3. INDEPENDENTLY VERIFIABLE -- the claimed improvement is checked by an
+   objective method (hash comparison, byte-count comparison, structural or
+   schema validation, a passing test) and that check is reported, not merely
+   asserted.
+
+A change that fails any of these tests may still be implemented if the user
+requests it, but MUST be logged as a preference honored, never as a fix or
+optimization. Calling a subjective or preference-driven change an
+"optimization" when it has no measurable, verifiable basis is a hallucination
+of value and is prohibited.
+
+CAPTURE AND VERSIONING:
+
+A change that passes the materiality gate becomes permanent doctrine: version
+the affected kernel module(s) and/or this Protocol's relevant section(s)
+following the existing changelog discipline (Kernel 00_meta/13_changelog and
+this Protocol's Section 32 change record), and never silently reintroduce a
+previously-fixed inefficiency in a later version. If a later version appears
+to reintroduce a pattern a prior changelog entry fixed, flag the regression
+explicitly rather than proceeding silently.
+
+A genuine lesson learned in one session must not be lost at the end of that
+session -- capture it into the kernel/protocol itself so a future session
+starting fresh automatically inherits it without needing to rediscover it.
+
+SELF-ASSESSMENT DISCIPLINE:
+
+When asked for a completeness score or quality estimate of this kernel,
+protocol, or any generated deliverable, ground every component of the score in
+a concrete, checkable criterion (a specific verified fact, a named remaining
+gap, a measured byte or percentage figure), not an unexplained number. State
+remaining gaps honestly, including gaps this discipline cannot itself close
+(for example, the continued absence of a rendered-pixel verification tool).
+
+PRIORITY RELATIVE TO GENERALIZATION:
+
+While preparing this kernel/protocol/package for use as a licensable,
+generalized derivative, prefer changes that also concretely benefit GSSC's
+own current, real use over abstractions that matter only for a hypothetical
+future derivative and provide no benefit to GSSC today. Generalization work
+must not degrade GSSC's own present deliverable quality, correctness, or
+efficiency.
+
+FAILURE CONDITIONS SPECIFIC TO THIS SECTION:
+
+- Labeling a subjective preference change as a fix or optimization.
+- Implementing a change that silently alters content or output not requested.
+- Claiming a byte/behavior improvement without independently checking it.
+- Losing a genuine lesson learned instead of capturing it into doctrine.
+- Silently reintroducing a previously-fixed inefficiency without flagging it.
+- Giving a self-assessment score with no stated, checkable basis.
+
+======================================================================
+23. CONTENT-FIT AND PRESERVATION HIERARCHY
+======================================================================
+Detect whether approved content is likely to exceed available space using the
+computable estimate in Section 23A before it is finalized, rather than relying
+on judgment alone. If approved content exceeds -- or is estimated by Section
+23A to be at risk of exceeding -- available space:
+
+1. Preserve template geometry and locked architecture.
+2. Remove repetition and tighten client-facing wording.
+3. Consolidate overlapping research into concise scope language.
+4. Prioritize contractual and decision-critical information.
+5. Use only an existing authorized region where appropriate.
+6. Flag secondary material for a separate approved attachment if necessary.
+7. Seek a specifically versioned structural change only when unavoidable.
+
+Do not solve overflow by:
+
+- shrinking locked typography
+- converting px typography to pt
+- moving the footer
+- reducing safe margins
+- clipping text
+- changing page dimensions
+- deleting legal or material commercial meaning
+- altering the signature lockup
+- silently changing page count
+
+======================================================================
+23A. LAYOUT BUDGET CALCULATOR -- COMPUTABLE OVERFLOW ESTIMATION (GOVERNED BY KERNEL MODULE 10 / 15)
+======================================================================
+HONESTY NOTE: this is a calibrated approximation, not a verified per-glyph
+font-metrics engine and not a rendered screenshot. No headless browser or
+HTML/CSS rendering engine (Chromium, Playwright, WeasyPrint, wkhtmltopdf) and
+no working package installer (pip/npm) were found available in the operating
+environment as of 6 August 2026 -- confirmed by direct search, not assumed.
+This method reduces, but does not eliminate, the need for a literal rendered
+check; if such a tool becomes available in a future environment, supersede
+this method with literal rendered measurement per Module 16 non-regression
+discipline.
+
+GEOMETRY CONSTANTS (extracted directly from the quotation master's own CSS,
+not assumed): page height 1123px; margin-top 96px; margin-bottom 120px; body
+column width 540px (fixed, non-responsive); body padding by page -- Page 1
+38/26px, Page 2 32/22px, Page 3 30/26px (top/bottom).
+
+FONT SIZE AND LINE-HEIGHT REFERENCE (px): fs-body 10.5, fs-bodyL 11.5,
+fs-title 42, fs-dek 13, fs-kicker 8, fs-caption 10, fs-section 9.
+Line-height ratios: lh-body 1.58, lh-display 1.12, lh-lede 1.65, lh-tight 1.4.
+
+ESTIMATION FORMULA:
+
+1. Average character width = 0.50 x font-size-px. This is a commonly used
+   design heuristic for proportional Latin body text, NOT independently
+   verified against the actual Inter/Libre Baskerville font metrics tables
+   (no internet-fetched font-metrics data available in this environment).
+2. Characters per line = column-width-px / average-character-width-px.
+3. Estimated lines = character-count / characters-per-line, rounded up.
+4. Estimated block height = estimated-lines x (font-size-px x line-height
+   ratio).
+5. Available budget = (page-height - margin-top - margin-bottom) - page's
+   body padding-top - body padding-bottom - height already used by prior
+   elements on that page.
+6. Safety margin = 0.85. Treat the block as fitting only if estimated block
+   height is at or below 85% of the available budget, absorbing kerning,
+   ligature, and hyphenation variance the flat character-width approximation
+   does not capture. Above that threshold, treat it as AT-RISK and apply the
+   Section 23 escalation hierarchy before finalizing.
+
+VALIDATION ON RECORD (6 August 2026): calibrated and sanity-checked against
+the master's own existing, presumed-working text blocks -- Page 1 lede
+paragraph (301 characters, computed at 12.8% of remaining budget), Page 1 dek
+paragraph (530 characters, 20.2%), Page 2 sig-desc block (286 characters,
+5.8%) -- and against constructed forced-overflow scenarios, including a case
+with 2,340 characters against only 100px of remaining budget, which correctly
+computed as AT-RISK at 381.6% fill. Both the PASS and AT-RISK verdict
+branches were confirmed to compute correctly from real arithmetic, not an
+always-true default.
+
+SCOPE LIMIT:
+
+This method estimates TEXT BLOCK height only. It does not estimate or verify
+image clipping, decorative-element overlap, CSS rendering defects, font-
+loading failures, or any other non-text visual issue. Those remain governed
+only by the qualitative construction-rule review already defined for Stage 4
+self-check; treat this calculator as a genuine reduction in correction
+iterations for text overflow specifically, not a complete substitute for
+eventual visual/rendered confirmation.
+
+======================================================================
+23B. COLLISION AND BALANCE DETECTION (GOVERNED BY KERNEL MODULE 10 / 15)
+======================================================================
+Extends Section 23A's single-block vertical estimate to genuine 2D layout
+risk: unintended overlap between simultaneously-visible elements (grid cells,
+side-by-side content), visual imbalance between elements meant to read as
+parallel or equal-weight, and horizontal overflow risk for fixed-width,
+non-shrinking elements. Still not a rendered screenshot -- models element
+geometry as axis-aligned bounding boxes from the template's own fixed CSS
+constants (column counts, gaps, fixed widths).
+
+AABB OVERLAP TEST:
+
+Two boxes (x, y, width, height) overlap if and only if:
+ax < bx+bw AND ax+aw > bx AND ay < by+bh AND ay+ah > by.
+Verified 6 August 2026 against a deliberately overlapping pair (correctly
+returned true) and a correctly-spaced 2-column pair (correctly returned
+false) -- both branches confirmed, not a default.
+
+GRID-ROW BALANCE CHECK:
+
+For cells sharing a grid row, row height equals the maximum of that row's
+cell heights (matching real CSS Grid auto-sizing behavior). Imbalance percent
+= 100 x (max cell height - min cell height) / min cell height. Flag as
+VISUALLY UNBALANCED above a 30% threshold -- an editorial-design heuristic
+for when a reader would notice unequal weight between elements presented as
+parallel choices, not an exact rendered measurement.
+
+Validated 6 August 2026 against the REAL Page 2 research-grid content from
+this session's own prior dynamic-body-design test output: correctly
+identified a genuine 33.3% height imbalance between two grid cells that had
+not been previously noticed without this check -- a concrete finding on real
+content, not only a synthetic demonstration. Also confirmed against a
+deliberately extreme forced case (699.4% imbalance), verifying the threshold
+fires correctly at the extreme end too.
+
+FIXED-WIDTH HORIZONTAL FIT CHECK:
+
+For an element with a fixed width and a non-shrinking constraint (for
+example flex-shrink:0), estimate whether given text fits on one line within
+that width: characters per line = allotted width px / (0.50 x font-size px);
+lines needed = ceiling(character count / characters per line). If the
+surrounding CSS does not permit wrapping and more than one line is needed,
+this is an overflow risk requiring attention before finalizing. Tested 6
+August 2026 against the template's actual Page 3 bar-chart label constants
+(150px width, 8px font-size): a 33-character label correctly estimated to
+fit on one line; a 62-character label correctly estimated to require 2 lines.
+
+USAGE:
+
+These checks feed Stage 4 self-check as objective data. They inform, not
+replace, the Stage 1 research decision on how to adjust a flagged layout --
+see Section 22A's research stage, which explicitly includes spatial
+alignment, relative sizing, and balance between simultaneously-visible
+elements within its scope. Decide the best content-level or arrangement-level
+fix using research judgment, then re-check with this section's calculations.
+
+SCOPE LIMIT:
+
+Currently models grid layouts and fixed-width flex children specifically --
+the patterns present in the current template. A genuinely novel future
+layout pattern not covered by these two models would need its own geometry
+formula added at that time, per Section 22B's continuous-optimization
+discipline.
+
+======================================================================
+24. GSSC IDENTITY, SIGNATURE AND TAX CONTROLS
+======================================================================
+Use current canonical identity from the attached production kernel and any higher
+priority verified current government source.
+
+For ordinary GSSC quotation work, preserve the canonical quotation signature
+lockup stated in the kernel and source master. Do not casually edit the name,
+titles, organization, image slot, line or spacing.
+
+STYLED SIGNATURE LOCKUP — CURRENT AUTHORIZED TREATMENT:
+
+The client-facing closing signature uses the current authorized presentation:
+
+- The integrated GSSC logo lockup sits directly above the signatory name.
+- A thin gold accent rule separates the logo from the name.
+- The signatory name renders in the GSSC gold accent color.
+- The title line renders in a muted italic beneath the name.
+- The complete signatory block anchors to the bottom of the closing page.
+- The default client-facing signatory is the Chief Executive Officer named as the
+  current signatory in the kernel governance module, unless the specific
+  instrument requires a different verified signatory.
+
+This treatment is a controlled typographic and color refinement inside the
+existing signature architecture. It does not move locked geometry, change page
+dimensions, rasterize text, or alter the watermark, footer, margins or masthead.
+Apply the exact signatory, titles and organization from the kernel. Preserve the
+Secretary's Certificate signatory rule without exception: the CEO does not sign
+the Secretary's Certificate itself; the Corporate Secretary signs it.
+
+Use current public GSSC contact information from the governing kernel. Do not
+copy superseded identifiers or contact details from an older quotation.
+
+Include statutory identifiers only when needed for the specific document.
+Do not publish unnecessary tax or registration data on decorative surfaces.
+
+The client-facing quotation must not show internal pricing formulas or explain
+internal tax normalization.
+
+Before CLIENT RELEASE:
+
+- Set the document control state to data-state="CLIENT_RELEASE" when that
+  attribute exists in the source architecture.
+- Client-visible tax labels must use "Non-VAT" unless a different exact phrase
+  is required by a current authoritative source.
+- Remove client-visible "VAT-neutral" wording while preserving internal tax
+  normalization only in the INTERNAL research dossier.
+- Do not alter geometry while applying these wording and state corrections.
+
+======================================================================
+25. CALCULATION, FACTUAL AND SOURCE QA
+======================================================================
+Independently verify:
+
+- quantities and units
+- extensions
+- subtotals
+- discounts, if genuinely approved
+- tax basis
+- rounding
+- option totals
+- final total
+- dates
+- client identity
+- document reference
+- specifications
+- delivery terms
+- payment terms
+- warranties
+- source validity
+- consistency between prose, tables and totals
+
+Do not rely only on the first arithmetic pass. Recalculate from source inputs.
+Report any discrepancy and do not conceal it by adjusting another line.
+
+Every external factual claim should be traceable to a current source or clearly
+identified as an approved project assumption.
+
+======================================================================
+26. THREE REQUIRED QA GATES
+======================================================================
+GATE 1 — RESEARCH QA
+
+PASS only if:
+- request and sources were inventoried
+- current market evidence was sought
+- comparable scope and tax bases were distinguished
+- materials, labor, logistics and risk were considered where applicable
+- technical and regulatory issues were checked
+- uncertainty and assumptions were labeled
+- no fact, price, law or specification was invented
+
+GATE 2 — COMMERCIAL, LEGAL AND FIREWALL QA
+
+PASS only if:
+- calculations were independently checked
+- fully loaded cost was considered
+- cost and negotiation floors were identified internally
+- recommended price is evidence-based
+- payment, warranty and execution exposure were considered
+- legal uncertainty is flagged for appropriate review
+- client-safe content excludes all forbidden internal information
+- no supplier, margin, cost or shadow-bid leakage exists
+- management approval is present for client release
+
+GATE 3 — VISUAL, TEMPLATE AND RELEASE QA
+
+PASS only if:
+- exact decoded source was used
+- official attached assets were used
+- DOM and CSS architecture were preserved
+- no unresolved tokens remain
+- A4 geometry and print rules remain intact
+- page count remains source-consistent unless specifically approved
+- no header, footer, marginalia, acceptance field or signature is clipped
+- all text remains inside safe bounds
+- acceptance fields remain practical and writable
+- canonical signature lockup is unchanged
+- client-facing identity and tax wording are current
+- print preview is visually sound at the approved settings
+- the output is a downloadable self-contained HTML file
+
+If any gate fails, do not label the output CLIENT RELEASE.
+
+======================================================================
+27. RELEASE STATES
+======================================================================
+Use one explicit state:
+
+INTERNAL WORKING
+INTERNAL REVIEW
+MANAGEMENT APPROVED
+COPILOT QA PASSED
+CLIENT RELEASE
+SUPERSEDED
+
+State changes must be based on actual completed gates. Do not infer approval.
+Do not automatically send the quotation to a client.
+
+CLIENT RELEASE requires:
+
+- management-approved commercial position
+- completed client-safe content
+- passed research QA
+- passed calculation and factual QA
+- passed firewall QA
+- passed visual and print QA
+- versioned output name
+
+======================================================================
+28. OUTPUT PACKAGE AND REPORTING
+======================================================================
+For a completed project, return:
+
+1. INTERNAL RESEARCH DOSSIER
+   Suggested name:
+   GSSC-INTERNAL-RESEARCH-[CLIENT]-[SUBJECT]-[YYYY]-[NNN]-v[VERSION].txt
+
+2. CLIENT-SAFE HTML QUOTATION
+   Use the naming convention required by the governing kernel and source master.
+
+3. COMPLETION REPORT
+   State:
+   - source template used
+   - source asset payload used
+   - operation mode
+   - output files
+   - management-approved amount and terms, without repeating hidden economics in
+     a client-facing file
+   - deviations, if any
+   - QA gate status
+   - unresolved limitations
+   - identity override applied to any older source
+
+Provide clickable download links for generated files.
+
+Approved print workflow unless the controlling source states otherwise:
+Chrome or Edge → Print → A4 portrait → Margins None → Background graphics ON →
+100% scale → Save as PDF.
+
+======================================================================
+28A. DELIVERY, FILE-SIZE AND DOWNLOAD ENGINEERING
+======================================================================
+A completed deliverable is not delivered until the recipient can actually open
+it. Apply the following delivery discipline.
+
+FILE-SIZE DISCIPLINE:
+- Keep the self-contained HTML as small as brand and print quality allow.
+- Embed each large Base64 asset ONCE. Where a masthead logo, seal, signature
+  lockup or watermark repeats on every page, reference a single embedded copy
+  through CSS (for example, content:url(...) on the element) instead of pasting
+  the same payload into every page. In Chrome and Edge this renders byte-for-byte
+  identical to a repeated src while dramatically reducing file size.
+- This single-embed deduplication is lossless and preserves the print system. It
+  is not a redesign and does not alter geometry, assets, watermark, footer or
+  margins. Background graphics must remain ON for CSS-embedded assets to print.
+- Oversized files can silently prevent the native download control from appearing
+  on the recipient's client. A leaner file restores reliable delivery.
+
+TRANSPORT COPY — OPTIONAL:
+- Where a still-smaller copy helps transport, a near-lossless copy may be produced
+  by quantizing only the flat brand raster assets (watermark, logos, seal,
+  signature) to a reduced palette. Keep the full-fidelity file as the
+  authoritative deliverable and label the reduced file clearly as a web/transport
+  copy. Never quantize away legibility or brand fidelity on the authoritative file.
+
+DELIVERY CHANNELS, IN ORDER OF PREFERENCE:
+1. Native self-contained HTML download control for the on-disk file.
+2. Plain, resolvable file links (for example, the user's OneDrive) presented as
+   plain text. Plain links render even when a recipient's client is intermittently
+   blocking cards, buttons or download chips.
+3. A simple link hub only when its links point to fully resolvable absolute URLs.
+
+DELIVERY RULES:
+- Prefer plain-text links as the resilient fallback whenever a recipient reports
+  that buttons, cards or download chips are not rendering.
+- Do not attempt to move binary or image-bearing files through chat text; binary
+  content cannot be reproduced faithfully in a message. Route such files through a
+  file channel (download control or file storage), never through transcription.
+- Confirm with the recipient that the delivered link or control actually opened
+  before treating the task as delivered.
+
+======================================================================
+28B. CHANNEL-FAILURE FALLBACK -- INLINE VERIFICATION RENDER
+======================================================================
+Section 28A governs delivery when the RECIPIENT'S CLIENT struggles to render a
+normally-sized delivery. This section governs the DIFFERENT condition where the
+DELIVERY MECHANISM ITSELF is unavailable -- a file-upload tool, document-library
+write, or direct file-send call errors, including on a trivial test file, such
+that no file channel (native download, file-storage push, or link) can succeed
+regardless of size or recipient client capability.
+
+DISTINGUISHING THE TWO CONDITIONS:
+
+- Recipient-rendering failure (Section 28A): the delivery call succeeds, but the
+  recipient reports the file, button, card, or chip did not display or open.
+- Channel failure (this section): the delivery call itself returns an error,
+  including on a minimal probe file, indicating the transport layer -- not the
+  recipient -- is the point of failure.
+
+Confirm which condition applies with a minimal test before choosing a remedy:
+if a trivial one-line file also fails to send or upload, treat it as a channel
+failure and apply this section rather than retrying Section 28A's channel list
+indefinitely.
+
+INLINE VERIFICATION RENDER -- PROCEDURE:
+
+1. Identify every large embedded binary payload in the deliverable (base64 image
+   data URIs, embedded fonts, or other non-text blobs) that is not itself the
+   subject of the current request.
+2. Replace each such payload with a short, explicitly labeled placeholder string
+   naming what was removed and stating it is byte-identical in the full-fidelity
+   file (for example: "[TRIMMED FOR CHAT DELIVERY -- watermark image, byte-
+   identical in the full package/file saved server-side]"). Never remove or
+   alter surrounding structure, CSS rules, DOM, or text content -- only the
+   binary payload itself is substituted.
+3. Confirm the resulting file is materially smaller and consists entirely of
+   plain text (HTML markup, CSS rules using var()-based tokens, JSON, or other
+   inherently textual content) suitable for direct inline transmission.
+4. Paste the complete resulting source inline in the chat response itself as
+   the deliverable, exactly once, in full -- not truncated or summarized.
+5. State plainly, in the same response, which specific elements were
+   placeholder-substituted, and that the unmodified, full-fidelity original
+   (with every real binary payload intact) remains saved and available through
+   the normal file channel once it recovers.
+6. This procedure does not alter, approximate, or lossily compress any text,
+   markup, CSS, or structural content. Only non-text binary payloads unrelated
+   to the current task are substituted, and only with explicit disclosure. It
+   is a controlled, narrow exception to the Section 28A rule against moving
+   binary content through chat text -- it never transcribes binary data itself,
+   it substitutes a disclosed placeholder for it.
+
+WHEN TO APPLY:
+
+Apply this section proactively the moment any file-delivery tool call errors,
+rather than waiting for the recipient to report a problem or retrying the same
+failing channel repeatedly. Different chat interfaces and API-connected models
+vary in file-upload size limits, binary-handling capability, and whether file
+delivery is supported at all -- this section is the universal fallback that
+functions inside any text-capable interface regardless of that variance.
+
+RECOVERY:
+
+Once the normal file channel is confirmed working again (for example, a later
+trivial probe file succeeds), resume standard Section 28A delivery for the
+full-fidelity file and note the successful handoff. The inline verification
+render is a stopgap for continuity and review, not a permanent replacement for
+the authoritative full-fidelity deliverable.
+
+FAILURE CONDITIONS SPECIFIC TO THIS SECTION:
+
+- Treating a channel failure as if it were a recipient-rendering problem, and
+  retrying Section 28A's channel list indefinitely without ever falling back.
+- Silently altering text, markup, CSS values, or structure while trimming --
+  only binary payloads may be substituted, and only with disclosure.
+- Failing to disclose which elements were placeholder-substituted.
+- Failing to note that the full-fidelity original remains available once the
+  channel recovers.
+- Attempting to transcribe actual binary data into chat text instead of using
+  a disclosed placeholder.
+
+======================================================================
+28C. ASSET HYDRATION AND ASSEMBLY (GOVERNED BY KERNEL MODULE 03 / 05 / 10)
+======================================================================
+The stored quotation payload is the TOKENIZED template. Every binary brand asset
+is held exactly once in brand_assets and referenced from the template by an
+opaque placeholder of the form {{GSSC_ASSET:name}}.
+
+WHY THIS EXISTS:
+Section 28A already requires single-embed Base64 asset deduplication. Storing an
+asset both in the asset repository and again inside the template violated that
+rule and inflated the shipped package, because template bytes are Base64-encoded
+a second time on the way into the container. Tokenizing removes the duplication
+without altering one character of text, markup, geometry or typography.
+
+HYDRATION IS MANDATORY BEFORE DELIVERY:
+The tokenized template is a STORAGE form, not a deliverable. It must never be
+sent to a client, opened as a finished document, or treated as the rendered
+quotation. Hydrate first.
+
+PROCEDURE (executable form: python gssc_runtime.py hydrate <package> -o out.html):
+1. Decode quotation_template_payload_base64 to UTF-8 text.
+2. For each token {{GSSC_ASSET:name}}, look up brand_assets[name].
+3. Replace the token with: data:<mime>;base64,<base64>
+   using the entry's own mime and base64 values, verbatim.
+4. Replace tokens ONLY. Never edit surrounding markup during hydration.
+5. Verify each decoded asset against its sha256_of_decoded_image before use.
+6. The hydrated result must equal assembly.verification.hydrated_template_sha256.
+   If it does not, stop: the package is damaged or has been altered. Do not
+   deliver, and do not attempt a partial repair.
+
+FAILURE CONDITIONS:
+- An unresolved token remains in a client-facing file. HARD STOP.
+- An asset hash does not match its declared value. HARD STOP.
+- A brand_assets entry is orphaned (declared but never referenced). Report it;
+  it indicates the template and the asset repository have diverged.
+- The hydrated hash does not match the declared verification value. HARD STOP.
+
+STANDALONE RENDERING:
+A hydrated file is fully self-contained and renders offline with no external
+request, exactly as before. This preserves the single-file offline portability
+principle. The saving is in transport and storage, never in the delivered
+artifact.
+
+======================================================================
+29. FAILURE CONDITIONS AND HARD STOPS
+======================================================================
+Do not proceed to client release when:
+
+- the governing kernel is missing or unreadable
+- the authoritative template cannot be decoded
+- required original assets cannot be decoded
+- the client request is too incomplete to establish material scope
+- price is unsupported by evidence or approval
+- calculations do not reconcile
+- required professional, regulatory or legal review is unresolved
+- a material identity conflict remains
+- supplier or internal economic information remains in client content
+- the HTML was rebuilt instead of surgically derived
+- the source geometry or locked signature system was altered
+- print preview shows clipping or overflow
+- client release approval is absent
+
+Partial internal research may still be delivered if clearly labeled with missing
+inputs and limitations. Never manufacture completeness.
+
+======================================================================
+30. STANDARD EMPLOYEE COMMAND
+======================================================================
+After attaching the current controlled files and project evidence, use:
+
+"Execute the attached GSSC master package. Apply the embedded GSSC production
+kernel and GSSC Quotation Research and Execution Protocol in full. Run the
+Section 03 package preflight first and report PASS or PRECHECK FAILED before
+any other work; the executable form is: python gssc_runtime.py all <package>.
+Read the Design Decision Log for this client and content type before making any
+body-content design decision, and write a new entry after the decision is made.
+Research the project using current verifiable sources; prepare the internal research dossier,
+commercial positions, risks, legal and technical flags, and client-safe content
+map. Do not invent facts. Do not expose supplier identities, internal costs,
+margin logic, formulas or comparison-bid arrangements. Do not create the final
+client quotation until a management-approved commercial position is present.
+For final conversion, decode the tokenized quotation source, apply the Section 28C
+hydration step using brand_assets, and surgically modify only the authorized
+variable regions. Do not rebuild or redesign it. Preserve the DOM,
+CSS, geometry, typography, assets, print rules, watermark, stripes, footer,
+acceptance system and canonical signature lockup. Run research, calculation,
+firewall and visual QA. Return the completed internal dossier and client-safe
+HTML as clickable downloads, with release state and limitations." 
+
+======================================================================
+31. FINAL COMMAND TO COPILOT
+======================================================================
+Apply this protocol silently and completely. Do not merely summarize it.
+Do not skip research because a supplier quote exists. Do not skip costing because
+a market price exists. Do not skip legal, technical, labor, logistics, risk or
+firewall review because the requested document appears simple.
+
+The required standard is:
+
+- commercially strong
+- evidence-based
+- current
+- legally and technically cautious
+- fair and non-deceptive
+- maximally profitable within defensible bounds
+- firewall-safe
+- source-preserving
+- visually exact
+- ready for controlled management release
+
+======================================================================
+32. PROTOCOL CHANGE RECORD
+======================================================================
+Version 2.0 -- 25 August 2026
+
+- Preserved the complete Version 1.9 architecture and every existing control. No
+  research, commercial, firewall, legal, QA or geometry control was relaxed.
+- Added an EXECUTABLE RUNTIME to the package (the runtime part): a stdlib-only
+  Python module implementing the Section 03 preflight, the Section 28C hydration,
+  the Module 10 layout-budget clip estimation, and the Module 15 Design Decision
+  Log read/write. No pip install, no network, no third-party dependency.
+- Rationale: every control in this protocol was previously prose that a human or
+  model had to read and apply by hand. The 2.6.0 preflight defect -- a mandatory
+  gate that had become literally inexecutable and went unnoticed for nineteen days
+  -- was possible precisely because nothing ever ran it. A control that is executed
+  cannot silently rot.
+- The runtime derives the expected package contract from manifest.parts rather than
+  a hardcoded part list. This structurally prevents a repeat of the 2.6.0 defect,
+  where a hardcoded four-file expectation drifted out of step with the real package.
+- The prose specification remains authoritative. Where prose and runtime disagree,
+  the prose governs and the runtime is the defect to be fixed.
+- Version numbered 2.0 rather than 1.10 deliberately: a 1.10 label sorts and reads
+  ambiguously against 1.1, and that exact ambiguity already produced a real registry
+  defect in which the kernel tracked the protocol as v1.1 while it stood at v1.8.
+
+Version 1.9 -- 25 August 2026
+
+- Preserved the complete Version 1.8 architecture and every existing control.
+- Repaired the Section 03 package preflight, which had become inexecutable. It
+  still instructed the operator to confirm four control files and to test every
+  decoded payload for a DOCTYPE declaration. The package became a single JSON
+  container on 06 August 2026 and the logo payload became a structured asset
+  repository holding raw PNG data, so the four-file check could not pass and the
+  DOCTYPE test failed against all three logos. With
+  FAIL_CLOSED_ON_UNREADABLE_INPUT set to YES this halted any compliant run at the
+  first gate. Verified by executing all three original checks against the real
+  package before the repair and confirming the failures were genuine, not
+  theoretical.
+- Rewrote the preflight for the single-container format: six-part presence check,
+  kernel module count against a declared value, single current changelog entry,
+  strict Base64 validation of the template only, the DOCTYPE test scoped to the
+  template alone, per-asset decode and hash verification, and a token/asset
+  reconciliation check in both directions.
+- Corrected the machine-readable control header: GOVERNING_KERNEL,
+  AUTHORIZED_TEMPLATE_INPUT and AUTHORIZED_ASSET_INPUT now name the parts that
+  actually exist. Added ASSET_HYDRATION_REQUIRED and PACKAGE_FORMAT.
+- Added Section 28C (Asset Hydration and Assembly), numbered within the existing
+  asset/delivery family so no existing section reference is renumbered.
+- Updated Section 30 (Standard Employee Command) to require a preflight
+  pass/fail report before any other work, and to name the hydration step.
+- No research, commercial, firewall, legal, QA or geometry control was relaxed,
+  reworded for convenience, or removed.
+
+Version 1.1 — 15 July 2026
+
+- Preserved the complete Version 1.0 research and conversion architecture.
+- Added deterministic four-file package preflight and strict Base64 validation.
+- Added SHA-256 source fingerprint requirements.
+- Clarified kernel, protocol, template and project-record authority boundaries.
+- Prevented a category-specific source from being assumed universal.
+- Added prior-project carryover scanning.
+- Made the fully loaded cost equation renderer-resistant.
+- Made filename placeholders renderer-resistant.
+- Added explicit CLIENT_RELEASE state and client-visible Non-VAT cleanup rules.
+- Retained the firewall, management gate, no-invention rule and exact-template
+  preservation requirements without relaxing any control.
+
+Version 1.2 — 27 July 2026
+
+- Preserved the complete Version 1.1 architecture and every existing control.
+- Added the editable-body versus locked-chrome operational boundary to the exact
+  template conversion section, formalizing body-region-only content work while
+  margins, masthead, footer, folios and watermark remain untouched.
+- Added the current authorized styled signature lockup treatment to Section 24:
+  integrated logo above the name, thin gold accent rule, gold signatory name,
+  muted italic title and bottom-anchored block, all inside the existing signature
+  architecture.
+- Added Section 28A delivery, file-size and download engineering: single-embed
+  Base64 asset deduplication, optional near-lossless transport copy, ordered
+  delivery channels and a plain-link fallback for clients that block rich controls.
+- Aligned signatory guidance with the updated kernel governance roster, including
+  the CEO default client-facing signatory and the unchanged Secretary's Certificate
+  signatory rule.
+
+Version 1.3 -- 05 August 2026
+
+- Preserved the complete Version 1.2 architecture and every existing control.
+- Added Section 22A: Dynamic Body Design -- Research, Translate, Memory,
+  governed by new Kernel Module 15 (Design Research & Integration Engine).
+- Established an always-on trigger for body-content design decisions: every
+  generation re-examines presentation choice, with no complexity threshold.
+- Defined the five-stage RESEARCH / TRANSLATE / INTEGRATE / SELF-CHECK /
+  SELF-FIX loop, with TRANSLATE as a hard, non-relaxing token-only gate.
+- Defined delegation topology for fleet versus single-model licensed contexts.
+- Mandated persistent, memory-based decision-making via a new Dataverse-backed
+  Design Decision Log (cr746_designdecisionlog), with a SharePoint/Drive list
+  as an equivalent alternate store. Metadata must be logic-derived from real
+  task facts, never fabricated.
+- Constrained novel visual elements to pure HTML/CSS/inline-SVG construction,
+  no external JS library or CDN dependency.
+
+Version 1.4 -- 06 August 2026
+
+- Preserved the complete Version 1.3 architecture and every existing control.
+- Added Section 28B: Channel-Failure Fallback -- Inline Verification Render.
+  Distinguishes recipient-rendering failure (Section 28A) from delivery-
+  mechanism/channel failure (this section), where the transport layer itself
+  errors regardless of file size or recipient capability.
+- Defined the inline verification render procedure: substitute large embedded
+  binary payloads with short, explicitly labeled placeholders stating they are
+  byte-identical in the full-fidelity file, then deliver the resulting
+  materially smaller, entirely-textual content inline in the chat response
+  itself. Text, markup, CSS, and structure are never altered -- only unrelated
+  binary payloads are substituted, always with disclosure.
+- Established this as a narrow, explicit exception to the existing Section 28A
+  rule against moving binary content through chat text: the exception applies
+  only via disclosed placeholder substitution, never actual binary
+  transcription.
+- Directed proactive application the moment any file-delivery tool call
+  errors (confirmed via a trivial test file), rather than waiting for
+  recipient complaints or retrying a failing channel indefinitely.
+- Noted this fallback is designed to function inside any text-capable chat
+  interface or API-connected model regardless of that interface's file-upload
+  size limits or binary-handling support, and defined recovery back to
+  standard Section 28A delivery once the channel is confirmed working again.
+
+Version 1.5 -- 06 August 2026
+
+- Preserved the complete Version 1.4 architecture and every existing control.
+- Generalized Section 22A's memory mandate to be storage-agnostic: replaced
+  the fixed Dataverse/SharePoint-only store definition with a priority-ordered
+  detection policy (Dataverse -> SharePoint/equivalent list -> flat JSON/CSV
+  file in any accessible drive -> any other persistent queryable memory system
+  the host model/agent has), all mapped onto the same canonical, storage-
+  neutral field names, with explicit disclosure required if only a session-
+  local fallback is available.
+- Added an explicit iterative-improvement objective to the memory mandate:
+  each generation must consider what can be refined relative to the closest
+  precedent and log that refinement (or the reasoned choice not to refine),
+  not merely reference or diverge from prior entries.
+- Retained GSSC's own concrete Dataverse table (cr746_designdecisionlog) as
+  GSSC's specific instance of the detection policy, explicitly clarified as
+  not the only permitted store -- this generalization is required groundwork
+  before this package can be adapted into a licensed derivative for a client
+  environment without Dataverse access.
+
+Version 1.6 -- 06 August 2026
+
+- Preserved the complete Version 1.5 architecture and every existing control.
+- Added Section 22B: Continuous Optimization and Anti-Hallucination Discipline,
+  mirroring new Kernel Module 16. Defines the materiality gate (objective
+  basis, no unrequested content change, independent verifiability) required
+  before any change may be labeled an optimization or fix rather than a
+  preference honored.
+- Defined capture-and-versioning for genuine lessons learned, non-regression
+  of previously-fixed inefficiencies, honest self-assessment grounded in
+  checkable criteria, and priority for changes that concretely benefit GSSC's
+  current use over generalization-only abstractions.
+
+Version 1.7 -- 06 August 2026
+
+- Preserved the complete Version 1.6 architecture and every existing control.
+- Added Section 23A: Layout Budget Calculator, a computable text-overflow
+  estimation method using the quotation master's own fixed geometry constants
+  (page height, margins, body column width, per-page padding), font-size and
+  line-height reference tables, and a stated estimation formula with an 0.85
+  safety margin.
+- Updated Section 23's introduction to require checking Section 23A's
+  estimate before relying on judgment alone when assessing whether content
+  will exceed available space.
+- Documented, on the record, that no headless browser/HTML-CSS rendering
+  engine and no working package installer exist in the operating environment
+  as of 6 August 2026 (checked directly), and that this method is a
+  calibrated approximation, not a substitute for eventual rendered
+  verification if such a tool becomes available.
+- Recorded the calibration/validation basis: sanity-checked against the
+  master's own existing text blocks and against constructed forced-overflow
+  scenarios, confirming both PASS and AT-RISK verdicts compute correctly.
+
+Version 1.8 -- 06 August 2026
+
+- Preserved the complete Version 1.7 architecture and every existing control.
+- Added Section 23B: Collision and Balance Detection, extending Section 23A's
+  single-block estimate to 2D layout risk -- AABB overlap testing, grid-row
+  balance checking (30% threshold), and fixed-width horizontal fit
+  estimation.
+- Recorded validation on real content: the grid-balance check correctly
+  identified a genuine 33.3% imbalance in this session's own prior test
+  output, not only a synthetic case, plus confirmed correct behavior on
+  deliberately constructed overlap, extreme-imbalance, and horizontal-overflow
+  test cases.
+- Connected these checks explicitly to Section 22A's research stage: spatial
+  alignment, relative sizing, and balance decisions are within that stage's
+  scope, with these calculations serving as objective input to -- not a
+  replacement for -- that research judgment.
+
+END OF PROTOCOL
+
+Version 2.1 -- 21 September 2026
+
+- Preserved the complete Version 2.0 architecture and every existing control. No
+  research, commercial, firewall, legal, QA or geometry control was relaxed,
+  reworded for convenience, or removed.
+- Added Section 23C (Footer and Geometric Overlap -- Cumulative Cursor). Section
+  23A was not wrong, it was low-resolution: it reports a whole-page fill
+  percentage and cannot name the block that crosses the footer or the pixel
+  amount it crosses by. Both are prerequisites for applying the Section 23
+  escalation ladder.
+- Added Sections 33, 33A, 34 and 35, numbered AFTER the existing change record
+  rather than renumbering it. Section 32 remains the change record and is no
+  longer the final section; that is a deliberate, stated choice, taken because
+  the 1.9-to-2.0 entry already records why ambiguous renumbering is a real
+  defect source in this package and renumbering four live cross-references
+  would reintroduce exactly that risk.
+- Recorded two defects found by reading the master's own CSS, and fixed both:
+  the 26px-versus-56px section-numeral drift between 2.9.0 doctrine and the
+  shipped template, and the 6.22-to-1 ordinal-over-title hierarchy inversion.
+- Recorded and fixed a third defect in the runtime rather than in the prose: the
+  Section-23-adjacent balance sample in pagefill() tested for markup
+  (div.dsec > div.n) that exists nowhere in this master, so the structural-opener
+  exclusion never fired and every page entered the prose sample.
+- The prose specification remains authoritative. Where prose and runtime
+  disagree, the prose governs and the runtime is the defect to be fixed.
+
+
+======================================================================
+23C. FOOTER AND GEOMETRIC OVERLAP -- CUMULATIVE CURSOR (GOVERNED BY KERNEL MODULE 10 / 17)
+======================================================================
+HONESTY NOTE: this shares Section 23A's calibrated approximation and none of
+its certainty. It is not a rendered screenshot. What changes is not the
+accuracy of the estimate but its RESOLUTION: 23A answers whether a page is too
+full on aggregate; it cannot answer which block crosses the footer, or by how
+many pixels. Those are the two facts an operator needs before applying the
+Section 23 escalation ladder, and neither was obtainable before this section.
+
+METHOD:
+
+Walk the FLOWED body blocks of each page in document order. Maintain a running
+Y cursor beginning at margin-top plus that page's own body padding-top. After
+each block, test its own bottom edge against two boundaries, both derived from
+geometry already declared in Module 10, not invented here:
+
+  SOFT  page-height - margin-bottom - body padding-bottom. The block has
+        entered the page's own reserve. Still inside the margin, but the
+        buffer is gone.
+  HARD  page-height - margin-bottom. The block has entered the footer band
+        itself -- running footer, seal, folio and contact anchor.
+
+On the universal master these resolve to a hard line at 1003px (1123 - 120) and
+a soft line at 977px or 981px depending on the page's own bottom padding.
+
+Absolutely-positioned locked chrome -- masthead, colophon, margin rail,
+watermark -- is EXCLUDED from the cursor. It does not participate in flow, and
+including it causes the walk to mis-attribute an overflow to a footer element
+that never flowed. The first prototype of this section did exactly that,
+naming .footer-secondary as the offending block on a forced fixture whose real
+cause was an injected paragraph several elements earlier.
+
+Figure heights, table cell type sizes and the declared block separation share
+the SAME cursor rather than being measured separately, so the walk is not a
+prose-only estimate.
+
+VALIDATION ON RECORD (21 September 2026): executed against the real hydrated 2.10.0
+derivative and against a deliberately forced-overflow fixture. Real derivative:
+5 pages, all PASS, smallest headroom 215px on page 5.
+Forced fixture: correctly FAILED, naming the offending block and its overflow
+in pixels. Both branches confirmed to compute from real arithmetic, not a
+default.
+
+SCOPE LIMIT:
+
+Raster image heights, CSS rendering defects and webfont-loading failure remain
+outside this check, as they remain outside every other check in this package.
+The header-boundary and marginalia-boundary variants of the same cursor are a
+direct extension of this method and are NOT yet built.
+
+======================================================================
+33. CATEGORICAL NUMBERING AND THE CATEGORICAL HEADER SYSTEM (GOVERNED BY KERNEL MODULE 17)
+======================================================================
+Numbering style and header aesthetic are a function of a declared CATEGORY, not
+one flat convention. The seven categories, their styles, reset scopes, roman
+ceilings and default registers are declared in kernel Module 17 and read from
+the package at run time so doctrine and enforcement cannot drift apart.
+
+A roman ordinal past a category's declared ceiling falls back to that
+category's declared fallback style. The fallback is deterministic and declared,
+never a silent truncation.
+
+THE CATEGORICAL HEADER SYSTEM:
+
+One skeleton -- stamp, title, descriptor, rule -- and five quiet registers:
+primary, legal, formal, plate and minor, plus toc for the contents page.
+
+Two measured defects motivated it, both found by reading the master's own CSS
+rather than by taste:
+
+- DOCTRINE DRIFT. Kernel 2.9.0 recorded section_numeral at 26.0px in
+  03_brand.document_type_system.inherited_literals_px. The template shipped the
+  same element at 56px, 48px and 46px across its three section pages. The
+  refinement was written into doctrine and never applied. This section closes
+  that drift and lands below the declared literal.
+- HIERARCHY INVERSION. The legacy header set the ordinal at 56px against a 9px
+  title: 6.22 to 1, in which the least semantic element on the page outweighed
+  the name of the section it numbered. Editorial practice is the reverse. An
+  eyebrow label supports the heading it introduces, conventionally at roughly
+  40 to 60 percent of it, grouped tightly above. The primary register sets the
+  ordinal at 0.68 to 1 of its title.
+
+The legacy .marker rules are PRESERVED, never deleted. An unconverted header
+still renders exactly as before, so conversion may be partial without breaking
+a page. Section 22's source-preservation discipline is not relaxed by this
+section.
+
+======================================================================
+33A. CATEGORICAL HEADER AUDIT
+======================================================================
+Executable: gssc_runtime.py chsaudit <package.json> --file <built.html>.
+
+Verifies register validity, register-to-category legality, that the CHS layer
+declares no raw font size, that every size token is registered in Module 17,
+that tracking is inherited rather than typed, that the palette is closed, that
+vertical rhythm sits on the declared sub-grid, that no register inverts ordinal
+against title, and that no unconverted legacy header survives in a document
+claiming conversion.
+
+======================================================================
+34. TABLE OF CONTENTS (GOVERNED BY KERNEL MODULE 17)
+======================================================================
+TRIGGER: a contents page is generated for flagship-tier documents, or for any
+document carrying at least the declared minimum number of sections. Letterheads,
+operational forms and email templates never carry one.
+
+BUILD ORDER IS BINDING: pagination settles FIRST, the contents page is generated
+SECOND, from the settled folios. Generating it earlier produces folios that are
+wrong the moment an annex expands the document.
+
+ORDINALS ARE RE-DERIVED through the Section 33 dispatcher, never copied from
+whatever numeral is hardcoded in the body, so the contents page self-corrects
+when a section is inserted or removed.
+
+THE LEADER reuses the master's own margin-rail dotted rule language. No new
+leader style is introduced.
+
+======================================================================
+35. PAGE ARCHETYPE CREATIVITY ENGINE (GOVERNED BY KERNEL MODULE 18)
+======================================================================
+Creative latitude is resolved REGION BY REGION, not page by page, and is
+expressed as a budget from 0 to 3.
+
+  0  Verbatim. Module 15 Stage 1 is skipped entirely. Deviation is a hard stop
+     of the same tier as Sections 21 and 24.
+  1  Token-constrained micro-variation within already-approved states.
+  2  The full Module 15 loop under the normal token vocabulary.
+  3  The full loop plus a mandatory external precedent check before Stage 2.
+
+Where a page carries more than one archetype, each region resolves
+independently and THE LOWEST BUDGET IN PLAY GOVERNS any decision spanning them.
+A budget-0 region never inherits latitude from a budget-2 neighbour.
+
+This is the rule the master itself requires: its final page carries the Section
+III commercial body, which is fully researchable, and the canonical signoff
+block, which carries no latitude at all, on the same sheet.
+
+Module 18 creates NO new authority. Every locked element names the module that
+actually owns it -- 02 and 06 for signatory, 09 for notarial, 03 for type and
+palette, 04 for firewall, 10 for figure geometry.
+
+Version 2.2 -- 21 September 2026
+
+- Preserved the complete Version 2.1 architecture and every existing control. No
+  research, commercial, firewall, legal, QA or geometry control was relaxed,
+  reworded for convenience, or removed.
+- Added Sections 36 (Contrast Audit), 37 (Doctrine / Implementation Parity) and
+  38 (Cover Overture), numbered after the existing sections so that no existing
+  cross-reference is renumbered.
+- Repaired a measurement defect that made Section 23C inaccurate on the very
+  elements the release before it introduced. The class-to-size map was scanned as
+  substrings, so "title" matched inside "chs-title" and every Categorical Header
+  System title was costed at 42px against a true 19px -- 47.0px charged for a real
+  21.3px, a 2.21x overestimate on every header. Section 23A separately omitted h2
+  from its tag scope entirely, so the same titles were invisible to page-fill.
+- Unified the three measurement functions onto one ruler. Section 23A had retained
+  the flat 0.50em line heuristic that 2.9.0 superseded everywhere else, and an
+  open/close tag alternation without a backreference that Section 23C had already
+  fixed. Measured on the real master: the flat and per-glyph models disagree on 1
+  of 97 blocks, a 16.6px error -- small, but the two models could disagree on any
+  block and nothing guaranteed they would not.
+- Resolved the section_numeral drift recorded at 2.10.0 in favour of the shipped
+  value, and added Section 37 so that class of drift is now executed against
+  rather than trusted.
+- The prose specification remains authoritative. Where prose and runtime disagree,
+  the prose governs and the runtime is the defect to be fixed.
+
+
+======================================================================
+36. CONTRAST AUDIT (GOVERNED BY KERNEL MODULE 03)
+======================================================================
+Every declared foreground/background pairing is measured by WCAG 2.x relative
+luminance against a declared small-text floor of 4.5:1.
+
+Print is not bound by WCAG. The luminance physics are identical on paper: a
+pairing below the floor at small size reads faint under office lighting too.
+
+A pairing may sit below the floor ONLY with an explicit exempt_reason recorded
+in 03_brand.document_type_system.contrast_registry. An exemption is a decision
+on the record, never a silence. Two exist at 2.11.0, both for the gold ordinal
+in the header and the contents row, both on the same ground: the ordinal is a
+redundant navigational marker whose value also appears in the contents page and
+the margin rail, so no information is lost if it reads softly, and the gold
+jewel against the navy title is the intended restraint of the register.
+
+Executable: gssc_runtime.py contrastaudit <package.json>
+
+======================================================================
+37. DOCTRINE / IMPLEMENTATION PARITY (GOVERNED BY KERNEL MODULES 03 AND 17)
+======================================================================
+Doctrine must equal implementation, and the equality must be executed rather
+than believed.
+
+The defect this section exists to prevent is on the record. Kernel 2.9.0
+declared inherited_literals_px.section_numeral at 26.0px while the template
+shipped the same element at 56px, 48px and 46px. The drift survived a complete
+release because nothing in the package ever compared the two numbers.
+
+This section asserts, on every run: that every Module 17 token agrees with the
+template :root literal of the same name; that no Module 17 token is orphaned;
+that the declared section_numeral equals the shipped ordinal token; and that
+every token used in a built CHS layer is registered.
+
+Executable: gssc_runtime.py parityaudit <package.json> --file <built.html>
+
+======================================================================
+38. COVER OVERTURE (GOVERNED BY KERNEL MODULE 18)
+======================================================================
+The cover is the only archetype carrying creativity budget 3, and budget 3
+requires a live precedent check before Stage 2 translation.
+
+Through 2.10.0 that check had never been performed for the universal master and
+the latitude had never been used: page 1 was a stacked text sequence
+structurally indistinguishable from a budget-2 prose page.
+
+The treatment adopted is scale dissonance with strict isolation. Exactly ONE
+element is raised -- the cover title, from --fs-title to --fs-dropcap, both
+already declared -- and every neighbour is left untouched, because the isolation
+effect holds only while the isolated element remains the exception.
+
+Photography is NOT the instrument. 03_brand.photography.default is "avoid when
+possible"; a cover overture is compositional and typographic.
+
+A cover overture may not add, remove or reword content. It is a restyle.
+
+Version 2.3 -- 21 September 2026
+
+- Preserved the complete Version 2.2 architecture and every existing control. No
+  research, commercial, firewall, legal, QA or geometry control was relaxed.
+- Added Section 23D (Resolved Box Model) as the BINDING overflow gate, and
+  Section 38A (The Page Budget Gate). Sections 23A and 23C are retained and
+  unchanged as coarse passes.
+- Reverted the Section 38 cover overture introduced at 2.11.0. It raised the
+  cover title to 64px at max-width:470px and drove page 1 to a 216px overflow
+  into the footer band. Measured, reverted, and recorded with the numbers rather
+  than shipped with a rationalisation.
+- Recorded that Section 23C reported PASS with 205px of headroom on that same
+  page. The failure was not arithmetic but scope: the estimate modelled text
+  height alone and was blind to margin, padding, max-width, late cascade
+  overrides and margin collapsing.
+- The prose specification remains authoritative. Where prose and runtime
+  disagree, the prose governs and the runtime is the defect to be fixed.
+
+
+======================================================================
+23D. RESOLVED BOX MODEL -- BINDING OVERFLOW GATE (GOVERNED BY KERNEL MODULE 10)
+======================================================================
+Sections 23A and 23C are retained as fast coarse passes. Section 23D decides.
+
+WHY THIS SECTION EXISTS:
+
+A human caught a footer overlap on page 1 of the 2.11.0 master by eye, on a
+page that Section 23C had reported PASS with 205px of headroom. The page
+overflowed its footer band by 216px. That is a 421px error, and it ran in the
+direction that hides defects rather than inventing them. The check that exists
+to catch overlap shipped an overlap.
+
+The cause was not arithmetic. Sections 23A and 23C costed a block as text
+height alone, from a hardcoded class-to-size map, and were therefore blind to
+four things the browser is not:
+
+  1. ELEMENT MARGIN AND PADDING, never added at all. Page 1 carries 114px of
+     margin and 36px of padding and borders: 150px, roughly 18% of the usable
+     page, entirely outside the estimate.
+  2. max-width. The estimate always wrapped at the 540px body column. The
+     2.11.0 cover title was max-width:470px -- four lines at 540px, SIX at
+     470px, a 143px error on one element.
+  3. LATE CASCADE OVERRIDES. A hardcoded map cannot see a property redeclared
+     in a later style block or scoped to a page.
+  4. MARGIN COLLAPSING. Adjacent sibling margins collapse to the larger of the
+     two; naive summation over-counts.
+
+METHOD:
+
+Parse the document's own style blocks. Resolve :root custom properties. Apply
+the real cascade by specificity then source order. Compute content height from
+a max-width-aware greedy wrap, add padding and borders, and collapse sibling
+margins. Wrapper elements that only nest other measured elements are skipped by
+name so nothing is counted twice.
+
+Custom property names are CASE-SENSITIVE. This stylesheet uses camelCase
+(--fs-bodyL), and a lowercase-only pattern silently resolves to None and falls
+back to a default. That defect was found and fixed during this build.
+
+SCOPE LIMIT:
+
+Not a rendered screenshot. Floats, flex and grid track sizing are not modelled,
+and the dropcap shape is not modelled. It closes the four blindnesses named
+above, which is what produced this defect. Browser print-to-PDF at A4 remains
+the only visual confirmation.
+
+Executable: gssc_runtime.py boxcheck <package.json> --file <built.html>
+
+======================================================================
+38A. THE PAGE BUDGET GATE (GOVERNED BY KERNEL MODULE 18)
+======================================================================
+No archetype treatment, at any creativity budget, may push a page past its
+content budget. The page budget outranks every creative latitude in Module 18,
+including budget 3.
+
+Section 23D must PASS on the built derivative before a treatment is adopted. A
+treatment that fails is REVERTED, not rationalised and not shipped with a
+caveat.
+
+This gate exists because the 2.11.0 cover overture was reasoned from genuine
+editorial precedent, was internally coherent, passed every check the package
+had, and was still wrong -- because nothing connected the creative decision to
+the page it had to live on.
+
+A cover overture may not add, remove or reword content. Where a page has no
+room for an overture, the correct finding is that the page must be shortened
+editorially first. That is a content decision for management, not a design
+decision taken inside a template build.
+
+Version 2.4 -- 21 September 2026
+
+- Preserved the complete Version 2.3 architecture and every existing control.
+  No research, commercial, firewall, legal, QA or geometry control was relaxed.
+- Added Sections 23E (Coverage Ledger), 39 (Data Series Colour) and 40 (Table
+  Emphasis Ladder), numbered after the existing sections so no cross-reference
+  is renumbered.
+- Replaced the Section 23D regex scan with a real DOM walk after demonstrating
+  that the scan could not see elements nested inside an already-matched parent,
+  and therefore could never prove coverage.
+- Repaired the selector matcher, which silently dropped every structural
+  pseudo-class. The failure ran in BOTH directions: `.toc-row:first-child` and
+  `.toc-row:last-child` both evaluated true on every row, while
+  `tr:nth-child(even) td` evaluated false on all of them, so a real rule never
+  applied at all.
+- Recorded three defects found by this release's OWN repasses and fixed before
+  sealing: table cells stacked vertically instead of laying out side by side;
+  declared column widths ignored in favour of an equal share; and a line box
+  sized by its parent rather than by its tallest inline child.
+- The prose specification remains authoritative. Where prose and runtime
+  disagree, the prose governs and the runtime is the defect to be fixed.
+
+
+======================================================================
+23E. COVERAGE LEDGER -- NO SILENT OMISSION (GOVERNED BY KERNEL MODULE 10)
+======================================================================
+Four incidents in this package's history share one root cause, and it is not
+arithmetic.
+
+  2.11.0  page 1 overflowed its footer by 216px while the checker reported
+          PASS with 205px of headroom.
+  2.12.0  the categorical header's stamp line contributed real height that
+          nothing measured.
+  2.12.0  every table rule failed its ancestor test, so no table styling
+          resolved at all.
+  2.12.0  the regex scan resumed after each match, so elements nested inside
+          an already-matched parent were NEVER VISITED -- .chs-stamp,
+          .sig-code, .sig-name and .sig-desc were all invisible to the model
+          while being visible on the page.
+
+In every case the model met something it did not understand and QUIETLY
+CONTINUED, producing a confident number wrong in the direction that hides
+defects. Patching each instance does not prevent the next one.
+
+Two structural changes make silence impossible:
+
+  A REAL DOM WALK replaces the regex scan. Every element is visited exactly
+  once, at its true depth, with true sibling positions -- which also makes
+  structural pseudo-classes evaluable instead of silently dropped.
+
+  A COVERAGE LEDGER records every element as MEASURED, EXCLUDED by a named
+  declared rule, or UNACCOUNTED. Section 23D FAILS on any unaccounted element.
+  A future component built from a construct this model does not handle becomes
+  a loud, named failure rather than a silent zero.
+
+A selector this resolver cannot evaluate is likewise recorded and EXCLUDED,
+never assumed to match.
+
+======================================================================
+39. DATA SERIES COLOUR (GOVERNED BY KERNEL MODULE 03)
+======================================================================
+Colour in a chart encodes information. It is not brand decoration and it does
+not follow brand-accent rules.
+
+THREE PALETTE TYPES, matched to the shape of the data:
+  CATEGORICAL  unordered groups. Hues must differ in BOTH hue and lightness.
+  SEQUENTIAL   one ordered quantity. A single hue ramped light to dark, which
+               must read as correctly ordered when desaturated.
+  DIVERGING    a meaningful centre. Two hues meeting at a neutral middle.
+
+THE GRAYSCALE TEST IS BINDING. Adjacent categorical series must differ by at
+least 0.04 relative luminance. This is not a preference: hue alone collapses in
+grayscale, in low-quality print, and under the red-green deficiency carried by
+roughly 8% of men. The 2.12.0 palette failed this test -- mid_grey sat 0.038
+from gold_deep -- which is why a fifth series could not be added without a new
+token.
+
+COLOUR IS NEVER THE ONLY CHANNEL. Every series declares a pattern and prints
+its value as a text label.
+
+CAP AT FIVE CATEGORICAL SERIES. Past that, split the chart rather than adding
+hues; a sixth series cannot be given a luminance slot both distinct from its
+neighbours and inside the brand.
+
+A new colour token is added to the master through a kernel version, with its
+measurement on the record. It is never invented inside a derivative.
+
+======================================================================
+40. TABLE EMPHASIS LADDER (GOVERNED BY KERNEL MODULE 03)
+======================================================================
+A table's emphasis is a declared ladder, not a single effect.
+
+  TIER 0  body row, paper.
+  TIER 1  banded row. Restrained, but it must be PERCEIVABLE: the 2.12.0
+          banding measured 1.06:1 against the paper and the header tint
+          1.08:1, both past subtle and into invisible.
+  TIER 2  column header: tinted ground plus a navy rule, legible as structure
+          without borrowing the decision row's full fill.
+  TIER 3  summary or reference row. The tier that did not exist, which is why
+          a reference total read as ordinary body copy.
+  TIER 4  the conclusive row. Full navy ground with a gold edge.
+
+EVERY MULTI-ROW TABLE CLOSES ON A DECLARED TIER. A table with no monetary
+total closes on its governing row instead of simply stopping.
+
+Version 2.5 -- 21 September 2026
+
+- Preserved the complete Version 2.4 architecture and every existing control.
+  No research, commercial, firewall, legal, QA or geometry control was relaxed.
+- Corrected a real defect: the master template's own hardcoded signoff block
+  printed Duke Y. Demayo with the title "Chief Executive Officer ·
+  President · Principal", a title that has belonged to Ronnie S. del
+  Castillo since at least kernel 2.1.1. The signatory's name is unchanged; the
+  title string is corrected to "President · Principal · Chief
+  Operating Officer", matching Module 02 exactly.
+- Added Section 41 (Governance / Signatory Parity), the same defect class as
+  Section 37 applied to governance rather than typography: doctrine and
+  rendered output can silently disagree when nothing reads both. Verified by
+  execution against the unmodified 2.13.0 document before the fix was applied:
+  the section correctly failed, naming the exact borrowed title and the exact
+  officer it belonged to.
+- The prose specification remains authoritative. Where prose and runtime
+  disagree, the prose governs and the runtime is the defect to be fixed.
+
+
+======================================================================
+41. GOVERNANCE / SIGNATORY PARITY (GOVERNED BY KERNEL MODULE 02)
+======================================================================
+The rendered signatory name and title must agree with kernel Module 02
+active_officers. This is on the record BECAUSE it once did not, silently.
+
+THE DEFECT ON RECORD: the universal quotation master's own hardcoded signoff
+block printed Duke Y. Demayo with the title "Chief Executive Officer ·
+President · Principal". Module 02 has carried Ronnie S. del Castillo as
+Chief Executive Officer and Duke Y. Demayo as President, Principal, and Chief
+Operating Officer since at least kernel 2.1.1. Nothing in the package ever
+compared the rendered title against the governance record, for the identical
+reason the 26px/56px section_numeral drift survived a full release: doctrine
+and rendered output are two different places, and nothing read both.
+
+THREE THINGS ARE CHECKED, NOT ONE:
+  1. the rendered signatory NAME resolves to a current active officer, never a
+     former officer or a future-only person;
+  2. every rendered TITLE belongs to that SAME officer's declared titles;
+  3. no rendered title belongs to a DIFFERENT active officer -- this is the
+     specific shape of the defect found here, and the sharpest test: a title
+     string can be a real, currently-valid title in the document and still be
+     wrong, because it is currently held by someone else.
+
+A rendered signature block that fails this section is not a stylistic
+question. It is a factual misstatement of who holds what authority in the
+company, in a client-facing document.
+
+Executable: gssc_runtime.py governanceaudit <package.json> --file <built.html>
+
+Version 2.6 -- 21 September 2026
+
+- Preserved the complete Version 2.5 architecture and every existing control. No
+  research, commercial, firewall, legal, QA or geometry control was relaxed.
+- Closed all five items of the 2.14.0 polish handoff: pagefill now decodes HTML
+  entities, matching clipcheck and footercheck and completing the "one ruler"
+  unification begun at runtime 1.3; the container_classes doctrine text is
+  corrected to describe what the 1.5 DOM engine actually does; the dead
+  .pm-curr component is removed; the `all` command's real scope is stated in
+  the docstring; and the Design Decision Log is now written by the release build
+  itself, having never once been called since it was written.
+- Added Sections 42 (Page Geometry Parity) and 43 (Forward-Compatibility Guard).
+- Repaired a defect live since release 2.10.0 and undetected across four
+  releases: ordinal-keyed page padding, four of five pages wrong, 24px of total
+  budget error. Page padding now resolves from the cascade.
+- Added CSS grid row-band measurement. The 2-column .gate-lines grid was costed
+  at 63.0px against a true 15.8px.
+- Section 41 now iterates every signature block rather than only the first.
+- The prose specification remains authoritative. Where prose and runtime
+  disagree, the prose governs and the runtime is the defect to be fixed.
+
+
+======================================================================
+42. PAGE GEOMETRY PARITY (GOVERNED BY KERNEL MODULE 10)
+======================================================================
+Declared page geometry must agree with the real cascade, and where the two can
+disagree, the cascade decides.
+
+THE DEFECT ON RECORD: body_padding_by_page is keyed 'page1', 'page2', 'page3'
+-- by POSITION, not by page identity. Inserting the contents page at position 2
+in release 2.10.0 shifted every later page's key by one. The runtime charged
+p2's padding to p-contents, p3's to p2, and the generic 'contract' fallback to
+p3. Four of five pages carried the wrong padding, for 24px of total budget
+error, and it survived four releases because nothing compared the declared
+table against the stylesheet.
+
+THE GENERAL RULE, which matters more than the instance:
+
+  NO LOAD-BEARING VALUE MAY BE KEYED BY DOCUMENT POSITION.
+
+Page order changes every time the design iterates -- an inserted contents page,
+a new annex, a reordered schedule. A position-keyed table silently re-points
+every entry after the insertion, and silence is the failure mode this package
+has now paid for four separate times. Key by identity, or resolve from the
+document itself.
+
+Padding is now resolved by the Section 23D cascade resolver. The declared table
+survives only as a fallback for a page whose padding no rule sets.
+
+Executable: gssc_runtime.py geometryaudit <package.json> --file <built.html>
+
+======================================================================
+43. FORWARD-COMPATIBILITY GUARD (GOVERNED BY KERNEL MODULES 03 AND 10)
+======================================================================
+Every defect this package has shipped had one shape: a construct the model did
+not know about, met silently, and costed as zero or as a default. The coverage
+ledger (Section 23E) closed that for element HEIGHT. This section closes it for
+the REGISTRIES -- the declared tables a future design iteration will extend, and
+that nothing previously forced it to extend completely.
+
+It is deliberately a set of REGISTRY COMPLETENESS tests. Each names something a
+future iteration is likely to add, and fails if that thing is added to one place
+and not the other:
+
+  1. Every palette colour is contrast-registered as text, or listed as non-text.
+     Adding a colour forces "is this ever text, and at what size" to be answered
+     when the token is added, not discovered in a printed proof.
+  2. Every chart series pattern comes from the declared pattern vocabulary, and
+     spare names are declared ahead of need so a sixth series has somewhere to
+     go that is already specified.
+  3. Supported layout modes are declared, and no stylesheet may use a mode
+     outside them. A new layout primitive forces a deliberate decision --
+     implement it or declare the gap -- instead of silent mis-measurement.
+  4. NO IN-FLOW GENERATED CONTENT. A ::before or ::after that is not absolutely
+     positioned and not display:none injects text that never appears in the
+     parsed HTML and is therefore invisible to any DOM box model. This is
+     forbidden rather than modelled.
+  5. Every signature block is governance-checked, not merely the first.
+  6. No registered flex-row or container class is stale, so a registry entry
+     that no longer matches the document is visible rather than quietly inert.
+
+THE PRINCIPLE: a registry that can be extended incompletely will eventually be
+extended incompletely. Complexity is welcome where it buys a guarantee; what is
+not welcome is a declared table that nobody is forced to keep whole.
+
+Executable: gssc_runtime.py futureproof <package.json> --file <built.html>

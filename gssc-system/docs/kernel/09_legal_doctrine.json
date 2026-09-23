@@ -1,0 +1,153 @@
+{
+  "module_id": "09_legal_doctrine",
+  "version": "1.0",
+  "role": "hard_default",
+  "purpose": "Govern legal-document structure, versioning, notarial discipline, statutory handling, and counsel review without replacing legal advice.",
+  "human_note": "The kernel governs process, not law.",
+  "scope": [
+    "CMSA",
+    "SMSA",
+    "POs",
+    "NTPs",
+    "SOWs",
+    "Secretary certificates",
+    "board resolutions",
+    "BIR/SEC filings",
+    "notarial instruments",
+    "ADR documents"
+  ],
+  "counsel_rule": "Use qualified Philippine counsel for legal advice, enforceability conclusions, statutory interpretation, and final review of material agreements.",
+  "architecture": {
+    "cmsa": {
+      "name": "Client Master Services Agreement",
+      "purpose": "Signed once per client; POs, NTPs and SOWs reference it."
+    },
+    "smsa": {
+      "name": "Supplier Master Sourcing Agreement",
+      "purpose": "Signed once per supplier; purchase instruments reference it."
+    }
+  },
+  "framework": {
+    "payment_tiers": "Inherit from the authoritative master and 06 unless the signed instrument says otherwise.",
+    "nda": "Recorded five-year tail default; preserve trade-secret treatment as applicable.",
+    "non_circumvention": "Recorded 24-month default subject to competition-law carve-outs.",
+    "force_majeure": "Preserve strict authoritative wording; no casual expansion.",
+    "adr": "Preserve the operative lawyer-reviewed clause.",
+    "competition": "Narrow restrictions to what is necessary; use authoritative wording."
+  },
+  "secretary_certificate": {
+    "signatory": "Michael C. Silla as Corporate Secretary",
+    "ceo_does_not_sign_certificate_itself": true,
+    "authorized_representatives_inside_resolutions": [
+      "Duke Y. Demayo",
+      "Michael C. Silla"
+    ],
+    "notarial_form": "Acknowledgment unless the instrument legally requires otherwise.",
+    "venue_default": "Iloilo City",
+    "identity_evidence": "Record competent evidence as required by the notary and operative rules."
+  },
+  "regulatory": {
+    "invoice_phrase": "THIS DOCUMENT IS NOT VALID FOR CLAIM OF INPUT TAX",
+    "authority_to_print": "Use current BIR forms, accredited-printer requirements, filing instructions, and authoritative certificate master.",
+    "verification": "Verify current statutory references before filing.",
+    "tax_rate_language": "Never state that a domestic corporation exercises the 8% income-tax option. For Non-VAT percentage tax, use the registered form and current law, and avoid presenting a tax rate as permanently fixed.",
+    "corporate_authority": "Do not treat a job title, signature block, profile, or filename as proof of authority. Require the governing corporate record.",
+    "privacy": "Personal TINs, residential addresses, IDs, and beneficial-ownership details are restricted internal data and must not be copied into public or routine client materials."
+  },
+  "formatting": {
+    "default": "Use authoritative legal master; recorded convention includes long bond, Times New Roman 11pt, justified, 1.5 spacing and controlled margins where required.",
+    "pt_exception": "Quotation px rules do not override legal-master typography."
+  },
+  "workflow": [
+    "identify master",
+    "preserve wording and structure",
+    "version changes",
+    "route material amendments to counsel",
+    "follow notarial/statutory form",
+    "register locked master"
+  ],
+  "hard_stops": [
+    "do not invent legal conclusions",
+    "do not assert enforceability without counsel",
+    "do not alter statutory language casually",
+    "do not present the kernel as legal advice"
+  ],
+  "failure_modes": [
+    "CEO signs Secretary Certificate itself",
+    "notarial controls omitted",
+    "force majeure broadened",
+    "ADR casually reworded",
+    "supplier data leaks",
+    "master edited in place",
+    "blank TIN left in final legal derivative",
+    "superseded identifier copied from an older registration source",
+    "candidate master called executed or lawyer-approved without evidence"
+  ],
+  "corporate_identifiers": {
+    "sec_registration_number": "2026060254196-01",
+    "bir_tin_and_branch_code": "806-700-547-00000",
+    "rule": "Populate legal derivatives from 01_identity canonical data; never copy an identifier from a superseded registration source."
+  },
+  "existing_candidate_masters": [
+    {
+      "file": "GSSC_SecretarysCertificate_ATP_v10_FINAL.html",
+      "role": "ATP Secretary Certificate candidate master",
+      "status": "review_pending",
+      "reason": "Existing final-labeled file; retain counsel/notarial review gate and update any blank or outdated corporate identifier before use."
+    },
+    {
+      "file": "GSSC-LEGAL-SECCERT-MAYORPERMIT-2026-0007-v1.html",
+      "role": "Mayor Permit Secretary Certificate candidate master",
+      "status": "review_pending",
+      "reason": "Existing three-page corporate authorization file; verify exact selected source among duplicates and final execution status."
+    },
+    {
+      "file": "GSSC_COMPANY_LEGAL.md",
+      "role": "legal framework reference",
+      "status": "authoritative_context",
+      "reason": "Records v5_FINAL_LOCKED legal framework and CMSA/SMSA architecture."
+    },
+    {
+      "file": "GSSC_CMSA_v6_9_FullEmbed.html",
+      "role": "CMSA candidate master",
+      "status": "review_pending",
+      "reason": "Latest retrieved CMSA version; counsel, execution, notarization, and exact-version checks remain required."
+    },
+    {
+      "file": "GSSC_CMSA_v6_8_FullEmbed.html",
+      "role": "CMSA candidate predecessor",
+      "status": "legacy",
+      "reason": "Superseded in candidate lineage by v6.9."
+    },
+    {
+      "file": "GSSC_CMSA_v6_7_FullEmbed.html",
+      "role": "CMSA candidate predecessor",
+      "status": "legacy",
+      "reason": "Superseded in candidate lineage by v6.9."
+    },
+    {
+      "file": "GSSC_CMSA_v6_6_FullEmbed.html",
+      "role": "CMSA candidate predecessor",
+      "status": "legacy",
+      "reason": "Superseded in candidate lineage by v6.9."
+    },
+    {
+      "file": "GSSC_CMSA_v6_5_FullEmbed.html",
+      "role": "CMSA candidate predecessor",
+      "status": "legacy",
+      "reason": "Superseded in candidate lineage by v6.9."
+    },
+    {
+      "file": "GSSC_CMSA_v6_4_FullEmbed.html",
+      "role": "CMSA candidate predecessor",
+      "status": "legacy",
+      "reason": "Superseded in candidate lineage by v6.9."
+    },
+    {
+      "file": "GSSC_SMSA_v7_0_FullEmbed.html",
+      "role": "SMSA candidate master",
+      "status": "review_pending",
+      "reason": "Retrieved SMSA v7.0 candidate; counsel, execution, notarization, and exact-version checks remain required."
+    }
+  ]
+}

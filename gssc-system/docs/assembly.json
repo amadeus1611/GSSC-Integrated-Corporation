@@ -1,0 +1,34 @@
+{
+  "engine_version": "2.16.1",
+  "purpose": "Deterministically reconstruct the full-fidelity quotation master from the tokenized payload and brand_assets.",
+  "governing_protocol_section": "28C",
+  "token_format": "{{GSSC_ASSET:<name>}} where <name> is a key of brand_assets",
+  "replacement_value": "data:<brand_assets[name].mime_type>;base64,<brand_assets[name].base64>",
+  "procedure": [
+    "Base64-decode quotation_template_payload_base64 to UTF-8 text.",
+    "For each brand_assets entry, verify base64 decodes and its sha256 matches sha256_of_decoded_image.",
+    "Replace every {{GSSC_ASSET:name}} token with its replacement_value. Replace tokens only; never edit surrounding markup.",
+    "Confirm zero unresolved tokens remain and that no brand_assets entry went unused.",
+    "Compare the result against verification.hydrated_template_sha256. On mismatch, HARD STOP: do not deliver, do not partially repair.",
+    "The hydrated file is fully self-contained and renders offline with no external request."
+  ],
+  "hard_stops": [
+    "An unresolved {{GSSC_ASSET:...}} token in any client-facing file.",
+    "An asset whose decoded hash does not match its declared value.",
+    "A hydrated digest that does not match verification.hydrated_template_sha256."
+  ],
+  "verification": {
+    "tokenized_template_characters": 87288,
+    "tokenized_template_sha256": "1f70bfa7a8f38e2c5f080f19b450455d8a23b36b8ff494c28f63163ebef61be5",
+    "hydrated_template_characters": 510756,
+    "hydrated_template_sha256": "2898956c66fe228e669e0c7ea1af82d7c49d3f59aafb86a7bb27cd251f2ab93d",
+    "round_trip_verified_at_build": "2026-09-22",
+    "round_trip_result": "Hydrating the tokenized 2.16.1 template reproduces the built derivative byte-for-byte.",
+    "tokens_expected": [
+      "{{GSSC_ASSET:header}}",
+      "{{GSSC_ASSET:seal}}",
+      "{{GSSC_ASSET:signature}}",
+      "{{GSSC_ASSET:watermark}}"
+    ]
+  }
+}

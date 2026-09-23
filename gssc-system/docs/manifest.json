@@ -1,0 +1,106 @@
+{
+  "package_role": "GSSC_MASTER_PACKAGE",
+  "package_version": "2.16.1",
+  "package_format": "single-file JSON container, eight parts, with an embedded executable runtime",
+  "package_built": "2026-09-22",
+  "supersedes": "GSSC_Master_Package_v2_14_0.json",
+  "note": "Design-system release. Adds Module 03 document_type_system and Module 10 component_layer_contract, type_metrics, figure_type_scale, figure_geometry_check and measured_pagination, and ships all of it as runnable runtime commands. Every threshold the runtime enforces is read from this package, so doctrine and enforcement cannot drift apart.",
+  "parts": [
+    {
+      "key": "kernel",
+      "format": "embedded JSON object",
+      "kernel_version": "2.16.1",
+      "sha256": "99089f5ec8d53d701a52995ac3c1e4ae1b393e04a7a9199d3812f72f68085859",
+      "note": "17 modules, 00-16. Design-system doctrine added to 03 and 10 in 2.9.0."
+    },
+    {
+      "key": "execution_protocol",
+      "format": "plain text string",
+      "protocol_version": "2.0",
+      "sha256": "35ffd9d678781cfdcd014df30029c67ff8d15b68f264936a908b84af99cdccb8",
+      "size_bytes": 88293,
+      "note": "Sections 03, 28C and 30 name the executable runtime form. Prose remains authoritative."
+    },
+    {
+      "key": "quotation_template_payload_base64",
+      "format": "base64 string -> tokenized HTML",
+      "sha256": "9db256010d49d69b6406e31364064eae582539b3ec8d76c5197e91c0976d75ef",
+      "size_bytes": 76100,
+      "decoded_characters": 56998,
+      "decoded_sha256": "925dec7f39fc009347c780da8404cc4734436f8626f59902814ac0f6b96273fd",
+      "note": "TOKENIZED universal quotation master v1.7. Not deliverable as stored."
+    },
+    {
+      "key": "brand_assets",
+      "format": "JSON object, one entry per governed image",
+      "sha256": "a6a1a24e3df5efb3e94497830a1a1789f26a645dafe152461dcb97e7ef6dce4d",
+      "asset_count": 4,
+      "note": "header, seal, signature, watermark. Watermark newly registered in 2.7.0."
+    },
+    {
+      "key": "assembly",
+      "format": "embedded JSON object",
+      "sha256": "736e735b0aed2aaab88dbd803239842b063b09ec1f2f373d34c7b5f8482c9431",
+      "note": "Deterministic hydration engine and round-trip verification values."
+    },
+    {
+      "key": "runtime",
+      "format": "embedded JSON object with python source string",
+      "runtime_version": "1.1",
+      "sha256": "fd1606e3e877b46c68e18c037957cdf3ee5188935036006b03cb6fa0d544ff94",
+      "code_bytes": 26327,
+      "note": "gssc_runtime v1.1, stdlib only. Adds figcheck, typeaudit, pagefill and designaudit. Exit 0 = PASS, 1 = FAILED."
+    },
+    {
+      "key": "design_decision_log",
+      "format": "embedded JSON object -- schema and store config",
+      "sha256": "27a440551bbde21ce41769d2ed6dc4ce4b693e9b8508b1fb3bae97d651c3a6e4",
+      "note": "Module 15 tier-3 store config. Entries live in a sidecar file, not in the package."
+    }
+  ],
+  "integrity": {
+    "hash_method": "sha256 over json.dumps(value, ensure_ascii=False, separators=(',',':'), sort_keys=False).encode('utf-8') for object parts; sha256 over value.encode('utf-8') for string parts",
+    "note": "Declared explicitly so any third party can reproduce every hash. In 2.6.0 the kernel and logo-repository hashes were not reproducible by any standard serialization.",
+    "kernel_module_count": 20,
+    "kernel_modules": [
+      "00_meta",
+      "01_identity",
+      "02_governance",
+      "03_brand",
+      "04_firewall",
+      "05_ip",
+      "06_quotation_doctrine",
+      "07_website_doctrine",
+      "08_document_doctrine",
+      "09_legal_doctrine",
+      "10_template_engine",
+      "11_registry",
+      "12_bootstrap",
+      "13_changelog",
+      "14_accounting_compliance",
+      "15_design_research_engine",
+      "16_continuous_optimization_discipline",
+      "17_numbering_and_toc_system",
+      "18_page_archetype_creativity_engine",
+      "19_accessibility_doctrine"
+    ]
+  },
+  "adoption_record": {
+    "execution_protocol_version": "2.0",
+    "status": "NOT YET RECORDED",
+    "required_action": "Record management adoption of the Execution Protocol. Carried as an authoritative candidate from v1.1 through v1.9 without a recorded adoption.",
+    "adopted_by": "",
+    "adopted_on": "",
+    "board_reference": "",
+    "pending_release": "2.16.1",
+    "pending_status": "review_candidate awaiting GSSC management adoption; 2.9.0 remains the current production release until adopted_by and adopted_on are populated"
+  },
+  "quickstart": {
+    "step_1": "Extract the runtime: see runtime.extraction.",
+    "step_2": "python gssc_runtime.py all GSSC_Master_Package.json   -> must print PASS.",
+    "step_3": "python gssc_runtime.py precedent GSSC_Master_Package.json   -> read prior design decisions.",
+    "step_4": "Attach the package and project evidence, then use the Standard Employee Command in Section 30.",
+    "step_5": "python gssc_runtime.py hydrate GSSC_Master_Package.json -o quotation.html",
+    "step_6": "Open quotation.html in Chrome or Edge, print to PDF at A4, margins none, background graphics ON. Do NOT use LibreOffice: it silently prints the internal builder-card panel."
+  }
+}

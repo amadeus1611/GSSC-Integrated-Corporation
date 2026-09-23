@@ -1,0 +1,461 @@
+{
+  "module_id": "11_registry",
+  "version": "1.0",
+  "role": "canonical_data",
+  "purpose": "Register known masters, baselines, assets, statuses, routing, supersession and verification metadata.",
+  "human_note": "The registry stores knowledge of files, not their contents.",
+  "schema": [
+    "file",
+    "role",
+    "status",
+    "supersedes",
+    "geometry_baseline",
+    "governing_module",
+    "engine_mode",
+    "last_verified",
+    "notes"
+  ],
+  "status_definitions": {
+    "authoritative": "Current source of truth.",
+    "baseline": "Authoritative for a named subsystem.",
+    "legacy": "Superseded but kept for lineage.",
+    "deprecated": "Do not derive new work.",
+    "experimental": "Under validation.",
+    "archived": "Historical only.",
+    "authoritative_with_identity_override": "Authoritative for structure/content, but canonical identity fields must come from 01_identity.",
+    "review_pending": "Existing candidate that requires stated review gates before authoritative promotion.",
+    "authoritative_context": "Authoritative contextual reference, not necessarily an executable template."
+  },
+  "entries": [
+    {
+      "file": "GSSC_SignageProgram.html",
+      "role": "quotation_master",
+      "status": "authoritative",
+      "supersedes": [],
+      "geometry_baseline": "v6.2",
+      "governing_module": "06_quotation_doctrine",
+      "engine_mode": "mode_B_deconstruction_engine",
+      "last_verified": "2026-07-14",
+      "notes": "Finished quotation standard; exact source for deconstruction."
+    },
+    {
+      "file": "GSSC_Template_Builder_v6_2_kit.html",
+      "role": "quotation_geometry_and_template_baseline",
+      "status": "baseline",
+      "supersedes": [],
+      "geometry_baseline": "v6.2",
+      "governing_module": "06_quotation_doctrine",
+      "engine_mode": "mode_B_deconstruction_engine",
+      "last_verified": "2026-07-14",
+      "notes": "Use SignageProgram for finished visual fidelity; this remains the geometry baseline."
+    },
+    {
+      "file": "GSSC-PROFILE-2026-001-v5-pitch.html",
+      "role": "company_profile_visual_and_content_master",
+      "status": "authoritative_with_identity_override",
+      "supersedes": [],
+      "geometry_baseline": "source-defined",
+      "governing_module": "08_document_doctrine",
+      "engine_mode": "mode_B_deconstruction_engine",
+      "last_verified": "2026-07-14",
+      "notes": "Authoritative visual/content reference. Corporate identifiers inside the profile must be overridden by 01_identity and corrected before the profile is republished."
+    },
+    {
+      "file": "GSSC_Home_Page_v2_5_FINAL.html",
+      "role": "website_home_master",
+      "status": "legacy",
+      "supersedes": [],
+      "geometry_baseline": "editorial-web",
+      "governing_module": "07_website_doctrine",
+      "engine_mode": "mode_B_deconstruction_engine",
+      "last_verified": "2026-07-14",
+      "notes": "Superseded by GSSC_Home_Page_v2_6_STATIC.html; retain for lineage only."
+    },
+    {
+      "file": "GSSC_Capabilities_v2_6.html",
+      "role": "website_capabilities_master",
+      "status": "authoritative",
+      "supersedes": [],
+      "geometry_baseline": "editorial-web",
+      "governing_module": "07_website_doctrine",
+      "engine_mode": "mode_B_deconstruction_engine",
+      "last_verified": "2026-07-14",
+      "notes": "Current capabilities-page file. Filename version: v2.6. Embedded merged CSS/master-package marker: v2.7. Preserve both facts; do not rename or supersede solely from the internal marker."
+    },
+    {
+      "file": "GSSC_HowWeEngage_v2_8.html",
+      "role": "website_engagement_master",
+      "status": "authoritative",
+      "supersedes": [],
+      "geometry_baseline": "editorial-web",
+      "governing_module": "07_website_doctrine",
+      "engine_mode": "mode_B_deconstruction_engine",
+      "last_verified": "2026-07-14",
+      "notes": "Current engagement master."
+    },
+    {
+      "file": "GSSC_Website_Base64_Logo_Pack.html",
+      "role": "brand_asset_pack",
+      "status": "authoritative",
+      "supersedes": [],
+      "geometry_baseline": "not_applicable",
+      "governing_module": "03_brand",
+      "engine_mode": "asset_source",
+      "last_verified": "2026-07-14",
+      "notes": "CSS variables for header, seal, and signature assets."
+    },
+    {
+      "file": "GSSC_Website_CustomCSS_v1_1_MERGED.html",
+      "role": "website_global_css",
+      "status": "authoritative",
+      "supersedes": [],
+      "geometry_baseline": "editorial-web",
+      "governing_module": "07_website_doctrine",
+      "engine_mode": "source_preservation",
+      "last_verified": "2026-07-14",
+      "notes": "Merged global CSS with base64 assets."
+    },
+    {
+      "file": "GSSC_MasterContext_v5_4.json",
+      "role": "legacy_context",
+      "status": "legacy",
+      "supersedes": [],
+      "geometry_baseline": "not_applicable",
+      "governing_module": "00_meta",
+      "engine_mode": "reference_only",
+      "last_verified": "2026-07-14",
+      "notes": "Prior context source; v2 kernel is now the general doctrine layer."
+    },
+    {
+      "file": "GSSC_RuntimeEngine_v5_4.py",
+      "role": "runtime_support",
+      "status": "legacy",
+      "supersedes": [],
+      "geometry_baseline": "not_applicable",
+      "governing_module": "10_template_engine",
+      "engine_mode": "inspect_before_use",
+      "last_verified": "2026-07-14",
+      "notes": "Superseded in practice by GSSC_Master_Package.json :: runtime (gssc_runtime v1.0). Retained for lineage only."
+    },
+    {
+      "file": "GSSC_DocumentFactory_v5_4.json",
+      "role": "document_factory_context",
+      "status": "legacy",
+      "supersedes": [],
+      "geometry_baseline": "not_applicable",
+      "governing_module": "08_document_doctrine",
+      "engine_mode": "reference_only",
+      "last_verified": "2026-07-14",
+      "notes": "Inspect before reuse."
+    },
+    {
+      "file": "GSSC_Home_Page_v2_6_STATIC.html",
+      "role": "website_home_master",
+      "status": "authoritative",
+      "supersedes": [
+        "GSSC_Home_Page_v2_5_FINAL.html"
+      ],
+      "geometry_baseline": "editorial-web-static",
+      "governing_module": "07_website_doctrine",
+      "engine_mode": "mode_B_deconstruction_engine",
+      "last_verified": "2026-07-14",
+      "notes": "Definitive stable replacement: zero scroll-triggered motion; load-time hero cascade and hover states only."
+    },
+    {
+      "file": "GSSCIntegratedCorporation_CertificateofIncorporation.pdf",
+      "role": "government_identity_source",
+      "status": "authoritative",
+      "supersedes": [],
+      "geometry_baseline": "not_applicable",
+      "governing_module": "01_identity",
+      "engine_mode": "reference_only",
+      "last_verified": "2026-07-14",
+      "notes": "Controls SEC registration number and incorporation identity."
+    },
+    {
+      "file": "GSSC_BIR_CertificateofRegistration.pdf",
+      "role": "government_tax_identity_source",
+      "status": "superseded",
+      "supersedes": [],
+      "geometry_baseline": "not_applicable",
+      "governing_module": "01_identity",
+      "engine_mode": "reference_only",
+      "last_verified": "2026-07-14",
+      "notes": "Older BIR Form 2303 showing 010-997-579-000; superseded by GSSC_CoR.pdf. Do not use for current identity."
+    },
+    {
+      "file": "GSSC_SecretarysCertificate_ATP_v10_FINAL.html",
+      "role": "secretary_certificate_candidate_master",
+      "status": "review_pending",
+      "supersedes": [
+        "GSSC_SecretarysCertificate_ATP_v9_FINAL.html"
+      ],
+      "geometry_baseline": "legal-source-defined",
+      "governing_module": "09_legal_doctrine",
+      "engine_mode": "inspect_before_use",
+      "last_verified": "2026-07-14",
+      "notes": "Existing final-labeled ATP certificate; verify execution, counsel/notarial readiness, page standard, and canonical identifiers before authoritative promotion."
+    },
+    {
+      "file": "GSSC-LEGAL-SECCERT-MAYORPERMIT-2026-0007-v1.html",
+      "role": "secretary_certificate_candidate_master",
+      "status": "review_pending",
+      "supersedes": [],
+      "geometry_baseline": "legal-source-defined",
+      "governing_module": "09_legal_doctrine",
+      "engine_mode": "inspect_before_use",
+      "last_verified": "2026-07-14",
+      "notes": "Existing Mayor Permit certificate; duplicates exist, so hash and select the exact intended source before promotion."
+    },
+    {
+      "file": "GSSC_COMPANY_LEGAL.md",
+      "role": "legal_framework_context",
+      "status": "authoritative_context",
+      "supersedes": [],
+      "geometry_baseline": "not_applicable",
+      "governing_module": "09_legal_doctrine",
+      "engine_mode": "reference_only",
+      "last_verified": "2026-07-14",
+      "notes": "Records v5_FINAL_LOCKED legal framework and CMSA/SMSA architecture."
+    },
+    {
+      "file": "GSSC_CoR.pdf",
+      "role": "government_tax_identity_source",
+      "status": "authoritative",
+      "supersedes": [
+        "GSSC_BIR_CertificateofRegistration.pdf"
+      ],
+      "geometry_baseline": "not_applicable",
+      "governing_module": "01_identity",
+      "engine_mode": "reference_only",
+      "last_verified": "2026-07-14",
+      "notes": "Latest user-supplied BIR Form 2303, Revised August 2024. Controls TIN 806-700-547-00000, issuance/registration date 2026-06-23, OCN 074RC20260000008487, RDO 074 South Iloilo and Guimaras, RR 011 Western Visayas."
+    },
+    {
+      "file": "GSSC-EMAIL-TEMPLATE-Universal-2026-002-v4-OutlookNative.html",
+      "role": "universal_email_template_master",
+      "status": "authoritative",
+      "supersedes": [
+        "GSSC-EMAIL-TEMPLATE-Universal-2026-002-v3-LightOnly.html",
+        "GSSC-EMAIL-TEMPLATE-Universal-2026-002-v2-DarkLight.html"
+      ],
+      "geometry_baseline": "email-client-safe-source-defined",
+      "governing_module": "08_document_doctrine",
+      "engine_mode": "mode_B_deconstruction_engine",
+      "last_verified": "2026-07-14",
+      "notes": "Current Outlook-native universal light-mode email master. Header, footer, tri-stripe, fleuron, and confidentiality line are locked; token fields are reusable."
+    },
+    {
+      "file": "GSSC-EMAIL-TEMPLATE-Universal-2026-002-v3-LightOnly.html",
+      "role": "universal_email_template_predecessor",
+      "status": "legacy",
+      "supersedes": [
+        "GSSC-EMAIL-TEMPLATE-Universal-2026-002-v2-DarkLight.html"
+      ],
+      "geometry_baseline": "email-client-safe-source-defined",
+      "governing_module": "08_document_doctrine",
+      "engine_mode": "reference_only",
+      "last_verified": "2026-07-14",
+      "notes": "Light-only predecessor superseded by v4 OutlookNative."
+    },
+    {
+      "file": "GSSC-EMAIL-TEMPLATE-Universal-2026-002-v2-DarkLight.html",
+      "role": "universal_email_template_predecessor",
+      "status": "legacy",
+      "supersedes": [],
+      "geometry_baseline": "email-client-safe-source-defined",
+      "governing_module": "08_document_doctrine",
+      "engine_mode": "reference_only",
+      "last_verified": "2026-07-14",
+      "notes": "Dark/light predecessor superseded by v3 and ultimately v4 OutlookNative."
+    },
+    {
+      "file": "GSSC_CMSA_v6_4_FullEmbed.html",
+      "role": "CMSA_candidate_predecessor",
+      "status": "legacy",
+      "supersedes": [],
+      "geometry_baseline": "legal-source-defined",
+      "governing_module": "09_legal_doctrine",
+      "engine_mode": "reference_only",
+      "last_verified": "2026-07-14",
+      "notes": "CMSA v6.4 candidate predecessor; superseded in candidate lineage by v6.9."
+    },
+    {
+      "file": "GSSC_CMSA_v6_5_FullEmbed.html",
+      "role": "CMSA_candidate_predecessor",
+      "status": "legacy",
+      "supersedes": [],
+      "geometry_baseline": "legal-source-defined",
+      "governing_module": "09_legal_doctrine",
+      "engine_mode": "reference_only",
+      "last_verified": "2026-07-14",
+      "notes": "CMSA v6.5 candidate predecessor; superseded in candidate lineage by v6.9."
+    },
+    {
+      "file": "GSSC_CMSA_v6_6_FullEmbed.html",
+      "role": "CMSA_candidate_predecessor",
+      "status": "legacy",
+      "supersedes": [],
+      "geometry_baseline": "legal-source-defined",
+      "governing_module": "09_legal_doctrine",
+      "engine_mode": "reference_only",
+      "last_verified": "2026-07-14",
+      "notes": "CMSA v6.6 candidate predecessor; superseded in candidate lineage by v6.9."
+    },
+    {
+      "file": "GSSC_CMSA_v6_7_FullEmbed.html",
+      "role": "CMSA_candidate_predecessor",
+      "status": "legacy",
+      "supersedes": [],
+      "geometry_baseline": "legal-source-defined",
+      "governing_module": "09_legal_doctrine",
+      "engine_mode": "reference_only",
+      "last_verified": "2026-07-14",
+      "notes": "CMSA v6.7 candidate predecessor; superseded in candidate lineage by v6.9."
+    },
+    {
+      "file": "GSSC_CMSA_v6_8_FullEmbed.html",
+      "role": "CMSA_candidate_predecessor",
+      "status": "legacy",
+      "supersedes": [],
+      "geometry_baseline": "legal-source-defined",
+      "governing_module": "09_legal_doctrine",
+      "engine_mode": "reference_only",
+      "last_verified": "2026-07-14",
+      "notes": "CMSA v6.8 candidate predecessor; superseded in candidate lineage by v6.9."
+    },
+    {
+      "file": "GSSC_CMSA_v6_9_FullEmbed.html",
+      "role": "CMSA_candidate_master",
+      "status": "review_pending",
+      "supersedes": [
+        "GSSC_CMSA_v6_4_FullEmbed.html",
+        "GSSC_CMSA_v6_5_FullEmbed.html",
+        "GSSC_CMSA_v6_6_FullEmbed.html",
+        "GSSC_CMSA_v6_7_FullEmbed.html",
+        "GSSC_CMSA_v6_8_FullEmbed.html"
+      ],
+      "geometry_baseline": "legal-source-defined",
+      "governing_module": "09_legal_doctrine",
+      "engine_mode": "inspect_before_use",
+      "last_verified": "2026-07-14",
+      "notes": "Latest retrieved CMSA full-embed candidate, version v6.9. Counsel, execution, notarization, and exact-version checks remain required before authoritative promotion."
+    },
+    {
+      "file": "GSSC_SMSA_v7_0_FullEmbed.html",
+      "role": "SMSA_candidate_master",
+      "status": "review_pending",
+      "supersedes": [],
+      "geometry_baseline": "legal-source-defined",
+      "governing_module": "09_legal_doctrine",
+      "engine_mode": "inspect_before_use",
+      "last_verified": "2026-07-14",
+      "notes": "Retrieved SMSA full-embed candidate, version v7.0. Counsel, execution, notarization, and exact-version checks remain required before authoritative promotion."
+    },
+    {
+      "file": "GSSC_Quotation_Universal_Master_v1_7_PRODUCTION_DETAIL_LOCK.html",
+      "payload_file": "GSSC_QuotationTemplate.txt",
+      "role": "universal_quotation_template_master",
+      "status": "authoritative",
+      "supersedes": [],
+      "geometry_baseline": "v6.2",
+      "governing_module": "06_quotation_doctrine",
+      "engine_mode": "mode_B_deconstruction_engine",
+      "last_verified": "2026-07-15",
+      "notes": "Universal four-page quotation master. Complete synthetic working example. TEMPLATE_MASTER state. Derivatives require research, approval, firewall, calculation and visual QA before CLIENT_RELEASE. Does not supersede the category-specific GSSC_SignageProgram.html master."
+    },
+    {
+      "file": "GSSC_Master_Package.json :: quotation_template_payload_base64",
+      "role": "universal_quotation_template_base64_transport",
+      "status": "authoritative",
+      "supersedes": [],
+      "geometry_baseline": "v6.2",
+      "governing_module": "06_quotation_doctrine",
+      "engine_mode": "source_preservation_transport",
+      "last_verified": "2026-08-25",
+      "notes": "TOKENIZED transport payload for universal master v1.7. Binary assets replaced by {{GSSC_ASSET:name}} tokens resolving against brand_assets. Hydration reproduces the v1.7 master byte-for-byte; verified by SHA-256 round trip at build time."
+    },
+    {
+      "file": "GSSC_Master_Package.json :: execution_protocol",
+      "role": "quotation_research_and_execution_protocol",
+      "status": "review_pending",
+      "supersedes": [],
+      "geometry_baseline": "not_applicable",
+      "governing_module": "12_bootstrap",
+      "engine_mode": "reference_only",
+      "last_verified": "2026-08-25",
+      "notes": "Protocol version 1.9. Internal control candidate ready for management adoption; not yet recorded as management adopted. Section 03 preflight repaired for the single-container format and Section 28C (asset hydration) added in this release."
+    },
+    {
+      "file": "GSSC_Master_Package.json :: brand_assets",
+      "role": "canonical_brand_asset_repository",
+      "status": "authoritative",
+      "supersedes": [
+        "GSSC_Logos_Base64.txt",
+        "logo_assets (3-entry repository, kernel 2.6.0)"
+      ],
+      "geometry_baseline": "not_applicable",
+      "governing_module": "03_brand",
+      "engine_mode": "asset_source",
+      "last_verified": "2026-08-25",
+      "notes": "Four governed images stored exactly once each: header, seal, signature, watermark. Single-encoded, each carrying a decoded-image SHA-256 and pixel dimensions."
+    },
+    {
+      "file": "GSSC_Master_Package.json :: runtime",
+      "role": "executable_control_runtime",
+      "status": "authoritative",
+      "supersedes": [
+        "GSSC_RuntimeEngine_v5_4.py"
+      ],
+      "geometry_baseline": "not_applicable",
+      "governing_module": "10_template_engine",
+      "engine_mode": "executable",
+      "last_verified": "2026-08-25",
+      "notes": "gssc_runtime v1.0. Stdlib-only Python implementing Section 03 preflight, Section 28C hydration, Module 10 clip estimation and Module 15 decision-log read/write. Prose specification governs on conflict."
+    }
+  ],
+  "planned_roles": [
+    {
+      "role": "letterhead master",
+      "planned_since": "2026-07-14",
+      "revisit_by": "2026-12-31",
+      "governing_module": "08_document_doctrine"
+    },
+    {
+      "role": "capability sheet master",
+      "planned_since": "2026-07-14",
+      "revisit_by": "2026-12-31",
+      "governing_module": "08_document_doctrine"
+    }
+  ],
+  "classification_workflow": [
+    "exact filename",
+    "inspect content/fingerprint",
+    "compare role/status",
+    "clarify only if treatment changes materially",
+    "route to doctrine and engine"
+  ],
+  "supersession": [
+    "register new master",
+    "move prior master to legacy",
+    "record relationship",
+    "reroute derivatives",
+    "deprecate only when no active lineage use remains"
+  ],
+  "verification_triggers": [
+    "kernel doctrine change",
+    "master structural change",
+    "new same-role master",
+    "user-reported drift",
+    "asset or contact update"
+  ],
+  "conflict_rules": [
+    "The latest verified government identity source supplied by the user overrides older government certificates, profiles, drafts, and memories.",
+    "Exact duplicate filenames must be disambiguated by content hash before promotion.",
+    "A filename containing FINAL does not establish execution, counsel review, notarization, or authoritative status by itself.",
+    "A filename version and embedded package marker may differ; record both and do not rename solely from an internal marker.",
+    "An existing legal candidate replaces a planned role but remains review_pending until its stated gates are satisfied.",
+    "The highest retrieved semantic version is the latest candidate only; it does not become authoritative without its legal promotion gates."
+  ],
+  "planned_role_rule": "A planned role carries planned_since and revisit_by. An open-ended planned role is indistinguishable from an abandoned one and will sit in the registry forever without anyone noticing it is still open."
+}

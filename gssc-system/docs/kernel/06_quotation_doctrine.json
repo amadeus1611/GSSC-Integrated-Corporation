@@ -1,0 +1,143 @@
+{
+  "module_id": "06_quotation_doctrine",
+  "version": "1.0",
+  "role": "strong_default",
+  "purpose": "Govern GSSC quotation geometry, typography, page architecture, assets, signatures, commercial logic, and print workflow.",
+  "human_note": "A GSSC quotation is an editorial commercial document, not a spreadsheet-style price list.",
+  "baseline": {
+    "system": "v6.2 Editorial Quarterly",
+    "page_w": "794px",
+    "page_h": "1123px",
+    "margin_top": "96px",
+    "margin_bot": "120px",
+    "margin_left": "80px",
+    "margin_right": "134px",
+    "body_col": "540px",
+    "stripe_x": "38px",
+    "stripe_w": "4px",
+    "watermark_opacity": "0.028"
+  },
+  "typography": {
+    "unit_rule": "px only; never convert quotation typography to pt",
+    "display": "Libre Baskerville",
+    "body": "Inter",
+    "sizes": {
+      "body": "10.5px",
+      "bodyL": "11.5px",
+      "title": "42px",
+      "dek": "13px",
+      "kicker": "8px",
+      "dropcap": "64px",
+      "numeral": "56px",
+      "price": "44px",
+      "pull": "19px",
+      "caption": "10px",
+      "folio": "11px",
+      "imprint": "8px"
+    },
+    "line_heights": {
+      "body": "1.58",
+      "display": "1.12",
+      "lede": "1.65",
+      "tight": "1.4"
+    },
+    "tracking": {
+      "standard": "0.18em",
+      "tight": "0.12em",
+      "cap": "0.14em"
+    }
+  },
+  "pages": {
+    "page_1": "Editorial cover: kicker, title, dek, prep line, lede, body, pull quote, closing.",
+    "page_2": "Program cards or scope, reference row and total row.",
+    "page_3": "Commercial terms, acceptance gate and canonical signature.",
+    "page_3_locked": {
+      "body_padding": "30px 0 26px 0",
+      "section_numeral": "46px",
+      "table_body_padding": "4.5px",
+      "table_body_font": "9.5px",
+      "table_footer_padding": "6px",
+      "table_footer_font": "10px",
+      "gate_body": "8.5px",
+      "sig_lockup_width": "175px",
+      "sig_slot": "250x28px",
+      "sig_name": "10.5px",
+      "sig_title": "9.5px",
+      "sig_org": "8px"
+    }
+  },
+  "stripe_rule": "Preserve the exact source-master implementation and measured top/bottom bounds. Never assume a full-page stripe.",
+  "assets": {
+    "required": [
+      "header logo",
+      "footer seal",
+      "signature lockup",
+      "watermark"
+    ],
+    "delivery": "Preserve and embed source assets; self-contained HTML preferred.",
+    "processing": "True aspect ratio; content-aware crop; LANCZOS only when transformation is explicitly required; preserve transparency."
+  },
+  "signature": {
+    "canonical": "Ronnie S. del Castillo · Chief Executive Officer · GSSC Integrated Corporation",
+    "canonical_president_of_record": "Duke Y. Demayo · President · Principal · Chief Operating Officer · GSSC Integrated Corporation",
+    "default_client_facing_signatory": "Ronnie S. del Castillo, Chief Executive Officer",
+    "hardcoded": true,
+    "style": "Gold accent rule above the name; signatory name in gold; title line in muted italic beneath. Integrated logo lockup sits above the name, signatory block at the bottom of the closing page.",
+    "image_overlay": "Optional only for signed version."
+  },
+  "commercial": {
+    "tax": "Non-VAT; VAT-neutral client-facing price posture.",
+    "validity_default": "30 calendar days unless the quotation states otherwise.",
+    "payment_tiers": {
+      "A": ">= PHP 1M: 50% downpayment + Net 30 balance",
+      "B": "< PHP 1M: Net 30; no downpayment"
+    },
+    "warranty_default": "18-month workmanship warranty for fabrication-heavy programs; otherwise use the program-specific authoritative term.",
+    "governing_law": "Republic of the Philippines; venue Iloilo City."
+  },
+  "acceptance_gate": {
+    "purpose": "Countersignature authorizes mobilization and proceeding.",
+    "required_slots": [
+      "client acceptance",
+      "date"
+    ],
+    "style": "Light confidentiality; no unnecessary legal clutter."
+  },
+  "program_cards": {
+    "types": [
+      "signage",
+      "water",
+      "diesel",
+      "civil",
+      "GFRC",
+      "waste",
+      "consultancy",
+      "food",
+      "other",
+      "tier_comparison"
+    ],
+    "anatomy": [
+      "label",
+      "turnkey description",
+      "service tier/spec",
+      "bundled per-line price"
+    ],
+    "firewall": "No itemized cost, supplier attribution, or margin wording.",
+    "tier_comparison_rule": "Use the registered tier_comparison component (03_brand.component_registry) when a requirement is genuinely modular. Never manufacture tiers to create the appearance of choice: a fabricated Essential tier that no client would accept is a discount anchor, not an option, and it invites the client to buy it."
+  },
+  "naming": {
+    "default": "GSSC-QUOT-{Client}-{SUBJECT}-{YYYY}-{NNN}-v{N}.html",
+    "belmont": "GSSC-QUOTE-BelmontHotel-{YYYY}-{NNNN}-v{N}.html"
+  },
+  "print_workflow": "Chrome or Edge → Ctrl+P → A4 portrait → Margins None → Background graphics ON → 100% scale → Save as PDF.",
+  "failure_modes": [
+    "pt conversion",
+    "Page 3 drift",
+    "signature drift",
+    "supplier leakage",
+    "unit-cost disclosure",
+    "missing assets",
+    "wrong stripe bounds",
+    "wrong print settings"
+  ]
+}

@@ -1,0 +1,111 @@
+{
+  "module_id": "02_governance",
+  "version": "1.0",
+  "role": "canonical_data",
+  "purpose": "Separate active authority from future-only plans and map signatory roles.",
+  "human_note": "Current is current; future is future. Public ambiguity is not permitted.",
+  "active_officers": {
+    "ronnie_s_del_castillo": {
+      "name": "Ronnie S. del Castillo",
+      "titles": [
+        "Chief Executive Officer"
+      ],
+      "canonical_block": "Ronnie S. del Castillo · Chief Executive Officer · GSSC Integrated Corporation",
+      "authority_basis": "Reflected in the recent General Information Sheet (GIS) amendment restoring the original partnership structure; default signatory for client-facing instruments (corporate profile, proposals, cover letters)."
+    },
+    "duke_y_demayo": {
+      "name": "Duke Y. Demayo",
+      "titles": [
+        "President",
+        "Principal",
+        "Chief Operating Officer"
+      ],
+      "canonical_block": "Duke Y. Demayo · President · Principal · Chief Operating Officer · GSSC Integrated Corporation",
+      "authority_basis": "President and Principal of record with the SEC; serves operationally as Chief Operating Officer. Remains the registered President for statutory instruments that require the President of record."
+    },
+    "michael_c_silla": {
+      "name": "Michael C. Silla",
+      "titles": [
+        "Corporate Secretary",
+        "Treasurer",
+        "Chief Financial Officer"
+      ],
+      "canonical_block": "Michael C. Silla · Corporate Secretary · Treasurer · Chief Financial Officer · GSSC Integrated Corporation"
+    },
+    "shieldon_tirazona": {
+      "name": "Shieldon Tirazona",
+      "titles": [
+        "Chief Investment Officer"
+      ],
+      "canonical_block": "Shieldon Tirazona · Chief Investment Officer · GSSC Integrated Corporation",
+      "authority_basis": "Chief Investment Officer (capital, investment strategy, and partnerships), reflected in the recent GIS amendment. 'CIO' expands to Chief Investment Officer, never Chief Information Officer."
+    }
+  },
+  "recorded_board_context": "Officer roster updated per the recent General Information Sheet (GIS) amendment restoring the original partnership structure. Duke Y. Demayo remains President and Principal of record with the SEC while serving operationally as COO; Ronnie S. del Castillo serves as CEO; Michael C. Silla as CFO/Corporate Secretary/Treasurer; Shieldon Tirazona as Chief Investment Officer.",
+  "future_only": {
+    "Leo Ollera": {
+      "planned_role": "Partner; non-operational",
+      "status": "future_only"
+    },
+    "Manny Borres": {
+      "planned_role": "Partner; non-operational",
+      "status": "future_only"
+    }
+  },
+  "signatory_authority": {
+    "client_facing_documents": [
+      "Ronnie S. del Castillo as Chief Executive Officer for corporate profiles, proposals, and cover letters, subject to controlling board resolutions and the specific instrument."
+    ],
+    "quotations": [
+      "Ronnie S. del Castillo as Chief Executive Officer, or Duke Y. Demayo as President/COO, subject to controlling board resolutions and the specific instrument."
+    ],
+    "secretary_certificates": [
+      "Michael C. Silla as Corporate Secretary. The CEO does not sign the Secretary's Certificate itself."
+    ],
+    "master_agreements_purchase_orders_ntps": [
+      "Use the governing board resolution and instrument; recorded authorized representatives include Ronnie S. del Castillo, Duke Y. Demayo, and Michael C. Silla."
+    ],
+    "statutory_filings": [
+      "Use the signatory required by the form, law, resolution, or filing instruction; never infer. Duke Y. Demayo signs as President of record where the instrument requires the registered President."
+    ]
+  },
+  "role_transition_workflow": [
+    "formal board action",
+    "secretary certification where required",
+    "regulatory update where required",
+    "kernel update",
+    "signature-block update",
+    "registry update"
+  ],
+  "output_rules": [
+    "Only active officers appear as current.",
+    "Future-only people appear only when explicitly labeled planned or future.",
+    "Canonical signature blocks are governance artifacts."
+  ],
+  "failure_modes": [
+    "future-only person shown as current",
+    "former officer shown as current",
+    "CEO signs the Secretary Certificate itself",
+    "signatory guessed instead of verified",
+    "canonical block edited casually",
+    "Duke Y. Demayo omitted as President of record on statutory instruments that require the registered President",
+    "CIO expanded as Chief Information Officer instead of Chief Investment Officer",
+    "rendered document title borrowed from a different active officer's declared titles (the specific defect Section 41 exists to catch)"
+  ],
+  "registered_officers_of_record": [
+    "Duke Y. Demayo — director/incorporator; President and Principal of record; serves operationally as COO",
+    "Michael C. Silla — director/incorporator, Treasurer, and Corporate Secretary as reflected in incorporation records; CFO title reflected in current records",
+    "Ronnie S. del Castillo — Chief Executive Officer, reflected in the recent GIS amendment restoring the original partnership structure",
+    "Shieldon Tirazona — Chief Investment Officer, reflected in the recent GIS amendment"
+  ],
+  "planned_governance_display_rule": "Leo Ollera and Manny Borres remain non-operational partners and must not be presented as officers or registered officers of record. The active four-officer roster (del Castillo, Demayo, Silla, Tirazona) is current and may be presented as such.",
+  "authority_evidence_rule": "Titles, signatory powers, and banking authority must be supported by the latest executed board resolutions, minutes, Secretary’s Certificates, bylaws, bank mandates, and SEC filings, including the recent GIS amendment. Marketing profiles and unsigned templates do not create authority.",
+  "known_conflicts": [
+    "Legacy files may still present Duke Y. Demayo as CEO; the current roster places Ronnie S. del Castillo as CEO and Duke Y. Demayo as President/COO. Use the current roster.",
+    "Legacy files may present Ronnie S. del Castillo as Chairman/Principal Director; the current public-facing role is Chief Executive Officer.",
+    "Statutory and SEC instruments must continue to reflect Duke Y. Demayo as President of record; do not substitute the CEO where the President of record is required.",
+    "RESOLVED 2026-09-21 (kernel 2.14.0): the universal quotation master's own hardcoded signoff block printed Duke Y. Demayo with the title \"Chief Executive Officer · President · Principal\" -- a title that has belonged to Ronnie S. del Castillo since at least kernel 2.1.1. Corrected to \"President · Principal · Chief Operating Officer\", matching active_officers.duke_y_demayo.titles exactly. The signatory NAME was not changed; only the title string. See Section 41 for the durable check."
+  ],
+  "section_41_measured_note": "Run 2026-09-21 against the real hydrated 2.14.0 derivative: all seven Section 41 checks PASS. Verified by five controls: the corrected build passes; re-injecting the exact original defect (Chief Executive Officer on Duke Y. Demayo) correctly FAILS; a future-only person shown as signatory correctly FAILS; an unrecognised name correctly FAILS; and a genuine SUBSET of the officer's declared titles (President · Principal, dropping COO) correctly PASSES -- proving the check is a real subset/ownership test, not string equality.",
+  "multi_signature_rule": "Section 41 iterates EVERY signature block in a document as of runtime 1.7. Through 1.6 it used a first-match search and checked only the first, so a two-party instrument -- a CMSA, an SMSA, a countersigned acceptance -- had every block after the first unexamined. The universal quotation master carries one block, so this was latent rather than live; it is fixed before the first two-party derivative rather than after it. ENFORCED as of 2.16.0: Section 43 now runs Section 41 and requires the number of signature blocks it examines to equal the number present in the document. Through 1.7 this was \"checked\" by a helper that returned a constant string, so the test was true by construction and would have passed with Section 41 deleted."
+}

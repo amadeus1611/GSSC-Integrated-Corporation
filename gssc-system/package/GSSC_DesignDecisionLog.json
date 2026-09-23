@@ -1,0 +1,16 @@
+{
+  "store_role": "GSSC_DESIGN_DECISION_LOG",
+  "canonical_fields": [
+    "document_reference",
+    "client_name",
+    "content_type",
+    "body_structure_used",
+    "is_novel_pattern",
+    "design_rationale",
+    "tokens_referenced",
+    "date_generated",
+    "source_versions_used",
+    "precedent_reference"
+  ],
+  "entries": []
+}

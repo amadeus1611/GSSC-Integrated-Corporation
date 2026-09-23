@@ -1,0 +1,115 @@
+{
+  "module_id": "07_website_doctrine",
+  "version": "1.0",
+  "role": "strong_default",
+  "purpose": "Govern gsscph.com visual character, motion, content security, page cohesion, and Squarespace integration.",
+  "human_note": "The website is a flagship credibility artifact: an editorial journal on the web.",
+  "character": {
+    "core": "Editorial masterpiece",
+    "audience": "Executives and decision-makers",
+    "principles": [
+      "typographic authority",
+      "restraint",
+      "cohesion with print",
+      "firewall-safe content"
+    ]
+  },
+  "visual": {
+    "inherit": "03_brand",
+    "layout": "Editorial columns and consistent grid; source master determines bleed behavior.",
+    "photography": "Avoid by default.",
+    "assets": "Preserve original CSS-variable/base64 strategy where present."
+  },
+  "motion": {
+    "current_authoritative_home_behavior": "Static Premium: all substantive content visible on load; only a load-time hero cascade plus restrained hover states.",
+    "scroll_triggered_motion": "Disabled in the current authoritative home master.",
+    "source_master_rule": "Do not reintroduce IntersectionObserver, scroll-linked reveal machinery, or hidden-on-load content unless the user explicitly creates a new versioned master.",
+    "allowed": [
+      "load-time hero cascade",
+      "restrained hover states",
+      "motion-reduction support"
+    ],
+    "avoid": [
+      "scroll-triggered reveal",
+      "content hidden pending intersection",
+      "bounce",
+      "elastic easing",
+      "gimmicky parallax",
+      "autoplay carousel",
+      "attention pulse",
+      "fast marquee",
+      "layout-shifting hover"
+    ]
+  },
+  "content": {
+    "voice": "Measured executive tone",
+    "prefer": [
+      "capabilities",
+      "firewall-safe case notes",
+      "engagement process",
+      "single-point accountability"
+    ],
+    "forbid": [
+      "supplier identities",
+      "unreleased client names",
+      "unapproved project values",
+      "margin language",
+      "facility identifiers",
+      "generic stock photography"
+    ]
+  },
+  "case_notes": {
+    "structure": [
+      "challenge",
+      "GSSC coordination",
+      "outcome"
+    ],
+    "rules": [
+      "no monetary values by default",
+      "no supplier identities",
+      "no client name without release",
+      "no facility names",
+      "generalize where needed"
+    ]
+  },
+  "pages": {
+    "known": [
+      "home",
+      "capabilities",
+      "how we engage",
+      "case notes",
+      "contact"
+    ],
+    "cohesion": "Share typography, color, spacing, motion and asset treatment."
+  },
+  "implementation": {
+    "platform": "Squarespace",
+    "delivery": "Ready-to-paste blocks preferred.",
+    "css": "Global shared system plus page-scoped or in-block CSS for conflict-prone components.",
+    "backup": "Back up live code before replacement; verify before deleting backup."
+  },
+  "registered_masters": [
+    "GSSC_Home_Page_v2_6_STATIC.html",
+    "GSSC_Capabilities_v2_6.html",
+    "GSSC_HowWeEngage_v2_8.html"
+  ],
+  "registered_assets": [
+    "GSSC_Website_Base64_Logo_Pack.html",
+    "GSSC_Website_CustomCSS_v1_1_MERGED.html"
+  ],
+  "failure_modes": [
+    "early animation",
+    "off-brand photography",
+    "CSS conflicts",
+    "public case-note leakage",
+    "regenerated logos",
+    "page-level drift",
+    "scroll-reveal doctrine applied to the v2.6 Static Premium home master",
+    "v2.5 home restored without explicit rollback instruction"
+  ],
+  "superseded_home_master": {
+    "file": "GSSC_Home_Page_v2_5_FINAL.html",
+    "status": "legacy",
+    "superseded_by": "GSSC_Home_Page_v2_6_STATIC.html"
+  }
+}

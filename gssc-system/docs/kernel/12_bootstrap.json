@@ -1,0 +1,204 @@
+{
+  "module_id": "12_bootstrap",
+  "version": "1.0",
+  "role": "startup_protocol",
+  "purpose": "Define startup, file classification, intent detection, routing, execution and reporting discipline.",
+  "human_note": "Apply silently after 00_meta; do not recite the kernel unless asked.",
+  "startup_sequence": [
+    "load and validate kernel",
+    "decode and read the full hydrated template body, and the full runtime source, end to end",
+    "read identity/governance",
+    "resolve canonical-data conflicts using source priority",
+    "read firewall/IP",
+    "read relevant doctrine",
+    "inventory uploads",
+    "classify files",
+    "determine intent",
+    "select operation/mode",
+    "execute source-preservingly",
+    "report output and QA"
+  ],
+  "file_classes": {
+    "authoritative_master": "Registered or explicitly designated finished GSSC source.",
+    "baseline": "Authoritative for a named subsystem.",
+    "working_draft": "Editable GSSC file not yet authoritative.",
+    "reference": "Source used for cloning, analysis or comparison.",
+    "unknown": "Inspect and use least-destructive treatment."
+  },
+  "intent_classes": [
+    "analyze",
+    "clone to HTML",
+    "deconstruct/tokenize",
+    "modify source-derived master",
+    "generate derivative",
+    "audit/QA",
+    "register/supersede"
+  ],
+  "routing": {
+    "reference plus clone": "Mode A",
+    "authoritative HTML plus tokenize": "Mode B",
+    "registered master plus edit": "surgical versioned derivative",
+    "analysis only": "no mutation",
+    "legal": "09 plus relevant master",
+    "external output": "04 scan",
+    "identity or tax fact": "Use 01_identity plus government-source registry entries; do not rely on profile snippets.",
+    "email template work": "Use GSSC-EMAIL-TEMPLATE-Universal-2026-002-v4-OutlookNative.html as authoritative.",
+    "CMSA work": "Use GSSC_CMSA_v6_9_FullEmbed.html as latest candidate while retaining review_pending legal gates.",
+    "SMSA work": "Use GSSC_SMSA_v7_0_FullEmbed.html as latest retrieved candidate while retaining review_pending legal gates.",
+    "accounting or tax": "Use 14_accounting_compliance plus current BIR/SEC source records; require accountant review for treatment, filing, and payment.",
+    "delivery channel failure": "Execution Protocol Section 28B",
+    "asset hydration": "Execution Protocol Section 28C",
+    "package validation": "run runtime preflight; Execution Protocol Section 03",
+    "html to pdf conversion": "browser print-to-PDF at A4, margins none, background graphics on. LibreOffice is NOT an acceptable client-release path -- see 10_template_engine.layout_budget_reference.honesty_note.",
+    "header or numbering or contents work": "Kernel Module 17; Execution Protocol Sections 33, 33A, 34",
+    "creative latitude question": "Kernel Module 18; Execution Protocol Section 35",
+    "contrast or legibility question": "Kernel Module 03 contrast_registry; Execution Protocol Section 36",
+    "cover or hero composition": "Kernel Module 18 cover archetype; Execution Protocol Section 38",
+    "overlap or overflow report": "Kernel Module 10 resolved_box_model; Execution Protocol Section 23D",
+    "chart or data series colour": "Kernel Module 03 data_series_palette; Execution Protocol Section 39",
+    "signatory or officer title question": "Kernel Module 02 active_officers; Execution Protocol Section 41",
+    "page geometry or padding question": "Kernel Module 10 resolved_box_model; Execution Protocol Section 42",
+    "adding a new component, token or layout mode": "Execution Protocol Section 43 -- run futureproof BEFORE building",
+    "collision, overlap or grid balance question": "Section 44 -- gssc_runtime.py gridbalance. Do not reason about whether two blocks overlap; measure it.",
+    "accessibility, screen reader or tagged PDF question": "Module 19 + Section 45 -- gssc_runtime.py a11yaudit. State the untagged-PDF limitation plainly; never imply conformance.",
+    "tiered or optional pricing": "03_brand.component_registry.tier_comparison + 06_quotation_doctrine. At most three tiers; never manufacture a tier to create the appearance of choice.",
+    "phase, stage or schedule presentation": "03_brand.component_registry.milestone_roadmap. At most four phases.",
+    "adding a new audit or entrypoint": "Section 46 -- wiringaudit. argparse choices, designaudit and (if it needs no --file) the `all` tail must all be updated in the SAME change, and the negative control must be written before the check is called done.",
+    "adding a block to an existing page": "Run boxcheck FIRST and read the target page's fill and AT CAPACITY status. Adding to a page already at capacity is the documented cause of the 2.16.0 footer overlap.",
+    "any figure, chart, image or embedded object": "It is a REPLACED ELEMENT with its own box. Confirm boxcheck reports it under \"replaced <tag> ... = Npx\". If it does not appear there, it is being costed at zero and the page fill is wrong."
+  },
+  "action_policy": {
+    "execute_without_reconfirmation": [
+      "well-scoped reversible edits",
+      "requested analysis",
+      "requested file generation with complete inputs"
+    ],
+    "state_assumption_then_execute": [
+      "minor ambiguity with a safe source-preserving interpretation"
+    ],
+    "do_not_execute": [
+      "missing essential source requiring fabrication",
+      "firewall violation",
+      "legal conclusion presented as counsel advice",
+      "publishing a disputed identifier",
+      "calling a review-pending legal candidate authoritative without evidence"
+    ]
+  },
+  "output_discipline": [
+    "name source",
+    "state mode",
+    "list files",
+    "state deviations/limitations",
+    "never silently supersede",
+    "provide clickable download",
+    "report any identity override applied to an older master",
+    "report candidate-master review status",
+    "on any file-delivery tool-call error, apply Execution Protocol Section 28B (channel-failure inline verification render) rather than retrying the same channel indefinitely",
+    "never deliver a file containing an unresolved {{GSSC_ASSET:...}} token; hydrate per Execution Protocol Section 28C first"
+  ],
+  "session_note": "Re-upload the kernel in a new chat unless already attached or loaded.",
+  "mandatory_validation": {
+    "syntax": [
+      "valid JSON",
+      "19 top-level modules (00-16 inclusive; count must equal manifest.integrity.kernel_module_count)",
+      "unique top-level keys",
+      "every manifest-declared part is present and no undeclared part exists (runtime enforces)"
+    ],
+    "identity": [
+      "legal name",
+      "SEC registration number",
+      "latest BIR TIN/branch code 806-700-547-00000",
+      "BIR issuance/registration date 2026-06-23",
+      "BIR OCN 074RC20260000008487",
+      "public contacts",
+      "no corporate 8% income-tax option language",
+      "contact conflict is recorded, not silently resolved",
+      "permit status is evidence-qualified"
+    ],
+    "governance": [
+      "every rendered signatory name resolves to a current active officer",
+      "every rendered title belongs to THAT officer, never to a different active officer",
+      "the officer titled Chief Executive Officer in rendered output is the one Module 02 names",
+      "no future-only person appears as a current signatory"
+    ],
+    "quotation": [
+      "794x1123",
+      "120px bottom margin",
+      "px typography",
+      "Page 3 locks"
+    ],
+    "template_engine": [
+      "Mode A present",
+      "Mode B present",
+      "source-preservation rules present"
+    ],
+    "registry": [
+      "authoritative home is v2.6 STATIC",
+      "v2.5 is legacy",
+      "government identity sources registered",
+      "legal candidates not over-promoted",
+      "email v4 is authoritative",
+      "Capabilities filename v2.6 and embedded v2.7 marker are distinguished",
+      "CMSA v6.9 is review_pending",
+      "CMSA v6.4–v6.8 are legacy candidate predecessors",
+      "SMSA v7.0 is review_pending",
+      "SMSA planned role removed",
+      "universal quotation master v1.7 is authoritative for the universal template role",
+      "quotation_template_payload_base64 holds the TOKENIZED universal master v1.7; it is a storage form and must be hydrated before delivery, never sent to a client as stored",
+      "Execution Protocol v1.9 remains review_pending until management adoption is recorded in manifest.adoption_record; the recorded version in this rule must be updated whenever the protocol is revised",
+      "GSSC_SignageProgram.html remains authoritative for the signage category role and is not superseded by the universal master",
+      "the employee package is the single GSSC_Master_Package.json container with six parts: manifest, kernel, execution_protocol, quotation_template_payload_base64, brand_assets, assembly",
+      "brand_assets holds each brand image exactly once, single-encoded, with a decoded-image SHA-256",
+      "every {{GSSC_ASSET:name}} token resolves to a brand_assets entry and no entry is orphaned",
+      "the runtime part is present and its sha256 matches manifest.parts"
+    ],
+    "accounting": [
+      "registered tax forms captured",
+      "books and close controls present",
+      "AI accounting controls present",
+      "open verification items preserved",
+      "no invented deadlines or compliance certification"
+    ],
+    "categorical_header_system": [
+      "every CHS header uses a register declared in Module 17",
+      "the register/category pairing is one Module 17 declares legal",
+      "the CHS style layer declares no raw font size and no colour outside the palette",
+      "no register sets the ordinal larger than the title it numbers",
+      "no unconverted legacy .marker header survives in a document claiming conversion",
+      "the contents page is generated only after pagination settles"
+    ],
+    "measurement_parity": [
+      "clipcheck, pagefill and footercheck resolve size, line height and tag scope identically",
+      "no measurement function uses the flat 0.50em heuristic",
+      "every declared contrast pairing is at or above the floor, or carries an exempt_reason",
+      "every Module 17 token equals the template :root literal of the same name",
+      "the declared section_numeral equals the shipped CHS ordinal token"
+    ],
+    "overflow": [
+      "Section 23D boxcheck PASSES on every page of the built derivative",
+      "no archetype treatment at any budget pushes a page past its content budget",
+      "every var() pattern in the box model accepts case-sensitive custom property names"
+    ],
+    "coverage": [
+      "Section 23D reports zero unaccounted elements on every page",
+      "every one-line span row is registered in flex_row_classes",
+      "every categorical data series is >=0.04 luminance from its neighbours",
+      "every data series carries a non-colour second channel",
+      "every multi-row table closes on a declared emphasis tier"
+    ],
+    "forward_compatibility": [
+      "page padding resolves from the cascade, never from an ordinal key",
+      "every palette colour is contrast-registered or waived as non-text",
+      "every series pattern is in the declared pattern vocabulary",
+      "no stylesheet uses a layout mode outside supported_layout_modes",
+      "no in-flow generated content exists anywhere in the document",
+      "every signature block is governance-checked, not just the first",
+      "no registered flex-row or container class is stale"
+    ],
+    "collision_and_balance": "gssc_runtime.py gridbalance <package.json> [--file built.html]",
+    "accessibility": "gssc_runtime.py a11yaudit <package.json> [--file built.html]",
+    "entrypoint_wiring": "gssc_runtime.py wiringaudit <package.json>",
+    "claim_evidence": "Module 16 claim_evidence_rule: any doctrine claim added in a release must ship with a check that would fail if it were false, demonstrated against a negative control.",
+    "replaced_elements": "boxcheck must list every figure under \"replaced <tag>\" with a resolved height, and report 0 unaccounted, before any derivative is considered measured."
+  }
+}

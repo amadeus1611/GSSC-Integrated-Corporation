@@ -1,0 +1,174 @@
+{
+  "module_id": "18_page_archetype_creativity_engine",
+  "version": "1.0",
+  "role": "strong_default",
+  "purpose": "Tell the generating model, region by region rather than page by page, how much creative latitude a given piece of a document carries and which existing module owns the rules for it.",
+  "human_note": "This is a routing and lookup layer. It creates no new authority over locked chrome; 03_brand, 06_quotation_doctrine and 09_legal_doctrine remain the substantive owners and are cross-referenced per archetype.",
+  "why_region_not_page": "Verified by direct inspection of the universal master: page p3 (folio 05 after 2.10.0 repagination) carries the Section III Commercial Terms body -- fully researchable under Module 15 -- and the canonical signoff block with the signature lockup, which carries zero latitude, on the same physical page. A page-level creative posture is therefore structurally wrong for this master.",
+  "budget_scale": {
+    "0": "Verbatim. Module 15 Stage 1 research is skipped entirely. Any deviation is a hard stop of the same tier as 04_firewall and 05_ip.",
+    "1": "Token-constrained micro-variation only. Stage 1 runs but is narrowly scoped to already-approved states.",
+    "2": "Full Module 15 five-stage loop, bound by the normal token vocabulary.",
+    "3": "Full Module 15 loop plus a mandatory external precedent check before Stage 2, because this is where a model is most likely to reach for an untokenized value or generic stock imagery."
+  },
+  "archetypes": {
+    "cover": {
+      "locked_elements": [
+        "masthead",
+        "logo",
+        "watermark",
+        "footer",
+        "page geometry"
+      ],
+      "variable_elements": [
+        "hero composition",
+        "pull-quote and dek selection",
+        "photography within 03_brand.photography"
+      ],
+      "creativity_budget": 3,
+      "authority_owner": "03_brand",
+      "note": "The only budget-3 archetype. Live precedent check is mandatory.",
+      "budget_3_pass": {
+        "status": "ATTEMPTED 2026-09-21, MEASURED, AND REVERTED the same day. The treatment raised the cover title from --fs-title 42px to --fs-dropcap 64px at max-width:470px. Measured by the Section 23D resolved box model: the 68-character title wraps to six lines, 430.1px, driving page 1 to 1059.4px against an 843px budget -- a 216px overflow into the footer band. Reverted to 42px on the full column: three lines, 141.1px, page total 770.4px, 72.6px spare.",
+        "precedent_basis": [
+          "Scale dissonance between display and body type is the dominant recurring device in contemporary editorial practice, and the cover is specifically the page that must earn attention before anything else does.",
+          "The isolation effect (von Restorff, 1933) holds only while the isolated element remains the exception: if everything is emphasised, nothing is. The correct move is therefore to raise exactly ONE element and leave every neighbour untouched."
+        ],
+        "execution": "Cover title --fs-title 42px -> --fs-dropcap 64px. Both tokens were already declared in the master :root; no new literal was introduced. Open space above the title widened so the raise reads as composition rather than a larger font. Kicker let down to a hairline-ruled eyebrow so the title is the single entry point. Nothing else on the page changed.",
+        "measured_effect": "Display-to-body dissonance returns to 4.00:1. The 6.10:1 figure claimed at 2.11.0 was real but unaffordable.",
+        "photography": "None introduced. 03_brand.photography.default is \"avoid when possible\" and the treatment is compositional and typographic only.",
+        "content_integrity": "No content added, removed or reworded. The change is entirely a restyle, so Module 16 NO_UNREQUESTED_CONTENT_CHANGE is satisfied.",
+        "finding": "The cover of this master cannot carry a scale-dissonance overture at its current content load. Measured headroom for the title box is 213.7px; 44px fits with 17px spare, 48px already overflows by 1px, and neither margin is safe. An overture needs SPACE, not only size, and space on this page would have to come from content -- which Section 38 forbids a cover overture from touching. The correct conclusion is that the page must be shortened editorially before any overture is attempted, which is a content decision for management, not a design decision for this module.",
+        "retained": "The kicker eyebrow refinement is kept: hairline rule beneath the kicker, gold-deep, with declared rhythm spacing. It costs 8.5px, measured, and it was never the cause."
+      }
+    },
+    "table_of_contents": {
+      "locked_elements": [
+        "dot-leader language",
+        "ordinal aesthetic (Module 17)",
+        "folio column"
+      ],
+      "variable_elements": [
+        "which sections carry a descriptor"
+      ],
+      "creativity_budget": 1,
+      "authority_owner": "17_numbering_and_toc_system",
+      "note": "Registered in the toc register.",
+      "registered_patterns": [
+        "metric_callout -- budget 1",
+        "milestone_roadmap -- budget 1"
+      ],
+      "fill_note": "The contents page of the universal master measured 30.7% fill against a 91.5% cover: a 60.8-point spread, the widest in the document. Luxury-editorial practice treats generous white space as confidence, but a spread that wide is not composition, it is an unfilled page. Adding the metric strip and roadmap -- both genuinely navigational content, which is what a contents page is for -- moved it to 48.9% and narrowed the document spread to 42.6 points. Measured, not asserted."
+    },
+    "narrative_prose_body": {
+      "locked_elements": [
+        "type scale",
+        "rhythm",
+        "palette"
+      ],
+      "variable_elements": [
+        "chart vs table vs prose",
+        "emphasis",
+        "pull-quotes"
+      ],
+      "creativity_budget": 2,
+      "authority_owner": "03_brand + 15_design_research_engine",
+      "note": ""
+    },
+    "commercial_schedule": {
+      "locked_elements": [
+        "column anatomy (06_quotation_doctrine.program_cards.anatomy)",
+        "firewall: no itemized cost, supplier attribution or margin wording"
+      ],
+      "variable_elements": [
+        "row grouping",
+        "emphasis",
+        "which tier is foregrounded"
+      ],
+      "creativity_budget": 1,
+      "authority_owner": "06_quotation_doctrine + 04_firewall",
+      "note": "",
+      "registered_patterns": [
+        "tier_comparison (03_brand.component_registry) -- budget 1; a registered anatomy, not a fresh composition"
+      ]
+    },
+    "chart_data_visualisation": {
+      "locked_elements": [
+        "viewBox bounds (figure_geometry_check)",
+        "font stacks mirroring prose (font_fallback_parity)"
+      ],
+      "variable_elements": [
+        "chart type",
+        "series-to-palette mapping",
+        "layout"
+      ],
+      "creativity_budget": 2,
+      "authority_owner": "10_template_engine + 03_brand",
+      "note": "Pure HTML/CSS/inline-SVG only; no external library or CDN.",
+      "first_exercised": "Performed 2026-09-21. The archetype was fully specified and had never been built against: grep for <svg> on the 2.12.0 master returned zero, so series-to-palette mapping was a declared variable with nothing to select from. A horizontal bar figure now ships on the commercial page, built from pure inline SVG with no library and no CDN, drawing on the new data_series_palette.",
+      "redundant_encoding_rule": "Colour never carries meaning alone. Every series declares a pattern as a second channel and prints its value as a text label, so the chart survives monochrome print and the red-green deficiency carried by roughly 8% of men."
+    },
+    "appendix_annex_opening": {
+      "locked_elements": [
+        "ordinal aesthetic (appendix_annex category)"
+      ],
+      "variable_elements": [
+        "supporting graphic",
+        "framing text"
+      ],
+      "creativity_budget": 2,
+      "authority_owner": "17_numbering_and_toc_system",
+      "note": ""
+    },
+    "correspondence_letterhead": {
+      "locked_elements": [
+        "logo and stripe",
+        "recipient / subject / closing anatomy (08_document_doctrine.types.letterhead)"
+      ],
+      "variable_elements": [
+        "tone",
+        "body paragraph structure"
+      ],
+      "creativity_budget": 1,
+      "authority_owner": "08_document_doctrine",
+      "note": ""
+    },
+    "signatory_acceptance": {
+      "locked_elements": [
+        "signature lockup image",
+        "signatory name, title and organization",
+        "acceptance-gate slot geometry (06_quotation_doctrine.acceptance_gate)"
+      ],
+      "variable_elements": [],
+      "creativity_budget": 0,
+      "authority_owner": "02_governance + 06_quotation_doctrine",
+      "note": "Zero latitude. Renders in the CHS formal register: no descriptor, strongest rule."
+    },
+    "notarial_acknowledgment": {
+      "locked_elements": [
+        "acknowledgment form",
+        "venue",
+        "DST amount",
+        "identity-evidence fields (09_legal_doctrine.secretary_certificate)"
+      ],
+      "variable_elements": [],
+      "creativity_budget": 0,
+      "authority_owner": "09_legal_doctrine",
+      "note": "Zero latitude. CHS legal or formal register only."
+    }
+  },
+  "composite_page_rule": "Where a page carries more than one archetype, each region is resolved independently and the LOWEST budget in play governs any decision that spans them. A budget-0 region never inherits latitude from a budget-2 neighbour.",
+  "failure_modes": [
+    "Assigning one creative posture to a whole page that carries mixed archetypes.",
+    "Treating a budget-0 region as merely conservative rather than verbatim.",
+    "Reading this module as authority to relax a rule owned by 03, 04, 05, 06 or 09.",
+    "Running a budget-3 archetype without the external precedent check.",
+    "Using an external charting library or CDN for a chart archetype."
+  ],
+  "budget_gate": {
+    "rule": "NO archetype treatment at any creativity budget may push a page past its content budget. The page budget is a hard constraint that outranks every creative latitude in this module, including budget 3.",
+    "enforcement": "Section 23D boxcheck must PASS on the built derivative before any archetype treatment is adopted. A treatment that fails is reverted, not rationalised.",
+    "origin": "Added after the 2.11.0 cover overture shipped a 216px footer overflow. The treatment was reasoned from genuine precedent and was still wrong, because no gate connected the creative decision to the page it had to live on.",
+    "capacity_rule": "Before adding ANY block to a page, read that page's current fill from Section 23D. A page reporting AT CAPACITY (>= soft_fill_limit_pct) has no room: place the block elsewhere or relocate existing content first. The 2.16.0 commercial page was at a true 95.8% when a tier block was added to it, which is how it reached 110.2% and crossed the footer. The measurement existed; it was not consulted before the edit."
+  }
+}

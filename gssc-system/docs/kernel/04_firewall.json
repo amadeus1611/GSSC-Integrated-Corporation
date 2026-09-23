@@ -1,0 +1,98 @@
+{
+  "module_id": "04_firewall",
+  "version": "1.0",
+  "role": "hard_override",
+  "purpose": "Block sensitive identity, economics, finance, and operational details from external outputs.",
+  "human_note": "Apply the spirit of each category, not merely exact keywords.",
+  "scope": {
+    "external": [
+      "quotations",
+      "proposals",
+      "website",
+      "profiles",
+      "case notes",
+      "marketing",
+      "third-party communications"
+    ],
+    "internal_exception": "Sensitive content may appear only in clearly marked INTERNAL_ONLY_DO_NOT_SHARE material."
+  },
+  "never_disclose": {
+    "supplier": [
+      "names",
+      "contacts",
+      "addresses",
+      "representatives",
+      "quotes",
+      "pricing",
+      "bank details"
+    ],
+    "economics": [
+      "unit cost pricing",
+      "margin percentages",
+      "markup logic",
+      "cost basis",
+      "internal worksheets",
+      "comparison-bid logic",
+      "shadow-bid arrangements"
+    ],
+    "finance": [
+      "bank account numbers",
+      "internal cash-flow data",
+      "unpublished financial statements"
+    ],
+    "operations": [
+      "processing facilities",
+      "warehouse locations",
+      "internal logistics routes",
+      "subcontractor identities"
+    ],
+    "legacy_future": [
+      "legacy company names",
+      "unreleased partners",
+      "future-only people presented as current"
+    ]
+  },
+  "conditional": {
+    "client_names": "Generalize publicly unless permission exists.",
+    "project_values": "Omit publicly unless authorized.",
+    "site_photography": "Use only with release and firewall review."
+  },
+  "always_safe": [
+    "legal name",
+    "public address",
+    "public email",
+    "public phone",
+    "website",
+    "high-level tax status",
+    "high-level services",
+    "active officers and verified titles"
+  ],
+  "pre_release_scan": [
+    "supplier identity",
+    "cost or supplier pricing",
+    "margin language",
+    "bank details",
+    "facilities",
+    "legacy names",
+    "future-only people as current",
+    "unauthorized client identity or values"
+  ],
+  "language": {
+    "prefer": [
+      "GSSC coordinates",
+      "GSSC delivers",
+      "GSSC provides",
+      "turnkey program",
+      "single-point accountability"
+    ],
+    "avoid": [
+      "our supplier",
+      "at cost",
+      "our margin",
+      "shadow bid",
+      "our processing facility"
+    ]
+  },
+  "on_detection": "Redact or generalize, state what was removed, preserve sensitive source separately when required.",
+  "success": "No external output reveals supplier economics, supplier identities, bank details, processing locations, legacy names, or future-only people as current."
+}

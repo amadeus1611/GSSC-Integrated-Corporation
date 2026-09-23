@@ -1,0 +1,21 @@
+{
+  "module_id": "19_accessibility_doctrine",
+  "version": "1.0",
+  "role": "document_accessibility_floor",
+  "purpose": "Govern the accessibility of GSSC client-facing documents, and state honestly and in one place what is currently guaranteed and what is not.",
+  "human_note": "This module exists because nothing else did. Modules 01-18 govern type, colour, geometry, overflow, governance and collision, and none of them said anything about whether a document can be read by a screen reader.",
+  "current_state": {
+    "source_floor": "ENFORCED. A declared document language, a non-empty title, a text alternative on every image, and a label or explicit aria-hidden on every figure. Checked on every run by Section 45 and demonstrated to fail on fixtures missing lang and missing alt.",
+    "pdf_structure": "NOT GUARANTEED, AND DISCLOSED. The approved print workflow (Chrome/Edge, Ctrl+P, A4, margins none, background graphics on, 100%, Save as PDF) emits an UNTAGGED PDF by construction: no structure tree, no tagged table headers, no explicit reading order. Every GSSC PDF released to date is in this state.",
+    "why_not_closed": "No tool capable of writing PDF structure exists in the operating environment -- re-confirmed 2026-09-22 alongside the rendering-engine check: no Chromium, no Playwright, no WeasyPrint, no wkhtmltopdf, no Prince, no pagedjs-cli, and no working package installer. LibreOffice is present and is already disqualified as a conversion path by Module 10. Claiming conformance without a tool that can produce it would be the exact failure class 2.16.0 was written to end."
+  },
+  "commercial_relevance": "PDF/UA or WCAG 2.1 AA conformance appears as boilerplate in an increasing share of institutional and enterprise procurement requirements. GSSC pursues exactly that class of client. A document can be visually immaculate and still fail an accessibility review outright, and none of the existing design QA can see it.",
+  "required_action": "When a tagging-capable tool becomes available -- Chrome DevTools Protocol tagged-PDF export, Acrobat Pro, or a Python tagging library -- extend this module to a full PDF/UA gate and supersede this text. Until then the source floor is the guarantee and the gap is stated, never implied closed.",
+  "executable": "gssc_runtime.py a11yaudit <package.json> [--file built.html]",
+  "failure_modes": [
+    "Asserting PDF/UA conformance that no tool in the pipeline can produce",
+    "Dropping lang, title, or alt in a future template edit",
+    "Treating a passing Section 45 run as evidence of PDF accessibility",
+    "Adding an unlabelled inline SVG figure"
+  ]
+}

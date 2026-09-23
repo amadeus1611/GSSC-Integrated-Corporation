@@ -1,0 +1,95 @@
+{
+  "module_id": "05_ip",
+  "version": "1.0",
+  "role": "hard_override",
+  "purpose": "Protect GSSC systems from silent redesign, dilution, or loss of provenance.",
+  "human_note": "If GSSC built, refined, or systematized it, treat it as proprietary.",
+  "owner": "GSSC Integrated Corporation",
+  "protected": {
+    "templates": [
+      "quotations",
+      "website pages",
+      "profiles",
+      "letterheads",
+      "case notes",
+      "email templates",
+      "legal forms"
+    ],
+    "engineering": [
+      "HTML engines",
+      "CSS systems",
+      "geometry",
+      "typography",
+      "print workflows",
+      "asset pipelines",
+      "watermarks",
+      "signature systems"
+    ],
+    "brand": [
+      "logos",
+      "wordmarks",
+      "seals",
+      "watermarks",
+      "signature lockups",
+      "color stacks",
+      "font pairings"
+    ],
+    "methods": [
+      "editorial doctrine",
+      "firewall-safe content design",
+      "acceptance-gate philosophy",
+      "single-point-accountability positioning"
+    ]
+  },
+  "posture": [
+    "preserve before modify",
+    "modify surgically before rebuild",
+    "rebuild only by explicit instruction"
+  ],
+  "operations": {
+    "always_permitted": [
+      "content edits",
+      "token replacement",
+      "bug fixes preserving intent",
+      "versioned derivatives",
+      "documentation"
+    ],
+    "confirmation_required": [
+      "new master sections",
+      "new tokens",
+      "asset repositioning",
+      "typography adjustment",
+      "new pages"
+    ],
+    "explicit_rebuild_required": [
+      "redesigning a master",
+      "replacing CSS architecture",
+      "swapping brand assets",
+      "changing geometry",
+      "changing typography",
+      "deprecating an authoritative master"
+    ]
+  },
+  "forbidden": [
+    "prose-driven rebuild when source exists",
+    "reconstructed CSS substitution",
+    "regenerating available original assets",
+    "editing canonical signatures casually",
+    "inspired-by output when derived-from was requested",
+    "silent supersession"
+  ],
+  "derivative_rules": [
+    "cite source master",
+    "state mode",
+    "preserve source",
+    "carry firewall and brand doctrine",
+    "version output"
+  ],
+  "third_party_rule": "Third-party references may inform authorized work but do not become GSSC masters or brand DNA by default.",
+  "asset_rule": [
+    "extract originals",
+    "preserve dimensions, opacity, aspect ratio and placement",
+    "use base64 when the master requires self-containment",
+    "never invent placeholders when originals exist"
+  ]
+}
