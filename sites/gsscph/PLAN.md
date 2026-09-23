@@ -112,6 +112,28 @@ The order on the home page: header → headline + statement → **the Chart**
 → **the Instrument (exploded view)** → engagement rail → proof → inquire →
 night footer.
 
+## 2B. Three separate signature assets (Duke, 2026-09-23)
+
+1. **The Chart (hero artwork, cursor-reactive).** Reference: Google
+   Antigravity (antigravity.google, observed 2026-09-23). A page-wide field
+   of tiny dashes: far from the cursor they rest as faint dots; near it they
+   become coloured strokes oriented around the pointer, and moving the
+   mouse sweeps a wake through the field. GSSC's version is a **magnetic
+   field**, because a compass answers to magnetism. The field is thousands
+   of fine navy dashes like iron filings or engraved hatching. Near the
+   cursor they swing to align around it and warm from ink to gold, then
+   relax back with the soft close when it leaves. On a phone, the touch
+   point (or tilt) does the same. It lives inside the expanding panel (§1A)
+   and converges into the star on scroll.
+2. **The Instrument (compass, scroll-linked vertical split).** A separate
+   asset from the Chart: the 3D compass that splits apart vertically into
+   its parts as you scroll, and re-assembles as you scroll back (§2A.2).
+3. **The header (scroll-linked horizontal expansion).** At the very top,
+   the mark splits and the header unfolds horizontally: the star stays
+   put, the GSSC wordmark slides out to its right, and the nav links fan
+   out along the bar. Scrolling down folds it back into the mark, through
+   every in-between state (§3).
+
 ## 3. The dynamic header (modelled on anthropic.com, verified in a browser)
 
 Observed on anthropic.com, 2026-09-23 (Chromium, 1440 px): the nav bar is
