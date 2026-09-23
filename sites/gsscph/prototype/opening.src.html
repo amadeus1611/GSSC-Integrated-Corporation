@@ -158,7 +158,7 @@ h1.title .it{font-style:italic;letter-spacing:-.02em}
 .figcaption i{font:italic 400 14px/1.5 var(--f-display);letter-spacing:0}
 
 /* Fig. 1: the field. Inset figure at rest; opens to full bleed with scroll. Corners stay at the master's 2px. */
-.field-stage{position:relative;height:250vh}
+.field-stage{position:relative;height:280vh}
 .field-pin{position:sticky;top:0;height:100vh;height:100svh;overflow:hidden}
 .panel{position:absolute;inset:0;background:var(--navy-dark);
   clip-path:inset(var(--it,15%) var(--is,var(--gutter)) var(--ib,11%) var(--is,var(--gutter)) round var(--r))}
@@ -185,7 +185,7 @@ h1.title .it{font-style:italic;letter-spacing:-.02em}
 @media (max-width:760px){ .sec-line{left:8px;width:1.5px} }
 
 /* the guide: the one persistent aid besides the header. Where you are, how far through, what comes next. */
-.guide{position:fixed;z-index:45;right:var(--gutter);top:calc(env(safe-area-inset-top,0px) + 112px - var(--h) * 36px);width:236px;
+.guide{--h:0;position:fixed;z-index:45;right:var(--gutter);top:calc(env(safe-area-inset-top,0px) + 112px - var(--h) * 36px);width:236px;
   padding:10px 12px 11px;border:1px solid rgba(9,23,61,.16);border-radius:var(--r);background:rgba(250,248,243,.74);
   -webkit-backdrop-filter:blur(12px);backdrop-filter:blur(12px);color:var(--navy-dark);
   transition:color 700ms var(--soft-close),background 700ms var(--soft-close),border-color 700ms var(--soft-close)}
@@ -207,7 +207,9 @@ body.on-night .g-hint,body.on-night .g-fol{color:var(--on-night-2)} body.on-nigh
 .sec::before,.sec::after{content:"";position:absolute;top:calc(var(--u) * 7);width:13px;height:13px;opacity:.5;
   background:linear-gradient(var(--hairline),var(--hairline)) center/1px 100% no-repeat,linear-gradient(var(--hairline),var(--hairline)) center/100% 1px no-repeat}
 .sec::before{left:calc(var(--gutter) - 26px)} .sec::after{right:calc(var(--gutter) - 26px)}
-.sec{padding-block:calc(var(--u) * 16) calc(var(--u) * 14);position:relative}
+.sec{padding-block:calc(var(--u) * 26) calc(var(--u) * 24);position:relative}
+/* breath: empty paper between a finished segment and the next, so each one is seen whole before the next arrives */
+.breath{height:clamp(160px,32vh,360px)}
 .grid12{display:grid;grid-template-columns:repeat(12,minmax(0,1fr));column-gap:24px;row-gap:calc(var(--u) * 5);align-items:start}
 .span-all{grid-column:1 / -1} .col-a{grid-column:1 / span 6} .col-b{grid-column:8 / -1}
 @media (max-width:960px){ .col-a,.col-b{grid-column:1 / -1} }
@@ -246,7 +248,7 @@ table.dt tbody tr:hover td{background:rgba(230,212,167,.24);transition-duration:
 @media (min-width:561px) and (max-width:960px){ .metric-strip{grid-template-columns:1fr 1fr} .metric:nth-child(2){border-right:0} .metric:nth-child(3){padding-left:0} .metric:nth-child(n+3){border-top:var(--rule-hair) solid var(--hairline)} }
 
 /* the statement: one idea, set large, inked in as it is read */
-.statement{padding-block:calc(var(--u) * 20) calc(var(--u) * 12);display:grid;grid-template-columns:repeat(12,minmax(0,1fr));column-gap:24px;row-gap:28px}
+.statement{padding-block:calc(var(--u) * 30) calc(var(--u) * 26);display:grid;grid-template-columns:repeat(12,minmax(0,1fr));column-gap:24px;row-gap:28px}
 .statement .kicker{grid-column:1 / span 2;padding-top:14px}
 .ink{grid-column:3 / span 9;margin:0;font:400 clamp(30px,4.1vw,64px)/1.14 var(--f-display);letter-spacing:var(--compressed);color:var(--navy-dark);text-wrap:balance}
 .statement-by{grid-column:3 / span 9;margin:12px 0 0;display:flex;gap:18px;align-items:baseline;font:500 11.5px/1.4 var(--f-body);letter-spacing:var(--tracked-tight);text-transform:uppercase;color:var(--mid-grey)}
@@ -255,7 +257,7 @@ table.dt tbody tr:hover td{background:rgba(230,212,167,.24);transition-duration:
 @media (max-width:860px){ .statement .kicker,.ink,.statement-by{grid-column:1 / -1} }
 
 /* Fig. 3: the system flow (two lanes, a firewall, a travelling token; drawn by scroll) */
-.flow{margin-top:calc(var(--u) * 16)}
+.flow{margin-top:calc(var(--u) * 26)}
 .flow-head{display:grid;grid-template-columns:repeat(12,minmax(0,1fr));column-gap:24px;row-gap:18px;align-items:end;margin-bottom:calc(var(--u) * 5)}
 .flow-head > div{grid-column:1 / span 6} .flow-body{grid-column:8 / -1;margin:0;font-size:15.5px;color:var(--slate)}
 .flow-title{margin:14px 0 0;font:400 clamp(26px,2.5vw,36px)/1.16 var(--f-display);letter-spacing:var(--compressed);color:var(--navy-dark);text-wrap:balance}
@@ -339,7 +341,7 @@ table.dt tbody tr:hover td{background:rgba(230,212,167,.24);transition-duration:
 
 /* ---------------------------------------------------------------- Fig. 2: the Instrument (night stage) */
 .night{background:var(--navy-dark);color:var(--on-night);position:relative}
-.inst-stage{position:relative;height:430vh}
+.inst-stage{position:relative;height:480vh}
 .inst-pin{position:sticky;top:0;height:100vh;height:100svh;overflow:hidden;background:radial-gradient(90% 70% at 62% 58%, #10204c 0%, var(--navy-dark) 62%, #060f2a 100%)}
 .inst-pin::after{content:"";position:absolute;inset:0;pointer-events:none;opacity:.5;mix-blend-mode:overlay;
   background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='240' height='240'><filter id='g'><feTurbulence type='fractalNoise' baseFrequency='.95' numOctaves='3' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 1  0 0 0 0 1  0 0 0 0 1  0 0 0 .16 0'/></filter><rect width='100%' height='100%' filter='url(%23g)'/></svg>")}
@@ -371,7 +373,7 @@ table.dt tbody tr:hover td{background:rgba(230,212,167,.24);transition-duration:
 }
 
 /* ---------------------------------------------------------------- close: gate + colophon */
-.close{padding-block:calc(var(--u) * 18) 0}
+.close{padding-block:calc(var(--u) * 28) 0}
 .gate{border-top:var(--rule-medium) solid rgba(243,236,218,.5);padding-top:28px;display:flex;flex-wrap:wrap;gap:20px 40px;align-items:center;justify-content:space-between}
 .gate p{margin:0;font:italic 400 19px/1.5 var(--f-display);color:var(--on-night-2);max-width:42ch}
 .night .btn{color:var(--on-night)}
@@ -449,6 +451,7 @@ table.dt tbody tr:hover td{background:rgba(230,212,167,.24);transition-duration:
     </div>
   </section>
 
+  <div class="breath" aria-hidden="true"></div>
   <section class="statement wrap" id="statement" data-rail="Company · Statement" data-index="i" aria-label="Statement">
     <p class="kicker" data-rise>The position</p>
     <p class="ink" id="ink">We do not supply a part of the programme. We answer for the whole of it, from the first scope conversation to the signed turnover.</p>
@@ -488,6 +491,7 @@ table.dt tbody tr:hover td{background:rgba(230,212,167,.24);transition-duration:
     </div>
   </section>
 
+  <div class="breath" aria-hidden="true"></div>
   <section class="inst-stage night" id="instrument" data-rail="Fig. 2 · The Instrument" data-index="I" aria-label="Figure 2, the Instrument: the compass opened into its six disciplines">
     <div class="inst-pin">
       <div class="inst-view" id="instView">
@@ -505,6 +509,7 @@ table.dt tbody tr:hover td{background:rgba(230,212,167,.24);transition-duration:
     </div>
   </section>
 
+  <div class="breath" aria-hidden="true"></div>
   <section class="sec wrap" id="engagement" data-rail="II · Engagement" data-index="II">
     <div class="chs">
       <div class="chs-stamp"><span class="chs-numeral">II</span><span class="chs-dash">—</span><span class="chs-cat" data-rise>Engagement</span></div>
@@ -591,6 +596,7 @@ table.dt tbody tr:hover td{background:rgba(230,212,167,.24);transition-duration:
     </div>
   </section>
 
+  <div class="breath" aria-hidden="true"></div>
   <section class="close night" id="inquire" data-rail="V · Inquire" data-index="V">
     <div class="wrap">
       <div class="chs">
@@ -721,11 +727,11 @@ void main(){
   float br = .0012 + .0065 * r2;
   vec2 asp0 = vec2(uRes.y / uRes.x, 1.);
   vec3 col = vec3(texture2D(uTex, d + ca).r, texture2D(uTex, d).g, texture2D(uTex, d - ca).b) * .36;
-  for (int i = 0; i < 8; i++){ float a = float(i) * .785 + .39; col += texture2D(uTex, d + vec2(cos(a), sin(a)) * asp0 * br).rgb * .08; }
+  for (int i = 0; i < 4; i++){ float a = float(i) * 1.5708 + .39; col += texture2D(uTex, d + vec2(cos(a), sin(a)) * asp0 * br).rgb * .16; }
   vec3 bl = vec3(0.); vec2 asp = vec2(uRes.y / uRes.x, 1.);
-  for (int i = 0; i < 12; i++){ float a = float(i) * .5236; vec2 o = vec2(cos(a), sin(a)) * asp;
+  for (int i = 0; i < 6; i++){ float a = float(i) * 1.0472 + .26; vec2 o = vec2(cos(a), sin(a)) * asp;
     bl += max(texture2D(uTex, d + o * .012).rgb - .62, 0.) + max(texture2D(uTex, d + o * .03).rgb - .62, 0.) * .7; }
-  col += bl * .05 * vec3(1., .88, .66);
+  col += bl * .1 * vec3(1., .88, .66);
   col += vec3(.9,.86,.78) * (gx1 * .035 + gx2 * .022) * (.6 + .4 * uv.y);
   col = clamp(col, 0., 1.);
   col = col * col * (3. - 2. * col) * .25 + col * .75;
@@ -762,7 +768,7 @@ if (gl) {
 let FW = 0, FH = 0;
 function sizeField(){
   if (!fx) return;
-  const dpr = Math.min(devicePixelRatio || 1, 1.5);
+  const dpr = Math.min(devicePixelRatio || 1, 1);   // soft footage: 1x playback is indistinguishable and a fraction of the cost
   FW = Math.max(2, Math.round(fcv.clientWidth * dpr)); FH = Math.max(2, Math.round(fcv.clientHeight * dpr));
   fcv.width = FW; fcv.height = FH;
   // the lamp itself renders small and is played back large: the softness is the point
@@ -846,7 +852,7 @@ let three = null;
 function buildInstrument(){
   if (!window.THREE) return null;
   const T = THREE;
-  const renderer = new T.WebGLRenderer({canvas: ic, antialias: true, alpha: true});
+  const renderer = new T.WebGLRenderer({canvas: ic, antialias: (devicePixelRatio || 1) < 1.5, alpha: true, powerPreference: 'high-performance'})  // on dense screens the pixel ratio itself smooths edges; MSAA there costs ~35% for nothing visible;
   renderer.outputEncoding = T.sRGBEncoding; renderer.toneMapping = T.ACESFilmicToneMapping; renderer.toneMappingExposure = .9;
   const scene = new T.Scene(), cam = new T.PerspectiveCamera(28, 1, .1, 200); cam.position.set(0, 0, 15);
   // a studio for the metal to reflect: a navy room with warm softboxes
@@ -867,8 +873,8 @@ function buildInstrument(){
     navyMetal: phys({color: 0x1a2c61, metalness: .62, roughness: .5, clearcoat: .2, clearcoatRoughness: .45}),
     gold: phys({color: 0xc9a553, metalness: .95, roughness: .44}),
     goldSatin: phys({color: 0xbf9b4b, metalness: .95, roughness: .55}),
-    enamel: new T.MeshPhysicalMaterial({color: 0xeae0c6, metalness: 0, roughness: .62, clearcoat: .35, clearcoatRoughness: .4, envMapIntensity: .55}),
-    ivory: new T.MeshPhysicalMaterial({color: 0xe3d8bc, metalness: .02, roughness: .66, envMapIntensity: .5}),
+    enamel: new T.MeshStandardMaterial({color: 0xeae0c6, metalness: 0, roughness: .62, clearcoat: .35, clearcoatRoughness: .4, envMapIntensity: .55}),
+    ivory: new T.MeshStandardMaterial({color: 0xe3d8bc, metalness: .02, roughness: .66, envMapIntensity: .5}),
   };
   const group = new T.Group(); scene.add(group);
   const parts = [];
@@ -882,7 +888,7 @@ function buildInstrument(){
       for (let a = 0; a <= Math.PI * 2 + .01; a += .01) { const rr = r + Math.sin(a * 24 + r * .06) * 3.2; gx.lineTo(Math.cos(a) * rr, Math.sin(a) * rr); }
       gx.strokeStyle = `rgba(${150 + (r % 3) * 20},${170 + (r % 3) * 15},230,.16)`; gx.lineWidth = 1.1; gx.stroke(); }
     const gtex = new T.CanvasTexture(gc); gtex.anisotropy = renderer.capabilities.getMaxAnisotropy();
-    const dial = new T.MeshPhysicalMaterial({map: gtex, bumpMap: gtex, bumpScale: .006, metalness: .55, roughness: .46, clearcoat: .3, clearcoatRoughness: .3, envMapIntensity: .7});
+    const dial = new T.MeshStandardMaterial({map: gtex, bumpMap: gtex, bumpScale: .006, metalness: .55, roughness: .46, clearcoat: .3, clearcoatRoughness: .3, envMapIntensity: .7});
     const base = new T.Mesh(new T.CylinderGeometry(3.62, 3.62, .12, 160, 1), [M.navyMetal, dial, M.navyMetal]); base.rotation.x = Math.PI / 2; base.position.z = -.12; g.add(base);
     // a soft contact shadow under the case, so the instrument sits in the room rather than floating in it
     const sc = document.createElement('canvas'); sc.width = sc.height = 128; const sx = sc.getContext('2d');
@@ -920,7 +926,7 @@ function buildInstrument(){
     }
     const geo = new T.BufferGeometry(); geo.setAttribute('position', new T.Float32BufferAttribute(pos, 3));
     geo.setAttribute('color', new T.Float32BufferAttribute(col, 3)); geo.computeVertexNormals();
-    add(new T.Mesh(geo, new T.MeshPhysicalMaterial({vertexColors: true, metalness: .85, roughness: .38, flatShading: true, side: T.DoubleSide, envMapIntensity: .8})), 2.16); }
+    add(new T.Mesh(geo, new T.MeshStandardMaterial({vertexColors: true, metalness: .85, roughness: .38, flatShading: true, side: T.DoubleSide, envMapIntensity: .8})), 2.16); }
   svgL.innerHTML = PARTS.map(() => '<path fill="none" stroke="rgba(200,164,77,.7)" stroke-width="1"/>').join('');
   tagsEl.innerHTML = PARTS.map(([n, p, c]) => `<div class="tag"><span class="c">${n ? `<em>${n}</em>` : ''}${p}</span><span class="v">${c}</span></div>`).join('');
   phaseEl.innerHTML = PARTS.map(() => '<i></i>').join('') + '<span>Closed</span>';
@@ -946,14 +952,14 @@ function drawInstrument(t, q, dt){
      means no part ever passes through another. */
   const S = three.state || (three.state = {tilt: 0, v: parts.map(() => 0)});
   const k = 1 - Math.exp(-dt / 120);
-  const tiltT = ease(clamp(q / .07)) * (1 - .7 * clamp((q - .9) / .07));
+  const tiltT = ease(clamp(q / .06)) * (1 - .7 * clamp((q - .8) / .06));
   S.tilt += (tiltT - S.tilt) * k;
   for (let i = 1; i < N; i++) {
     const fromTop = N - 1 - i;
-    const opn = clamp((q - (.07 + fromTop * .085)) / .085), cls = clamp((q - (.66 + (i - 1) * .04)) / .06);
+    const opn = clamp((q - (.06 + fromTop * .075)) / .075), cls = clamp((q - (.58 + (i - 1) * .035)) / .05);
     S.v[i] += (opn * (1 - cls) - S.v[i]) * k;
   }
-  const closing = q >= .66, lifted = S.v.filter(v => v > .5).length;
+  const closing = q >= .58, lifted = S.v.filter(v => v > .5).length;
   const tilt = ease(S.tilt);
   three.tilt.x += (iptr.y * .16 - three.tilt.x) * .05; three.tilt.y += (iptr.x * .24 - three.tilt.y) * .05;
   group.rotation.x = -1.04 * tilt + three.tilt.x; group.rotation.y = three.tilt.y;
@@ -968,7 +974,9 @@ function drawInstrument(t, q, dt){
   group.position.x = narrow ? 0 : lerp(1.2, .5, open);
   group.position.y = -stack * .58 * Math.sin(1.04 * tilt) * sc - (narrow ? .9 : .35) * tilt;
   cam.position.z = lerp(15, 19, open); cam.lookAt(0, 0, 0);
-  renderer.render(scene, cam);
+  const sig = (q * 1e4 | 0) + ':' + (S.tilt * 1e3 | 0) + ':' + S.v.map(v => v * 1e3 | 0).join(',') + ':' + (three.tilt.x * 1e3 | 0) + ':' + (three.tilt.y * 1e3 | 0);
+  three.fr = (three.fr || 0) + 1;
+  if (sig !== three.sig || three.fr % 2 === 0) { renderer.render(scene, cam); three.sig = sig; }
   three.slow = dt > 26 ? (three.slow || 0) + 1 : Math.max(0, (three.slow || 0) - 1);
   if (three.slow > 24 && three.pr > 1) { three.pr = 1; renderer.setPixelRatio(1); sizeInst(); three.slow = 0; }
   let cur = -1; for (let i = N - 1; i >= 1; i--) if (E[i] > .5) cur = i;
@@ -1099,6 +1107,9 @@ const secs = railSecs;
 document.querySelectorAll('.sec').forEach(sec => { const l = document.createElement('i'); l.className = 'sec-line'; l.setAttribute('aria-hidden', 'true'); sec.prepend(l); });
 const secLines = [...document.querySelectorAll('.sec-line')];
 const guide = {sec: document.getElementById('gSec'), fol: document.getElementById('gFol'), hint: document.getElementById('gHint'), el: document.getElementById('guide'), last: ''};
+// write a custom property only when its value changes: unchanged writes still invalidate style
+const setVar = (el, k, v) => { const c = el.__v || (el.__v = {}); if (c[k] !== v) { c[k] = v; el.style.setProperty(k, v); } };
+const barEl = document.getElementById('bar');
 const shortName = el => el.dataset.rail.split('·').pop().trim();
 function frame(t){
   const dt = Math.min(64, t - last); last = t;
@@ -1114,28 +1125,28 @@ function frame(t){
   // ---- header: a damped spring off the scroll; the wordmark leads, the dateline and nav settle a beat later
   const target = clamp(Math.max(0, -topR.top) / 180);
   H1 += (target - H1) * (1 - Math.exp(-dt / 110)); H2 += (target - H2) * (1 - Math.exp(-dt / 260));
-  root.style.setProperty('--h', ease(H1).toFixed(4)); root.style.setProperty('--h2', ease(H2).toFixed(4));
-  root.style.setProperty('--hv', clamp(Math.abs(target - H1) * 5).toFixed(3));
+  setVar(barEl, '--h', ease(H1).toFixed(3)); setVar(barEl, '--h2', ease(H2).toFixed(3)); setVar(guide.el, '--h', ease(H1).toFixed(3));
+  setVar(barEl, '--hv', clamp(Math.abs(target - H1) * 5).toFixed(2));
   // ---- Fig. 1: opens within the first screen of the pin, has gathered by 80% of it, then holds complete
   const span = fieldStage.offsetHeight - vh;
-  const open = clamp((-fr.top + vh * .6) / vh), conv = clamp((-fr.top - vh * .3) / ((span - vh * .3) * .8));
+  const open = clamp((-fr.top + vh * .6) / vh), conv = clamp((-fr.top - vh * .3) / ((span - vh * .3) * .68));
   const eo = ease(open), inset = Math.min(104, Math.max(20, vw * .06));
-  for (const el of [panel, panelLabel]) { el.style.setProperty('--it', lerp(15, 0, eo) + '%'); el.style.setProperty('--is', lerp(inset, 0, eo) + 'px'); }
-  panel.style.setProperty('--ib', lerp(11, 0, eo) + '%'); panel.style.setProperty('--feather', (1 - eo).toFixed(3));
-  fieldStage.style.setProperty('--open', eo.toFixed(4));
-  panel.style.setProperty('--st', ease(clamp((conv - .65) / .35)).toFixed(4));
+  for (const el of [panel, panelLabel]) { setVar(el, '--it', lerp(15, 0, eo).toFixed(2) + '%'); setVar(el, '--is', lerp(inset, 0, eo).toFixed(1) + 'px'); }
+  setVar(panel, '--ib', lerp(11, 0, eo).toFixed(2) + '%'); setVar(panel, '--feather', (1 - eo).toFixed(3));
+  setVar(fieldStage, '--open', eo.toFixed(3));
+  setVar(panel, '--st', ease(clamp((conv - .65) / .35)).toFixed(3));
   if (fr.bottom > -40 && fr.top < vh + 40) drawField(t, conv, dt);
   // ---- Fig. 2
   const iq = clamp(-ir.top / (instStage.offsetHeight - vh));
   if (three && ir.bottom > 0 && ir.top < vh) drawInstrument(t, iq, dt);
   // ---- paper sections
   const rm = ease(clamp((vh * .85 - rr.top) / (vh * .6)));
-  roadmap.style.setProperty('--rm', rm.toFixed(4)); stages.forEach((st, i) => st.classList.toggle('lit', rm >= i / stages.length + .02));
-  rises.forEach((el, i) => { if (riseT[i] > vh * 1.2 || riseT[i] < -vh) return; el.style.setProperty('--p', ease(clamp((vh * .96 - riseT[i]) / (vh * .34))).toFixed(3)); });
+  setVar(roadmap, '--rm', rm.toFixed(3)); stages.forEach((st, i) => st.classList.toggle('lit', rm >= i / stages.length + .02));
+  rises.forEach((el, i) => { if (riseT[i] > vh * 1.2 || riseT[i] < -vh) return; setVar(el, '--p', ease(clamp((vh * .96 - riseT[i]) / (vh * .34))).toFixed(2)); });
   { const pr = clamp((vh * .82 - inkR.top) / (inkR.height + vh * .3)), n = inkWords.length;
-    inkWords.forEach((w, i) => w.style.setProperty('--wp', clamp(pr * n * 1.08 - i).toFixed(2))); }
-  secLines.forEach((l, i) => { const r = lineR[i]; l.style.setProperty('--sp', clamp((vh * .7 - r.top) / r.height).toFixed(3)); });
-  if (flowGeo) { const tg = clamp((vh * .78 - flowR.top) / (flowR.height + vh * .15));
+    inkWords.forEach((w, i) => setVar(w, '--wp', clamp(pr * n * 1.08 - i).toFixed(2))); }
+  secLines.forEach((l, i) => { const r = lineR[i]; setVar(l, '--sp', clamp((vh * .7 - r.top) / r.height).toFixed(3)); });
+  if (flowGeo && flowR.bottom > -100 && flowR.top < vh + 100) { const tg = clamp((vh * .78 - flowR.top) / (flowR.height + vh * .15));
     flowGeo.p += (tg - flowGeo.p) * (1 - Math.exp(-dt / 180));
     const L = flowGeo.len * flowGeo.p, pt = flowGeo.path.getPointAtLength(L);
     flowGeo.path.setAttribute('stroke-dashoffset', (flowGeo.len - L).toFixed(1));
@@ -1143,25 +1154,27 @@ function frame(t){
     flowGeo.halo.setAttribute('r', (8 + 3 * Math.sin(t * .003)).toFixed(2));
     flowGeo.nodes.forEach((n, i) => n.classList.toggle('on', L >= flowGeo.at[i] - 2)); }
   { const g = ease(clamp((vh * .85 - econR.top) / (vh * .5)));
-    barsEl.style.setProperty('--grow', g.toFixed(3));
+    setVar(barsEl, '--grow', g.toFixed(3));
     const k = 1 - Math.exp(-dt / 260);
     econ.sD += (econ.tD * g - econ.sD) * k; econ.sC += (econ.tC * g - econ.sC) * k;
-    hero.D.textContent = php(econ.sD); hero.C.textContent = php(econ.sC);
-    hero.S.textContent = php(Math.max(0, econ.sD - econ.sC)) + ' · ' + (econ.share * 100 * g).toFixed(1) + '%'; }
-  { const d = ease(clamp((vh * .82 - tlR.top) / (vh * .55))); tl.style.setProperty('--d', d.toFixed(4));
+    if (econR.bottom > 0 && econR.top < vh) { hero.D.textContent = php(econ.sD); hero.C.textContent = php(econ.sC);
+    hero.S.textContent = php(Math.max(0, econ.sD - econ.sC)) + ' · ' + (econ.share * 100 * g).toFixed(1) + '%'; } }
+  { const d = ease(clamp((vh * .82 - tlR.top) / (vh * .55))); setVar(tl, '--d', d.toFixed(3));
     tl.querySelectorAll('.tl-ev').forEach(e => e.classList.toggle('on', d >= (+e.dataset.day - 1) / 29)); }
   // ---- tone
   const probe = 40, onField = fr.top <= probe && fr.bottom > probe && open > .55;
   body.classList.toggle('on-field', onField);
   body.classList.toggle('on-night', onField || nightR.some(r => r.top <= probe && r.bottom > probe));
   // ---- the guide: where you are, how far through it, what comes next
-  let ci = secR.findIndex(r => r.top <= vh * .45 && r.bottom > vh * .45); if (ci < 0) ci = secR[0].top > 0 ? 0 : secs.length - 1;
+  // in the breathing space between sections, the guide stays with the section just finished
+  let ci = 0; secR.forEach((r, i) => { if (r.top <= vh * .45) ci = i; });
   const cr = secR[ci], cp = clamp((vh * .45 - cr.top) / cr.height);
-  guide.el.style.setProperty('--gp', cp.toFixed(3));
+  setVar(guide.el, '--gp', cp.toFixed(3));
   const nx = secs[ci + 1];
   let hint, href = nx ? '#' + nx.id : '#top';
-  if (secs[ci] === fieldStage && conv < .98) hint = 'Keep scrolling · the field gathers';
-  else if (secs[ci] === instStage && iq < .97) hint = `Keep scrolling · part ${Math.max(1, Math.min(7, Math.ceil(iq * 7.4)))} of 7`;
+  if (secs[ci] === fieldStage && conv < .99) hint = 'Keep scrolling · the field gathers';
+  else if (secs[ci] === instStage && iq < .58) hint = `Keep scrolling · part ${Math.max(1, Math.min(7, Math.ceil(iq / .51 * 6) + 1))} of 7`;
+  else if (secs[ci] === instStage && iq < .86) hint = 'Keep scrolling · it closes around the star';
   else if (ci === 0 && cp < .25) hint = 'Scroll to begin';
   else hint = nx ? 'Next · ' + shortName(nx) : 'Back to the top';
   const key = ci + hint;
@@ -1172,6 +1185,11 @@ function frame(t){
 }
 addEventListener('resize', () => { vw = innerWidth; vh = innerHeight; sizeField(); sizeInst(); layoutFlow(); });
 three = buildInstrument(); sizeInst();
+// WARM-UP. Shader programs and textures are otherwise compiled and uploaded on the first draw, which
+// would land exactly when the reader arrives at the compass and stall the page. Do it now, in idle
+// time after first paint, so arriving at Fig. 2 costs nothing.
+if (three) { const warm = () => { three.renderer.compile(three.scene, three.cam); drawInstrument(performance.now(), 0, 16); };
+  (window.requestIdleCallback || (f => setTimeout(f, 400)))(warm, {timeout: 1500}); }
 if (REDUCE) {
   panel.style.setProperty('--it', '0%'); panel.style.setProperty('--ib', '0%'); panel.style.setProperty('--is', '0px');
   drawField(0, 0, 16);
