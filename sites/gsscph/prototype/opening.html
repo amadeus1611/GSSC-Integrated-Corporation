@@ -262,20 +262,46 @@ table.dt tbody tr:hover td{background:rgba(230,212,167,.24);transition-duration:
 .flow-head > div{grid-column:1 / span 6} .flow-body{grid-column:8 / -1;margin:0;font-size:15.5px;color:var(--slate)}
 .flow-title{margin:14px 0 0;font:400 clamp(26px,2.5vw,36px)/1.16 var(--f-display);letter-spacing:var(--compressed);color:var(--navy-dark);text-wrap:balance}
 .flow-fig{margin:0}
-.flow-fig svg{width:100%;height:auto;display:block;overflow:visible}
-.flow-fig .lane{fill:rgba(243,239,228,.55)} .flow-fig .lane.in{fill:rgba(9,23,61,.035)}
-.flow-fig .lane-t{font:600 10.5px var(--f-body);letter-spacing:.18em;text-transform:uppercase;fill:var(--slate)}
-.flow-fig .wall{stroke:var(--gold-deep);stroke-width:1;stroke-dasharray:3 5}
-.flow-fig .wall-t{font:italic 400 13px var(--f-display);fill:var(--gold-deep)}
-.flow-fig .track{fill:none;stroke:var(--hairline);stroke-width:1}
-.flow-fig .run{fill:none;stroke:var(--navy-dark);stroke-width:1.5}
-.flow-fig .nd rect{fill:var(--ivory);stroke:var(--hairline);stroke-width:1;transition:stroke 700ms var(--soft-close),fill 700ms var(--soft-close)}
-.flow-fig .nd .n{font:400 13px var(--f-display);font-feature-settings:"onum" 1;fill:var(--hairline);transition:fill 700ms var(--soft-close)}
-.flow-fig .nd .t{font:500 12.5px var(--f-body);fill:var(--mid-grey);transition:fill 700ms var(--soft-close)}
-.flow-fig .nd .s{font:italic 400 11.5px var(--f-display);fill:var(--mid-grey);opacity:0;transition:opacity 700ms var(--soft-close)}
-.flow-fig .nd.on rect{stroke:var(--navy-dark)} .flow-fig .nd.on .n{fill:var(--gold-deep)} .flow-fig .nd.on .t{fill:var(--navy-dark)} .flow-fig .nd.on .s{opacity:1}
-.flow-fig .nd.gate rect{stroke-dasharray:3 3} .flow-fig .nd.gate.on rect{stroke:var(--gold-deep);fill:rgba(230,212,167,.25)}
-.flow-fig .tok{fill:var(--gold-primary)} .flow-fig .tok-h{fill:none;stroke:var(--gold-primary);stroke-width:1;opacity:.5}
+/* the plate: Fig. 3 is set like a primary exhibit, with a strong rule above, a header strip and its own ground */
+.flow-plate{border:1px solid var(--hairline);border-top:var(--rule-strong) solid var(--navy-dark);border-radius:0 0 var(--r) var(--r);
+  background:linear-gradient(180deg,rgba(243,239,228,.9),rgba(250,248,243,.6) 40%,rgba(243,239,228,.75));box-shadow:0 30px 60px -40px rgba(9,23,61,.28)}
+.flow-bar,.flow-foot{display:flex;justify-content:space-between;align-items:center;gap:14px 28px;flex-wrap:wrap;padding:14px 22px}
+.flow-bar{border-bottom:var(--rule-hair) solid var(--hairline)}
+.flow-foot{border-top:var(--rule-hair) solid var(--hairline)}
+.fb-t,.ff-sum{font:600 10.5px/1.3 var(--f-body);letter-spacing:var(--tracked);text-transform:uppercase;color:var(--navy-dark)}
+.ff-sum{color:var(--mid-grey);letter-spacing:var(--tracked-tight)}
+.ff-step{font:italic 400 15px/1.3 var(--f-display);color:var(--navy-dark);font-feature-settings:"lnum" 1}
+.fb-legend{display:flex;gap:22px;flex-wrap:wrap;font:500 11px/1 var(--f-body);letter-spacing:var(--tracked-tight);text-transform:uppercase;color:var(--slate)}
+.fb-legend span{display:inline-flex;align-items:center;gap:9px}
+.sw{display:inline-block;width:14px;height:10px;border-radius:1px;border:1px solid var(--hairline)}
+.sw.c{background:var(--ivory)} .sw.g{background:repeating-linear-gradient(45deg,rgba(9,23,61,.12) 0 1px,transparent 1px 4px),var(--ivory-deep)}
+.sw.w{border:1px dashed var(--gold-deep);background:rgba(230,212,167,.35)}
+.flow-fig svg{width:100%;height:auto;display:block}
+.flow-fig .lane-in{fill:url(#hatch)} .flow-fig .lane-c{fill:transparent}
+.flow-fig .lane-t{font:600 10px var(--f-body);letter-spacing:.2em;text-transform:uppercase;fill:var(--mid-grey)}
+.flow-fig .wall{stroke:var(--gold-deep);stroke-width:1;stroke-dasharray:2 4}
+.flow-fig .wall-tag rect{fill:var(--ivory);stroke:var(--gold-deep);stroke-width:.75}
+.flow-fig .wall-tag text{font:600 9.5px var(--f-body);letter-spacing:.18em;text-transform:uppercase;fill:var(--gold-deep);text-anchor:middle}
+/* connectors: routed port to port, behind the cards */
+.flow-fig .e-track{fill:none;stroke:rgba(9,23,61,.16);stroke-width:1;stroke-dasharray:1 4;stroke-linecap:round}
+.flow-fig .e-run{fill:none;stroke:var(--navy-dark);stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round}
+.flow-fig .e-run.x{stroke:var(--gold-deep)}
+.flow-fig .port{fill:var(--ivory);stroke:rgba(9,23,61,.3);stroke-width:1;transition:fill 500ms var(--soft-close),stroke 500ms var(--soft-close)}
+.flow-fig .port.on{fill:var(--gold-primary);stroke:var(--gold-deep)}
+/* cards: opaque, so no line is ever seen through them; the border traces itself as the path arrives */
+.flow-fig .card{fill:var(--ivory);stroke:var(--hairline);stroke-width:1;transition:fill 700ms var(--soft-close)}
+.flow-fig .trace{fill:none;stroke:var(--navy-dark);stroke-width:1.25}
+.flow-fig .nd.gate .card{fill:rgba(250,246,234,1);stroke:var(--gold-deep);stroke-dasharray:3 3}
+.flow-fig .nd.gate .trace{stroke:var(--gold-deep)}
+.flow-fig .nd .n{font:400 14px var(--f-display);font-feature-settings:"onum" 1;fill:var(--hairline);transition:fill 700ms var(--soft-close)}
+.flow-fig .nd .k{font:600 8.5px var(--f-body);letter-spacing:.2em;text-transform:uppercase;fill:var(--hairline);text-anchor:end;transition:fill 700ms var(--soft-close)}
+.flow-fig .nd .t{font:400 16px var(--f-display);letter-spacing:-.01em;fill:var(--mid-grey);transition:fill 700ms var(--soft-close)}
+.flow-fig .nd .s{font:italic 400 11.5px var(--f-display);fill:var(--slate);opacity:.0;transition:opacity 800ms var(--soft-close)}
+.flow-fig .nd .bar{fill:var(--gold-primary);transform-box:fill-box;transform-origin:left;transform:scaleX(0);transition:transform 900ms var(--soft-close)}
+.flow-fig .nd.on .card{fill:#fffdf8} .flow-fig .nd.on .n{fill:var(--gold-deep)} .flow-fig .nd.on .k{fill:var(--mid-grey)}
+.flow-fig .nd.on .t{fill:var(--navy-dark)} .flow-fig .nd.on .s{opacity:1} .flow-fig .nd.on .bar{transform:scaleX(1)}
+.flow-fig .tok{fill:var(--gold-primary);stroke:var(--gold-deep);stroke-width:.75}
+.flow-fig .tok-h{fill:none;stroke:var(--gold-primary);stroke-width:1}
 @media (max-width:960px){ .flow-head > div,.flow-body{grid-column:1 / -1} }
 
 /* the economics: a model the reader can move; two series, labelled, with its sources beneath */
@@ -485,8 +511,15 @@ table.dt tbody tr:hover td{background:rgba(230,212,167,.24);transition-duration:
         <p class="flow-body" data-rise>Research, pricing and the management decision happen inside GSSC, under the kernel's controls. Before anything reaches the client it passes the firewall, where supplier names, costs and margins are removed. What crosses is one quotation, and from acceptance to turnover, one line of accountability. Every decision is written to the record.</p>
       </div>
       <figure class="flow-fig" aria-label="Flow: inquiry, then inside GSSC research, pricing, decision and firewall, then quotation, acceptance, delivery and turnover to the client, and the record inside GSSC.">
-        <div class="dia-scroll"><svg id="flowSvg" role="img"><title>The GSSC engagement flow across the firewall</title></svg></div>
-        <figcaption class="figcaption"><b>Fig. 3</b><i>The path lights as you read. It follows the execution protocol: research, commercial and firewall gates before any client release.</i></figcaption>
+        <div class="flow-plate">
+          <div class="flow-bar">
+            <span class="fb-t">Fig. 3 · Engagement flow</span>
+            <span class="fb-legend"><span><i class="sw c"></i>Client-facing</span><span><i class="sw g"></i>Inside GSSC</span><span><i class="sw w"></i>Firewall gate</span></span>
+          </div>
+          <div class="dia-scroll"><svg id="flowSvg" role="img"><title>The GSSC engagement flow across the firewall</title></svg></div>
+          <div class="flow-foot"><span class="ff-step" id="flowStep">Step 01 of 10 · Inquiry</span><span class="ff-sum">10 steps · 1 gate · 1 contract · 1 point of accountability</span></div>
+        </div>
+        <figcaption class="figcaption"><b>Fig. 3</b><i>The path advances as you read. It follows the execution protocol: research, commercial and firewall gates before any client release.</i></figcaption>
       </figure>
     </div>
   </section>
@@ -1014,39 +1047,67 @@ const FLOW = [
 ];
 const flowSvg = document.getElementById('flowSvg'), flowFig = document.getElementById('flow');
 let flowGeo = null;
+const flowStep = document.getElementById('flowStep');
+/* ROUTING. Connectors leave a card through a port on its edge and enter the next through a port,
+   running as rounded orthogonal elbows in the gutter between cards (right-to-left on a wide screen,
+   bottom-to-top on a phone). Cards are opaque and drawn over the connectors, so a line is never seen
+   inside a box; it arrives at the box. */
+function elbow(a, b, dir, R){
+  if (dir === 'h') {
+    if (Math.abs(b.y - a.y) < .5) return `M${a.x} ${a.y} H${b.x}`;
+    const m = (a.x + b.x) / 2, s = Math.sign(b.y - a.y), r = Math.min(R, Math.abs(b.y - a.y) / 2, (b.x - a.x) / 2);
+    return `M${a.x} ${a.y} H${m - r} Q${m} ${a.y} ${m} ${a.y + s * r} V${b.y - s * r} Q${m} ${b.y} ${m + r} ${b.y} H${b.x}`;
+  }
+  if (Math.abs(b.x - a.x) < .5) return `M${a.x} ${a.y} V${b.y}`;
+  const m = (a.y + b.y) / 2, s = Math.sign(b.x - a.x), r = Math.min(R, Math.abs(b.x - a.x) / 2, (b.y - a.y) / 2);
+  return `M${a.x} ${a.y} V${m - r} Q${a.x} ${m} ${a.x + s * r} ${m} H${b.x - s * r} Q${b.x} ${m} ${b.x} ${m + r} V${b.y}`;
+}
 function layoutFlow(){
-  const narrow = flowFig.clientWidth < 700, NW = narrow ? 150 : 106, NH = 58;
-  let W, H, pos, wall, lanes;
+  const narrow = flowFig.clientWidth < 760, n = FLOW.length;
+  const NW = narrow ? 158 : 112, NH = narrow ? 70 : 104, R = 10;
+  let W, H, pos, lanes, wallSvg, dir;
   if (!narrow) {
-    W = 1200; H = 390; const wy = 200, top = 70, bot = 272;
-    pos = FLOW.map((f, i) => ({x: 22 + i * 118, y: f[0] === 'c' ? top : f[0] === 'i' ? bot : wy - NH / 2}));
-    wall = `<line class="wall" x1="0" y1="${wy}" x2="${W}" y2="${wy}"/><text class="wall-t" x="${W}" y="${wy - 8}" text-anchor="end">The firewall · supplier names, costs and margins never cross</text>`;
-    lanes = `<rect class="lane" x="0" y="30" width="${W}" height="${wy - 30}" rx="2"/><rect class="lane in" x="0" y="${wy}" width="${W}" height="${H - wy - 6}" rx="2"/>
-      <text class="lane-t" x="10" y="22">Client-facing</text><text class="lane-t" x="10" y="${H + 12}">Inside GSSC · kernel-governed</text>`;
+    dir = 'h'; W = 1400; H = 430; const pitch = 132, x0 = 84, wy = 222, yc = 58, yi = 280;
+    pos = FLOW.map((f, i) => ({x: x0 + i * pitch, y: f[0] === 'c' ? yc : f[0] === 'i' ? yi : wy - NH / 2}));
+    lanes = `<rect class="lane-c" x="0" y="0" width="${W}" height="${wy}"/><rect class="lane-in" x="0" y="${wy}" width="${W}" height="${H - wy}"/>
+      <text class="lane-t" transform="translate(34 ${wy / 2}) rotate(-90)" text-anchor="middle">Client-facing</text>
+      <text class="lane-t" transform="translate(34 ${(wy + H) / 2}) rotate(-90)" text-anchor="middle">Inside GSSC</text>`;
+    wallSvg = `<line class="wall" x1="60" y1="${wy - 2}" x2="${W - 20}" y2="${wy - 2}"/><line class="wall" x1="60" y1="${wy + 2}" x2="${W - 20}" y2="${wy + 2}"/>
+      <g class="wall-tag" transform="translate(${x0 + 2 * pitch + NW / 2} ${wy})"><rect x="-116" y="-10" width="232" height="20" rx="1"/><text y="3.5">Firewall · nothing internal crosses</text></g>`;
   } else {
-    W = 360; H = 20 + FLOW.length * 76; const wx = 180;
-    pos = FLOW.map((f, i) => ({x: f[0] === 'c' ? 8 : f[0] === 'i' ? 202 : wx - NW / 2, y: 30 + i * 76}));
-    wall = `<line class="wall" x1="${wx}" y1="0" x2="${wx}" y2="${H}"/>`;
-    lanes = `<rect class="lane" x="0" y="0" width="${wx}" height="${H}" rx="2"/><rect class="lane in" x="${wx}" y="0" width="${W - wx}" height="${H}" rx="2"/>
-      <text class="lane-t" x="8" y="-10">Client</text><text class="lane-t" x="${W}" y="-10" text-anchor="end">Inside GSSC</text>`;
+    dir = 'v'; W = 392; H = 40 + n * 112; const wx = 196, xc = 14, xi = W - 14 - NW;
+    pos = FLOW.map((f, i) => ({x: f[0] === 'c' ? xc : f[0] === 'i' ? xi : wx - NW / 2, y: 30 + i * 112}));
+    lanes = `<rect class="lane-c" x="0" y="0" width="${wx}" height="${H}"/><rect class="lane-in" x="${wx}" y="0" width="${W - wx}" height="${H}"/>
+      <text class="lane-t" x="14" y="18">Client</text><text class="lane-t" x="${W - 14}" y="18" text-anchor="end">Inside GSSC</text>`;
+    wallSvg = `<line class="wall" x1="${wx - 2}" y1="26" x2="${wx - 2}" y2="${H}"/><line class="wall" x1="${wx + 2}" y1="26" x2="${wx + 2}" y2="${H}"/>`;
   }
-  const C = pos.map(q => ({x: q.x + NW / 2, y: q.y + NH / 2}));
-  // an orthogonal path through every node centre; cumulative length recorded at each node
-  let d = `M${C[0].x} ${C[0].y}`, len = 0; const at = [0];
-  for (let i = 1; i < C.length; i++) {
-    const a = C[i - 1], b = C[i];
-    if (!narrow) { const mx = (a.x + b.x) / 2; d += ` L${mx} ${a.y} L${mx} ${b.y} L${b.x} ${b.y}`; }
-    else { const my = (a.y + b.y) / 2; d += ` L${a.x} ${my} L${b.x} ${my} L${b.x} ${b.y}`; }
-    len += Math.abs(b.x - a.x) + Math.abs(b.y - a.y); at.push(len);
-  }
-  const nodes = FLOW.map((f, i) => `<g class="nd${f[0] === 'w' ? ' gate' : ''}" transform="translate(${pos[i].x},${pos[i].y})"><title>${f[1]}: ${f[2]}</title>
-    <rect width="${NW}" height="${NH}" rx="2"/><text class="n" x="10" y="20">${String(i + 1).padStart(2, '0')}</text>
-    <text class="t" x="10" y="38">${f[1]}</text><text class="s" x="10" y="51">${f[2]}</text></g>`).join('');
-  flowSvg.setAttribute('viewBox', narrow ? `0 -24 ${W} ${H + 30}` : `0 0 ${W} ${H + 20}`);
-  flowSvg.style.minWidth = '0';
-  flowSvg.innerHTML = `<title>The GSSC engagement flow across the firewall</title>${lanes}${wall}<path class="track" d="${d}"/><path class="run" d="${d}" stroke-dasharray="${len}" stroke-dashoffset="${len}"/>${nodes}<circle class="tok-h" r="9"/><circle class="tok" r="4"/>`;
-  const path = flowSvg.querySelector('.run');
-  flowGeo = {path, len, at, nodes: [...flowSvg.querySelectorAll('.nd')], tok: flowSvg.querySelector('.tok'), halo: flowSvg.querySelector('.tok-h'), p: 0};
+  const outP = i => dir === 'h' ? {x: pos[i].x + NW, y: pos[i].y + NH / 2} : {x: pos[i].x + NW / 2, y: pos[i].y + NH};
+  const inP = i => dir === 'h' ? {x: pos[i].x, y: pos[i].y + NH / 2} : {x: pos[i].x + NW / 2, y: pos[i].y};
+  const edges = [];
+  for (let i = 0; i < n - 1; i++) edges.push({a: outP(i), b: inP(i + 1), d: elbow(outP(i), inP(i + 1), dir, R), cross: FLOW[i][0] === 'w' || FLOW[i + 1][0] === 'w'});
+  const port = (p, cls) => `<rect class="port ${cls}" x="${p.x - 3.5}" y="${p.y - 3.5}" width="7" height="7" rx="1"/>`;
+  const lane = f => f[0] === 'c' ? 'Client' : f[0] === 'i' ? 'GSSC' : 'Gate';
+  const cards = FLOW.map((f, i) => `<g class="nd${f[0] === 'w' ? ' gate' : ''}" transform="translate(${pos[i].x},${pos[i].y})"><title>${String(i + 1).padStart(2, '0')} · ${f[1]}: ${f[2]}</title>
+    <rect class="card" width="${NW}" height="${NH}" rx="2"/><rect class="trace" width="${NW}" height="${NH}" rx="2"/>
+    <text class="n" x="12" y="${narrow ? 22 : 24}">${String(i + 1).padStart(2, '0')}</text><text class="k" x="${NW - 12}" y="${narrow ? 21 : 23}">${lane(f)}</text>
+    <text class="t" x="12" y="${narrow ? 45 : 62}">${f[1]}</text><text class="s" x="12" y="${narrow ? 60 : 80}">${f[2]}</text>
+    <rect class="bar" x="12" y="${NH - 7}" width="${NW - 24}" height="1.5"/></g>`).join('');
+  flowSvg.setAttribute('viewBox', `0 0 ${W} ${H}`);
+  flowSvg.innerHTML = `<title>The GSSC engagement flow across the firewall</title>
+    <defs><pattern id="hatch" width="6" height="6" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><rect width="6" height="6" fill="rgba(243,239,228,.9)"/><line x1="0" y1="0" x2="0" y2="6" stroke="rgba(9,23,61,.07)" stroke-width="1"/></pattern></defs>
+    ${lanes}${wallSvg}
+    ${edges.map(e => `<path class="e-track" d="${e.d}"/>`).join('')}
+    ${edges.map(e => `<path class="e-run${e.cross ? ' x' : ''}" d="${e.d}"/>`).join('')}
+    ${cards}
+    ${edges.map(e => port(e.a, 'o') + port(e.b, 'i')).join('')}
+    <circle class="tok-h" r="10"/><rect class="tok" x="-4.5" y="-4.5" width="9" height="9" rx="1" transform="rotate(45)"/>`;
+  const runs = [...flowSvg.querySelectorAll('.e-run')], trs = [...flowSvg.querySelectorAll('.trace')];
+  const eLen = runs.map(r => r.getTotalLength()), per = 2 * (NW + NH);
+  runs.forEach((r, i) => { r.style.strokeDasharray = eLen[i]; r.style.strokeDashoffset = eLen[i]; });
+  trs.forEach(t => { t.style.strokeDasharray = per; t.style.strokeDashoffset = per; });
+  const ports = [...flowSvg.querySelectorAll('.port')];
+  flowGeo = {runs, eLen, trs, per, ports, pos, NW, NH, dir, inP: FLOW.map((_, i) => inP(i)),
+             nodes: [...flowSvg.querySelectorAll('.nd')], tok: flowSvg.querySelector('.tok'), halo: flowSvg.querySelector('.tok-h'), p: 0, lastStep: -1};
 }
 layoutFlow();
 
@@ -1146,13 +1207,31 @@ function frame(t){
   { const pr = clamp((vh * .82 - inkR.top) / (inkR.height + vh * .3)), n = inkWords.length;
     inkWords.forEach((w, i) => setVar(w, '--wp', clamp(pr * n * 1.08 - i).toFixed(2))); }
   secLines.forEach((l, i) => { const r = lineR[i]; setVar(l, '--sp', clamp((vh * .7 - r.top) / r.height).toFixed(3)); });
-  if (flowGeo && flowR.bottom > -100 && flowR.top < vh + 100) { const tg = clamp((vh * .78 - flowR.top) / (flowR.height + vh * .15));
-    flowGeo.p += (tg - flowGeo.p) * (1 - Math.exp(-dt / 180));
-    const L = flowGeo.len * flowGeo.p, pt = flowGeo.path.getPointAtLength(L);
-    flowGeo.path.setAttribute('stroke-dashoffset', (flowGeo.len - L).toFixed(1));
-    for (const c of [flowGeo.tok, flowGeo.halo]) { c.setAttribute('cx', pt.x.toFixed(1)); c.setAttribute('cy', pt.y.toFixed(1)); }
-    flowGeo.halo.setAttribute('r', (8 + 3 * Math.sin(t * .003)).toFixed(2));
-    flowGeo.nodes.forEach((n, i) => n.classList.toggle('on', L >= flowGeo.at[i] - 2)); }
+  if (flowGeo && flowR.bottom > -100 && flowR.top < vh + 100) {
+    /* SEQUENCE. The figure advances one unit at a time: a card receives the path (its border traces
+       itself around, 0.6 of a unit), then the connector to the next card draws (1 unit). Scroll sets
+       where the sequence is; a short damper keeps it smooth; reversing rewinds it exactly. */
+    const G = flowGeo, n = G.nodes.length, NU = .6, total = n * NU + (n - 1);
+    const tg = clamp((vh * .82 - flowR.top) / Math.max(vh * .62, flowR.height * .9));
+    G.p += (tg - G.p) * (1 - Math.exp(-dt / 160));
+    const u = G.p * total; let tokX = G.inP[0].x, tokY = G.inP[0].y, step = 0;
+    for (let i = 0; i < n; i++) {
+      const s0 = i * (NU + 1), np = clamp((u - s0) / NU);
+      setVar(G.trs[i], 'stroke-dashoffset', (G.per * (1 - ease(np))).toFixed(1));
+      G.nodes[i].classList.toggle('on', np >= .98);
+      if (u >= s0) { step = i; tokX = G.inP[i].x; tokY = G.inP[i].y; }
+      if (i < n - 1) {
+        const ep = clamp((u - s0 - NU) / 1), L = G.eLen[i] * ease(ep);
+        setVar(G.runs[i], 'stroke-dashoffset', (G.eLen[i] - L).toFixed(1));
+        G.ports[i * 2].classList.toggle('on', ep > 0); G.ports[i * 2 + 1].classList.toggle('on', ep >= .999);
+        if (ep > 0 && ep < 1) { const pt = G.runs[i].getPointAtLength(L); tokX = pt.x; tokY = pt.y; }
+      }
+    }
+    G.tok.setAttribute('transform', `translate(${tokX.toFixed(1)} ${tokY.toFixed(1)}) rotate(45)`);
+    G.halo.setAttribute('cx', tokX.toFixed(1)); G.halo.setAttribute('cy', tokY.toFixed(1));
+    G.halo.setAttribute('r', (9 + 2.5 * Math.sin(t * .004)).toFixed(2)); G.halo.setAttribute('opacity', (.35 + .2 * Math.sin(t * .004)).toFixed(2));
+    if (step !== G.lastStep) { G.lastStep = step; flowStep.textContent = `Step ${String(step + 1).padStart(2, '0')} of ${n} · ${FLOW[step][1]} — ${FLOW[step][2].toLowerCase()}`; }
+  }
   { const g = ease(clamp((vh * .85 - econR.top) / (vh * .5)));
     setVar(barsEl, '--grow', g.toFixed(3));
     const k = 1 - Math.exp(-dt / 260);
