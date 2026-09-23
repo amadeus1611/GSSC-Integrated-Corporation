@@ -71,6 +71,27 @@ artwork is what makes it feel like a gallery rather than a company page.
 - Generated in code (WebGL shader plus drawn lines), so it's unique to
   GSSC, weighs little and costs nothing. A still frame is the fallback.
 
+**1A. The expanding panel** (verified on anthropic.com: at the top the
+artwork panel sits inset with rounded corners; one scroll later it fills the
+full width edge to edge with square corners)
+- The Chart panel starts inset: within the page margins, rounded corners,
+  about 60% of the screen height, playing its artwork.
+- **Scroll-linked:** as you scroll, it grows to full-bleed, edge to edge
+  and taller. The corners square off and the headline above drifts up and
+  softens. Scroll back up and it shrinks back into its card through every
+  in-between size.
+- Once it's full-bleed, the Chart's own scroll story runs (the horizon
+  rises, the lines converge into the star) and hands off to the Instrument.
+- **The asset is ours, made from scratch.** It runs live in the browser (a
+  WebGL shader and drawn lines, not a stock or AI-generated video), so
+  it's sharp at any size, reacts to the cursor, and weighs a fraction of
+  a video. For phones in low-power mode and for social sharing, the same
+  scene is also rendered to a short, silent, seamless loop (MP4/WebM
+  under about 1.5 MB, plus a still poster) and swapped in automatically.
+- Built with a CSS scroll-driven `clip-path`/`scale` transition on the
+  panel (smooth, off the main thread), with GSAP only where it has to sync
+  with the artwork's own animation.
+
 **2. The Instrument, exploded vertically** (lower, the capabilities chapter)
 - The GSSC star, assembled, arrives in the centre as the Chart's lines
   converge into it.
