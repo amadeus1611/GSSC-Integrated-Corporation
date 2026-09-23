@@ -103,6 +103,84 @@
    "source_versions_used": "kernel 2.16.1; runtime 1.9; protocol 2.0",
    "precedent_reference": "NONE -- first logged generation for this client/content-type pair",
    "logged_at": "2026-09-23T07:07:38"
+  },
+  {
+   "document_reference": "GSSC-QUOTATION-MASTER-v1",
+   "client_name": "INTERNAL - reusable template, no client",
+   "content_type": "quotation",
+   "body_structure_used": "Master body carried verbatim through build_derivative.py (Mode B parity build)",
+   "is_novel_pattern": "false - parity copy of the master",
+   "design_rationale": "Production copy of the quotation master built through the new derivative engine. Round-trip verified: output equals the hydrated master byte-for-byte apart from the provenance comment. Signatory already Duke Y. Demayo, President, consistent with the signatory rule. All 14 kernel audits and rendered QA pass.",
+   "tokens_referenced": "Master <head> carried verbatim (15 style elements) from package payload; brand_assets hydrated byte-identical; no derivative style",
+   "date_generated": "2026-09-23",
+   "source_versions_used": "kernel 2.16.1; runtime 1.9; protocol 2.0",
+   "precedent_reference": "NONE -- first logged generation for this client/content-type pair",
+   "logged_at": "2026-09-23T07:50:28"
+  },
+  {
+   "document_reference": "GSSC-PROFILE-2026-002-v4",
+   "client_name": "INTERNAL - no external client, GSSC self-collateral",
+   "content_type": "company_profile",
+   "body_structure_used": "6 pages in master vocabulary: p-cover (kicker, title, dek, caption-date, drop-cap lede, pull), p-contents (CHS toc, toc-block, metric-strip, roadmap, pattern-filled fig of 14 registered capabilities by family), p2 Section I (sig-cards with PSIC rows), p-commercial Section II (table.dt emphasis ladder, tiers), p2 Section III (officer sig-cards, registry table), p3 Section IV (contact table, chs--minor steps, Section 24 signoff)",
+   "is_novel_pattern": "false - rebuilt entirely from master components",
+   "design_rationale": "v1-v3 reconstructed CSS in parallel files, which Module 10 component_layer_contract forbids, and which is why the profile lacked the master's CHS headers, TOC, metric strip, roadmap, figure, card and table anatomy. v4 carries the master cascade verbatim and writes only content. Signatory changed from Ronnie S. del Castillo to Duke Y. Demayo, President, per Duke's direct instruction. All 14 audits and rendered QA pass.",
+   "tokens_referenced": "Master <head> carried verbatim (15 style elements) from package payload; brand_assets hydrated byte-identical; no derivative style",
+   "date_generated": "2026-09-23",
+   "source_versions_used": "kernel 2.16.1; runtime 1.9; protocol 2.0",
+   "precedent_reference": "GSSC-PROFILE-2026-002-v3",
+   "logged_at": "2026-09-23T07:50:28"
+  },
+  {
+   "document_reference": "GSSC-CMSA-TEMPLATE-v2",
+   "client_name": "INTERNAL - reusable template, no client",
+   "content_type": "contract_sample",
+   "body_structure_used": "8 pages: p-cover (parties as sig-cards), p-contents (toc of 9 articles + execution + inbuilt notarial, metric-strip of recorded defaults, instrument roadmap CMSA>SOW>PO>NTP), 4 p2 article pages (CHS legal register legal_article, clauses legal_section/minor), p3 execution (client gate-refined, witness gate with Michael C. Silla for GSSC, Section 24 signoff Duke Y. Demayo President), p3 inbuilt notarial acknowledgment",
+   "is_novel_pattern": "true - first legal_article document in the master system",
+   "design_rationale": "Rebuilt on the master per Duke's premium pass. Signatory changed from CEO to Duke Y. Demayo, President; Michael C. Silla present as GSSC instrumental witness. Notarial acknowledgment now inbuilt. Operative text for confidentiality, non-circumvention, force majeure and ADR remains counsel-drafted placeholders per 09 hard_stops. All 14 audits and rendered QA pass.",
+   "tokens_referenced": "Master <head> carried verbatim (15 style elements) from package payload; brand_assets hydrated byte-identical; gssc-legal-derivative.css (tpl-field, ack-venue)",
+   "date_generated": "2026-09-23",
+   "source_versions_used": "kernel 2.16.1; runtime 1.9; protocol 2.0",
+   "precedent_reference": "GSSC-CMSA-TEMPLATE-v1",
+   "logged_at": "2026-09-23T07:50:28"
+  },
+  {
+   "document_reference": "GSSC-SECCERT-TEMPLATE-v2",
+   "client_name": "INTERNAL - reusable template, no client",
+   "content_type": "secretary_certificate",
+   "body_structure_used": "3 pages: p-cover (kicker, title, caption-date, drop-cap recital by the Corporate Secretary, clause 1 + resolution sig-card + clause 2), p3 (clauses 3-4, Section 24 signoff Michael C. Silla), p3 inbuilt notarial acknowledgment",
+   "is_novel_pattern": "false - same legal vocabulary as the CMSA",
+   "design_rationale": "Signed by Michael C. Silla alone, never the President or CEO (09 named failure mode). Duke Y. Demayo named as the authorised representative, with joint signature by Silla where two signatories are required. futureproof fails only because a 3-page certificate correctly carries no contents block (Section 34 trigger not met) - runtime scope defect logged.",
+   "tokens_referenced": "Master <head> carried verbatim (15 style elements) from package payload; brand_assets hydrated byte-identical; gssc-legal-derivative.css",
+   "date_generated": "2026-09-23",
+   "source_versions_used": "kernel 2.16.1; runtime 1.9; protocol 2.0",
+   "precedent_reference": "GSSC-SECCERT-TEMPLATE-v1",
+   "logged_at": "2026-09-23T07:50:28"
+  },
+  {
+   "document_reference": "GSSC-BOARDRES-TEMPLATE-v2",
+   "client_name": "INTERNAL - reusable template, no client",
+   "content_type": "board_resolution",
+   "body_structure_used": "3 pages: p-cover (title, caption-date, drop-cap recital, CHS legal Recitals, Resolution header + clause 1), p3 (clauses 2-4 incl. joint-signature clause, certified-correct signoff Silla + attested signoff Duke), p3 inbuilt notarial acknowledgment for both officers",
+   "is_novel_pattern": "false - same legal vocabulary as the CMSA",
+   "design_rationale": "Both officers sign per Duke's rule: Silla certifies, Duke attests. The resolution authorises Duke as primary signatory and Silla jointly where two are required. Notarial acknowledgment inbuilt, marked for use only when the receiving party requires the resolution itself notarised. futureproof fails only on master-registry components a resolution does not use - runtime scope defect logged.",
+   "tokens_referenced": "Master <head> carried verbatim (15 style elements) from package payload; brand_assets hydrated byte-identical; gssc-legal-derivative.css",
+   "date_generated": "2026-09-23",
+   "source_versions_used": "kernel 2.16.1; runtime 1.9; protocol 2.0",
+   "precedent_reference": "GSSC-BOARDRES-TEMPLATE-v1",
+   "logged_at": "2026-09-23T07:50:28"
+  },
+  {
+   "document_reference": "GSSC-NOTARIAL-ACK-TEMPLATE-v2",
+   "client_name": "INTERNAL - reusable template, no client",
+   "content_type": "notarial_acknowledgment",
+   "body_structure_used": "1 p3 page: CHS legal Acknowledgment header, venue caption, identity table in the master p3 table geometry, gate-refined notary block, doc/page/book/series line",
+   "is_novel_pattern": "false",
+   "design_rationale": "Fallback only - the CMSA, certificate and resolution now carry inbuilt acknowledgments. governanceaudit and futureproof fail because a notary's page has no GSSC signoff and no master-registry components by nature - runtime scope defects logged, not papered over with invented content.",
+   "tokens_referenced": "Master <head> carried verbatim (15 style elements) from package payload; brand_assets hydrated byte-identical; gssc-legal-derivative.css",
+   "date_generated": "2026-09-23",
+   "source_versions_used": "kernel 2.16.1; runtime 1.9; protocol 2.0",
+   "precedent_reference": "GSSC-NOTARIAL-ACK-TEMPLATE-v1",
+   "logged_at": "2026-09-23T07:50:28"
   }
  ]
 }

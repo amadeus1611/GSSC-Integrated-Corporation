@@ -1,0 +1,16 @@
+/* GSSC legal-instrument derivative layer (Module 10 component_layer_contract).
+   Appended as the ONE derivative style element of every legal derivative
+   (CMSA, Secretary's Certificate, Board Resolution, Notarial Acknowledgment).
+   Everything else -- CHS legal/minor registers, table.dt, gate-refined,
+   signoff, colophon, margin-rail, watermark -- is the master's own cascade.
+   New classes only; no master rule is overridden; every value is a master
+   token (palette, --fs-*, --tracked-*, --u rhythm, --rule-*). */
+
+/* Fill-in field in a structural template: teal is the legal register's own
+   colour (toc-row[data-cat="legal_article"]), 8.72:1 on ivory. */
+.tpl-field{color:var(--teal-deep);font-style:italic;border-bottom:var(--rule-hair) dotted var(--teal-deep);}
+
+/* Notarial venue caption: REPUBLIC OF THE PHILIPPINES ) / CITY ) S.S. */
+.ack-venue{border-collapse:collapse;margin:0 0 calc(var(--u) * 2.5) 0;font-family:var(--f-body);
+  font-size:var(--fs-caption);letter-spacing:var(--tracked-tight);text-transform:uppercase;color:var(--navy-dark);}
+.ack-venue td{padding:calc(var(--u) * 0.5) calc(var(--u) * 3) calc(var(--u) * 0.5) 0;}

@@ -12,6 +12,113 @@ session, what changed, why, what's still open.
 
 ---
 
+## 2026-09-23 (7) — premium pass executed: every document rebuilt on the master itself
+
+**By:** Claude Code (Opus 5.5 session), executing
+`handoff/OPUS_HANDOFF_premium_derivative_pass.md` at Duke's instruction.
+
+**The decisive finding.** Kernel Module 10 `component_layer_contract`
+already defines what a derivative is — the master's `<head>` carried
+verbatim (every style element, cascade, A4 geometry, page furniture,
+print rules), at most one appended style element with new classes, only
+the body substituted — and Module 10 `mode_B_deconstruction_engine`
+lists "reconstructed CSS" as forbidden. Entries (2)–(5) did exactly the
+forbidden thing: `gssc-tokens.css`, `gssc-components.css` and
+`gssc-legal-components.css` were reconstructions, which is why the
+derivatives lacked the master's categorical headers, contents block,
+metric strip, roadmap, pattern-filled figure, sig-cards, emphasis-ladder
+tables, tiers, acceptance gates and Section 24 signature lockup. All three
+files and `assemble_derivative.py` are retired (recoverable in git).
+
+**Built:**
+- `runtime/build_derivative.py` — Mode B engine. Reads the master from the
+  package at build time, carries all 15 master style elements verbatim,
+  hydrates assets exactly as `hydrate()` does, writes a Module 10
+  provenance comment, and hard-stops on: missing master style, unresolved
+  token, foreign image payload, >1 derivative style, `:root` in a
+  derivative, or a derivative class name the master already uses.
+  **Round-trip verified:** rebuilding the master's own body reproduces the
+  hydrated master byte-for-byte except the provenance comment.
+- `runtime/render_check.py` — renders in headless Chromium with the real
+  Libre Baskerville/Inter faces (fetched once through the sandbox proxy,
+  cached; a run without them FAILS rather than measuring fallbacks) and
+  reports OVERFLOW into the colophon, COLLISION between text runs, BREACH
+  of the body column. Calibrated: the master passes; injected overlap and
+  overflow bugs are both caught.
+- `design-tokens/gssc-legal-derivative.css` — the one appended layer for
+  legal documents: `.tpl-field` (teal fill-in fields) and `.ack-venue`
+  (notarial venue caption). Nothing else.
+- Six documents, each `.src.html` → built `.html`:
+  quotation (parity copy), company profile v4 (6 pp), CMSA v2 (8 pp),
+  Secretary's Certificate v2 (3 pp), Board Resolution v2 (3 pp),
+  notarial acknowledgment fallback v2 (1 p).
+
+**Design choices, and the kernel rule behind each:**
+- Legal documents use the master's own legal machinery rather than a
+  separate typographic system: Module 17 `legal_article` / `legal_section`
+  categories, the `legal` CHS register (which lists
+  `notarial_acknowledgment` among its archetypes), teal
+  `toc-row[data-cat="legal_article"]` markers. This replaces the earlier
+  Times New Roman/long-bond register; the long-bond print convention in
+  09_legal_doctrine applies "where required" by a receiving office and can
+  be produced as a variant if Duke confirms it is needed.
+- Article stamps read "I — ARTICLE", mirroring the master's
+  "I — SECTION", because `tocgen` derives contents ordinals through the
+  `toc_entry_ref` dispatcher.
+- Execution pages mirror the master's final page: `gate-refined` for the
+  client and witnesses, canonical `signoff` for GSSC. `gate-refined`,
+  `signoff` and the p3 table geometry are styled only under `.page.p3`, so
+  execution and notarial pages are `p3`, and notarial identity tables use
+  the p3 terms-table grammar (item · name · particulars).
+- Signatory rule applied: Duke Y. Demayo (President) on the quotation,
+  profile and CMSA; Michael C. Silla alone on the Secretary's Certificate
+  and as GSSC's instrumental witness on the CMSA; both on the Board
+  Resolution (Silla certifies, Duke attests), which also carries a
+  joint-signature clause for instruments needing two officers.
+  02_governance's prose still names the CEO as default client-facing
+  signatory — a kernel correction for Duke to approve.
+- Notarial acknowledgments are inbuilt in the CMSA, certificate and
+  resolution; the resolution's is marked for use only when the receiving
+  party requires the resolution itself notarised.
+- No fabricated data: the profile's figure charts the 14 registered
+  capabilities by family (counts from 01_identity); sig-card figure rows
+  carry registered PSIC codes and coverage counts, not prices.
+
+**Bugs found by the loop and fixed before shipping:** contents-page
+overflow (45px) and p3 table collisions on the first CMSA build; a
+**third** class-name collision — the master already defines `.fill`
+(`table.dt .fill`) and the first legal layer reused it, turning fill-ins
+pale and wide-tracked inside tables (fixed by renaming to `.tpl-field`
+and adding the builder's collision guard, negative-tested); uneven page
+balance on the certificate and resolution; and a broken Module 15
+precedent chain from inconsistent client labels in my own log entries
+(reverted the six uncommitted entries and re-logged — all now chain to
+their v1/v3 predecessors).
+
+**Verification (final):** preflight PASS. Rendered QA PASS on all six.
+Quotation, profile, CMSA: all 14 kernel audits PASS (boxcheck included —
+its earlier false positives were caused by the reconstructed vocabulary
+and are gone). Certificate and resolution: 13/14. Notarial fallback:
+12/14. Each remaining failure is a master-scope rule, below.
+
+**Runtime defects found — proposed for the next kernel version, not
+patched here (the runtime is package content):**
+1. `extract_sections` pairs a CHS stamp with the next `<h2>`, so an
+   `<h3>` CHS title swallows the following section's title (only 4 of 9
+   CMSA articles were extracted). Worked around by using `<h2>` titles.
+2. `futureproof` check 7 treats every registered component absent from a
+   document as a stale registry entry; a 3-page certificate must not carry
+   a contents block (Section 34), so it fails by construction.
+3. `governanceaudit` requires at least one GSSC signoff; a notary's page
+   has none by nature.
+4. `tocgen` matches the literal `class="toc-block"`; any modifier class
+   defeats it.
+
+**Open, needs Duke:** approve the signatory rule into 02_governance;
+confirm whether any receiving office requires long-bond statutory prints;
+whether the four runtime fixes above go into the next kernel release;
+counsel drafting for every clause marked for counsel review.
+
 ## 2026-09-23 (6) — audit + handoff prep for an Opus 5.5 premium pass
 
 **By:** Claude Code (cloud session). Prep work only — no derivative files

@@ -22,6 +22,18 @@ gssc-system/
     GSSC_DesignDecisionLog.json        the memory store (see below) — grows over time
   runtime/
     gssc_runtime.py                    stdlib-only Python engine (extracted from package.runtime.code)
+    build_derivative.py                builds every derivative from the master (see "Derivatives" below)
+    render_check.py                    rendered QA: overflow, text collision, column breach, real fonts
+  derivatives/
+    quotation/                         production copy of the quotation master (parity build)
+    company-profile/                   6-page company profile
+    contract-sample/                   CMSA with inbuilt execution and notarial pages
+    secretary-certificate/             Secretary's Certificate with inbuilt notarial page
+    board-resolution/                  Board Resolution with inbuilt notarial page
+    notarial-instrument/               fallback acknowledgment for instruments without their own
+      each: <name>.src.html (edit this) -> <name>.html (built, self-contained, never hand-edit)
+  design-tokens/
+    gssc-legal-derivative.css          the ONE appended style layer shared by the legal derivatives
   templates/
     quotation_template_tokenized.html  raw tokenized master template (not directly usable — has {{TOKEN}} placeholders)
     GSSC_Quotation_Universal_Master_v3_6_HYDRATED_reference.html
@@ -48,6 +60,47 @@ gssc-system/
   release is **2.9.0**. Don't treat 2.16.1 as live policy until someone
   with authority promotes it; treat it as the draft under review.
 - The runtime is **stdlib-only Python 3.8+**: no install, no network.
+
+## Derivatives — how every GSSC document is built
+
+Kernel Module 10's `component_layer_contract` defines what a derivative
+is: the quotation master's `<head>` carried **verbatim** (every style
+element, the whole cascade, A4 geometry, masthead, margin-rail,
+watermark, spine stripe, colophon, print rules), at most **one** appended
+style element, and new body content written in the master's **own**
+component vocabulary. `runtime/build_derivative.py` enforces that: it
+reads the master CSS straight from the package at build time (so a kernel
+version bump reaches every document on its next build), hydrates brand
+assets byte-identically, and hard-stops on a missing master style, an
+unresolved asset token, a foreign image, a second style element, a
+`:root` token in the derivative, or a derivative class name that the
+master already uses.
+
+```bash
+cd gssc-system/runtime
+python3 build_derivative.py ../derivatives/company-profile/GSSC-PROFILE-2026-002-v4.src.html \
+    -o ../derivatives/company-profile/GSSC-PROFILE-2026-002-v4.html
+python3 render_check.py ../derivatives/company-profile/GSSC-PROFILE-2026-002-v4.html --shots /tmp/shots
+python3 gssc_runtime.py designaudit ../package/GSSC_Master_Package_v2_16_1.json \
+    --file ../derivatives/company-profile/GSSC-PROFILE-2026-002-v4.html
+```
+
+Component vocabulary to write with (all from the master, see
+`docs/audits/master_html_component_audit.json`): page classes
+`p-cover` / `p-contents` / `p2` / `p-commercial` / `p3`; cover stack
+`kicker`, `h1.title`, `dek`, `caption-date`, `lede` (drop cap), `bt`,
+`pull`; categorical headers `chs` with registers `primary`, `toc`,
+`legal` (articles and notarial pages), `minor` (clauses and items);
+`toc-block`/`toc-row`, `metric-strip`, `roadmap`, `fig` (pattern-filled
+SVG), `sig-card`, `table.dt` (with `reference-total`/`decision-total`
+rows on `p-commercial`), `tiers`, `gate gate-refined` and `signoff`
+(both only on `p3` pages), `colophon colophon-docket`.
+
+Signatory rule (Duke Y. Demayo, 2026-09-23): the President signs alone
+wherever one GSSC signature is needed; Michael C. Silla alone signs every
+Secretary's Certificate; where an instrument needs two officers, both
+sign in their own capacity. Notarial acknowledgments are built into the
+CMSA, Secretary's Certificate and Board Resolution.
 
 ## Running it
 

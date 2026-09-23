@@ -1,5 +1,10 @@
 # GSSC Premium Derivative Pass — Handoff to Opus 5.5
 
+> **Status: EXECUTED 2026-09-23.** See `MAINTENANCE_LOG.md` entry (7). The
+> approach changed on execution: rather than extracting components into
+> new shared CSS, every derivative now carries the master cascade verbatim
+> via `runtime/build_derivative.py`, per Module 10 `component_layer_contract`.
+
 **Prepared by:** Claude Code (Sonnet), cloud session, 2026-09-23, at Duke Y.
 Demayo's direction, as prep work only — no rebuild has been attempted yet
 under this handoff. Read this whole document before touching any file.

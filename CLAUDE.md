@@ -36,6 +36,21 @@ in this repository.
   it lands in `package/GSSC_DesignDecisionLog.json` automatically. Never
   add fabricated/seed entries to that log — Module 15 forbids invented
   precedent, and it poisons future `precedent` lookups.
+- Build every derivative document (profile, contracts, certificates,
+  resolutions) with `gssc-system/runtime/build_derivative.py` from a
+  `.src.html` written in the master's own component vocabulary — never
+  reconstruct or copy master CSS into a separate file (Module 10
+  `component_layer_contract` forbids it; the first profile/legal builds did
+  exactly that and lost the master's premium detail). A derivative may add
+  one style element with NEW class names only; the builder hard-stops on a
+  reused master class name.
+- A document is done only when `runtime/render_check.py` PASSES (real fonts,
+  no overflow, no text collision) and the `gssc_runtime.py` audits pass or
+  fail only for a reason recorded in `MAINTENANCE_LOG.md`. Look at the
+  rendered pages; audits alone have missed real bugs here twice.
+- Signatories: Duke Y. Demayo (President) signs alone where one GSSC
+  signature is needed; Michael C. Silla alone signs Secretary's
+  Certificates; both sign where an instrument needs two officers.
 - Log any non-trivial change to `gssc-system/` — what changed, why, what's
   still open — as a new dated entry at the top of
   `gssc-system/MAINTENANCE_LOG.md`. This is the running memory of this
