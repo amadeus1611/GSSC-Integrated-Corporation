@@ -26,6 +26,7 @@ import sys
 ROOT = pathlib.Path(__file__).resolve().parent.parent
 TOKENS_PATH = ROOT / "design-tokens" / "gssc-tokens.css"
 COMPONENTS_PATH = ROOT / "design-tokens" / "gssc-components.css"
+LEGAL_COMPONENTS_PATH = ROOT / "design-tokens" / "gssc-legal-components.css"
 ASSETS_DIR = ROOT / "brand_assets"
 
 
@@ -46,6 +47,10 @@ def main():
     if "/*__GSSC_COMPONENTS__*/" in out:
         components = COMPONENTS_PATH.read_text(encoding="utf-8")
         out = out.replace("/*__GSSC_COMPONENTS__*/", components)
+
+    if "/*__GSSC_LEGAL_COMPONENTS__*/" in out:
+        legal = LEGAL_COMPONENTS_PATH.read_text(encoding="utf-8")
+        out = out.replace("/*__GSSC_LEGAL_COMPONENTS__*/", legal)
 
     for name in ("header", "seal", "signature", "watermark"):
         token = "{{GSSC_ASSET:%s}}" % name
