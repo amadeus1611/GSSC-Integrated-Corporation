@@ -16,15 +16,18 @@
   --tracked:.18em;--tracked-cap:.14em;--tracked-tight:.12em;--tracked-num:-.012em;
   --rule-hair:.5px;--rule-medium:1px;--u:4px;
   --soft-close:cubic-bezier(0.16,1,0.3,1);--release:cubic-bezier(0.65,0,0.35,1);
+  --s1:#4a6fd0;--s2:#b88a2c;--s3:#1f9a86;--s4:#c9644e;--s5:#9a66b8;
   --in:180ms;--out:600ms;--reveal:1100ms;--grain:none;
 }
 @media (prefers-color-scheme:dark){:root:not([data-theme="light"]){color-scheme:dark;
+  --s1:#5f82dc;--s2:#b38a3c;--s3:#2a9e8a;--s4:#cf6f59;--s5:#a070c2;
   --bg:#0E1320;--side:#0A0F1A;--panel:#151C2C;--well:#121928;--sheet:#111827;
   --ink:#EDE7D9;--text:#D9D3C5;--soft:#A3A8B3;--mute:#737A88;
   --line:rgba(237,231,217,.07);--line-2:rgba(237,231,217,.13);--line-3:rgba(237,231,217,.22);
   --gold:#C8A45A;--gold-2:#D9B873;--gold-wash:rgba(200,164,90,.09);--head:#E3C27E;--head-glow:rgba(227,194,126,.55);
   --ok:#8FC3A6;--bad:#E59A8F;--warn:#E0B765;--shadow:0 1px 1px rgba(0,0,0,.3),0 14px 40px -18px rgba(0,0,0,.7);--mark-a:#C9C2B2;--mark-b:#8F98A8}}
 :root[data-theme="dark"]{color-scheme:dark;
+  --s1:#5f82dc;--s2:#b38a3c;--s3:#2a9e8a;--s4:#cf6f59;--s5:#a070c2;
   --bg:#0E1320;--side:#0A0F1A;--panel:#151C2C;--well:#121928;--sheet:#111827;
   --ink:#EDE7D9;--text:#D9D3C5;--soft:#A3A8B3;--mute:#737A88;
   --line:rgba(237,231,217,.07);--line-2:rgba(237,231,217,.13);--line-3:rgba(237,231,217,.22);
@@ -119,26 +122,25 @@ body{margin:0;background:var(--bg);color:var(--text);font:300 14.5px/1.6 var(--f
 .toc button:hover .t{color:var(--ink);transform:translateX(3px);transition-duration:var(--in)}
 .toc button:hover .lead{border-color:var(--gold)}
 
-/* ---------- composer ---------- */
-.dock{flex:none;padding:6px 20px calc(10px + env(safe-area-inset-bottom,0px))}
+/* ---------- composer: one thin line that grows to seven ---------- */
+.dock{flex:none;padding:4px 20px calc(8px + env(safe-area-inset-bottom,0px))}
 .app:not(.has-chat) .dock{padding:0;width:100%;max-width:720px}
-.comp{max-width:720px;margin:0 auto;background:var(--panel);border:var(--rule-hair) solid var(--line-3);border-radius:6px;box-shadow:var(--shadow);transition:border-color var(--out) var(--soft-close),box-shadow var(--out) var(--soft-close)}
+.comp{max-width:720px;margin:0 auto;display:flex;align-items:flex-end;gap:4px;padding:4px 4px 4px 2px;background:var(--panel);border:var(--rule-hair) solid var(--line-3);border-radius:6px;box-shadow:var(--shadow);transition:border-color var(--out) var(--soft-close)}
 .comp:focus-within{border-color:color-mix(in srgb,var(--ink) 40%,transparent);transition-duration:var(--in)}
-#prompt{display:block;width:100%;border:0;background:transparent;resize:none;outline:none;padding:13px 16px 4px;min-height:50px;max-height:240px;font-size:14.5px;line-height:1.55;font-weight:300}
+#prompt{flex:1;min-width:0;display:block;border:0;background:transparent;resize:none;outline:none;padding:6px 10px;height:33px;min-height:33px;max-height:calc(21px * 7 + 12px);overflow-y:auto;font-size:14.5px;line-height:21px;font-weight:300}
 #prompt::placeholder{color:var(--mute)}
-.row{display:flex;align-items:center;gap:4px;padding:4px 8px 8px 10px}
-.tg{display:flex;align-items:center;gap:7px;border:0;background:transparent;padding:6px 8px;border-radius:4px;cursor:pointer;font-size:12px;color:var(--soft);transition:background var(--out) var(--soft-close),color var(--out) var(--soft-close)}
+.ctl{display:flex;align-items:center;gap:0;flex:none}
+.tg{display:flex;align-items:center;gap:6px;border:0;background:transparent;height:30px;padding:0 8px;border-radius:4px;cursor:pointer;font-size:11.5px;color:var(--mute);transition:background var(--out) var(--soft-close),color var(--out) var(--soft-close)}
 .tg:hover{background:var(--line);color:var(--ink);transition-duration:var(--in)}
-.tg i{width:6px;height:6px;border-radius:50%;border:var(--rule-medium) solid var(--mute);transition:background .3s ease,border-color .3s ease,transform .5s var(--soft-close)}
-.tg[aria-pressed="true"] i{transform:scale(1.15)}
-.tg[aria-pressed="true"]{color:var(--ink)}.tg[aria-pressed="true"] i{background:var(--gold);border-color:var(--gold)}
-.count{margin-left:auto;font-size:11px;color:var(--mute);padding-right:8px;opacity:0;transition:opacity var(--out) var(--soft-close)}
+.tg i{width:5px;height:5px;border-radius:50%;border:var(--rule-medium) solid var(--mute);transition:background .3s ease,border-color .3s ease,transform .5s var(--soft-close)}
+.tg[aria-pressed="true"]{color:var(--text)}.tg[aria-pressed="true"] i{background:var(--gold);border-color:var(--gold);transform:scale(1.15)}
+.count{font-size:10.5px;color:var(--mute);padding:0 6px;opacity:0;transition:opacity var(--out) var(--soft-close);white-space:nowrap}
 .count.on{opacity:1}
-.send{width:32px;height:32px;border-radius:4px;border:0;background:var(--ink);color:var(--bg);display:grid;place-items:center;cursor:pointer;transition:opacity var(--out) var(--soft-close),transform var(--out) var(--soft-close)}
+.send{width:30px;height:30px;flex:none;border-radius:4px;border:0;background:var(--ink);color:var(--bg);display:grid;place-items:center;cursor:pointer;transition:opacity var(--out) var(--soft-close),transform var(--out) var(--soft-close)}
 .send:hover{transform:translateY(-1px);transition-duration:var(--in)}
 .send:disabled{opacity:.22;cursor:not-allowed;transform:none}
-.send svg{width:14px;height:14px}
-.note{text-align:center;color:var(--mute);font-size:11px;margin-top:7px}
+.send svg{width:13px;height:13px}
+@media (max-width:560px){.tg span{display:none}.count{display:none}}
 
 /* ---------- messages ---------- */
 .you{align-self:flex-end;max-width:min(82%,560px);background:var(--well);border:var(--rule-hair) solid var(--line);border-radius:6px;padding:9px 13px;font-size:14px;line-height:1.6;color:var(--ink);white-space:pre-wrap;word-wrap:break-word}
@@ -156,6 +158,37 @@ body{margin:0;background:var(--bg);color:var(--text);font:300 14.5px/1.6 var(--f
 .ans code{font-size:13px;background:var(--well);border:var(--rule-hair) solid var(--line-2);border-radius:3px;padding:1px 5px}
 .ans pre{background:var(--well);border:var(--rule-hair) solid var(--line-2);border-radius:5px;padding:12px 14px;overflow-x:auto;font-size:13px}
 .ans pre code{border:0;background:none;padding:0}
+.code{margin:0 0 14px;border:var(--rule-hair) solid var(--line-2);border-radius:5px;overflow:hidden;background:var(--well)}
+.code .hd{display:flex;align-items:center;justify-content:space-between;padding:5px 8px 5px 12px;border-bottom:var(--rule-hair) solid var(--line-2)}
+.code pre{margin:0;border:0;border-radius:0;background:transparent;font-size:12.5px;line-height:1.6}
+.code .cp{border:0;background:none;cursor:pointer;color:var(--mute);font-size:11px;padding:2px 6px;border-radius:3px;transition:color var(--out) var(--soft-close),background var(--out) var(--soft-close)}
+.code .cp:hover{color:var(--ink);background:var(--line);transition-duration:var(--in)}
+.ans blockquote{margin:0 0 14px;padding:2px 0 2px 14px;border-left:var(--rule-medium) solid var(--gold);font:italic 400 14.5px/1.6 var(--f-display);color:var(--ink)}
+.ans hr{border:0;height:var(--rule-hair);background:var(--line-3);margin:18px 0}
+.ans a{color:var(--ink);text-decoration:underline;text-decoration-color:var(--gold);text-underline-offset:3px}
+.ans em{font-family:var(--f-display);font-style:italic}
+/* figures: charts set like a journal plate */
+.fig{margin:4px 0 18px;padding:14px 0 0;border-top:var(--rule-medium) solid var(--ink)}
+.fig-h{display:flex;align-items:baseline;gap:10px;flex-wrap:wrap;margin-bottom:8px}
+.fig-h .no{font:italic 400 12px var(--f-display);color:var(--gold)}
+.fig-h .tt{font:400 14px var(--f-display);color:var(--ink)}
+.fig-h .tb{margin-left:auto;border:0;background:none;cursor:pointer;font-size:10px;letter-spacing:var(--tracked-tight);text-transform:uppercase;color:var(--mute);padding:2px 0}
+.fig-h .tb:hover{color:var(--ink)}
+.lg{display:flex;flex-wrap:wrap;gap:4px 14px;margin:0 0 6px;font-size:11.5px;color:var(--soft)}
+.lg span{display:inline-flex;align-items:center;gap:6px}.lg i{width:8px;height:8px;border-radius:2px}
+.fig svg.ch{display:block;width:100%;height:auto;overflow:visible}
+.ch .gl{stroke:var(--line-2);stroke-width:.5}.ch .ax{stroke:var(--line-3);stroke-width:.75}
+.ch text{font:300 10px var(--f-body);fill:var(--mute)}.ch text.dl{fill:var(--text);font-size:10.5px}
+.ch .bar{transition:opacity .3s ease}.ch.hov .bar{opacity:.45}.ch.hov .bar.on{opacity:1}
+.ch .xh{stroke:var(--line-3);stroke-width:.75;opacity:0}.ch.hov .xh{opacity:1}
+.ch .dot{opacity:0;stroke:var(--sheet);stroke-width:2}.ch.hov .dot.on{opacity:1}
+.fig .note{font:italic 400 11.5px var(--f-display);color:var(--soft);margin-top:6px}
+.fig table{margin-top:8px}.fig .tv[hidden]{display:none}
+.stat-fig{display:flex;align-items:baseline;gap:14px;flex-wrap:wrap}.stat-fig .big{font:400 40px/1.1 var(--f-display);color:var(--ink);font-variant-numeric:tabular-nums}.stat-fig .sub{font-size:12.5px;color:var(--soft)}
+.setting{font:italic 400 12.5px var(--f-display);color:var(--mute);margin:0 0 14px}
+.ctip{position:fixed;z-index:96;pointer-events:none;background:var(--panel);border:var(--rule-hair) solid var(--line-3);border-radius:5px;box-shadow:var(--shadow);padding:7px 10px;font-size:11.5px;color:var(--text);opacity:0;transition:opacity .15s ease;min-width:120px}
+.ctip.on{opacity:1}.ctip b{display:block;font:400 12px var(--f-display);color:var(--ink);margin-bottom:3px}
+.ctip div{display:flex;align-items:center;gap:7px;justify-content:space-between}.ctip div span:first-child{display:flex;align-items:center;gap:6px;color:var(--soft)}.ctip i{width:7px;height:7px;border-radius:2px}
 .tw{overflow-x:auto;margin:0 0 16px}
 .ans table{border-collapse:collapse;width:100%;font-size:13px;font-variant-numeric:tabular-nums}
 .ans th{text-align:left;font-weight:400;font-size:10px;letter-spacing:var(--tracked-tight);text-transform:uppercase;color:var(--mute);border-bottom:var(--rule-hair) solid var(--gold);padding:6px 14px 6px 0}
@@ -241,6 +274,16 @@ body{margin:0;background:var(--bg);color:var(--text);font:300 14.5px/1.6 var(--f
 .chron .ph{font-size:9.5px;letter-spacing:var(--tracked-tight);text-transform:uppercase;color:var(--gold);margin-right:8px}
 .pull{margin:4px 0 22px;padding:14px 0;border-top:var(--rule-medium) solid var(--ink);border-bottom:var(--rule-hair) solid var(--line-2);font:italic 400 17px/1.5 var(--f-display);color:var(--ink);text-wrap:balance}
 .late{animation:evIn .7s var(--soft-close) both}
+.plate{margin:0 0 20px}
+.plate .frame{position:relative;border-radius:3px;overflow:hidden;background:var(--well);border:var(--rule-hair) solid var(--line-2)}
+.plate canvas{display:block;width:100%;height:156px}
+.plate .gut{position:absolute;left:0;top:0;bottom:0;width:22px;display:flex;flex-direction:column;pointer-events:none;border-right:var(--rule-hair) solid var(--line-2);background:color-mix(in srgb,var(--well) 70%,transparent)}
+.plate .gut span{flex:1;display:grid;place-items:center;font:400 9.5px var(--f-display);color:var(--mute);border-bottom:var(--rule-hair) solid var(--line)}
+.plate .gut span:last-child{border-bottom:0}
+.plate .gut span.on{color:var(--gold)}
+.plate figcaption{display:flex;gap:8px;margin-top:7px;font:italic 400 11.5px/1.5 var(--f-display);color:var(--soft)}
+.plate figcaption b{font-style:normal;font-weight:400;color:var(--gold);white-space:nowrap}
+.plate .rt{position:absolute;right:46px;top:5px;font:400 9.5px var(--f-body);letter-spacing:var(--tracked-tight);color:var(--mute);text-transform:uppercase}
 .colophon{font-size:10.5px;color:var(--mute);line-height:1.6;border-top:var(--rule-hair) solid var(--line-2);padding-top:12px}
 .empty{font:italic 400 14px var(--f-display);color:var(--soft)}
 
@@ -307,14 +350,14 @@ body{margin:0;background:var(--bg);color:var(--text);font:300 14.5px/1.6 var(--f
       <form class="comp" id="form">
         <label for="prompt" class="sr">Message EXPIRA</label>
         <textarea id="prompt" rows="1" placeholder="Brief EXPIRA…"></textarea>
-        <div class="row">
-          <button type="button" class="tg" id="safe" aria-pressed="true" data-tip="Scan answers for supplier names, costs and margins"><i></i>Client-safe</button>
-          <button type="button" class="tg" id="deep" aria-pressed="false" data-tip="Always consult the specialist desks"><i></i>Specialists</button>
+        <div class="ctl">
           <span class="count num" id="count"></span>
+          <button type="button" class="tg" id="safe" aria-pressed="true" data-tip="Client-safe: scan answers for supplier names, costs and margins"><i></i><span>Client-safe</span></button>
+          <button type="button" class="tg" id="deep" aria-pressed="false" data-tip="Always consult the specialist desks"><i></i><span>Desks</span></button>
           <button type="submit" class="send" id="send" aria-label="Send" data-tip="Send"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M8 13V3M3.5 7.5L8 3l4.5 4.5"/></svg></button>
         </div>
       </form>
-      <div class="note" id="note">EXPIRA recommends; a person approves. Check important figures.</div>
+      
     </div>
   </div>
 </div>
@@ -328,6 +371,7 @@ body{margin:0;background:var(--bg);color:var(--text);font:300 14.5px/1.6 var(--f
 <div class="pal" id="pal" role="dialog" aria-label="Commands"><label for="palIn" class="sr">Command</label><input id="palIn" placeholder="Type a command…"><ul id="palList"></ul></div>
 <div class="toasts" id="toasts" aria-live="polite"></div>
 <div class="tip" id="tip" role="tooltip"></div>
+<div class="ctip" id="ctip" role="tooltip"></div>
 
 <script>
 (() => {
@@ -376,32 +420,79 @@ const longDate=ts=>new Date(ts).toLocaleString("en-PH",{weekday:"long",day:"nume
 const words=n=>["No","One","Two","Three","Four","Five"][n]||String(n);
 const cap1=s=>s.charAt(0).toUpperCase()+s.slice(1);
 
-function md(src){const L=src.split("\n");let o="",list=null,i=0;const inl=s=>esc(s).replace(/\*\*(.+?)\*\*/g,"<strong>$1</strong>").replace(/`([^`]+)`/g,"<code>$1</code>");const close=()=>{if(list){o+=`</${list}>`;list=null}};
+const FIGS=new Map();let figSeq=0;
+function inl(x){return esc(x).replace(/\[([^\]]+)\]\((https?:\/\/[^)\s]+)\)/g,'<a href="$2" target="_blank" rel="noopener">$1</a>').replace(/\*\*(.+?)\*\*/g,"<strong>$1</strong>").replace(/(^|[^*])\*([^*\s][^*]*?)\*(?!\*)/g,"$1<em>$2</em>").replace(/`([^`]+)`/g,"<code>$1</code>")}
+function md(src,live){const L=src.split("\n");let o="",list=null,i=0,figNo=0;const close=()=>{if(list){o+=`</${list}>`;list=null}};
  while(i<L.length){const l=L[i];
-  if(/^```/.test(l)){close();const b=[];i++;while(i<L.length&&!/^```/.test(L[i]))b.push(L[i++]);i++;o+=`<pre><code>${esc(b.join("\n"))}</code></pre>`;continue}
+  const fence=l.match(/^```\s*([\w+-]*)/);
+  if(fence){close();const lang=fence[1].toLowerCase(),b=[];i++;let closed=false;while(i<L.length){if(/^```/.test(L[i])){closed=true;i++;break}b.push(L[i++])}
+   if(lang==="chart"){figNo++;if(!closed&&live){o+=`<p class="setting">Setting Fig. ${figNo}…</p>`;continue}o+=chartFig(b.join("\n"),figNo);continue}
+   o+=`<div class="code"><div class="hd"><span class="capt">${esc(lang||"text")}</span><button class="cp" data-cpc>Copy</button></div><pre><code>${esc(b.join("\n"))}</code></pre></div>`;continue}
   if(/^\s*\|.*\|\s*$/.test(l)&&L[i+1]&&/^\s*\|?[\s:-]+\|/.test(L[i+1])){close();const cells=r=>r.trim().replace(/^\||\|$/g,"").split("|").map(c=>c.trim());const h=cells(l);i+=2;let rows="";while(i<L.length&&/^\s*\|.*\|\s*$/.test(L[i]))rows+=`<tr>${cells(L[i++]).map(c=>`<td>${inl(c)}</td>`).join("")}</tr>`;o+=`<div class="tw"><table><thead><tr>${h.map(c=>`<th>${inl(c)}</th>`).join("")}</tr></thead><tbody>${rows}</tbody></table></div>`;continue}
-  const h=l.match(/^#{1,4}\s+(.*)/),b=l.match(/^\s*[-*]\s+(.*)/),n=l.match(/^\s*\d+[.)]\s+(.*)/),want=b?"ul":n?"ol":null;
+  if(/^\s*(---|\*\*\*)\s*$/.test(l)){close();o+="<hr>";i++;continue}
+  if(/^>\s?/.test(l)){close();const q=[];while(i<L.length&&/^>\s?/.test(L[i]))q.push(L[i++].replace(/^>\s?/,""));o+=`<blockquote>${inl(q.join(" "))}</blockquote>`;continue}
+  const h=l.match(/^#{1,4}\s+(.*)/),bl=l.match(/^\s*[-*]\s+(.*)/),n=l.match(/^\s*\d+[.)]\s+(.*)/),want=bl?"ul":n?"ol":null;
   if(list&&want!==list)close();if(want&&!list){o+=`<${want}>`;list=want}
-  if(h)o+=`<h3>${inl(h[1])}</h3>`;else if(want)o+=`<li>${inl((b||n)[1])}</li>`;else if(l.trim())o+=`<p>${inl(l)}</p>`;i++}
+  if(h)o+=`<h3>${inl(h[1])}</h3>`;else if(want)o+=`<li>${inl((bl||n)[1])}</li>`;else if(l.trim())o+=`<p>${inl(l)}</p>`;i++}
  close();return o}
 
+/* ---------- charts: ```chart JSON rendered as a journal plate ---------- */
+const fmtV=(v,u)=>{if(v==null||isNaN(v))return "—";const a=Math.abs(v);let t=a>=1e9?(v/1e9).toFixed(1)+"B":a>=1e6?(v/1e6).toFixed(a>=1e7?0:1)+"M":a>=1e4?Math.round(v).toLocaleString("en-PH"):(Math.round(v*100)/100).toLocaleString("en-PH");return u?(/^(PHP|USD|₱|\$)$/i.test(u)?u+" "+t:t+" "+u):t};
+function nice(lo,hi,n=4){if(lo===hi){hi=lo+1}const r=hi-lo,raw=r/n,p=Math.pow(10,Math.floor(Math.log10(raw))),f=raw/p,st=(f<=1?1:f<=2?2:f<=5?5:10)*p,a=Math.floor(lo/st)*st,b=Math.ceil(hi/st)*st,t=[];for(let v=a;v<=b+st/2;v+=st)t.push(+v.toFixed(10));return t}
+function chartFig(json,no){let sp;try{sp=JSON.parse(json)}catch(e){return `<div class="code"><div class="hd"><span class="capt">chart</span></div><pre><code>${esc(json)}</code></pre></div>`}
+ const type=String(sp.type||"bar").toLowerCase(),title=sp.title||"",unit=sp.unit||"";
+ if(type==="stat")return `<figure class="fig"><div class="fig-h"><span class="no">Fig. ${no}</span><span class="tt">${esc(title)}</span></div><div class="stat-fig"><span class="big">${esc(fmtV(Number(sp.value),unit))}</span><span class="sub">${esc(sp.caption||"")}</span></div>${sp.note?`<p class="note">${esc(sp.note)}</p>`:""}</figure>`;
+ const labels=(sp.labels||[]).map(String).slice(0,24),S=(sp.series||[]).filter(x=>Array.isArray(x.values)).slice(0,5).map(x=>({name:String(x.name||""),values:labels.map((_,i)=>Number(x.values[i]))}));
+ if(!labels.length||!S.length)return "";
+ const line=type==="line"||type==="area",n=labels.length,W=640,H=236,direct=line&&S.length<=4,m={l:54,r:direct?104:10,t:10,b:26},pw=W-m.l-m.r,ph=H-m.t-m.b;
+ const all=S.flatMap(x=>x.values).filter(v=>!isNaN(v));let lo=Math.min(0,...all),hi=Math.max(0,...all);if(line&&Math.min(...all)>0&&Math.min(...all)>hi*.5)lo=Math.min(...all);
+ const tk=nice(lo,hi),t0=tk[0],tN=tk[tk.length-1],y=v=>m.t+(1-(v-t0)/(tN-t0))*ph,band=pw/n,cx=i=>line?m.l+(n===1?pw/2:i*pw/(n-1)):m.l+band*(i+.5);
+ let g="";tk.forEach(v=>{g+=`<line class="${v===0?"ax":"gl"}" x1="${m.l}" x2="${W-m.r}" y1="${y(v)}" y2="${y(v)}"/><text x="${m.l-8}" y="${y(v)+3}" text-anchor="end">${esc(fmtV(v,""))}</text>`});
+ const every=Math.max(1,Math.ceil(n*62/pw));labels.forEach((lb,i)=>{if(i%every===0)g+=`<text x="${cx(i)}" y="${H-8}" text-anchor="middle">${esc(lb.length>14?lb.slice(0,13)+"…":lb)}</text>`});
+ let marks="";
+ if(!line){const gw=Math.min(band*.72,S.length*30),bw=(gw-2*(S.length-1))/S.length,z=y(Math.max(t0,Math.min(0,tN)));
+  S.forEach((x,j)=>x.values.forEach((v,i)=>{if(isNaN(v))return;const x0=cx(i)-gw/2+j*(bw+2),yt=y(v),h=Math.abs(z-yt),r=Math.min(4,bw/2,h);
+   const d=v>=0?`M${x0},${z}V${yt+r}Q${x0},${yt} ${x0+r},${yt}H${x0+bw-r}Q${x0+bw},${yt} ${x0+bw},${yt+r}V${z}Z`:`M${x0},${z}V${yt-r}Q${x0},${yt} ${x0+r},${yt}H${x0+bw-r}Q${x0+bw},${yt} ${x0+bw},${yt-r}V${z}Z`;
+   marks+=`<path class="bar" data-i="${i}" d="${d}" fill="var(--s${j+1})"/>`}));}
+ else{S.forEach((x,j)=>{const pts=x.values.map((v,i)=>isNaN(v)?null:[cx(i),y(v)]).filter(Boolean);if(type==="area"&&pts.length)marks+=`<polygon points="${pts.map(p=>p.join(",")).join(" ")} ${pts[pts.length-1][0]},${y(Math.max(t0,0))} ${pts[0][0]},${y(Math.max(t0,0))}" fill="var(--s${j+1})" opacity=".1"/>`;
+   marks+=`<polyline points="${pts.map(p=>p.join(",")).join(" ")}" fill="none" stroke="var(--s${j+1})" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/>`;
+   x.values.forEach((v,i)=>{if(!isNaN(v))marks+=`<circle class="dot" data-i="${i}" cx="${cx(i)}" cy="${y(v)}" r="4" fill="var(--s${j+1})"/>`})});
+  marks+=`<line class="xh" x1="0" x2="0" y1="${m.t}" y2="${H-m.b}"/>`;
+  if(direct){const ends=S.map((x,j)=>{let k=n-1;while(k>0&&isNaN(x.values[k]))k--;return{j,y:y(x.values[k]),t:x.name}}).sort((a,b)=>a.y-b.y);for(let k=1;k<ends.length;k++)if(ends[k].y-ends[k-1].y<13)ends[k].y=ends[k-1].y+13;
+   ends.forEach(e=>marks+=`<circle cx="${W-m.r+10}" cy="${e.y}" r="3" fill="var(--s${e.j+1})"/><text class="dl" x="${W-m.r+18}" y="${e.y+3.5}">${esc(e.t.length>14?e.t.slice(0,13)+"…":e.t)}</text>`)}}
+ const hit=`<rect class="hit" x="${m.l}" y="${m.t}" width="${pw}" height="${ph}" fill="transparent"/>`;
+ const id="f"+(++figSeq);FIGS.set(id,{labels,S,unit,line,n,W,m,pw,band});
+ const legend=S.length>=2?`<div class="lg">${S.map((x,j)=>`<span><i style="background:var(--s${j+1})"></i>${esc(x.name)}</span>`).join("")}</div>`:"";
+ const table=`<div class="tw tv" hidden><table><thead><tr><th></th>${S.map(x=>`<th>${esc(x.name||title)}</th>`).join("")}</tr></thead><tbody>${labels.map((lb,i)=>`<tr><td>${esc(lb)}</td>${S.map(x=>`<td>${esc(fmtV(x.values[i],unit))}</td>`).join("")}</tr>`).join("")}</tbody></table></div>`;
+ return `<figure class="fig"><div class="fig-h"><span class="no">Fig. ${no}</span><span class="tt">${esc(title)}</span>${unit?`<span class="capt">${esc(unit)}</span>`:""}<button class="tb" data-tv>Table</button></div>${legend}<svg class="ch" data-fig="${id}" viewBox="0 0 ${W} ${H}" role="img" aria-label="${esc(title)}">${g}${marks}${hit}</svg>${table}${sp.note?`<p class="note">${esc(sp.note)}</p>`:""}</figure>`}
+/* chart hover: crosshair and a tooltip for the nearest point, kept inside the window */
+(()=>{const tip=$("#ctip");let last=null;
+ const clear=()=>{if(last){last.classList.remove("hov");last.querySelectorAll(".on").forEach(e=>e.classList.remove("on"));last=null}tip.classList.remove("on")};
+ document.addEventListener("pointermove",e=>{const svg=e.target.closest&&e.target.closest("svg.ch");if(!svg){clear();return}const G=FIGS.get(svg.dataset.fig);if(!G){clear();return}
+  const r=svg.getBoundingClientRect(),sx=(e.clientX-r.left)*G.W/r.width;let i=G.line?Math.round((sx-G.m.l)/(G.n>1?G.pw/(G.n-1):1)):Math.floor((sx-G.m.l)/G.band);i=Math.max(0,Math.min(G.n-1,i));
+  if(last&&last!==svg)clear();last=svg;svg.classList.add("hov");svg.querySelectorAll(".on").forEach(el=>el.classList.remove("on"));svg.querySelectorAll(`[data-i="${i}"]`).forEach(el=>el.classList.add("on"));
+  if(G.line){const x=G.m.l+(G.n===1?G.pw/2:i*G.pw/(G.n-1));const xh=svg.querySelector(".xh");xh.setAttribute("x1",x);xh.setAttribute("x2",x)}
+  tip.innerHTML=`<b>${esc(G.labels[i])}</b>`+G.S.map((x,j)=>`<div><span><i style="background:var(--s${j+1})"></i>${esc(x.name||"Value")}</span><span class="num">${esc(fmtV(x.values[i],G.unit))}</span></div>`).join("");
+  const w=tip.offsetWidth,h=tip.offsetHeight;let px=e.clientX+14,py=e.clientY-h-10;if(px+w>innerWidth-8)px=e.clientX-w-14;if(py<8)py=e.clientY+16;tip.style.left=px+"px";tip.style.top=py+"px";tip.classList.add("on")},{passive:true});
+ addEventListener("scroll",clear,true)})();
+
 /* streaming: words that arrived in the last 320 ms fade in; older text is already settled, so nothing flickers */
-function streamInto(el,text,st){const tmp=document.createElement("div");tmp.innerHTML=md(text);const now=performance.now(),total=tmp.textContent.length;
+function streamInto(el,text,st){const tmp=document.createElement("div");tmp.innerHTML=md(text,true);const now=performance.now(),total=tmp.textContent.length;
  if(!st.h.length||total>st.h[st.h.length-1][0])st.h.push([total,now]);
  if(!reduce){let cut=0;for(const [len,t] of st.h){if(t<=now-320)cut=len;else break}
   const arr=off=>{for(const [len,t] of st.h)if(len>off)return t;return now};
-  const tw=document.createTreeWalker(tmp,NodeFilter.SHOW_TEXT),nodes=[];let n;while(n=tw.nextNode())nodes.push(n);let off=0;
+  const tw=document.createTreeWalker(tmp,NodeFilter.SHOW_TEXT,{acceptNode:x=>x.parentElement&&x.parentElement.closest("svg,figure,pre,.code")?NodeFilter.FILTER_REJECT:NodeFilter.FILTER_ACCEPT}),nodes=[];let n;while(n=tw.nextNode())nodes.push(n);let off=0;
   for(const node of nodes){const s=node.nodeValue,a=off,b=off+s.length;off=b;if(b<=cut)continue;const frag=document.createDocumentFragment(),k=Math.max(0,cut-a);if(k)frag.append(s.slice(0,k));let p=a+k;
    for(const part of s.slice(k).split(/(\s+)/)){if(!part)continue;if(/^\s+$/.test(part))frag.append(part);else{const sp=document.createElement("span");sp.className="w";sp.style.animationDelay=(-(now-arr(p)))+"ms";sp.textContent=part;frag.append(sp)}p+=part.length}
    node.replaceWith(frag)}}
- el.replaceChildren(...tmp.childNodes);let last=el.lastElementChild||el;if(/^(UL|OL)$/.test(last.tagName))last=last.lastElementChild||last;if(last.classList?.contains("tw"))last=el;const c=document.createElement("span");c.className="caret";last.append(c)}
+ el.replaceChildren(...tmp.childNodes);let last=el.lastElementChild||el;if(/^(UL|OL)$/.test(last.tagName))last=last.lastElementChild||last;if(last.classList?.contains("tw")||last.tagName==="FIGURE"||last.classList?.contains("code"))last=el;const c=document.createElement("span");c.className="caret";last.append(c)}
 
 /* chats (per viewer, this browser) */
-const store={get(){try{return JSON.parse(localStorage.getItem("expira.v5")||"null")}catch(e){return null}},set(v){try{localStorage.setItem("expira.v5",JSON.stringify(v))}catch(e){}}};
+const store={get(){try{return JSON.parse(localStorage.getItem("expira.v6")||localStorage.getItem("expira.v5")||"null")}catch(e){return null}},set(v){try{localStorage.setItem("expira.v6",JSON.stringify(v))}catch(e){}}};
 const T0=Date.now()-864e5;
 const EX={id:"example",no:13,title:"Belmont drapery refit",example:true,ts:T0,turns:[
  {role:"user",ts:T0,content:"Belmont Hotel wants 40 guest rooms refitted with blackout drapery and ceiling track before December. Scope it, price it roughly, flag contract risks, and recommend how we proceed."},
- {role:"assistant",ts:T0+94000,content:"### Recommendation\nRun it as a **phased programme**: two floors in November, the remaining rooms in December once samples are approved. A single December push leaves no room for a late sample sign-off.\n\n### Indicative budget\n| Line | Per room | 40 rooms |\n|---|---|---|\n| Drapery, track, installation | PHP 22,050 | PHP 882,000 |\n| Contingency 8% | | PHP 70,560 |\n| **Indicative total, before VAT** | | **PHP 952,560** |\n\n### Before we quote\n- Guaranteed room blocks from Belmont, in writing\n- Delay clause wording agreed with counsel\n- Your approval of the phased schedule and contingency",
+ {role:"assistant",ts:T0+94000,content:"### Recommendation\nRun it as a **phased programme**: two floors in November, the remaining rooms in December once samples are approved. A single December push leaves no room for a late sample sign-off.\n\n### Indicative budget\n| Line | Per room | 40 rooms |\n|---|---|---|\n| Drapery, track, installation | PHP 22,050 | PHP 882,000 |\n| Contingency 8% | | PHP 70,560 |\n| **Indicative total, before VAT** | | **PHP 952,560** |\n\n```chart\n{\"type\":\"bar\",\"title\":\"Cost per room, by line\",\"unit\":\"PHP\",\"labels\":[\"Drapery\",\"Ceiling track\",\"Installation\"],\"series\":[{\"name\":\"Per room\",\"values\":[11650,8000,2400]}],\"note\":\"Mid-range rates; drapery is more than half of every room.\"}\n```\n\n### Before we quote\n- Guaranteed room blocks from Belmont, in writing\n- Delay clause wording agreed with counsel\n- Your approval of the phased schedule and contingency",
   work:{ms:94000,firewall:"clear",steps:[{role:"research",tier:"medium",task:"Iloilo rates and lead times for drapery and track",v:"pass",ms:14000,out:"Blackout drapery, hotel grade: PHP 9,500–13,800 per window (verified).\nCeiling track: PHP 2,100–2,900 per metre (verified).\nLead time 5–7 weeks (staff canvass, unverified).\nCONFIDENCE: medium"},{role:"finance",tier:"high",task:"An indicative budget for forty rooms",v:"pass",ms:38000,out:"Per room PHP 22,050. 40 rooms PHP 882,000. Contingency 8% PHP 70,560. Total PHP 952,560 before VAT.\nCONFIDENCE: medium"},{role:"legal",tier:"high",task:"Contract risks behind a December deadline",v:"pass",ms:33000,out:"Cap liquidated damages at 10%; exclude delay from late sample approval; variations by signed order only. Counsel: LD wording.\nCONFIDENCE: high"},{role:"decision",tier:"medium",task:"How the company should proceed",v:"pass",ms:21000,out:"Recommend phased. Options: full push, phased, January start. Duke decides schedule and contingency.\nCONFIDENCE: high"}],
   flow:[0,2,6,9,7,4,8,12,15,11,9,6,10,14,9,5,3,6,8,4,2,1],
   feed:[[1800,"Read the brief and commissioned <em>four desks</em>"],[16200,"The research desk filed its notes"],[38400,"The finance desk filed a budget"],[39800,"The legal desk filed its review"],[41000,"All four pieces passed review"],[91200,"Firewall clear"],[94000,"Answer delivered"]]}}]};
@@ -425,6 +516,8 @@ function open(c){cur=c;app.classList.toggle("has-chat",!!c);
  renderRecents()}
 document.addEventListener("click",e=>{
  const h=e.target.closest(".think-h");if(h){const t=h.closest(".think");t.classList.toggle("open");h.setAttribute("aria-expanded",t.classList.contains("open"));return}
+ const cc=e.target.closest("[data-cpc]");if(cc){const t=cc.closest(".code").querySelector("pre").innerText;navigator.clipboard?.writeText(t).then(()=>{cc.textContent="Copied";setTimeout(()=>cc.textContent="Copy",1400)},()=>toast("Select the code to copy it"));return}
+ const tv=e.target.closest("[data-tv]");if(tv){const f=tv.closest(".fig"),t=f.querySelector(".tv");t.hidden=!t.hidden;tv.textContent=t.hidden?"Table":"Chart";f.querySelector("svg.ch").style.display=t.hidden?"":"none";return}
  const c=e.target.closest("[data-copy]");if(c){const t=c.closest(".bot").querySelector(".ans").innerText;navigator.clipboard?.writeText(t).then(()=>toast("Copied"),()=>toast("Select the text to copy it"));return}
  const r=e.target.closest("[data-regen]");if(r){if(busy)return;if(cur?.example){toast("Start a new chat to brief EXPIRA yourself");return}const k=+r.closest(".bot").dataset.k,q=cur.turns[k-1]?.content;if(q){cur.turns.splice(k-1);save();open(cur);send(q)}return}
  const d=e.target.closest("[data-read]");if(d){if(busy&&d.dataset.read==="live"){showDsp(true);return}const k=+d.dataset.read,t=cur.turns[k];recordedDispatch(t.work,cur,cur.turns[k-1]?.ts||t.ts);showDsp(true);return}
@@ -447,7 +540,7 @@ $("#findBtn").onclick=()=>{$("#side").classList.toggle("searching");$("#find").f
 const toggle=id=>{const b=$("#"+id);b.setAttribute("aria-pressed",b.getAttribute("aria-pressed")!=="true")};
 $("#safe").onclick=()=>toggle("safe");$("#deep").onclick=()=>toggle("deep");
 const promptEl=$("#prompt");
-function grow(){promptEl.style.height="auto";promptEl.style.height=Math.min(promptEl.scrollHeight,240)+"px";const n=promptEl.value.trim().length;$("#count").textContent=n?`~${ft(tok(promptEl.value))} tokens`:"";$("#count").classList.toggle("on",n>0);$("#send").disabled=busy?false:!n||!sample}
+function grow(){promptEl.style.height="auto";const mx=21*7+12;promptEl.style.height=Math.min(promptEl.scrollHeight,mx)+"px";promptEl.style.overflowY=promptEl.scrollHeight>mx?"auto":"hidden";const n=promptEl.value.trim().length;$("#count").textContent=n?`~${ft(tok(promptEl.value))} tokens`:"";$("#count").classList.toggle("on",n>0);$("#send").disabled=busy?false:!n||!sample}
 promptEl.addEventListener("input",grow);promptEl.addEventListener("keydown",e=>{if(e.key==="Enter"&&!e.shiftKey&&!e.isComposing){e.preventDefault();$("#form").requestSubmit()}});
 function prog(){const m=sc.scrollHeight-sc.clientHeight;$("#prog").style.width=m>0?(sc.scrollTop/m*100)+"%":"0";$("#jump").classList.toggle("show",m-sc.scrollTop>260)}
 sc.addEventListener("scroll",prog,{passive:true});$("#jump").onclick=()=>sc.scrollTo({top:1e9,behavior:reduce?"auto":"smooth"});
@@ -478,22 +571,63 @@ function standfirst(w){const s=w.steps||[];if(!s.length)return "EXPIRA answered 
  return `${words(s.length)} desk${s.length>1?"s":""} contributed: ${Object.entries(by).map(([k,v])=>`${list(v)} at ${k} effort`).join("; ")}.${s.some(x=>x.redo)?" One piece was sent back and deepened.":""}`}
 function shell(c,ts){$("#dspNo").textContent=`No. ${pad(c.no||0,3)}`;
  $("#dspB").innerHTML=`<div class="kicker bi"><span class="cap">Filed from Iloilo</span></div><h2 class="bi" id="dxT" style="animation-delay:.05s">${esc(c.title)}</h2><p class="dl bi" style="animation-delay:.1s">${esc(longDate(ts))}</p>
- <div id="dxTop"></div><section id="dxDesks" hidden><h3 class="cap late">Contributors</h3><div id="desks"></div></section><section id="dxChron" hidden style="margin-top:18px"><h3 class="cap late">Chronicle</h3><ol class="chron num" id="chron"></ol></section><div id="dxEnd"></div>`}
+ ${PLATE}<div id="dxTop"></div><section id="dxDesks" hidden><h3 class="cap late">Contributors</h3><div id="desks"></div></section><section id="dxChron" hidden style="margin-top:18px"><h3 class="cap late">Chronicle</h3><ol class="chron num" id="chron"></ol></section><div id="dxEnd"></div>`}
 function deskHTML(s,i,d=0){const st=s.v?(s.v==="pass"?(s.redo?"Passed, deepened":"Passed"):"Returned"):"Queued";
  return `<article class="desk" id="dk${i}" style="animation-delay:${d}s"><span class="rn">${ROMAN[i]}.</span><div class="hd"><b>${ROSTER[s.role].desk}</b><span class="eff">${meter(s.tier)}<span id="ef${i}">${TIERS[s.tier].w}</span></span><span class="st ${s.v||""}" id="ds${i}">${st}</span></div>
  <p class="task">${esc(s.task)}</p><div class="mt num"><span id="dm${i}">${s.ms?fmt(s.ms):"—"}</span><span id="dq${i}">${s.out?ft(tok(s.out))+" tokens":""}</span><button class="rd" data-notes>Read notes</button></div><div class="notes" id="dn${i}">${esc(s.out||"")}</div></article>`}
 const chronLi=(f,d=0)=>`<li style="animation-delay:${d}s"><span class="ts">${mmss(f[0])}</span><span>${f[1]}</span></li>`;
-function finishTop(w){$("#dxTop").innerHTML=`<p class="standfirst late">${esc(standfirst(w))}</p><div class="stats late" style="animation-delay:.08s"><div class="stat"><span class="v num">${mmss(w.ms||0)}</span><span class="cap">Elapsed</span></div><div class="stat"><span class="v num">${(w.steps||[]).length}</span><span class="cap">Desks</span></div><div class="stat"><span class="v num">${ft((w.steps||[]).reduce((a,x)=>a+tok(x.out),0))}</span><span class="cap">Tokens</span>${spark(w.flow)}</div></div>`;
+function finishTop(w){$("#dxTop").innerHTML=`<p class="standfirst late">${esc(standfirst(w))}</p><div class="stats late" style="animation-delay:.08s"><div class="stat"><span class="v num">${mmss(w.ms||0)}</span><span class="cap">Elapsed</span></div><div class="stat"><span class="v num">${(w.steps||[]).length}</span><span class="cap">Desks</span></div><div class="stat"><span class="v num">${ft((w.steps||[]).reduce((a,x)=>a+tok(x.out),0))}</span><span class="cap">Tokens</span></div></div>`;
  $("#dxEnd").innerHTML=(w.firewall&&w.firewall!=="off"?`<blockquote class="pull late" style="animation-delay:.16s">${w.firewall==="clear"?"“Firewall clear. Nothing restricted leaves with this answer.”":"“Held for internal use. Restricted details were found.”"}</blockquote>`:"")+`<p class="colophon late" style="animation-delay:.22s">Set in Libre Baskerville and Inter. Orchestrated by Opus 5.5 at low effort; desks at the effort each brief required. EXPIRA recommends; a person approves.</p>`}
-function recordedDispatch(w,c,ts){shell(c,ts);const s=w.steps||[];
+function recordedDispatch(w,c,ts){shell(c,ts);requestAnimationFrame(()=>{const sp=newSpec();if(sp){sp.replay(w.sig||synthSig(w),w.ms||0);$("#specT").textContent="Recorded"}});const s=w.steps||[];
  if(s.length){$("#dxDesks").hidden=false;$("#desks").innerHTML=s.map((x,i)=>deskHTML(x,i,.12+i*.06)).join("")}
  if((w.feed||[]).length){$("#dxChron").hidden=false;$("#chron").innerHTML=w.feed.map((f,i)=>chronLi(f,.2+i*.04)).join("")}
  finishTop(w)}
 
+
+/* ---------- the spectrum plate: each band is a desk; thinking is a thread, writing is a burst ---------- */
+class Spectro{
+ constructor(cv,ov,gut){this.cv=cv;this.ov=ov;this.gut=gut;this.NB=5;this.BIN=22;this.val=[...Array(this.NB)].map(()=>new Float32Array(this.BIN));
+  this.par=[...Array(this.NB)].map(()=>[Math.random(),Math.random(),Math.random()]);this.ph=Math.random()*9;this.t=0;this.col=0;this.size();
+  const cs=getComputedStyle(root),hx=v=>{v=v.trim();const m=v.match(/^#([0-9a-f]{6})$/i);return m?[0,2,4].map(k=>parseInt(m[1].substr(k,2),16)):[128,128,128]};
+  const W0=hx(cs.getPropertyValue("--well")),B1=hx(cs.getPropertyValue("--s1")),dim=W0.map((c,i)=>Math.round(c+(B1[i]-c)*.38));const stops=[W0,dim,hx(cs.getPropertyValue("--gold")),hx(cs.getPropertyValue("--ink"))],P=[0,.4,.78,1];
+  this.lut=new Uint8ClampedArray(256*3);for(let k=0;k<256;k++){const v=k/255;let a=0;while(a<2&&v>P[a+1])a++;const f=(v-P[a])/(P[a+1]-P[a]),e=f*f*(3-2*f);for(let c=0;c<3;c++)this.lut[k*3+c]=stops[a][c]+(stops[a+1][c]-stops[a][c])*e}
+  this.bg=stops[0]}
+ size(){const d=devicePixelRatio||1;this.d=d;this.w=Math.max(10,Math.round(this.cv.clientWidth*d));this.h=Math.round(156*d);for(const c of [this.cv,this.ov]){c.width=this.w;c.height=this.h}this.x=this.cv.getContext("2d");this.o=this.ov.getContext("2d");
+  this.x.fillStyle=`rgb(${(this.bg||[20,20,30]).join(",")})`;this.x.fillRect(0,0,this.w,this.h);this.cw=Math.max(1,Math.round(d))}
+ step(amp,think,sec){const{NB,BIN}=this;this.ph+=.045;
+  for(let b=0;b<NB;b++){const v=this.val[b],a=Math.min(1,amp[b]||0),th=think[b];
+   for(let k=0;k<BIN;k++)v[k]=v[k]*(a>0?.78:.86)+Math.random()*.012;
+   const P=this.par[b];for(let p=0;p<3;p++){P[p]=Math.min(.97,Math.max(.03,P[p]+(Math.random()-.5)*(.05+a*.12)))}
+   if(a>0)P.forEach((c,p)=>{const mu=c*(BIN-1),sg=.7+a*1.6+p*.3,e=a*(.42-p*.1)*(.55+Math.random()*.6);for(let k=0;k<BIN;k++){const z=(k-mu)/sg;v[k]+=e*Math.exp(-z*z*.5)}
+    const h2=Math.min(BIN-1,mu*1.9+2);for(let k=0;k<BIN;k++){const z=(k-h2)/1.1;v[k]+=e*.3*Math.exp(-z*z*.5)}});
+   if(th){const mu=(.5+.34*Math.sin(this.ph*1.3+b*1.7)+.1*Math.sin(this.ph*3.1+b))*(BIN-1);for(let k=0;k<BIN;k++){const z=(k-mu)/.6;v[k]+=.3*Math.exp(-z*z*.5)}}
+   for(let k=0;k<BIN;k++)v[k]=Math.min(1,v[k])}
+  this.draw(sec)}
+ draw(sec){const{x,w,h,cw,NB,BIN,d}=this;x.drawImage(this.cv,-cw,0);const img=x.createImageData(cw,h),rb=h/NB;
+  for(let py=0;py<h;py++){const b=Math.min(NB-1,Math.floor(py/rb)),loc=1-((py%rb)/rb),f=loc*(BIN-1),k0=Math.floor(f),k1=Math.min(BIN-1,k0+1),t=f-k0;
+   let v=this.val[b][k0]*(1-t)+this.val[b][k1]*t;v=Math.min(1,Math.pow(Math.max(0,v),1.25)*(.82+Math.random()*.3));const L=Math.round(v*255)*3;
+   const edge=(py%rb)<d?.55:1;for(let px=0;px<cw;px++){const i=(py*cw+px)*4;img.data[i]=this.lut[L]*edge+this.bg[0]*(1-edge);img.data[i+1]=this.lut[L+1]*edge+this.bg[1]*(1-edge);img.data[i+2]=this.lut[L+2]*edge+this.bg[2]*(1-edge);img.data[i+3]=255}}
+  x.putImageData(img,w-cw,0);
+  const ev=this.every||5;if(sec!=null&&this.lastSec!=null&&Math.floor(sec/ev)!==Math.floor(this.lastSec/ev)){x.fillStyle=getComputedStyle(root).getPropertyValue("--mute");x.globalAlpha=.8;x.fillRect(w-cw,h-4*d,cw,4*d);x.font=`${9*d}px Inter,system-ui`;x.textAlign="right";const ts=Math.floor(sec/ev)*ev;x.fillText(`${Math.floor(ts/60)}:${pad(ts%60)}`,w-cw-3*d,h-6*d);x.globalAlpha=1}
+  this.lastSec=sec;
+  const o=this.o;o.clearRect(0,0,w,h);o.strokeStyle=getComputedStyle(root).getPropertyValue("--gold");o.lineWidth=d;o.globalAlpha=.9;o.beginPath();
+  for(let py=0;py<h;py+=2){const b=Math.min(NB-1,Math.floor(py/rb)),f=(1-((py%rb)/rb))*(BIN-1),k=Math.round(f),v=Math.min(1,this.val[b][k]);const px=w-2*d-v*34*d;py?o.lineTo(px,py):o.moveTo(px,py)}o.stroke();o.globalAlpha=1}
+ live(src){this.stop();this.every=5;let last=0;const loop=t=>{if(t-last>=41.67){last=t;const r=src();r.amp=r.amp.map(a=>Math.min(1,a*.6));this.step(r.amp,r.think,r.sec);this.gut&&[...this.gut.children].forEach((el,b)=>el.classList.toggle("on",(r.amp[b]||0)>0||r.think[b]))}this.raf=requestAnimationFrame(loop)};this.raf=requestAnimationFrame(loop)}
+ stop(){cancelAnimationFrame(this.raf)}
+ replay(sig,ms){if(!sig||!sig.length){for(let c=0;c<this.w/this.cw;c++)this.step([0,0,0,0,0],[0,0,0,0,0],null);return}const cols=Math.floor(this.w/this.cw);const spp=(ms/1000)/(cols*this.cw/this.d);this.every=[5,10,15,30,60,120,300].find(v=>v/spp>=80)||600;
+  for(let c=0;c<cols;c++){const fr=sig[Math.min(sig.length-1,Math.floor(c/cols*sig.length))],amp=fr.slice(0,5).map(v=>Math.min(1,v/7)),mask=fr[5]||0;this.step(amp,[0,1,2,3,4].map(b=>(mask>>b)&1),(c/cols)*(ms/1000))}}
+}
+const PLATE=`<figure class="plate late" style="animation-delay:.12s"><div class="frame"><canvas id="spec"></canvas><canvas id="specO" style="position:absolute;inset:0;width:100%;height:100%"></canvas><div class="gut" id="specG"><span>A</span><span>I</span><span>II</span><span>III</span><span>IV</span></div><span class="rt" id="specT">Live</span></div><figcaption><b>Fig. 1</b><span>The run as a spectrum. The top band is the answer; below it, one band per desk. The faint thread is thinking; the bright bursts are writing.</span></figcaption></figure>`;
+let spec=null;
+function newSpec(){spec?.stop();const cv=$("#spec");if(!cv)return null;spec=new Spectro(cv,$("#specO"),$("#specG"));return spec}
+function synthSig(w){const N=Math.max(40,Math.round((w.ms||60000)/250)),S=w.steps||[],out=[];for(let f=0;f<N;f++){const t=f/N,fr=[0,0,0,0,0,0];
+  if(t<.03)fr[5]|=1;S.slice(0,4).forEach((s,i)=>{const a=.03+i*.02,e=Math.min(.45,.05+(s.ms||20000)/(w.ms||60000)*.9),wr=a+(e-a)*.45;if(t>a&&t<wr)fr[5]|=1<<(i+1);if(t>=wr&&t<e)fr[i+1]=Math.round(2+Math.random()*6)});
+  if(t>.5&&t<.56)fr[5]|=1;if(t>=.56&&t<.97)fr[0]=Math.round(1+Math.random()*7);out.push(fr)}return out}
+
 /* ---------- runtime ---------- */
 let sample=null,db=null,ctl=null,busy=false;
 (async()=>{sample=await window.claude?.use?.("sample")??null;$("#sig").className="sig capt"+(sample?" live":"");swap($("#sigT"),sample?"Linked":"Preview");
- if(!sample)$("#note").textContent="Open this page in Claude to brief EXPIRA. The example shows a recorded dispatch.";grow();db=await window.claude?.use?.("db")??null})();
+ if(!sample)promptEl.placeholder="Open this page in Claude to brief EXPIRA";grow();db=await window.claude?.use?.("db")??null})();
 open(chats.find(c=>!c.example)||chats[0]);
 
 $("#form").addEventListener("submit",e=>{e.preventDefault();if(busy){ctl?.abort();return}const q=promptEl.value.trim();if(q&&sample)send(q)});
@@ -511,6 +645,9 @@ async function send(q){
  const th=bot.querySelector(".think"),lbl=bot.querySelector(".lbl"),tEl=bot.querySelector(".think-h .t"),evs=bot.querySelector(".ev"),ans=bot.querySelector(".ans");
  const t0=performance.now(),work={steps:[],firewall:safe?"pending":"off",feed:[],flow:[],ms:0};
  shell(cur,tsQ);
+ const pend=[0,0,0,0,0],think=[1,0,0,0,0];work.sig=[];let sigAcc=[0,0,0,0,0];
+ requestAnimationFrame(()=>{const sp=newSpec();if(sp)sp.live(()=>{const amp=pend.map(v=>v/4);for(let b=0;b<5;b++){sigAcc[b]+=pend[b];pend[b]=0}return{amp,think:think.map((v,b)=>v&&!amp[b]),sec:(performance.now()-t0)/1000}})});
+ const sigIv=setInterval(()=>{work.sig.push([...sigAcc.map(v=>Math.round(v/4)),think.reduce((m,v,b)=>m|(v?1<<b:0),0)]);sigAcc=[0,0,0,0,0]},250);
  let bucket=0;const flowIv=setInterval(()=>{work.flow.push(bucket);bucket=0},500);
  const tick=setInterval(()=>{tEl.textContent=mmss(performance.now()-t0);work.steps.forEach((s,i)=>{if(s._t0&&s._live){const m=$("#dm"+i);if(m)m.textContent=fmt(performance.now()-s._t0)}})},250);
  const follow=()=>{if(sc.scrollHeight-sc.scrollTop-sc.clientHeight<200)sc.scrollTop=1e9};
@@ -532,11 +669,11 @@ ${history?`Conversation so far:\n${history}\n\n`:""}New message: ${q}`,{modelTie
    steps.forEach((s,i)=>setTimeout(()=>{$("#desks").insertAdjacentHTML("beforeend",deskHTML(s,i));F(`${ROSTER[s.role].desk}, ${TIERS[s.tier].w} effort: ${esc(s.task.charAt(0).toLowerCase()+s.task.slice(1))}`)},reduce?0:220*i));
    await new Promise(r=>setTimeout(r,reduce?0:220*steps.length));
    const brief=s=>`${ROSTER[s.role].brief}\n${history?`Conversation so far:\n${history}\n\n`:""}Request: ${q}\nYour task: ${s.task}\n${s.after.filter(n=>outs[n-1]).map(n=>`Input from ${steps[n-1].role}:\n${outs[n-1].slice(0,3000)}`).join("\n\n")}${s.feedback?`\nA reviewer returned your last attempt: ${s.feedback}. Fix that.`:""}\nPlain text, under 220 words. End with: CONFIDENCE: high|medium|low`;
-   const runOne=async i=>{const s=steps[i],stE=$("#ds"+i),out=$("#dn"+i);let last=0;s._t0=performance.now();s._live=true;
+   const runOne=async i=>{const s=steps[i],stE=$("#ds"+i),out=$("#dn"+i);let last=0,lastLen=0;s._t0=performance.now();s._live=true;if(i<4)think[i+1]=1;
     stE.className="st live";swap(stE,s.redo?"Deepening":ROSTER[s.role].verb);
-    try{const r=await sample(brief(s),{modelTier:TIERS[s.tier].m,cache:false,signal:ctl.signal,onText:({text})=>{const n=tok(text);bucket+=n-last;last=n;s.out=text;out.textContent=text;out.scrollTop=1e9;$("#dq"+i).textContent=ft(n)+" tokens"}});
+    try{const r=await sample(brief(s),{modelTier:TIERS[s.tier].m,cache:false,signal:ctl.signal,onText:({text})=>{if(i<4){pend[i+1]+=text.length-lastLen;lastLen=text.length}const n=tok(text);bucket+=n-last;last=n;s.out=text;out.textContent=text;out.scrollTop=1e9;$("#dq"+i).textContent=ft(n)+" tokens"}});
      outs[i]=r.text;s.out=r.text;return r.text}
-    finally{s._live=false;s.ms=performance.now()-s._t0;$("#dm"+i).textContent=fmt(s.ms);stE.className="st";swap(stE,"Filed")}};
+    finally{s._live=false;if(i<4)think[i+1]=0;s.ms=performance.now()-s._t0;$("#dm"+i).textContent=fmt(s.ms);stE.className="st";swap(stE,"Filed")}};
    const done=[];steps.forEach((s,i)=>done[i]=(async()=>{for(const n of s.after)if(done[n-1])await done[n-1];const r=await runOne(i);F(`The ${ROSTER[s.role].desk.toLowerCase()} filed its notes`);return r})());
    await Promise.all(done);
    for(let round=0;round<=2;round++){
@@ -553,21 +690,26 @@ ${history?`Conversation so far:\n${history}\n\n`:""}New message: ${q}`,{modelTie
      $("#dk"+i).querySelector(".meter").outerHTML=meter(s.tier);swap($("#ef"+i),TIERS[s.tier].w);F(`Sent the ${ROSTER[s.role].desk.toLowerCase()} back at <em>${TIERS[s.tier].w}</em> effort`);await runOne(i)}));
    }
   } else F("Read the brief; no desk needed");
-  swap(lbl,steps.length?"Writing the answer":"Considering");
+  swap(lbl,steps.length?"Writing the answer":"Considering");think[0]=1;
   const input=`You are EXPIRA, the assistant of EXPIRA AI Systems (sister company of GSSC Integrated Corporation, Iloilo, Philippines). Answer the user's latest message.
-Style: precise, calm, editorial. Lead with the answer. Use "### " headings, "- " bullets and markdown tables only when they help. Keep it as short as the question allows.
+Style: precise, calm, editorial. Lead with the answer. Use "### " headings, "- " bullets, "> " for one key takeaway, and markdown tables only when they help. Keep it as short as the question allows.
+When numbers compare or change over time, add ONE figure as a fenced block:
+\`\`\`chart
+{"type":"bar"|"line"|"area"|"stat","title":string,"unit":"PHP" or other,"labels":[strings],"series":[{"name":string,"values":[numbers]}],"note":string}
+\`\`\`
+(for "stat" use {"type":"stat","title","value":number,"unit","caption"}). Use at most 5 series and 12 labels. Never invent figures for a chart.
 ${safe?"CLIENT-SAFE: never include supplier names or contacts, supplier costs or cost basis, margins, markup, bank details, facility locations or internal worksheets.":""}
 ${history?`Conversation so far:\n${history}\n\n`:""}${steps.length?`Desk notes:\n${steps.map((s,i)=>`[${s.role}, ${s.tier} effort]\n${(outs[i]||"").slice(0,3000)}`).join("\n\n")}\n\n`:""}Latest message: ${q}`;
-  const sst={h:[]};let la=0,first=true;
-  const fin=await sample(input,{modelTier:steps.length?"default":"quick",cache:false,signal:ctl.signal,onText:({text})=>{if(first){first=false;th.classList.remove("open");th.querySelector(".think-h").setAttribute("aria-expanded","false")}const n=tok(text);bucket+=n-la;la=n;streamInto(ans,text,sst);follow()}});
+  const sst={h:[]};let la=0,first=true,aLen=0;
+  const fin=await sample(input,{modelTier:steps.length?"default":"quick",cache:false,signal:ctl.signal,onText:({text})=>{pend[0]+=text.length-aLen;aLen=text.length;if(first){first=false;th.classList.remove("open");th.querySelector(".think-h").setAttribute("aria-expanded","false")}const n=tok(text);bucket+=n-la;la=n;streamInto(ans,text,sst);follow()}});
   ans.innerHTML=md(fin.text);
   if(safe){swap(lbl,"Checking the firewall");
    const fw=await sample.json(`EXPIRA firewall. Does this client-facing text contain supplier names or contacts, supplier pricing or cost basis, margin or markup, bank details, facility locations, or internal worksheets?\nReply with only JSON: {"verdict":"clear"|"blocked","hits":[string]}\n\n${fin.text}`,{modelTier:"quick",cache:false,signal:ctl.signal});
    work.firewall=fw.verdict==="blocked"?"blocked":"clear";F(work.firewall==="clear"?"Firewall clear":"Held by the firewall: "+esc((fw.hits||[]).join("; ")));
    if(work.firewall==="blocked")toast("Held by the firewall. <em>Internal only.</em>")}
-  work.ms=performance.now()-t0;F("Answer delivered");
+  work.ms=performance.now()-t0;think[0]=0;F("Answer delivered");
   const content=(work.firewall==="blocked"?"**Internal only.** The firewall found restricted details. Remove them before this goes to a client.\n\n":"")+fin.text;
-  cur.turns.push({role:"assistant",content,ts:Date.now(),work:{ms:work.ms,firewall:work.firewall,feed:work.feed,flow:work.flow.slice(-60),steps:steps.map(s=>({role:s.role,tier:s.tier,task:s.task,v:s.v,redo:s.redo,ms:s.ms,out:(s.out||"").slice(0,4000)}))}});save();
+  cur.turns.push({role:"assistant",content,ts:Date.now(),work:{ms:work.ms,firewall:work.firewall,feed:work.feed,sig:work.sig.slice(-600),steps:steps.map(s=>({role:s.role,tier:s.tier,task:s.task,v:s.v,redo:s.redo,ms:s.ms,out:(s.out||"").slice(0,4000)}))}});save();
   try{if(db)await db.collection("runs").doc("r"+Date.now()).set({ts:Date.now(),request:q.slice(0,160),steps:steps.map(s=>({role:s.role,tier:s.tier,verdict:s.v||"",redo:s.redo})),firewall:work.firewall})}catch(e){}
   /* settle in place rather than re-rendering: the answer stays put, the sheen settles, the label becomes the summary */
   const k=cur.turns.length-1;bot.dataset.k=k;bot.classList.add("fresh");th.classList.remove("running");th.classList.add("settled");swap(lbl,summary(work));tEl.textContent=mmss(work.ms);
@@ -580,7 +722,7 @@ ${history?`Conversation so far:\n${history}\n\n`:""}${steps.length?`Desk notes:\
   if(e&&e.text)ans.innerHTML=md(e.text);F(code==="cancelled"?"Stopped at your request":"Interrupted");
   if(code!=="cancelled")toast(COPY[code]||"Something interrupted that. Send it again.");
   if(code==="not_granted"||code==="sampling_disabled")sample=null;cur.turns.pop();save();
- }finally{clearInterval(tick);clearInterval(flowIv);setBusy(false)}
+ }finally{clearInterval(tick);clearInterval(flowIv);clearInterval(sigIv);setTimeout(()=>{spec?.stop();const t=$("#specT");if(t)t.textContent="Recorded"},1500);setBusy(false)}
 }
 })();
 </script>
