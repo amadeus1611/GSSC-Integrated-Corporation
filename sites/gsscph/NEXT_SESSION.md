@@ -3,6 +3,43 @@
 Preview: https://claude.ai/artifact/XCFwjPczMANmFZLhoc8Pnx
 Source: `prototype/opening.src.html` → `python3 prototype/build.py`
 
+## Status (2026-09-23, execution session)
+
+Duke's answers: (1) a scroll-driven, pre-rendered film compass is fine; (2) the Festive Walk image
+will be sorted out later; (3) the Blender source may live in the repo.
+
+Done in this session:
+- **§2 mobile:**
+  - Fig. 4 is a vertical timeline on phones.
+  - Height-only resizes (the address bar) no longer re-lay out the page.
+  - Fig. 3 never pins on touch.
+  - The viewport meta tag was missing and is now set.
+  - No `scroll-snap` exists.
+- **§2A economics:** Exhibit III, the ledger plate:
+  - Double rule, a live header summary and a recessed worksheet column.
+  - A vertical rule that draws on entry.
+  - A result footer and a stamped "Illustrative" mark.
+  - Fixed-width right-aligned tabular cells with labels on their own ruled row; the share in its own cell.
+  - Figures count at 24 fps, rounded to ₱100 while moving.
+  - Larger slider thumbs on touch.
+- **§1A compass:** route 1 plus route 3. Modelled and rendered in Blender, in `compass/` (see its
+  README). The page plays the frames through one WebGL "print" pass: composite over the navy room, lens
+  fringe, halation on the gold only, a printer-light grade and vignette. three.js is gone from the page.
+- **§1 cinema:**
+  - The shared film clock and defects (`FILM`, `FILM_GLSL`):
+    - 24 fps artwork: the lava steps at the film cadence, and the compass redraws on film frames.
+    - Grain re-seeded per frame, gate weave, exposure flicker.
+    - A dust speck or hair every 8–12 s, a rare scratch, and a light leak when the field or the Instrument begins.
+  - Tokens `--frame`, `--grain`, `--weave`, `--flicker`, `--dust`.
+  - Reduced motion shows still frames.
+  - The static grain overlay that sat over the Instrument's text is removed.
+- **§2C:**
+  - A crosshair cursor over the artwork only.
+  - Meta description, Open Graph, and Organization/LocalBusiness JSON-LD.
+
+Still open: §2B (Festive Walk, waiting on an image); `og.jpg` at the domain root; §2C real-device QA
+and performance budget; §3.
+
 ## 1. Make the film look intentional everywhere
 
 Duke likes how the lava lamp and the compass look on mobile: grainy, like

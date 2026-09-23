@@ -1,4 +1,13 @@
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>GSSC Showroom Opening</title>
+<meta name="description" content="GSSC Integrated Corporation coordinates multi-discipline programmes in Iloilo City under one contract and one point of accountability: sourcing, site execution, supply programmes, consultancy, business support and compliance.">
+<meta property="og:type" content="website">
+<meta property="og:title" content="GSSC Integrated Corporation">
+<meta property="og:description" content="One contract. One point of accountability. Integrated programme coordination from Iloilo City.">
+<meta property="og:image" content="https://gsscph.com/og.jpg">
+<meta name="twitter:card" content="summary_large_image">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":["Organization","LocalBusiness"],"name":"GSSC Integrated Corporation","url":"https://gsscph.com","email":"management@gsscph.com","telephone":["+63 33 339 7472","+63 928 370 3574"],"address":{"@type":"PostalAddress","streetAddress":"Regus, 3F Festive Walk Mall, Iloilo Business Park, Megaworld Boulevard, Mandurriao","addressLocality":"Iloilo City","postalCode":"5000","addressCountry":"PH"},"foundingDate":"2026-06-10"}</script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&display=swap">
@@ -26,6 +35,8 @@
   --soft-close:cubic-bezier(0.16,1,0.3,1);
   --gutter:clamp(20px,6vw,104px); --maxw:1360px;
   --h:0; --h2:0;
+  --frame:41.67ms;                /* the artwork's film cadence: 24 fps */
+  --grain:.8; --weave:.3; --flicker:.015; --dust:1;   /* film layer intensities (px for weave) */
   color-scheme:light;
 }
 *{box-sizing:border-box}
@@ -160,7 +171,7 @@ h1.title .it{font-style:italic;letter-spacing:-.02em}
 /* Fig. 1: the field. Inset figure at rest; opens to full bleed with scroll. Corners stay at the master's 2px. */
 .field-stage{position:relative;height:280vh}
 .field-pin{position:sticky;top:0;height:100vh;height:100svh;overflow:hidden}
-.panel{position:absolute;inset:0;background:var(--navy-dark);
+.panel{position:absolute;inset:0;cursor:crosshair;background:var(--navy-dark);
   clip-path:inset(var(--it,15%) var(--is,var(--gutter)) var(--ib,11%) var(--is,var(--gutter)) round var(--r))}
 /* a soft inner edge while the figure is inset: a few pixels of paper light bleeding into the glass.
    It thins to nothing as the figure reaches full bleed, so the final frame is truly edge to edge. */
@@ -309,11 +320,28 @@ table.dt tbody tr:hover td{background:rgba(230,212,167,.24);transition-duration:
 @media (max-width:960px){ .flow-head > div,.flow-body{grid-column:1 / -1} }
 
 /* the economics: a model the reader can move; two series, labelled, with its sources beneath */
-.econ-grid{display:grid;grid-template-columns:repeat(12,minmax(0,1fr));column-gap:24px;row-gap:32px;align-items:start}
-.econ-ctl{grid-column:1 / span 4;position:sticky;top:110px;border-top:var(--rule-medium) solid var(--navy-dark)}
+/* Exhibit III, the ledger: a sibling of the Fig. 3 plate, not a copy. A double rule above, as on a statement
+   of account; the inputs in a recessed worksheet column; the results on paper; a rule between them that
+   draws itself on entry; a footer that states the result. Every figure sits in a fixed-width cell with
+   tabular digits, right-aligned, so a changing number never moves anything around it. */
+.ledger{margin:0;border:1px solid var(--hairline);border-top:4px double var(--navy-dark);border-radius:0 0 var(--r) var(--r);background:#fdfcf8;
+  box-shadow:0 30px 60px -40px rgba(9,23,61,.28)}
+.lg-head,.lg-foot{display:flex;justify-content:space-between;align-items:baseline;gap:10px 28px;flex-wrap:wrap;padding:14px 22px}
+.lg-head{border-bottom:var(--rule-hair) solid var(--hairline)}
+.lg-t{font:600 10.5px/1.3 var(--f-body);letter-spacing:var(--tracked);text-transform:uppercase;color:var(--navy-dark)}
+.lg-sum{font:italic 400 15px/1.3 var(--f-display);color:var(--navy-dark);font-feature-settings:"lnum" 1,"tnum" 1}
+.lg-body{position:relative;display:grid;grid-template-columns:minmax(0,4fr) minmax(0,8fr)}
+.lg-rule{position:absolute;top:0;bottom:0;left:calc(100% / 3);width:0;border-left:var(--rule-hair) solid var(--navy-dark);transform-origin:top;transform:scaleY(var(--lr,1))}
+.econ-ctl{background:var(--ivory-deep);padding:6px 24px 24px;box-shadow:inset 0 10px 18px -14px rgba(9,23,61,.22)}
+.econ-out{position:relative;padding:22px 26px 26px 30px}
+.lg-stamp{position:absolute;right:22px;top:-9px;padding:4px 9px;border:1px solid rgba(168,134,47,.7);border-radius:1px;background:#fdfcf8;
+  font:600 9.5px/1 var(--f-body);letter-spacing:.24em;text-transform:uppercase;color:var(--gold-deep);transform:rotate(-3deg);opacity:.9}
+.lg-foot{border-top:var(--rule-hair) solid var(--hairline);background:linear-gradient(180deg,rgba(243,239,228,.6),rgba(243,239,228,.2))}
+.lg-res{font:italic 400 15px/1.45 var(--f-display);color:var(--navy-dark);font-feature-settings:"lnum" 1,"tnum" 1}
+.lg-fol{font:600 10px/1.3 var(--f-body);letter-spacing:var(--tracked-tight);text-transform:uppercase;color:var(--mid-grey)}
 .ctl{padding:18px 0 16px;border-bottom:var(--rule-hair) solid var(--hairline)}
-.ctl label{display:flex;justify-content:space-between;align-items:baseline;gap:12px;font:600 10.5px/1.4 var(--f-body);letter-spacing:var(--tracked-cap);text-transform:uppercase;color:var(--navy-dark)}
-.ctl output{font:400 21px/1 var(--f-display);letter-spacing:var(--tracked-num);text-transform:none;font-feature-settings:"lnum" 1,"tnum" 1}
+.ctl label{display:flex;min-height:24px;justify-content:space-between;align-items:baseline;gap:12px;font:600 10.5px/1.4 var(--f-body);letter-spacing:var(--tracked-cap);text-transform:uppercase;color:var(--navy-dark)}
+.ctl output{min-width:5.2ch;text-align:right;font:400 21px/1 var(--f-display);letter-spacing:var(--tracked-num);text-transform:none;font-feature-settings:"lnum" 1,"tnum" 1}
 .ctl input[type=range]{-webkit-appearance:none;appearance:none;width:100%;margin:16px 0 0;height:18px;background:transparent;cursor:pointer}
 .ctl input[type=range]::-webkit-slider-runnable-track{height:1px;background:linear-gradient(to right,var(--navy-dark) var(--f,50%),var(--hairline) var(--f,50%))}
 .ctl input[type=range]::-moz-range-track{height:1px;background:var(--hairline)}
@@ -321,11 +349,12 @@ table.dt tbody tr:hover td{background:rgba(230,212,167,.24);transition-duration:
 .ctl input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:12px;height:12px;margin-top:-6px;border-radius:1px;background:var(--ivory);border:1.5px solid var(--navy-dark);transform:rotate(45deg)}
 .ctl input[type=range]::-moz-range-thumb{width:10px;height:10px;border-radius:1px;background:var(--ivory);border:1.5px solid var(--navy-dark);transform:rotate(45deg)}
 .ctl .hint{display:block;margin-top:8px;font:italic 400 13px/1.4 var(--f-display);color:var(--slate)}
-.econ-out{grid-column:6 / -1}
-.econ-hero{display:grid;grid-template-columns:1fr 1fr 1fr;border-top:var(--rule-medium) solid var(--navy-dark);border-bottom:var(--rule-hair) solid var(--hairline)}
-.econ-hero > div{padding:20px 18px 18px 0} .econ-hero > div + div{padding-left:18px;border-left:var(--rule-hair) solid var(--hairline)}
-.econ-hero .v{display:block;font:400 clamp(24px,2.6vw,38px)/1.05 var(--f-display);letter-spacing:var(--tracked-num);color:var(--navy-dark);font-feature-settings:"lnum" 1,"tnum" 1;white-space:nowrap}
-.econ-hero .l{display:block;margin-top:10px;font:600 10.5px/1.45 var(--f-body);letter-spacing:var(--tracked-cap);text-transform:uppercase;color:var(--slate)}
+.econ-hero{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));border-top:var(--rule-medium) solid var(--navy-dark);border-bottom:var(--rule-hair) solid var(--hairline)}
+.econ-hero > div{min-width:0;padding:18px 16px 16px 0;text-align:right} .econ-hero > div + div{padding-left:16px;border-left:var(--rule-hair) solid var(--hairline)}
+.econ-hero .v{display:flex;justify-content:flex-end;align-items:baseline;gap:8px;height:1.15em;overflow:hidden;
+  font:400 clamp(21px,2.1vw,32px)/1.1 var(--f-display);letter-spacing:0;color:var(--navy-dark);font-variant-numeric:tabular-nums lining-nums;font-feature-settings:"lnum" 1,"tnum" 1;white-space:nowrap}
+.econ-hero .v .pc{flex:none;min-width:3.6em;font:400 .5em/1 var(--f-body);letter-spacing:.02em;color:var(--slate);text-align:right}
+.econ-hero .l{display:block;margin-top:12px;padding-top:10px;border-top:var(--rule-hair) solid var(--hairline);font:600 10px/1.45 var(--f-body);letter-spacing:var(--tracked-cap);text-transform:uppercase;color:var(--slate)}
 .econ-hero .d .v{color:#2a4a9e} .econ-hero .c .v{color:var(--gold-deep)}
 .econ-legend{display:flex;gap:26px;margin:26px 0 8px;font:600 10.5px/1 var(--f-body);letter-spacing:var(--tracked-cap);text-transform:uppercase;color:var(--navy-dark)}
 .econ-legend span{display:inline-flex;align-items:center;gap:10px}
@@ -340,14 +369,20 @@ table.dt tbody tr:hover td{background:rgba(230,212,167,.24);transition-duration:
 .eb em{margin-left:10px;font:500 12.5px/1 var(--f-body);font-style:normal;font-feature-settings:"tnum" 1;color:var(--ink);white-space:nowrap}
 .eb.c em.x{font:italic 400 13px/1 var(--f-display);color:var(--slate)}
 .econ-note{margin:16px 0 0;font:italic 400 14px/1.5 var(--f-display);color:var(--slate);max-width:62ch}
-.econ-src{margin-top:28px}
-.econ-src summary{cursor:pointer;list-style:none;display:flex;justify-content:space-between;align-items:center;padding:12px 0;border-top:var(--rule-medium) solid var(--navy-dark);border-bottom:var(--rule-hair) solid var(--hairline);
+.econ-src{margin:0}
+.econ-src summary{cursor:pointer;list-style:none;display:flex;justify-content:space-between;align-items:center;min-height:44px;padding:0 22px;border-top:var(--rule-hair) solid var(--hairline);border-bottom:var(--rule-hair) solid var(--hairline);
   font:600 10.5px/1 var(--f-body);letter-spacing:var(--tracked-cap);text-transform:uppercase;color:var(--navy-dark)}
 .econ-src summary::-webkit-details-marker{display:none}
 .econ-src summary::after{content:"+";font:400 18px/1 var(--f-display);transition:transform 600ms var(--soft-close)} .econ-src[open] summary::after{transform:rotate(45deg)}
-.econ-src table.dt{min-width:0;margin-top:0} .econ-src table.dt td{font-size:14px;padding:12px 12px}
+.econ-src .dt-wrap{padding:0 22px 18px} .econ-src table.dt{min-width:0;margin-top:0} .econ-src table.dt td{font-size:14px;padding:12px 12px}
 .econ-src a{color:var(--navy-dark);text-decoration:underline;text-decoration-color:var(--gold-primary);text-underline-offset:3px}
-@media (max-width:960px){ .econ-ctl,.econ-out{grid-column:1 / -1} .econ-ctl{position:static} .econ-hero{grid-template-columns:1fr} .econ-hero > div + div{padding-left:0;border-left:0;border-top:var(--rule-hair) solid var(--hairline)} .brow{grid-template-columns:1fr} }
+@media (max-width:960px){ .lg-body{grid-template-columns:1fr} .lg-rule{display:none} .econ-ctl{padding:4px var(--gutter-in,18px) 18px;border-bottom:var(--rule-hair) solid var(--navy-dark)}
+  .econ-out{padding:24px 18px 22px} .lg-head,.lg-foot{padding:12px 18px} .econ-src summary{padding:0 18px}
+  .econ-hero{grid-template-columns:1fr} .econ-hero > div + div{padding-left:0;border-left:0;border-top:var(--rule-hair) solid var(--hairline)}
+  .econ-hero{border-top:0} .econ-hero > div{padding-right:0} .brow{grid-template-columns:1fr} .lg-stamp{right:14px} }
+/* touch: a larger thumb to catch, a taller hit area */
+@media (pointer:coarse){ .ctl input[type=range]{height:36px} .ctl input[type=range]::-webkit-slider-thumb{width:20px;height:20px;margin-top:-10px}
+  .ctl input[type=range]::-moz-range-thumb{width:18px;height:18px} }
 
 /* Fig. 4: the record (real dates from kernel 01_identity) */
 .tl{margin:0 0 8px}
@@ -366,16 +401,19 @@ table.dt tbody tr:hover td{background:rgba(230,212,167,.24);transition-duration:
 .tl .tl-ev .d{font:400 22px var(--f-display);fill:var(--navy-dark)}
 .tl .tl-ev .e{font:600 11px var(--f-body);letter-spacing:.14em;text-transform:uppercase;fill:var(--slate)}
 .tl .tl-ev:hover circle{fill:var(--gold-light)}
+.tl-vert{display:none;width:100%;max-width:420px;height:auto;overflow:visible}
+.tl .tl-vert .tl-run{stroke-dasharray:390;stroke-dashoffset:calc(390 * (1 - var(--d,1)))}
+.tl .tl-vert .tl-ev .st{stroke-dasharray:30;stroke-dashoffset:30} .tl .tl-vert .tl-ev.on .st{stroke-dashoffset:0}
+.tl .tl-vert .tk text{text-anchor:end}
+.tl .tl-vert .tl-ev .d{font-size:20px}
 .dia-scroll{overflow-x:auto;-webkit-overflow-scrolling:touch}
-@media (max-width:700px){ .acct-fig svg{min-width:680px} .tl svg{min-width:820px} .dia-scroll{margin-inline:calc(var(--gutter) * -1);padding-inline:var(--gutter)} }
+@media (max-width:700px){ .acct-fig svg{min-width:680px} .tl .dia-scroll{display:none} .tl-vert{display:block} .dia-scroll{margin-inline:calc(var(--gutter) * -1);padding-inline:var(--gutter)} }
 
 /* ---------------------------------------------------------------- Fig. 2: the Instrument (night stage) */
 .night{background:var(--navy-dark);color:var(--on-night);position:relative}
 .inst-stage{position:relative;height:480vh}
 .inst-pin{position:sticky;top:0;height:100vh;height:100svh;overflow:hidden;background:radial-gradient(90% 70% at 62% 58%, #10204c 0%, var(--navy-dark) 62%, #060f2a 100%)}
-.inst-pin::after{content:"";position:absolute;inset:0;pointer-events:none;opacity:.5;mix-blend-mode:overlay;
-  background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='240' height='240'><filter id='g'><feTurbulence type='fractalNoise' baseFrequency='.95' numOctaves='3' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 1  0 0 0 0 1  0 0 0 0 1  0 0 0 .16 0'/></filter><rect width='100%' height='100%' filter='url(%23g)'/></svg>")}
-.inst-view{position:absolute;inset:0}
+.inst-view{position:absolute;inset:0;cursor:crosshair}
 .inst-view canvas{position:absolute;inset:0;width:100%;height:100%;display:block}
 .inst-copy{position:absolute;left:var(--gutter);top:calc(128px + env(safe-area-inset-top,0px));max-width:340px;z-index:2}
 .inst-copy .kicker{color:var(--gold-primary)}
@@ -572,31 +610,37 @@ table.dt tbody tr:hover td{background:rgba(230,212,167,.24);transition-duration:
       <p class="chs-descriptor" data-rise>A client who buys each discipline separately also buys the work of holding them together: the purchase orders, the invoices, the hours on the phone and the rework that falls between trades. Move the figures to your programme.</p>
       <div class="chs-rule" data-rise></div>
     </div>
-    <div class="econ-grid" id="econ">
-      <div class="econ-ctl">
+    <figure class="ledger" id="econ" aria-label="Exhibit III: an interactive model of the overhead a client carries when buying each discipline direct, against one coordinator">
+      <div class="lg-head"><span class="lg-t">Exhibit III · The cost of coordinating it yourself</span><span class="lg-sum" id="lgSum" aria-live="polite"></span></div>
+      <div class="lg-body">
+        <div class="econ-ctl">
         <div class="ctl"><label for="eV">Programme value <output id="oV"></output></label><input id="eV" type="range" min="1" max="50" step="0.5" value="5"><span class="hint">Total contract value across all disciplines</span></div>
         <div class="ctl"><label for="eN">Disciplines <output id="oN"></output></label><input id="eN" type="range" min="2" max="10" step="1" value="6"><span class="hint">Separate suppliers the client would otherwise contract</span></div>
         <div class="ctl"><label for="eM">Duration <output id="oM"></output></label><input id="eM" type="range" min="1" max="12" step="1" value="4"><span class="hint">Months from mobilisation to turnover</span></div>
       </div>
-      <div class="econ-out">
-        <div class="econ-hero">
-          <div class="d"><span class="v" id="hD">—</span><span class="l">Carried by the client, buying direct</span></div>
-          <div class="c"><span class="v" id="hC">—</span><span class="l">Carried by the client, one coordinator</span></div>
-          <div><span class="v" id="hS">—</span><span class="l">Overhead lifted off the client · share of programme</span></div>
+        <i class="lg-rule" aria-hidden="true"></i>
+        <div class="econ-out">
+          <span class="lg-stamp" aria-hidden="true">Illustrative</span>
+          <div class="econ-hero">
+            <div class="d"><span class="v"><span id="hD">—</span></span><span class="l">Carried by the client, buying direct</span></div>
+            <div class="c"><span class="v"><span id="hC">—</span></span><span class="l">Carried by the client, one coordinator</span></div>
+            <div class="s"><span class="v"><span id="hS">—</span><span class="pc" id="hP"></span></span><span class="l">Overhead lifted off the client · share of programme</span></div>
+          </div>
+          <div class="econ-legend" aria-hidden="true"><span><i style="background:#2a4a9e"></i>Buying direct</span><span><i style="background:var(--gold-deep)"></i>One coordinator</span></div>
+          <div class="bars" id="bars"></div>
+          <p class="econ-note">Illustrative model of the client's own overhead, built from published benchmarks. It excludes the coordinator's fee, which GSSC quotes per engagement, so read it as what one point of accountability lifts off your side of the table.</p>
         </div>
-        <div class="econ-legend" aria-hidden="true"><span><i style="background:#2a4a9e"></i>Buying direct</span><span><i style="background:var(--gold-deep)"></i>One coordinator</span></div>
-        <div class="bars" id="bars"></div>
-        <p class="econ-note">Illustrative model of the client's own overhead, built from published benchmarks. It excludes the coordinator's fee, which GSSC quotes per engagement, so read it as what one point of accountability lifts off your side of the table.</p>
-        <details class="econ-src"><summary>Assumptions and sources</summary>
+      </div>
+      <div class="lg-foot"><span class="lg-res" id="lgRes"></span><span class="lg-fol">Sources: APQC · BSP · PayScale PH · CII</span></div>
+      <details class="econ-src"><summary>Assumptions and sources</summary>
           <div class="dt-wrap"><table class="dt"><thead><tr><th>Line</th><th>Assumption</th><th>Source</th></tr></thead><tbody>
             <tr><td class="name">Invoices</td><td>One invoice per supplier per month, at ₱1,344 each (US$21.40 median cost to process an AP invoice, at ₱62.80)</td><td><a href="https://www.apqc.org/resource-library/resource/total-cost-process-accounts-payable-invoice-processed">APQC</a> · <a href="https://www.bsp.gov.ph/statistics/external/tab12_pus.aspx">BSP rate, 22 Sep 2026</a></td></tr>
             <tr><td class="name">Purchase orders</td><td>Two per supplier (award and one change), at ₱2,135 each (US$34, the midpoint of US$14–54)</td><td><a href="https://www.apqc.org/resource-library/resource/how-efficient-your-procurement-process-benchmarks-reveal-wide-performance">APQC</a></td></tr>
             <tr><td class="name">Coordination time</td><td>Three hours a week per supplier of a manager's time, at ₱346 an hour (₱720,000 a year over 2,080 hours)</td><td><a href="https://www.payscale.com/research/PH/Job=Project_Manager%2C_Construction/Salary/038fa076/Manila-Project-Management">PayScale PH</a></td></tr>
             <tr><td class="name">Interface rework</td><td>Rework averages 5% of project cost, 17% of it from communication failures between trades: 0.85% of programme value, carried by the client when no one owns the interfaces</td><td><a href="https://www.planradar.com/us/cost-of-rework-construction/">CII via PlanRadar</a></td></tr>
           </tbody></table></div>
-        </details>
-      </div>
-    </div>
+      </details>
+    </figure>
   </section>
 
   <section class="sec wrap" id="verification" data-rail="IV · Verification" data-index="IV">
@@ -624,6 +668,13 @@ table.dt tbody tr:hover td{background:rgba(230,212,167,.24);transition-duration:
           <g class="tl-ev" data-day="10"><title>10 June 2026 · Incorporated, Securities and Exchange Commission · Reg. 2026060254196-01</title><circle r="5.5"/><line class="st" y1="-10" y2="-62"/><text class="d" y="-86">10 June</text><text class="e" y="-70">Incorporated · SEC</text></g>
           <g class="tl-ev" data-day="23"><title>23 June 2026 · BIR registration (Form 2303) and Authority to Print approved</title><circle r="5.5"/><line class="st" y1="-10" y2="-62"/><text class="d" y="-86">23 June</text><text class="e" y="-70">BIR registration · Authority to Print</text></g>
         </svg></div>
+        <svg class="tl-vert" viewBox="0 0 340 430" role="img"><title>June 2026: incorporated 10 June; BIR registration and Authority to Print 23 June</title>
+          <g class="tl-ticks-v"></g>
+          <line class="tl-base" x1="64" y1="20" x2="64" y2="410"/>
+          <line class="tl-run" x1="64" y1="20" x2="64" y2="410"/>
+          <g class="tl-ev" data-day="10"><circle r="5.5"/><line class="st" x1="10" x2="40"/><text class="d" x="50" y="0">10 June</text><text class="e" x="50" y="20">Incorporated · SEC</text></g>
+          <g class="tl-ev" data-day="23"><circle r="5.5"/><line class="st" x1="10" x2="40"/><text class="d" x="50" y="0">23 June</text><text class="e" x="50" y="20">BIR · Authority to Print</text></g>
+        </svg>
       </figure>
       <div class="col-a" style="margin-top:40px">
         <blockquote class="pull" data-rise>Programmes rarely fail for lack of suppliers. They fail in the gaps between them.<cite>GSSC Integrated Corporation · Positioning</cite></blockquote>
@@ -656,7 +707,6 @@ table.dt tbody tr:hover td{background:rgba(230,212,167,.24);transition-duration:
   </section>
 </main>
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/lenis@1.1.20/dist/lenis.min.js"></script>
 <script>
 (() => {
@@ -667,6 +717,7 @@ const lerp = (a, b, t) => a + (b - a) * t;
 const ease = t => 1 - Math.pow(1 - t, 4);                        // the soft close
 const inOut = t => t < .5 ? 8 * t * t * t * t : 1 - Math.pow(-2 * t + 2, 4) / 2;
 let vw = innerWidth, vh = innerHeight;
+const COARSE = matchMedia('(pointer: coarse)').matches;   // touch: native momentum, no pins that release mid-flick
 
 /* ------------------------------------------------ smooth scroll with a governor
    Wheel and trackpad input glides (Lenis); inside the Instrument the glide is heavier, so a hard
@@ -686,6 +737,56 @@ const setSheet = open => { sheet.classList.toggle('open', open); indexBtn.setAtt
 indexBtn.addEventListener('click', () => setSheet(true));
 document.getElementById('sheetClose').addEventListener('click', () => setSheet(false));
 sheet.querySelectorAll('a').forEach(a => a.addEventListener('click', () => setSheet(false)));
+
+/* ------------------------------------------------ the film: one clock and one set of authored defects
+   Everything filmic is deliberate and identical on every device: the artwork (the lava, the compass)
+   advances at 24 frames a second, and each film frame re-seeds the grain, drifts the gate a fraction
+   of a pixel and breathes the exposure. Rarely, a speck of dust or a hair crosses for a frame or two,
+   or a faint scratch runs for a few frames; a scene that begins gets a moment of light leak. Scroll,
+   the header and the text stay at the display's own rate: the film is the artwork's, never the UI's.
+   Intensities are tokens on :root (--grain, --weave, --flicker, --dust), tuned as one look. */
+const FRAME_MS = 1000 / 24;
+const cssNum = (k, d) => { const v = parseFloat(getComputedStyle(root).getPropertyValue(k)); return isNaN(v) ? d : v; };
+const FILM = {grain: cssNum('--grain', 1), weave: cssNum('--weave', .3), flicker: cssNum('--flicker', .015), dust: REDUCE ? 0 : cssNum('--dust', 1),
+  f: -1, seed: 0, wx: 0, wy: 0, fl: 1, dustV: [0, 0, 0, 0], scr: [0, 0, 0, 0], leak: 0, nextDust: 0, nextScr: 0, dustLeft: 0, scrLeft: 0, leakT: -1e9};
+if (REDUCE) { FILM.weave = 0; FILM.flicker = 0; }
+FILM.tick = t => {
+  const f = Math.floor(t / FRAME_MS); if (f === FILM.f) return false; FILM.f = f;
+  const R = Math.random;
+  FILM.seed = REDUCE ? 1 : (f % 89) * 1.618;
+  FILM.wx = (R() - .5) * 2 * FILM.weave; FILM.wy = (R() - .5) * 2 * FILM.weave;
+  FILM.fl = 1 + (R() - .5) * 2 * FILM.flicker;
+  if (!FILM.nextDust) { FILM.nextDust = t + 5000 + R() * 5000; FILM.nextScr = t + 9000 + R() * 8000; }
+  if (FILM.dustLeft > 0) FILM.dustLeft--; else FILM.dustV = [0, 0, 0, 0];
+  if (FILM.dust > 0 && t > FILM.nextDust) {   // a speck (most often) or a hair, for one or two frames, every 8 to 12 s
+    FILM.dustLeft = R() < .5 ? 1 : 0; FILM.dustV = [.12 + R() * .76, .12 + R() * .76, .0016 + R() * .0028, R() < .72 ? 1 : 2];
+    FILM.nextDust = t + 8000 + R() * 4000; }
+  if (FILM.scrLeft > 0) { FILM.scrLeft--; FILM.scr[0] += (R() - .5) * .0015; } else FILM.scr = [0, 0, 0, 0];
+  if (FILM.dust > 0 && t > FILM.nextScr) { FILM.scrLeft = 3 + (R() * 4 | 0); FILM.scr = [.08 + R() * .84, 0, R(), 1]; FILM.nextScr = t + 14000 + R() * 12000; }
+  FILM.leak = REDUCE ? 0 : Math.max(0, 1 - (t - FILM.leakT) / 1000);
+  return true;
+};
+FILM.cut = t => { FILM.leakT = t; };
+const FILM_GLSL = `
+uniform vec4 uFilm, uDust, uScr;      // film: seed, exposure, grain, leak; dust: x, y, size, kind; scratch: x, -, phase, on
+float fhash(vec2 p){ vec3 p3 = fract(vec3(p.xyx) * .1031); p3 += dot(p3, p3.yzx + 33.33); return fract((p3.x + p3.y) * p3.z); }   // no sin(): no banding at large coordinates
+vec3 film(vec3 col, vec2 px, vec2 uv, vec2 res){
+  float lum = dot(col, vec3(.3, .59, .11));
+  // grain: two sizes of clump, re-seeded every film frame, stronger in the shadows than the highlights
+  float g = (fhash(px + vec2(uFilm.x * 37.1, uFilm.x * 17.3)) - .5) * .085 + (fhash(floor(px * .5) + vec2(uFilm.x * 3.7, uFilm.x * 9.1)) - .5) * .035;
+  col += g * uFilm.z * (.45 + .55 * smoothstep(0., .35, lum)) * (1. - lum * .55);   // fine in the deepest navy, full in the mids
+  col *= uFilm.y;
+  if (uDust.w > 0.) { vec2 p = (uv - uDust.xy) * vec2(res.x / res.y, 1.);
+    float m = uDust.w < 1.5 ? smoothstep(uDust.z, uDust.z * .35, length(p * vec2(1., 1.3)))
+      : smoothstep(.0014, .0003, abs(p.y - sin(p.x * 55. + uDust.x * 9.) * .014)) * smoothstep(.07, .03, abs(p.x));
+    col = mix(col, col * .2, m * .85); }
+  if (uScr.w > 0.) { float d = abs(uv.x - uScr.x - sin(uv.y * 7. + uScr.z * 6.) * .0025);
+    col += smoothstep(1.2 / res.x, 0., d) * .07 * (.5 + .5 * fhash(vec2(floor(uv.y * 60.), uFilm.x))); }
+  col += uFilm.w * uFilm.w * vec3(.6, .3, .08) * smoothstep(.5, 0., uv.x) * (.55 + .45 * uv.y) * .32;
+  return col;
+}`;
+const filmLocs = (g, p) => ({film: g.getUniformLocation(p, 'uFilm'), dust: g.getUniformLocation(p, 'uDust'), scr: g.getUniformLocation(p, 'uScr')});
+const filmUniforms = (g, L) => { g.uniform4f(L.film, FILM.seed, FILM.fl, FILM.grain, FILM.leak); g.uniform4fv(L.dust, FILM.dustV); g.uniform4fv(L.scr, FILM.scr); };
 
 /* ------------------------------------------------ Fig. 1, the field: wax under glass, filmed
    Pass A renders the lamp at low resolution into a texture: wax blobs (metaballs with a true
@@ -753,7 +854,7 @@ uniform sampler2D uCur, uPrev; uniform vec2 uRes;
 void main(){ vec2 uv = gl_FragCoord.xy / uRes; gl_FragColor = vec4(mix(texture2D(uCur, uv).rgb, texture2D(uPrev, uv).rgb, .34), 1.); }`;
 const FS_B = `precision highp float;
 uniform sampler2D uTex; uniform vec2 uRes, uJit; uniform float uTime;
-float hash(vec2 p){ return fract(sin(dot(p, vec2(12.9898, 78.233))) * 43758.5453); }
+${FILM_GLSL}
 void main(){
   vec2 uv = gl_FragCoord.xy / uRes, c = uv - .5;
   float r2 = dot(c, c);
@@ -778,11 +879,7 @@ void main(){
   col = mix(vec3(dot(col, vec3(.3,.59,.11))), col, .92);
   col += vec3(.0, .012, .03) * (1. - col);
   col *= .78 + .22 * smoothstep(.95, .15, length(c * vec2(1.25, 1.)));
-  float ft = floor(uTime / 41.67);
-  float lum = dot(col, vec3(.3,.59,.11));
-  col += ((hash(gl_FragCoord.xy + ft * 17.31) - .5) * .085 + (hash(floor(gl_FragCoord.xy * .5) + ft * 3.7) - .5) * .035) * (1. - lum * .55);
-  col *= 1. + (hash(vec2(ft, 7.)) - .5) * .014;
-  gl_FragColor = vec4(col, 1.);
+  gl_FragColor = vec4(film(col, gl_FragCoord.xy, uv, uRes), 1.);
 }`;
 let fx = null;
 if (gl) {
@@ -802,7 +899,7 @@ if (gl) {
   fx = {A, B, F, buf, tex, acc, ping: 0, fbo, lw: 0, lh: 0, aA: gl.getAttribLocation(A, 'a'), aB: gl.getAttribLocation(B, 'a'), aF: gl.getAttribLocation(F, 'a'),
         f: {cur: loc(F, 'uCur'), prev: loc(F, 'uPrev'), res: loc(F, 'uRes')},
         a: {res: loc(A, 'uRes'), time: loc(A, 'uTime'), conv: loc(A, 'uConv'), b: loc(A, 'uB')},
-        b: {res: loc(B, 'uRes'), time: loc(B, 'uTime'), jit: loc(B, 'uJit'), tex: loc(B, 'uTex')}};
+        b: {res: loc(B, 'uRes'), time: loc(B, 'uTime'), jit: loc(B, 'uJit'), tex: loc(B, 'uTex'), ...filmLocs(gl, B)}};
 }
 let FW = 0, FH = 0;
 function sizeField(){
@@ -868,13 +965,17 @@ function drawField(t, conv, dt){
   gl.bindFramebuffer(gl.FRAMEBUFFER, null); gl.viewport(0, 0, FW, FH);
   gl.useProgram(fx.B); gl.enableVertexAttribArray(fx.aB); gl.vertexAttribPointer(fx.aB, 2, gl.FLOAT, false, 0, 0);
   gl.activeTexture(gl.TEXTURE0); gl.bindTexture(gl.TEXTURE_2D, dst.t); gl.uniform1i(fx.b.tex, 0);
-  const ft = Math.floor(t / 41.67);
   gl.uniform2f(fx.b.res, FW, FH); gl.uniform1f(fx.b.time, t);
-  gl.uniform2f(fx.b.jit, Math.sin(ft * 12.9898) * .00035, Math.sin(ft * 78.233) * .00035);   // a whisper of gate weave
+  gl.uniform2f(fx.b.jit, FILM.wx / FW, FILM.wy / FH); filmUniforms(gl, fx.b);   // the shared gate weave, grain and defects
   gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
 }
 
-/* ------------------------------------------------ Fig. 2, the Instrument */
+/* ------------------------------------------------ Fig. 2, the Instrument: a filmed object, not a live model
+   The compass was modelled, lit and rendered in Blender (sites/gsscph/compass/build_compass.py): a studio
+   HDRI, brushed brass, enamel and guilloche, depth of field, 91 frames of one gesture. Scroll picks the
+   frame; nothing is computed in 3D here, so it cannot stall. One WebGL pass projects it like a print:
+   composite over the room, lens (a touch of barrel, colour fringe at the edges), halation off the gold,
+   a printer-light grade, vignette, and the shared film layer (grain, weave, flicker, dust, scratch, leak). */
 const iv = document.getElementById('instView'), ic = document.getElementById('inst'), instStage = document.getElementById('instrument');
 const svgL = document.getElementById('leaders'), tagsEl = document.getElementById('tags'), nowEl = document.getElementById('now'), phaseEl = document.getElementById('phase');
 // bottom (the case) to top (the star); numbering follows the table in Section I
@@ -887,159 +988,141 @@ const PARTS = [
   ['vi', 'Spokes', 'Compliance & documentation'],
   ['', 'The star', 'GSSC · one point of accountability'],
 ];
-let three = null;
+const SEQ = {{COMPASS}};                  // frames, tilt, per, anchors[f][part] = [x, y] as fractions of the frame
+const FS_I = `precision highp float;
+uniform sampler2D uTex; uniform vec2 uRes, uWeave; uniform vec4 uRect;
+${FILM_GLSL}
+vec4 frameAt(vec2 q){ vec2 t = (q * uRes - uRect.xy) / uRect.zw;
+  return (t.x < 0. || t.y < 0. || t.x > 1. || t.y > 1.) ? vec4(0.) : texture2D(uTex, t); }
+void main(){
+  vec2 uv = gl_FragCoord.xy / uRes, q0 = vec2(uv.x, 1. - uv.y), c = q0 - .5;
+  float r2 = dot(c, c);
+  vec2 q = .5 + c * (1. - .02 * r2) + uWeave / uRes;
+  // the room: the page's own radial navy, so the object sits in the stage it was lit for
+  vec2 g = (q - vec2(.62, .58)) / vec2(.9, .7);
+  vec3 bg = mix(vec3(.063, .125, .298), vec3(.035, .09, .239), smoothstep(0., .62, length(g)));
+  bg = mix(bg, vec3(.024, .059, .165), smoothstep(.62, 1., length(g)));
+  vec2 ca = c * r2 * .012;
+  vec4 m = frameAt(q);
+  vec3 fg = vec3(frameAt(q + ca).r, m.g, frameAt(q - ca).b);
+  vec3 col = fg + bg * (1. - m.a);
+  // halation: the brightest gold bleeds a warm red-orange into what surrounds it
+  vec3 h = vec3(0.); vec2 px = 1. / uRes;
+  for (int i = 0; i < 6; i++){ float a = float(i) * 1.047 + .3;
+    vec2 o = vec2(cos(a), sin(a)) * px;
+    vec4 s1 = frameAt(q + o * 5.), s2 = frameAt(q + o * 13.);
+    // only warm highlights (the gold) halate; the ivory enamel stays clean
+    h += max(s1.r - .72, 0.) * smoothstep(.08, .3, s1.r - s1.b) + max(s2.r - .72, 0.) * smoothstep(.08, .3, s2.r - s2.b) * .6; }
+  col += h * .13 * vec3(1., .45, .2);
+  // printer lights: navy in the shadows, warm in the highlights, blacks lifted like a print
+  float lum = dot(col, vec3(.3, .59, .11));
+  col = mix(col, col * vec3(1.03, 1., .95), smoothstep(.45, .95, lum));
+  col += vec3(.004, .012, .03) * (1. - lum);
+  col *= .8 + .2 * smoothstep(.95, .2, length(c * vec2(1.15, 1.)));
+  gl_FragColor = vec4(film(col, gl_FragCoord.xy, q0, uRes), 1.);
+}`;
+let inst = null;
 function buildInstrument(){
-  if (!window.THREE) return null;
-  const T = THREE;
-  const renderer = new T.WebGLRenderer({canvas: ic, antialias: (devicePixelRatio || 1) < 1.5, alpha: true, powerPreference: 'high-performance'})  // on dense screens the pixel ratio itself smooths edges; MSAA there costs ~35% for nothing visible;
-  renderer.outputEncoding = T.sRGBEncoding; renderer.toneMapping = T.ACESFilmicToneMapping; renderer.toneMappingExposure = .9;
-  const scene = new T.Scene(), cam = new T.PerspectiveCamera(28, 1, .1, 200); cam.position.set(0, 0, 15);
-  // a studio for the metal to reflect: a navy room with warm softboxes
-  { const env = new T.Scene(), pm = new T.PMREMGenerator(renderer);
-    env.add(new T.Mesh(new T.SphereGeometry(20, 32, 16), new T.MeshBasicMaterial({color: 0x0a1433, side: T.BackSide})));
-    const box = (w, h, x, y, z, c, i) => { const m = new T.Mesh(new T.PlaneGeometry(w, h), new T.MeshBasicMaterial({color: new T.Color(c).multiplyScalar(i), side: T.DoubleSide})); m.position.set(x, y, z); m.lookAt(0, 0, 0); env.add(m); };
-    box(16, 7, -6, 10, 6, 0xfff0d8, 1.25); box(5, 12, 12, 2, 2, 0xe8d3a0, .6); box(12, 4, 0, -9, 7, 0x5a6fa8, .35); box(7, 7, -10, -2, -8, 0xffe6b0, .45);
-    scene.environment = pm.fromScene(env, .02).texture; }
-  scene.add(new T.AmbientLight(0xffffff, .12));
-  const key = new T.DirectionalLight(0xfff0d0, .8); key.position.set(-5, 8, 9); scene.add(key);
-  // a brushed-grain map (fine concentric scratches, not a mirror) shared by every metal part
-  const grain = (() => { const c = document.createElement('canvas'); c.width = c.height = 256; const x = c.getContext('2d');
-    x.fillStyle = '#808080'; x.fillRect(0, 0, 256, 256);
-    for (let i = 0; i < 1400; i++) { const v = 110 + Math.random() * 40 | 0; x.fillStyle = `rgba(${v},${v},${v},.35)`; x.fillRect(Math.random() * 256, Math.random() * 256, 30 + Math.random() * 90, 1); }
-    const t = new T.CanvasTexture(c); t.wrapS = t.wrapT = T.RepeatWrapping; t.repeat.set(3, 1); return t; })();
-  const phys = o => { delete o.clearcoat; delete o.clearcoatRoughness; return new T.MeshStandardMaterial(Object.assign({roughnessMap: grain, bumpMap: grain, bumpScale: .0025, envMapIntensity: .75}, o)); };
-  const M = {
-    navyMetal: phys({color: 0x1a2c61, metalness: .62, roughness: .5, clearcoat: .2, clearcoatRoughness: .45}),
-    gold: phys({color: 0xc9a553, metalness: .95, roughness: .44}),
-    goldSatin: phys({color: 0xbf9b4b, metalness: .95, roughness: .55}),
-    enamel: new T.MeshStandardMaterial({color: 0xeae0c6, metalness: 0, roughness: .62, clearcoat: .35, clearcoatRoughness: .4, envMapIntensity: .55}),
-    ivory: new T.MeshStandardMaterial({color: 0xe3d8bc, metalness: .02, roughness: .66, envMapIntensity: .5}),
-  };
-  const group = new T.Group(); scene.add(group);
-  const parts = [];
-  const add = (obj, radius) => { const p = new T.Group(); p.add(obj); group.add(p); parts.push({g: p, radius}); return p; };
-  { const g = new T.Group();
-    g.add(new T.Mesh(new T.TorusGeometry(3.6, .11, 18, 160), M.navyMetal));
-    // the dial: a guilloché field (engine-turned waves), engraved into the navy
-    const gc = document.createElement('canvas'); gc.width = gc.height = 768; const gx = gc.getContext('2d');
-    gx.fillStyle = '#1b2d62'; gx.fillRect(0, 0, 1024, 1024); gx.translate(384, 384);
-    for (let r = 22; r < 384; r += 4.2) { gx.beginPath();
-      for (let a = 0; a <= Math.PI * 2 + .01; a += .01) { const rr = r + Math.sin(a * 24 + r * .06) * 3.2; gx.lineTo(Math.cos(a) * rr, Math.sin(a) * rr); }
-      gx.strokeStyle = `rgba(${150 + (r % 3) * 20},${170 + (r % 3) * 15},230,.16)`; gx.lineWidth = 1.1; gx.stroke(); }
-    const gtex = new T.CanvasTexture(gc); gtex.anisotropy = renderer.capabilities.getMaxAnisotropy();
-    const dial = new T.MeshStandardMaterial({map: gtex, bumpMap: gtex, bumpScale: .006, metalness: .55, roughness: .46, clearcoat: .3, clearcoatRoughness: .3, envMapIntensity: .7});
-    const base = new T.Mesh(new T.CylinderGeometry(3.62, 3.62, .12, 160, 1), [M.navyMetal, dial, M.navyMetal]); base.rotation.x = Math.PI / 2; base.position.z = -.12; g.add(base);
-    // a soft contact shadow under the case, so the instrument sits in the room rather than floating in it
-    const sc = document.createElement('canvas'); sc.width = sc.height = 128; const sx = sc.getContext('2d');
-    const gr = sx.createRadialGradient(64, 64, 20, 64, 64, 64); gr.addColorStop(0, 'rgba(0,0,0,.55)'); gr.addColorStop(1, 'rgba(0,0,0,0)');
-    sx.fillStyle = gr; sx.fillRect(0, 0, 128, 128);
-    const sh = new T.Mesh(new T.PlaneGeometry(9.6, 9.6), new T.MeshBasicMaterial({map: new T.CanvasTexture(sc), transparent: true, depthWrite: false}));
-    sh.position.z = -.3; g.add(sh);
-    add(g, 3.72); }
-  { const g = new T.Group(), t1 = new T.BoxGeometry(.024, .17, .04), t2 = new T.BoxGeometry(.034, .32, .05);
-    // 120 ticks as two instanced draws instead of 120 meshes
-    const im1 = new T.InstancedMesh(t1, M.ivory, 108), im2 = new T.InstancedMesh(t2, M.gold, 12), o = new T.Object3D(); let n1 = 0, n2 = 0;
-    for (let i = 0; i < 120; i++) { const L = i % 10 === 0, a = i / 120 * Math.PI * 2, r = L ? 3.2 : 3.26;
-      o.position.set(Math.cos(a) * r, Math.sin(a) * r, 0); o.rotation.set(0, 0, a - Math.PI / 2); o.updateMatrix();
-      L ? im2.setMatrixAt(n2++, o.matrix) : im1.setMatrixAt(n1++, o.matrix); }
-    g.add(im1, im2);
-    g.add(new T.Mesh(new T.TorusGeometry(3.06, .014, 6, 140), M.goldSatin)); add(g, 3.38); }
-  { const shapes = [];   // eight plates, one geometry, one draw
-    for (let i = 0; i < 8; i++) { const s = new T.Shape(), a0 = i * Math.PI / 4 + .03, a1 = (i + 1) * Math.PI / 4 - .03;
-      s.absarc(0, 0, 2.94, a0, a1, false); s.absarc(0, 0, 2.54, a1, a0, true); shapes.push(s); }
-    add(new T.Mesh(new T.ExtrudeGeometry(shapes, {depth: .08, bevelEnabled: true, bevelThickness: .02, bevelSize: .02, bevelSegments: 2, curveSegments: 16}), M.enamel), 2.98); }
-  add(new T.Mesh(new T.TorusGeometry(2.38, .05, 14, 150), M.gold), 2.43);
-  add(new T.Mesh(new T.TorusGeometry(2.0, .07, 14, 140), M.navyMetal), 2.07);
-  { const g = new T.Group(), o = new T.Object3D();
-    const iL = new T.InstancedMesh(new T.BoxGeometry(1.5, .034, .034), M.goldSatin, 8), iS = new T.InstancedMesh(new T.BoxGeometry(1.12, .02, .034), M.ivory, 8);
-    for (let i = 0; i < 16; i++) { const L = i % 2 === 0, len = L ? 1.5 : 1.12, a = i / 16 * Math.PI * 2 + Math.PI / 16, r = .42 + len / 2;
-      o.position.set(Math.cos(a) * r, Math.sin(a) * r, 0); o.rotation.set(0, 0, a); o.updateMatrix(); (L ? iL : iS).setMatrixAt(i >> 1, o.matrix); }
-    g.add(iL, iS); add(g, 1.94); }
-  { const pos = [], col = [], cL = new T.Color(0xf6e2a8), cD = new T.Color(0xb68a36), H = .46, V = .36;
-    for (let i = 0; i < 8; i++) {
-      const a = i * Math.PI / 4 + Math.PI / 2, R = i % 2 ? 1.42 : 2.16;
-      const tip = [Math.cos(a) * R, Math.sin(a) * R, 0];
-      const vl = [Math.cos(a - Math.PI / 8) * V, Math.sin(a - Math.PI / 8) * V, 0], vr = [Math.cos(a + Math.PI / 8) * V, Math.sin(a + Math.PI / 8) * V, 0];
-      pos.push(0, 0, H, ...vl, ...tip, 0, 0, H, ...tip, ...vr);
-      for (let k = 0; k < 3; k++) col.push(cD.r, cD.g, cD.b); for (let k = 0; k < 3; k++) col.push(cL.r, cL.g, cL.b);
-    }
-    const geo = new T.BufferGeometry(); geo.setAttribute('position', new T.Float32BufferAttribute(pos, 3));
-    geo.setAttribute('color', new T.Float32BufferAttribute(col, 3)); geo.computeVertexNormals();
-    add(new T.Mesh(geo, new T.MeshStandardMaterial({vertexColors: true, metalness: .85, roughness: .38, flatShading: true, side: T.DoubleSide, envMapIntensity: .8})), 2.16); }
+  const g2 = ic.getContext('webgl', {antialias: false, alpha: false, premultipliedAlpha: false});
+  if (!g2) return null;
+  const pr = g2.createProgram();
+  for (const [type, src] of [[g2.VERTEX_SHADER, VS], [g2.FRAGMENT_SHADER, FS_I]]) { const s = g2.createShader(type); g2.shaderSource(s, src); g2.compileShader(s); g2.attachShader(pr, s); }
+  g2.linkProgram(pr); g2.useProgram(pr);
+  const buf = g2.createBuffer(); g2.bindBuffer(g2.ARRAY_BUFFER, buf);
+  g2.bufferData(g2.ARRAY_BUFFER, new Float32Array([-1,-1, 1,-1, -1,1, 1,1]), g2.STATIC_DRAW);
+  const aP = g2.getAttribLocation(pr, 'a'); g2.enableVertexAttribArray(aP); g2.vertexAttribPointer(aP, 2, g2.FLOAT, false, 0, 0);
+  const tex = g2.createTexture(); g2.bindTexture(g2.TEXTURE_2D, tex);
+  for (const [k, v] of [[g2.TEXTURE_MIN_FILTER, g2.LINEAR], [g2.TEXTURE_MAG_FILTER, g2.LINEAR], [g2.TEXTURE_WRAP_S, g2.CLAMP_TO_EDGE], [g2.TEXTURE_WRAP_T, g2.CLAMP_TO_EDGE]]) g2.texParameteri(g2.TEXTURE_2D, k, v);
+  g2.pixelStorei(g2.UNPACK_PREMULTIPLY_ALPHA_WEBGL, true);   // composite in the shader as premultiplied
+  const u = n => g2.getUniformLocation(pr, n);
+  // frames: phones get the smaller set; the first frame loads now, the rest when the stage is near
+  const set = Math.min(innerWidth, innerHeight * 1.2) * Math.min(devicePixelRatio || 1, 2) > 1300 ? 'd' : 'm';
+  const imgs = new Array(SEQ.frames).fill(null);
+  const load = i => new Promise(res => { const im = new Image(); im.decoding = 'async';
+    // decoded off the main thread into a premultiplied bitmap, so showing a frame is a plain GPU upload
+    im.onload = () => (window.createImageBitmap ? createImageBitmap(im, {premultiplyAlpha: 'premultiply'}) : (im.decode ? im.decode() : Promise.resolve()).then(() => im))
+      .catch(() => im).then(bm => { imgs[i] = bm; res(); }); im.onerror = res;
+    im.src = `compass/${set}/f${String(i).padStart(3, '0')}.webp`; });
+  load(0);
+  let loading = false;
+  const loadAll = async () => { if (loading) return; loading = true;
+    // coarse to fine: every eighth frame first, so a fast scroll always has something close to show
+    const order = []; for (const st of [8, 4, 2, 1]) for (let i = 0; i < SEQ.frames; i += st) if (!order.includes(i)) order.push(i);
+    for (let k = 0; k < order.length; k += 6) await Promise.all(order.slice(k, k + 6).map(i => imgs[i] ? 0 : load(i))); };
   svgL.innerHTML = PARTS.map(() => '<path fill="none" stroke="rgba(200,164,77,.7)" stroke-width="1"/>').join('');
   tagsEl.innerHTML = PARTS.map(([n, p, c]) => `<div class="tag"><span class="c">${n ? `<em>${n}</em>` : ''}${p}</span><span class="v">${c}</span></div>`).join('');
   phaseEl.innerHTML = PARTS.map(() => '<i></i>').join('') + '<span>Closed</span>';
-  return {renderer, scene, cam, group, parts, leaders: [...svgL.children], tags: [...tagsEl.children], ticks: [...phaseEl.querySelectorAll('i')],
-          phaseLabel: phaseEl.querySelector('span'), tilt: {x: 0, y: 0}, state: null, V: new T.Vector3(), C: new T.Vector3()};
+  return {gl: g2, tex, imgs, loadAll, shown: -1, f: 0, fx: {res: u('uRes'), weave: u('uWeave'), rect: u('uRect'), tex: u('uTex'), ...filmLocs(g2, pr)},
+          leaders: [...svgL.children], tags: [...tagsEl.children], ticks: [...phaseEl.querySelectorAll('i')], phaseLabel: phaseEl.querySelector('span'),
+          tilt: {x: 0, y: 0}, w: 0, h: 0};
 }
 function sizeInst(){
-  if (!three) return;
+  if (!inst) return;
   const w = iv.clientWidth, h = iv.clientHeight;
-  three.pr = three.pr || Math.min(devicePixelRatio || 1, 1.5); three.renderer.setPixelRatio(three.pr); three.renderer.setSize(w, h, false);
-  three.cam.aspect = w / h; three.cam.updateProjectionMatrix(); svgL.setAttribute('viewBox', `0 0 ${w} ${h}`);
+  // rendered below one pixel per CSS pixel on wide screens and upscaled: soft, like a projected print
+  const k = w > 1100 ? .8 : 1, cw = Math.round(w * k), ch = Math.round(h * k);
+  ic.width = cw; ic.height = ch; inst.w = w; inst.h = h; inst.k = k; inst.gl.viewport(0, 0, cw, ch); inst.shown = -1;
+  svgL.setAttribute('viewBox', `0 0 ${w} ${h}`);
 }
 const iptr = {x: 0, y: 0};
 iv.addEventListener('pointermove', e => { const r = iv.getBoundingClientRect(); iptr.x = (e.clientX - r.left) / r.width - .5; iptr.y = (e.clientY - r.top) / r.height - .5; });
 iv.addEventListener('pointerleave', () => { iptr.x = 0; iptr.y = 0; });
-function drawInstrument(t, q, dt){
-  const {renderer, scene, cam, group, parts, leaders, tags} = three;
-  const w = iv.clientWidth, h = iv.clientHeight, narrow = vw <= 860, N = parts.length;
-  /* PHASES, owned by scroll. Every part has its own slice of the pin: the tilt, then each part from
-     the star down, a hold with everything open, then closing from the case up and a final settle.
-     The state follows the scroll position through a short damper, so it is always exactly where the
-     reader is, finishes inside the pin, and rewinds perfectly. Opening top-down and closing bottom-up
-     means no part ever passes through another. */
-  const S = three.state || (three.state = {tilt: 0, v: parts.map(() => 0)});
-  const k = 1 - Math.exp(-dt / 120);
-  const tiltT = ease(clamp(q / .06)) * (1 - .7 * clamp((q - .8) / .06));
-  S.tilt += (tiltT - S.tilt) * k;
-  for (let i = 1; i < N; i++) {
-    const fromTop = N - 1 - i;
-    const opn = clamp((q - (.06 + fromTop * .075)) / .075), cls = clamp((q - (.58 + (i - 1) * .035)) / .05);
-    S.v[i] += (opn * (1 - cls) - S.v[i]) * k;
+// the sequence as the renderer made it: the tilt, then each part lifting in turn, the star first
+const easeQ = t => 1 - Math.pow(1 - t, 4);
+const seqPose = f => { const tilt = easeQ(clamp(f / (SEQ.tilt - 1))), lift = [0];
+  for (let i = 1; i < PARTS.length; i++) lift.push(easeQ(clamp((f - (SEQ.tilt + (PARTS.length - 1 - i) * SEQ.per)) / SEQ.per)));
+  return {tilt, lift}; };
+/* PHASES, owned by scroll, exactly as before: tilt by 6%, parts open star-first to 51%, hold, close from the
+   case up (the same frames played back) to 80%, then settle to a slight tilt. The frame follows the scroll
+   through a short damper, so it is always where the reader is and rewinds perfectly. */
+function frameFor(q){
+  const L = SEQ.frames - 1, T = SEQ.tilt - 1, tiltF = v => T * (1 - Math.pow(1 - v, .25));
+  if (q < .06) return T * q / .06;
+  if (q < .51) return SEQ.tilt + (q - .06) / .45 * (L - SEQ.tilt);
+  if (q < .58) return L;
+  if (q < .80) return L - (q - .58) / .22 * (L - SEQ.tilt);
+  return Math.max(tiltF(.3), T - clamp((q - .8) / .06) * (T - tiltF(.3)));
+}
+function drawInstrument(t, q, dt, newFilm){
+  const I = inst, G = I.gl, w = I.w, h = I.h, narrow = vw <= 860, N = PARTS.length;
+  I.f += (frameFor(q) - I.f) * (1 - Math.exp(-dt / 120));
+  let fi = Math.round(clamp(I.f, 0, SEQ.frames - 1));
+  if (!I.imgs[fi]) { let b = -1; for (let d = 1; d < SEQ.frames && b < 0; d++) { if (I.imgs[fi - d]) b = fi - d; else if (I.imgs[fi + d]) b = fi + d; } if (b < 0) return; fi = b; }
+  I.tilt.x += (iptr.x - I.tilt.x) * .06; I.tilt.y += (iptr.y - I.tilt.y) * .06;
+  // where the print sits: beside the copy on a wide screen, centred low on a phone; the cursor drifts it a little
+  const size = narrow ? Math.min(w * 1.5, h * .8) : Math.min(h * 1.04, w * .62);
+  const cx = (narrow ? w * .5 : w * .47) + I.tilt.x * 14, cy = (narrow ? h * .57 : h * .55) + I.tilt.y * 10;
+  const rect = [cx - size / 2, cy - size / 2, size, size];
+  if (fi !== I.shown) { G.bindTexture(G.TEXTURE_2D, I.tex); G.texImage2D(G.TEXTURE_2D, 0, G.RGBA, G.RGBA, G.UNSIGNED_BYTE, I.imgs[fi]); }
+  if (fi !== I.shown || newFilm || REDUCE) {
+    I.shown = fi;
+    G.uniform2f(I.fx.res, w * I.k, h * I.k); G.uniform2f(I.fx.weave, FILM.wx * I.k, FILM.wy * I.k); G.uniform4f(I.fx.rect, ...rect.map(v => v * I.k)); G.uniform1i(I.fx.tex, 0);
+    filmUniforms(G, I.fx); G.drawArrays(G.TRIANGLE_STRIP, 0, 4);
   }
-  const closing = q >= .58, lifted = S.v.filter(v => v > .5).length;
-  const tilt = ease(S.tilt);
-  three.tilt.x += (iptr.y * .16 - three.tilt.x) * .05; three.tilt.y += (iptr.x * .24 - three.tilt.y) * .05;
-  group.rotation.x = -1.04 * tilt + three.tilt.x; group.rotation.y = three.tilt.y;
-  const E = S.v.map(v => ease(clamp(v)));
-  const spread = narrow ? .8 : .92;
-  let stack = 0;
-  parts.forEach((p, i) => { p.g.position.z = i * spread * E[i]; stack = Math.max(stack, p.g.position.z);
-    p.g.rotation.z = t * .00004 * (i % 2 ? -1 : 1) * (1 - E[i] * .6); });
-  const open = clamp(stack / (spread * (N - 1)));
-  const sc = (narrow ? .56 : 1) * lerp(1, .74, open);
-  group.scale.setScalar(sc);
-  group.position.x = narrow ? 0 : lerp(1.2, .5, open);
-  group.position.y = -stack * .58 * Math.sin(1.04 * tilt) * sc - (narrow ? .9 : .35) * tilt;
-  cam.position.z = lerp(15, 19, open); cam.lookAt(0, 0, 0);
-  const sig = (q * 1e4 | 0) + ':' + (S.tilt * 1e3 | 0) + ':' + S.v.map(v => v * 1e3 | 0).join(',') + ':' + (three.tilt.x * 1e3 | 0) + ':' + (three.tilt.y * 1e3 | 0);
-  three.fr = (three.fr || 0) + 1;
-  if (sig !== three.sig || three.fr % 2 === 0) { renderer.render(scene, cam); three.sig = sig; }
-  three.slow = dt > 26 ? (three.slow || 0) + 1 : Math.max(0, (three.slow || 0) - 1);
-  if (three.slow > 24 && three.pr > 1) { three.pr = 1; renderer.setPixelRatio(1); sizeInst(); three.slow = 0; }
-  let cur = -1; for (let i = N - 1; i >= 1; i--) if (E[i] > .5) cur = i;
-  three.ticks.forEach((el, i) => el.classList.toggle('on', i === 0 ? tilt > .5 : E[N - i] > .5));
-  three.phaseLabel.textContent = closing ? (open > .02 ? 'Closing' : 'Closed') : lifted && cur > 0 ? `Open · ${PARTS[cur][1]}` : tilt > .5 ? 'Tilted' : 'Closed';
+  // the state, read back from the frame on screen: labels always describe what the reader sees
+  const {tilt, lift} = seqPose(fi), closing = q >= .58;
+  let cur = -1; for (let i = N - 1; i >= 1; i--) if (lift[i] > .5) cur = i;
+  const open = lift.slice(1).reduce((a, b) => a + b, 0) / (N - 1);
+  I.ticks.forEach((el, i) => el.classList.toggle('on', i === 0 ? tilt > .5 : lift[N - i] > .5));
+  I.phaseLabel.textContent = closing ? (open > .02 ? 'Closing' : 'Closed') : cur > 0 ? `Open · ${PARTS[cur][1]}` : tilt > .5 ? 'Tilted' : 'Closed';
   if (narrow) {
     const idx = cur > 0 ? cur : (tilt > .5 && !closing ? 0 : -1);
-    nowEl.innerHTML = idx >= 0 ? `<span class="c">${PARTS[idx][0] ? PARTS[idx][0] + ' · ' : ''}${PARTS[idx][1]}</span><span class="v">${PARTS[idx][2]}</span>` : '';
+    const html = idx >= 0 ? `<span class="c">${PARTS[idx][0] ? PARTS[idx][0] + ' · ' : ''}${PARTS[idx][1]}</span><span class="v">${PARTS[idx][2]}</span>` : '';
+    if (nowEl.__h !== html) { nowEl.__h = html; nowEl.innerHTML = html; }
     return;
   }
-  /* LEADERS. Each line starts on the right-hand rim of its own part, measured in world space (so a
-     part's slow spin never drags the anchor), and labels stack strictly in part order, star at the
-     top down to the case, with only the visible labels taking space. */
-  const colX = w * .72, GAP = 54;
-  const pts = parts.map(p => { p.g.getWorldPosition(three.C); const v = three.V.copy(three.C); v.x += p.radius * group.scale.x; v.project(cam);
-    return {x: (v.x + 1) / 2 * w, y: (1 - v.y) / 2 * h}; });
-  const vis = parts.map((p, i) => i === 0 ? clamp((open - .15) / .5) : clamp((E[i] - .35) / .65));
-  const ty = pts.map(q => q.y); let prev = -1e9;
+  /* LEADERS. Each line starts on the right-hand rim of its own part, as the renderer recorded it for this
+     exact frame, and labels stack strictly in part order, star at the top down to the case. */
+  const colX = w * .72, GAP = 54, A = SEQ.anchors[fi];
+  const pts = A.map(([x, y]) => ({x: rect[0] + x * size, y: rect[1] + y * size}));
+  const vis = PARTS.map((p, i) => i === 0 ? clamp((open - .15) / .5) : clamp((lift[i] - .35) / .65));
+  const ty = pts.map(p => p.y); let prev = -1e9;
   for (let i = N - 1; i >= 0; i--) { if (vis[i] <= .01) continue; ty[i] = Math.max(ty[i], prev + GAP); prev = ty[i]; }
-  parts.forEach((p, i) => {
+  PARTS.forEach((p, i) => {
     const a = vis[i], {x, y} = pts[i];
-    leaders[i].setAttribute('d', a > .01 ? `M${x},${y} L${x + 14},${y} C${x + 60},${y} ${colX - 70},${ty[i]} ${lerp(x + 14, colX - 14, a)},${ty[i]}` : '');
-    leaders[i].setAttribute('stroke-opacity', a);
-    tags[i].style.opacity = a; tags[i].style.transform = `translate(${colX}px, ${ty[i] - 20}px)`;
+    I.leaders[i].setAttribute('d', a > .01 ? `M${x.toFixed(1)},${y.toFixed(1)} L${(x + 14).toFixed(1)},${y.toFixed(1)} C${x + 60},${y} ${colX - 70},${ty[i]} ${lerp(x + 14, colX - 14, a).toFixed(1)},${ty[i]}` : '');
+    I.leaders[i].setAttribute('stroke-opacity', a.toFixed(3));
+    I.tags[i].style.opacity = a.toFixed(3); I.tags[i].style.transform = `translate(${colX}px, ${(ty[i] - 20).toFixed(1)}px)`;
   });
 }
 
@@ -1118,7 +1201,7 @@ function layoutFlow(){
 layoutFlow();
 const flowTrack = document.getElementById('flowTrack');
 function sizeFlowTrack(){
-  const h = flowTrack.querySelector('.flow-fig').offsetHeight, pin = h < innerHeight * .78 && !REDUCE;
+  const h = flowTrack.querySelector('.flow-fig').offsetHeight, pin = h < innerHeight * .78 && !REDUCE && !COARSE;
   flowTrack.classList.toggle('pinned', pin); flowTrack.style.setProperty('--ph', h + 'px'); flowGeo.pinned = pin; flowGeo.ph = h;
 }
 sizeFlowTrack();
@@ -1133,7 +1216,8 @@ const ROWS = [['Invoices processed', 'one per supplier, per month'], ['Purchase 
 barsEl.innerHTML = ROWS.map(([k, s]) => `<div class="brow"><div class="k">${k}<small>${s}</small></div><div class="bpair">
   <div class="eb d"><b></b><em></em></div><div class="eb c"><b></b><em></em></div></div></div>`).join('');
 const barD = [...barsEl.querySelectorAll('.eb.d')], barC = [...barsEl.querySelectorAll('.eb.c')];
-const hero = {D: document.getElementById('hD'), C: document.getElementById('hC'), S: document.getElementById('hS')};
+const hero = {D: document.getElementById('hD'), C: document.getElementById('hC'), S: document.getElementById('hS'), P: document.getElementById('hP')};
+const lgSum = document.getElementById('lgSum'), lgRes = document.getElementById('lgRes'), ledger = econEl;
 const econ = {tD: 0, tC: 0, sD: 0, sC: 0, share: 0};
 function model(){
   const V = +eV.value * 1e6, N = +eN.value, M = +eM.value, wk = M * 4.33;
@@ -1149,6 +1233,8 @@ function model(){
     em.textContent = i === 3 ? 'Held by the coordinator' : php(v); em.classList.toggle('x', i === 3);
     barC[i].title = i === 3 ? 'The interfaces belong to the coordinator under one contract' : `One coordinator: ${php(v)}`; });
   econ.tD = d.reduce((a, b) => a + b); econ.tC = c.reduce((a, b) => a + b); econ.share = (econ.tD - econ.tC) / V;
+  lgSum.textContent = `${document.getElementById('oV').textContent} · ${N} disciplines · ${M} ${M === 1 ? 'month' : 'months'}`;
+  lgRes.textContent = `Buying each discipline direct, the client carries ${php(econ.tD - econ.tC)} more of its own overhead: ${(econ.share * 100).toFixed(1)}% of the programme.`;
 }
 for (const el of [eV, eN, eM]) el.addEventListener('input', model);
 model();
@@ -1163,7 +1249,12 @@ const tl = document.getElementById('tl');
   const svg = 'http://www.w3.org/2000/svg', ticks = tl.querySelector('.tl-ticks'), X = d => 40 + (d - 1) / 29 * 1120;
   for (const d of [1, 5, 10, 15, 20, 25, 30]) { const g = document.createElementNS(svg, 'g'); g.setAttribute('class', 'tk');
     g.innerHTML = `<line x1="${X(d)}" x2="${X(d)}" y1="126" y2="134"/><text x="${X(d)}" y="156">${d === 1 ? '1 Jun' : d}</text>`; ticks.appendChild(g); }
-  tl.querySelectorAll('.tl-ev').forEach(e => e.setAttribute('transform', `translate(${X(+e.dataset.day)},120)`));
+  tl.querySelectorAll('.dia-scroll .tl-ev').forEach(e => e.setAttribute('transform', `translate(${X(+e.dataset.day)},120)`));
+  // the phone version runs down the page: same days, same scroll-linked run
+  const Y = d => 20 + (d - 1) / 29 * 390, tv = tl.querySelector('.tl-ticks-v');
+  for (const d of [1, 5, 10, 15, 20, 25, 30]) { const g = document.createElementNS(svg, 'g'); g.setAttribute('class', 'tk');
+    g.innerHTML = `<line x1="58" x2="52" y1="${Y(d)}" y2="${Y(d)}"/><text x="44" y="${Y(d) + 4}">${d === 1 ? '1 Jun' : d}</text>`; tv.appendChild(g); }
+  tl.querySelectorAll('.tl-vert .tl-ev').forEach(e => e.setAttribute('transform', `translate(64,${Y(+e.dataset.day)})`));
 })();
 const ink = document.getElementById('ink');
 ink.innerHTML = ink.textContent.split(' ').map(w => `<span class="w">${w}</span>`).join(' ');
@@ -1174,7 +1265,8 @@ const stages = [...document.querySelectorAll('.roadmap .stage')];
 /* ------------------------------------------------ the loop: positions are measured from the page */
 const topEl = document.getElementById('top'), roadmap = document.getElementById('roadmap');
 const railSecs = [...document.querySelectorAll('[data-rail]')], nightSecs = [...document.querySelectorAll('.night')];
-let last = performance.now(), H1 = 0, H2 = 0;
+let last = performance.now(), H1 = 0, H2 = 0, fieldT = 0;
+const cut = {field: false, inst: false};
 // one frame = read every position first, then write; never interleaved, so the browser lays out once
 const secs = railSecs;
 document.querySelectorAll('.sec').forEach(sec => { const l = document.createElement('i'); l.className = 'sec-line'; l.setAttribute('aria-hidden', 'true'); sec.prepend(l); });
@@ -1187,6 +1279,7 @@ const shortName = el => el.dataset.rail.split('·').pop().trim();
 function frame(t){
   const dt = Math.min(64, t - last); last = t;
   if (lenis) lenis.raf(t);
+  const newFilm = FILM.tick(t);          // the artwork advances at 24 fps; everything else at the display's rate
   // ---- read
   const topR = topEl.getBoundingClientRect(), fr = fieldStage.getBoundingClientRect(), ir = instStage.getBoundingClientRect();
   const rr = roadmap.getBoundingClientRect(), inkR = ink.getBoundingClientRect(), flowR = flowTrack.getBoundingClientRect();
@@ -1208,10 +1301,13 @@ function frame(t){
   setVar(panel, '--ib', lerp(11, 0, eo).toFixed(2) + '%'); setVar(panel, '--feather', (1 - eo).toFixed(3));
   setVar(fieldStage, '--open', eo.toFixed(3));
   setVar(panel, '--st', ease(clamp((conv - .65) / .35)).toFixed(3));
-  if (fr.bottom > -40 && fr.top < vh + 40) drawField(t, conv, dt);
+  if (newFilm && fr.bottom > -40 && fr.top < vh + 40) { drawField(t, conv, Math.min(84, t - (fieldT || t - FRAME_MS))); fieldT = t; }
+  if (open > .5 && !cut.field) FILM.cut(t); cut.field = open > .5;          // a scene begins: a moment of light leak
   // ---- Fig. 2
   const iq = clamp(-ir.top / (instStage.offsetHeight - vh));
-  if (three && ir.bottom > 0 && ir.top < vh) drawInstrument(t, iq, dt);
+  if (inst && ir.top < vh * 3) inst.loadAll();
+  if (ir.top <= 0 && !cut.inst && ir.bottom > vh) FILM.cut(t); cut.inst = ir.top <= 0 && ir.bottom > vh;
+  if (inst && ir.bottom > 0 && ir.top < vh) drawInstrument(t, iq, dt, newFilm);
   // ---- paper sections
   const rm = ease(clamp((vh * .85 - rr.top) / (vh * .6)));
   setVar(roadmap, '--rm', rm.toFixed(3)); stages.forEach((st, i) => st.classList.toggle('lit', rm >= i / stages.length + .02));
@@ -1252,8 +1348,13 @@ function frame(t){
     setVar(barsEl, '--grow', g.toFixed(3));
     const k = 1 - Math.exp(-dt / 260);
     econ.sD += (econ.tD * g - econ.sD) * k; econ.sC += (econ.tC * g - econ.sC) * k;
-    if (econR.bottom > 0 && econR.top < vh) { hero.D.textContent = php(econ.sD); hero.C.textContent = php(econ.sC);
-    hero.S.textContent = php(Math.max(0, econ.sD - econ.sC)) + ' · ' + (econ.share * 100 * g).toFixed(1) + '%'; } }
+    setVar(ledger, '--lr', ease(clamp((vh * .8 - econR.top) / (vh * .7))).toFixed(3));
+    // digits update at the film cadence and round to the nearest hundred while moving, exact only at rest
+    if (econR.bottom > 0 && econR.top < vh && t - (econ.lastT || 0) > 41.67) { econ.lastT = t;
+      const moving = Math.abs(econ.tD * g - econ.sD) > 50 || Math.abs(econ.tC * g - econ.sC) > 50;
+      const r = v => moving ? Math.round(v / 100) * 100 : v, txt = (el, v) => { if (el.textContent !== v) el.textContent = v; };
+      txt(hero.D, php(r(econ.sD))); txt(hero.C, php(r(econ.sC))); txt(hero.S, php(r(Math.max(0, econ.sD - econ.sC))));
+      txt(hero.P, (econ.share * 100 * g).toFixed(1) + '%'); } }
   { const d = ease(clamp((vh * .82 - tlR.top) / (vh * .55))); setVar(tl, '--d', d.toFixed(3));
     tl.querySelectorAll('.tl-ev').forEach(e => e.classList.toggle('on', d >= (+e.dataset.day - 1) / 29)); }
   // ---- tone
@@ -1278,17 +1379,22 @@ function frame(t){
     guide.hint.textContent = hint; guide.hint.setAttribute('href', href); }
   if (!REDUCE) requestAnimationFrame(frame);
 }
-addEventListener('resize', () => { vw = innerWidth; vh = innerHeight; sizeField(); sizeInst(); layoutFlow(); sizeFlowTrack(); });
-three = buildInstrument(); sizeInst();
-// WARM-UP. Shader programs and textures are otherwise compiled and uploaded on the first draw, which
-// would land exactly when the reader arrives at the compass and stall the page. Do it now, in idle
-// time after first paint, so arriving at Fig. 2 costs nothing.
-if (three) { const warm = () => { three.renderer.compile(three.scene, three.cam); drawInstrument(performance.now(), 0, 16); };
-  (window.requestIdleCallback || (f => setTimeout(f, 400)))(warm, {timeout: 1500}); }
+// on a phone the address bar showing or hiding changes only the height: keep the measured height and
+// the layout as they are, or every pin and progress would jump under the reader's thumb (the "magnets")
+addEventListener('resize', () => {
+  if (COARSE && innerWidth === vw) return;
+  vw = innerWidth; vh = innerHeight; sizeField(); sizeInst(); layoutFlow(); sizeFlowTrack();
+});
+inst = buildInstrument(); sizeInst();
 if (REDUCE) {
   panel.style.setProperty('--it', '0%'); panel.style.setProperty('--ib', '0%'); panel.style.setProperty('--is', '0px');
   drawField(0, 0, 16);
-  if (three) { three.state = {tilt: 1, v: three.parts.map(() => 1)}; drawInstrument(0, .6, 1e4); }
+  FILM.tick(0);
+  if (inst) { inst.loadAll().then(() => { inst.f = SEQ.frames - 1; drawInstrument(0, .55, 1e4, true); }); }
+  { econ.sD = econ.tD; econ.sC = econ.tC; hero.D.textContent = php(econ.tD); hero.C.textContent = php(econ.tC);
+    hero.S.textContent = php(econ.tD - econ.tC); hero.P.textContent = (econ.share * 100).toFixed(1) + '%'; }
+  for (const el of [eV, eN, eM]) el.addEventListener('input', () => { hero.D.textContent = php(econ.tD); hero.C.textContent = php(econ.tC);
+    hero.S.textContent = php(econ.tD - econ.tC); hero.P.textContent = (econ.share * 100).toFixed(1) + '%'; });
 } else requestAnimationFrame(frame);
 })();
 </script>

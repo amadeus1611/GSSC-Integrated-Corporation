@@ -19,6 +19,8 @@ for token, key in (("{{SEAL}}", "seal"), ("{{WORDMARK}}", "wordmark")):
     if hashlib.sha256(base64.b64decode(a["base64"])).hexdigest() != a["sha256_of_decoded_image"]:
         raise SystemExit("HARD STOP: %s hash mismatch" % key)
     html = html.replace(token, "data:%s;base64,%s" % (a["mime_type"], a["base64"]))
+# Fig. 2: the rendered compass's per-frame anchors (sites/gsscph/compass/anchors.json)
+html = html.replace("{{COMPASS}}", (HERE.parent / "compass" / "anchors.json").read_text(encoding="utf-8").strip())
 assert "{{" not in html
 (HERE / "opening.html").write_text(html, encoding="utf-8")
 print("built opening.html from %s (%d bytes)" % (PKG.name, len(html)))
