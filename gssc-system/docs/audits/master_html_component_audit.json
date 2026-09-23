@@ -1,0 +1,103 @@
+{
+  "audit_role": "GSSC_MASTER_HTML_COMPONENT_AUDIT",
+  "audit_date": "2026-09-23",
+  "audited_file": "gssc-system/templates/quotation_template_tokenized.html",
+  "audited_file_sha256_note": "byte-identical to the hydrated reference and to the file re-uploaded this session (93aeffd3-...) — verified, not re-extracted",
+  "method": "Structural read of every top-level CSS selector (349 total across 1676 lines, the master's own append-only patch history under IDs like gssc-v1-7-production-detail-lock, gssc-chs-extension, gssc-design-extension-v3-1) plus a rendered visual pass. Grouped into component families by function, not by literal line — that is the meaningful audit unit for a document this size.",
+  "purpose": "Answer directly: what does the master actually contain that our derivatives (company profile, secretary certificate, board resolution, notarial acknowledgment, CMSA) have NOT yet reused. This is the concrete list behind 'the cover page/company profile lacked the details in the JSON.'",
+  "component_families": [
+    {
+      "id": "chrome",
+      "name": "Page chrome: masthead, margin-rail, watermark, spine stripe",
+      "selectors": [".page", ".page::before", ".watermark", ".masthead", ".masthead .meta", ".masthead .meta .doctype", ".page .margin-rail", ".page .margin-rail-rule", ".page .margin-rail-copy", ".page .margin-rail-section", ".page .margin-rail-descriptor", ".page .margin-rail-index"],
+      "line_range": "53-64, 537-572",
+      "ported_status": "FULLY PORTED",
+      "ported_to": ["gssc-components.css: .masthead, .margin-rail*, .watermark", "used correctly in company-profile v3"],
+      "gap": "None for editorial documents. NOT used in legal derivatives by design (09_legal_doctrine.formatting.pt_exception forbids the editorial chrome on statutory instruments) — that exclusion is intentional, not a gap."
+    },
+    {
+      "id": "editorial_cover_stack",
+      "name": "Cover/body editorial stack: kicker, title, dek, caption-date, drop-cap lede, running body text, pull-quote",
+      "selectors": [".kicker", ".dek", ".caption-date", ".lede", ".lede::first-letter", ".bt", ".pull", ".pull .attrib"],
+      "line_range": "66-75",
+      "ported_status": "FULLY PORTED",
+      "ported_to": ["gssc-components.css: .kicker, .dek, .caption-date, .lede/::first-letter, .bt, .pull/.attrib", "company-profile v2/v3 cover and overview pages"],
+      "gap": "None. This was the v1->v2 company-profile fix already completed this session."
+    },
+    {
+      "id": "chs_category_header_system",
+      "name": "CHS — Categorical Header System. Ordinal + gold tick + category word (chs-stamp), display title (chs-title), italic descriptor (chs-descriptor), hairline rule with gold accent stub (chs-rule), plus FIVE named register variants",
+      "selectors": [".chs", ".chs-stamp", ".chs-numeral", ".chs-tick", ".chs-cat", ".chs-title", ".chs-descriptor", ".chs-rule", ".chs-rule::after", ".chs--primary (default)", ".chs--legal", ".chs--formal", ".chs--plate", ".chs--minor", ".chs--toc"],
+      "line_range": "814-932",
+      "ported_status": "NOT PORTED — direct gap",
+      "ported_to": [],
+      "gap": "THIS IS THE MAIN FINDING. Every section heading built so far (company profile's `.sec-head`, the legal derivatives' plain `<h1>`/`<b>` headings) is a parallel invention, not this system. The master already ships FIVE register variants for exactly this situation: `.chs--legal` (semibold uppercase title, medium-weight rule — literally named for legal content), `.chs--formal` (no descriptor, strong rule, navy category label — for formal/statutory headers), `.chs--plate` (compact numeral+title only, no rule — for dense reference lists), `.chs--minor` (inline compact heading, no rule — for sub-points), `.chs--toc` (smaller numeral, for table-of-contents rows). `.chs--primary` is the default full treatment already ported as company-profile's cover kicker style is NOT this — the profile's *section* headings (Overview, Capabilities, Governance, Engage) should have used `.chs--primary` or `.chs--formal`, and the legal derivatives' section headings should use `.chs--legal`. None of this exists yet in gssc-components.css or gssc-legal-components.css.",
+      "priority": "HIGH — this is very likely what the user means by the cover page and company profile 'lacking the details in the JSON.'"
+    },
+    {
+      "id": "commercial_data_table",
+      "name": "table.dt — the master's real data-table component with header/body/footer(totals) treatment and density variants per page",
+      "selectors": ["table.dt thead th", "table.dt thead th.num", "table.dt tbody td", "table.dt tbody tr:nth-child(even) td", "table.dt tfoot td", ".page.p2 table.dt *", ".page.p3 table.dt *"],
+      "line_range": "143-160, table.dt full definition ~1200s (search 'table.dt thead th{' second occurrence for the canonical rule with 1.5px navy top border)",
+      "ported_status": "NOT PORTED — parallel invention exists instead",
+      "ported_to": [],
+      "gap": "CMSA's `table.reso-table` and any future pricing/schedule tables were hand-rolled with generic borders instead of reusing `table.dt` (navy 1.5px top rule, navy-deep 1px bottom rule, ivory-deep header background, tracked uppercase header labels, zebra striping via row-alt, distinct footer/totals row treatment). Any derivative that needs a real data table (CMSA fee schedule, a future invoice, a board-resolution vote tally) should use `table.dt`, not a fresh table."
+    },
+    {
+      "id": "pricing_tier_cards",
+      "name": "sig-card — the master's tiered-offer card component (used for Essential/Programme/Programme+Support in the reference quotation)",
+      "selectors": [".sig-card", ".sig-card .sig-code", ".sig-card .sig-name", ".sig-card .sig-desc", ".sig-card .sig-tier", ".sig-card .sig-price", ".sig-card .sig-price-label", ".sig-card .sig-price-amount", ".page.p2 .sig-card"],
+      "line_range": "127-135, 147-149, 583-590",
+      "ported_status": "NOT PORTED — parallel invention exists instead",
+      "ported_to": [],
+      "gap": "Not directly needed by the company profile or legal derivatives as built, but the QUOTATION MASTER's own tier cards (what the reference HTML calls Tier I/II/III) were NOT extracted as a reusable component at all — if a future derivative needs tiered options (e.g. a services-tier one-pager), this exists ready-made and should be used instead of reinventing."
+    },
+    {
+      "id": "price_moment_and_caption",
+      "name": "price-moment / price-caption — the large single-figure price display block (used for the commercial-total callout)",
+      "selectors": [".price-moment", ".price-moment .pm-label", ".price-moment .pm-amount", ".price-caption"],
+      "line_range": "85-101",
+      "ported_status": "NOT PORTED",
+      "ported_to": [],
+      "gap": "Not used anywhere yet. Relevant to a future invoice/PO derivative, not the three in scope now, but note it exists."
+    },
+    {
+      "id": "acceptance_gate_refined",
+      "name": "gate-refined — the master's REAL acceptance/signature block: labeled gate head, gold gate-mark, structured signature/date/name/position fields with individual underlines",
+      "selectors": [".gate", ".gate-label", ".gate-body", ".gate-lines", ".page.p3 .gate.gate-refined", ".gate-refined .gate-head", ".gate-refined .gate-label", ".gate-refined .gate-mark", ".gate-refined .gate-body", ".gate-refined .gate-lines-refined", ".gate-refined .gate-field-signature", ".gate-refined .gate-field-date", ".gate-refined .gate-field-name", ".gate-refined .gate-field-position"],
+      "line_range": "102-108 (early/superseded form), 194-300 (gate-refined, the real final form, per the master's own append-only patch discipline — gate-refined SUPERSEDES the plain .gate block; use gate-refined, not .gate)",
+      "ported_status": "NOT PORTED — parallel invention exists instead",
+      "ported_to": [],
+      "gap": "This is the single biggest miss for the LEGAL derivatives specifically. `.legal-sigblock` (built fresh in gssc-legal-components.css) is a plain underline + name + role — functional but generic. The master's `gate-refined` is a genuinely premium, structured acceptance block: a labeled gate head with a gold gate-mark accent, and PER-FIELD underlines for signature/date/printed-name/position rather than one generic line. The quotation master's own client-acceptance block on its last page uses exactly this. This is the component to reconcile: legal instruments need Times New Roman/statutory body text, but the SIGNATURE BLOCK ITSELF is chrome, not statutory prose — it can and should borrow gate-refined's structure (adapted to the legal palette/typeface) rather than staying a plain underline."
+    },
+    {
+      "id": "colophon_docket_footer",
+      "name": "colophon-docket — the master's fully-realized three-zone footer (rail bar, left eyebrow+imprint, center seal+org+address, right page label+numeral) — the CURRENT footer, superseding earlier .colophon forms",
+      "selectors": [".page .colophon.colophon-docket", ".colophon-docket::before", ".colophon-docket .footer-rail", ".colophon-docket .footer-rail span", ".colophon-docket .footer-zone", ".footer-left", ".footer-eyebrow", ".footer-imprint", ".footer-center", ".footer-seal", ".footer-secondary", ".footer-primary", ".footer-right", ".footer-page-label", ".footer-page-number"],
+      "line_range": "399-520 (colophon-docket is the superseding/current form; earlier .colophon/.colophon .center/.folio rules at 119-135, 255-360 are earlier iterations per the append-only patch history — colophon-docket is what the reference HTML actually renders)",
+      "ported_status": "FULLY PORTED",
+      "ported_to": ["gssc-components.css: .colophon, .footer-zone, .footer-eyebrow, .footer-imprint, .footer-seal, .footer-primary, .footer-secondary, .footer-page-label, .footer-page-number", "used correctly in company-profile v2/v3"],
+      "gap": "None for the editorial system. Legal derivatives correctly use a DIFFERENT, plainer footer per doctrine — that's intentional, not a gap, but confirm gssc-legal-components.css's footer treatment was a deliberate simplification and not an oversight (it reads as deliberate in the current files)."
+    },
+    {
+      "id": "numbering_toc_system",
+      "name": "Table of Contents block + numbering/folio conventions",
+      "selectors": [".chs--toc .chs-numeral", "TOC section starting ~line 935 per the file's own '---------------------- TABLE OF CONTENTS ---------------------- Section 34.' comment"],
+      "line_range": "931-1040ish (search 'TABLE OF CONTENTS' comment)",
+      "ported_status": "PARTIALLY PORTED",
+      "ported_to": ["company-profile's .toc-list is a parallel invention, not this system"],
+      "gap": "Same pattern as CHS: company profile's table-of-contents block should be reconciled against the master's own TOC construction and Module 17 (numbering_and_toc_system) doctrine rather than staying a hand-rolled lookalike. Lower priority than CHS since the visual result was already judged acceptable, but flag for the premium pass."
+    }
+  ],
+  "cross_cutting_findings": [
+    {
+      "finding": "The master's CSS is an append-only patch history (11+ sequential <style id=\"gssc-...\"> blocks, each documented as superseding specific rules from the previous one). Any 'line-by-line' extraction must resolve the CASCADE — i.e. use the LAST rule for a given selector, not the first one found — exactly as the kernel's own 13_changelog.json discipline requires ('append-never-rewrite'). This audit did that (e.g. gate-refined supersedes .gate; colophon-docket supersedes early .colophon variants). Opus should do the same: read the whole file top to bottom and let later blocks win, never stop at the first match for a selector."
+    },
+    {
+      "finding": "Every gap above is a MISSING REUSE, not a missing capability — the master already contains a correct, tested, doctrine-referenced component for each one. The fix is extraction and adaptation, not new design work. This matters for the 'premium' goal: the fastest path to premium is fidelity to what already exists, not fresh invention."
+    },
+    {
+      "finding": "gssc-legal-components.css was deliberately built as a SEPARATE register per 09_legal_doctrine.formatting.pt_exception, and that separation is correct and should NOT be undone. The fix for legal derivatives is narrower: reuse gate-refined's STRUCTURE (field-by-field signature lines) adapted to Times New Roman/black ink, and consider whether `.chs--legal`/`.chs--formal` section-heading treatment (already literally named for this) should govern legal-document section headings instead of the plain bold headings currently used."
+    }
+  ]
+}

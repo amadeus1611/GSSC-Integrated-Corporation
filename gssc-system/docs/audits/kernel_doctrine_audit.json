@@ -1,0 +1,84 @@
+{
+  "audit_role": "GSSC_KERNEL_DOCTRINE_AUDIT",
+  "audit_date": "2026-09-23",
+  "audited_file": "gssc-system/package/GSSC_Master_Package_v2_16_1.json",
+  "audited_file_content_note": "Content-identical to the freshly re-uploaded copy (ee7617d7-...) — every part's sha256 hash matched via `gssc_runtime.py preflight`; only prior whitespace re-serialization differed, not substance. No re-extraction was needed.",
+  "kernel_identity_note": "kernel 2.16.1 is a review_candidate per its own 13_changelog.json; 2.9.0 remains the adopted production release. Everything below audits 2.16.1 as the working draft, per prior session decision to treat it as such.",
+  "modules": [
+    {"id": "00_meta", "status": "read, no derivative action required", "note": "Wrapper/reading-order module only."},
+    {"id": "01_identity", "status": "FULLY USED", "note": "Legal name, office, contact, positioning, capabilities, PSIC all correctly sourced into company profile and all four legal derivatives."},
+    {
+      "id": "02_governance",
+      "status": "USED, WITH A KNOWN CONFLICT TO RESOLVE",
+      "note": "Officer roster (del Castillo/CEO, Demayo/President-Principal-COO, Silla/Corp Sec-Treasurer-CFO, Tirazona/CIO) correctly sourced everywhere. CONFLICT: the module's own authority_basis text names Ronnie S. del Castillo as 'default signatory for client-facing instruments (corporate profile, proposals, cover letters)' and the CMSA derivative followed that, using del Castillo as GSSC's contract signatory. Duke Demayo (the operating principal, instructing this session directly) has now given a DIFFERENT, more specific signatory rule for the premium pass — see signatory_policy_override below. This is a deliberate, sourced correction from the person who holds the President title, not a guess, but it means 02_governance's own prose is now stale relative to real practice and should eventually be corrected at the kernel level, not just patched in each derivative."
+    },
+    {"id": "03_brand", "status": "FULLY USED for tokens; PARTIALLY USED for components", "note": "Palette/type-scale/tracking fully extracted to gssc-tokens.css. document_type_system's 5-step scale (micro/small/cap/body/dek) was extracted but is UNUSED in practice — derivatives use the template_root_literals_px scale instead throughout. Not a defect, just worth Opus knowing both scales exist and which one the built documents actually use."},
+    {"id": "04_firewall", "status": "RESPECTED", "note": "No supplier/economics/facility data ever surfaced in any derivative. TIN/SEC numbers used only where firewall marks them safe-with-justification (compliance panels), never in casual copy."},
+    {
+      "id": "05_ip",
+      "status": "NOT YET READ IN DEPTH THIS SESSION",
+      "note": "Flag for Opus: this module has not been summarized in any audit or handoff so far. Read it before the premium pass in case it constrains anything about reusing the master template's own design as a 'derivative work' internally (it almost certainly doesn't — this is GSSC's own IP being reused by GSSC — but it hasn't been explicitly checked, so don't assume, verify)."
+    },
+    {
+      "id": "06_quotation_doctrine",
+      "status": "GOVERNS the quotation master itself; NOT yet re-read for the premium pass",
+      "note": "This is the CANONICAL owner of the document the user now wants fully, faithfully re-hydrated as 'the master template' proper. Opus must read this module in full before touching the quotation derivative — it's the authority, the HTML is the execution of it."
+    },
+    {
+      "id": "07_website_doctrine",
+      "status": "OUT OF SCOPE for this handoff",
+      "note": "Governs GSSC's public website (the root README.md in this repo), not the document derivatives. Not part of this pass."
+    },
+    {
+      "id": "08_document_doctrine",
+      "status": "USED for company_profile; NOT yet read for its other types",
+      "note": "company_profile's flagship structure (full editorial cover + governance footer) was followed correctly. Module also names types not yet built here: letterhead, case_note, capability_sheet, engagement_summary, email_template, presentation, operational_form — out of scope for THIS handoff (quotation, profile, CMSA) but worth Opus knowing they exist for later."
+    },
+    {
+      "id": "09_legal_doctrine",
+      "status": "FULLY USED for the four legal derivatives",
+      "note": "secretary_certificate signatory rule (Silla only, never CEO) correctly implemented. architecture.cmsa correctly implemented (CMSA signed once, POs/NTPs/SOWs reference it). notarial_form default (Acknowledgment) and venue_default (Iloilo City) correctly implemented. framework defaults (5yr NDA tail, 24mo non-circumvention) correctly implemented as defaults-only with counsel-review flags on operative language. hard_stops respected throughout (no invented legal conclusions, no enforceability claims, CEO does not sign secretary certificates)."
+    },
+    {
+      "id": "10_template_engine",
+      "status": "PARTIALLY USED",
+      "note": "layout_budget_reference / resolved_box_model config is what powers `boxcheck` — already known to false-positive on any derivative's un-registered flex-row classes (.stat-row, .toc-list .row, .flow, .flow-key). This is a real, logged, open gap (see MAINTENANCE_LOG.md 2026-09-23 (3)/(4)). Also contains component_layer_contract, type_metrics, figure_type_scale, figure_geometry_check, measured_pagination per the package manifest's 2.9.0 note — NOT yet cross-checked against any derivative. Opus should read this module in full; it's the formal spec behind several of the HTML-audit gaps (CHS, table.dt, gate-refined) and may name them explicitly with rules this audit inferred only from the CSS."
+    },
+    {"id": "11_registry", "status": "READ, DELIBERATELY NOT EDITED", "note": "Lists GSSC-PROFILE-2026-001-v5-pitch.html as the authoritative company-profile master — that file was never supplied to this repo; the profile built here (GSSC-PROFILE-2026-002) is a parallel, unregistered document by design, pending Duke's decision on which is canonical. None of the four legal derivatives are registered either. This remains open."},
+    {"id": "12_bootstrap", "status": "not reviewed this session, low relevance to document derivatives", "note": "Likely session/context-loading protocol, not document content."},
+    {"id": "13_changelog", "status": "READ, append-only, never edited", "note": "Source of the append-never-rewrite discipline applied throughout this audit and in reading the master HTML's own patch history."},
+    {"id": "14_accounting_compliance", "status": "not reviewed this session", "note": "Flag for Opus if the quotation or CMSA premium pass touches invoicing/payment-instrument specifics beyond what 01_identity.tax_posture already covered."},
+    {
+      "id": "15_design_research_engine",
+      "status": "OPERATIONAL — this IS the memory system",
+      "note": "Governs package/GSSC_DesignDecisionLog.json. Every real derivative generation this session was logged via `gssc_runtime.py logwrite`, non-empty, real entries only, precedent-chained correctly (v1->v2->v3 for the company profile). Opus MUST continue this discipline: run `logwrite` (or produce entries in the same schema) for every derivative it touches, and run `precedent` first per Module 15's own read_before_decide rule."
+    },
+    {
+      "id": "16_continuous_optimization_discipline",
+      "status": "the source of the 'upstream_deletion_rule' / measurement-honesty norms already being followed",
+      "note": "This module's spirit (don't claim a check passed if it didn't actually run; a completeness guarantee is only valid over what it can see) is exactly why the boxcheck false-positive was documented instead of hidden, and why NO_UNREQUESTED_CONTENT_CHANGE was respected (no fabricated data in any chart/table)."
+    },
+    {
+      "id": "17_numbering_and_toc_system",
+      "status": "NOT YET RECONCILED",
+      "note": "Company profile's .toc-list is a parallel invention rather than a direct implementation of this module + the master's own .chs--toc. Flagged in the HTML audit as lower priority than CHS but should be checked during the premium pass."
+    },
+    {
+      "id": "18_page_archetype_creativity_engine",
+      "status": "FULLY RESPECTED",
+      "note": "The cover was deliberately kept content-light because this module's own budget_3_pass entry already measured and reverted a bolder cover treatment as an overflow risk. That finding was reused as-is rather than re-discovered. Continue honoring it: do not re-attempt a larger cover title without first re-reading this module's measured finding."
+    },
+    {"id": "19_accessibility_doctrine", "status": "USED", "note": "a11yaudit passes on every derivative checked. contrastaudit passes but only validates the kernel's fixed pairing list, not each new derivative's actual novel color usage — same caveat as boxcheck, already logged as open."}
+  ],
+  "signatory_policy_override": {
+    "source": "Duke Y. Demayo, President/Principal/COO — given directly this session, as the person holding that office, superseding 02_governance's 'default signatory' prose for the documents in this handoff's scope",
+    "rule": [
+      "Duke Y. Demayo, President, is PRIMARY signatory for the documents in this handoff's scope (quotation, company profile, CMSA) wherever a single GSSC signatory is required.",
+      "Michael C. Silla signs wherever his specific office requires it regardless of the above — Corporate Secretary certifications (secretary certificates) ALWAYS require Silla, never Duke, per 09_legal_doctrine's own named failure mode ('CEO/other officer signs Secretary Certificate itself').",
+      "Where a document genuinely requires BOTH signatures (e.g. a board resolution being both adopted and secretarially attested, or a CMSA clause requiring dual authorization), BOTH Demayo and Silla sign, each in their own capacity.",
+      "Where only one signature is required and it is not a Silla-specific instrument (i.e. not a secretary certificate), Duke Y. Demayo signs alone."
+    ],
+    "action_required": "Update every derivative's signature block accordingly: CMSA's GSSC signatory changes from Ronnie S. del Castillo (CEO) to Duke Y. Demayo (President). Company profile's closing signoff (currently Ronnie S. del Castillo, CEO, on the Engage page) should be reviewed against this same rule — confirm with Duke whether the profile's warm-regards signoff should also move to him, since that page is a general courtesy close rather than a signed instrument, so the rule may or may not apply there; flagged rather than silently changed.",
+    "not_yet_done": "This override has NOT been applied to any file yet as of this audit — it is a decision to carry into the premium pass, not a completed change."
+  }
+}

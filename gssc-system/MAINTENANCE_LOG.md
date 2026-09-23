@@ -12,6 +12,89 @@ session, what changed, why, what's still open.
 
 ---
 
+## 2026-09-23 (6) — audit + handoff prep for an Opus 5.5 premium pass
+
+**By:** Claude Code (cloud session). Prep work only — no derivative files
+were changed in this entry; the next entry should record the actual
+premium-pass execution once it happens.
+
+**What triggered this:** Duke re-supplied the quotation master HTML and
+kernel package JSON and asked for (1) a line-by-line audit of both, and
+(2) a detailed handoff document so a separate Opus 5.5 session can bring
+the quotation, company profile, and CMSA derivatives into full fidelity
+with the master template's actual design system, "premium" as the
+explicit goal. He noted the company profile's cover/sections "lacked the
+details in the JSON."
+
+**Verified first:** both re-supplied files are content-identical to what
+this repo already has (`gssc_runtime.py preflight` hash-matched every
+package part; the HTML's SHA-256 matched exactly). No re-extraction was
+needed — told Duke he didn't need to resend.
+
+**The actual finding (this is the real content of the audit):** the
+master quotation template's CSS (349 selectors across an append-only
+11-block patch history) contains several genuinely premium components
+that were never reused in any derivative built so far — most
+significantly a full categorical-header system (`.chs`, with FIVE named
+register variants including one literally called `.chs--legal`), a real
+data-table component (`table.dt`), a refined acceptance/signature block
+(`gate-refined` — per-field underlines under a labeled gold-accented
+gate head, not just one generic line), and pricing-tier cards
+(`sig-card`). Every derivative instead built parallel, thinner
+lookalikes (company profile's `.sec-head`/`.toc-list`, the legal
+derivatives' plain underline signature blocks and hand-rolled tables).
+This is almost certainly what "lacked the details in the JSON" meant,
+and it's now documented precisely rather than guessed at again.
+
+**Produced:**
+- `docs/audits/master_html_component_audit.json` — component-family-by-
+  component-family audit of the master HTML (chrome, editorial stack,
+  CHS system, data tables, pricing cards, price-moment, gate-refined
+  acceptance block, colophon-docket footer, TOC/numbering), each with
+  line ranges, porting status, and specific gap notes.
+- `docs/audits/kernel_doctrine_audit.json` — module-by-module (00-19)
+  status against what's actually implemented, plus a formal
+  **signatory-policy override** (see below) and a flagged, unresolved
+  conflict between `02_governance.json`'s prose (Ronnie S. del Castillo
+  as default client-facing signatory) and Duke's direct instruction.
+- `handoff/OPUS_HANDOFF_premium_derivative_pass.md` — the actual handoff:
+  per-document instructions for the quotation (verify master fidelity,
+  don't rebuild), company profile (adopt real CHS instead of the
+  parallel `.sec-head`/`.toc-list`), and CMSA (inbuilt notarial page,
+  `gate-refined`-derived signature structure, signatory swap); a
+  notarial-inbuilt policy decision (yes for CMSA and secretary
+  certificate, ask-don't-assume for board resolution, keep the
+  standalone page as a fallback); the full signatory matrix; and an
+  explicit required correct/repass/recheck-overlaps/reconfigure/fix/
+  polish workflow per Duke's own stated process, citing the two real bug
+  classes already found twice this session (inline/justify overlap,
+  `.body` class-name collision) so they don't get reintroduced.
+
+**Signatory policy override (decided, not yet applied to any file):**
+Duke Y. Demayo, President, is primary signatory wherever a single GSSC
+signature is needed, superseding 02_governance's stale "del Castillo by
+default" prose. Michael C. Silla remains the only correct signatory for
+Secretary's Certificates specifically (never Duke — named failure mode
+in doctrine). Both sign where both are genuinely required. This
+supersedes the CMSA's current signatory (currently del Castillo/CEO —
+flagged to change) and raises an open question on the company profile's
+closing signoff (currently del Castillo/CEO on a courtesy close, not a
+signed instrument — flagged to ask Duke, not silently changed).
+
+**Not done in this entry, intentionally:** no CSS was written, no
+signature blocks changed, no CHS system extracted into
+`gssc-components.css` yet. This was audit-and-plan only, per Duke's
+explicit request to "just prepare" the handoff before the Opus session
+executes it.
+
+**Open, carried into the handoff:**
+- Board-resolution notarial-inbuilt question — genuinely needs doctrine
+  re-check or Duke's answer, not a default assumption.
+- Company-profile signoff signatory — needs Duke's confirmation.
+- `05_ip.json` and `06_quotation_doctrine.json` (the quotation's own
+  canonical authority) haven't been deeply read yet this session — both
+  flagged as required reading before the Opus pass touches those areas.
+
 ## 2026-09-23 (5) — four legal-instrument derivatives, built in parallel by subagents
 
 **By:** four `builder` subagents launched in parallel (secretary certificate,
