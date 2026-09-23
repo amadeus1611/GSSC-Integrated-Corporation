@@ -10,7 +10,7 @@
   },
   "type": {
     "wordmark": "EXPIRA native stencil serif (Canva source, EXPIRA_Native_Logo-Pack)",
-    "descriptor": "Cinzel 700, tracked caps"
+    "descriptor": "Cormorant Garamond 500 (tracked caps \"AI SYSTEMS\"; two-line \"AI / Systems\" with gold highlight bar)"
   },
   "brand_assets": {
     "header": {
@@ -36,10 +36,10 @@
     "signature": {
       "file": "signature.png",
       "mime_type": "image/png",
-      "width": 1175,
+      "width": 938,
       "height": 153,
       "background": "transparent",
-      "sha256_of_decoded_image": "ea03368080eed2619581e171b7706db2144310703108e2f73aba41609a28a6c3",
+      "sha256_of_decoded_image": "0e810b6c801dba5284757f4fe61faebf8e6b749c364d6b9c031b4092a2e88519",
       "template_use": true,
       "role": "wordmark + AI SYSTEMS descriptor (signature block)"
     },

@@ -30,6 +30,6 @@ with descriptor, horizontal with descriptor, wordmark with descriptor.
   clean fracture. Vector source: `source/EXPIRA_mark.svg`.
 - Wordmark: the native EXPIRA stencil serif from the Canva logo pack
   (`EXPIRA_Native_Logo-Pack`).
-- Descriptor: "AI SYSTEMS" in Cinzel 700, set beside a gold shard cut at
-  the same angle as the fracture in the mark.
+- Descriptor: Cormorant Garamond 500. Tracked caps "AI SYSTEMS" under the
+  gold rule in the horizontal and signature lockups.
 - Colors: ink `#0B1A3F`, slate `#2C3549`, deep `#09101E`, gold `#AE8A47`.
