@@ -37,7 +37,7 @@ with descriptor, horizontal with descriptor, wordmark with descriptor.
 
 ## console/
 
-`console/index.html` is the EXPIRA Console, the client-facing orchestrator,
+`console/index.html` is the EXPIRA Console, a Claude-style chat over the orchestrator,
 published as a Claude artifact. It plans a request, delegates to specialists
 at effort tiers from `orchestrator/POLICY.md` (low = quick, medium = default,
 high = complex), reviews and escalates, firewall-scans client-facing
