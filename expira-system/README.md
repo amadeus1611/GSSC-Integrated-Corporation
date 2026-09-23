@@ -31,5 +31,6 @@ with descriptor, horizontal with descriptor, wordmark with descriptor.
 - Wordmark: the native EXPIRA stencil serif from the Canva logo pack
   (`EXPIRA_Native_Logo-Pack`).
 - Descriptor: Cormorant Garamond 500. Tracked caps "AI SYSTEMS" under the
+  stacked lockup; two-line "AI / Systems" with a gold highlight bar and
   gold rule in the horizontal and signature lockups.
 - Colors: ink `#0B1A3F`, slate `#2C3549`, deep `#09101E`, gold `#AE8A47`.
