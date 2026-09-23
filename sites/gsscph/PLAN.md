@@ -10,6 +10,33 @@ Decided by Duke Y. Demayo, 2026-09-23:
 - Page flow modelled on how Anthropic's site leads a reader.
 - A dynamic header, with scroll-driven text and assets.
 
+## 0. Web grammar = the quotation master's grammar (Duke, 2026-09-23)
+
+The site follows the documents as strictly as the documents follow the
+kernel. Rules taken from the master and applied in `prototype/opening.src.html`:
+- **Corners:** radii 1–2px only. No pills and no soft cards. Buttons are
+  thin 1px rectangles with tracked caps.
+- **Rules:** three weights, strong (1.5px navy), medium (1px navy) and
+  hairline (1px `#c9c9c4`), used as the master uses them: `table.dt`
+  heads, the metric strip, the roadmap and colophon rules.
+- **Headings:** the Categorical Header System: a gold old-style numeral, a
+  dash, a tracked category chip on ivory-deep, the Baskerville title, an
+  italic descriptor and a hairline rule. Every section gets one.
+- **Chrome:** the spine stripe (navy 60 / gold 25 / slate 15), the margin
+  rail (a vertical running head plus a folio numeral), the masthead with
+  its dateline (the caption-date bar), and the colophon with the seal.
+- **Type:** Libre Baskerville for display (compressed −0.032em for titles)
+  and Inter tracked 0.18 / 0.14 / 0.12em for caps (expanded). Old-style
+  numerals in display, tabular in tables, and ink `#1a1d24` for body.
+  Magazine contrast comes from compressed display against expanded caps.
+- **Gold:** only for the mark, the numeral, one rule per block and hover.
+- **Figures:** numbered like the documents (Fig. 1, Fig. 2), with a
+  figcaption, and cross-referenced from the register table.
+- **Fast scrolling:** Lenis glide on wheel and trackpad, heavier inside the
+  Instrument. The Instrument runs as phases on its own clock, opening from
+  the star down and closing from the case up, so a flick queues the phases
+  rather than skipping them. Touch keeps native momentum.
+
 ## 1. Stack (recommended, and why)
 
 | Layer | Choice | Why |

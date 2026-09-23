@@ -3,467 +3,767 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&display=swap">
 <style>
-/* GSSC showroom -- stage 2 preview. Tokens from kernel 03_brand; motion from 07_website_doctrine v2.0.
-   A single committed look (paper showroom with a night stage), painted explicitly in both host themes. */
+/* GSSC showroom, stage 2 preview, second pass.
+   Every rule below is the quotation master's grammar (kernel 03_brand, 10 component_layer_contract,
+   17 numbering, 07 v2.0 motion) translated to screen. Print sizes are scaled x1.6-2.2 for reading
+   distance; names follow the master so the web and the documents read as one publisher.
+   Master rules kept verbatim in intent: radii 1-2px only; three rule weights; ink #1a1d24 for body;
+   tracked caps at .18/.14/.12em; old-style numerals in display, tabular in tables; gold only for the
+   mark, one rule per block, the numeral and hover. A single committed look: paper with a night stage. */
 :root{
-  --paper:#faf8f3; --paper-deep:#f3efe4; --ink:#0d2463; --night:#09173d;
-  --gold:#c8a44d; --gold-deep:#a8862f; --gold-light:#e6d4a7; --slate:#4f5663; --hair:#c9c9c4;
-  --serif:"Libre Baskerville", Baskerville, "Baskerville Old Face", Georgia, serif;
-  --sans:Inter, "Helvetica Neue", Arial, system-ui, sans-serif;
+  --navy-deep:#0d2463; --navy-dark:#09173d; --gold-primary:#c8a44d; --gold-light:#e6d4a7; --gold-deep:#a8862f;
+  --slate:#4f5663; --mid-grey:#7a818d; --hairline:#c9c9c4; --ivory:#faf8f3; --ivory-deep:#f3efe4;
+  --ink:#1a1d24; --row-alt:#f5f2e8; --row-alt-deep:#ece8dc; --on-night:#f3ecda; --on-night-2:rgba(243,236,218,.66);
+  --f-display:"Libre Baskerville","Hoefler Text",Georgia,"Times New Roman",Times,serif;
+  --f-body:"Inter",-apple-system,BlinkMacSystemFont,"Segoe UI","Helvetica Neue",Arial,sans-serif;
+  --u:8px;                        /* master --u 4px, x2 on screen */
+  --r:2px;                        /* master radii: 1px and 2px, nothing rounder */
+  --rule-hair:1px; --rule-medium:1px; --rule-strong:1.5px;
+  --tracked:.18em; --tracked-cap:.14em; --tracked-tight:.12em; --tracked-num:-.012em; --compressed:-.032em;
+  --fs-kicker:11px; --fs-caption:13px; --fs-body:16.5px; --fs-bodyL:18.5px; --fs-dek:21px; --fs-pull:30px;
+  --fs-chs:clamp(30px,3.4vw,46px); --fs-title:clamp(52px,8.4vw,136px);
+  --lh-body:1.62; --lh-display:1.12; --lh-tight:1.4;
   --soft-close:cubic-bezier(0.16,1,0.3,1);
-  --gutter:clamp(20px,5vw,72px);
-  --h:0; /* header condense progress, 0 = very top */
+  --gutter:clamp(20px,6vw,104px); --maxw:1360px;
+  --h:0;
   color-scheme:light;
 }
 *{box-sizing:border-box}
-html{background:var(--paper)}
-body{margin:0;background:var(--paper);color:var(--ink);font-family:var(--sans);font-size:16px;line-height:1.6;
-  -webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility}
+html{background:var(--ivory)}
+body{margin:0;background:var(--ivory);color:var(--ink);font-family:var(--f-body);font-size:var(--fs-body);line-height:var(--lh-body);
+  -webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility;font-kerning:normal;font-feature-settings:"kern" 1,"liga" 1}
+/* the paper: a quiet fibre grain over ivory, as on the printed master */
+body::before{content:"";position:fixed;inset:0;pointer-events:none;z-index:0;opacity:.55;mix-blend-mode:multiply;
+  background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='300' height='300'><filter id='p'><feTurbulence type='fractalNoise' baseFrequency='.9 .6' numOctaves='4' seed='7' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 .55  0 0 0 0 .5  0 0 0 0 .4  0 0 0 .09 0'/></filter><rect width='100%' height='100%' filter='url(%23p)'/></svg>")}
+main,footer{position:relative;z-index:1}
 a{color:inherit}
-:focus-visible{outline:2px solid var(--gold);outline-offset:3px;border-radius:4px}
+:focus-visible{outline:1.5px solid var(--gold-primary);outline-offset:3px;border-radius:var(--r)}
+.wrap{max-width:var(--maxw);margin-inline:auto;padding-inline:var(--gutter)}
 
-/* ---------------------------------------------------------------- header */
-.bar{position:fixed;inset:0 0 auto 0;z-index:50;padding-top:env(safe-area-inset-top,0px)}
-.bar::before{content:"";position:absolute;inset:0;background:rgba(250,248,243,.82);
-  -webkit-backdrop-filter:blur(14px) saturate(1.2);backdrop-filter:blur(14px) saturate(1.2);
-  opacity:var(--h);border-bottom:1px solid rgba(13,36,99,calc(var(--h)*.12))}
-.bar-in{position:relative;height:72px;display:flex;align-items:center;justify-content:space-between;
-  padding-inline:var(--gutter);gap:24px}
+/* ---------------------------------------------------------------- spine stripe and margin rail (master chrome) */
+.spine{position:fixed;left:calc(var(--gutter) * .38);top:140px;bottom:120px;width:3px;z-index:3;pointer-events:none;
+  background:linear-gradient(to bottom,var(--navy-deep) 0%,var(--navy-deep) 60%,var(--gold-primary) 60%,var(--gold-primary) 85%,var(--slate) 85%,var(--slate) 100%)}
+.rail{position:fixed;right:calc(var(--gutter) * .3);top:140px;bottom:120px;width:28px;z-index:3;pointer-events:none;color:var(--mid-grey);
+  transition:color 600ms var(--soft-close)}
+.rail-copy{position:absolute;right:6px;top:0;writing-mode:vertical-rl;transform:rotate(180deg);font:600 10px/1 var(--f-body);
+  letter-spacing:var(--tracked);text-transform:uppercase;white-space:nowrap}
+.rail-index{position:absolute;right:4px;bottom:0;font:400 22px/1 var(--f-display);font-feature-settings:"onum" 1;color:rgba(9,23,61,.4);
+  transition:color 600ms var(--soft-close)}
+body.on-night .rail{color:rgba(243,236,218,.45)} body.on-night .rail-index{color:rgba(243,236,218,.45)}
+@media (max-width:1100px){ .rail{display:none} .spine{left:6px;width:2px} }
+
+/* ---------------------------------------------------------------- masthead (header logic from the master) */
+.bar{position:fixed;inset:0 0 auto 0;z-index:50;padding-top:env(safe-area-inset-top,0px);color:var(--navy-dark)}
+.bar::before{content:"";position:absolute;inset:0;background:rgba(250,248,243,.86);opacity:var(--h);
+  -webkit-backdrop-filter:blur(16px) saturate(1.15);backdrop-filter:blur(16px) saturate(1.15);transition:background 600ms var(--soft-close)}
+.bar-row{position:relative;max-width:var(--maxw);margin-inline:auto;padding-inline:var(--gutter);height:68px;display:flex;align-items:center;justify-content:space-between;gap:24px}
 .lock{display:flex;align-items:center;text-decoration:none;height:40px}
-.lock .mark{height:34px;width:34px;flex:none;transform:rotate(calc(var(--h)*-45deg))}
-.lock .word{height:21px;width:auto;margin-left:calc(12px - var(--h)*12px);
-  clip-path:inset(0 calc(var(--h)*100%) 0 0);opacity:calc(1 - var(--h)*1.1);
-  transform:translateX(calc(var(--h)*-18px))}
-.nav{display:flex;align-items:center;gap:calc(34px - var(--h)*12px)}
-.nav a{font-size:14px;font-weight:500;text-decoration:none;color:var(--ink);letter-spacing:.005em;
-  transform:translateX(calc(var(--h)*var(--i)*6px));opacity:.92}
-.nav a:hover{opacity:1}
-.nav .cta{padding:10px 18px;border-radius:999px;background:var(--ink);color:var(--paper);opacity:1;
-  transition:background 600ms var(--soft-close)}
-.nav .cta:hover{background:var(--night);transition-duration:180ms}
-.bar::before{transition:background 600ms var(--soft-close),border-color 600ms var(--soft-close)}
-.bar .nav a,.bar .menu,.bar .word{transition:color 600ms var(--soft-close),background 600ms var(--soft-close),filter 600ms var(--soft-close),border-color 600ms var(--soft-close)}
-.bar.dark::before{background:rgba(9,23,61,.7);border-bottom-color:rgba(230,212,167,calc(var(--h)*.14))}
-.bar.dark .nav a{color:#f6efdd}
-.bar.dark .nav .cta{background:var(--gold);color:var(--night)}
-.bar.dark .menu{color:#f6efdd;border-color:rgba(246,239,221,.3)}
-.bar.dark .lock .word{filter:brightness(0) invert(.95) sepia(.25)}
-.menu{display:none;font:500 14px var(--sans);color:var(--ink);background:none;border:1px solid rgba(13,36,99,.25);
-  border-radius:999px;padding:9px 16px}
-@media (max-width:820px){ .nav a:not(.cta){display:none} .menu{display:inline-block} .nav{gap:10px} }
+.lock .mark{height:32px;width:32px;flex:none;transform:rotate(calc(var(--h) * -45deg))}
+.lock .word{height:19px;width:auto;margin-left:calc(12px - var(--h) * 12px);clip-path:inset(0 calc(var(--h) * 100%) 0 0);
+  opacity:calc(1 - var(--h) * 1.1);transform:translateX(calc(var(--h) * -16px));transition:filter 600ms var(--soft-close)}
+.nav{display:flex;align-items:center;gap:calc(30px - var(--h) * 8px)}
+.nav a{font:500 11.5px/1 var(--f-body);letter-spacing:var(--tracked-cap);text-transform:uppercase;text-decoration:none;
+  padding:8px 0;border-bottom:1px solid transparent;transition:border-color 600ms var(--soft-close),color 600ms var(--soft-close)}
+.nav a:hover{border-bottom-color:var(--gold-primary);transition-duration:180ms}
+.btn{display:inline-flex;align-items:center;gap:10px;font:600 11.5px/1 var(--f-body);letter-spacing:var(--tracked-cap);text-transform:uppercase;
+  text-decoration:none;color:inherit;background:transparent;border:1px solid currentColor;border-radius:var(--r);padding:11px 16px;cursor:pointer;
+  transition:background 600ms var(--soft-close),color 600ms var(--soft-close),border-color 600ms var(--soft-close)}
+.btn:hover{background:var(--navy-dark);color:var(--ivory);border-color:var(--navy-dark);transition-duration:180ms}
+.nav .btn{padding:10px 14px}
+.index-btn{display:none}
+/* the dateline: the master's caption-date bar, present at the very top, folded away as you scroll */
+.dateline{position:relative;max-width:var(--maxw);margin-inline:auto;padding-inline:var(--gutter);height:calc(34px * (1 - var(--h)));overflow:hidden;opacity:calc(1 - var(--h) * 1.6)}
+.dateline div{display:flex;justify-content:space-between;gap:16px;border-top:var(--rule-hair) solid var(--hairline);padding-top:9px;
+  font:500 10.5px/1 var(--f-body);letter-spacing:var(--tracked-tight);text-transform:uppercase;color:var(--mid-grey);white-space:nowrap}
+/* the masthead rule: inset between the margins at the top, it runs edge to edge once condensed */
+.mast-rule{position:relative;height:0;margin-inline:auto;max-width:calc(var(--maxw) + (100vw - var(--maxw)) * var(--h));
+  padding-inline:calc(var(--gutter) * (1 - var(--h)))}
+.mast-rule::after{content:"";display:block;border-bottom:var(--rule-medium) solid currentColor;opacity:calc(.9 - var(--h) * .75)}
+body.on-night .bar{color:var(--on-night)}
+body.on-night .bar::before{background:rgba(9,23,61,.72)}
+body.on-night .lock .word{filter:brightness(0) invert(.94) sepia(.2)}
+body.on-night .btn:hover{background:var(--gold-primary);border-color:var(--gold-primary);color:var(--navy-dark)}
+body.on-night .dateline div{border-top-color:rgba(243,236,218,.18);color:var(--on-night-2)}
+@media (max-width:860px){ .nav a{display:none} .index-btn{display:inline-flex} .dateline div span:nth-child(2){display:none} }
 
-/* ---------------------------------------------------------------- hero */
-.hero{padding:calc(140px + env(safe-area-inset-top,0px)) var(--gutter) 56px;
-  display:grid;grid-template-columns:1.25fr 1fr;gap:clamp(24px,5vw,96px);align-items:end;max-width:1480px;margin-inline:auto}
-.eyebrow{font:600 11px/1 var(--sans);letter-spacing:.22em;text-transform:uppercase;color:var(--gold-deep);margin:0 0 22px}
-h1{font-family:var(--serif);font-weight:400;font-size:clamp(40px,5.6vw,84px);line-height:1.06;letter-spacing:-.018em;
-  margin:0;text-wrap:balance}
-h1 em{font-style:italic;color:var(--gold-deep)}
-.dek{font-family:var(--serif);font-size:clamp(17px,1.5vw,21px);line-height:1.55;color:var(--slate);margin:0;max-width:34ch}
-.preview{display:inline-flex;gap:10px;align-items:center;margin-top:22px;font:500 12px var(--sans);color:var(--slate)}
-.preview::before{content:"";width:6px;height:6px;border-radius:50%;background:var(--gold)}
-@media (max-width:820px){ .hero{grid-template-columns:1fr;padding-top:calc(120px + env(safe-area-inset-top,0px));gap:28px} }
+/* the index sheet (mobile menu) is a contents page: toc rows, numerals, leaders, folios */
+.sheet{position:fixed;inset:0;z-index:60;background:var(--ivory);padding:calc(96px + env(safe-area-inset-top,0px)) var(--gutter) 40px;
+  display:flex;flex-direction:column;gap:0;transform:translateY(-100%);transition:transform 900ms var(--soft-close);visibility:hidden}
+.sheet.open{transform:none;visibility:visible}
+.sheet .kicker{margin-bottom:24px}
+.toc-row{display:flex;align-items:baseline;gap:14px;padding:16px 0;border-bottom:var(--rule-hair) solid var(--hairline);text-decoration:none;color:var(--navy-dark)}
+.toc-row .n{font:400 17px/1 var(--f-display);font-feature-settings:"onum" 1;color:var(--gold-deep);min-width:34px}
+.toc-row .t{font:400 26px/1.1 var(--f-display);letter-spacing:var(--tracked-num)}
+.toc-row .lead{flex:1;border-bottom:1px dotted var(--hairline);transform:translateY(-5px)}
+.toc-row .f{font:600 11px/1 var(--f-body);letter-spacing:var(--tracked-tight);color:var(--mid-grey)}
+.sheet-close{position:absolute;right:var(--gutter);top:calc(18px + env(safe-area-inset-top,0px))}
 
-/* ---------------------------------------------------------------- the Chart */
-.chart-stage{position:relative;height:300vh}
-.chart-pin{position:sticky;top:0;height:100vh;height:100svh;overflow:hidden}
-.panel{position:absolute;inset:0;background:var(--night);
-  clip-path:inset(var(--it,6%) var(--is,var(--gutter)) var(--ib,8%) var(--is,var(--gutter)) round var(--ir,28px))}
-.panel .sky{position:absolute;inset:0;
-  background:
-    radial-gradient(120% 60% at 50% calc(112% - var(--hz,0)*38%), rgba(200,164,77,.55) 0%, rgba(168,134,47,.22) 26%, rgba(13,36,99,0) 58%),
-    linear-gradient(180deg,#07122f 0%, #0b1d52 46%, #0d2463 70%, #1c2f64 100%)}
-.panel .grain{position:absolute;inset:0;opacity:.22;mix-blend-mode:overlay;pointer-events:none;
-  background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='220' height='220'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 1  0 0 0 0 1  0 0 0 0 1  0 0 0 .55 0'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>")}
-.panel canvas{position:absolute;inset:0;width:100%;height:100%;display:block;touch-action:pan-y}
-.panel .seat{position:absolute;left:50%;top:50%;width:clamp(72px,9vw,120px);height:auto;pointer-events:none;
-  transform:translate(-50%,-50%) scale(calc(.6 + var(--st,0)*.4)) rotate(calc((1 - var(--st,0))*-45deg));opacity:var(--st,0);
-  filter:drop-shadow(0 8px 30px rgba(200,164,77,.35))}
-.panel .legend{position:absolute;left:calc(var(--is,var(--gutter)) + 28px);top:calc(var(--it,6%) + 26px);
-  font:600 10.5px/1.5 var(--sans);letter-spacing:.2em;text-transform:uppercase;color:rgba(230,212,167,.72);margin:0;
-  opacity:calc(1 - var(--cv,0)*1.6);right:calc(var(--is,var(--gutter)) + 28px)}
-@media (max-width:820px){ .eyebrow{letter-spacing:.16em} .panel .legend{left:calc(var(--is,var(--gutter)) + 18px);right:calc(var(--is,var(--gutter)) + 18px)} }
-.panel .legend span{display:block;font-weight:400;letter-spacing:.04em;text-transform:none;color:rgba(246,239,221,.55)}
+/* ---------------------------------------------------------------- type grammar */
+.kicker{font:600 var(--fs-kicker)/1.3 var(--f-body);letter-spacing:var(--tracked);text-transform:uppercase;color:var(--gold-deep);margin:0}
+.caption{font:500 12px/1.5 var(--f-body);letter-spacing:var(--tracked-tight);text-transform:uppercase;color:var(--mid-grey)}
+.dek{font:italic 400 var(--fs-dek)/1.52 var(--f-display);color:var(--slate);margin:0;max-width:30ch}
+.lede{font-size:var(--fs-bodyL);line-height:1.66;color:var(--ink);margin:0;max-width:34em}
+.lede.cap::first-letter{float:left;font:400 5.1em/.8 var(--f-display);color:var(--navy-dark);margin:.06em .1em 0 -.02em}
+.pull{font:italic 400 var(--fs-pull)/1.38 var(--f-display);color:var(--navy-dark);border-left:2px solid var(--gold-primary);padding:6px 0 6px 30px;margin:0;max-width:26ch;letter-spacing:var(--tracked-num)}
+.pull cite{display:block;margin-top:18px;font:600 11px/1 var(--f-body);font-style:normal;letter-spacing:var(--tracked);text-transform:uppercase;color:var(--gold-deep)}
 
-/* ---------------------------------------------------------------- the Instrument */
-.inst-stage{position:relative;height:620vh;background:var(--night);color:#f6efdd}
-.inst-pin{position:sticky;top:0;height:100vh;height:100svh;display:grid;grid-template-columns:minmax(0,0.9fr) minmax(0,1.6fr);
-  align-items:center;padding-inline:var(--gutter);overflow:hidden}
-.inst-copy{position:relative;z-index:2;max-width:30rem}
-.inst-copy .eyebrow{color:var(--gold)}
-.inst-copy h2{font-family:var(--serif);font-weight:400;font-size:clamp(30px,3.4vw,52px);line-height:1.12;margin:0 0 20px;text-wrap:balance}
-.inst-copy p{margin:0;color:rgba(246,239,221,.72);max-width:36ch}
-.inst-view{position:relative;height:100%}
-.inst-view canvas{position:absolute;inset:0;width:100%;height:100%;display:block}
-.leaders{position:absolute;inset:0;width:100%;height:100%;pointer-events:none}
-.tags{position:absolute;inset:0;pointer-events:none}
-.tag{position:absolute;left:0;top:0;white-space:nowrap;font:500 13px/1.25 var(--sans);color:#f6efdd;opacity:0;
-  will-change:transform,opacity}
-.tag small{display:block;font:600 9.5px/1.4 var(--sans);letter-spacing:.2em;text-transform:uppercase;color:var(--gold)}
-.now{display:none}
-@media (max-width:820px){
-  .inst-pin{grid-template-columns:1fr;grid-template-rows:auto 1fr;align-items:start;padding-top:calc(96px + env(safe-area-inset-top,0px))}
-  .inst-copy h2{font-size:28px;margin-bottom:10px}
-  .inst-copy p{font-size:15px}
-  .tags,.leaders{display:none}
-  .now{display:block;position:absolute;left:var(--gutter);right:var(--gutter);bottom:calc(28px + env(safe-area-inset-bottom,0px));
-    text-align:center;font:500 15px var(--sans);color:#f6efdd;min-height:44px}
-  .now small{display:block;font:600 10px/1.6 var(--sans);letter-spacing:.2em;text-transform:uppercase;color:var(--gold)}
+/* Categorical Header System (Module 17): numeral — category chip, title, italic descriptor, hairline */
+.chs{margin:0 0 calc(var(--u) * 6)}
+.chs-stamp{display:flex;align-items:baseline;gap:calc(var(--u) * 1.6);margin-bottom:calc(var(--u) * 2.2)}
+.chs-numeral{font:400 var(--fs-dek)/1 var(--f-display);color:var(--gold-deep);letter-spacing:var(--tracked-tight);font-feature-settings:"onum" 1}
+.chs-dash{color:var(--gold-deep);opacity:.7}
+.chs-cat{display:inline-block;font:600 10.5px/1.4 var(--f-body);letter-spacing:var(--tracked);text-transform:uppercase;color:var(--slate);
+  padding:4px 10px;background:var(--ivory-deep);border:var(--rule-hair) solid var(--hairline);border-radius:var(--r)}
+.chs-title{font:400 var(--fs-chs)/var(--lh-display) var(--f-display);letter-spacing:var(--compressed);color:var(--navy-dark);margin:0;
+  max-width:18ch;text-wrap:balance;font-feature-settings:"kern" 1,"liga" 1,"onum" 1}
+.chs-descriptor{font:italic 400 17px/1.5 var(--f-display);color:var(--slate);margin:calc(var(--u) * 1.4) 0 0;max-width:46ch}
+.chs-rule{margin-top:calc(var(--u) * 3);border-bottom:var(--rule-hair) solid var(--hairline)}
+.night .chs-cat{background:rgba(243,236,218,.06);border-color:rgba(243,236,218,.2);color:var(--on-night-2)}
+.night .chs-title{color:var(--on-night)} .night .chs-descriptor{color:var(--on-night-2)} .night .chs-rule{border-color:rgba(243,236,218,.16)}
+.night .chs-numeral,.night .chs-dash{color:var(--gold-primary)}
+
+/* ---------------------------------------------------------------- cover (hero): magazine grid */
+.cover{padding-block:calc(168px + env(safe-area-inset-top,0px)) calc(var(--u) * 7);position:relative}
+.cover-grid{display:grid;grid-template-columns:repeat(12,minmax(0,1fr));column-gap:24px;row-gap:calc(var(--u) * 4)}
+.cover .kicker{grid-column:1 / -1;display:flex;gap:18px;flex-wrap:wrap}
+.cover .kicker span+span::before{content:"·";margin-right:18px;color:var(--hairline)}
+h1.title{grid-column:1 / span 11;margin:0;font:400 var(--fs-title)/.96 var(--f-display);letter-spacing:var(--compressed);color:var(--navy-dark);
+  font-feature-settings:"kern" 1,"liga" 1,"onum" 1;text-wrap:balance}
+h1.title .it{font-style:italic;letter-spacing:-.02em}
+h1.title .sub{display:block;margin-top:1.05em;font:600 clamp(10.5px,1vw,12.5px)/1.6 var(--f-body);letter-spacing:.32em;text-transform:uppercase;color:var(--slate)}
+.caption-date{grid-column:1 / -1;display:flex;justify-content:space-between;gap:18px;flex-wrap:wrap;padding:12px 0;
+  border-top:var(--rule-hair) solid var(--hairline);border-bottom:var(--rule-hair) solid var(--hairline);
+  font:500 11px/1.3 var(--f-body);letter-spacing:var(--tracked-tight);text-transform:uppercase;color:var(--mid-grey)}
+.cover .dek{grid-column:1 / span 5}
+.cover .lede{grid-column:7 / -1}
+.cover-mark{position:absolute;right:calc(var(--gutter) * -.2);top:120px;width:min(46vw,620px);opacity:.035;pointer-events:none;z-index:-1}
+@media (max-width:860px){
+  .cover{padding-top:calc(128px + env(safe-area-inset-top,0px))}
+  h1.title,.cover .dek,.cover .lede{grid-column:1 / -1}
+  .caption-date span:nth-child(2){display:none}
 }
 
-/* ---------------------------------------------------------------- close */
-.close{background:var(--night);color:#f6efdd;padding:18vh var(--gutter) calc(64px + env(safe-area-inset-bottom,0px));
-  border-top:1px solid rgba(230,212,167,.14)}
-.close h2{font-family:var(--serif);font-weight:400;font-size:clamp(28px,3.2vw,46px);line-height:1.15;margin:0 0 28px;max-width:20ch;text-wrap:balance}
-.close .cta{display:inline-block;padding:14px 26px;border-radius:999px;background:var(--gold);color:var(--night);
-  font-weight:600;font-size:15px;text-decoration:none;transition:background 600ms var(--soft-close)}
-.close .cta:hover{background:var(--gold-light);transition-duration:180ms}
-.close .fine{margin-top:12vh;display:flex;flex-wrap:wrap;gap:12px 36px;justify-content:space-between;
-  font-size:12.5px;color:rgba(246,239,221,.55);border-top:1px solid rgba(230,212,167,.12);padding-top:22px}
-.close .fine img{height:26px;opacity:.9}
+/* ---------------------------------------------------------------- figures */
+.figcaption{display:flex;gap:14px;align-items:baseline;margin:0;font:500 12px/1.5 var(--f-body);letter-spacing:var(--tracked-tight);color:var(--slate)}
+.figcaption b{font-weight:600;text-transform:uppercase;letter-spacing:var(--tracked);color:var(--navy-dark);white-space:nowrap}
+.figcaption i{font:italic 400 14px/1.5 var(--f-display);letter-spacing:0}
+
+/* Fig. 1: the field. Inset figure at rest; opens to full bleed with scroll. Corners stay at the master's 2px. */
+.field-stage{position:relative;height:320vh}
+.field-pin{position:sticky;top:0;height:100vh;height:100svh;overflow:hidden}
+.panel{position:absolute;inset:0;background:var(--navy-dark);
+  clip-path:inset(var(--it,15%) var(--is,var(--gutter)) var(--ib,11%) var(--is,var(--gutter)) round var(--r))}
+.panel canvas{position:absolute;inset:0;width:100%;height:100%;display:block;touch-action:pan-y}
+.panel .seat{position:absolute;left:50%;top:50%;width:clamp(64px,7vw,104px);pointer-events:none;
+  transform:translate(-50%,-50%) scale(calc(.7 + var(--st,0) * .3)) rotate(calc((1 - var(--st,0)) * -45deg));opacity:var(--st,0);
+  filter:drop-shadow(0 6px 24px rgba(200,164,77,.28))}
+.field-cap{position:absolute;left:0;right:0;bottom:calc(11% - 44px);opacity:calc(1 - var(--open,0) * 2.2)}
+.panel-label{position:absolute;margin:0;left:calc(var(--is,var(--gutter)) + 24px);right:calc(var(--is,var(--gutter)) + 24px);top:calc(var(--it,15%) + 20px);
+  display:flex;justify-content:space-between;gap:12px;font:600 10.5px/1.3 var(--f-body);letter-spacing:var(--tracked);text-transform:uppercase;
+  color:rgba(230,212,167,.8);pointer-events:none}
+.panel-label span:last-child{color:rgba(243,236,218,.5);font-weight:500;letter-spacing:var(--tracked-tight)}
+
+/* ---------------------------------------------------------------- sections on paper */
+.sec{padding-block:calc(var(--u) * 16) calc(var(--u) * 14);position:relative}
+.grid12{display:grid;grid-template-columns:repeat(12,minmax(0,1fr));column-gap:24px;row-gap:calc(var(--u) * 5);align-items:start}
+.span-all{grid-column:1 / -1} .col-a{grid-column:1 / span 6} .col-b{grid-column:8 / -1}
+@media (max-width:960px){ .col-a,.col-b{grid-column:1 / -1} }
+
+/* table.dt: strong top, medium under the head, ivory-deep head, banded rows, tabular numerals */
+.dt-wrap{overflow-x:auto}
+table.dt{width:100%;min-width:620px;border-collapse:collapse;font-size:15px;font-feature-settings:"tnum" 1}
+table.dt thead th{background:var(--ivory-deep);border-top:var(--rule-strong) solid var(--navy-dark);border-bottom:var(--rule-medium) solid var(--navy-dark);
+  font:600 10.5px/1.3 var(--f-body);letter-spacing:.13em;text-transform:uppercase;color:var(--navy-dark);text-align:left;padding:12px 14px}
+table.dt td{padding:16px 14px;vertical-align:top;border-bottom:var(--rule-hair) solid var(--hairline);color:var(--ink);line-height:1.5}
+table.dt tbody tr:nth-child(even) td{background:rgba(236,232,220,.55)}
+table.dt td.no{font:400 18px/1.2 var(--f-display);font-feature-settings:"onum" 1;color:var(--gold-deep);width:64px;white-space:nowrap}
+table.dt td.name{font:400 19px/1.3 var(--f-display);color:var(--navy-dark);width:30%;letter-spacing:var(--tracked-num)}
+table.dt td.code{font:500 12px/1.4 var(--f-body);letter-spacing:var(--tracked-tight);color:var(--mid-grey);white-space:nowrap;text-align:right}
+table.dt tbody tr td{transition:background 600ms var(--soft-close)}
+@media (max-width:640px){ table.dt{min-width:0} table.dt th:last-child,table.dt td.code{display:none} table.dt td.name{width:38%;font-size:17px} table.dt td,table.dt thead th{padding-inline:10px} table.dt td.no{width:40px} }
+table.dt tbody tr:hover td{background:rgba(230,212,167,.24);transition-duration:180ms}
+
+/* roadmap: the master's milestone grid, strong top rule, onum numerals; the gold line draws with scroll */
+.roadmap{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:24px;border-top:var(--rule-strong) solid var(--navy-dark);position:relative;padding-top:28px}
+.roadmap::before{content:"";position:absolute;left:0;top:-1.5px;height:1.5px;width:calc(var(--rm,0) * 100%);background:var(--gold-primary)}
+.stage .n{font:400 40px/1 var(--f-display);font-feature-settings:"onum" 1;color:var(--gold-deep);letter-spacing:var(--tracked-num)}
+.stage .l{margin:16px 0 8px;font:600 11px/1.3 var(--f-body);letter-spacing:var(--tracked);text-transform:uppercase;color:var(--navy-dark)}
+.stage p{margin:0;font-size:15px;line-height:1.55;color:var(--slate)}
+@media (max-width:960px){ .roadmap{grid-template-columns:1fr 1fr} }
+@media (max-width:560px){ .roadmap{grid-template-columns:1fr} .stage{display:grid;grid-template-columns:64px 1fr;column-gap:12px} .stage .n{grid-row:span 2} .stage .l{margin-top:4px} }
+
+/* metric strip: medium navy rule above, hairline below */
+.metric-strip{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));border-top:var(--rule-medium) solid var(--navy-dark);border-bottom:var(--rule-hair) solid var(--hairline)}
+.metric{padding:22px 20px 22px 0;border-right:var(--rule-hair) solid var(--hairline)}
+.metric+.metric{padding-left:20px} .metric:last-child{border-right:0}
+.metric-value{display:block;font:400 clamp(17px,1.6vw,25px)/1.2 var(--f-display);color:var(--navy-dark);letter-spacing:var(--tracked-num);font-feature-settings:"onum" 1;white-space:nowrap}
+.metric-label{display:block;margin-top:8px;font:600 10.5px/1.45 var(--f-body);letter-spacing:var(--tracked-cap);text-transform:uppercase;color:var(--slate)}
+@media (max-width:560px){ .metric-strip{grid-template-columns:1fr} .metric{border-right:0!important;padding-left:0!important} .metric+.metric{border-top:var(--rule-hair) solid var(--hairline)} }
+@media (min-width:561px) and (max-width:960px){ .metric-strip{grid-template-columns:1fr 1fr} .metric:nth-child(2){border-right:0} .metric:nth-child(3){padding-left:0} .metric:nth-child(n+3){border-top:var(--rule-hair) solid var(--hairline)} }
+
+/* ---------------------------------------------------------------- Fig. 2: the Instrument (night stage) */
+.night{background:var(--navy-dark);color:var(--on-night)}
+.inst-stage{position:relative;height:720vh}
+.inst-pin{position:sticky;top:0;height:100vh;height:100svh;overflow:hidden}
+.inst-view{position:absolute;inset:0}
+.inst-view canvas{position:absolute;inset:0;width:100%;height:100%;display:block}
+.inst-copy{position:absolute;left:var(--gutter);top:calc(128px + env(safe-area-inset-top,0px));max-width:340px;z-index:2}
+.inst-copy .kicker{color:var(--gold-primary)}
+.inst-copy h2{margin:16px 0 12px;font:400 clamp(28px,2.6vw,38px)/1.14 var(--f-display);letter-spacing:var(--compressed)}
+.inst-copy p{margin:0;font-size:15px;color:var(--on-night-2)}
+.phase{position:absolute;left:var(--gutter);bottom:calc(40px + env(safe-area-inset-bottom,0px));z-index:2;display:flex;gap:6px;align-items:center;margin:0}
+.phase i{display:block;width:22px;height:1.5px;background:rgba(243,236,218,.2);transition:background 600ms var(--soft-close)}
+.phase i.on{background:var(--gold-primary)}
+.phase span{margin-left:12px;font:600 10.5px/1 var(--f-body);letter-spacing:var(--tracked);text-transform:uppercase;color:var(--on-night-2)}
+.leaders{position:absolute;inset:0;width:100%;height:100%;pointer-events:none}
+.tags{position:absolute;inset:0;pointer-events:none}
+.tag{position:absolute;left:0;top:0;opacity:0;will-change:transform,opacity;border-left:1.5px solid var(--gold-primary);padding:2px 0 2px 12px}
+.tag .c{display:block;font:600 10px/1.4 var(--f-body);letter-spacing:var(--tracked);text-transform:uppercase;color:var(--gold-primary)}
+.tag .c em{font:400 13px/1 var(--f-display);font-style:normal;font-feature-settings:"onum" 1;letter-spacing:0;margin-right:8px;text-transform:none}
+.tag .v{display:block;font:400 17px/1.3 var(--f-display);color:var(--on-night);white-space:nowrap}
+.now{display:none}
+@media (max-width:860px){
+  .inst-copy{left:var(--gutter);right:var(--gutter);top:calc(96px + env(safe-area-inset-top,0px));max-width:none}
+  .inst-copy h2{font-size:26px} .inst-copy p{display:none}
+  .tags,.leaders{display:none}
+  .now{display:block;position:absolute;left:var(--gutter);right:var(--gutter);bottom:calc(84px + env(safe-area-inset-bottom,0px));
+    border-left:1.5px solid var(--gold-primary);padding-left:12px;min-height:48px;margin:0}
+  .now .c{display:block;font:600 10px/1.5 var(--f-body);letter-spacing:var(--tracked);text-transform:uppercase;color:var(--gold-primary)}
+  .now .v{display:block;font:400 19px/1.3 var(--f-display);color:var(--on-night)}
+}
+
+/* ---------------------------------------------------------------- close: gate + colophon */
+.close{padding-block:calc(var(--u) * 18) 0}
+.gate{border-top:var(--rule-medium) solid rgba(243,236,218,.5);padding-top:28px;display:flex;flex-wrap:wrap;gap:20px 40px;align-items:center;justify-content:space-between}
+.gate p{margin:0;font:italic 400 19px/1.5 var(--f-display);color:var(--on-night-2);max-width:42ch}
+.night .btn{color:var(--on-night)}
+.colophon{margin-top:calc(var(--u) * 16);border-top:var(--rule-medium) solid rgba(243,236,218,.35);padding-block:26px calc(34px + env(safe-area-inset-bottom,0px));
+  display:grid;grid-template-columns:1fr auto 1fr;gap:18px;align-items:center}
+.colophon .fl{font:600 10px/1.5 var(--f-body);letter-spacing:var(--tracked-tight);text-transform:uppercase;color:var(--on-night-2)}
+.colophon .cc{text-align:center;font:400 11.5px/1.6 var(--f-body);letter-spacing:.04em;color:var(--on-night-2)}
+.colophon .cc img{display:block;width:30px;margin:0 auto 10px;opacity:.85}
+.colophon .cc b{display:block;font:600 10.5px/1.5 var(--f-body);letter-spacing:var(--tracked);text-transform:uppercase;color:var(--on-night)}
+.colophon .fr{text-align:right;font:400 22px/1 var(--f-display);font-feature-settings:"onum" 1;color:var(--on-night)}
+@media (max-width:760px){ .colophon{grid-template-columns:1fr 1fr} .colophon .cc{grid-column:1 / -1;grid-row:1} }
 
 @media (prefers-reduced-motion:reduce){
-  .chart-stage{height:auto}
-  .chart-pin{position:relative;height:88vh}
-  .inst-stage{height:auto}
-  .inst-pin{position:relative;height:auto;min-height:100vh}
+  .field-stage,.inst-stage{height:auto}
+  .field-pin{position:relative;height:88vh}
+  .inst-pin{position:relative;height:100vh}
+  .sheet{transition:none}
 }
 </style>
 
+<div class="spine" aria-hidden="true"></div>
+<div class="rail" aria-hidden="true"><span class="rail-copy" id="railCopy">Company · Cover</span><span class="rail-index" id="railIndex">i</span></div>
+
 <header class="bar" id="bar">
-  <div class="bar-in">
+  <div class="bar-row">
     <a class="lock" href="#top" aria-label="GSSC Integrated Corporation, home">
       <img class="mark" src="{{SEAL}}" alt="">
       <img class="word" src="{{WORDMARK}}" alt="">
     </a>
     <nav class="nav" aria-label="Primary">
-      <a href="#capabilities" style="--i:4">Capabilities</a>
-      <a href="#engage" style="--i:3">How we engage</a>
-      <a href="#notes" style="--i:2">Case notes</a>
-      <a href="#company" style="--i:1">Company</a>
-      <button class="menu" type="button" id="menu">Menu</button>
-      <a class="cta" href="#inquire" style="--i:0">Inquire</a>
+      <a href="#capabilities">Capabilities</a>
+      <a href="#engagement">Engagement</a>
+      <a href="#verification">Verification</a>
+      <a class="btn" href="#inquire">Inquire</a>
+      <button class="btn index-btn" type="button" id="indexBtn" aria-expanded="false" aria-controls="sheet">Index</button>
     </nav>
   </div>
+  <div class="dateline" aria-hidden="true"><div><span>Company · GSSC-WEB-2026 · Edition I</span><span>Iloilo Business Park · Mandurriao</span><span>Iloilo City · Philippines</span></div></div>
+  <div class="mast-rule" aria-hidden="true"></div>
 </header>
 
+<nav class="sheet" id="sheet" aria-label="Index">
+  <button class="btn sheet-close" type="button" id="sheetClose">Close</button>
+  <p class="kicker">Contents</p>
+  <a class="toc-row" href="#capabilities"><span class="n">I</span><span class="t">Capabilities</span><span class="lead"></span><span class="f">02</span></a>
+  <a class="toc-row" href="#engagement"><span class="n">II</span><span class="t">Engagement</span><span class="lead"></span><span class="f">03</span></a>
+  <a class="toc-row" href="#verification"><span class="n">III</span><span class="t">Verification</span><span class="lead"></span><span class="f">04</span></a>
+  <a class="toc-row" href="#inquire"><span class="n">IV</span><span class="t">Inquire</span><span class="lead"></span><span class="f">05</span></a>
+</nav>
+
 <main id="top">
-  <section class="hero">
-    <div>
-      <p class="eyebrow">GSSC Integrated Corporation · Iloilo City</p>
-      <h1>One point of accountability for <em>integrated</em> programmes.</h1>
-    </div>
-    <div>
-      <p class="dek">We coordinate sourcing, site execution, supply programmes and business support under one governed engagement, from the first scope conversation to turnover.</p>
-      <p class="preview">Showroom preview, stage 2. Not the live site.</p>
+  <section class="cover wrap" data-rail="Company · Cover" data-index="i">
+    <img class="cover-mark" src="{{SEAL}}" alt="">
+    <div class="cover-grid">
+      <p class="kicker"><span>Volume I</span><span>Company</span><span>The integrated corporation</span></p>
+      <h1 class="title">One point of accountability for <span class="it">integrated</span> programmes.<span class="sub">Sourcing · Site execution · Supply · Consultancy · Support</span></h1>
+      <div class="caption-date"><span>Prepared for institutional review</span><span>Showroom preview · Stage 2 · Not the live site</span><span>Issued · Iloilo City, Philippines</span></div>
+      <p class="dek">A super-sourcing, management consultancy and business support platform, answering for the programme as a whole.</p>
+      <p class="lede cap">Programmes rarely fail for lack of suppliers. They fail in the gaps between them, where each party answers for a slice of the outcome and no one answers for the whole. GSSC is structured to occupy that gap: one programme lead, one scoped quotation, and one controlled path from approval to turnover.</p>
     </div>
   </section>
 
-  <section class="chart-stage" id="chart" aria-label="The field: liquid gold that gathers toward your cursor">
-    <div class="chart-pin">
+  <section class="field-stage" id="field" aria-label="Figure 1, the field: gold wax under glass that gathers toward your cursor">
+    <div class="field-pin">
       <div class="panel" id="panel">
-        <div class="sky"></div>
-        <canvas id="field" aria-hidden="true"></canvas>
-        <div class="grain"></div>
-        <p class="legend">The field<span>Move through it. It gathers toward you, then settles.</span></p>
+        <canvas id="fieldCanvas" aria-hidden="true"></canvas>
         <img class="seat" src="{{SEAL}}" alt="">
       </div>
+      <p class="panel-label" id="panelLabel" aria-hidden="true"><span>Fig. 1 · The field</span><span>Move through it</span></p>
+      <div class="field-cap wrap"><p class="figcaption"><b>Fig. 1</b><i>Gold wax under glass, lit from below. It gathers toward your hand, lets go slowly, and closes on the seal.</i></p></div>
     </div>
   </section>
 
-  <section class="inst-stage" id="capabilities" aria-label="The Instrument: six disciplines around one star">
+  <section class="sec wrap" id="capabilities" data-rail="I · Capabilities" data-index="I">
+    <div class="chs">
+      <div class="chs-stamp"><span class="chs-numeral">I</span><span class="chs-dash">—</span><span class="chs-cat">Capabilities</span></div>
+      <h2 class="chs-title">Six disciplines under one accountable programme.</h2>
+      <p class="chs-descriptor">Each discipline is coordinated by the same programme lead, quoted in the same document and answered for under the same governance.</p>
+      <div class="chs-rule"></div>
+    </div>
+    <div class="dt-wrap">
+      <table class="dt">
+        <thead><tr><th>No.</th><th>Discipline</th><th>What it covers</th><th style="text-align:right">Register</th></tr></thead>
+        <tbody>
+          <tr><td class="no">I</td><td class="name">Sourcing &amp; procurement</td><td>Strategic sourcing, canvass and supplier coordination held under GSSC governance.</td><td class="code">Fig. 2 · i</td></tr>
+          <tr><td class="no">II</td><td class="name">Site execution</td><td>Civil and construction-adjacent works, electrical and mechanical, signage and fabrication.</td><td class="code">Fig. 2 · ii</td></tr>
+          <tr><td class="no">III</td><td class="name">Supply programmes</td><td>Water filtration and refilling, diesel supply, furniture and fit-out supply.</td><td class="code">Fig. 2 · iii</td></tr>
+          <tr><td class="no">IV</td><td class="name">Management consultancy</td><td>Programme structuring, scope definition and decision-ready documentation.</td><td class="code">PSIC 70200</td></tr>
+          <tr><td class="no">V</td><td class="name">Business support</td><td>Waste programmes, food service and operational support services.</td><td class="code">PSIC 82990</td></tr>
+          <tr><td class="no">VI</td><td class="name">Compliance &amp; documentation</td><td>Quotations, agreements, certificates and notarial instruments prepared to the GSSC standard.</td><td class="code">Fig. 2 · vi</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <section class="inst-stage night" id="instrument" data-rail="Fig. 2 · The Instrument" data-index="I" aria-label="Figure 2, the Instrument: the compass opened into its six disciplines">
     <div class="inst-pin">
-      <div class="inst-copy">
-        <p class="eyebrow">The Instrument</p>
-        <h2>Six disciplines. One point of accountability.</h2>
-        <p>Scroll, and the compass opens into the parts every engagement is made of. Keep scrolling and it closes again, around the star it never leaves.</p>
-      </div>
       <div class="inst-view" id="instView">
         <canvas id="inst" aria-hidden="true"></canvas>
         <svg class="leaders" id="leaders" aria-hidden="true"></svg>
         <div class="tags" id="tags"></div>
-        <p class="now" id="now" aria-live="polite"></p>
+      </div>
+      <div class="inst-copy">
+        <p class="kicker">Fig. 2 · The Instrument</p>
+        <h2>Opened, it is six disciplines. Closed, it is one.</h2>
+        <p>Keep scrolling. The compass opens one part at a time, from the star down to the case, then closes in order around the star.</p>
+      </div>
+      <p class="now" id="now" aria-live="polite"></p>
+      <p class="phase" id="phase" aria-hidden="true"></p>
+    </div>
+  </section>
+
+  <section class="sec wrap" id="engagement" data-rail="II · Engagement" data-index="II">
+    <div class="chs">
+      <div class="chs-stamp"><span class="chs-numeral">II</span><span class="chs-dash">—</span><span class="chs-cat">Engagement</span></div>
+      <h2 class="chs-title">From requirement to turnover, one controlled path.</h2>
+      <p class="chs-descriptor">Five stages, one programme lead and one acceptance gate. Nothing moves to site before the scope is quoted and accepted.</p>
+      <div class="chs-rule"></div>
+    </div>
+    <div class="roadmap" id="roadmap">
+      <div class="stage"><span class="n">i</span><p class="l">Requirement</p><p>A short scope conversation: category, site, timeline and the constraint that shapes the work.</p></div>
+      <div class="stage"><span class="n">ii</span><p class="l">Scoped quotation</p><p>Bundled work packages, stated assumptions and approved Non-VAT pricing, reconciled to the request.</p></div>
+      <div class="stage"><span class="n">iii</span><p class="l">Acceptance</p><p>One acceptance gate. Mobilisation is scheduled only against the accepted scope.</p></div>
+      <div class="stage"><span class="n">iv</span><p class="l">Delivery</p><p>One programme lead coordinates every discipline on site and reports against the quotation.</p></div>
+      <div class="stage"><span class="n">v</span><p class="l">Turnover</p><p>Documented handover and close-out, filed to the same standard as the quotation.</p></div>
+    </div>
+  </section>
+
+  <section class="sec wrap" id="verification" data-rail="III · Verification" data-index="III">
+    <div class="chs">
+      <div class="chs-stamp"><span class="chs-numeral">III</span><span class="chs-dash">—</span><span class="chs-cat">Verification</span></div>
+      <h2 class="chs-title">Registered, documented, accountable.</h2>
+      <p class="chs-descriptor">The records a counterparty checks first, stated as they appear on the government-issued certificates.</p>
+      <div class="chs-rule"></div>
+    </div>
+    <div class="grid12">
+      <div class="span-all">
+        <div class="metric-strip">
+          <div class="metric"><span class="metric-value">10 June 2026</span><span class="metric-label">Incorporated · Securities and Exchange Commission</span></div>
+          <div class="metric"><span class="metric-value">2026060254196-01</span><span class="metric-label">SEC company registration number</span></div>
+          <div class="metric"><span class="metric-value">Non-VAT</span><span class="metric-label">Tax posture · Bureau of Internal Revenue</span></div>
+          <div class="metric"><span class="metric-value">70200 · 82990</span><span class="metric-label">PSIC · Consultancy · Business support</span></div>
+        </div>
+      </div>
+      <div class="col-a" style="margin-top:40px">
+        <blockquote class="pull">Programmes rarely fail for lack of suppliers. They fail in the gaps between them.<cite>GSSC Integrated Corporation · Positioning</cite></blockquote>
+      </div>
+      <div class="col-b" style="margin-top:48px">
+        <p class="kicker" style="margin-bottom:14px">Principal office</p>
+        <p class="lede" style="font-size:16.5px">Regus, 3F Festive Walk Mall, Iloilo Business Park, Megaworld Boulevard, Mandurriao, Iloilo City 5000. A domestic stock corporation with its principal office in Iloilo City, Philippines.</p>
       </div>
     </div>
   </section>
 
-  <section class="close" id="inquire">
-    <p class="eyebrow" style="color:var(--gold)">Inquire</p>
-    <h2>Tell us what needs coordinating. We answer for the whole of it.</h2>
-    <a class="cta" href="#inquire">Start an inquiry</a>
-    <div class="fine">
-      <img src="{{SEAL}}" alt="GSSC seal">
-      <span>Preview of the gsscph.com showroom: the Chart, the Instrument and the header. Built from kernel 2.18.0.</span>
-      <span>management@gsscph.com</span>
+  <section class="close night" id="inquire" data-rail="IV · Inquire" data-index="IV">
+    <div class="wrap">
+      <div class="chs">
+        <div class="chs-stamp"><span class="chs-numeral">IV</span><span class="chs-dash">—</span><span class="chs-cat">Inquire</span></div>
+        <h2 class="chs-title">Tell us what needs coordinating. We answer for the whole of it.</h2>
+        <div class="chs-rule"></div>
+      </div>
+      <div class="gate">
+        <p>One inquiry reaches the management team directly. The reply comes from the programme lead who will carry it.</p>
+        <a class="btn" href="#inquire">Begin an inquiry <span aria-hidden="true">→</span></a>
+      </div>
+      <footer class="colophon">
+        <span class="fl">Company · Edition I<br>gsscph.com</span>
+        <span class="cc"><img src="{{SEAL}}" alt=""><b>GSSC Integrated Corporation</b>management@gsscph.com · (033) 339-7472 · +63 928 370 3574</span>
+        <span class="fr">v</span>
+      </footer>
     </div>
   </section>
 </main>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/lenis@1.1.20/dist/lenis.min.js"></script>
 <script>
 (() => {
 const REDUCE = matchMedia('(prefers-reduced-motion: reduce)').matches;
-const root = document.documentElement;
+const root = document.documentElement, body = document.body;
 const clamp = (v, a = 0, b = 1) => Math.min(b, Math.max(a, v));
 const lerp = (a, b, t) => a + (b - a) * t;
-const ease = t => 1 - Math.pow(1 - t, 4);                 // soft close
-const inOut = t => t < .5 ? 8*t*t*t*t : 1 - Math.pow(-2*t + 2, 4) / 2;
+const ease = t => 1 - Math.pow(1 - t, 4);                        // the soft close
+const inOut = t => t < .5 ? 8 * t * t * t * t : 1 - Math.pow(-2 * t + 2, 4) / 2;
 let vw = innerWidth, vh = innerHeight;
-addEventListener('resize', () => { vw = innerWidth; vh = innerHeight; sizeField(); sizeInst(); });
 
-/* ------------------------------------------------ the field: liquid gold (WebGL metaballs) */
-const panel = document.getElementById('panel'), cv = document.getElementById('field'), seat = panel.querySelector('.seat');
-const chartStage = document.getElementById('chart');
-const gl = cv.getContext('webgl', {antialias: false, premultipliedAlpha: false});
-const NB = 10;
-const FS = `precision highp float;
-uniform vec2 uRes; uniform float uTime, uConv; uniform vec3 uB[${NB}];
-float field(vec2 p){ float f = 0.; for (int i = 0; i < ${NB}; i++){ vec2 d = p - uB[i].xy; f += uB[i].z * uB[i].z / (dot(d, d) + 1e-4); } return f; }
+/* ------------------------------------------------ smooth scroll with a governor
+   Wheel and trackpad input glides (Lenis); inside the Instrument the glide is heavier, so a hard
+   flick cannot throw the reader past the phases. Touch keeps native momentum. Keyboard, anchors and
+   assistive navigation are untouched (07 v2.0 forbids scroll-jacking). Whichever element actually
+   scrolls in this viewer (window or body) is the one we drive. */
+let lenis = null;
+if (!REDUCE && window.Lenis) {
+  const bodyScrolls = /(auto|scroll)/.test(getComputedStyle(body).overflowY) && body.scrollHeight > body.clientHeight + 2;
+  lenis = new Lenis(bodyScrolls ? {wrapper: body, content: body, lerp: .085, wheelMultiplier: .9, anchors: true}
+                                : {lerp: .085, wheelMultiplier: .9, anchors: true});
+}
+
+/* ------------------------------------------------ index sheet */
+const sheet = document.getElementById('sheet'), indexBtn = document.getElementById('indexBtn');
+const setSheet = open => { sheet.classList.toggle('open', open); indexBtn.setAttribute('aria-expanded', open); if (lenis) open ? lenis.stop() : lenis.start(); };
+indexBtn.addEventListener('click', () => setSheet(true));
+document.getElementById('sheetClose').addEventListener('click', () => setSheet(false));
+sheet.querySelectorAll('a').forEach(a => a.addEventListener('click', () => setSheet(false)));
+
+/* ------------------------------------------------ Fig. 1, the field: wax under glass, filmed
+   Pass A renders the lamp at low resolution into a texture: wax blobs (metaballs with a true
+   sphere height, so thickness reads as subsurface glow), lit from a lamp below, in a navy liquid
+   with slow heat shimmer. Pass B plays it back like footage at display resolution: soft upscale,
+   a touch of barrel and chromatic fringe, bloom and warm halation off the hot wax, vignette,
+   and a 24 fps film grain with a faint exposure flicker. */
+const panel = document.getElementById('panel'), fcv = document.getElementById('fieldCanvas'), fieldStage = document.getElementById('field');
+const panelLabel = document.getElementById('panelLabel');
+const gl = fcv.getContext('webgl', {antialias: false, alpha: false, premultipliedAlpha: false});
+const NB = 11;
+const VS = 'attribute vec2 a; void main(){ gl_Position = vec4(a, 0., 1.); }';
+const FS_A = `precision highp float;
+uniform vec2 uRes; uniform float uTime, uConv; uniform vec4 uB[${NB}];
+float hash(vec2 p){ return fract(sin(dot(p, vec2(127.1, 311.7))) * 43758.5453); }
+float noise(vec2 p){ vec2 i = floor(p), f = fract(p); f = f * f * (3. - 2. * f);
+  return mix(mix(hash(i), hash(i + vec2(1., 0.)), f.x), mix(hash(i + vec2(0., 1.)), hash(i + vec2(1., 1.)), f.x), f.y); }
+float fbm(vec2 p){ float v = 0., a = .5; for (int i = 0; i < 4; i++){ v += a * noise(p); p *= 2.03; a *= .5; } return v; }
+float field(vec2 p){ float f = 0.; for (int i = 0; i < ${NB}; i++){ vec4 b = uB[i]; vec2 d = p - b.xy; d.y /= b.w; f += b.z * b.z / (dot(d, d) + 1e-5); } return f; }
+float hgt(float f){ return sqrt(max(0., 1. - 1. / max(f, 1e-3))); }
 void main(){
   vec2 uv = gl_FragCoord.xy / uRes, p = (gl_FragCoord.xy - .5 * uRes) / uRes.y;
-  vec3 top = vec3(.027,.071,.184), bot = vec3(.051,.141,.388);
-  vec3 bg = mix(bot, top, pow(uv.y, .8));
-  float hz = exp(-pow((uv.y - (.02 + uConv * .42)) * 3.0, 2.));
-  bg += vec3(.78,.62,.28) * .22 * hz;
-  // height = sqrt(1 - 1/f): exactly a sphere for a lone blob, a smooth weld where blobs merge
-  float f = field(p), e = 1.5 / uRes.y;
-  float h0 = sqrt(max(0., 1. - 1. / max(f, 1e-3)));
-  float hx = sqrt(max(0., 1. - 1. / max(field(p + vec2(e, 0.)), 1e-3)));
-  float hy = sqrt(max(0., 1. - 1. / max(field(p + vec2(0., e)), 1e-3)));
-  vec2 g = vec2(hx - h0, hy - h0) / e;
-  float body = smoothstep(.96, 1.08, f);
-  vec3 n = normalize(vec3(-g * .075, 1.));
-  vec3 L = normalize(vec3(-.45, .65, .62));
-  float dif = clamp(dot(n, L), 0., 1.), spec = pow(clamp(dot(reflect(-L, n), vec3(0., 0., 1.)), 0., 1.), 28.);
-  vec3 deep = vec3(.42,.29,.10), gold = vec3(.79,.64,.30), light = vec3(.95,.87,.66);
-  vec3 lava = mix(deep, gold, dif) + light * spec * .85;
-  lava = mix(lava, vec3(.05,.10,.27), .18 * (1. - dif));
-  float halo = smoothstep(.28, .96, f) * (1. - body);
-  vec3 col = bg + gold * halo * .16;
-  col = mix(col, lava, body);
-  float gr = fract(sin(dot(gl_FragCoord.xy + fract(uTime * .0001) * 91., vec2(12.9898, 78.233))) * 43758.5453);
-  col += (gr - .5) * .03;
+  float t = uTime * .001;
+  vec2 q = p + vec2(0., t * .012);
+  float shimmer = fbm(q * vec2(2.6, 1.1) + vec2(fbm(q * 1.7 + t * .05), 0.) * .6);
+  vec3 liquid = mix(vec3(.047,.086,.2), vec3(.02,.035,.09), smoothstep(-.1, 1.05, uv.y));
+  vec2 lp = (p - vec2(0., -.72)) * vec2(1.1, 1.9);
+  float lamp = exp(-dot(lp, lp) * 2.4);
+  liquid += vec3(.36,.27,.12) * lamp * (.45 + .45 * (1. - uConv));
+  liquid *= .86 + .28 * shimmer;
+  float f = field(p), e = 1.2 / uRes.y;
+  float h0 = hgt(f), hx = hgt(field(p + vec2(e, 0.))), hy = hgt(field(p + vec2(0., e)));
+  vec3 n = normalize(vec3(-(hx - h0) / e * .055, -(hy - h0) / e * .055, 1.));
+  float body = smoothstep(.985, 1.045, f);
+  float near = clamp(.62 - p.y * .7, 0., 1.);
+  vec3 waxDeep = vec3(.33,.24,.1), waxMid = vec3(.66,.53,.26), waxHot = vec3(.9,.83,.63);
+  vec3 wax = mix(waxDeep, waxMid, smoothstep(0., .75, h0));
+  wax = mix(wax, waxHot, pow(h0, 3.2) * (.18 + .42 * near));
+  float rim = 1. - smoothstep(0., .32, h0);
+  wax = mix(wax, liquid * 1.6 + vec3(.14,.07,.015), rim * .5);
+  vec3 L = normalize(vec3(-.3, .5, .8));
+  wax += vec3(1.,.95,.84) * pow(max(dot(reflect(-L, n), vec3(0., 0., 1.)), 0.), 22.) * .22;
+  wax *= .92 + .16 * fbm(p * 9. + t * .02);
+  float glow = smoothstep(.25, .985, f) * (1. - body);
+  liquid += waxMid * glow * .12;
+  gl_FragColor = vec4(mix(liquid, wax, body), 1.);
+}`;
+const FS_B = `precision highp float;
+uniform sampler2D uTex; uniform vec2 uRes, uJit; uniform float uTime;
+float hash(vec2 p){ return fract(sin(dot(p, vec2(12.9898, 78.233))) * 43758.5453); }
+void main(){
+  vec2 uv = gl_FragCoord.xy / uRes, c = uv - .5;
+  float r2 = dot(c, c);
+  vec2 d = .5 + c * (1. - .035 * r2) + uJit;
+  vec2 ca = c * .0028;
+  vec3 col = vec3(texture2D(uTex, d + ca).r, texture2D(uTex, d).g, texture2D(uTex, d - ca).b);
+  vec3 bl = vec3(0.); vec2 asp = vec2(uRes.y / uRes.x, 1.);
+  for (int i = 0; i < 12; i++){ float a = float(i) * .5236; vec2 o = vec2(cos(a), sin(a)) * asp;
+    bl += max(texture2D(uTex, d + o * .012).rgb - .62, 0.) + max(texture2D(uTex, d + o * .03).rgb - .62, 0.) * .7; }
+  col += bl * .05 * vec3(1., .88, .66);
+  col = clamp(col, 0., 1.);
+  col = col * col * (3. - 2. * col) * .25 + col * .75;
+  col *= .94;
+  col = mix(vec3(dot(col, vec3(.3,.59,.11))), col, .92);
+  col += vec3(.0, .012, .03) * (1. - col);
+  col *= .78 + .22 * smoothstep(.95, .15, length(c * vec2(1.25, 1.)));
+  float ft = floor(uTime / 41.67);
+  float lum = dot(col, vec3(.3,.59,.11));
+  col += ((hash(gl_FragCoord.xy + ft * 17.31) - .5) * .085 + (hash(floor(gl_FragCoord.xy * .5) + ft * 3.7) - .5) * .035) * (1. - lum * .55);
+  col *= 1. + (hash(vec2(ft, 7.)) - .5) * .014;
   gl_FragColor = vec4(col, 1.);
 }`;
-let prog = null, uRes, uTime, uConv, uB;
+let fx = null;
 if (gl) {
-  const sh = (type, src) => { const o = gl.createShader(type); gl.shaderSource(o, src); gl.compileShader(o); return o; };
-  prog = gl.createProgram();
-  gl.attachShader(prog, sh(gl.VERTEX_SHADER, 'attribute vec2 a; void main(){ gl_Position = vec4(a, 0., 1.); }'));
-  gl.attachShader(prog, sh(gl.FRAGMENT_SHADER, FS)); gl.linkProgram(prog); gl.useProgram(prog);
-  gl.bindBuffer(gl.ARRAY_BUFFER, gl.createBuffer());
+  const compile = (vs, fs) => { const pr = gl.createProgram();
+    for (const [type, src] of [[gl.VERTEX_SHADER, vs], [gl.FRAGMENT_SHADER, fs]]) { const s = gl.createShader(type); gl.shaderSource(s, src); gl.compileShader(s); gl.attachShader(pr, s); }
+    gl.linkProgram(pr); return pr; };
+  const A = compile(VS, FS_A), B = compile(VS, FS_B);
+  const buf = gl.createBuffer(); gl.bindBuffer(gl.ARRAY_BUFFER, buf);
   gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1,-1, 1,-1, -1,1, 1,1]), gl.STATIC_DRAW);
-  const loc = gl.getAttribLocation(prog, 'a'); gl.enableVertexAttribArray(loc); gl.vertexAttribPointer(loc, 2, gl.FLOAT, false, 0, 0);
-  uRes = gl.getUniformLocation(prog, 'uRes'); uTime = gl.getUniformLocation(prog, 'uTime');
-  uConv = gl.getUniformLocation(prog, 'uConv'); uB = gl.getUniformLocation(prog, 'uB');
+  const tex = gl.createTexture(); gl.bindTexture(gl.TEXTURE_2D, tex);
+  gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR); gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
+  gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE); gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
+  const fbo = gl.createFramebuffer();
+  const loc = (pr, n) => gl.getUniformLocation(pr, n);
+  fx = {A, B, buf, tex, fbo, lw: 0, lh: 0, aA: gl.getAttribLocation(A, 'a'), aB: gl.getAttribLocation(B, 'a'),
+        a: {res: loc(A, 'uRes'), time: loc(A, 'uTime'), conv: loc(A, 'uConv'), b: loc(A, 'uB')},
+        b: {res: loc(B, 'uRes'), time: loc(B, 'uTime'), jit: loc(B, 'uJit'), tex: loc(B, 'uTex')}};
 }
-let W = 0, H = 0;
+let FW = 0, FH = 0;
 function sizeField(){
-  // the lava is soft-edged, so it renders at reduced resolution and the browser upscales it
-  const k = Math.min(devicePixelRatio || 1, 1.5) * (innerWidth < 700 ? .55 : .5);
-  W = Math.max(2, Math.round(cv.clientWidth * k)); H = Math.max(2, Math.round(cv.clientHeight * k));
-  cv.width = W; cv.height = H; if (gl) gl.viewport(0, 0, W, H);
+  if (!fx) return;
+  const dpr = Math.min(devicePixelRatio || 1, 1.5);
+  FW = Math.max(2, Math.round(fcv.clientWidth * dpr)); FH = Math.max(2, Math.round(fcv.clientHeight * dpr));
+  fcv.width = FW; fcv.height = FH;
+  // the lamp itself renders small and is played back large: the softness is the point
+  fx.lw = Math.max(2, Math.round(Math.min(fcv.clientWidth, vw < 700 ? 380 : 560))); fx.lh = Math.max(2, Math.round(fx.lw * FH / FW));
+  gl.bindTexture(gl.TEXTURE_2D, fx.tex);
+  gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, fx.lw, fx.lh, 0, gl.RGBA, gl.UNSIGNED_BYTE, null);
+  gl.bindFramebuffer(gl.FRAMEBUFFER, fx.fbo);
+  gl.framebufferTexture2D(gl.FRAMEBUFFER, gl.COLOR_ATTACHMENT0, gl.TEXTURE_2D, fx.tex, 0);
+  gl.bindFramebuffer(gl.FRAMEBUFFER, null);
 }
 sizeField();
-// nine drifting blobs on slow Lissajous paths, plus one that follows the pointer
-const blobs = Array.from({length: NB - 1}, (_, i) => ({
-  cx: (i / (NB - 2) - .5) * 1.25, cy: Math.sin(i * 2.1) * .18, ax: .12 + (i % 3) * .05, ay: .1 + (i % 4) * .035,
-  fx: .00007 + i * .000011, fy: .00009 + (i % 5) * .000013, ph: i * 1.7, r: .075 + (i % 4) * .018,
-  ox: 0, oy: 0, x: 0, y: 0}));
+// a lamp: a pooled mass at the bottom, a small one at the top, and wax that rises, stretches and sinks
+const wax = Array.from({length: NB - 3}, (_, i) => ({
+  x: ((i * .618) % 1 - .5) * .9, sway: .04 + (i % 3) * .025, per: 52000 + i * 9100, ph: i * 1.93, r: .052 + (i % 4) * .013, ox: 0, oy: 0}));
 const hand = {x: 0, y: 0, r: 0};
 const ptr = {x: 0, y: 0, active: false, last: 0};
-panel.addEventListener('pointermove', e => { const r = cv.getBoundingClientRect();
+panel.addEventListener('pointermove', e => { const r = fcv.getBoundingClientRect();
   ptr.x = (e.clientX - r.left - r.width / 2) / r.height; ptr.y = -(e.clientY - r.top - r.height / 2) / r.height;
   ptr.active = true; ptr.last = performance.now(); });
 panel.addEventListener('pointerleave', () => { ptr.active = false; });
-const ub = new Float32Array(NB * 3);
+const U = new Float32Array(NB * 4);
 function drawField(t, conv, dt){
-  if (!gl) return;
-  const aspect = cv.clientWidth / Math.max(1, cv.clientHeight);
+  if (!fx) return;
+  const aspect = fcv.clientWidth / Math.max(1, fcv.clientHeight), portrait = aspect < 1, rf = portrait ? .8 : 1;
   const idle = !ptr.active || performance.now() - ptr.last > 2600;
-  const mx = idle ? Math.sin(t * .00019) * aspect * .32 : ptr.x, my = idle ? Math.sin(t * .00027 + 1) * .16 : ptr.y;
+  const mx = idle ? Math.sin(t * .00017) * aspect * .3 : ptr.x, my = idle ? Math.sin(t * .00023 + 1) * .2 : ptr.y;
   const c = inOut(conv), sm = k => 1 - Math.exp(-dt / k);
-  const portrait = aspect < 1, rf = portrait ? .62 : .8, vy = portrait ? 1.9 : 1.15;
-  blobs.forEach((b, i) => {
-    const dx = b.cx * aspect * .8 + Math.sin(t * b.fx + b.ph) * b.ax * aspect, dy = (b.cy + Math.cos(t * b.fy + b.ph) * b.ay) * vy;
-    // near the pointer a blob leans toward it: quick to gather, slow to let go (the soft close)
-    const ddx = mx - dx, ddy = my - dy, w = Math.exp(-(ddx*ddx + ddy*ddy) / .09) * (idle ? .45 : .8);
-    const tx = ddx * w * .55, ty = ddy * w * .55, grow = Math.hypot(tx, ty) > Math.hypot(b.ox, b.oy);
-    b.ox += (tx - b.ox) * sm(grow ? .35 : 1.4); b.oy += (ty - b.oy) * sm(grow ? .35 : 1.4);
-    b.x = lerp(dx + b.ox, 0, c); b.y = lerp(dy + b.oy, 0, c);
-    ub.set([b.x, b.y, lerp(b.r * rf, .062 * rf, c)], i * 3);
+  U.set([0, lerp(-.66, 0, c), lerp(.24, 0, c) * rf, .4], 0);
+  U.set([lerp(.05, 0, c), lerp(.64, 0, c), lerp(.12, 0, c) * rf, .45], 4);
+  wax.forEach((b, i) => {
+    const phase = (t + b.ph * 1e4) / b.per * Math.PI * 2;
+    const y = -.5 + (.5 - .5 * Math.cos(phase));
+    const vy = Math.abs(Math.sin(phase));
+    const x = (b.x + Math.sin(phase * .7 + b.ph) * b.sway) * aspect * (portrait ? .9 : .62);
+    const ddx = mx - x, ddy = my - y, w = Math.exp(-(ddx * ddx + ddy * ddy) / .08) * (idle ? .4 : .75);
+    const tx = ddx * w * .5, ty = ddy * w * .5, grow = Math.hypot(tx, ty) > Math.hypot(b.ox, b.oy);
+    b.ox += (tx - b.ox) * sm(grow ? 450 : 1600); b.oy += (ty - b.oy) * sm(grow ? 450 : 1600);
+    U.set([lerp(x + b.ox, 0, c), lerp(y + b.oy, 0, c), lerp(b.r, .066, c) * rf, lerp(1 + vy * .38, 1, c)], (i + 2) * 4);
   });
-  hand.x += (mx - hand.x) * sm(.18); hand.y += (my - hand.y) * sm(.18);
-  hand.r += ((idle ? .05 : .085) * rf * (1 - c) - hand.r) * sm(.5);
-  ub.set([hand.x, hand.y, hand.r], (NB - 1) * 3);
-  gl.uniform2f(uRes, W, H); gl.uniform1f(uTime, t); gl.uniform1f(uConv, conv); gl.uniform3fv(uB, ub);
+  hand.x += (mx - hand.x) * sm(220); hand.y += (my - hand.y) * sm(220);
+  hand.r += ((idle ? .045 : .075) * rf * (1 - c) - hand.r) * sm(600);
+  U.set([hand.x, hand.y, hand.r, 1], (NB - 1) * 4);
+  gl.bindBuffer(gl.ARRAY_BUFFER, fx.buf);
+  gl.bindFramebuffer(gl.FRAMEBUFFER, fx.fbo); gl.viewport(0, 0, fx.lw, fx.lh);
+  gl.useProgram(fx.A); gl.enableVertexAttribArray(fx.aA); gl.vertexAttribPointer(fx.aA, 2, gl.FLOAT, false, 0, 0);
+  gl.uniform2f(fx.a.res, fx.lw, fx.lh); gl.uniform1f(fx.a.time, t); gl.uniform1f(fx.a.conv, conv); gl.uniform4fv(fx.a.b, U);
+  gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
+  gl.bindFramebuffer(gl.FRAMEBUFFER, null); gl.viewport(0, 0, FW, FH);
+  gl.useProgram(fx.B); gl.enableVertexAttribArray(fx.aB); gl.vertexAttribPointer(fx.aB, 2, gl.FLOAT, false, 0, 0);
+  gl.activeTexture(gl.TEXTURE0); gl.bindTexture(gl.TEXTURE_2D, fx.tex); gl.uniform1i(fx.b.tex, 0);
+  const ft = Math.floor(t / 41.67);
+  gl.uniform2f(fx.b.res, FW, FH); gl.uniform1f(fx.b.time, t);
+  gl.uniform2f(fx.b.jit, Math.sin(ft * 12.9898) * .00035, Math.sin(ft * 78.233) * .00035);   // a whisper of gate weave
   gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
 }
 
-/* ------------------------------------------------ the Instrument */
-const iv = document.getElementById('instView'), ic = document.getElementById('inst');
-const instStage = document.getElementById('capabilities');
-const svgL = document.getElementById('leaders'), tagsEl = document.getElementById('tags'), nowEl = document.getElementById('now');
+/* ------------------------------------------------ Fig. 2, the Instrument */
+const iv = document.getElementById('instView'), ic = document.getElementById('inst'), instStage = document.getElementById('instrument');
+const svgL = document.getElementById('leaders'), tagsEl = document.getElementById('tags'), nowEl = document.getElementById('now'), phaseEl = document.getElementById('phase');
+// bottom (the case) to top (the star); numbering follows the table in Section I
 const PARTS = [
-  ['Outer bezel', 'Sourcing & procurement'],
-  ['Graduated scale', 'Site execution'],
-  ['Faceted plates', 'Supply programmes'],
-  ['Gold meridian', 'Management consultancy'],
-  ['Inner ring', 'Business support'],
-  ['Spokes', 'Compliance & documentation'],
-  ['The star', 'GSSC, single point of accountability'],
+  ['i', 'Case bezel', 'Sourcing & procurement'],
+  ['ii', 'Graduated scale', 'Site execution'],
+  ['iii', 'Enamel plates', 'Supply programmes'],
+  ['iv', 'Gold meridian', 'Management consultancy'],
+  ['v', 'Inner ring', 'Business support'],
+  ['vi', 'Spokes', 'Compliance & documentation'],
+  ['', 'The star', 'GSSC · one point of accountability'],
 ];
 let three = null;
 function buildInstrument(){
   if (!window.THREE) return null;
   const T = THREE;
   const renderer = new T.WebGLRenderer({canvas: ic, antialias: true, alpha: true});
-  const scene = new T.Scene(), cam = new T.PerspectiveCamera(30, 1, .1, 100); cam.position.set(0, 0, 14);
-  scene.add(new T.AmbientLight(0xfff4dc, .55));
-  const key = new T.DirectionalLight(0xfff1d0, .9); key.position.set(-4, 6, 8); scene.add(key);
-  const rim = new T.DirectionalLight(0x8fa6ff, .45); rim.position.set(5, -3, -6); scene.add(rim);
-  const mat = (color, m = .55, r = .34) => new T.MeshStandardMaterial({color, metalness: m, roughness: r, flatShading: true});
-  const NAVY = 0x2a4aa8, GOLD = 0xc8a44d, GOLDL = 0xe6d4a7, IVORY = 0xcfc3a3;
+  renderer.outputEncoding = T.sRGBEncoding; renderer.toneMapping = T.ACESFilmicToneMapping; renderer.toneMappingExposure = 1.05;
+  const scene = new T.Scene(), cam = new T.PerspectiveCamera(28, 1, .1, 200); cam.position.set(0, 0, 15);
+  // a studio for the metal to reflect: a navy room with warm softboxes
+  { const env = new T.Scene(), pm = new T.PMREMGenerator(renderer);
+    env.add(new T.Mesh(new T.SphereGeometry(20, 32, 16), new T.MeshBasicMaterial({color: 0x0a1433, side: T.BackSide})));
+    const box = (w, h, x, y, z, c, i) => { const m = new T.Mesh(new T.PlaneGeometry(w, h), new T.MeshBasicMaterial({color: new T.Color(c).multiplyScalar(i), side: T.DoubleSide})); m.position.set(x, y, z); m.lookAt(0, 0, 0); env.add(m); };
+    box(14, 5, -6, 10, 6, 0xfff0d2, 3.2); box(4, 12, 12, 2, 2, 0xe8d3a0, 1.6); box(10, 3, 0, -9, 7, 0x6f86c8, .9); box(6, 6, -10, -2, -8, 0xffe6b0, 1.2);
+    scene.environment = pm.fromScene(env, .02).texture; }
+  scene.add(new T.AmbientLight(0xffffff, .12));
+  const key = new T.DirectionalLight(0xfff0d0, .8); key.position.set(-5, 8, 9); scene.add(key);
+  const phys = o => new T.MeshPhysicalMaterial(o);
+  const M = {
+    navyMetal: phys({color: 0x1d3478, metalness: .9, roughness: .26, clearcoat: .6, clearcoatRoughness: .2}),
+    gold: phys({color: 0xd4af5c, metalness: 1, roughness: .2}),
+    goldSatin: phys({color: 0xc8a44d, metalness: 1, roughness: .34}),
+    enamel: phys({color: 0xf1e8d2, metalness: 0, roughness: .42, clearcoat: 1, clearcoatRoughness: .08}),
+    ivory: phys({color: 0xe9dfc4, metalness: .05, roughness: .45}),
+  };
   const group = new T.Group(); scene.add(group);
   const parts = [];
   const add = (obj, radius) => { const p = new T.Group(); p.add(obj); group.add(p); parts.push({g: p, radius}); return p; };
-  // 0 bezel
-  add(new T.Mesh(new T.TorusGeometry(3.6, .075, 18, 220), mat(NAVY, .6, .3)), 3.68);
-  // 1 graduated scale
-  { const g = new T.Group(); const tick = new T.BoxGeometry(.022, .17, .04), tickL = new T.BoxGeometry(.03, .3, .05);
-    const mN = mat(IVORY, .2, .5), mG = mat(GOLD, .7, .3);
-    for (let i = 0; i < 120; i++) { const long = i % 10 === 0, m = new T.Mesh(long ? tickL : tick, long ? mG : mN);
-      const a = i / 120 * Math.PI * 2, r = long ? 3.18 : 3.24; m.position.set(Math.cos(a) * r, Math.sin(a) * r, 0); m.rotation.z = a - Math.PI / 2; g.add(m); }
-    g.add(new T.Mesh(new T.TorusGeometry(3.05, .012, 6, 200), mN)); add(g, 3.36); }
-  // 2 faceted plates
-  { const g = new T.Group(), m = mat(IVORY, .35, .55);
-    for (let i = 0; i < 8; i++) { const s = new T.Shape(), a0 = i * Math.PI / 4 + .035, a1 = (i + 1) * Math.PI / 4 - .035;
-      s.absarc(0, 0, 2.92, a0, a1, false); s.absarc(0, 0, 2.56, a1, a0, true);
-      g.add(new T.Mesh(new T.ExtrudeGeometry(s, {depth: .07, bevelEnabled: true, bevelThickness: .015, bevelSize: .015, bevelSegments: 1, curveSegments: 18}), m)); }
-    add(g, 2.95); }
-  // 3 gold meridian
-  add(new T.Mesh(new T.TorusGeometry(2.38, .045, 14, 200), mat(GOLD, .85, .25)), 2.42);
-  // 4 inner ring
-  add(new T.Mesh(new T.TorusGeometry(2.0, .06, 14, 180), mat(NAVY, .6, .32)), 2.06);
-  // 5 spokes
   { const g = new T.Group();
-    for (let i = 0; i < 16; i++) { const long = i % 2 === 0, len = long ? 1.55 : 1.2;
-      const m = new T.Mesh(new T.BoxGeometry(len, long ? .03 : .018, .03), mat(long ? GOLD : IVORY, long ? .8 : .2, .35));
-      const a = i / 16 * Math.PI * 2, r = .42 + len / 2; m.position.set(Math.cos(a) * r, Math.sin(a) * r, 0); m.rotation.z = a; g.add(m); }
-    add(g, 1.97); }
-  // 6 the star: eight faceted points, each split into a light and a dark half, like the mark
-  { const pos = [], col = [], cL = new T.Color(0xefd9a0), cD = new T.Color(0xb38a3e), H = .42, V = .38;
+    g.add(new T.Mesh(new T.TorusGeometry(3.6, .11, 24, 240), M.navyMetal));
+    const base = new T.Mesh(new T.CylinderGeometry(3.62, 3.62, .12, 160, 1), M.navyMetal); base.rotation.x = Math.PI / 2; base.position.z = -.12; g.add(base);
+    add(g, 3.72); }
+  { const g = new T.Group(), t1 = new T.BoxGeometry(.024, .17, .04), t2 = new T.BoxGeometry(.034, .32, .05);
+    for (let i = 0; i < 120; i++) { const L = i % 10 === 0, m = new T.Mesh(L ? t2 : t1, L ? M.gold : M.ivory);
+      const a = i / 120 * Math.PI * 2, r = L ? 3.2 : 3.26; m.position.set(Math.cos(a) * r, Math.sin(a) * r, 0); m.rotation.z = a - Math.PI / 2; g.add(m); }
+    g.add(new T.Mesh(new T.TorusGeometry(3.06, .014, 8, 220), M.goldSatin)); add(g, 3.38); }
+  { const g = new T.Group();
+    for (let i = 0; i < 8; i++) { const s = new T.Shape(), a0 = i * Math.PI / 4 + .03, a1 = (i + 1) * Math.PI / 4 - .03;
+      s.absarc(0, 0, 2.94, a0, a1, false); s.absarc(0, 0, 2.54, a1, a0, true);
+      g.add(new T.Mesh(new T.ExtrudeGeometry(s, {depth: .08, bevelEnabled: true, bevelThickness: .02, bevelSize: .02, bevelSegments: 3, curveSegments: 24}), M.enamel)); }
+    add(g, 2.98); }
+  add(new T.Mesh(new T.TorusGeometry(2.38, .05, 20, 220), M.gold), 2.43);
+  add(new T.Mesh(new T.TorusGeometry(2.0, .07, 20, 200), M.navyMetal), 2.07);
+  { const g = new T.Group();
+    for (let i = 0; i < 16; i++) { const L = i % 2 === 0, len = L ? 1.5 : 1.12;
+      const m = new T.Mesh(new T.BoxGeometry(len, L ? .034 : .02, .034), L ? M.goldSatin : M.ivory);
+      const a = i / 16 * Math.PI * 2 + Math.PI / 16, r = .42 + len / 2; m.position.set(Math.cos(a) * r, Math.sin(a) * r, 0); m.rotation.z = a; g.add(m); }
+    add(g, 1.94); }
+  { const pos = [], col = [], cL = new T.Color(0xf6e2a8), cD = new T.Color(0xb68a36), H = .46, V = .36;
     for (let i = 0; i < 8; i++) {
-      const a = i * Math.PI / 4 + Math.PI / 2, R = i % 2 ? 1.45 : 2.2;
+      const a = i * Math.PI / 4 + Math.PI / 2, R = i % 2 ? 1.42 : 2.16;
       const tip = [Math.cos(a) * R, Math.sin(a) * R, 0];
       const vl = [Math.cos(a - Math.PI / 8) * V, Math.sin(a - Math.PI / 8) * V, 0], vr = [Math.cos(a + Math.PI / 8) * V, Math.sin(a + Math.PI / 8) * V, 0];
-      pos.push(0, 0, H, ...vl, ...tip,   0, 0, H, ...tip, ...vr);
+      pos.push(0, 0, H, ...vl, ...tip, 0, 0, H, ...tip, ...vr);
       for (let k = 0; k < 3; k++) col.push(cD.r, cD.g, cD.b); for (let k = 0; k < 3; k++) col.push(cL.r, cL.g, cL.b);
     }
     const geo = new T.BufferGeometry(); geo.setAttribute('position', new T.Float32BufferAttribute(pos, 3));
     geo.setAttribute('color', new T.Float32BufferAttribute(col, 3)); geo.computeVertexNormals();
-    const m = new T.MeshStandardMaterial({vertexColors: true, metalness: .55, roughness: .3, flatShading: true, side: T.DoubleSide});
-    add(new T.Mesh(geo, m), 2.2); }
-  // labels and leaders
-  svgL.innerHTML = PARTS.map(() => '<path fill="none" stroke="rgba(200,164,77,.55)" stroke-width="1"/>').join('');
-  tagsEl.innerHTML = PARTS.map(([p, c]) => `<div class="tag"><small>${p}</small>${c}</div>`).join('');
-  return {renderer, scene, cam, group, parts, leaders: [...svgL.children], tags: [...tagsEl.children], tilt: {x: 0, y: 0}};
+    add(new T.Mesh(geo, new T.MeshPhysicalMaterial({vertexColors: true, metalness: .92, roughness: .22, flatShading: true, side: T.DoubleSide})), 2.16); }
+  svgL.innerHTML = PARTS.map(() => '<path fill="none" stroke="rgba(200,164,77,.6)" stroke-width="1"/>').join('');
+  tagsEl.innerHTML = PARTS.map(([n, p, c]) => `<div class="tag"><span class="c">${n ? `<em>${n}</em>` : ''}${p}</span><span class="v">${c}</span></div>`).join('');
+  phaseEl.innerHTML = PARTS.map(() => '<i></i>').join('') + '<span>Closed</span>';
+  return {renderer, scene, cam, group, parts, leaders: [...svgL.children], tags: [...tagsEl.children], ticks: [...phaseEl.querySelectorAll('i')],
+          phaseLabel: phaseEl.querySelector('span'), tilt: {x: 0, y: 0}, state: null, V: new T.Vector3()};
 }
 function sizeInst(){
   if (!three) return;
   const w = iv.clientWidth, h = iv.clientHeight;
   three.renderer.setPixelRatio(Math.min(devicePixelRatio || 1, 2)); three.renderer.setSize(w, h, false);
-  three.cam.aspect = w / h; three.cam.updateProjectionMatrix();
-  svgL.setAttribute('viewBox', `0 0 ${w} ${h}`);
+  three.cam.aspect = w / h; three.cam.updateProjectionMatrix(); svgL.setAttribute('viewBox', `0 0 ${w} ${h}`);
 }
 const iptr = {x: 0, y: 0};
 iv.addEventListener('pointermove', e => { const r = iv.getBoundingClientRect(); iptr.x = (e.clientX - r.left) / r.width - .5; iptr.y = (e.clientY - r.top) / r.height - .5; });
 iv.addEventListener('pointerleave', () => { iptr.x = 0; iptr.y = 0; });
-const v3 = () => new THREE.Vector3();
 function drawInstrument(t, q, dt){
   const {renderer, scene, cam, group, parts, leaders, tags} = three;
-  const w = iv.clientWidth, h = iv.clientHeight, narrow = vw <= 820;
-  // PHASES: the pinned scroll is divided into steps. Scroll only chooses the step;
-  // each part then travels there on its own clock with the soft close, strictly
-  // in order, so a fast flick never skips a part and scrolling back rewinds it.
-  const N = parts.length, steps = N + 3;                      // tilt, 7 parts, hold, close
+  const w = iv.clientWidth, h = iv.clientHeight, narrow = vw <= 860, N = parts.length;
+  /* PHASES. Scroll only chooses the phase; each part then travels on its own clock with the soft
+     close, and parts obey the order an exploded drawing needs: they OPEN from the top of the stack
+     down (the star lifts first, so nothing passes through anything) and CLOSE from the bottom up.
+     A fast flick therefore queues the phases instead of skipping them. */
+  const steps = N + 3;                                   // tilt · lift the star..ii · hold · close
   const step = Math.min(steps - 1, Math.floor(q * steps));
-  const closing = step >= N + 2;
+  const closing = step >= N + 1;
   const S = three.state || (three.state = {tilt: 0, v: parts.map(() => 0)});
-  const k = 1 - Math.exp(-dt / 320);
-  S.tilt += ((step >= 1 && !closing ? 1 : closing ? .45 : 0) - S.tilt) * k;
-  for (let i = 0; i < N; i++) {
-    let goal = !closing && step >= i + 1 && S.tilt > .6 ? 1 : 0;
-    if (goal && i > 0 && S.v[i - 1] < .55) goal = S.v[i];           // open in order, top down
-    if (!goal && i < N - 1 && S.v[i + 1] > .45) goal = S.v[i];      // close in reverse order
+  const k = 1 - Math.exp(-dt / 360);
+  S.tilt += ((step >= 1 && !closing ? 1 : closing ? .3 : 0) - S.tilt) * k;
+  const lifted = closing ? 0 : clamp(step - 1, 0, N - 1);   // parts up, counted from the top; the case never lifts
+  for (let i = N - 1; i >= 1; i--) {
+    const fromTop = N - 1 - i;
+    let goal = S.tilt > .7 && fromTop < lifted ? 1 : 0;
+    if (goal && i < N - 1 && S.v[i + 1] < .6) goal = S.v[i];        // wait for the part above to clear
+    if (!goal && i > 1 && S.v[i - 1] > .4) goal = S.v[i];           // wait for the part below to seat
     S.v[i] += (goal - S.v[i]) * k;
   }
   const tilt = ease(S.tilt);
-  let maxE = 0, current = -1;
-  const E = S.v.map((v, i) => { const e = ease(clamp(v)); maxE = Math.max(maxE, e); if (e > .5) current = i; return e; });
-  // cursor tilt settles with the soft close
-  three.tilt.x += (iptr.y * .22 - three.tilt.x) * .05; three.tilt.y += (iptr.x * .3 - three.tilt.y) * .05;
-  group.rotation.x = -1.02 * tilt + three.tilt.x;
-  group.rotation.y = three.tilt.y;
-  const spin = t * .00005 * (1 - maxE * .85);
-  const spread = narrow ? .78 : .95, center = 3;
-  parts.forEach((p, i) => { p.g.position.z = (center - i) * spread * E[i] * 1.0; p.g.rotation.z = spin * (i % 2 ? -1 : 1) * (i === 6 ? 2 : 1); });
-  const sc = narrow ? .8 : 1; group.scale.setScalar(sc * lerp(1, .8, maxE));
-  cam.position.z = lerp(13.5, 16.5, maxE); cam.position.y = lerp(0, -.4, maxE); cam.lookAt(0, 0, 0);
+  three.tilt.x += (iptr.y * .16 - three.tilt.x) * .05; three.tilt.y += (iptr.x * .24 - three.tilt.y) * .05;
+  group.rotation.x = -1.04 * tilt + three.tilt.x; group.rotation.y = three.tilt.y;
+  const E = S.v.map(v => ease(clamp(v)));
+  const spread = narrow ? .8 : .92;
+  let stack = 0;
+  parts.forEach((p, i) => { p.g.position.z = i * spread * E[i]; stack = Math.max(stack, p.g.position.z);
+    p.g.rotation.z = t * .00004 * (i % 2 ? -1 : 1) * (1 - E[i] * .6); });
+  const open = clamp(stack / (spread * (N - 1)));
+  const sc = (narrow ? .56 : 1) * lerp(1, .74, open);
+  group.scale.setScalar(sc);
+  group.position.x = narrow ? 0 : lerp(1.2, .5, open);
+  group.position.y = -stack * .58 * Math.sin(1.04 * tilt) * sc - (narrow ? .9 : .35) * tilt;
+  cam.position.z = lerp(15, 19, open); cam.lookAt(0, 0, 0);
   renderer.render(scene, cam);
+  let cur = -1; for (let i = N - 1; i >= 1; i--) if (E[i] > .5) cur = i;
+  three.ticks.forEach((el, i) => el.classList.toggle('on', i === 0 ? tilt > .5 : E[N - i] > .5));
+  three.phaseLabel.textContent = closing ? (open > .02 ? 'Closing' : 'Closed') : lifted && cur > 0 ? `Open · ${PARTS[cur][1]}` : tilt > .5 ? 'Tilted' : 'Closed';
   if (narrow) {
-    const i = current;
-    nowEl.innerHTML = i >= 0 ? `<small>${PARTS[i][0]}</small>${PARTS[i][1]}` : '';
+    const idx = cur > 0 ? cur : (tilt > .5 && !closing ? 0 : -1);
+    nowEl.innerHTML = idx >= 0 ? `<span class="c">${PARTS[idx][0] ? PARTS[idx][0] + ' · ' : ''}${PARTS[idx][1]}</span><span class="v">${PARTS[idx][2]}</span>` : '';
     return;
   }
-  // leaders from each part's rim to a label column on the right
-  const colX = w * .80, GAP = 38;
-  const pts = parts.map(p => { const rim = v3().set(p.radius, 0, 0); p.g.localToWorld(rim); rim.project(cam);
-    return {x: (rim.x + 1) / 2 * w, y: (1 - rim.y) / 2 * h}; });
+  const colX = w * .74, GAP = 52;
+  const pts = parts.map(p => { const v = three.V.set(p.radius, 0, 0); p.g.localToWorld(v); v.project(cam); return {x: (v.x + 1) / 2 * w, y: (1 - v.y) / 2 * h}; });
   const ys = pts.map(q => q.y), order = ys.map((y, i) => i).sort((a, b) => ys[a] - ys[b]);
   const ty = ys.slice(); let prev = -1e9;
   for (const i of order) { ty[i] = Math.max(ty[i], prev + GAP); prev = ty[i]; }
   parts.forEach((p, i) => {
-    const e = E[i], a = clamp((e - .35) / .65);
+    const a = i === 0 ? clamp((open - .15) / .5) : clamp((E[i] - .35) / .65);
     const {x, y} = pts[i];
-    leaders[i].setAttribute('d', a > 0 ? `M${x + 6},${y} C${x + 60},${y} ${colX - 70},${ty[i]} ${lerp(x + 6, colX - 14, a)},${ty[i]}` : '');
+    leaders[i].setAttribute('d', a > 0 ? `M${x + 8},${y} C${x + 70},${y} ${colX - 80},${ty[i]} ${lerp(x + 8, colX - 16, a)},${ty[i]}` : '');
     leaders[i].setAttribute('stroke-opacity', a);
-    tags[i].style.opacity = a;
-    tags[i].style.transform = `translate(${colX}px, ${ty[i] - 16}px)`;
+    tags[i].style.opacity = a; tags[i].style.transform = `translate(${colX}px, ${ty[i] - 20}px)`;
   });
 }
 
-/* ------------------------------------------------ the loop */
-// Positions are read from the elements themselves, never from window.scrollY:
-// inside some viewers the body, not the window, is the scroller.
-const bar = document.getElementById('bar'), closeEl = document.getElementById('inquire'), topEl = document.getElementById('top');
+/* ------------------------------------------------ the loop: positions are measured from the page */
+const topEl = document.getElementById('top'), roadmap = document.getElementById('roadmap');
+const railCopy = document.getElementById('railCopy'), railIndex = document.getElementById('railIndex');
+const railSecs = [...document.querySelectorAll('[data-rail]')], nightSecs = [...document.querySelectorAll('.night')];
 let last = performance.now();
 function frame(t){
   const dt = Math.min(64, t - last); last = t;
+  if (lenis) lenis.raf(t);
   const scrolled = Math.max(0, -topEl.getBoundingClientRect().top);
-  root.style.setProperty('--h', clamp(scrolled / 140).toFixed(4));          // header, scroll-linked
-  const cr = chartStage.getBoundingClientRect(), span = chartStage.offsetHeight - vh;
-  const p = clamp((-cr.top + vh * .55) / (vh * .95));
-  const conv = clamp((-cr.top - vh * .55) / (span - vh * .55));
-  const ep = ease(p);
-  panel.style.setProperty('--it', lerp(6, 0, ep) + '%'); panel.style.setProperty('--ib', lerp(8, 0, ep) + '%');
-  panel.style.setProperty('--is', lerp(Math.min(72, Math.max(20, vw * .05)), 0, ep) + 'px'); panel.style.setProperty('--ir', lerp(28, 0, ep) + 'px');
-  panel.style.setProperty('--cv', conv.toFixed(4)); panel.style.setProperty('--st', ease(clamp((conv - .72) / .28)).toFixed(4));
-  if (cr.bottom > -50 && cr.top < vh + 50) drawField(t, conv, dt);
-  if (three) {
-    const ir = instStage.getBoundingClientRect();
-    if (ir.bottom > 0 && ir.top < vh) drawInstrument(t, clamp(-ir.top / (instStage.offsetHeight - vh)), dt);
-  }
-  const probe = 36, over = el => { const r = el.getBoundingClientRect(); return r.top <= probe && r.bottom > probe; };
-  bar.classList.toggle('dark', (over(chartStage) && p > .55) || over(instStage) || over(closeEl));
+  root.style.setProperty('--h', clamp(scrolled / 160).toFixed(4));
+  const fr = fieldStage.getBoundingClientRect(), span = fieldStage.offsetHeight - vh;
+  const open = clamp((-fr.top + vh * .6) / vh), conv = clamp((-fr.top - vh * .45) / (span - vh * .45));
+  const eo = ease(open), inset = Math.min(104, Math.max(20, vw * .06));
+  for (const el of [panel, panelLabel]) { el.style.setProperty('--it', lerp(15, 0, eo) + '%'); el.style.setProperty('--is', lerp(inset, 0, eo) + 'px'); }
+  panel.style.setProperty('--ib', lerp(11, 0, eo) + '%');
+  fieldStage.style.setProperty('--open', eo.toFixed(4));
+  panel.style.setProperty('--st', ease(clamp((conv - .7) / .3)).toFixed(4));
+  if (fr.bottom > -40 && fr.top < vh + 40) drawField(t, conv, dt);
+  const ir = instStage.getBoundingClientRect(), inInst = ir.top < vh * .5 && ir.bottom > vh * .5;
+  if (lenis) { lenis.options.lerp = inInst ? .05 : .085; lenis.options.wheelMultiplier = inInst ? .6 : .9; }
+  if (three && ir.bottom > 0 && ir.top < vh) drawInstrument(t, clamp(-ir.top / (instStage.offsetHeight - vh)), dt);
+  const rr = roadmap.getBoundingClientRect(); roadmap.style.setProperty('--rm', ease(clamp((vh * .85 - rr.top) / (vh * .6))).toFixed(4));
+  const probe = 40;
+  body.classList.toggle('on-night', nightSecs.some(el => { const r = el.getBoundingClientRect(); return r.top <= probe && r.bottom > probe; }) || (fr.top <= probe && fr.bottom > probe && open > .6));
+  const cur = railSecs.find(el => { const r = el.getBoundingClientRect(); return r.top <= vh * .5 && r.bottom > vh * .5; });
+  if (cur && railCopy.textContent !== cur.dataset.rail) { railCopy.textContent = cur.dataset.rail; railIndex.textContent = cur.dataset.index; }
   if (!REDUCE) requestAnimationFrame(frame);
 }
+addEventListener('resize', () => { vw = innerWidth; vh = innerHeight; sizeField(); sizeInst(); });
 three = buildInstrument(); sizeInst();
 if (REDUCE) {
-  // a still, fully designed page: the field at rest, the Instrument opened with every label shown
-  panel.style.setProperty('--it', '0%'); panel.style.setProperty('--ib', '0%'); panel.style.setProperty('--is', '0px'); panel.style.setProperty('--ir', '0px');
+  panel.style.setProperty('--it', '0%'); panel.style.setProperty('--ib', '0%'); panel.style.setProperty('--is', '0px');
   drawField(0, 0, 16);
-  if (three) { three.state = {tilt: 1, v: three.parts.map(() => 1)}; drawInstrument(0, .7, 16); }
+  if (three) { three.state = {tilt: 1, v: three.parts.map(() => 1)}; drawInstrument(0, .6, 16); }
 } else requestAnimationFrame(frame);
 })();
 </script>
