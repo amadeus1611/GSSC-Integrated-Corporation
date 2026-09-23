@@ -34,3 +34,11 @@ with descriptor, horizontal with descriptor, wordmark with descriptor.
   stacked lockup; two-line "AI / Systems" with a gold highlight bar and
   gold rule in the horizontal and signature lockups.
 - Colors: ink `#0B1A3F`, slate `#2C3549`, deep `#09101E`, gold `#AE8A47`.
+
+## console/
+
+`console/index.html` is the EXPIRA Console, the client-facing orchestrator,
+published as a Claude artifact. It plans a request, delegates to specialists
+at effort tiers from `orchestrator/POLICY.md` (low = quick, medium = default,
+high = complex), reviews and escalates, firewall-scans client-facing
+answers, and logs each run's tiers to the artifact's `runs` collection.
