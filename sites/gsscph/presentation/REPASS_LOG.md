@@ -65,6 +65,20 @@ beautiful though. Apply the same extra agent qa checker, then coordinates with b
 | `getPointAtLength` runs in the render loop (C7) | Should fix | To the builder: a cached polyline at build time |
 | The diagram is close to the site's Fig. 3 one for one; its distinctness is the walk-through and the captions (C2) | Note | **Kept, deliberately.** Duke asked for "the flowchart thing" itself, so the exhibit is the same and the deck adds the walk-through. Revisit in pass 3 if it reads as a copy |
 
+**The builder's fixes (d1c245c), and the reviewer's re-check**
+- **Clear.** The token and ring are set as SVG attributes and hidden at rest. The caption has room for two
+  lines. The gate pulses once, then settles. Old edges fade smoothly. The geometry is cached. The builder
+  sampled every frame of a build and of the gate build as evidence (`/tmp/claude-0/flow2/`).
+- **New blocker, from the caption fix.** The diagram was scaled by width alone, so it ran about 9 px under
+  the plate's foot on every step.
+- **The fix (f537efa).** The diagram fits its box both ways (`meet`), with overflow hidden. Checked at the foot
+  of all five steps.
+
+**Open for pass 3:** fitting both ways made the diagram about 12% narrower. The lane band no longer spans the
+plate, and the cards' small labels (Client, GSSC, the italic subtitles) are smaller still. Pass 3 (C8, density)
+should resize the plate, for example with a tighter title block, so the diagram gets its full width back.
+
+
 ## Pass 0 · Leaders, better ease (2026-09-24)
 
 **Duke:** "the line connecting animation for the compass needs to have a better iteration, smoother... keep that
