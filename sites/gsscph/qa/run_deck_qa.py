@@ -87,7 +87,7 @@ def main():
         pg.on("pageerror", lambda e: errs.append("pageerror: " + str(e)))
         pg.on("console", lambda m: errs.append("console: " + m.text) if m.type == "error" else None)
         pg.goto(INDEX.as_uri()); pg.wait_for_timeout(8000)
-        steps = int(re.search(r"const STEPS = (\d+)", INDEX.read_text(encoding="utf-8")).group(1))
+        steps = int(pg.evaluate("() => document.documentElement.dataset.steps"))   # the deck's own count
 
         def sample_move(key, target):
             # sample every frame from the key press until the move has landed, plus a quarter second at rest

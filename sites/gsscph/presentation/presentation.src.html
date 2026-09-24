@@ -232,17 +232,17 @@ body{font-family:var(--f-body);color:var(--ink)}
 
   <!-- 1 · cover -->
   <section class="scene" data-scene="0">
-    <p class="t kicker cover-kick" data-in="-1 -.5" data-out=".02 .3">GSSC Integrated Corporation · Company profile · 2026</p>
-    <div class="t cover-title" data-in="-1 -.5" data-out="0 .32"><h1 class="h1">One point of accountability for <em>integrated</em> programmes.</h1></div>
-    <p class="t sub cover-sub" data-in="-1 -.5" data-out=".04 .34">Sourcing · Site execution · Supply · Consultancy · Support</p>
-    <p class="t dek cover-dek" data-in="-1 -.5" data-out=".06 .36">A super-sourcing, management consultancy and business support platform, answering for the programme as a whole.</p>
+    <p class="t kicker cover-kick" data-in="start">GSSC Integrated Corporation · Company profile · 2026</p>
+    <div class="t cover-title" data-in="start"><h1 class="h1">One point of accountability for <em>integrated</em> programmes.</h1></div>
+    <p class="t sub cover-sub" data-in="start">Sourcing · Site execution · Supply · Consultancy · Support</p>
+    <p class="t dek cover-dek" data-in="start">A super-sourcing, management consultancy and business support platform, answering for the programme as a whole.</p>
   </section>
 
   <!-- 2 · six disciplines (the compass opens part by part; the table is its key) -->
   <section class="scene" data-scene="1">
-    <div class="t x cap-head night-t" data-in=".6 1" data-out="9.02 9.3"><div class="chs"><span class="num">I</span><i class="dash"></i><span class="cat">Capabilities</span></div></div>
-    <div class="t x cap-title" data-in=".66 1" data-out="9.02 9.32"><h2 class="h2">Six disciplines under one accountable programme.</h2></div>
-    <div class="t cap-table" data-in=".75 1" data-out="9.04 9.36">
+    <div class="t x cap-head night-t" data-in="0"><div class="chs"><span class="num">I</span><i class="dash"></i><span class="cat">Capabilities</span></div></div>
+    <div class="t x cap-title" data-in="0"><h2 class="h2">Six disciplines under one accountable programme.</h2></div>
+    <div class="t cap-table" data-in="0">
       <table class="reg" id="reg"><thead><tr><th>No.</th><th>Discipline</th><th>What it covers</th></tr></thead><tbody>
         <tr data-part="6"><td class="no">★</td><td class="name">GSSC</td><td class="what">One programme lead, one scoped quotation, one point of accountability.</td></tr>
         <tr data-part="5"><td class="no">VI</td><td class="name">Compliance &amp; documentation</td><td class="what">Quotations, agreements, certificates and notarial instruments to the GSSC standard.</td></tr>
@@ -257,19 +257,19 @@ body{font-family:var(--f-body);color:var(--ink)}
 
   <!-- 3 · the file you receive -->
   <section class="scene" data-scene="2">
-    <div class="t x file-head day-t" data-in="9.55 10" data-out="14.02 14.3"><div class="chs"><span class="num">II</span><i class="dash"></i><span class="cat">Engagement</span></div></div>
-    <div class="t x file-title" data-in="9.6 10" data-out="14.02 14.32"><h2 class="h2">At each gate, one document. Together, one file.</h2></div>
-    <ol class="t gates" id="gates" data-in="9.7 10" data-out="14.04 14.34">{{GATES}}</ol>
-    <div class="t desk-count" data-in="9.7 10" data-out="14.02 14.3"><span class="kicker" style="color:var(--gold-deep)">Fig. 5 · The file you receive</span><i id="deskCount">0 of 5 documents</i></div>
+    <div class="t x file-head day-t" data-in="0"><div class="chs"><span class="num">II</span><i class="dash"></i><span class="cat">Engagement</span></div></div>
+    <div class="t x file-title" data-in="0"><h2 class="h2">At each gate, one document. Together, one file.</h2></div>
+    <ol class="t gates" id="gates" data-in="0">{{GATES}}</ol>
+    <div class="t desk-count" data-in="0"><span class="kicker" style="color:var(--gold-deep)">Fig. 5 · The file you receive</span><i id="deskCount">0 of 5 documents</i></div>
     <div class="desk" id="desk">{{DOCS}}</div>
   </section>
 
   <!-- 4 · economics: the site's model, drawn three ways, live -->
   <section class="scene" data-scene="3">
-    <div class="t x eco-head day-t" data-in="14.55 15" data-out="18.02 18.3"><div class="chs"><span class="num">III</span><i class="dash"></i><span class="cat">Economics</span></div></div>
-    <div class="t x eco-title" data-in="14.6 15" data-out="18.02 18.32"><h2 class="h2">What coordinating it yourself costs.</h2></div>
-    <p class="t eco-dek" data-in="14.66 15" data-out="18.02 18.32">A client who buys each discipline separately also buys the work of holding them together. Move the figures to your programme.</p>
-    <div class="t eco-inputs live" data-in="14.7 15" data-out="18.04 18.34"><div class="panel-plate" style="position:relative">
+    <div class="t x eco-head day-t" data-in="0"><div class="chs"><span class="num">III</span><i class="dash"></i><span class="cat">Economics</span></div></div>
+    <div class="t x eco-title" data-in="0"><h2 class="h2">What coordinating it yourself costs.</h2></div>
+    <p class="t eco-dek" data-in="0">A client who buys each discipline separately also buys the work of holding them together. Move the figures to your programme.</p>
+    <div class="t eco-inputs live" data-in="0"><div class="panel-plate" style="position:relative">
       <div class="plate-h"><span>Exhibit III · Your programme</span><i id="ecoSum"></i></div>
       <div class="ctls">
         <div class="ctl"><label for="eV">Value <output id="oV"></output></label><input id="eV" type="range" min="1" max="50" step="0.5" value="5"></div>
@@ -283,18 +283,18 @@ body{font-family:var(--f-body);color:var(--ink)}
       </div>
       <span class="stamp-il">Illustrative</span>
     </div></div>
-    <div class="t eco-plate" data-in="14.75 15" data-out="18.04 18.36"><div class="panel-plate" style="position:absolute;inset:0">
+    <div class="t eco-plate" data-in="0"><div class="panel-plate" style="position:absolute;inset:0">
       <div class="plate-h"><span>Fig. 6 · The overhead, three ways</span><span class="figtabs"><b id="ft0">6a · Where it goes</b><b id="ft1">6b · What is lifted</b><b id="ft2">6c · How it scales</b></span></div>
       <div class="chart" id="ch0"></div><div class="chart" id="ch1"></div><div class="chart" id="ch2"></div>
     </div></div>
-    <div class="t eco-notes" data-in="17.6 18" data-out="18.04 18.34">{{NOTES}}</div>
+    <div class="t eco-notes" data-in="3">{{NOTES}}</div>
   </section>
 
   <!-- 5 · close -->
   <section class="scene" data-scene="4">
-    <p class="t kicker end-kick" data-in="18.55 19">IV · Inquire</p>
-    <div class="t end-title" data-in="18.6 19"><h2 class="h2">Tell us what needs coordinating.<br>We answer for the whole of it.</h2></div>
-    <p class="t end-contact" data-in="18.7 19"><b>GSSC Integrated Corporation</b>Regus, 3F Festive Walk Mall, Iloilo Business Park, Mandurriao, Iloilo City 5000<br>management@gsscph.com · (033) 339-7472 · +63 928 370 3574</p>
+    <p class="t kicker end-kick" data-in="0">IV · Inquire</p>
+    <div class="t end-title" data-in="0"><h2 class="h2">Tell us what needs coordinating.<br>We answer for the whole of it.</h2></div>
+    <p class="t end-contact" data-in="0"><b>GSSC Integrated Corporation</b>Regus, 3F Festive Walk Mall, Iloilo Business Park, Mandurriao, Iloilo City 5000<br>management@gsscph.com · (033) 339-7472 · +63 928 370 3574</p>
   </section>
 
   <!-- the master's chrome: lockup, section, rule with progress, colophon and folio -->
@@ -385,8 +385,18 @@ function drawGrain(){ if (!gfx) return; gg.uniform2f(gfx.res, 720, 450); filmUni
 /* ------------------------------------------------ the timeline
    Steps are integers. 0 cover · 1 disciplines at rest · 2 tilted · 3..8 one part lifts each · 9 the case ·
    10..14 one document each · 15 economics: where it goes · 16 what is lifted · 17 how it scales · 18 notes · 19 close. Between two steps T glides (a build eases out; a scene change eases in and out, like a camera move). */
-const STEPS = 19, SCENES = [{at: 0, name: 'Cover', where: 'Company profile'}, {at: 1, name: 'Six disciplines', where: 'I · Capabilities'},
-  {at: 10, name: 'The file you receive', where: 'II · Engagement'}, {at: 15, name: 'Economics', where: 'III · Economics'}, {at: 19, name: 'Close', where: 'IV · Inquire'}];
+/* SCENES by length: a scene's first step is where the last one ended, so a scene can be added or grown without
+   renumbering anything after it. Every window in the code below is counted from its own scene's start (S.key).
+   A scene that "closes" undoes what it built before it fades (the compass), and takes longer to leave. */
+const SCENES = [
+  {key: 'cover', len: 1, name: 'Cover', where: 'Company profile'},
+  {key: 'disc', len: 9, name: 'Six disciplines', where: 'I · Capabilities', closes: true},
+  {key: 'file', len: 5, name: 'The file you receive', where: 'II · Engagement'},
+  {key: 'eco', len: 4, name: 'Economics', where: 'III · Economics'},
+  {key: 'close', len: 1, name: 'Close', where: 'IV · Inquire'}];
+const S = {}; { let at = 0; for (const sc of SCENES) { sc.at = at; sc.end = at + sc.len - 1; S[sc.key] = at; at += sc.len; } }
+const STEPS = SCENES[SCENES.length - 1].end;
+root.dataset.steps = STEPS;   // for the QA harness
 const sceneOf = s => { let k = 0; SCENES.forEach((sc, i) => { if (s >= sc.at) k = i; }); return k; };
 let T = 0, from = 0, to = 0, t0 = 0, dur = 1, moving = false;
 const startStep = clamp(parseInt(location.hash.slice(1)) || 0, 0, STEPS);
@@ -396,7 +406,7 @@ function go(target){
   target = clamp(Math.round(target), 0, STEPS); pending = null; if (target === to && moving) return;
   const scMove = sceneOf(target) !== sceneOf(Math.round(T));
   from = T; to = target; t0 = performance.now();
-  const dist = Math.abs(to - from), closes = Math.min(from, to) < 9.5 && Math.max(from, to) > 9.5;
+  const dist = Math.abs(to - from), closes = SCENES.some(sc => sc.closes && Math.min(from, to) < sc.end + .5 && Math.max(from, to) > sc.end + .5);
   // a build is brisk (1.45 s: the part lifts in the first 0.8 s, its line follows); a change of scene is unhurried (3.6 s), and leaving
   // the compass takes longer still (6 s), because it closes completely before anything fades.
   // The timeline runs at an even pace; every piece carries its own soft curve inside its phase.
@@ -408,16 +418,19 @@ function request(target){ target = clamp(target, 0, STEPS); if (moving) { pendin
 const easeMove = p => p;   // even: the softness belongs to each piece, not to the clock
 
 /* ------------------------------------------------ everything is a function of T */
-// leaving the disciplines (9 → 10): lines retract [9, 9.18], the compass closes [9.08, 9.42], the scene fades
-// [9.42, 9.64], the page turns in the rest [9.64, 9.74], the file arrives [9.72, 10]
-const RETRACT9 = [9, 9.18], CLOSE9 = [9.08, 9.42], FADE9 = [9.42, 9.64], PAGE9 = [9.64, 9.74], ARRIVE10 = 9.72;
-const els = [...document.querySelectorAll('[data-in]')].map(el => { let [a, b] = el.dataset.in.split(' ').map(Number);
-  let [c, d] = (el.dataset.out || '99 100').split(' ').map(Number);
-  /* PHASES, never overlapping: in a move, what leaves takes the first 40%, the stage rests for the next 15%, and what
-     arrives takes the last 45%. So a scene has fully gone, and the room has been still, before the next appears.
-     Leaving the disciplines has a phase before that: the lines retract and the compass closes, THEN the scene fades. */
-  if (b > 0) a = b === 10 ? ARRIVE10 : b - .45;
-  if (c < 99) { c = Math.floor(c + .001); [c, d] = c === 9 ? FADE9 : [c, c + .4]; }
+/* PHASES, never overlapping. In a move out of a scene's last step L: what leaves takes [L, L+.40], the stage rests,
+   and what arrives takes [L+.55, L+1]. A scene that closes first: it undoes itself [L, L+.42] (the compass: lines
+   retract [L, L+.18], it closes [L+.08, L+.42]), fades [L+.42, L+.64], the page turns in the rest [L+.64, L+.74], and
+   the next scene arrives [L+.72, L+1]. */
+const LEAVE = sc => sc.closes ? [sc.end + .42, sc.end + .64] : [sc.end, sc.end + .4];
+const ARRIVE = k => k > 0 && SCENES[k - 1].closes ? SCENES[k - 1].end + .72 : SCENES[k].at - .45;   // when scene k starts to arrive
+const D = SCENES[1], RETRACT9 = [D.end, D.end + .18], CLOSE9 = [D.end + .08, D.end + .42], FADE9 = LEAVE(D), PAGE9 = [D.end + .64, D.end + .74];
+// an element arrives on its scene's step data-in (counted from the scene's start; "start": there from the first frame)
+// and leaves with its scene; a build within a scene arrives over the second half of its step
+const els = [...document.querySelectorAll('[data-in]')].map(el => { const k = +el.closest('.scene').dataset.scene, sc = SCENES[k];
+  const rel = el.dataset.in === 'start' ? null : +el.dataset.in;
+  const b = rel === null ? -1 : sc.at + rel, a = rel === null ? -2 : rel === 0 ? ARRIVE(k) : b - .45;
+  const [c, d] = k < SCENES.length - 1 ? LEAVE(sc) : [99, 100];
   return {el, a, b, c, d}; });
 const sseg = (a, b) => SOFT(clamp((T - a) / (b - a)));   // a window, eased: every piece arrives and leaves softly
 const leadEls = [];   // one path and one dot per part; paths use pathLength 1, so drawing is a dash offset of 0..1
@@ -451,13 +464,14 @@ const seg = (a, b) => clamp((T - a) / (b - a));
 // the rest of the step belongs to its line.
 const LIFT_SHARE = .55;
 function splitFrame(){ const T1 = SEQ.tilt - 1, L = SPLIT - 1;
-  if (T < 1) return 0; if (T < 2) return T1 * (T - 1); if (T >= 8) return L;
-  const k = Math.floor(T - 2), u = Math.min(1, (T - 2 - k) / LIFT_SHARE);
+  const t = T - S.disc;   // 0 at rest, 1 tilted, 2..7 one part each, 8 the case
+  if (t < 0) return 0; if (t < 1) return T1 * t; if (t >= 7) return L;
+  const k = Math.floor(t - 1), u = Math.min(1, (t - 1 - k) / LIFT_SHARE);
   return Math.min(L, SEQ.tilt + (k + u) * SEQ.per); }
 // a part lifts over the step before its own: the star over 2→3 … the graduated scale over 7→8; the case rests, lit at 8
 const litOf = p => sseg(s0Of(p) + .72, s0Of(p) + 1);   // the row lights as its line arrives
-const curOf = p => p === 0 ? 9 : 9 - p;
-const s0Of = p => p === 0 ? 8 : 8 - p;   // the step each part's line starts drawing from
+const s0Of = p => S.disc + (p === 0 ? 7 : 7 - p);   // the step each part's line starts drawing from (star 2→3 … the case 8→9)
+const curOf = p => s0Of(p) + 1;
 // row geometry, measured once (static in the stage)
 let rowY = null;
 function measureRows(){ const st = stage.getBoundingClientRect(), s = st.width / 1440;
@@ -467,28 +481,30 @@ function render(now, newFilm){
   // ---- scene furniture
   for (const o of els) { const v = sseg(o.a, o.b) * (1 - sseg(o.c, o.d)); setVar(o.el, '--v', v.toFixed(3)); setVar(o.el, 'visibility', v < .002 ? 'hidden' : 'visible'); }
   // the header's scene name changes in the rest, once the old scene has gone (never while it is still on screen)
-  const fl = Math.floor(T), sc = sceneOf(T - fl >= (fl === 9 ? FADE9[1] + .01 - 9 : .47) ? fl + 1 : fl);
-  const day = sseg(...PAGE9) * (1 - sseg(18.45, 18.75));        // the page turns in the rest between scenes             // the paper rises for the file, and falls for the close
+  const fl = Math.floor(T), lv = SCENES.find(x => x.end === fl), sc = sceneOf(lv && T - fl >= LEAVE(lv)[1] + .01 - fl ? fl + 1 : fl);
+  const C = S.close, E = S.eco, F = S.file;
+  // the paper rises in the rest after the compass closes, and falls in the rest before the close
+  const day = sseg(...PAGE9) * (1 - sseg(C - .55, C - .25));
   setVar(paper, '--paper', day.toFixed(3)); setVar(chrome, '--paper', day.toFixed(3)); stage.classList.toggle('day', day > .5);
   setVar(ruleI, '--prog', (T / STEPS).toFixed(4));
   if (whereEl.textContent !== SCENES[sc].where) { whereEl.textContent = SCENES[sc].where; scnName.textContent = SCENES[sc].name; folio.textContent = `${romans[sc]} / ${romans[SCENES.length - 1]}`; }
   // ---- the lava: free on the cover, gathering into the seal on the way to the compass; back, settled, for the close
-  const conv = T < 1 ? sseg(0, .4) : T > 18 ? 1 - .35 * sseg(18.55, 19) : 1;   // the wax gathers into the seal as the cover leaves
-  const lavaOn = 1 - sseg(.55, .8) + sseg(18.5, 18.8);
+  const conv = T < 1 ? sseg(0, .4) : T > C - 1 ? 1 - .35 * sseg(C - .45, C) : 1;   // the wax gathers into the seal as the cover leaves
+  const lavaOn = 1 - sseg(.55, .8) + sseg(C - .5, C - .2);
   setVar(panelEl, '--lava', clamp(lavaOn).toFixed(3));
   setVar(panelEl, '--st', ease(clamp((conv - .65) / .35)).toFixed(3));
   if (lavaOn > .01 && newFilm) drawField(now, conv, FRAME_MS);
   // ---- the compass: the seal becomes the compass (top-down frame 0 at the seal's place and size), then it moves left
-  const co = sseg(.5, .7) * (1 - sseg(...FADE9)) + sseg(18.55, 18.85);
+  const co = sseg(.5, .7) * (1 - sseg(...FADE9)) + sseg(C - .45, C - .15);
   setVar(compassEl, '--co', co.toFixed(3));
   if (co > .01) {
     let kind = 'split', f = Math.round(splitFrame());
-    if (T > 18) { if (TURN) { kind = 'turn'; if (newFilm) turnF = (turnF + 1) % TURN; f = turnF; } else f = SEQ.tilt - 1; }   // the turntable, once rendered
-    else if (T > 9 && T < 10) f = Math.round(lerp(SPLIT - 1, 0, sseg(...CLOSE9)));   // it closes completely (the parts settle back, star last; it lies flat) before it fades
+    if (T > C - 1) { if (TURN) { kind = 'turn'; if (newFilm) turnF = (turnF + 1) % TURN; f = turnF; } else f = SEQ.tilt - 1; }   // the turntable, once rendered
+    else if (T > D.end && T < D.end + 1) f = Math.round(lerp(SPLIT - 1, 0, sseg(...CLOSE9)));   // it closes completely (the parts settle back, star last; it lies flat) before it fades
     showFrame(kind, f);
-    const grow = sseg(.5, .85), close = sseg(18.55, 19);
-    const size = T > 18 ? lerp(300, 560, close) : lerp(170, PS, grow);
-    const cx = T > 18 ? 720 : lerp(720, 400, sseg(.58, .95)), cy = T > 18 ? lerp(450, 440, close) : lerp(450, 470, grow);
+    const grow = sseg(.5, .85), close = sseg(C - .45, C), atClose = T > C - 1;
+    const size = atClose ? lerp(300, 560, close) : lerp(170, PS, grow);
+    const cx = atClose ? 720 : lerp(720, 400, sseg(.58, .95)), cy = atClose ? lerp(450, 440, close) : lerp(450, 470, grow);
     setVar(print, 'transform', `translate(${(cx - size / 2 + FILM.wx).toFixed(2)}px, ${(cy - size / 2 + FILM.wy).toFixed(2)}px) scale(${(size / PS).toFixed(4)})`);
     if (newFilm) drawGrain();
     /* LEADERS, the website's curves with a better ease. A click has two beats: the part lifts (the first 55%), then its
@@ -518,18 +534,18 @@ function render(now, newFilm){
   // ---- the key lights as each part lifts
   rows.forEach(r => { const p = +r.dataset.part, lit = litOf(p);
     setVar(r, '--lit', lit.toFixed(3)); r.classList.toggle('cur', lit > .5 && Math.round(T) === curOf(p)); });
-  // ---- the file: one document per step, 9..13; the stamp strikes after acceptance settles
-  let got = 0;
-  // the first document arrives with its scene; each later one is a build
-  docs.forEach((d, i) => { const a = sseg(i ? 9.12 + i : ARRIVE10, 10 + i) * (1 - sseg(14, 14.4)); setVar(d, '--a', a.toFixed(3)); if (i === 2) setVar(d, '--stamp', sseg(11.7, 12).toFixed(3)); if (a > .6) got = i + 1; });
+  // ---- the file: one document per step; the first arrives with its scene, each later one is a build; the stamp
+  // strikes after acceptance settles
+  let got = 0; const FK = SCENES.findIndex(x => x.key === 'file'), FL = LEAVE(SCENES[FK]);
+  docs.forEach((d, i) => { const a = sseg(i ? F + i - .88 : ARRIVE(FK), F + i) * (1 - sseg(...FL)); setVar(d, '--a', a.toFixed(3)); if (i === 2) setVar(d, '--stamp', sseg(F + 1.7, F + 2).toFixed(3)); if (a > .6) got = i + 1; });
   gates.forEach((g, i) => { setVar(g, '--lit', (got > i ? 1 : 0).toString()); g.classList.toggle('cur', got - 1 === i); });
   const txt = `${got} of 5 documents`; if (deskCount.textContent !== txt) deskCount.textContent = txt;
   // ---- economics: 6a, 6b, 6c in turn; each grows as it arrives; the tiles count up at the film's cadence
-  if (T > 14.3 && T < 18.5) {
-    const win = [[14.55, 15, 15, 15.4], [15.55, 16, 16, 16.4], [16.55, 17, 99, 100]];   // a chart leaves, the plate rests, the next arrives
+  if (T > E - .7 && T < E + 3.5) {
+    const win = [[E - .45, E, E, E + .4], [E + .55, E + 1, E + 1, E + 1.4], [E + 1.55, E + 2, 99, 100]];   // a chart leaves, the plate rests, the next arrives
     charts.forEach((c, i) => { const [a, b, o1, o2] = win[i], v = sseg(a, b) * (1 - sseg(o1, o2)); setVar(c, '--v', v.toFixed(3)); setVar(c, 'visibility', v < .002 ? 'hidden' : 'visible');
       setVar(c, '--g', sseg(a + .1, b).toFixed(3)); tabs[i].classList.toggle('on', v > .5); });
-    const k = sseg(14.55, 15);
+    const k = sseg(E - .45, E);
     if (newFilm || !moving) { const r = v => k < 1 ? Math.round(v * k / 100) * 100 : v;
       tileTxt(tD, php(r(M_.tD))); tileTxt(tC, php(r(M_.tC))); tileTxt(tS, `${php(r(M_.tD - M_.tC))} · ${(M_.share * 100 * k).toFixed(1)}%`); }
   }
