@@ -601,7 +601,7 @@ html.theming,html.theming *,html.theming *::before,html.theming *::after{transit
 .field .k-orch .lb{font:400 11px var(--f-display);fill:var(--ink)}
 .field .k-conn .lb{font:400 10.5px var(--f-display);fill:var(--ink)}
 .field .k-site .lb,.field .k-more .lb{font-size:9.5px;fill:var(--mute)}
-.dmap .field .lb{stroke:var(--well)}.dmap .field .core{stroke:var(--well)}
+.dmap .field .lb{stroke:var(--well)}
 .field .ln{stroke:var(--line-3);stroke-linecap:round;transition:opacity .35s ease,stroke .35s ease}
 .field .ln.dep{stroke:var(--gold);stroke-dasharray:2 3;opacity:.55}
 .field .lf{stroke:var(--gold);stroke-linecap:round;stroke-dasharray:3 6;opacity:0;transition:opacity .5s ease;animation:flow .9s linear infinite}
@@ -730,6 +730,36 @@ html.calm *,html.calm *::before,html.calm *::after{animation:none!important;tran
 .about .ok{color:var(--ok)}.about .no{color:var(--warn)}
 .credit{margin:18px 0 0;font:italic 400 11.5px/1.55 var(--f-display);color:var(--mute);max-width:56ch}
 @media (max-width:640px){.stg{grid-template-columns:1fr;grid-template-rows:auto minmax(0,1fr)}.stg-n{border-right:0;border-bottom:var(--rule-hair) solid var(--line-2);padding:16px 12px 8px}.stg-n h2{margin-bottom:10px}.stg-n nav{flex-direction:row;overflow-x:auto;scrollbar-width:none}.stg-v{display:none}.stg-p{padding:20px 16px 26px}.frc{grid-template-columns:96px minmax(0,1fr) 40px}.tin{width:150px}.cards.two{grid-template-columns:1fr}}
+
+/* ---------- v16 ---------- */
+/* node tokens: hollow nodes and rims read on either palette */
+:root{--n-hollow:#FFFFFF;--n-rim:rgba(11,26,63,.36);--n-sep:var(--sheet);--n-lab:var(--mute)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--n-hollow:#1F2A40;--n-rim:rgba(237,231,217,.58);--n-lab:#9AA1AE}}
+:root[data-theme="dark"]{--n-hollow:#1F2A40;--n-rim:rgba(237,231,217,.58);--n-lab:#9AA1AE}
+.dmap{--n-sep:var(--well)}.pvmap{--n-sep:var(--sheet)}
+.field .core{fill:var(--c,var(--n-hollow));stroke:var(--n-sep);stroke-width:1.5}
+.field .k-orch .core{fill:var(--ink)}
+.field .k-conn .core{fill:var(--n-hollow);stroke:var(--gold);stroke-width:1.5}
+.field .k-site .core,.field .k-more .core{fill:var(--n-hollow);stroke:var(--n-rim);stroke-width:1.1}
+.field .k-agent.st-wait .core{fill:var(--n-hollow);stroke:var(--c);stroke-width:1.4}
+.field .k-site .lb,.field .k-more .lb{fill:var(--n-lab)}
+.dmap .field .lb{stroke:var(--well)}
+.map .bx{stroke:var(--n-rim)}
+.dmap .bx{fill:var(--n-hollow)}
+/* the name row says it opens a menu */
+.me .mech{width:10px;height:10px;margin-left:auto;flex:none;color:var(--mute);transition:color .3s ease,transform .6s var(--soft-close)}
+.me:hover .mech,.me[aria-expanded="true"] .mech{color:var(--ink)}
+.me[aria-expanded="true"] .mech{transform:rotate(180deg)}
+.menu.acct{width:248px;transform-origin:0 100%}
+.acct-h{display:flex;align-items:center;gap:10px;padding:8px 8px 10px}
+.acct-h b{display:block;font-weight:400;font-size:12.5px;color:var(--ink)}.acct-h small{display:block;font-size:11px;color:var(--mute)}
+.acct-h .av{width:26px;height:26px;font-size:10px}
+.menu.acct .seg{margin:2px 2px 4px}
+.seg2.s3{grid-template-columns:repeat(3,1fr)}
+.sb .age{color:var(--mute)}.sb .age.old{color:var(--warn)}
+.field .k-conn .core{fill:color-mix(in srgb,var(--gold) 16%,var(--n-hollow))}
+.menu .seg button[aria-checked="true"]{box-shadow:inset 0 0 0 var(--rule-hair) var(--gold),0 1px 2px rgba(0,0,0,.12);color:var(--ink)}
+.menu .seg button[aria-checked="true"] svg{color:var(--gold)}
 </style>
 
 <div class="app has-chat" id="app">
@@ -742,7 +772,7 @@ html.calm *,html.calm *::before,html.calm *::after{animation:none!important;tran
     </div>
     <div class="search"><label for="find" class="sr">Search chats</label><input id="find" placeholder="Search chats"></div>
     <div class="recents" id="recents"></div>
-    <div class="foot"><button class="me" id="me" aria-haspopup="menu" aria-expanded="false" data-tip="Settings"><span class="av">DD</span><span class="who">Duke Y. Demayo<small>EXPIRA AI Systems</small></span></button><button class="ib" id="palBtn" style="margin-left:auto" data-tip="Commands  ⌘K" aria-label="Commands"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1"><path d="M5 3a2 2 0 100 4h6a2 2 0 100-4 2 2 0 00-2 2v6a2 2 0 102-2H5a2 2 0 102 2V5a2 2 0 00-2-2z"/></svg></button></div>
+    <div class="foot"><button class="me" id="me" aria-haspopup="menu" aria-expanded="false" aria-controls="acct"><span class="av">DD</span><span class="who">Duke Y. Demayo<small>EXPIRA AI Systems</small></span><svg class="mech" viewBox="0 0 10 10" fill="none" stroke="currentColor" stroke-width="1.1" aria-hidden="true"><path d="M3 4.2L5 2.4 7 4.2M3 5.8L5 7.6 7 5.8"/></svg></button><button class="ib" id="palBtn" style="margin-left:auto" data-tip="Settings  ⌘," aria-label="Settings"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1"><circle cx="8" cy="8" r="2.1"/><path d="M8 1.8l1.1 1.6 1.9-.4.5 1.9 1.8.8-.6 1.8 1.1 1.6-1.6 1.1.2 1.9-1.9.3-.8 1.8-1.8-.7L8 14.2l-1.1-1.6-1.9.4-.5-1.9-1.8-.8.6-1.8L2.2 7l1.6-1.1-.2-1.9 1.9-.3.8-1.8 1.8.7z"/></svg></button></div>
   </nav>
 
   <div class="main" id="main">
@@ -794,19 +824,32 @@ html.calm *,html.calm *::before,html.calm *::after{animation:none!important;tran
   <button role="menuitemradio" data-opt="desks" data-v="off" data-hint="No desks. The fastest answer.">Direct<i class="ck"></i></button>
   <div class="mh cap">Depth</div>
   <div class="seg2" role="radiogroup" aria-label="Depth"><button role="menuitemradio" data-opt="depth" data-v="standard" data-hint="Desks start at their floor.">Standard</button><button role="menuitemradio" data-opt="depth" data-v="deep" data-hint="Research and decision desks start at deep effort.">Deep</button></div>
+  <div class="mh cap">Freshness</div>
+  <div class="seg2 s3" role="radiogroup" aria-label="Freshness"><button role="menuitemradio" data-opt="fresh" data-v="3" data-hint="Prefer sources from the last 90 days.">90 days</button><button role="menuitemradio" data-opt="fresh" data-v="12" data-hint="Prefer sources from the last 12 months.">12 months</button><button role="menuitemradio" data-opt="fresh" data-v="any" data-hint="No preference for recent sources.">Any</button></div>
   <div class="sep"></div>
   <button role="menuitemcheckbox" data-opt="safe" data-hint="Firewall-check every answer and exhibit.">Client-safe<i class="sw"></i></button>
   <button role="menuitemcheckbox" data-opt="web" aria-disabled="true" id="webOpt" data-hint="Checking Parallel Search…">Web research<i class="sw"></i></button>
   <p class="hint" id="optHint"></p>
 </div>
 <div class="stg" id="setMenu" role="dialog" aria-modal="true" aria-labelledby="stgT">
-  <aside class="stg-n"><h2 id="stgT">Settings</h2><nav role="tablist" aria-orientation="vertical" aria-label="Settings sections"><button role="tab" data-tab="general" aria-selected="false"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1"><path d="M2.5 4.5h7M12.5 4.5h1M2.5 11.5h1M6.5 11.5h7"/><circle cx="11" cy="4.5" r="1.5"/><circle cx="5" cy="11.5" r="1.5"/></svg><span>General</span></button><button role="tab" data-tab="appearance" aria-selected="false"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1"><circle cx="8" cy="8" r="5.5"/><path d="M8 2.5v11a5.5 5.5 0 000-11z" fill="currentColor" stroke="none"/></svg><span>Appearance</span></button><button role="tab" data-tab="briefs" aria-selected="false"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1"><path d="M3.5 2.5h9v11h-9zM5.5 5.5h5M5.5 8h5M5.5 10.5h3"/></svg><span>Briefs</span></button><button role="tab" data-tab="map" aria-selected="false"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1"><circle cx="4" cy="8" r="1.8"/><circle cx="11.5" cy="4" r="1.4"/><circle cx="12" cy="11.5" r="1.4"/><path d="M5.6 7.2l4.6-2.5M5.6 8.8l5 2.1"/></svg><span>The map</span></button><button role="tab" data-tab="library" aria-selected="false"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1"><path d="M1.5 4.5a1 1 0 011-1h3.6l1.5 1.5h5.9a1 1 0 011 1v6.5a1 1 0 01-1 1h-11a1 1 0 01-1-1z"/></svg><span>Library</span></button><button role="tab" data-tab="about" aria-selected="false"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1"><circle cx="8" cy="8" r="5.5"/><path d="M8 7.2v4M8 5v.3"/></svg><span>About</span></button></nav><p class="stg-v">EXPIRA Console · v15</p></aside>
+  <aside class="stg-n"><h2 id="stgT">Settings</h2><nav role="tablist" aria-orientation="vertical" aria-label="Settings sections"><button role="tab" data-tab="general" aria-selected="false"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1"><path d="M2.5 4.5h7M12.5 4.5h1M2.5 11.5h1M6.5 11.5h7"/><circle cx="11" cy="4.5" r="1.5"/><circle cx="5" cy="11.5" r="1.5"/></svg><span>General</span></button><button role="tab" data-tab="appearance" aria-selected="false"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1"><circle cx="8" cy="8" r="5.5"/><path d="M8 2.5v11a5.5 5.5 0 000-11z" fill="currentColor" stroke="none"/></svg><span>Appearance</span></button><button role="tab" data-tab="briefs" aria-selected="false"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1"><path d="M3.5 2.5h9v11h-9zM5.5 5.5h5M5.5 8h5M5.5 10.5h3"/></svg><span>Briefs</span></button><button role="tab" data-tab="map" aria-selected="false"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1"><circle cx="4" cy="8" r="1.8"/><circle cx="11.5" cy="4" r="1.4"/><circle cx="12" cy="11.5" r="1.4"/><path d="M5.6 7.2l4.6-2.5M5.6 8.8l5 2.1"/></svg><span>The map</span></button><button role="tab" data-tab="library" aria-selected="false"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1"><path d="M1.5 4.5a1 1 0 011-1h3.6l1.5 1.5h5.9a1 1 0 011 1v6.5a1 1 0 01-1 1h-11a1 1 0 01-1-1z"/></svg><span>Library</span></button><button role="tab" data-tab="about" aria-selected="false"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1"><circle cx="8" cy="8" r="5.5"/><path d="M8 7.2v4M8 5v.3"/></svg><span>About</span></button></nav><p class="stg-v">EXPIRA Console · v16</p></aside>
   <section class="stg-p" id="stgP" role="tabpanel" aria-labelledby="stgT"></section>
   <button class="ib stg-x" id="stgX" aria-label="Close settings" data-tip="Close  Esc"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.1"><path d="M4 4l8 8M12 4l-8 8"/></svg></button>
 </div>
+<div class="menu acct" id="acct" role="menu" aria-label="Account">
+  <div class="acct-h"><span class="av">DD</span><span><b>Duke Y. Demayo</b><small>EXPIRA AI Systems</small></span></div>
+  <div class="seg" role="radiogroup" aria-label="Theme"><button role="radio" data-th="system"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1"><rect x="2" y="3" width="12" height="8.5" rx="1"/><path d="M6 13.5h4"/></svg>System</button><button role="radio" data-th="light"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1"><circle cx="8" cy="8" r="3"/><path d="M8 1.5v1.5M8 13v1.5M1.5 8H3M13 8h1.5M3.4 3.4l1 1M11.6 11.6l1 1M3.4 12.6l1-1M11.6 4.4l1-1"/></svg>Light</button><button role="radio" data-th="dark"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1"><path d="M13 9.5A5.5 5.5 0 116.5 3a4.5 4.5 0 006.5 6.5z"/></svg>Dark</button></div>
+  <div class="sep"></div>
+  <button role="menuitem" data-ac="settings"><svg class="ic" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1"><circle cx="8" cy="8" r="2.1"/><path d="M8 1.8l1.1 1.6 1.9-.4.5 1.9 1.8.8-.6 1.8 1.1 1.6-1.6 1.1.2 1.9-1.9.3-.8 1.8-1.8-.7L8 14.2l-1.1-1.6-1.9.4-.5-1.9-1.8-.8.6-1.8L2.2 7l1.6-1.1-.2-1.9 1.9-.3.8-1.8 1.8.7z"/></svg><span class="t">Settings</span><span class="kb">⌘,</span></button>
+  <button role="menuitem" data-ac="pal"><svg class="ic" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1"><path d="M5 3a2 2 0 100 4h6a2 2 0 100-4 2 2 0 00-2 2v6a2 2 0 102-2H5a2 2 0 102 2V5a2 2 0 00-2-2z"/></svg><span class="t">Commands</span><span class="kb">⌘K</span></button>
+  <button role="menuitem" data-ac="keys"><svg class="ic" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1"><rect x="1.5" y="4" width="13" height="8" rx="1.2"/><path d="M4 6.5h.5M6.5 6.5h.5M9 6.5h.5M11.5 6.5h.5M5 9.5h6"/></svg><span class="t">Keyboard shortcuts</span><span class="kb">?</span></button>
+  <button role="menuitem" data-ac="library"><svg class="ic" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1"><rect x="2" y="3" width="12" height="3" rx=".6"/><path d="M3 6v6.5a1 1 0 001 1h8a1 1 0 001-1V6M6.5 9h3"/></svg><span class="t">Library<small id="archN2"></small></span></button>
+  <div class="sep"></div>
+  <button role="menuitem" data-ac="about"><svg class="ic" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1"><circle cx="8" cy="8" r="5.5"/><path d="M8 7.2v4M8 5v.3"/></svg><span class="t">About EXPIRA</span></button>
+</div>
 <div class="menu ctx" id="ctx" role="menu" aria-label="Actions"></div>
 <div class="veil" id="veil"></div>
-<div class="keys" id="keys" role="dialog" aria-label="Keyboard shortcuts"><div class="cap">Keyboard</div><dl><dt><span class="kb">⌘K</span></dt><dd>Commands</dd><dt><span class="kb">⌥N</span></dt><dd>New chat</dd><dt><span class="kb">⌥L</span></dt><dd>The Dispatch</dd><dt><span class="kb">/</span></dt><dd>Search chats</dd><dt><span class="kb">Enter</span></dt><dd>Send</dd><dt><span class="kb">⇧ Enter</span></dt><dd>New line</dd><dt><span class="kb">Esc</span></dt><dd>Stop or close</dd><dt><span class="kb">?</span></dt><dd>This card</dd></dl></div>
+<div class="keys" id="keys" role="dialog" aria-label="Keyboard shortcuts"><div class="cap">Keyboard</div><dl><dt><span class="kb">⌘K</span></dt><dd>Commands</dd><dt><span class="kb">⌘,</span></dt><dd>Settings</dd><dt><span class="kb">⌥N</span></dt><dd>New chat</dd><dt><span class="kb">⌥L</span></dt><dd>The Dispatch</dd><dt><span class="kb">/</span></dt><dd>Search chats</dd><dt><span class="kb">Enter</span></dt><dd>Send</dd><dt><span class="kb">⇧ Enter</span></dt><dd>New line</dd><dt><span class="kb">Esc</span></dt><dd>Stop or close</dd><dt><span class="kb">?</span></dt><dd>This card</dd></dl></div>
 <div class="pal" id="pal" role="dialog" aria-label="Commands"><label for="palIn" class="sr">Command</label><input id="palIn" placeholder="Type a command…"><ul id="palList"></ul></div>
 <div class="toasts" id="toasts" aria-live="polite"></div>
 <div class="tip" id="tip" role="tooltip"></div>
@@ -989,7 +1032,7 @@ $("#recents").addEventListener("drop",e=>{const t=e.target.closest(".fold,[data-
 const ctx=$("#ctx");let ctxBtn=null;
 function placeMenu(m,anchor,w){const r=anchor.getBoundingClientRect();m.style.left=Math.max(8,Math.min(innerWidth-w-8,r.left))+"px";m.style.top="0px";m.classList.add("open");const hh=m.offsetHeight;let y=r.bottom+4;if(y+hh>innerHeight-8)y=Math.max(8,r.top-hh-4);m.style.top=y+"px"}
 function closeCtx(){ctx.classList.remove("open");if(ctxBtn&&ctxBtn.setAttribute)ctxBtn.setAttribute("aria-expanded","false");ctxBtn=null}
-function chatMenu(id,btn){const c=chats.find(x=>x.id===id);if(!c)return;if(ctx.classList.contains("open")&&ctxBtn===btn){closeCtx();return}closeCtx();menu(false);setMenu(false);closeSheet();ctxBtn=btn;
+function chatMenu(id,btn){const c=chats.find(x=>x.id===id);if(!c)return;if(ctx.classList.contains("open")&&ctxBtn===btn){closeCtx();return}closeCtx();menu(false);setMenu(false);acctMenu(false);closeSheet();ctxBtn=btn;
  ctx.innerHTML=`<div class="mh plain">${esc(c.title)}</div><button data-a="rename">${I.ren}<span class="t">Rename</span><span class="kb">F2</span></button><button data-a="pin">${I.pinI}<span class="t">${c.pinned?"Unpin":"Pin"}</span></button><button data-a="move">${I.mv}<span class="t">Move to folder</span>${CHEV}</button>
  <div class="sub" id="ctxSub">${FOLDERS.filter(f=>f.id!==c.folder).map(f=>`<button data-a="to" data-f="${esc(f.id)}">${I.fold.replace('class="fi"','class="ic"')}<span class="t">${esc(f.name)}</span></button>`).join("")}${c.folder?`<button data-a="to" data-f="">${I.mv}<span class="t">Out of folder</span></button>`:""}<button data-a="tonew">${I.plus.replace("<svg",'<svg class="ic"')}<span class="t">New folder…</span></button></div>
  <div class="sep"></div><button data-a="archive">${I.ar}<span class="t">Archive</span></button><button data-a="delete" class="danger">${I.del}<span class="t">Delete</span></button>`;
@@ -1088,25 +1131,35 @@ function applyTheme(v,soft){if(soft&&!reduce){root.classList.add("theming");clea
 applyTheme(THEME,false);
 let STAB="general";
 function setMenu(o){const m=$("#setMenu"),b=$("#me");o=o??!m.classList.contains("open");
- if(o){if(!m.classList.contains("open")){closeCtx();menu(false);closeSheet();pal(false);keys(false);m.classList.add("open");$("#veil").classList.add("open");stab(STAB);FM.forEach(x=>x.go());setTimeout(()=>m.querySelector('[role=tab][aria-selected="true"]')?.focus({preventScroll:true}),90)}}
+ if(o){if(!m.classList.contains("open")){closeCtx();menu(false);closeSheet();acctMenu(false);pal(false);keys(false);m.classList.add("open");$("#veil").classList.add("open");stab(STAB);FM.forEach(x=>x.go());setTimeout(()=>m.querySelector('[role=tab][aria-selected="true"]')?.focus({preventScroll:true}),90)}}
  else if(m.classList.contains("open")){m.classList.remove("open");$("#veil").classList.remove("open");FM.forEach(x=>{if(x.opt.pv)x.kill()})}
- b.setAttribute("aria-expanded",String(!!o))}
-$("#me").onclick=e=>{e.stopPropagation();setMenu()};$("#stgX").onclick=()=>setMenu(false);
+ }
+$("#stgX").onclick=()=>setMenu(false);
+/* the name row opens a small account menu, upward; a second click closes it */
+function acctMenu(o){const a=$("#acct"),b=$("#me");if(!a)return;o=o??!a.classList.contains("open");
+ if(o){closeCtx();menu(false);closeSheet();const r=b.getBoundingClientRect();a.style.left=Math.max(8,Math.min(innerWidth-256,r.left-4))+"px";a.style.top="0px";a.classList.add("open");a.style.top=Math.max(8,r.top-a.offsetHeight-8)+"px";
+  const n=chats.filter(c=>c.archived).length,l=chats.filter(c=>!c.archived&&!c.example).length;$("#archN2").textContent=`${l} chat${l===1?"":"s"}${n?` · ${n} archived`:""}`;setTimeout(()=>a.querySelector('[aria-checked="true"]')?.focus({preventScroll:true}),60)}
+ else a.classList.remove("open");b.setAttribute("aria-expanded",String(!!o))}
+$("#me").onclick=e=>{e.stopPropagation();acctMenu()};
+$("#acct").addEventListener("click",e=>{const t=e.target.closest("[data-th]");if(t){applyTheme(t.dataset.th,true);return}const b=e.target.closest("[data-ac]");if(!b)return;const k=b.dataset.ac;acctMenu(false);
+ if(k==="settings")setMenu(true);if(k==="pal")setTimeout(()=>pal(true),40);if(k==="keys")setTimeout(()=>keys(true),40);if(k==="library"){STAB="library";setMenu(true)}if(k==="about"){STAB="about";setMenu(true)}});
+$("#acct").addEventListener("keydown",e=>{const it=[...$("#acct").querySelectorAll("button")],i=it.indexOf(document.activeElement);if(e.key==="ArrowDown"){e.preventDefault();it[(i+1)%it.length].focus()}if(e.key==="ArrowUp"){e.preventDefault();it[(i-1+it.length)%it.length].focus()}if(e.key==="Escape"){e.stopPropagation();acctMenu(false);$("#me").focus()}});
+document.addEventListener("pointerdown",e=>{if($("#acct").classList.contains("open")&&!e.target.closest("#acct,#me"))acctMenu(false)});
 const sampleWork=()=>{let best=null;for(const c of chats){if(c.archived)continue;for(const t of c.turns){const w=t.work;if(!w||!(w.steps||[]).length)continue;const sc=(w.steps.length)+((w.map&&w.map.pages||[]).length?20:0);if(!best||sc>best.sc)best={w,sc}}}return best?best.w:EX.turns[1].work};
 const cardHTML=(attrs,pv,name,sub,desc)=>`<button type="button" class="card" role="radio" aria-checked="false" ${attrs}><span class="pv">${pv}</span><span class="nm"><i></i>${name}${sub?`<small>${sub}</small>`:""}</span>${desc?`<span class="ds">${desc}</span>`:""}</button>`;
 const swRow=(k,name,desc)=>`<button type="button" class="srow" role="switch" aria-checked="false" data-sw="${k}"><span class="l"><b>${name}</b><small>${desc}</small></span><span class="sw2"></span></button>`;
 const uiHTML=c=>`<span class="ui ${c}"><i class="s"></i><i class="t"></i><i class="c"></i><i class="k"></i></span>`;
 /* small diagrams for the staffing and map choices, drawn in the page's own tokens */
 const dia=(desks)=>{const o=[18,41];let g=`<circle cx="${o[0]}" cy="${o[1]}" r="6" fill="var(--ink)"/>`;desks.forEach(([x,y,c],i)=>{g=`<line x1="${o[0]}" y1="${o[1]}" x2="${x}" y2="${y}" stroke="var(--line-3)" stroke-width=".8"/>`+g+`<circle cx="${x}" cy="${y}" r="${3.4+(i%3)}" fill="${c}"/>`});return `<svg viewBox="0 0 150 82" preserveAspectRatio="xMidYMid meet">${g}</svg>`};
-const DIA={auto:dia([[70,22,"var(--s1)"],[82,46,"var(--s1)"],[66,66,"var(--s2)"]]),always:dia([[62,14,"var(--s1)"],[84,26,"var(--s1)"],[98,44,"var(--s2)"],[88,62,"var(--s4)"],[64,72,"var(--s5)"],[112,70,"var(--s3)"]]),off:`<svg viewBox="0 0 150 82"><circle cx="18" cy="41" r="6" fill="var(--ink)"/><line x1="26" y1="41" x2="120" y2="41" stroke="var(--gold)" stroke-width=".8" stroke-dasharray="2 3"/><rect x="122" y="35" width="14" height="12" rx="2" fill="none" stroke="var(--line-3)"/></svg>`};
-const THUMB={flow:`<svg viewBox="0 0 150 82"><rect x="8" y="34" width="28" height="14" rx="2" fill="var(--panel)" stroke="var(--line-3)" stroke-width=".6"/>${[12,34,56].map(y=>`<path d="M36 41C50 41 50 ${y+7} 62 ${y+7}" fill="none" stroke="var(--line-3)" stroke-width=".7"/><rect x="62" y="${y}" width="38" height="14" rx="2" fill="var(--panel)" stroke="var(--line-3)" stroke-width=".6"/><path d="M100 ${y+7}C112 ${y+7} 110 41 118 41" fill="none" stroke="var(--line-3)" stroke-width=".7"/>`).join("")}<rect x="118" y="34" width="24" height="14" rx="2" fill="var(--panel)" stroke="var(--gold)" stroke-width=".7"/></svg>`,
- field:`<svg viewBox="0 0 150 82"><g stroke="var(--line-3)" stroke-width=".7"><line x1="30" y1="44" x2="62" y2="20"/><line x1="30" y1="44" x2="70" y2="50"/><line x1="30" y1="44" x2="52" y2="68"/><line x1="70" y1="50" x2="108" y2="40"/><line x1="62" y1="20" x2="108" y2="40"/><line x1="108" y1="40" x2="136" y2="22"/><line x1="108" y1="40" x2="138" y2="56"/><line x1="108" y1="40" x2="124" y2="70"/></g><circle cx="30" cy="44" r="7" fill="var(--ink)"/><circle cx="62" cy="20" r="5" fill="var(--s1)"/><circle cx="70" cy="50" r="6.5" fill="var(--s1)"/><circle cx="52" cy="68" r="4" fill="var(--s4)"/><circle cx="108" cy="40" r="6" fill="var(--panel)" stroke="var(--gold)"/><circle cx="136" cy="22" r="3" fill="var(--panel)" stroke="var(--line-3)"/><circle cx="138" cy="56" r="3.6" fill="var(--panel)" stroke="var(--line-3)"/><circle cx="124" cy="70" r="2.6" fill="var(--panel)" stroke="var(--line-3)"/></svg>`};
+const DIA={auto:dia([[70,22,"var(--s1)"],[82,46,"var(--s1)"],[66,66,"var(--s2)"]]),always:dia([[62,14,"var(--s1)"],[84,26,"var(--s1)"],[98,44,"var(--s2)"],[88,62,"var(--s4)"],[64,72,"var(--s5)"],[112,70,"var(--s3)"]]),off:`<svg viewBox="0 0 150 82"><circle cx="18" cy="41" r="6" fill="var(--ink)"/><line x1="26" y1="41" x2="120" y2="41" stroke="var(--gold)" stroke-width=".8" stroke-dasharray="2 3"/><rect x="122" y="35" width="14" height="12" rx="2" fill="none" stroke="var(--n-rim)"/></svg>`};
+const THUMB={flow:`<svg viewBox="0 0 150 82"><rect x="8" y="34" width="28" height="14" rx="2" fill="var(--n-hollow)" stroke="var(--n-rim)" stroke-width=".6"/>${[12,34,56].map(y=>`<path d="M36 41C50 41 50 ${y+7} 62 ${y+7}" fill="none" stroke="var(--line-3)" stroke-width=".7"/><rect x="62" y="${y}" width="38" height="14" rx="2" fill="var(--n-hollow)" stroke="var(--n-rim)" stroke-width=".6"/><path d="M100 ${y+7}C112 ${y+7} 110 41 118 41" fill="none" stroke="var(--line-3)" stroke-width=".7"/>`).join("")}<rect x="118" y="34" width="24" height="14" rx="2" fill="var(--panel)" stroke="var(--gold)" stroke-width=".7"/></svg>`,
+ field:`<svg viewBox="0 0 150 82"><g stroke="var(--line-3)" stroke-width=".7"><line x1="30" y1="44" x2="62" y2="20"/><line x1="30" y1="44" x2="70" y2="50"/><line x1="30" y1="44" x2="52" y2="68"/><line x1="70" y1="50" x2="108" y2="40"/><line x1="62" y1="20" x2="108" y2="40"/><line x1="108" y1="40" x2="136" y2="22"/><line x1="108" y1="40" x2="138" y2="56"/><line x1="108" y1="40" x2="124" y2="70"/></g><circle cx="30" cy="44" r="7" fill="var(--ink)"/><circle cx="62" cy="20" r="5" fill="var(--s1)"/><circle cx="70" cy="50" r="6.5" fill="var(--s1)"/><circle cx="52" cy="68" r="4" fill="var(--s4)"/><circle cx="108" cy="40" r="6" fill="var(--panel)" stroke="var(--gold)"/><circle cx="136" cy="22" r="3" fill="var(--n-hollow)" stroke="var(--n-rim)"/><circle cx="138" cy="56" r="3.6" fill="var(--n-hollow)" stroke="var(--n-rim)"/><circle cx="124" cy="70" r="2.6" fill="var(--n-hollow)" stroke="var(--n-rim)"/></svg>`};
 const SAMPLE=`<div class="ans"><h3>Recommendation</h3><p>Run it as a <strong>phased programme</strong>: two floors in November, the rest in December once samples are approved.</p></div>`;
 function paneHTML(t){
  if(t==="general")return `<h3>General</h3><p class="lede">How EXPIRA addresses you, and the keys that move you around.</p>
   <div class="grp"><div class="gh"><span><b>Your name</b><small>Used in the greeting on the start page.</small></span><input class="tin" data-name maxlength="24" value="${esc(PREF.name)}" aria-label="Your name" spellcheck="false"></div>
   <div class="pvbox"><span class="cap">Preview</span><p class="gp" id="pvGreet"></p></div></div>
-  <div class="grp"><div class="gh"><span><b>Keyboard</b><small>Everything also lives in the command palette, ⌘K.</small></span></div><dl class="kbl">${[["⌘K","Commands"],["⌥N","New chat"],["⌥L","The Dispatch"],["F2","Rename this chat"],["/","Search chats"],["Esc","Stop the run, or close"],["?","Shortcut sheet"]].map(([k,d])=>`<dt><span class="kb">${k}</span></dt><dd>${d}</dd>`).join("")}</dl></div>`;
+  <div class="grp"><div class="gh"><span><b>Keyboard</b><small>Everything also lives in the command palette, ⌘K.</small></span></div><dl class="kbl">${[["⌘K","Commands"],["⌘,","Settings"],["⌥N","New chat"],["⌥L","The Dispatch"],["F2","Rename this chat"],["/","Search chats"],["Esc","Stop the run, or close"],["?","Shortcut sheet"]].map(([k,d])=>`<dt><span class="kb">${k}</span></dt><dd>${d}</dd>`).join("")}</dl></div>`;
  if(t==="appearance")return `<h3>Appearance</h3><p class="lede">Palette, type and pace. Changes apply as you choose them.</p>
   <div class="grp"><div class="gh"><span><b>Theme</b><small>System follows your device.</small></span></div><div class="cards">
    ${cardHTML('data-th="system"',uiHTML("th-l")+uiHTML("th-d half"),"System")}${cardHTML('data-th="light"',uiHTML("th-l"),"Light")}${cardHTML('data-th="dark"',uiHTML("th-d"),"Dark")}</div></div>
@@ -1123,6 +1176,8 @@ function paneHTML(t){
    ${cardHTML('data-so="desks" data-v="auto"',DIA.auto,"Auto","","Staffs each brief itself")}${cardHTML('data-so="desks" data-v="always"',DIA.always,"Thorough","","Always desks, split generously")}${cardHTML('data-so="desks" data-v="off"',DIA.off,"Direct","","No desks; fastest")}</div></div>
   <div class="grp"><div class="gh"><span><b>Depth</b><small>Where desks start on the effort scale.</small></span></div><div class="cards two">
    ${cardHTML('data-so="depth" data-v="standard"',`<span class="aa">${meter("medium")}</span>`,"Standard","","Each desk starts at its floor")}${cardHTML('data-so="depth" data-v="deep"',`<span class="aa">${meter("high")}</span>`,"Deep","","Research and decision start deep")}</div></div>
+  <div class="grp"><div class="gh"><span><b>Freshness</b><small>How recent web sources should be. Results always come newest first, with today's date in every brief.</small></span></div><div class="cards">
+   ${[["3","90 days",.2],["12","12 months",.55],["any","Any date",1]].map(([v,n,f])=>cardHTML(`data-so="fresh" data-v="${v}"`,`<svg viewBox="0 0 150 82"><line x1="14" y1="50" x2="136" y2="50" stroke="var(--line-3)" stroke-width=".8"/><rect x="${136-122*f}" y="44" width="${122*f}" height="12" rx="2" fill="var(--gold-wash)" stroke="var(--gold)" stroke-width=".7"/>${[0,1,2,3,4,5,6].map(k=>`<circle cx="${20+k*18}" cy="${34-((k*37)%11)}" r="2.4" fill="${20+k*18>=136-122*f?"var(--gold)":"var(--n-rim)"}"/>`).join("")}<text x="136" y="72" text-anchor="end" font-size="8" fill="var(--mute)" font-family="Inter,system-ui">today</text></svg>`,n)).join("")}</div></div>
   ${swRow("safe","Client-safe","Firewall-check every answer and exhibit before it is filed.")}
   ${swRow("web","Web research",WEB.ok?"Research, legal and decision desks can search with Parallel Search.":"Connect Parallel Search in claude.ai to enable.")}`;
  if(t==="map")return `<h3>The map</h3><p class="lede">How each run is drawn: a plate in columns, or a field under gravity.</p>
@@ -1137,10 +1192,10 @@ function paneHTML(t){
   <div class="grp"><div class="gh"><span><b>Archived chats</b><small>Restore one to bring it back to the sidebar.</small></span></div>${A.length?`<ul class="alist">${A.map(c=>`<li><span>${esc(c.title)}<small class="num">${esc(new Date(c.ts||Date.now()).toLocaleDateString("en-PH",{day:"numeric",month:"short"}))}</small></span><button class="ab" data-unarch="${esc(c.id)}">Restore</button><button class="ab danger" data-purge="${esc(c.id)}">Delete</button></li>`).join("")}</ul>`:`<p class="empty2">Nothing archived.</p>`}</div>
   <div class="srow" style="cursor:default"><span class="l"><b>Copy the library</b><small>Every chat, as JSON, to your clipboard.</small></span><button class="btn2" data-export>Copy JSON</button></div>
   <div class="srow" style="cursor:default"><span class="l"><b>Clear the library</b><small>Deletes every chat and folder in this browser. This cannot be undone.</small></span><button class="btn2 danger" data-clear>Clear</button></div>`}
- return `<h3>About</h3><p class="lede">EXPIRA Console, version 15. Built on Claude for EXPIRA AI Systems and GSSC Integrated Corporation.</p>
+ return `<h3>About</h3><p class="lede">EXPIRA Console, version 16. Built on Claude for EXPIRA AI Systems and GSSC Integrated Corporation.</p>
   <dl class="about"><dt>Orchestrator</dt><dd>Opus 5.5 at low effort; plans at the quick tier</dd><dt>Desks</dt><dd>Light effort at the quick tier, considered at the default tier, deep at the complex tier</dd>
   <dt>Claude</dt><dd class="${sample?"ok":"no"}">${sample?"Linked":"Not linked. Open this page in Claude to brief EXPIRA."}</dd><dt>Parallel Search</dt><dd class="${WEB.ok?"ok":"no"}">${WEB.ok?"Connected":"Not connected"}</dd>
-  <dt>Policy</dt><dd>Escalates above PHP 500,000; at most two redos; a firewall on client-facing answers</dd><dt>Storage</dt><dd>Chats in this browser; run summaries in the runs log</dd></dl>
+  <dt>Freshness</dt><dd>Every prompt carries today's date; web results are sorted newest first and anything older than the window is flagged</dd><dt>Policy</dt><dd>Escalates above PHP 500,000; at most two redos; a firewall on client-facing answers</dd><dt>Storage</dt><dd>Chats in this browser; run summaries in the runs log</dd></dl>
   <p class="credit">The field view follows Obsidian's graph forces on a d3-force style integrator. Nodes are born as liquid after Hiroyuki Sato's metaball, as Varun Vachhar explains it.</p>`}
 function syncStg(){const m=$("#setMenu");
  m.querySelectorAll("[data-th]").forEach(b=>b.setAttribute("aria-checked",String(b.dataset.th===THEME)));
@@ -1176,12 +1231,12 @@ $("#setMenu").addEventListener("keydown",e=>{const m=$("#setMenu");
 function archivedMenu(){const A=chats.filter(c=>c.archived);ctxBtn=$("#me");ctx.innerHTML=`<div class="mh cap">Archived chats</div>${A.map(c=>`<button data-arch="${esc(c.id)}"><span class="t">${esc(c.title)}<small>Restore</small></span></button>`).join("")||`<div class="mh plain" style="color:var(--mute)">Nothing archived.</div>`}`;delete ctx.dataset.id;delete ctx.dataset.fid;placeMenu(ctx,$("#me"),224)}
 document.addEventListener("click",e=>{const r=e.target.closest("[data-arch]");if(!r)return;const c=chats.find(x=>x.id===r.dataset.arch);c.archived=false;save();renderRecents();closeCtx();toast("Restored")});
 /* options: desks, depth, client-safe, web; remembered per viewer */
-const OPT=Object.assign({desks:"auto",depth:"standard",safe:true,web:true},(()=>{try{return JSON.parse(localStorage.getItem("expira.opt")||"{}")}catch(e){return {}}})());
+const OPT=Object.assign({desks:"auto",depth:"standard",safe:true,web:true,fresh:"12"},(()=>{try{return JSON.parse(localStorage.getItem("expira.opt")||"{}")}catch(e){return {}}})());
 const saveOpt=()=>{try{localStorage.setItem("expira.opt",JSON.stringify(OPT))}catch(e){}};
 function drawOpt(){$("#optMenu").querySelectorAll("[data-opt]").forEach(b=>{const k=b.dataset.opt;b.setAttribute("aria-checked",k==="safe"?String(OPT.safe):k==="web"?String(!!(OPT.web&&WEB.ok)):String(OPT[k]===b.dataset.v))});
  $("#optSum").textContent=[{auto:"Auto",always:"Thorough",off:"Direct"}[OPT.desks],OPT.depth==="deep"?"Deep":"",OPT.safe?"":"Internal",OPT.web&&WEB.ok?"Web":""].filter(Boolean).join(" · ");
  const n={off:1,auto:2,always:3}[OPT.desks];$("#optBtn").querySelectorAll(".ic i").forEach((i,k)=>i.classList.toggle("on",k<n));readyUpd()}
-function menu(o){const m=$("#optMenu"),b=$("#optBtn");o=o??!m.classList.contains("open");if(o){closeCtx();setMenu(false);closeSheet();hint(null,true);const r=b.getBoundingClientRect(),w=212;m.style.left=Math.max(8,Math.min(innerWidth-w-8,r.right-w))+"px";const hgt=m.offsetHeight;let y=r.top-hgt-8;if(y<8)y=Math.min(innerHeight-hgt-8,r.bottom+8);m.style.top=y+"px";m.classList.add("open");setTimeout(()=>m.querySelector('[aria-checked="true"]')?.focus(),60)}else m.classList.remove("open");b.setAttribute("aria-expanded",o)}
+function menu(o){const m=$("#optMenu"),b=$("#optBtn");o=o??!m.classList.contains("open");if(o){closeCtx();setMenu(false);acctMenu(false);closeSheet();hint(null,true);const r=b.getBoundingClientRect(),w=212;m.style.left=Math.max(8,Math.min(innerWidth-w-8,r.right-w))+"px";const hgt=m.offsetHeight;let y=r.top-hgt-8;if(y<8)y=Math.min(innerHeight-hgt-8,r.bottom+8);m.style.top=y+"px";m.classList.add("open");setTimeout(()=>m.querySelector('[aria-checked="true"]')?.focus(),60)}else m.classList.remove("open");b.setAttribute("aria-expanded",o)}
 $("#optBtn").onclick=e=>{e.stopPropagation();menu()};
 $("#optMenu").addEventListener("click",e=>{const b=e.target.closest("[data-opt]");if(!b||b.getAttribute("aria-disabled")==="true")return;const k=b.dataset.opt;if(k==="safe")OPT.safe=!OPT.safe;else if(k==="web")OPT.web=!OPT.web;else OPT[k]=b.dataset.v;saveOpt();drawOpt();clearTimeout(menu.t);menu.t=setTimeout(()=>{menu(false);$("#optBtn").focus({preventScroll:true})},240)});
 function hint(t,now){const el=$("#optHint");if(t==null){const c=$("#optMenu").querySelector('[data-opt="desks"][aria-checked="true"]');t=c?c.dataset.hint:""}if(el.textContent===t)return;if(now||reduce){el.textContent=t;return}el.classList.add("swap");clearTimeout(el._t);el._t=setTimeout(()=>{el.textContent=t;el.classList.remove("swap")},150)}
@@ -1206,20 +1261,22 @@ addEventListener("keydown",e=>{if(["PageUp","ArrowUp","Home"].includes(e.key)&&d
 $("#jump").onclick=()=>{stick=true;sc.scrollTo({top:1e9,behavior:reduce?"auto":"smooth"})};
 
 /* palette */
-const CMDS=[["Appearance: light","",()=>applyTheme("light",true)],["Appearance: dark","",()=>applyTheme("dark",true)],["Appearance: system","",()=>applyTheme("system",true)],["Settings","",()=>setTimeout(()=>setMenu(true),60)],["Settings: appearance","",()=>{STAB="appearance";setTimeout(()=>setMenu(true),60)}],["Settings: the map","",()=>{STAB="map";setTimeout(()=>setMenu(true),60)}],["Keyboard shortcuts","?",()=>setTimeout(()=>keys(true),30)],["New chat","⌥N",newChat],["Open the Dispatch","⌥L",()=>openLatest()],["Brief options","",()=>{STAB="briefs";setTimeout(()=>setMenu(true),60)}],["Toggle client-safe","",()=>{OPT.safe=!OPT.safe;saveOpt();drawOpt();toast(OPT.safe?"Client-safe on":"Client-safe off")}],["New folder","",()=>newFolder()],["Rename this chat","F2",()=>cur&&renameChat(cur)],["Archive this chat","",()=>cur&&!busy&&archiveChat(cur)],["Delete this chat","",()=>cur&&!busy&&deleteChat(cur)],["Search chats","/",()=>{app.classList.remove("folded");$("#side").classList.add("searching");$("#find").focus()}],["Stop the run","Esc",()=>ctl?.abort()],["Toggle sidebar","",()=>app.classList.toggle("folded")]];
+const CMDS=[["Appearance: light","",()=>applyTheme("light",true)],["Appearance: dark","",()=>applyTheme("dark",true)],["Appearance: system","",()=>applyTheme("system",true)],["Settings","⌘,",()=>setTimeout(()=>setMenu(true),60)],["Settings: appearance","",()=>{STAB="appearance";setTimeout(()=>setMenu(true),60)}],["Settings: the map","",()=>{STAB="map";setTimeout(()=>setMenu(true),60)}],["Keyboard shortcuts","?",()=>setTimeout(()=>keys(true),30)],["New chat","⌥N",newChat],["Open the Dispatch","⌥L",()=>openLatest()],["Brief options","",()=>{STAB="briefs";setTimeout(()=>setMenu(true),60)}],["Toggle client-safe","",()=>{OPT.safe=!OPT.safe;saveOpt();drawOpt();toast(OPT.safe?"Client-safe on":"Client-safe off")}],["New folder","",()=>newFolder()],["Rename this chat","F2",()=>cur&&renameChat(cur)],["Archive this chat","",()=>cur&&!busy&&archiveChat(cur)],["Delete this chat","",()=>cur&&!busy&&deleteChat(cur)],["Search chats","/",()=>{app.classList.remove("folded");$("#side").classList.add("searching");$("#find").focus()}],["Stop the run","Esc",()=>ctl?.abort()],["Toggle sidebar","",()=>app.classList.toggle("folded")]];
 let ps=0;const pal=o=>{$("#pal").classList.toggle("open",o);$("#veil").classList.toggle("open",o);if(o){$("#palIn").value="";ps=0;drawPal();setTimeout(()=>$("#palIn").focus(),30)}};
 function drawPal(){const q=$("#palIn").value.toLowerCase(),L=CMDS.filter(c=>c[0].toLowerCase().includes(q));ps=Math.min(ps,Math.max(0,L.length-1));$("#palList").innerHTML=L.map((c,i)=>`<li class="${i===ps?"on":""}" data-i="${CMDS.indexOf(c)}">${c[0]}${c[1]?`<span class="kb">${c[1]}</span>`:""}</li>`).join("")||`<li class="empty">No command matches.</li>`}
 $("#palIn").addEventListener("input",()=>{ps=0;drawPal()});
 $("#palIn").addEventListener("keydown",e=>{const n=$("#palList").querySelectorAll("[data-i]").length;if(!n)return;if(e.key==="ArrowDown"){ps=(ps+1)%n;drawPal();e.preventDefault()}if(e.key==="ArrowUp"){ps=(ps-1+n)%n;drawPal();e.preventDefault()}if(e.key==="Enter"){const li=$("#palList").children[ps];if(li?.dataset.i){pal(false);CMDS[+li.dataset.i][2]()}}});
 $("#palList").addEventListener("click",e=>{const li=e.target.closest("[data-i]");if(li){pal(false);CMDS[+li.dataset.i][2]()}});
 const keys=o=>{$("#keys").classList.toggle("open",o);$("#veil").classList.toggle("open",o)};
-$("#veil").onclick=()=>{pal(false);keys(false);setMenu(false)};$("#palBtn").onclick=()=>pal(true);
+$("#veil").onclick=()=>{pal(false);keys(false);setMenu(false)};$("#palBtn").onclick=()=>setMenu(true);
 addEventListener("keydown",e=>{const k=e.key.toLowerCase();if(k==="escape"&&$("#sheet").classList.contains("open")){closeSheet();return}
  if((e.metaKey||e.ctrlKey)&&k==="k"){e.preventDefault();pal(!$("#pal").classList.contains("open"))}
  else if(e.altKey&&e.code==="KeyN"){e.preventDefault();newChat()}
  else if(e.altKey&&e.code==="KeyL"){e.preventDefault();openLatest()}
  else if(k==="?"&&!/^(TEXTAREA|INPUT)$/.test(document.activeElement.tagName)){e.preventDefault();keys(!$("#keys").classList.contains("open"))}
  else if(e.key==="F2"&&cur&&!/^(TEXTAREA|INPUT)$/.test(document.activeElement.tagName)){e.preventDefault();renameChat(cur)}
+ else if((e.metaKey||e.ctrlKey)&&e.key===","){e.preventDefault();setMenu(!$("#setMenu").classList.contains("open"))}
+ else if(k==="escape"&&$("#acct").classList.contains("open"))acctMenu(false);
  else if(k==="escape"&&ctx.classList.contains("open"))closeCtx();
  else if(k==="escape"&&$("#setMenu").classList.contains("open"))setMenu(false);
  else if(k==="escape"&&$("#optMenu").classList.contains("open"))menu(false);
@@ -1517,7 +1574,7 @@ const workOf=el=>{const b=el.closest(".bot");return b&&(b._work||cur?.turns[+b.d
 function exList(t){const p=String(t||"").split(/\s*…\s*/).map(x=>x.trim()).filter(x=>x.length>2).slice(0,5);return p.length?`<ol class="ex">${p.map(x=>`<li>${esc(x)}</li>`).join("")}</ol>`:""}
 function sheetHTML(w,id){const S=w.steps||[],M=w.map||{},P=M.pages||[],C=M.calls||[],si=x=>`<div class="si">${x}</div>`;
  const dn=i=>S[i]?`Desk ${ROMAN[i]} · ${ROLE[S[i].role]}${S[i].focus?` · ${esc(S[i].focus)}`:""}`:"";
- const page=p=>`<div class="pg si"><h5>${esc(p.title||hostOf(p.url))}</h5><div class="mt">${p.date?`<span class="num">${esc(p.date)}</span>`:""}${S[p.i]?`<span>${dn(p.i)}</span>`:""}${p.q?`<span>“${esc(p.q)}”</span>`:""}</div>${exList(p.ex)}<a class="go" href="${esc(p.url)}" target="_blank" rel="noopener">Open the page ↗</a></div>`;
+ const page=p=>`<div class="pg si"><h5>${esc(p.title||hostOf(p.url))}</h5><div class="mt">${p.date?`<span class="num">${esc(p.date)}</span>`:""}<span class="age${(ageOf(p.date)??0)>(freshDays()||1e9)?" old":""}">${ageText(ageOf(p.date))}</span>${S[p.i]?`<span>${dn(p.i)}</span>`:""}${p.q?`<span>“${esc(p.q)}”</span>`:""}</div>${exList(p.ex)}<a class="go" href="${esc(p.url)}" target="_blank" rel="noopener">Open the page ↗</a></div>`;
  if(id.startsWith("s:")){const hh=id.slice(2),L=P.filter(p=>hostOf(p.url)===hh);if(!L.length)return "";return si(`<span class="k cap">Source</span><h4>${esc(hh)}</h4><div class="mt"><span>${L.length} page${L.length>1?"s":""} pulled</span><span>via Parallel Search</span></div>`)+L.map(page).join("")}
  if(id.startsWith("u:")){const p=P.find(x=>x.url===id.slice(2));if(!p)return "";return si(`<span class="k cap">Source · ${esc(hostOf(p.url))}</span>`)+page(p).replace('class="pg si"','class="si" style="margin-top:6px"')}
  if(id==="more"){const rest=hostsOf(P).slice(SITES);return si(`<span class="k cap">Sources</span><h4>${rest.length} more site${rest.length>1?"s":""}</h4>`)+si(`<ul class="ql">${rest.map(o=>`<li><span class="num">${o.n}</span><button class="lnk" data-sheet="s:${esc(o.h)}">${esc(o.h)}</button></li>`).join("")}</ul>`)}
@@ -1529,14 +1586,14 @@ function sheetHTML(w,id){const S=w.steps||[],M=w.map||{},P=M.pages||[],C=M.calls
    +(hs.length?si(`<span class="k2 cap">Sites it drew on</span><ul class="ql">${hs.map(o=>`<li><span class="num">${o.n}</span><button class="lnk" data-sheet="s:${esc(o.h)}">${esc(o.h)}</button></li>`).join("")}</ul>`):"")
    +si(`<span class="k2 cap">Notes</span><div class="nt2">${esc(s.out||(s._live?"Writing…":"No notes filed."))}</div>`)}
  return ""}
-function openSheet(w,id,anchor){const sh=$("#sheet");if(!w||!anchor)return;const html=sheetHTML(w,id);if(!html)return;closeCtx();menu(false);setMenu(false);
+function openSheet(w,id,anchor){const sh=$("#sheet");if(!w||!anchor)return;if(sh.classList.contains("open")&&sh._id===id&&sh._w===w){closeSheet();return}acctMenu(false);const html=sheetHTML(w,id);if(!html)return;closeCtx();menu(false);setMenu(false);
  document.querySelectorAll(".map .sel").forEach(x=>x.classList.remove("sel"));if(anchor.closest&&anchor.closest(".map"))anchor.classList.add("sel");
- sh._w=w;sh.style.transition="none";sh.classList.remove("open");$("#sheetB").innerHTML=html;$("#sheetB").scrollTop=0;$("#sheetB").querySelectorAll(".si").forEach((x,i)=>x.style.animationDelay=(.1+i*.06).toFixed(2)+"s");
+ sh._w=w;sh._id=id;sh.style.transition="none";sh.classList.remove("open");$("#sheetB").innerHTML=html;$("#sheetB").scrollTop=0;$("#sheetB").querySelectorAll(".si").forEach((x,i)=>x.style.animationDelay=(.1+i*.06).toFixed(2)+"s");
  const r=anchor.getBoundingClientRect(),sw=Math.min(380,innerWidth-24);sh.style.width=sw+"px";const hh=sh.offsetHeight;
  let x=r.right+12+sw<=innerWidth-12?r.right+12:r.left-12-sw>=12?r.left-12-sw:(innerWidth-sw)/2,y=Math.max(12,Math.min(innerHeight-hh-12,r.top+r.height/2-90));
  sh.style.left=x+"px";sh.style.top=y+"px";sh.style.setProperty("--ox",(r.left+r.width/2-x).toFixed(0)+"px");sh.style.setProperty("--oy",(r.top+r.height/2-y).toFixed(0)+"px");
  void sh.offsetWidth;sh.style.transition="";requestAnimationFrame(()=>sh.classList.add("open"));setTimeout(()=>$("#sheetX").focus({preventScroll:true}),80)}
-function closeSheet(){const sh=$("#sheet");if(!sh||!sh.classList.contains("open"))return;sh.classList.remove("open");document.querySelectorAll(".map .sel").forEach(x=>x.classList.remove("sel"))}
+function closeSheet(){const sh=$("#sheet");if(!sh||!sh.classList.contains("open"))return;sh._id=null;sh.classList.remove("open");document.querySelectorAll(".map .sel").forEach(x=>x.classList.remove("sel"))}
 $("#sheetX").onclick=closeSheet;
 document.addEventListener("pointerdown",e=>{if($("#sheet").classList.contains("open")&&!e.target.closest("#sheet,[data-node],[data-sheet],a[data-src]"))closeSheet()});
 
@@ -1555,14 +1612,21 @@ const WEB_ROLES=new Set(["research","legal","decision"]);
 const MCP_COPY={server_not_connected:"Parallel Search isn't connected. Add it in claude.ai Settings → Connectors.",needs_reauth:"Reconnect Parallel Search in claude.ai Settings → Connectors.",not_in_manifest:"Web research isn't allowed for this page. Allow Parallel Search when asked.",selection_required:"Choose which Parallel Search connector to use when Claude asks.",blocked_by_policy:"Your organisation blocks web research here."};
 async function webInit(){try{WEB.mcp=await window.claude?.use?.("mcp")??null;if(!WEB.mcp)throw 0;const l=await WEB.mcp.listTools(WEB.server);const sv=(l.servers||[]).find(x=>x.server===WEB.server);WEB.ok=!!(sv&&(sv.tools||[]).some(t=>t.name==="web_search"))}catch(e){WEB.ok=false}
  const b=$("#webOpt");if(b){b.setAttribute("aria-disabled",String(!WEB.ok));b.dataset.hint=WEB.ok?"Research, legal and decision desks can search with Parallel Search.":"Connect Parallel Search in claude.ai to enable web research."}drawOpt()}
+const freshDays=()=>({"3":92,"12":366}[OPT.fresh]||0);
+const todayISO=()=>{const d=new Date();return `${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())}`};
+const todayLine=()=>`Today is ${new Date().toLocaleDateString("en-PH",{weekday:"long",day:"numeric",month:"long",year:"numeric"})} (${todayISO()}), Asia/Manila.`;
+const ageOf=d=>{const t=Date.parse(d||"");if(isNaN(t))return null;return Math.max(0,Math.round((Date.now()-t)/864e5))};
+const ageText=a=>a==null?"undated":a<2?"today":a<45?`${a} days old`:a<600?`${Math.round(a/30.4)} months old`:`${(a/365).toFixed(1)} years old`;
 const clip=(t,n)=>{t=String(t||"").replace(/\s+/g," ").trim();return t.length>n?t.slice(0,n)+"…":t};
 function webTools(ctx){/* ctx: {onSearch(queries), onSources(list), onError(code)} */
  const call=async(tool,input,signal)=>{try{const r=await WEB.mcp.callTool(WEB.server,tool,input,{signal,cache:false});return r.payload??r}catch(e){ctx.onError(e&&e.code);throw new Error(MCP_COPY[e&&e.code]||("web "+tool+" failed: "+(e&&e.code||"error")))}};
- const trim=p=>{const rs=(p&&p.results)||[];const out=rs.slice(0,6).map(r=>({url:r.url,title:clip(r.title,120),published:r.publish_date||null,excerpt:clip((r.excerpts||[]).join(" … "),900)}));ctx.onSources(out);return {results:out}};
+ const trim=p=>{const rs=(p&&p.results)||[],win=freshDays();const out=rs.slice(0,8).map(r=>{const a=ageOf(r.publish_date);return {url:r.url,title:clip(r.title,120),published:r.publish_date||null,age_days:a,stale:!!(win&&a!=null&&a>win),excerpt:clip((r.excerpts||[]).join(" … "),900)}})
+   /* newest first; undated after dated; anything outside the window goes last */
+   .sort((x,y)=>(x.stale-y.stale)||((x.age_days??1e6)-(y.age_days??1e6))).slice(0,7);ctx.onSources(out);return {today:todayISO(),order:"newest first",rule:win?`Prefer results with stale:false. stale:true means older than ${OPT.fresh} months; use it only as background and say how old it is.`:"Prefer the newest result when figures differ.",results:out}};
  return [
   {name:"web_search",description:"Search the web for current facts. Returns up to 6 results with url, title, published date and excerpts that usually answer directly. Give one precise objective and 2-3 short keyword queries. Cite the url of any figure you use.",
    inputSchema:{type:"object",properties:{objective:{type:"string",description:"What you are trying to find, specific and atomic"},search_queries:{type:"array",items:{type:"string"},description:"2-3 keyword queries, 3-6 words each"}},required:["objective","search_queries"]},
-   execute:async(inp,{signal})=>{const q=(Array.isArray(inp.search_queries)?inp.search_queries:[inp.search_queries]).map(String).filter(Boolean).slice(0,4);ctx.onSearch(q);return trim(await call("web_search",{objective:String(inp.objective||q.join("; ")).slice(0,400),search_queries:q,session_id:WEB.sid},signal))}},
+   execute:async(inp,{signal})=>{const q=(Array.isArray(inp.search_queries)?inp.search_queries:[inp.search_queries]).map(String).filter(Boolean).slice(0,4);ctx.onSearch(q);return trim(await call("web_search",{objective:(String(inp.objective||q.join("; ")).slice(0,360)+(freshDays()?` Prefer sources published in the last ${OPT.fresh} months; today is ${todayISO()}.`:` Today is ${todayISO()}.`)),search_queries:q,session_id:WEB.sid},signal))}},
   {name:"web_fetch",description:"Read specific pages when search excerpts are not enough (exact wording, full tables). Pass up to 3 urls and an objective. Returns focused excerpts per page.",
    inputSchema:{type:"object",properties:{urls:{type:"array",items:{type:"string"}},objective:{type:"string"}},required:["urls","objective"]},
    execute:async(inp,{signal})=>{const u=(Array.isArray(inp.urls)?inp.urls:[inp.urls]).map(String).filter(x=>/^https?:\/\//.test(x)).slice(0,3);if(!u.length)throw new Error("Give at least one http(s) url.");ctx.onSearch(u.map(x=>(x.match(/^https?:\/\/([^/]+)/)||[])[1]||x),true);return trim(await call("web_fetch",{urls:u,objective:String(inp.objective||"").slice(0,200),session_id:WEB.sid},signal))}}]}
@@ -1630,6 +1694,7 @@ async function send(q){
   else{P("plan","on");let rawN=0;const dps=[dlb.querySelector("p")];
    const paint=(th,partial)=>{th.forEach((t,i)=>{let el=dps[i];if(!el){el=document.createElement("p");dlb.append(el);dps[i]=el}if(el.textContent!==t)el.textContent=t;el.classList.toggle("typing",!!partial&&i===th.length-1)})};
    plan=await sample.json(`You are the EXPIRA orchestrator (EXPIRA AI Systems, sister company of GSSC Integrated Corporation, Iloilo, Philippines). Think briefly, then staff this brief.
+${todayLine()} When the brief depends on current facts (prices, rates, rules, news), plan for the newest figures.
 Staffing is your decision, not a fixed roster. Commission as many desks as the work truly needs, from 0 to 8, in any mix of roles, and several desks of one role when the work splits cleanly: for example two research desks on different sub-questions, or two legal desks on different documents. Never give two desks the same work. ${thorough?"The user wants specialists: staff at least two desks and split the work generously.":"Small talk, simple facts or quick edits need no desk."} If the user asks for a particular staffing, follow it within these limits.
 Roles and effort: research (medium or high; floor medium), finance (high), legal (high), decision (medium or high; floor medium), builder (medium). Start each desk at its floor; use high for research or decision only when the amount exceeds PHP 500,000, sources may conflict, or there is legal exposure.
 ${webOn?"Research, legal and decision desks can search the web through Parallel Search; set web true where current, local or checkable facts matter.":"There is no web access in this run; set web false."}
@@ -1650,7 +1715,7 @@ ${history?`Conversation so far:\n${history}\n\n`:""}New message: ${q}`,{modelTie
    P("desks","on");const by={};steps.forEach(s=>by[s.role]=(by[s.role]||0)+1);
    F(`Staffed <em>${words(steps.length).toLowerCase()} desk${steps.length>1?"s":""}</em>`,`Staffed ${words(steps.length).toLowerCase()} desk${steps.length>1?"s":""}: ${Object.entries(by).map(([r,n])=>`${n>1?words(n).toLowerCase()+" ":""}${ROLE[r].toLowerCase()}`).join(", ")}.`);
    if(steps.some(s=>s.web))F(null,"Web research is on for the desks that need it.");
-   const brief=(s,i)=>`${ROSTER[s.role].brief}\n${history?`Conversation so far:\n${history}\n\n`:""}Request: ${q}\nYour desk: ${ROLE[s.role]}${s.focus?`, focused on ${s.focus}`:""}.\nYour task: ${s.task}\n${steps.length>1?`Other desks are covering: ${steps.filter((_,j)=>j!==i).map(x=>`${x.focus||x.task} (${x.role})`).join("; ")}. Do not duplicate their work.\n`:""}${s.after.filter(n=>outs[n-1]).map(n=>`Input from desk ${ROMAN[n-1]} (${steps[n-1].role}):\n${outs[n-1].slice(0,3000)}`).join("\n\n")}${s.feedback?`\nA reviewer returned your last attempt: ${s.feedback}. Fix that.`:""}${s.web?"\nYou can search the web with web_search (and web_fetch for a specific page). Use it for anything current, local or checkable; at most 3 searches. Put the source url in brackets after each figure you take from the web.":""}\nPlain text, under 220 words. Give figures with units and name sources where you can. End with: CONFIDENCE: high|medium|low`;
+   const brief=(s,i)=>`${ROSTER[s.role].brief}\n${todayLine()}\n${history?`Conversation so far:\n${history}\n\n`:""}Request: ${q}\nYour desk: ${ROLE[s.role]}${s.focus?`, focused on ${s.focus}`:""}.\nYour task: ${s.task}\n${steps.length>1?`Other desks are covering: ${steps.filter((_,j)=>j!==i).map(x=>`${x.focus||x.task} (${x.role})`).join("; ")}. Do not duplicate their work.\n`:""}${s.after.filter(n=>outs[n-1]).map(n=>`Input from desk ${ROMAN[n-1]} (${steps[n-1].role}):\n${outs[n-1].slice(0,3000)}`).join("\n\n")}${s.feedback?`\nA reviewer returned your last attempt: ${s.feedback}. Fix that.`:""}${s.web?"\nYou can search the web with web_search (and web_fetch for a specific page). Use it for anything current, local or checkable; at most 3 searches. Put the source url in brackets after each figure you take from the web, with its date, e.g. [url, Aug 2026]. Results come newest first: prefer the newest figure; put the current year in a query when timing matters; if the newest source you find is old, say so.":""}\nPlain text, under 220 words. Give figures with units and name sources where you can. End with: CONFIDENCE: high|medium|low`;
    const runOne=async i=>{const s=steps[i],key="d"+i,stE=$("#ds"+i),out=$("#dn"+i);let len=0;s._t0=performance.now();s._live=true;think[key]=1;mapSync();
     stE.className="st live";swap(stE,s.redo?"Deepening":ROSTER[s.role].verb);s.searches=s.searches||0;s.srcN=s.srcN||0;
     const tools=s.web&&webOn?webTools({onSearch:(qs,fetch)=>{s.searches++;s._web=performance.now();s._lq=qs[0];work.map.calls.push({t:Math.round(now()),i,q:qs.slice(0,4).map(x=>clip(x,90)),fetch:!!fetch});pend[key]=(pend[key]||0)+30;
@@ -1667,7 +1732,7 @@ ${history?`Conversation so far:\n${history}\n\n`:""}New message: ${q}`,{modelTie
    for(let round=0;round<=2;round++){
     const pend2=steps.map((_,i)=>i).filter(i=>steps[i].v!=="pass");if(!pend2.length)break;
     think.O=1;work._o=true;mapSync();pend2.forEach(i=>{$("#ds"+i).className="st live";swap($("#ds"+i),"In review")});
-    const rv=await sample.json(`You are the EXPIRA reviewer. Check each output answers its task, states sources or assumptions, and has no arithmetic or logic errors.\nReply with only JSON: [{"step": number, "verdict": "pass"|"fail", "reason": string (under 14 words)}]\n\n${pend2.map(i=>`Step ${i+1} (${steps[i].role}${steps[i].focus?", "+steps[i].focus:""}) task: ${steps[i].task}\n${(outs[i]||"").slice(0,2500)}`).join("\n\n---\n\n")}`,{modelTier:"default",cache:false,signal:ctl.signal});
+    const rv=await sample.json(`You are the EXPIRA reviewer. ${todayLine()} Check each output answers its task, states sources or assumptions, and has no arithmetic or logic errors. Dates up to today are not in the future.\nReply with only JSON: [{"step": number, "verdict": "pass"|"fail", "reason": string (under 14 words)}]\n\n${pend2.map(i=>`Step ${i+1} (${steps[i].role}${steps[i].focus?", "+steps[i].focus:""}) task: ${steps[i].task}\n${(outs[i]||"").slice(0,2500)}`).join("\n\n---\n\n")}`,{modelTier:"default",cache:false,signal:ctl.signal});
     think.O=0;work._o=false;const fail=[];for(const r of Array.isArray(rv)?rv:[]){const i=Number(r.step)-1;if(!steps[i])continue;steps[i].v=r.verdict==="fail"?"fail":"pass";steps[i].feedback=r.reason;if(steps[i].v==="fail"){fail.push(i);F(`Returned desk ${ROMAN[i]}`,`Returned desk ${ROMAN[i]}: ${esc(r.reason||"it did not answer its task")}.`)}}
     pend2.forEach(i=>{if(!steps[i].v)steps[i].v="pass"});
     steps.forEach((s,i)=>{const e=$("#ds"+i);e.className="st "+s.v;swap(e,s.v==="pass"?(s.redo?"Passed, deepened":"Passed"):"Returned")});mapSync();
@@ -1681,6 +1746,7 @@ ${history?`Conversation so far:\n${history}\n\n`:""}New message: ${q}`,{modelTie
   } else if(!direct){P("desks","skip");P("review","skip");dropMap();F("Answered directly","No desk needed; answering directly.")}
   P("answer","on");think.A=1;
   const input=`You are EXPIRA, the assistant of EXPIRA AI Systems (sister company of GSSC Integrated Corporation, Iloilo, Philippines). Answer the user's latest message.
+${todayLine()} Where desks give differing figures, use the most recent and give its date for anything time-sensitive.
 Style: precise, calm, editorial. Lead with the answer. Use "### " headings, "- " bullets and "> " for one key takeaway when they help. Keep it as short as the question allows. Key figures, charts and comparison tables are added below your answer as exhibits, so do not draw charts or repeat long tables.
 ${safe?"CLIENT-SAFE: never include supplier names or contacts, supplier costs or cost basis, margins, markup, bank details, facility locations or internal worksheets.":""}
 ${history?`Conversation so far:\n${history}\n\n`:""}${steps.length?`Desk notes:\n${steps.map((s,i)=>`[${s.role}${s.focus?", "+s.focus:""}, ${s.tier} effort]\n${(outs[i]||"").slice(0,3000)}`).join("\n\n")}\n\n`:""}Latest message: ${q}`;
@@ -1689,7 +1755,7 @@ ${history?`Conversation so far:\n${history}\n\n`:""}${steps.length?`Desk notes:\
   cancelAnimationFrame(sRaf);sRaf=0;aText=fin.text;ans.innerHTML=md(fin.text);think.A=0;P("answer","done");F(null,`Composed the answer: about ${ft(tok(fin.text))} tokens.`);
   let ex=null;const PG=work.map.pages;
   if(steps.length||/\d/.test(fin.text)){P("exhibits","on");think.O=1;work._o=true;mapSync();
-   try{ex=await sample.json(`You set the exhibits under an EXPIRA answer: key figures, charts, one comparison table and sources, in the manner of a research journal.
+   try{ex=await sample.json(`You set the exhibits under an EXPIRA answer: key figures, charts, one comparison table and sources, in the manner of a research journal. ${todayLine()} Put each source's date in its note.
 Use ONLY figures and facts present in the notes or the answer below; never invent or estimate new numbers. Omit anything that would not help. If nothing numeric exists, return empty lists.
 Reply with only JSON:
 {"facts":[{"label": string (2-4 words), "value": string (e.g. "PHP 952,560" or "5–7 weeks"), "note": string (optional, under 8 words)}] (0-4 items),
@@ -1697,7 +1763,7 @@ Reply with only JSON:
  "matrix": {"title": string,"columns":[strings],"rows":[{"name": string,"cells":[strings, numbers, or integer ratings 0-5]}],"note": string} or null,
  "sources":[{"title": string,"url": string (only if given in the notes),"note": string}] (0-6 items)}
 ${safe?"CLIENT-SAFE: no supplier names, supplier costs, margins or internal figures.":""}
-${PG.length?`Web sources the desks consulted (use these urls in "sources"; list only ones the notes or answer rely on):\n${PG.slice(0,14).map(x=>`- ${x.title} — ${x.url}${x.date?` (${x.date})`:""}`).join("\n")}\n\n`:""}Answer:\n${fin.text.slice(0,5000)}\n\nNotes:\n${steps.map((s,i)=>`[${s.role}]\n${(outs[i]||"").slice(0,2500)}`).join("\n\n")}`,{modelTier:"default",cache:false,signal:ctl.signal})}catch(e){if(e&&e.code==="cancelled")throw e;ex=null}
+${PG.length?`Web sources the desks consulted, newest first (use these urls in "sources"; list only ones the notes or answer rely on):\n${[...PG].sort((a,b)=>(ageOf(a.date)??1e6)-(ageOf(b.date)??1e6)).slice(0,14).map(x=>`- ${x.title} — ${x.url}${x.date?` (${x.date})`:" (undated)"}`).join("\n")}\n\n`:""}Answer:\n${fin.text.slice(0,5000)}\n\nNotes:\n${steps.map((s,i)=>`[${s.role}]\n${(outs[i]||"").slice(0,2500)}`).join("\n\n")}`,{modelTier:"default",cache:false,signal:ctl.signal})}catch(e){if(e&&e.code==="cancelled")throw e;ex=null}
    think.O=0;work._o=false;mapSync();const hx=exhibitsHTML(ex,true);if(hx){exw.innerHTML=hx;countUp(exw);follow();const n=(ex.facts||[]).length,c=(ex.charts||[]).length;F("Set the exhibits",`Set the exhibits: ${[n?`${words(n).toLowerCase()} figure${n>1?"s":""}`:"",c?`${words(c).toLowerCase()} chart${c>1?"s":""}`:"",ex.matrix?"a comparison":"",(ex.sources||[]).length?"sources":""].filter(Boolean).join(", ")}.`)}else ex=null;P("exhibits","done")}
   else P("exhibits","skip");
   if(safe){P("firewall","on");think.O=1;work._o=true;mapSync();
