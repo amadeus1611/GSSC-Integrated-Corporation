@@ -73,6 +73,13 @@ in this repository.
   system across sessions; keep it current rather than letting context
   live only in chat history.
 
+## The GSSC Library (internal hub)
+
+`sites/gsscph/hub/` builds the one page employees bookmark: https://claude.ai/artifact/15iRb37fbNzXCzhusZbjDG.
+When a page is published or republished for GSSC, update its entry in `sites/gsscph/hub/entries.json` (a new
+work gets a new entry), run `python3 sites/gsscph/hub/build.py`, and republish `hub/dist/library.html` to that
+same URL. See `sites/gsscph/hub/README.md`.
+
 ## How work gets delegated
 
 This project uses four subagents, defined in `.claude/agents/`:
