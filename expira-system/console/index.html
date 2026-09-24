@@ -1014,6 +1014,32 @@ html.calm *,html.calm *::before,html.calm *::after{animation:none!important;tran
 [data-docsave]{position:relative}
 [data-docsave].drip::after{content:"";position:absolute;left:50%;top:-10px;width:4px;height:8px;margin-left:-2px;border-radius:50% 50% 50% 50%/62% 62% 38% 38%;background:var(--gold);pointer-events:none;animation:drip .5s cubic-bezier(.55,0,.85,.35) both}
 @media (prefers-reduced-motion:reduce){[data-docsave].drip::after{display:none}}
+/* v29 · ink, steer, costs, beads, the liquid field */
+.w{animation:inkw .56s var(--soft-close) both}
+@keyframes inkw{from{opacity:0;filter:blur(3px);transform:translateY(1.5px)}60%{opacity:.85;filter:blur(.4px)}to{opacity:1;filter:none;transform:none}}
+.caret{width:5px;height:5px;border-radius:50%;margin-left:4px;vertical-align:.12em;animation:caretJ 1.1s var(--soft-close) infinite}
+@keyframes caretJ{0%,100%{transform:scale(1)}30%{transform:scale(1.35,.7)}55%{transform:scale(.85,1.15)}}
+.send .ar{display:none}.send.steer .sq{display:none}.send.steer .ar{display:inline}
+.send.steer{background:var(--gold)}
+.cost{margin:8px 0 0 18px;display:flex;flex-direction:column;gap:7px}
+.cost .cl{display:flex;flex-wrap:wrap;gap:4px 14px;font-size:9.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--mute)}
+.cost .cl b{font-weight:400;letter-spacing:.02em;text-transform:none;color:var(--soft);margin-left:6px;font-size:10.5px}
+.cost .dp{display:flex;flex-wrap:wrap;gap:4px}
+.dpn{display:inline-flex;align-items:center;gap:7px;height:24px;padding:0 8px;border:var(--rule-hair) solid var(--line-2);border-radius:4px;background:none;cursor:pointer;font-size:11px;color:var(--text);transition:border-color .3s,background .3s}
+.dpn b{font-weight:500;font-size:9.5px;color:var(--gold)}
+.dpn i{font-style:normal;color:var(--mute);max-width:140px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.dpn span{font-size:9px;letter-spacing:.14em;text-transform:uppercase;color:var(--mute);margin-left:4px;transition:color .3s}
+.dpn:hover{border-color:var(--line-3);background:var(--well)}.dpn:hover span{color:var(--gold)}
+.map .fl,.field .lf{stroke-dasharray:.1 8;stroke-linecap:round;stroke-width:2.2}
+@keyframes flow{to{stroke-dashoffset:-8.1}}
+.dsp:not(.open) *,.dsp:not(.open) *::before,.dsp:not(.open) *::after{animation-play-state:paused!important}
+.stg-n nav{position:relative}.stg-n nav>[role=tab]{position:relative;z-index:1}
+.stg-n nav>.merc{border-radius:5px;background:var(--line-2);box-shadow:none}
+.moving>[aria-selected="true"]{background:transparent!important}
+.hero{position:relative}
+#goo{position:absolute;left:50%;top:30%;width:min(560px,100%);height:auto;aspect-ratio:5/3;transform:translate(-50%,-50%);pointer-events:none;filter:blur(6px);z-index:0;opacity:1}
+.hero>*:not(#goo){position:relative;z-index:1}
+@media (prefers-reduced-motion:reduce){#goo{display:none}}
 </style>
 
 <div class="app has-chat" id="app">
@@ -1040,7 +1066,7 @@ html.calm *,html.calm *::before,html.calm *::after{animation:none!important;tran
       </div>
     </header>
 
-    <section class="hero" id="hero">
+    <section class="hero" id="hero"><canvas id="goo" width="160" height="96" aria-hidden="true"></canvas>
       <div class="dateline cap" id="dateline"></div>
       <div class="mark-w grain" id="stage"><svg class="mark" viewBox="0 0 1413 425" role="img" aria-label="EXPIRA mark"><polygon points="0,0 233,0 391,100 206,425 40,425 0,302" fill="var(--mark-a)"/><polygon points="233,0 728,0 391,100" fill="var(--gold)"/><polygon points="391,100 728,0 778,0 871,225 1166,425 1058,425" fill="var(--mark-a)"/><polygon points="391,100 1058,425 206,425" fill="var(--mark-b)"/><polygon points="918,0 1043,0 1408,425 1241,425 968,192" fill="var(--gold)"/><polygon points="1043,0 1340,0 1408,425" fill="var(--mark-b)"/></svg></div>
       <h1 class="greet" id="greet">Good evening, <em>Duke</em></h1>
@@ -1104,7 +1130,7 @@ html.calm *,html.calm *::before,html.calm *::after{animation:none!important;tran
   <p class="hint" id="optHint"></p>
 </div>
 <div class="stg" id="setMenu" role="dialog" aria-modal="true" aria-labelledby="stgT">
-  <aside class="stg-n"><h2 id="stgT">Settings</h2><nav role="tablist" aria-orientation="vertical" aria-label="Settings sections"><button role="tab" data-tab="general" aria-selected="false"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1"><path d="M2.5 4.5h7M12.5 4.5h1M2.5 11.5h1M6.5 11.5h7"/><circle cx="11" cy="4.5" r="1.5"/><circle cx="5" cy="11.5" r="1.5"/></svg><span>General</span></button><button role="tab" data-tab="appearance" aria-selected="false"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1"><circle cx="8" cy="8" r="5.5"/><path d="M8 2.5v11a5.5 5.5 0 000-11z" fill="currentColor" stroke="none"/></svg><span>Appearance</span></button><button role="tab" data-tab="briefs" aria-selected="false"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1"><path d="M3.5 2.5h9v11h-9zM5.5 5.5h5M5.5 8h5M5.5 10.5h3"/></svg><span>Briefs</span></button><button role="tab" data-tab="map" aria-selected="false"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1"><circle cx="4" cy="8" r="1.8"/><circle cx="11.5" cy="4" r="1.4"/><circle cx="12" cy="11.5" r="1.4"/><path d="M5.6 7.2l4.6-2.5M5.6 8.8l5 2.1"/></svg><span>The map</span></button><button role="tab" data-tab="kernel" aria-selected="false"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1"><path d="M8 1.8l5.4 3.1v6.2L8 14.2l-5.4-3.1V4.9z"/><path d="M8 8l5.4-3.1M8 8v6.2M8 8L2.6 4.9"/></svg><span>Kernel</span></button><button role="tab" data-tab="files" aria-selected="false"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.1" ><path d="M3.5 1.5h6l3 3v10h-9z"/><path d="M9.5 1.5v3h3M5.5 8h5M5.5 10.5h5M5.5 13h3"/></svg><span>Files</span></button><button role="tab" data-tab="library" aria-selected="false"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1"><path d="M1.5 4.5a1 1 0 011-1h3.6l1.5 1.5h5.9a1 1 0 011 1v6.5a1 1 0 01-1 1h-11a1 1 0 01-1-1z"/></svg><span>Library</span></button><button role="tab" data-tab="about" aria-selected="false"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1"><circle cx="8" cy="8" r="5.5"/><path d="M8 7.2v4M8 5v.3"/></svg><span>About</span></button></nav><p class="stg-v">EXPIRA Console · v20</p></aside>
+  <aside class="stg-n"><h2 id="stgT">Settings</h2><nav role="tablist" aria-orientation="vertical" aria-label="Settings sections"><button role="tab" data-tab="general" aria-selected="false"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1"><path d="M2.5 4.5h7M12.5 4.5h1M2.5 11.5h1M6.5 11.5h7"/><circle cx="11" cy="4.5" r="1.5"/><circle cx="5" cy="11.5" r="1.5"/></svg><span>General</span></button><button role="tab" data-tab="appearance" aria-selected="false"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1"><circle cx="8" cy="8" r="5.5"/><path d="M8 2.5v11a5.5 5.5 0 000-11z" fill="currentColor" stroke="none"/></svg><span>Appearance</span></button><button role="tab" data-tab="briefs" aria-selected="false"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1"><path d="M3.5 2.5h9v11h-9zM5.5 5.5h5M5.5 8h5M5.5 10.5h3"/></svg><span>Briefs</span></button><button role="tab" data-tab="map" aria-selected="false"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1"><circle cx="4" cy="8" r="1.8"/><circle cx="11.5" cy="4" r="1.4"/><circle cx="12" cy="11.5" r="1.4"/><path d="M5.6 7.2l4.6-2.5M5.6 8.8l5 2.1"/></svg><span>The map</span></button><button role="tab" data-tab="kernel" aria-selected="false"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1"><path d="M8 1.8l5.4 3.1v6.2L8 14.2l-5.4-3.1V4.9z"/><path d="M8 8l5.4-3.1M8 8v6.2M8 8L2.6 4.9"/></svg><span>Kernel</span></button><button role="tab" data-tab="files" aria-selected="false"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.1" ><path d="M3.5 1.5h6l3 3v10h-9z"/><path d="M9.5 1.5v3h3M5.5 8h5M5.5 10.5h5M5.5 13h3"/></svg><span>Files</span></button><button role="tab" data-tab="library" aria-selected="false"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1"><path d="M1.5 4.5a1 1 0 011-1h3.6l1.5 1.5h5.9a1 1 0 011 1v6.5a1 1 0 01-1 1h-11a1 1 0 01-1-1z"/></svg><span>Library</span></button><button role="tab" data-tab="about" aria-selected="false"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1"><circle cx="8" cy="8" r="5.5"/><path d="M8 7.2v4M8 5v.3"/></svg><span>About</span></button></nav><p class="stg-v">EXPIRA Console · v29</p></aside>
   <section class="stg-p" id="stgP" role="tabpanel" aria-labelledby="stgT"></section>
   <button class="ib stg-x" id="stgX" aria-label="Close settings" data-tip="Close  Esc"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.1"><path d="M4 4l8 8M12 4l-8 8"/></svg></button>
 </div>
@@ -1246,7 +1272,7 @@ const RO0=`<span class="ro-h">Point at the plate to read values</span>`;
 /* streaming: words that arrived in the last 320 ms fade in; older text is already settled, so nothing flickers */
 function streamInto(el,text,st){const tmp=document.createElement("div");tmp.innerHTML=md(text,true);const now=performance.now(),total=tmp.textContent.length;
  if(!st.h.length||total>st.h[st.h.length-1][0])st.h.push([total,now]);
- if(!reduce){let cut=0;for(const [len,t] of st.h){if(t<=now-320)cut=len;else break}
+ if(!reduce){let cut=0;for(const [len,t] of st.h){if(t<=now-560)cut=len;else break}
   const arr=off=>{for(const [len,t] of st.h)if(len>off)return t;return now};
   const tw=document.createTreeWalker(tmp,NodeFilter.SHOW_TEXT,{acceptNode:x=>x.parentElement&&x.parentElement.closest("svg,figure,pre,.code")?NodeFilter.FILTER_REJECT:NodeFilter.FILTER_ACCEPT}),nodes=[];let n;while(n=tw.nextNode())nodes.push(n);let off=0;
   for(const node of nodes){const s=node.nodeValue,a=off,b=off+s.length;off=b;if(b<=cut)continue;const frag=document.createDocumentFragment(),k=Math.max(0,cut-a);if(k)frag.append(s.slice(0,k));let p=a+k;
@@ -1377,10 +1403,12 @@ function foldStream(ol){if(!ol||ol.classList.contains("all"))return;const it=[..
 function fupsHTML(w){const L=w&&w.ledger;if(!L)return "";const open=(L.claims||[]).filter(c=>c.v==="unsupported"||c.v==="partial"||c.v==="conflict").slice(0,3);if(!open.length)return "";
  const q=c=>(c.v==="conflict"?"Settle the conflict on: ":c.v==="partial"?"Firm up: ":"Find a source for: ")+c.text.replace(/\.$/,"");
  return `<div class="fups"><span class="cap">Open threads</span>${open.map((c,i)=>`<button type="button" class="fu" style="--i:${i}" data-fu="${esc(q(c))}"><b class="num">c${c.id}</b><span>${esc(q(c))}</span><svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.1" aria-hidden="true"><path d="M3.5 8.5l5-5M4.5 3.5h4v4"/></svg></button>`).join("")}</div>`}
+function costHTML(w){const ph=w.ph||{},ks=Object.keys(PHB).filter(k=>ph[k]&&!ph[k].skip&&ph[k].e!=null&&ph[k].s!=null);if(!ks.length&&!(w.steps||[]).length)return "";const t=tokLine(w);
+ return `<div class="cost">${ks.length?`<div class="cl">${ks.map(k=>`<span>${PHB[k]}<b class="num">${fmt(Math.max(0,ph[k].e-ph[k].s))}</b></span>`).join("")}${t?`<span>Tokens<b class="num">${t.replace(" tokens","")}</b></span>`:""}</div>`:""}${(w.steps||[]).length?`<div class="dp">${w.steps.map((st,i)=>`<button type="button" class="dpn" data-fu="${esc(`Go deeper on desk ${ROMAN[i]} (${ROLE[st.role]}${st.focus?`, ${st.focus}`:""}): `)}"><b class="num">${ROMAN[i]}</b>${ROLE[st.role]}${st.focus?`<i>${esc(st.focus)}</i>`:""}<span>Deepen</span></button>`).join("")}</div>`:""}</div>`}
 function runHTML(w,k,live,o={}){const M=w.map||{},th=M.thinking||[],n=(w.feed||[]).filter(f=>f[1]).length,op=live||o.open;
  const dl=live?(o.direct?"":`<div class="delib"><span class="cap">Deliberation</span><p class="typing">Reading the brief</p></div>`):th.length?`<div class="delib"><span class="cap">Deliberation</span>${th.map(t=>`<p>${esc(t)}</p>`).join("")}</div>`:"";
  return `<div class="run ${live?"running":"settled"}${op?" open":""}"><button class="run-h" type="button" aria-expanded="${!!op}">${GLYPH}<span class="lbl">${live?(o.direct?"Considering":"Deliberating"):esc(summary(w))}</span><span class="rk num">${live?"":tokLine(w)}</span><span class="t num">${mmss(w.ms||0)}</span>${CHEV}</button><div class="sheen"></div>${railHTML(w,live,o)}
- <p class="now" aria-live="polite"></p><div class="run-b"><div><div class="flow">${dl}<ol class="strm">${live?"":streamHTML(w)}</ol></div><div class="staff" hidden></div><div class="mrow">${(live&&!o.direct)||(w.steps||[]).length?`<button class="mapt" type="button" aria-expanded="false"><svg viewBox="0 0 16 16" width="12" height="12" fill="none" stroke="currentColor" stroke-width="1.2"><circle cx="3.5" cy="8" r="1.8"/><circle cx="12.5" cy="3.8" r="1.8"/><circle cx="12.5" cy="12.2" r="1.8"/><path d="M5.2 7.2 10.8 4.6M5.2 8.8l5.6 2.6"/></svg><span>Map</span></button>`:""}<button class="rd" data-read="${live?"live":k}">Open the dispatch</button></div><div class="mapw"></div><div class="ledw">${live?"":ledgerHTML(w)}</div>
+ <p class="now" aria-live="polite"></p><div class="run-b"><div><div class="flow">${dl}<ol class="strm">${live?"":streamHTML(w)}</ol></div>${live?"":costHTML(w)}<div class="staff" hidden></div><div class="mrow">${(live&&!o.direct)||(w.steps||[]).length?`<button class="mapt" type="button" aria-expanded="false"><svg viewBox="0 0 16 16" width="12" height="12" fill="none" stroke="currentColor" stroke-width="1.2"><circle cx="3.5" cy="8" r="1.8"/><circle cx="12.5" cy="3.8" r="1.8"/><circle cx="12.5" cy="12.2" r="1.8"/><path d="M5.2 7.2 10.8 4.6M5.2 8.8l5.6 2.6"/></svg><span>Map</span></button>`:""}<button class="rd" data-read="${live?"live":k}">Open the dispatch</button></div><div class="mapw"></div><div class="ledw">${live?"":ledgerHTML(w)}</div>
  <div class="logw${live?" open":""}"><button class="logt" type="button"><span class="cap">Log</span><span class="n num">${n||""}</span>${CHEV}</button><div class="logb"><div><ol class="ev">${(w.feed||[]).map(evLi).join("")}</ol></div></div></div>
  </div></div><p class="rnote" hidden></p></div>`}
 function splitQuote(c){const m=String(c).match(/^((?:> ?.*(?:\n|$))+)\n*([\s\S]*)$/);return m?[m[1].replace(/^> ?/gm,"").trim(),m[2]]:["",String(c)]}
@@ -1392,7 +1420,14 @@ function inThis(html){const d=document.createElement("div");d.innerHTML=html;con
 function meta(text){const w=(text.match(/\S+/g)||[]).length;return `<span>${w} words · ${Math.max(1,Math.round(w/220))} min read</span>`}
 function botHTML(t,k,last){const a=md(t.content);return `<div class="bot" data-k="${k}"><div class="by">${BYLINE}<time class="num">${hhmm(t.ts)}</time></div>${t.work?runHTML(t.work,k,false,{open:false}):""}<div class="ans">${a}</div>${exhibitsHTML(t.ex,false)}<div class="docw">${docCardHTML(t.doc)}</div>${fupsHTML(t.work)}${inThis(a)}<div class="filed capt"><span>Filed ${hhmm(t.ts)}</span><i class="dotsep"></i>${meta(t.content)}${acts(k)}</div></div>`}
 setTimeout(filesCount,0);
-function open(c){if(c!==cur&&$("#att"))attClear();window.__selHide&&window.__selHide();cur=c;app.classList.toggle("has-chat",!!c);GRAIN.run(!c&&PREF.grain);
+const GOO=(()=>{let cv=null,raf=0,t0=0,last=0;const B=[...Array(6)].map((_,i)=>({a:i*1.9,r:.042+(i%3)*.014,sx:.23+i*.041,sy:.31+i*.029}));
+ function frame(t){raf=requestAnimationFrame(frame);if(t-last<50||document.hidden)return;last=t;const x=cv.getContext("2d"),W=cv.width,H=cv.height,im=x.createImageData(W,H),d=im.data,s=(t-t0)/1000;
+  const col=getComputedStyle(document.documentElement).getPropertyValue("--gold").trim()||"#A8862F",rgb=[1,3,5].map(i=>parseInt(col.slice(i,i+2),16));
+  const P=B.map(b=>[.5+.36*Math.sin(s*b.sx*.35+b.a),.5+.34*Math.cos(s*b.sy*.35+b.a*1.3),b.r*b.r]);
+  for(let y=0;y<H;y++)for(let xx=0;xx<W;xx++){const u=xx/W,v=y/H*H/W;let f=0;for(const p of P){const dx=u-p[0],dy=v-p[1]*H/W;f+=p[2]/(dx*dx+dy*dy+1e-4)}const k=(y*W+xx)*4;const a=f<.9?0:f<1.15?(f-.9)/.25:1;d[k]=rgb[0];d[k+1]=rgb[1];d[k+2]=rgb[2];d[k+3]=a*(f>1.6?26:34)}
+  x.putImageData(im,0,0)}
+ return{run(on){if(!cv){cv=document.getElementById("goo");if(!cv)return}if(on&&!reduce&&!raf){t0=performance.now()-4e4;raf=requestAnimationFrame(frame)}else if((!on||reduce)&&raf){cancelAnimationFrame(raf);raf=0}}}})();
+function open(c){GOO.run(!c);if(c!==cur&&$("#att"))attClear();window.__selHide&&window.__selHide();cur=c;app.classList.toggle("has-chat",!!c);GRAIN.run(!c&&PREF.grain);
  closeSheet();if(c){crumb();const la=c.turns.map(t=>t.role).lastIndexOf("assistant");$("#thread").innerHTML=c.turns.map((t,k)=>t.role==="user"?youHTML(t,k):botHTML(t,k,k===la)).join("");$("#main").append($("#dock"));FM.forEach(m=>{if(!m.host.isConnected)m.kill()});mountMaps();mountDocs();stick=true;requestAnimationFrame(()=>{sc.scrollTop=1e9;prog()})}
  else{$("#heroDock").append($("#dock"));$("#thread").innerHTML="";$("#crumb").textContent="";showDsp(false)}
  renderRecents()}
@@ -2131,12 +2166,17 @@ open(chats.find(c=>!c.example)||chats[0]);
   const cl=(v,mx)=>Math.max(0,Math.min(v,mx)),from=`inset(${cl(r.top-q.top,q.height-6)}px ${cl(q.right-r.right,q.width-24)}px ${cl(q.bottom-r.bottom,q.height-6)}px ${cl(r.left-q.left,q.width-24)}px round 12px)`;
   m.animate(open?[{clipPath:from},{clipPath:"inset(0px 0px 0px 0px round 11px)",offset:.62},{clipPath:"inset(0px 0px 0px 0px round 8px)"}]:[{clipPath:"inset(0px 0px 0px 0px round 8px)"},{clipPath:from}],{duration:open?640:280,easing:open?"cubic-bezier(.32,.6,.18,1)":"cubic-bezier(.5,0,.75,0)"})};
  const mo=new MutationObserver(ms=>ms.forEach(x=>{const m=x.target,o=m.classList.contains("open");if(o===!!m._o)return;m._o=o;if(o){m._from=lastBtn;requestAnimationFrame(()=>pour(m,true))}else pour(m,false)}));
- document.querySelectorAll(".menu").forEach(m=>mo.observe(m,{attributes:true,attributeFilter:["class"]}))}
-/* mercury: the selected segment slides across, stretching between the two */
-document.addEventListener("click",e=>{const b=e.target.closest(".seg2 button,.menu .seg button");if(!b||reduce)return;const g=b.parentElement,o=g.querySelector('[aria-checked="true"]');if(!o||o===b)return;const gr=g.getBoundingClientRect(),a=o.getBoundingClientRect();
- requestAnimationFrame(()=>{const g2=b.isConnected?b.parentElement:g;const n=g2.querySelector('[aria-checked="true"]');if(!n||n===o&&o.isConnected)return;const c=n.getBoundingClientRect();let m=g2.querySelector(":scope>.merc");if(!m){m=document.createElement("i");m.className="merc";g2.prepend(m)}
-  const L=x=>x.left-gr.left,T=x=>x.top-gr.top,l0=Math.min(L(a),L(c)),r0=Math.max(L(a)+a.width,L(c)+c.width);g2.classList.add("moving");
-  const an=m.animate([{left:L(a)+"px",top:T(a)+"px",width:a.width+"px",height:a.height+"px"},{left:l0+"px",top:(T(a)+T(c))/2+1.5+"px",width:r0-l0+"px",height:Math.min(a.height,c.height)-3+"px",offset:.42},{left:L(c)+"px",top:T(c)+"px",width:c.width+"px",height:c.height+"px"}],{duration:440,easing:"cubic-bezier(.3,.7,.2,1)"});an.onfinish=an.oncancel=()=>g2.classList.remove("moving")})},true);
+ document.querySelectorAll(".menu,#mfs,#setMenu,#docv").forEach(m=>mo.observe(m,{attributes:true,attributeFilter:["class"]}))}
+/* mercury: the selected segment or tab slides across, stretching between the two */
+{const SEL='[aria-checked="true"],[aria-selected="true"]';
+document.addEventListener("click",e=>{const b=e.target.closest(".seg2 button,.menu .seg button,[role=tablist]>[role=tab]");if(!b||reduce)return;const g=b.parentElement,o=g.querySelector(":scope>"+SEL.split(",").join(",:scope>"));if(!o||o===b)return;const gr=g.getBoundingClientRect(),a=o.getBoundingClientRect();
+ requestAnimationFrame(()=>{const g2=b.isConnected?b.parentElement:g;const n=g2.querySelector(":scope>"+SEL.split(",").join(",:scope>"));if(!n||n===o&&o.isConnected)return;const c=n.getBoundingClientRect();let m=g2.querySelector(":scope>.merc");if(!m){m=document.createElement("i");m.className="merc";g2.prepend(m)}
+  const L=x=>x.left-gr.left,T=x=>x.top-gr.top,hz=Math.abs(L(c)-L(a))>=Math.abs(T(c)-T(a));g2.classList.add("moving");
+  const mid=hz?{left:Math.min(L(a),L(c))+"px",width:Math.max(L(a)+a.width,L(c)+c.width)-Math.min(L(a),L(c))+"px",top:(T(a)+T(c))/2+1.5+"px",height:Math.min(a.height,c.height)-3+"px"}
+             :{top:Math.min(T(a),T(c))+"px",height:Math.max(T(a)+a.height,T(c)+c.height)-Math.min(T(a),T(c))+"px",left:(L(a)+L(c))/2+2+"px",width:Math.min(a.width,c.width)-4+"px"};
+  const an=m.animate([{left:L(a)+"px",top:T(a)+"px",width:a.width+"px",height:a.height+"px"},{...mid,offset:.42},{left:L(c)+"px",top:T(c)+"px",width:c.width+"px",height:c.height+"px"}],{duration:hz?440:520,easing:"cubic-bezier(.3,.7,.2,1)"});an.onfinish=an.oncancel=()=>g2.classList.remove("moving")})},true)}
+document.addEventListener("keydown",e=>{if(e.metaKey||e.ctrlKey||e.altKey||e.target.closest?.("input,textarea,[contenteditable]"))return;const r=[...document.querySelectorAll("#thread .run")].pop();if(!r)return;
+ if(e.key==="."){e.preventDefault();r.querySelector(".run-h").click()}else if(e.key==="m"){const t=r.querySelector(".mapt");if(!t)return;e.preventDefault();if(!r.classList.contains("open"))r.querySelector(".run-h").click();t.click()}});
 /* claim cards: hovering a citation draws its claim out of the marker */
 {const P=$("#cpop");let tm=0,on=null;const host=u=>{try{return new URL(u).hostname.replace(/^www\./,"")}catch(e){return String(u)}};
  const show=el=>{const w=workOf(el),c=w?.ledger?.claims?.find(x=>String(x.id)===el.dataset.claim);if(!c)return;on=el;
@@ -2147,9 +2187,9 @@ document.addEventListener("click",e=>{const b=e.target.closest(".seg2 button,.me
    P.animate([{clipPath:from},{clipPath:"inset(0px 0px 0px 0px round 8px)",offset:.6},{clipPath:"inset(0px 0px 0px 0px round 6px)"}],{duration:440,easing:"cubic-bezier(.3,.6,.2,1)"})}};
  const hide=()=>{on=null;P.hidden=true};
  document.addEventListener("pointerover",e=>{const c=e.target.closest?.(".cite");if(c){clearTimeout(tm);if(c!==on)tm=setTimeout(()=>show(c),130)}else if(on&&!e.target.closest?.("#cpop")){clearTimeout(tm);tm=setTimeout(hide,140)}});
- document.addEventListener("focusin",e=>{const c=e.target.closest?.(".cite");if(c)show(c)});document.addEventListener("click",e=>{if(e.target.closest(".cite"))hide();const f=e.target.closest(".fu");if(f){promptEl.value=f.dataset.fu;grow();phSync&&phSync();promptEl.focus()}},true);addEventListener("scroll",hide,true)}
+ document.addEventListener("focusin",e=>{const c=e.target.closest?.(".cite");if(c)show(c)});document.addEventListener("click",e=>{if(e.target.closest(".cite"))hide();const f=e.target.closest(".fu,.dpn");if(f){promptEl.value=f.dataset.fu;grow();phSync&&phSync();promptEl.focus()}},true);addEventListener("scroll",hide,true)}
 /* attachments: images the viewer picks, pastes or drops ride along with the brief */
-var ATT=[],IMGCAP=null;
+var ATT=[],IMGCAP=null,STEER=[],STEERF=null;const steerNote=()=>STEER.length?`\n\nWhile you worked, the user added (follow it where it applies): ${STEER.map(t=>`"${t}"`).join("; ")}`:"";
 const fmtB=b=>b>=1e6?(b/1e6).toFixed(b>=1e7?0:1)+" MB":Math.max(1,Math.round(b/1e3))+" KB";
 async function thumbOf(f){try{const bm=await createImageBitmap(f),k=Math.min(1,200/Math.max(bm.width,bm.height)),c=document.createElement("canvas");c.width=Math.max(1,Math.round(bm.width*k));c.height=Math.max(1,Math.round(bm.height*k));c.getContext("2d").drawImage(bm,0,0,c.width,c.height);return{w:bm.width,h:bm.height,thumb:c.toDataURL("image/jpeg",.74)}}catch(e){return null}}
 function attNote(t){const a=$("#att");a.hidden=false;let n=a.querySelector(".an");if(!n){a.insertAdjacentHTML("beforeend",'<span class="an"></span>');n=a.querySelector(".an")}n.textContent=t;clearTimeout(attNote.t);attNote.t=setTimeout(()=>{n.remove();if(!ATT.length)a.hidden=true},3200)}
@@ -2180,9 +2220,11 @@ document.addEventListener("paste",e=>{if(!IMGCAP)return;const fs=[...(e.clipboar
    L.animate([{opacity:0},{opacity:1}],{duration:reduce?0:280});return}
   if(e.target.closest("#lbx"))close()});
  document.addEventListener("keydown",e=>{if(e.key==="Escape"&&!L.hidden){e.stopPropagation();close()}},true)}
-$("#form").addEventListener("submit",e=>{e.preventDefault();if(busy){ctl?.abort();return}let q=promptEl.value.trim();if((!q&&!QUOTE&&!ATT.length)||!sample)return;if(!q&&!QUOTE)q=ATT.length>1?"Take a look at these images.":"Take a look at this image.";if(QUOTE){q=quoteMd(QUOTE)+"\n\n"+(q||"Tell me more about this.");setQuote("")}send(q)});
+$("#form").addEventListener("submit",e=>{e.preventDefault();if(busy){const v=promptEl.value.trim();if(v&&STEERF){STEER.push(v);STEERF(v);promptEl.value="";grow();phSync&&phSync();return}ctl?.abort();return}let q=promptEl.value.trim();if((!q&&!QUOTE&&!ATT.length)||!sample)return;if(!q&&!QUOTE)q=ATT.length>1?"Take a look at these images.":"Take a look at this image.";if(QUOTE){q=quoteMd(QUOTE)+"\n\n"+(q||"Tell me more about this.");setQuote("")}send(q)});
+function sendSync(){const s=$("#send");if(!busy)return;const v=promptEl.value.trim();s.setAttribute("aria-label",v?"Add to this run":"Stop");s.dataset.tip=v?"Add to this run  ↵":"Stop  Esc";s.classList.toggle("steer",!!v)}
+promptEl.addEventListener("input",sendSync);
 function setBusy(on){if(busy!==on&&!reduce){const b=$("#send");b.animate([{transform:"none",borderRadius:"4px"},{transform:"scale(.7,.84)",borderRadius:"50%",offset:.34},{transform:"scale(1.07,.95)",borderRadius:"6px",offset:.68},{transform:"none",borderRadius:"4px"}],{duration:540,easing:"cubic-bezier(.3,.7,.2,1)"})}busy=on;app.classList.toggle("busy",on);$("#runPill").hidden=!on;const s=$("#send");s.setAttribute("aria-label",on?"Stop":"Send");s.dataset.tip=on?"Stop  Esc":"Send";
- s.innerHTML=on?`<svg viewBox="0 0 16 16"><rect x="4.5" y="4.5" width="7" height="7" rx="1" fill="currentColor"/></svg>`:`<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M8 13V3M3.5 7.5L8 3l4.5 4.5"/></svg>`;grow()}
+ s.classList.remove("steer");s.innerHTML=on?`<svg viewBox="0 0 16 16"><rect class="sq" x="4.5" y="4.5" width="7" height="7" rx="1" fill="currentColor"/><path class="ar" d="M8 13V3M3.5 7.5L8 3l4.5 4.5" fill="none" stroke="currentColor" stroke-width="1.5"/></svg>`:`<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M8 13V3M3.5 7.5L8 3l4.5 4.5"/></svg>`;grow()}
 const COPY={not_granted:"EXPIRA needs permission to use Claude. Reload to be asked again.",rate_limited:"Too many requests. Wait a minute, then send again.",session_expired:"Your session expired. Sign in again.",refused:"That brief was declined. Rephrase it.",prompt_too_large:"That brief is too long. Shorten it.",invalid_json:"The plan came back unreadable. Send again."};
 
 /* scroll requests collect and land once per frame */
@@ -2206,6 +2248,7 @@ async function send(q,re){const KL=await KLIB.load().catch(()=>null),docPre=DOCS
  const mapSync=()=>FM.forEach(m=>m.get()===work&&m.sync()),mapPulse=(a,b)=>FM.forEach(m=>m.get()===work&&m.pulse(a,b));
  const dropMap=()=>{FM.forEach(m=>{if(m.get()===work){m.kill();m.host.innerHTML=""}});$("#dxMapF").hidden=true};
  const setNow=t=>{if(!nowEl||!t||nowEl.textContent===t)return;nowEl.textContent=t;nowEl.classList.remove("ink");void nowEl.offsetWidth;nowEl.classList.add("ink");clearTimeout(nowEl._i);nowEl._i=setTimeout(()=>nowEl.classList.remove("ink"),800)};
+ STEER.length=0;STEERF=t=>F(null,`You added: <em>${esc(clip(t,160))}</em>`);
  const say=(t,cls)=>{note.hidden=false;note.className="rnote"+(cls?" "+cls:"");note.textContent=t};
  /* the rail: every stage keeps its place; pending, working, done or skipped */
  const PHL={plan:"Deliberating",desks:"Desks at work",review:"Weighing the claims",answer:"Writing the answer",audit:"Auditing the answer",doc:"Building the document",exhibits:"Setting the exhibits",firewall:"Checking the firewall"};
@@ -2273,7 +2316,7 @@ ${history?`Conversation so far:\n${history}\n\n`:""}New message: ${q}`,{modelTie
       onSources:list=>{const fresh=[];list.forEach(r=>{if(!r.url||work.map.pages.some(p=>p.url===r.url))return;const hh=hostOf(r.url);if(hh&&!work.map.pages.some(p=>hostOf(p.url)===hh))fresh.push(hh);work.map.pages.push({url:r.url,title:clip(r.title,140),date:r.published||null,ex:clip(r.excerpt,700),i,q:s._lq?clip(s._lq,90):""})});
        s.srcN+=list.length;pend[key]=(pend[key]||0)+20;$("#dq"+i).textContent=`${s.searches} search${s.searches>1?"es":""} · ${s.srcN} sources`;mapSync();fresh.slice(0,6).forEach((hh,j)=>setTimeout(()=>mapPulse("c","s:"+hh),160+j*110))},
       onError:code=>{if(["server_not_connected","needs_reauth","not_in_manifest","blocked_by_policy","selection_required"].includes(code)){webOn=false;say(MCP_COPY[code]||"Web research is unavailable.","warn")}F(null,`Web research failed for desk ${ROMAN[i]}${code?` (${esc(code)})`:""}.`)}}):null;
-    try{const r=await sample(brief(s,i),{modelTier:TIERS[s.tier].m,cache:false,...IM,signal:ctl.signal,...(tools?{tools}:{}),onText:({text})=>{pend[key]=(pend[key]||0)+Math.max(0,text.length-len);len=text.length;s.out=text;if(!s._raf)s._raf=requestAnimationFrame(()=>{s._raf=0;out.textContent=s.out;if(out.parentElement.classList.contains("show"))toEnd(out);const q=$("#dq"+i),v=(s.searches?`${s.searches} search${s.searches>1?"es":""} · `:"")+ft(tok(s.out))+" tokens";if(q&&q.textContent!==v)q.textContent=v})}});
+    try{const r=await sample(brief(s,i)+steerNote(),{modelTier:TIERS[s.tier].m,cache:false,...IM,signal:ctl.signal,...(tools?{tools}:{}),onText:({text})=>{pend[key]=(pend[key]||0)+Math.max(0,text.length-len);len=text.length;s.out=text;if(!s._raf)s._raf=requestAnimationFrame(()=>{s._raf=0;out.textContent=s.out;if(out.parentElement.classList.contains("show"))toEnd(out);const q=$("#dq"+i),v=(s.searches?`${s.searches} search${s.searches>1?"es":""} · `:"")+ft(tok(s.out))+" tokens";if(q&&q.textContent!==v)q.textContent=v})}});
      outs[i]=r.text;s.out=r.text;return r.text}
     finally{s._live=false;think[key]=0;s.ms=performance.now()-s._t0;$("#dm"+i).textContent=fmt(s.ms);stE.className="st";swap(stE,"Filed");mapSync()}};
    const done=[];steps.forEach((s,i)=>done[i]=(async()=>{for(const n of s.after)if(n-1<i&&done[n-1])await done[n-1];const r=await runOne(i);F(`Desk ${ROMAN[i]} filed its notes`,`Desk ${ROMAN[i]} filed ${ft(tok(r))} tokens of notes in ${fmt(s.ms)}.`);return r})());
@@ -2329,7 +2372,7 @@ Style: precise, calm, editorial. Lead with the answer. Use "### " headings, "- "
 ${safe?"CLIENT-SAFE: never include supplier names or contacts, supplier costs or cost basis, margins, markup, bank details, facility locations or internal worksheets.":""}
 ${work.ledger&&work.ledger.claims.length?`Claims ledger, weighed by the decision agent. Cite a claim as [c3] right after the sentence that uses it. State supported and derived claims as fact; give partial and conflict claims with their caveat and date; present unsupported claims only as estimates or assumptions, or leave them out. Never introduce a figure, date or name that is not in the ledger or the user's message.\n${ledText()}\n\n`:""}${history?`Conversation so far:\n${history}\n\n`:""}${steps.length?`Desk notes (context only; the ledger decides what is true):\n${steps.map((s,i)=>`[${s.role}${s.focus?", "+s.focus:""}, ${s.tier} effort]\n${(outs[i]||"").slice(0,1800)}`).join("\n\n")}\n\n`:""}Latest message: ${q}`;
   const sst={h:[]};let first=true,sRaf=0;
-  const fin=await sample(input,{modelTier:steps.length?"default":"quick",cache:false,...IM,signal:ctl.signal,onText:({text})=>{pend.A=(pend.A||0)+Math.max(0,text.length-aText.length);aText=text;if(first){first=false;think.A=0}if(!sRaf)sRaf=requestAnimationFrame(()=>{sRaf=0;streamInto(ans,aText,sst);follow()})}});
+  ans.classList.add("live");const fin=await sample(input+steerNote(),{modelTier:steps.length?"default":"quick",cache:false,...IM,signal:ctl.signal,onText:({text})=>{pend.A=(pend.A||0)+Math.max(0,text.length-aText.length);aText=text;if(first){first=false;think.A=0}if(!sRaf)sRaf=requestAnimationFrame(()=>{sRaf=0;streamInto(ans,aText,sst);follow()})}});
   const fin2={text:fin.text};cancelAnimationFrame(sRaf);sRaf=0;aText=fin2.text;ans.innerHTML=md(fin2.text);think.A=0;work._aw=0;work.atok=tok(fin2.text);P("answer","done");F(null,`Composed the answer: about ${ft(tok(fin2.text))} tokens.`);
   /* the compiler's last pass: every factual line in the answer must trace to the ledger */
   if(work.ledger&&work.ledger.claims.length){P("audit","on");work._au=1;mapSync();
@@ -2387,7 +2430,7 @@ ${PG.length?`Web sources the desks consulted, newest first (use these urls in "s
    map:{thinking:M.thinking.slice(0,6).map(t=>clip(t,240)),rationale:clip(M.rationale,240),kind:clip(M.kind,80),calls:M.calls.slice(0,40),pages:M.pages.slice(0,30)}}});save();
   try{if(db)await db.collection("runs").doc("r"+Date.now()).set({ts:Date.now(),request:q.slice(0,160),steps:steps.map(s=>({role:s.role,tier:s.tier,focus:s.focus||"",verdict:s.v||"",redo:s.redo})),firewall:work.firewall})}catch(e){}
   const k=cur.turns.length-1;bot.dataset.k=k;bot.classList.add("fresh");run.classList.remove("running");run.classList.add("settled");swap(lbl,summary(work));tEl.textContent=mmss(work.ms);setTimeout(()=>{if(!run.classList.contains("pinned")){run.classList.remove("open");run.querySelector(".run-h").setAttribute("aria-expanded","false")}},1100);rk.textContent=tokLine(cur.turns[k].work);
-  run.querySelector("[data-read]").dataset.read=k;if(work.firewall==="blocked")ans.innerHTML=md(content);
+  run.querySelector("[data-read]").dataset.read=k;run.querySelector(".flow")?.insertAdjacentHTML("afterend",costHTML(cur.turns[k].work));if(work.firewall==="blocked")ans.innerHTML=md(content);
   bot.insertAdjacentHTML("beforeend",`<div class="bi">${inThis(ans.innerHTML)}</div>${fupsHTML(cur.turns[k].work)}<div class="filed capt bi"><span>Filed ${hhmm(Date.now())}</span><i class="dotsep"></i>${meta(content)}${acts(k)}</div>`);
   finishTop(cur.turns[k].work);
  }catch(e){
@@ -2395,7 +2438,7 @@ ${PG.length?`Web sources the desks consulted, newest first (use these urls in "s
   if(e&&e.text)ans.innerHTML=md(e.text);F(code==="cancelled"?"Stopped at your request":"Interrupted",code==="cancelled"?"Stopped at your request.":"Interrupted.");
   if(code!=="cancelled")say(COPY[code]||"Something interrupted that. Send it again.");
   if(code==="not_granted"||code==="sampling_disabled")sample=null;save();
- }finally{clearInterval(tick);clearInterval(sigIv);for(const k in think)think[k]=0;work._o=false;work.steps.forEach(s=>s._live=false);work._va=work._aw=work._au=work._vs=0;mapSync();setTimeout(()=>{stopPlates();const l=document.querySelector(".plate .lv");if(l){l.classList.remove("on");$("#lvT").textContent="Recorded"}},1400);setBusy(false)}
+ }finally{STEERF=null;ans.classList.remove("live");clearInterval(tick);clearInterval(sigIv);for(const k in think)think[k]=0;work._o=false;work.steps.forEach(s=>s._live=false);work._va=work._aw=work._au=work._vs=0;mapSync();setTimeout(()=>{stopPlates();const l=document.querySelector(".plate .lv");if(l){l.classList.remove("on");$("#lvT").textContent="Recorded"}},1400);setBusy(false)}
 }
 })();
 </script>
