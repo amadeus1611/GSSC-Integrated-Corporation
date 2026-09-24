@@ -867,6 +867,15 @@ html.calm *,html.calm *::before,html.calm *::after{animation:none!important;tran
 .ktpl li span{flex:1;min-width:0}.ktpl small{display:block;font-size:10.5px;color:var(--mute)}
 .kver{display:flex;flex-wrap:wrap;gap:4px 16px;font-size:11.5px;color:var(--soft)}.kver span::before{content:"";display:inline-block;width:6px;height:6px;border-radius:50%;background:var(--mute);margin-right:6px;transform:translateY(-1px)}.kver .ok::before{background:var(--ok)}.kver .bad::before{background:var(--bad)}
 .field .k-doc .core{fill:var(--n-hollow);stroke:var(--gold);stroke-width:1.8}.map .k-doc .bx{stroke:var(--gold)}
+
+/* ---------- v20: documents on request, and a place to collect them ---------- */
+.optb svg{width:12px;height:12px}#docBtn[data-on="1"]{border-color:var(--gold);color:var(--ink)}#docBtn[data-on="1"] svg{color:var(--gold)}
+.dbar>svg{width:12px;height:12px;color:var(--gold);flex:none}
+.docc .ac .btn2{font-size:11.5px}
+.flist{list-style:none;margin:0;padding:0}.flist li{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:4px 12px;align-items:center;padding:10px 0;border-top:var(--rule-hair) solid var(--line)}
+.flist b{display:block;font-weight:400;font-size:13px;color:var(--ink)}.flist small{display:block;font-size:10.5px;color:var(--mute)}
+.flist .fa{display:flex;gap:6px}
+@media (max-width:560px){#docSum{display:none}}
 </style>
 
 <div class="app has-chat" id="app">
@@ -875,6 +884,7 @@ html.calm *,html.calm *::before,html.calm *::after{animation:none!important;tran
     <div class="nav">
       <button class="navb" id="newChat"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.1"><path d="M8 3v10M3 8h10"/></svg>New chat<span class="kb">⌥N</span></button>
       <button class="navb" id="findBtn"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.1"><circle cx="7" cy="7" r="4.5"/><path d="M10.5 10.5L14 14"/></svg>Search<span class="kb">/</span></button>
+      <button class="navb" id="filesNav"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.1" ><path d="M3.5 1.5h6l3 3v10h-9z"/><path d="M9.5 1.5v3h3M5.5 8h5M5.5 10.5h5M5.5 13h3"/></svg>Files<span class="kb" id="filesN"></span></button>
       <button class="navb" id="dspNav"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.1"><path d="M3 2.5h10v11H3zM5.5 5.5h5M5.5 8h5M5.5 10.5h3"/></svg>The Dispatch<span class="kb">⌥L</span></button>
     </div>
     <div class="search"><label for="find" class="sr">Search chats</label><input id="find" placeholder="Search chats"></div>
@@ -905,13 +915,14 @@ html.calm *,html.calm *::before,html.calm *::after{animation:none!important;tran
 
     <div class="dock" id="dock">
       <button class="jump" id="jump" type="button">Latest ↓</button>
+      <div class="qbar dbar" id="dbar" hidden><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.1" aria-hidden="true"><path d="M3.5 1.5h6l3 3v10h-9z"/><path d="M9.5 1.5v3h3M5.5 8h5M5.5 10.5h5M5.5 13h3"/></svg><span class="qk">Will build</span><span class="qt" id="dbT"></span><button type="button" class="ib sm" id="dbX" aria-label="Do not build a document"><svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.2"><path d="M3 3l6 6M9 3l-6 6"/></svg></button></div>
       <div class="qbar" id="qbar" hidden><svg viewBox="0 0 16 16" fill="currentColor" aria-hidden="true"><path d="M3 9.5C3 6.8 4.6 5 7 4.5l.4.9C5.9 6 5.2 7 5.1 8H7v4H3zM9 9.5C9 6.8 10.6 5 13 4.5l.4.9C11.9 6 11.2 7 11.1 8H13v4H9z"/></svg><span class="qk">Asking about</span><span class="qt" id="qt"></span><button type="button" class="ib sm" id="qx" aria-label="Remove the quote"><svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.2"><path d="M3 3l6 6M9 3l-6 6"/></svg></button></div>
       <form class="comp" id="form">
         <label for="prompt" class="sr">Message EXPIRA</label>
         <div class="pw"><textarea id="prompt" rows="1" placeholder="Brief EXPIRA…"></textarea><span class="phx" id="phx" aria-hidden="true">Brief EXPIRA…</span></div>
         <div class="ctl">
           <span class="count num" id="count"></span>
-          <button type="button" class="optb" id="optBtn" aria-haspopup="menu" aria-expanded="false"><span class="ic" aria-hidden="true"><i></i><i></i><i></i></span><span id="optSum">Auto</span><svg viewBox="0 0 10 10" fill="none" stroke="currentColor" stroke-width="1"><path d="M2.5 6.5L5 4l2.5 2.5"/></svg></button>
+          <button type="button" class="optb" id="docBtn" aria-haspopup="menu" aria-expanded="false" data-tip="Make a document"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.1" aria-hidden="true"><path d="M3.5 1.5h6l3 3v10h-9z"/><path d="M9.5 1.5v3h3M5.5 8h5M5.5 10.5h5M5.5 13h3"/></svg><span id="docSum">Document</span></button><button type="button" class="optb" id="optBtn" aria-haspopup="menu" aria-expanded="false"><span class="ic" aria-hidden="true"><i></i><i></i><i></i></span><span id="optSum">Auto</span><svg viewBox="0 0 10 10" fill="none" stroke="currentColor" stroke-width="1"><path d="M2.5 6.5L5 4l2.5 2.5"/></svg></button>
           <button type="submit" class="send" id="send" aria-label="Send" data-tip="Send"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M8 13V3M3.5 7.5L8 3l4.5 4.5"/></svg></button>
         </div>
       </form>
@@ -925,6 +936,18 @@ html.calm *,html.calm *::before,html.calm *::after{animation:none!important;tran
   <div class="dsp-b" id="dspB"></div>
 </aside>
 
+<div class="menu opt" id="docMenu" role="menu" aria-label="Make a document">
+  <div class="mh cap">Build from the kernel</div>
+  <button role="menuitemradio" data-dt="quotation">Quotation<i class="ck"></i></button>
+  <button role="menuitemradio" data-dt="company_profile">Company profile<i class="ck"></i></button>
+  <button role="menuitemradio" data-dt="contract">Contract (CMSA)<i class="ck"></i></button>
+  <button role="menuitemradio" data-dt="secretary_certificate">Secretary's certificate<i class="ck"></i></button>
+  <button role="menuitemradio" data-dt="board_resolution">Board resolution<i class="ck"></i></button>
+  <button role="menuitemradio" data-dt="notarial_acknowledgment">Notarial acknowledgment<i class="ck"></i></button>
+  <div class="sep"></div>
+  <button role="menuitemradio" data-dt="">No document<i class="ck"></i></button>
+  <p class="hint">The next brief builds this document, filled from what the desks verify, and gives you a file to download.</p>
+</div>
 <div class="menu opt" id="optMenu" role="menu" aria-label="Options">
   <div class="mh cap">Staffing</div>
   <button role="menuitemradio" data-opt="desks" data-v="auto" data-hint="The orchestrator decides how many desks, and which, for each brief.">Auto<i class="ck"></i></button>
@@ -940,7 +963,7 @@ html.calm *,html.calm *::before,html.calm *::after{animation:none!important;tran
   <p class="hint" id="optHint"></p>
 </div>
 <div class="stg" id="setMenu" role="dialog" aria-modal="true" aria-labelledby="stgT">
-  <aside class="stg-n"><h2 id="stgT">Settings</h2><nav role="tablist" aria-orientation="vertical" aria-label="Settings sections"><button role="tab" data-tab="general" aria-selected="false"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1"><path d="M2.5 4.5h7M12.5 4.5h1M2.5 11.5h1M6.5 11.5h7"/><circle cx="11" cy="4.5" r="1.5"/><circle cx="5" cy="11.5" r="1.5"/></svg><span>General</span></button><button role="tab" data-tab="appearance" aria-selected="false"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1"><circle cx="8" cy="8" r="5.5"/><path d="M8 2.5v11a5.5 5.5 0 000-11z" fill="currentColor" stroke="none"/></svg><span>Appearance</span></button><button role="tab" data-tab="briefs" aria-selected="false"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1"><path d="M3.5 2.5h9v11h-9zM5.5 5.5h5M5.5 8h5M5.5 10.5h3"/></svg><span>Briefs</span></button><button role="tab" data-tab="map" aria-selected="false"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1"><circle cx="4" cy="8" r="1.8"/><circle cx="11.5" cy="4" r="1.4"/><circle cx="12" cy="11.5" r="1.4"/><path d="M5.6 7.2l4.6-2.5M5.6 8.8l5 2.1"/></svg><span>The map</span></button><button role="tab" data-tab="kernel" aria-selected="false"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1"><path d="M8 1.8l5.4 3.1v6.2L8 14.2l-5.4-3.1V4.9z"/><path d="M8 8l5.4-3.1M8 8v6.2M8 8L2.6 4.9"/></svg><span>Kernel</span></button><button role="tab" data-tab="library" aria-selected="false"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1"><path d="M1.5 4.5a1 1 0 011-1h3.6l1.5 1.5h5.9a1 1 0 011 1v6.5a1 1 0 01-1 1h-11a1 1 0 01-1-1z"/></svg><span>Library</span></button><button role="tab" data-tab="about" aria-selected="false"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1"><circle cx="8" cy="8" r="5.5"/><path d="M8 7.2v4M8 5v.3"/></svg><span>About</span></button></nav><p class="stg-v">EXPIRA Console · v19</p></aside>
+  <aside class="stg-n"><h2 id="stgT">Settings</h2><nav role="tablist" aria-orientation="vertical" aria-label="Settings sections"><button role="tab" data-tab="general" aria-selected="false"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1"><path d="M2.5 4.5h7M12.5 4.5h1M2.5 11.5h1M6.5 11.5h7"/><circle cx="11" cy="4.5" r="1.5"/><circle cx="5" cy="11.5" r="1.5"/></svg><span>General</span></button><button role="tab" data-tab="appearance" aria-selected="false"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1"><circle cx="8" cy="8" r="5.5"/><path d="M8 2.5v11a5.5 5.5 0 000-11z" fill="currentColor" stroke="none"/></svg><span>Appearance</span></button><button role="tab" data-tab="briefs" aria-selected="false"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1"><path d="M3.5 2.5h9v11h-9zM5.5 5.5h5M5.5 8h5M5.5 10.5h3"/></svg><span>Briefs</span></button><button role="tab" data-tab="map" aria-selected="false"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1"><circle cx="4" cy="8" r="1.8"/><circle cx="11.5" cy="4" r="1.4"/><circle cx="12" cy="11.5" r="1.4"/><path d="M5.6 7.2l4.6-2.5M5.6 8.8l5 2.1"/></svg><span>The map</span></button><button role="tab" data-tab="kernel" aria-selected="false"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1"><path d="M8 1.8l5.4 3.1v6.2L8 14.2l-5.4-3.1V4.9z"/><path d="M8 8l5.4-3.1M8 8v6.2M8 8L2.6 4.9"/></svg><span>Kernel</span></button><button role="tab" data-tab="files" aria-selected="false"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.1" ><path d="M3.5 1.5h6l3 3v10h-9z"/><path d="M9.5 1.5v3h3M5.5 8h5M5.5 10.5h5M5.5 13h3"/></svg><span>Files</span></button><button role="tab" data-tab="library" aria-selected="false"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1"><path d="M1.5 4.5a1 1 0 011-1h3.6l1.5 1.5h5.9a1 1 0 011 1v6.5a1 1 0 01-1 1h-11a1 1 0 01-1-1z"/></svg><span>Library</span></button><button role="tab" data-tab="about" aria-selected="false"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1"><circle cx="8" cy="8" r="5.5"/><path d="M8 7.2v4M8 5v.3"/></svg><span>About</span></button></nav><p class="stg-v">EXPIRA Console · v20</p></aside>
   <section class="stg-p" id="stgP" role="tabpanel" aria-labelledby="stgT"></section>
   <button class="ib stg-x" id="stgX" aria-label="Close settings" data-tip="Close  Esc"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.1"><path d="M4 4l8 8M12 4l-8 8"/></svg></button>
 </div>
@@ -1191,7 +1214,7 @@ const chipHTML=(r,n)=>`<span class="chip" data-r="${r}">${ROLE[r]||r}<b>${n>1?"�
 function staffHTML(S){const g={};(S||[]).forEach(s=>g[s.role]=(g[s.role]||0)+1);return Object.entries(g).map(([r,n])=>chipHTML(r,n)).join("")}
 const PHN={plan:"Deliberate",desks:"Desks",review:"Verify",answer:"Answer",audit:"Audit",doc:"Document",exhibits:"Exhibits",firewall:"Firewall"};
 function railHTML(w,live,o={}){let keys,st={};
- if(live)keys=(o.direct?["answer","exhibits"]:["plan","desks","review","answer","audit","doc","exhibits"]).concat(o.safe?["firewall"]:[]);
+ if(live)keys=(o.direct?["answer",...(o.doc?["doc"]:[]),"exhibits"]:["plan","desks","review","answer","audit","doc","exhibits"]).concat(o.safe?["firewall"]:[]);
  else if(w.ph){keys=Object.keys(PHN).filter(k=>w.ph[k]);keys.forEach(k=>{const p=w.ph[k];st[k]=p.skip?["skip",""]:p.e!=null?["done",fmt(p.e-(p.s||p.e))]:["stop",""]})}
  else{keys=[...((w.steps||[]).length?["plan","desks","review"]:[]),"answer",...(w.firewall&&w.firewall!=="off"?["firewall"]:[])];keys.forEach(k=>st[k]=["done",""])}
  return `<ol class="rail" aria-label="Stages">${keys.map(k=>{const [c,t]=st[k]||["",""];return `<li data-ph="${k}" class="${c}${k==="firewall"&&w.firewall==="blocked"?" bad":""}"><i></i><span>${PHN[k]}</span><span class="num">${t}</span></li>`}).join("")}</ol>`}
@@ -1209,6 +1232,7 @@ const BYLINE=`${MARK}<span class="who">EXPIRA</span>`;
 function inThis(html){const d=document.createElement("div");d.innerHTML=html;const hs=[...d.querySelectorAll("h3")];if(hs.length<3)return "";return `<nav class="inthis"><span class="cap">In this answer</span>${hs.map((x,i)=>`<button data-sec="${i}" style="animation-delay:${i*.05}s"><b>§${i+1}</b>${esc(x.textContent)}</button>`).join("")}</nav>`}
 function meta(text){const w=(text.match(/\S+/g)||[]).length;return `<span>${w} words · ${Math.max(1,Math.round(w/220))} min read</span>`}
 function botHTML(t,k,last){const a=md(t.content);return `<div class="bot" data-k="${k}"><div class="by">${BYLINE}<time class="num">${hhmm(t.ts)}</time></div>${t.work?runHTML(t.work,k,false,{open:last}):""}<div class="ans">${a}</div>${exhibitsHTML(t.ex,false)}<div class="docw">${docCardHTML(t.doc)}</div>${inThis(a)}<div class="filed capt"><span>Filed ${hhmm(t.ts)}</span><i class="dotsep"></i>${meta(t.content)}${acts(k)}</div></div>`}
+setTimeout(filesCount,0);
 function open(c){window.__selHide&&window.__selHide();cur=c;app.classList.toggle("has-chat",!!c);GRAIN.run(!c&&PREF.grain);
  closeSheet();if(c){crumb();const la=c.turns.map(t=>t.role).lastIndexOf("assistant");$("#thread").innerHTML=c.turns.map((t,k)=>t.role==="user"?youHTML(t,k):botHTML(t,k,k===la)).join("");$("#main").append($("#dock"));FM.forEach(m=>{if(!m.host.isConnected)m.kill()});mountMaps();mountDocs();stick=true;requestAnimationFrame(()=>{sc.scrollTop=1e9;prog()})}
  else{$("#heroDock").append($("#dock"));$("#thread").innerHTML="";$("#crumb").textContent="";showDsp(false)}
@@ -1356,6 +1380,9 @@ function paneHTML(t){
   <div class="grp"><div class="gh"><span><b>Forces</b><small>The field's four forces, after Obsidian's graph view.</small></span><button class="btn2" data-reset-forces>Reset</button></div>
    <div class="mapw pvmap" id="pvMap" style="margin-bottom:16px"></div>
    ${[["center","Centre force"],["repel","Repel force"],["link","Link force"],["dist","Link distance"]].map(([k,n])=>`<div class="frc"><label for="f_${k}">${n}</label><input type="range" id="f_${k}" data-force="${k}" min="0.3" max="2" step="0.05" value="${FORCES[k]}" style="--p:${((FORCES[k]-.3)/1.7*100).toFixed(1)}%"><output class="num">${(+FORCES[k]).toFixed(2)}×</output></div>`).join("")}</div>`;
+ if(t==="files"){const L=allDocs();return `<h3>Files</h3><p class="lede">Every document the console has built, newest first. Each downloads as a self-contained HTML file with the brand assets embedded.</p>
+  ${L.length?`<ul class="flist">${L.map(x=>`<li><span><b>${esc(x.d.title||DOCT[x.d.type])}</b><small>${esc(DOCT[x.d.type]||"")} · ${x.d.pages||"?"} pages · ${esc(new Date(x.ts).toLocaleDateString("en-PH",{day:"numeric",month:"short",year:"numeric"}))} · ${esc(x.c.title)}</small></span><span class="fa"><button type="button" class="btn2" data-fopen="${esc(x.c.id)}|${x.k}">Open</button><button type="button" class="btn2" data-fsave="${esc(x.c.id)}|${x.k}" style="border-color:var(--ink)">Download</button></span></li>`).join("")}</ul>`:`<p class="empty2">No documents yet. Choose one with the Document button beside the message box, or ask for one in a brief: “Prepare a quotation for…”.</p>`}
+  <div class="grp"><div class="gh"><span><b>Templates</b><small>The kernel's six templates, unfilled, are in Settings → Kernel.</small></span><button type="button" class="btn2" data-tab="kernel">Kernel</button></div></div>`}
  if(t==="kernel"){const K=KLIB.v;return `<h3>Kernel</h3><p class="lede">The GSSC master kernel lives inside the console: its doctrine, the tokenized quotation master, the brand assets and every derivative. Documents are built from it, not from files you attach.</p>
   <div class="grp"><div class="gh"><span><b>${K?`Kernel ${esc(K.kernel_version)}`:"Loading the kernel…"}</b><small>${K?`${Object.keys(K.kernel).length} modules · ${K.derivatives.length} derivatives · ${Object.keys(K.brand_assets).length} brand assets`:""}</small></span></div><div class="kver" id="kVer"><span>Checking asset hashes…</span></div></div>
   <div class="grp"><div class="gh"><span><b>Templates</b><small>Open any template hydrated, exactly as the builder makes it. Ask for a document in a brief and the console fills one from these.</small></span></div><ul class="ktpl">${K?K.derivatives.map(d=>`<li><span>${esc(DOCT[d.type]||d.type)}<small>${esc(d.file)}${d.governing?` · ${esc(d.governing)}`:""}</small></span><button type="button" class="btn2" data-ktpl="${esc(d.file)}">Open</button></li>`).join(""):""}</ul></div>
@@ -1366,7 +1393,7 @@ function paneHTML(t){
   <div class="grp"><div class="gh"><span><b>Archived chats</b><small>Restore one to bring it back to the sidebar.</small></span></div>${A.length?`<ul class="alist">${A.map(c=>`<li><span>${esc(c.title)}<small class="num">${esc(new Date(c.ts||Date.now()).toLocaleDateString("en-PH",{day:"numeric",month:"short"}))}</small></span><button class="ab" data-unarch="${esc(c.id)}">Restore</button><button class="ab danger" data-purge="${esc(c.id)}">Delete</button></li>`).join("")}</ul>`:`<p class="empty2">Nothing archived.</p>`}</div>
   <div class="srow" style="cursor:default"><span class="l"><b>Copy the library</b><small>Every chat, as JSON, to your clipboard.</small></span><button class="btn2" data-export>Copy JSON</button></div>
   <div class="srow" style="cursor:default"><span class="l"><b>Clear the library</b><small>Deletes every chat and folder in this browser. This cannot be undone.</small></span><button class="btn2 danger" data-clear>Clear</button></div>`}
- return `<h3>About</h3><p class="lede">EXPIRA Console, version 19. Built on Claude for EXPIRA AI Systems and GSSC Integrated Corporation.</p>
+ return `<h3>About</h3><p class="lede">EXPIRA Console, version 20. Built on Claude for EXPIRA AI Systems and GSSC Integrated Corporation.</p>
   <dl class="about"><dt>Orchestrator</dt><dd>Opus 5.5 at low effort; plans at the quick tier</dd><dt>Desks</dt><dd>Light effort at the quick tier, considered at the default tier, deep at the complex tier</dd>
   <dt>Claude</dt><dd class="${sample?"ok":"no"}">${sample?"Linked":"Not linked. Open this page in Claude to brief EXPIRA."}</dd><dt>Parallel Search</dt><dd class="${WEB.ok?"ok":"no"}">${WEB.ok?"Connected":"Not connected"}</dd>
   <dt>Truth</dt><dd>The decision agent staffs the desks, then weighs every claim they file against the pages read; the answer cites the ledger; an auditor checks each factual line before filing</dd><dt>Kernel</dt><dd>The GSSC kernel ships inside the console; desks read the doctrine that governs them, and documents are built by a port of the kernel's own builder, checked byte for byte against it</dd><dt>Freshness</dt><dd>Every prompt carries today's date; web results are sorted newest first and anything older than the window is flagged</dd><dt>Policy</dt><dd>Escalates above PHP 500,000; at most two redos; a firewall on client-facing answers</dd><dt>Storage</dt><dd>Chats in this browser; run summaries in the runs log</dd></dl>
@@ -1880,7 +1907,7 @@ async function kAssemble(K,src,opt={}){
 
 
 /* the kernel library ships beside the page (lib/gssc-kernel.json): kernel modules, the tokenized master, brand assets, derivative sources */
-const KLIB={p:null,v:null,load(){return this.p||(this.p=fetch("lib/gssc-kernel.json").then(r=>{if(!r.ok)throw new Error("The kernel library could not be loaded.");return r.json()}).then(k=>(this.v=k)).catch(e=>{this.p=null;throw e}))}};
+const KLIB={p:null,v:null,err:"",load(){return this.p||(this.p=(async()=>{let last="";for(const u of ["lib/gssc-kernel.json","./lib/gssc-kernel.json",new URL("lib/gssc-kernel.json",location.href).href]){try{const r=await fetch(u,{cache:"force-cache"});if(r.ok)return await r.json();last="HTTP "+r.status}catch(e){last=e.message||String(e)}}this.err=last;throw new Error("The kernel library could not be loaded ("+last+").")})().then(k=>(this.v=k)).catch(e=>{this.p=null;throw e}))}};
 const DOCT={quotation:"Quotation",company_profile:"Company profile",contract:"Contract (CMSA)",secretary_certificate:"Secretary's certificate",board_resolution:"Board resolution",notarial_acknowledgment:"Notarial acknowledgment"};
 const kJ=(o,n)=>{const t=JSON.stringify(o);return t.length>n?t.slice(0,n)+"…":t};
 /* what each desk reads from the kernel before it works */
@@ -1891,6 +1918,24 @@ function kDigest(K,role){if(!K)return "";const k=K.kernel,m=[];
  return m.length?`\nKernel ${K.kernel_version} (binding company doctrine; follow it over general practice):\n`+m.map(([id,n])=>`[${id}] ${kJ(k[id],n)}`).join("\n")+"\n":""}
 async function kBuild(type,src,second){const K=await KLIB.load();const ref=K.derivatives.find(d=>d.type===type);const stamp=new Date();const file=`GSSC-${(type||"DOC").toUpperCase().replace(/_/g,"-")}-${stamp.getFullYear()}${pad(stamp.getMonth()+1)}${pad(stamp.getDate())}.html`;
  return Object.assign(await kAssemble(K,src,{second:second||(ref&&ref.second_signatory)||undefined,name:file,builder:"  builder: EXPIRA Console kernel builder (port of gssc-system/runtime/build_derivative.py) -->\n"}),{file})}
+/* a brief that names a document gets one; the words are matched here, not left to the planner */
+function docIntent(q){const t=String(q||"").replace(/^(?:> ?.*\n)+\n*/,"");if(!/\b(prepare|draft|make|create|write|generate|produce|build|issue|send|need|want|give)\b/i.test(t))return null;
+ if(/secretary'?s?\s+cert/i.test(t))return "secretary_certificate";if(/board\s+resolution/i.test(t))return "board_resolution";if(/notari[sz]?(al|ed|e)|acknowledg(e)?ment/i.test(t))return "notarial_acknowledgment";
+ if(/company\s+profile|corporate\s+profile/i.test(t))return "company_profile";if(/\bcontract\b|\bCMSA\b|services?\s+agreement/i.test(t))return "contract";if(/\bquotation\b|\bquote\b|price\s+proposal/i.test(t))return "quotation";return null}
+let DOCSEL=null;
+function setDoc(t){DOCSEL=t||null;$("#dbar").hidden=!DOCSEL;$("#dbT").textContent=DOCSEL?`${DOCT[DOCSEL]}, from the kernel`:"";$("#docSum").textContent=DOCSEL?DOCT[DOCSEL]:"Document";$("#docBtn").dataset.on=DOCSEL?"1":"";$("#docMenu").querySelectorAll("[data-dt]").forEach(b=>b.setAttribute("aria-checked",String((b.dataset.dt||null)===DOCSEL)))}
+$("#dbX").onclick=()=>setDoc(null);
+function docMenu(o){const m=$("#docMenu"),b=$("#docBtn");o=o??!m.classList.contains("open");if(o){closeCtx();menu(false);setMenu(false);acctMenu(false);closeSheet();const r=b.getBoundingClientRect(),w=212;m.style.left=Math.max(8,Math.min(innerWidth-w-8,r.right-w))+"px";m.style.top="0px";m.classList.add("open");const hh=m.offsetHeight;let y=r.top-hh-8;if(y<8)y=Math.min(innerHeight-hh-8,r.bottom+8);m.style.top=y+"px";setTimeout(()=>m.querySelector('[aria-checked="true"]')?.focus(),60)}else m.classList.remove("open");b.setAttribute("aria-expanded",String(!!o))}
+$("#docBtn").onclick=e=>{e.stopPropagation();docMenu()};
+$("#docMenu").addEventListener("click",e=>{const b=e.target.closest("[data-dt]");if(!b)return;setDoc(b.dataset.dt||null);setTimeout(()=>{docMenu(false);promptEl.focus()},200)});
+document.addEventListener("pointerdown",e=>{if($("#docMenu").classList.contains("open")&&!e.target.closest("#docMenu,#docBtn"))docMenu(false)});
+/* every document made, across chats */
+function allDocs(){const L=[];chats.forEach(c=>c.turns.forEach((t,k)=>{if(t.doc&&!t.doc.error)L.push({c,k,d:t.doc,ts:t.ts})}));return L.sort((a,b)=>b.ts-a.ts)}
+function filesCount(){const n=allDocs().length;const e=$("#filesN");if(e)e.textContent=n?String(n):""}
+$("#filesNav").onclick=()=>{STAB="files";setMenu(true)};
+async function saveDoc(d){const r=await kBuild(d.type,d.src,d.second).catch(e=>({ok:false,error:e.message}));if(!r.ok){toast(esc(r.error||"The document could not be built."));return false}
+ const dl=await window.claude?.use?.("downloads")??null;if(dl){try{await dl.save({filename:r.file,data:new Blob([r.html],{type:"text/html"})});return true}catch(e){if(e&&e.code==="declined")return false}}
+ try{await navigator.clipboard.writeText(r.html);toast("Downloads are off here; the HTML is on your clipboard");return true}catch(e){toast("Downloads are off here. Open the document and use Copy HTML.");return false}}
 /* the document viewer */
 let DOCV=null;
 async function openDoc(d,title){const v=$("#docv");$("#docvT").textContent=title||d.title||"Document";$("#docvM").textContent="Building…";$("#docvL").innerHTML="";$("#docvF").srcdoc="";v.classList.add("open");$("#veil").classList.add("open");closeSheet();
@@ -1901,16 +1946,17 @@ async function openDoc(d,title){const v=$("#docv");$("#docvT").textContent=title
 function closeDoc(){const v=$("#docv");if(!v.classList.contains("open"))return;v.classList.remove("open");$("#veil").classList.remove("open");setTimeout(()=>{if(!v.classList.contains("open"))$("#docvF").srcdoc=""},500)}
 $("#docvX").onclick=closeDoc;
 $("#docvCopy").onclick=()=>{const b=$("#docvCopy");if(!DOCV)return;const done=m=>{b.textContent=m;setTimeout(()=>b.textContent="Copy HTML",1500)};navigator.clipboard?navigator.clipboard.writeText(DOCV.html).then(()=>done("Copied"),()=>done("Not allowed")):done("Not allowed")};
-$("#docvSave").onclick=async()=>{const b=$("#docvSave");if(!DOCV)return;const dl=await window.claude?.use?.("downloads")??null;if(!dl){b.textContent="Unavailable here";setTimeout(()=>b.textContent="Download",1800);return}
+$("#docvSave").onclick=async()=>{const b=$("#docvSave");if(!DOCV)return;const dl=await window.claude?.use?.("downloads")??null;if(!dl){try{await navigator.clipboard.writeText(DOCV.html);b.textContent="Copied instead"}catch(e){b.textContent="Use Copy HTML"}setTimeout(()=>b.textContent="Download",2200);return}
  try{await dl.save({filename:DOCV.file,data:new Blob([DOCV.html],{type:"text/html"})});b.textContent="Saved"}catch(e){b.textContent=e&&e.code==="declined"?"Declined":"Not saved"}setTimeout(()=>b.textContent="Download",1800)};
-function docCardHTML(d){if(!d)return "";if(d.error)return `<div class="docc failed"><div></div><div><span class="k cap">Document held</span><h4>${esc(DOCT[d.type]||"Document")}</h4><p class="aud">${esc(d.error)}</p></div></div>`;
- return `<div class="docc" data-doc><div class="th" data-docopen role="button" tabindex="0" aria-label="Open the document"><span class="ld">Rendering…</span></div><div><span class="k cap">${esc(DOCT[d.type]||"Document")} · kernel ${esc(d.kernel||"")}</span><h4>${esc(d.title||"")}</h4><div class="mt"><span class="num">${d.pages||"?"} page${d.pages===1?"":"s"}</span><span>Hydrated and verified</span>${d.second?`<span>Second signatory: ${esc(d.second.replace(/_/g," "))}</span>`:""}</div><ul class="ck">${(d.checks||[]).slice(0,4).map(c=>`<li>${esc(c[0])}</li>`).join("")}</ul><div class="ac"><button type="button" class="btn2" data-docopen>Open</button><button type="button" class="btn2" data-docsave>Download</button></div></div></div>`}
+function docCardHTML(d){if(!d)return "";if(d.error)return `<div class="docc failed"><div class="th" style="cursor:default"><span class="ld">Held</span></div><div><span class="k cap">Document held</span><h4>${esc(DOCT[d.type]||"Document")}</h4><p class="aud">${esc(d.error)}</p></div></div>`;
+ return `<div class="docc" data-doc><div class="th" data-docopen role="button" tabindex="0" aria-label="Open the document"><span class="ld">Rendering…</span></div><div><span class="k cap">${esc(DOCT[d.type]||"Document")} · kernel ${esc(d.kernel||"")}</span><h4>${esc(d.title||"")}</h4><div class="mt"><span class="num">${d.pages||"?"} page${d.pages===1?"":"s"}</span><span>Hydrated and verified</span>${d.second?`<span>Second signatory: ${esc(d.second.replace(/_/g," "))}</span>`:""}</div><ul class="ck">${(d.checks||[]).slice(0,4).map(c=>`<li>${esc(c[0])}</li>`).join("")}</ul><div class="ac"><button type="button" class="btn2" data-docsave style="border-color:var(--ink)">Download .html</button><button type="button" class="btn2" data-docopen>Open</button></div></div></div>`}
 /* thumbnails render the first page once each card is on screen */
 const docThumbIO=new IntersectionObserver(es=>es.forEach(async en=>{if(!en.isIntersecting)return;docThumbIO.unobserve(en.target);const card=en.target,d=docOf(card);if(!d||d.error)return;try{const r=await kBuild(d.type,d.src,d.second);if(!r.ok)return;const th=card.querySelector(".th");const f=document.createElement("iframe");f.setAttribute("sandbox","allow-same-origin");f.setAttribute("tabindex","-1");f.setAttribute("aria-hidden","true");f.srcdoc=r.html;f.onload=()=>th.querySelector(".ld")?.remove();th.append(f)}catch(e){}}),{rootMargin:"200px"});
 const docOf=el=>{const b=el.closest(".bot");if(!b)return null;return b._doc||(cur&&cur.turns[+b.dataset.k]&&cur.turns[+b.dataset.k].doc)||null};
 function mountDocs(){document.querySelectorAll("#thread .docc[data-doc]:not([data-seen])").forEach(c=>{c.dataset.seen=1;docThumbIO.observe(c)})}
 document.addEventListener("click",async e=>{const o=e.target.closest("[data-docopen]");if(o){const d=docOf(o);if(d)openDoc(d);return}
- const sv=e.target.closest("[data-docsave]");if(sv){const d=docOf(sv);if(!d)return;const r=await kBuild(d.type,d.src,d.second).catch(()=>null);if(!r||!r.ok)return;DOCV={html:r.html,file:r.file};$("#docvSave").click();return}
+ const sv=e.target.closest("[data-docsave]");if(sv){const d=docOf(sv);if(!d)return;const t=sv.textContent;sv.textContent="Preparing…";const ok=await saveDoc(d);sv.textContent=ok?"Saved":t;setTimeout(()=>sv.textContent="Download",1800);return}
+ const fo=e.target.closest("[data-fopen]"),fs2=e.target.closest("[data-fsave]");if(fo||fs2){const [cid,k]=(fo||fs2).dataset[fo?"fopen":"fsave"].split("|"),c=chats.find(x=>x.id===cid),d=c&&c.turns[+k]&&c.turns[+k].doc;if(!d)return;if(fo){setMenu(false);openDoc(d)}else{const b=fs2;b.textContent="Preparing…";const ok=await saveDoc(d);b.textContent=ok?"Saved":"Download";setTimeout(()=>b.textContent="Download",1800)}return}
  const kt=e.target.closest("[data-ktpl]");if(kt){const K=await KLIB.load().catch(()=>null);const d=K&&K.derivatives.find(x=>x.file===kt.dataset.ktpl);if(d){setMenu(false);openDoc({type:d.type,src:d.src,second:d.second_signatory,basis:"The kernel's stock template, unfilled."},d.title)}}});
 /* ---------- runtime ---------- */
 let sample=null,db=null,ctl=null,busy=false;
@@ -1926,7 +1972,7 @@ const COPY={not_granted:"EXPIRA needs permission to use Claude. Reload to be ask
 /* scroll requests collect and land once per frame */
 const ENDS=new Set();let endRaf=0;
 function toEnd(el){ENDS.add(el);if(!endRaf)endRaf=requestAnimationFrame(()=>{endRaf=0;for(const e of ENDS){if(e)e.scrollTop=e.scrollHeight;else if(stick)sc.scrollTop=sc.scrollHeight}ENDS.clear()})}
-async function send(q){const KL=await KLIB.load().catch(()=>null);
+async function send(q){const KL=await KLIB.load().catch(()=>null),docPre=DOCSEL||docIntent(q);setDoc(null);
  if(!cur||cur.example){cur={id:"c"+Date.now(),no:nextNo(),title:(q.replace(/^(?:> ?.*\n)+\n*/,"")||"Quoted passage").slice(0,52),ts:Date.now(),turns:[],folder:pendingFolder};pendingFolder=null;chats.unshift(cur)}
  const tsQ=Date.now();cur.turns.push({role:"user",content:q,ts:tsQ});promptEl.value="";phSync();open(cur);setBusy(true);ctl=new AbortController();stick=true;closeSheet();
  const safe=OPT.safe,thorough=OPT.desks==="always",direct=OPT.desks==="off",depthDeep=OPT.depth==="deep";let webOn=OPT.web&&WEB.ok;
@@ -1934,7 +1980,7 @@ async function send(q){const KL=await KLIB.load().catch(()=>null);
  const K=cur.turns.length,t0=performance.now(),now=()=>performance.now()-t0;
  const work={steps:[],firewall:safe?"pending":"off",feed:[],ms:0,sig:[],sigKeys:["O","A"],map:{thinking:[],calls:[],pages:[],rationale:"",kind:""},ph:{},_o:true};
  const bot=document.createElement("div");bot.className="bot bi";bot.dataset.k=K;bot._work=work;
- bot.innerHTML=`<div class="by">${BYLINE}<time class="num">${hhmm(Date.now())}</time></div>${runHTML(work,K,true,{direct,safe})}<div class="ans"></div><div class="exw"></div><div class="docw"></div>`;
+ bot.innerHTML=`<div class="by">${BYLINE}<time class="num">${hhmm(Date.now())}</time></div>${runHTML(work,K,true,{direct,safe,doc:!!docPre})}<div class="ans"></div><div class="exw"></div><div class="docw"></div>`;
  $("#thread").append(bot);sc.scrollTop=1e9;
  const run=bot.querySelector(".run"),lbl=run.querySelector(".lbl"),tEl=run.querySelector(".run-h .t"),rk=run.querySelector(".rk"),evs=run.querySelector(".ev"),logN=run.querySelector(".logt .n"),dlb=run.querySelector(".delib"),stf=run.querySelector(".staff"),mapH=run.querySelector(".mapw"),note=run.querySelector(".rnote"),ans=bot.querySelector(".ans"),exw=bot.querySelector(".exw");
  shell(cur,tsQ,true);
@@ -1972,11 +2018,11 @@ async function send(q){const KL=await KLIB.load().catch(()=>null);
  F(null,`Received the brief: about ${ft(tok(q))} tokens.`);
  try{
   let plan;
-  if(direct){plan={title:q.split(/\s+/).slice(0,6).join(" "),kind:"direct answer",rationale:"Desks are off; answering directly.",steps:[]}}
+  if(direct){work.docPlan=docPre?{type:docPre,second:null,brief:q}:null;plan={title:q.split(/\s+/).slice(0,6).join(" "),kind:"direct answer",rationale:"Desks are off; answering directly.",steps:[]}}
   else{P("plan","on");let rawN=0;const dps=[dlb.querySelector("p")];
    const paint=(th,partial)=>{th.forEach((t,i)=>{let el=dps[i];if(!el){el=document.createElement("p");dlb.append(el);dps[i]=el}if(el.textContent!==t)el.textContent=t;el.classList.toggle("typing",!!partial&&i===th.length-1)})};
    plan=await sample.json(`You are the EXPIRA orchestrator (EXPIRA AI Systems, sister company of GSSC Integrated Corporation, Iloilo, Philippines). Think briefly, then staff this brief.
-${KL?`The GSSC kernel ${KL.kernel_version} is loaded, with templates for: quotation, company_profile, contract, secretary_certificate, board_resolution, notarial_acknowledgment. Second signatories (for contract, secretary_certificate, board_resolution) come from: ${Object.keys(KL.kernel["02_governance"].active_officers).filter(k=>k!=="duke_y_demayo").join(", ")}. If the user asks for one of these documents, set "document" and staff the desks that gather its facts.`:""}
+${KL?`The GSSC kernel ${KL.kernel_version} is loaded, with templates for: quotation, company_profile, contract, secretary_certificate, board_resolution, notarial_acknowledgment. Second signatories (for contract, secretary_certificate, board_resolution) come from: ${Object.keys(KL.kernel["02_governance"].active_officers).filter(k=>k!=="duke_y_demayo").join(", ")}. If the user asks for one of these documents, set "document" and staff the desks that gather its facts.${docPre?` The user has asked for a ${DOCT[docPre]}: set "document" with type "${docPre}".`:""}`:""}
 ${todayLine()} When the brief depends on current facts (prices, rates, rules, news), plan for the newest figures.
 Staffing is your decision, not a fixed roster. Commission as many desks as the work truly needs, from 0 to 8, in any mix of roles, and several desks of one role when the work splits cleanly: for example two research desks on different sub-questions, or two legal desks on different documents. Never give two desks the same work. ${thorough?"The user wants specialists: staff at least two desks and split the work generously.":"Small talk, simple facts or quick edits need no desk."} If the user asks for a particular staffing, follow it within these limits.
 Roles and effort: research (medium or high; floor medium), finance (high), legal (high), decision (medium or high; floor medium), builder (medium). Start each desk at its floor; use high for research or decision only when the amount exceeds PHP 500,000, sources may conflict, or there is legal exposure.
@@ -1993,7 +2039,7 @@ ${history?`Conversation so far:\n${history}\n\n`:""}New message: ${q}`,{modelTie
    work.map.rationale=String(plan.rationale||"");work.map.kind=String(plan.kind||"")}
   if(cur.turns.length===1&&plan.title){cur.title=String(plan.title).slice(0,60);crumb();renderRecents();swap($("#dxT"),cur.title)}
   const steps=work.steps,outs=[];think.O=0;work._o=false;
-  if(!direct){work._vs=0;work.docPlan=plan.document&&DOCT[plan.document.type]?{type:plan.document.type,second:plan.document.second_signatory||null,brief:String(plan.document.brief||"")}:null;if(work.docPlan)F(`Planned a ${DOCT[work.docPlan.type].toLowerCase()}`,`Planned a document from the kernel: ${DOCT[work.docPlan.type].toLowerCase()}.`);P("plan","done");F(null,`Classified the brief: <em>${esc(plan.kind||"general enquiry")}</em>.`);if(plan.rationale)F(null,esc(plan.rationale))}
+  if(!direct){work._vs=0;work.docPlan=(plan.document&&DOCT[plan.document.type]&&(!docPre||plan.document.type===docPre))?{type:plan.document.type,second:plan.document.second_signatory||null,brief:String(plan.document.brief||"")}:docPre?{type:docPre,second:null,brief:q}:null;if(work.docPlan)F(`Planned a ${DOCT[work.docPlan.type].toLowerCase()}`,`Planned a document from the kernel: ${DOCT[work.docPlan.type].toLowerCase()}.`);P("plan","done");F(null,`Classified the brief: <em>${esc(plan.kind||"general enquiry")}</em>.`);if(plan.rationale)F(null,esc(plan.rationale))}
   $("#lvN").textContent=steps.length?`${words(steps.length)} desk${steps.length>1?"s":""}`:"Direct";mapSync();
   if(steps.length){
    P("desks","on");const by={};steps.forEach(s=>by[s.role]=(by[s.role]||0)+1);
@@ -2078,7 +2124,8 @@ ${work.ledger&&work.ledger.claims.length?`Claims ledger, weighed by the decision
    work._au=0;work._aw=0;run.querySelector(".ledw").innerHTML=ledgerHTML(work);P("audit","done");mapSync()}
   else if(!direct)P("audit","skip");
   /* the document: the kernel's template, filled only with what the ledger supports, built and verified by the kernel builder */
-  if(work.docPlan&&KL){P("doc","on");work._doc=1;mapSync();const dp=work.docPlan,ref=KL.derivatives.find(d=>d.type===dp.type),gov=ref&&ref.governing;
+  if(work.docPlan&&!KL){P("doc","on");work.doc={type:work.docPlan.type,error:`The kernel library did not load${KLIB.err?` (${KLIB.err})`:""}, so no document was built. Reload the console and send the brief again.`};bot._doc=work.doc;bot.querySelector(".docw").innerHTML=docCardHTML(work.doc);F("Document held",esc(work.doc.error));P("doc","done")}
+  else if(work.docPlan&&KL){P("doc","on");work._doc=1;mapSync();const dp=work.docPlan,ref=KL.derivatives.find(d=>d.type===dp.type),gov=ref&&ref.governing;
    const dprompt=err=>`You are the EXPIRA document desk, building a GSSC ${DOCT[dp.type]} from the kernel. ${todayLine()}
 Return ONLY the derivative source in one \`\`\`html fence: the <title>, the reference's <link rel="gssc-derivative-style"> line or at most ONE <style> element (scoped classes only, never :root, never a class the master already uses), then the complete <body ...>...</body>.
 Rules: write in the master's component vocabulary exactly as the reference does (same classes, page sections, masthead, margin rail, watermark, numbering); keep the <img> elements as they are (the builder hydrates them); replace a bracketed field (class tpl-field) only with a value the ledger, the answer or the user gives; leave every other field as a bracketed tpl-field. Never invent a figure, name, date, number or clause fact. ${dp.second?`Keep the {{GSSC_SIGNATORY_2:name}} and {{GSSC_SIGNATORY_2:titles}} tokens where the reference has them.`:""}${safe?" CLIENT-SAFE: no supplier names, supplier costs, margins or internal figures.":""}
@@ -2094,7 +2141,7 @@ Ledger:\n${ledText()||"(none)"}\n\nThe answer as filed:\n${fin2.text.slice(0,400
    work.doc=built&&built.ok?{type:dp.type,src,second:dp.second,title:titleT.trim(),pages:built.pages,checks:built.checks,kernel:built.kernel,basis:dp.brief}:{type:dp.type,error:err||"The builder could not verify the document."};
    bot._doc=work.doc;bot.querySelector(".docw").innerHTML=docCardHTML(work.doc);mountDocs();follow();work._doc=0;
    F(work.doc.error?"Document held":`Built the ${DOCT[dp.type].toLowerCase()}`,work.doc.error?`Document held by the builder: ${esc(work.doc.error)}`:`Built and verified the ${DOCT[dp.type].toLowerCase()}: ${built.pages} pages, kernel ${built.kernel}.`);P("doc","done");mapSync()}
-  else if(!direct)P("doc","skip");
+  else P("doc","skip");filesCount();
   let ex=null;const PG=work.map.pages;
   if(steps.length||/\d/.test(fin2.text)){P("exhibits","on");think.O=1;work._o=true;mapSync();
    try{ex=await sample.json(`You set the exhibits under an EXPIRA answer: key figures, charts, one comparison table and sources, in the manner of a research journal. ${todayLine()} Put each source's date in its note.
