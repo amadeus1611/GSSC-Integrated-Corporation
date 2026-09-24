@@ -876,6 +876,8 @@ html.calm *,html.calm *::before,html.calm *::after{animation:none!important;tran
 .flist b{display:block;font-weight:400;font-size:13px;color:var(--ink)}.flist small{display:block;font-size:10.5px;color:var(--mute)}
 .flist .fa{display:flex;gap:6px}
 @media (max-width:560px){#docSum{display:none}}
+.tip::after{content:"";position:absolute;left:var(--ax,50%);top:100%;width:6px;height:6px;margin:-3px 0 0 -3px;background:var(--ink);transform:rotate(45deg);border-radius:1px}
+.tip.below::after{top:0}
 </style>
 
 <div class="app has-chat" id="app">
@@ -1018,7 +1020,9 @@ function toast(h){const box=$("#toasts");box.innerHTML="";const e=document.creat
 /* tooltips kept inside the window */
 (()=>{const tip=$("#tip");let tm,cur;
  const show=el=>{tip.textContent=el.dataset.tip;tip.classList.remove("on");tip.style.left="0px";tip.style.top="0px";const r=el.getBoundingClientRect(),w=tip.offsetWidth,h=tip.offsetHeight,m=8;
-  let x=r.left+r.width/2-w/2;x=Math.max(m,Math.min(innerWidth-w-m,x));let y=r.top-h-8;if(y<m)y=r.bottom+8;tip.style.left=x+"px";tip.style.top=y+"px";requestAnimationFrame(()=>tip.classList.add("on"))};
+  /* centred on the control; near an edge, aligned to the control's own edge instead, with the pointer kept on the control */
+  const cx=r.left+r.width/2;let x=cx-w/2;if(x<m)x=Math.max(m,r.left);else if(x+w>innerWidth-m)x=Math.min(innerWidth-w-m,r.right-w);
+  let y=r.top-h-8,below=false;if(y<m){y=r.bottom+8;below=true}tip.classList.toggle("below",below);tip.style.setProperty("--ax",Math.max(8,Math.min(w-8,cx-x))+"px");tip.style.left=x+"px";tip.style.top=y+"px";requestAnimationFrame(()=>tip.classList.add("on"))};
  document.addEventListener("pointerover",e=>{const el=e.target.closest("[data-tip]");if(el===cur)return;cur=el;clearTimeout(tm);tip.classList.remove("on");if(el&&e.pointerType!=="touch")tm=setTimeout(()=>show(el),650)});
  document.addEventListener("pointerdown",()=>{clearTimeout(tm);tip.classList.remove("on");cur=null});
  addEventListener("scroll",()=>tip.classList.remove("on"),true)})();
