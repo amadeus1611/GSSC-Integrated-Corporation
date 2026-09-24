@@ -760,6 +760,44 @@ html.calm *,html.calm *::before,html.calm *::after{animation:none!important;tran
 .field .k-conn .core{fill:color-mix(in srgb,var(--gold) 16%,var(--n-hollow))}
 .menu .seg button[aria-checked="true"]{box-shadow:inset 0 0 0 var(--rule-hair) var(--gold),0 1px 2px rgba(0,0,0,.12);color:var(--ink)}
 .menu .seg button[aria-checked="true"] svg{color:var(--gold)}
+
+/* ---------- v17: selection, quotes, message actions ---------- */
+:root{--sel:rgba(168,134,47,.26)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--sel:rgba(200,164,90,.34)}}
+:root[data-theme="dark"]{--sel:rgba(200,164,90,.34)}
+::selection{background:var(--sel);color:inherit}
+.ans,.you,.sb,.notes,.olog,.delib,.exh,.dsp h2{-webkit-user-select:text;user-select:text}
+.selbar{position:fixed;left:0;top:0;z-index:96;display:flex;align-items:center;gap:1px;padding:3px;border-radius:7px;background:var(--ink);color:var(--bg);box-shadow:0 10px 30px -10px rgba(0,0,0,.45);opacity:0;visibility:hidden;transform:translateY(4px) scale(.98);filter:blur(2px);transition:opacity .2s ease,transform .45s var(--soft-close),filter .3s ease,visibility 0s linear .2s;pointer-events:none}
+.selbar.open{opacity:1;visibility:visible;transform:none;filter:none;pointer-events:auto;transition-delay:0s}
+.selbar::after{content:"";position:absolute;left:var(--cx,50%);top:100%;width:8px;height:8px;margin:-4px 0 0 -4px;background:var(--ink);transform:rotate(45deg);border-radius:1px}
+.selbar.below::after{top:0}
+.selbar button{display:flex;align-items:center;gap:6px;border:0;background:none;color:inherit;font:400 11.5px var(--f-body);padding:5px 9px;border-radius:5px;cursor:pointer;white-space:nowrap;opacity:.86;transition:background .2s ease,opacity .2s ease}
+.selbar button:hover,.selbar button:focus-visible{background:color-mix(in srgb,var(--bg) 14%,transparent);opacity:1;outline:none}
+.selbar svg{width:13px;height:13px;flex:none}
+.selbar .sep{width:1px;height:14px;background:color-mix(in srgb,var(--bg) 22%,transparent);margin:0 3px}
+.defc{position:fixed;left:0;top:0;z-index:95;width:min(320px,calc(100vw - 24px));padding:12px 14px 10px;border-radius:8px;background:var(--panel);border:var(--rule-hair) solid var(--line-3);box-shadow:var(--shadow);opacity:0;visibility:hidden;transform:translateY(-4px);transition:opacity .25s ease,transform .5s var(--soft-close),visibility 0s linear .25s}
+.defc.open{opacity:1;visibility:visible;transform:none;transition-delay:0s}
+.defc .dk{color:var(--gold)}.defc .dt{font:400 15px/1.3 var(--f-display);color:var(--ink);margin:4px 0 6px;overflow:hidden;text-overflow:ellipsis;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical}
+.defc .dd{margin:0;font-size:12.5px;line-height:1.6;color:var(--text);min-height:20px}
+.defc .dd.wait{color:var(--mute);font:italic 400 12px var(--f-display)}
+.defc .da{display:flex;justify-content:flex-end;gap:4px;margin-top:8px;padding-top:6px;border-top:var(--rule-hair) solid var(--line)}
+.qbar{max-width:720px;margin:0 auto 5px;display:flex;align-items:center;gap:8px;padding:6px 6px 6px 10px;border:var(--rule-hair) solid var(--line-2);border-left:var(--rule-medium) solid var(--gold);border-radius:5px;background:var(--well);animation:blurIn .45s var(--soft-close) both}
+.qbar[hidden]{display:none}
+.qbar>svg{width:11px;height:11px;color:var(--gold);flex:none}
+.qbar .qk{font-size:9.5px;letter-spacing:var(--tracked-tight);text-transform:uppercase;color:var(--mute);flex:none}
+.qbar .qt{flex:1;min-width:0;font:italic 400 12.5px/1.4 var(--f-display);color:var(--text);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.app:not(.has-chat) .qbar{width:100%}
+/* your messages: a quote block, and Copy / Edit on hover */
+.yw{position:relative;align-self:flex-end;display:flex;flex-direction:column;align-items:flex-end;max-width:min(82%,560px);margin-bottom:-14px}
+.yw .you{align-self:auto;max-width:100%;margin:0}
+.you .yq{display:block;margin:0 0 6px;padding-left:10px;border-left:var(--rule-medium) solid var(--gold);font:italic 400 12.5px/1.5 var(--f-display);color:var(--soft);white-space:pre-wrap}
+.yacts{position:absolute;right:calc(100% + 6px);bottom:2px;display:flex;gap:1px;opacity:0;transform:translateX(4px);transition:opacity .3s ease,transform .5s var(--soft-close)}
+.yw:hover .yacts,.yw:focus-within .yacts{opacity:1;transform:none}
+.yacts[hidden]{display:none}
+.yedit{width:min(560px,70vw);display:flex;flex-direction:column;gap:6px;padding:8px;border:var(--rule-hair) solid var(--gold);border-radius:6px;background:var(--panel)}
+.yedit textarea{width:100%;min-height:60px;max-height:260px;border:0;background:transparent;resize:none;outline:none;font:300 14px/1.6 var(--f-body);color:var(--ink)}
+.yedit .ya{display:flex;justify-content:flex-end;gap:6px}
+.acts{opacity:.55}.bot:hover .acts,.bot:focus-within .acts{opacity:1}
 </style>
 
 <div class="app has-chat" id="app">
@@ -798,6 +836,7 @@ html.calm *,html.calm *::before,html.calm *::after{animation:none!important;tran
 
     <div class="dock" id="dock">
       <button class="jump" id="jump" type="button">Latest ↓</button>
+      <div class="qbar" id="qbar" hidden><svg viewBox="0 0 16 16" fill="currentColor" aria-hidden="true"><path d="M3 9.5C3 6.8 4.6 5 7 4.5l.4.9C5.9 6 5.2 7 5.1 8H7v4H3zM9 9.5C9 6.8 10.6 5 13 4.5l.4.9C11.9 6 11.2 7 11.1 8H13v4H9z"/></svg><span class="qk">Asking about</span><span class="qt" id="qt"></span><button type="button" class="ib sm" id="qx" aria-label="Remove the quote"><svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.2"><path d="M3 3l6 6M9 3l-6 6"/></svg></button></div>
       <form class="comp" id="form">
         <label for="prompt" class="sr">Message EXPIRA</label>
         <div class="pw"><textarea id="prompt" rows="1" placeholder="Brief EXPIRA…"></textarea><span class="phx" id="phx" aria-hidden="true">Brief EXPIRA…</span></div>
@@ -832,7 +871,7 @@ html.calm *,html.calm *::before,html.calm *::after{animation:none!important;tran
   <p class="hint" id="optHint"></p>
 </div>
 <div class="stg" id="setMenu" role="dialog" aria-modal="true" aria-labelledby="stgT">
-  <aside class="stg-n"><h2 id="stgT">Settings</h2><nav role="tablist" aria-orientation="vertical" aria-label="Settings sections"><button role="tab" data-tab="general" aria-selected="false"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1"><path d="M2.5 4.5h7M12.5 4.5h1M2.5 11.5h1M6.5 11.5h7"/><circle cx="11" cy="4.5" r="1.5"/><circle cx="5" cy="11.5" r="1.5"/></svg><span>General</span></button><button role="tab" data-tab="appearance" aria-selected="false"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1"><circle cx="8" cy="8" r="5.5"/><path d="M8 2.5v11a5.5 5.5 0 000-11z" fill="currentColor" stroke="none"/></svg><span>Appearance</span></button><button role="tab" data-tab="briefs" aria-selected="false"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1"><path d="M3.5 2.5h9v11h-9zM5.5 5.5h5M5.5 8h5M5.5 10.5h3"/></svg><span>Briefs</span></button><button role="tab" data-tab="map" aria-selected="false"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1"><circle cx="4" cy="8" r="1.8"/><circle cx="11.5" cy="4" r="1.4"/><circle cx="12" cy="11.5" r="1.4"/><path d="M5.6 7.2l4.6-2.5M5.6 8.8l5 2.1"/></svg><span>The map</span></button><button role="tab" data-tab="library" aria-selected="false"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1"><path d="M1.5 4.5a1 1 0 011-1h3.6l1.5 1.5h5.9a1 1 0 011 1v6.5a1 1 0 01-1 1h-11a1 1 0 01-1-1z"/></svg><span>Library</span></button><button role="tab" data-tab="about" aria-selected="false"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1"><circle cx="8" cy="8" r="5.5"/><path d="M8 7.2v4M8 5v.3"/></svg><span>About</span></button></nav><p class="stg-v">EXPIRA Console · v16</p></aside>
+  <aside class="stg-n"><h2 id="stgT">Settings</h2><nav role="tablist" aria-orientation="vertical" aria-label="Settings sections"><button role="tab" data-tab="general" aria-selected="false"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1"><path d="M2.5 4.5h7M12.5 4.5h1M2.5 11.5h1M6.5 11.5h7"/><circle cx="11" cy="4.5" r="1.5"/><circle cx="5" cy="11.5" r="1.5"/></svg><span>General</span></button><button role="tab" data-tab="appearance" aria-selected="false"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1"><circle cx="8" cy="8" r="5.5"/><path d="M8 2.5v11a5.5 5.5 0 000-11z" fill="currentColor" stroke="none"/></svg><span>Appearance</span></button><button role="tab" data-tab="briefs" aria-selected="false"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1"><path d="M3.5 2.5h9v11h-9zM5.5 5.5h5M5.5 8h5M5.5 10.5h3"/></svg><span>Briefs</span></button><button role="tab" data-tab="map" aria-selected="false"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1"><circle cx="4" cy="8" r="1.8"/><circle cx="11.5" cy="4" r="1.4"/><circle cx="12" cy="11.5" r="1.4"/><path d="M5.6 7.2l4.6-2.5M5.6 8.8l5 2.1"/></svg><span>The map</span></button><button role="tab" data-tab="library" aria-selected="false"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1"><path d="M1.5 4.5a1 1 0 011-1h3.6l1.5 1.5h5.9a1 1 0 011 1v6.5a1 1 0 01-1 1h-11a1 1 0 01-1-1z"/></svg><span>Library</span></button><button role="tab" data-tab="about" aria-selected="false"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1"><circle cx="8" cy="8" r="5.5"/><path d="M8 7.2v4M8 5v.3"/></svg><span>About</span></button></nav><p class="stg-v">EXPIRA Console · v17</p></aside>
   <section class="stg-p" id="stgP" role="tabpanel" aria-labelledby="stgT"></section>
   <button class="ib stg-x" id="stgX" aria-label="Close settings" data-tip="Close  Esc"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.1"><path d="M4 4l8 8M12 4l-8 8"/></svg></button>
 </div>
@@ -852,6 +891,8 @@ html.calm *,html.calm *::before,html.calm *::after{animation:none!important;tran
 <div class="keys" id="keys" role="dialog" aria-label="Keyboard shortcuts"><div class="cap">Keyboard</div><dl><dt><span class="kb">⌘K</span></dt><dd>Commands</dd><dt><span class="kb">⌘,</span></dt><dd>Settings</dd><dt><span class="kb">⌥N</span></dt><dd>New chat</dd><dt><span class="kb">⌥L</span></dt><dd>The Dispatch</dd><dt><span class="kb">/</span></dt><dd>Search chats</dd><dt><span class="kb">Enter</span></dt><dd>Send</dd><dt><span class="kb">⇧ Enter</span></dt><dd>New line</dd><dt><span class="kb">Esc</span></dt><dd>Stop or close</dd><dt><span class="kb">?</span></dt><dd>This card</dd></dl></div>
 <div class="pal" id="pal" role="dialog" aria-label="Commands"><label for="palIn" class="sr">Command</label><input id="palIn" placeholder="Type a command…"><ul id="palList"></ul></div>
 <div class="toasts" id="toasts" aria-live="polite"></div>
+<div class="selbar" id="selbar" role="toolbar" aria-label="Selection"><button type="button" data-sa="ask"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.1" aria-hidden="true"><path d="M2.5 3.5h11v7h-6l-3 2.5v-2.5h-2z"/></svg><span>Ask EXPIRA</span></button><button type="button" data-sa="explain"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.1" aria-hidden="true"><circle cx="8" cy="8" r="5.5"/><path d="M6.4 6.4a1.7 1.7 0 113 1c-.6.4-1.4.8-1.4 1.6M8 11v.3"/></svg><span>Explain</span></button><button type="button" data-sa="define"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.1" aria-hidden="true"><path d="M3 2.5h7.5L13 5v8.5H3z"/><path d="M5.5 7h5M5.5 9.5h5M5.5 12h3"/></svg><span>Define</span></button><i class="sep"></i><button type="button" data-sa="copy"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.1" aria-hidden="true"><rect x="5.5" y="5.5" width="8" height="8" rx="1"/><path d="M10.5 5.5v-2a1 1 0 00-1-1h-6a1 1 0 00-1 1v6a1 1 0 001 1h2"/></svg><span>Copy</span></button><button type="button" data-sa="newchat"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.1" aria-hidden="true"><path d="M8 3v10M3 8h10"/></svg><span>New chat</span></button></div>
+<div class="defc" id="defc" role="dialog" aria-label="Definition"><div class="dk cap">Define</div><div class="dt" id="defT"></div><p class="dd" id="defD"></p><div class="da"><button type="button" class="ab" data-sa="ask">Ask more</button><button type="button" class="ab" data-dclose>Close</button></div></div>
 <div class="tip" id="tip" role="tooltip"></div>
 <div class="ctip" id="ctip" role="tooltip"></div>
 <div class="sheet" id="sheet" role="dialog" aria-label="Details"><button class="ib sx" id="sheetX" aria-label="Close"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.1"><path d="M4 4l8 8M12 4l-8 8"/></svg></button><div class="sb" id="sheetB"></div></div>
@@ -863,7 +904,7 @@ const esc=s=>String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",
 const PREF=Object.assign({name:"Duke",text:"m",density:"comfortable",motion:"full",grain:true},(()=>{try{return JSON.parse(localStorage.getItem("expira.prefs")||"{}")}catch(e){return {}}})());
 const FORCES=Object.assign({center:1,repel:1,link:1,dist:1},PREF.forces||{});
 const savePref=()=>{try{localStorage.setItem("expira.prefs",JSON.stringify(Object.assign({},PREF,{forces:FORCES})))}catch(e){}};
-const MQR=matchMedia("(prefers-reduced-motion: reduce)");let reduce=MQR.matches||PREF.motion==="calm";
+const MQR=matchMedia("(prefers-reduced-motion: reduce)");let reduce=MQR.matches||PREF.motion==="calm";let QUOTE="";
 root.dataset.text=PREF.text;root.dataset.density=PREF.density;root.classList.toggle("calm",PREF.motion==="calm");
 const GRAIN={run(){}};
 const pad=(n,w=2)=>String(n).padStart(w,"0");
@@ -1083,14 +1124,16 @@ function runHTML(w,k,live,o={}){const M=w.map||{},th=M.thinking||[],n=(w.feed||[
  <div class="run-b"><div>${dl}<div class="staff">${live?"":staffHTML(w.steps)}</div><div class="mapw"></div>
  <div class="logw${live?" open":""}"><button class="logt" type="button"><span class="cap">Log</span><span class="n num">${n||""}</span>${CHEV}</button><div class="logb"><div><ol class="ev">${(w.feed||[]).map(evLi).join("")}</ol><button class="rd" data-read="${live?"live":k}">Open the dispatch</button></div></div></div>
  </div></div><p class="rnote" hidden></p></div>`}
-function youHTML(t){return `<div class="you bi">${esc(t.content)}</div>`}
+function splitQuote(c){const m=String(c).match(/^((?:> ?.*(?:\n|$))+)\n*([\s\S]*)$/);return m?[m[1].replace(/^> ?/gm,"").trim(),m[2]]:["",String(c)]}
+function youHTML(t,k){const [qt,body]=splitQuote(t.content);return `<div class="yw bi" data-k="${k}"><div class="you">${qt?`<span class="yq">${esc(qt)}</span>`:""}${esc(body)}</div><span class="yacts"><button class="ab" data-ycopy>Copy</button><button class="ab" data-yedit>Edit</button></span></div>`}
+function youHTML_old(t){return `<div class="you bi">${esc(t.content)}</div>`}
 const acts=k=>`<span class="acts"><button class="ab" data-copy>Copy</button><button class="ab" data-regen>Retry</button><button class="ab" data-read="${k}">Dispatch</button></span>`;
 const BYLINE=`${MARK}<span class="who">EXPIRA</span>`;
 function inThis(html){const d=document.createElement("div");d.innerHTML=html;const hs=[...d.querySelectorAll("h3")];if(hs.length<3)return "";return `<nav class="inthis"><span class="cap">In this answer</span>${hs.map((x,i)=>`<button data-sec="${i}" style="animation-delay:${i*.05}s"><b>§${i+1}</b>${esc(x.textContent)}</button>`).join("")}</nav>`}
 function meta(text){const w=(text.match(/\S+/g)||[]).length;return `<span>${w} words · ${Math.max(1,Math.round(w/220))} min read</span>`}
 function botHTML(t,k,last){const a=md(t.content);return `<div class="bot" data-k="${k}"><div class="by">${BYLINE}<time class="num">${hhmm(t.ts)}</time></div>${t.work?runHTML(t.work,k,false,{open:last}):""}<div class="ans">${a}</div>${exhibitsHTML(t.ex,false)}${inThis(a)}<div class="filed capt"><span>Filed ${hhmm(t.ts)}</span><i class="dotsep"></i>${meta(t.content)}${acts(k)}</div></div>`}
-function open(c){cur=c;app.classList.toggle("has-chat",!!c);GRAIN.run(!c&&PREF.grain);
- closeSheet();if(c){crumb();const la=c.turns.map(t=>t.role).lastIndexOf("assistant");$("#thread").innerHTML=c.turns.map((t,k)=>t.role==="user"?youHTML(t):botHTML(t,k,k===la)).join("");$("#main").append($("#dock"));FM.forEach(m=>{if(!m.host.isConnected)m.kill()});mountMaps();stick=true;requestAnimationFrame(()=>{sc.scrollTop=1e9;prog()})}
+function open(c){window.__selHide&&window.__selHide();cur=c;app.classList.toggle("has-chat",!!c);GRAIN.run(!c&&PREF.grain);
+ closeSheet();if(c){crumb();const la=c.turns.map(t=>t.role).lastIndexOf("assistant");$("#thread").innerHTML=c.turns.map((t,k)=>t.role==="user"?youHTML(t,k):botHTML(t,k,k===la)).join("");$("#main").append($("#dock"));FM.forEach(m=>{if(!m.host.isConnected)m.kill()});mountMaps();stick=true;requestAnimationFrame(()=>{sc.scrollTop=1e9;prog()})}
  else{$("#heroDock").append($("#dock"));$("#thread").innerHTML="";$("#crumb").textContent="";showDsp(false)}
  renderRecents()}
 document.addEventListener("click",e=>{
@@ -1106,6 +1149,54 @@ document.addEventListener("click",e=>{
  const r=e.target.closest("[data-regen]");if(r){if(busy)return;if(cur?.example){toast("Start a new chat to brief EXPIRA yourself");return}const k=+r.closest(".bot").dataset.k,q=cur.turns[k-1]?.content;if(q){cur.turns.splice(k-1);save();open(cur);send(q)}return}
  const d=e.target.closest("[data-read]");if(d){if(busy&&d.dataset.read==="live"){showDsp(true);return}const k=+d.dataset.read,t=cur.turns[k];if(!t||!t.work)return;recordedDispatch(t.work,cur,cur.turns[k-1]?.ts||t.ts);showDsp(true);return}
  const pk=e.target.closest("[data-notes]");if(pk){const dk=pk.closest(".desk");dk.classList.toggle("show");pk.textContent=dk.classList.contains("show")?"Close notes":"Read notes"}});
+
+/* ---------- quoting: a passage rides along with the next brief ---------- */
+const quoteMd=t=>String(t).trim().split("\n").map(l=>"> "+l).join("\n");
+function setQuote(t){QUOTE=String(t||"").trim().slice(0,1200);const b=$("#qbar");b.hidden=!QUOTE;$("#qt").textContent=QUOTE.replace(/\s+/g," ");promptEl.placeholder=QUOTE?"Ask about this passage…":"Brief EXPIRA…";$("#phx").classList.toggle("gone",!!QUOTE||!!promptEl.value);grow()}
+$("#qx").onclick=()=>{setQuote("");promptEl.focus()};
+
+/* ---------- the selection bar: select any passage to ask about it, explain it, define it, copy it ---------- */
+(()=>{const bar=$("#selbar"),dc=$("#defc");let txt="",ctxT="",tm=0;const DEF=new Map();
+ const hide=()=>{bar.classList.remove("open")};const hideDef=()=>dc.classList.remove("open");
+ const hostOf2=n=>{const e=n&&(n.nodeType===1?n:n.parentElement);return e&&e.closest(".ans,.you,.sb,.notes,.olog,.delib,.exh")};
+ function check(){const s=getSelection();if(!s||s.isCollapsed||!s.rangeCount){hide();return}const t=String(s).replace(/\s+\n/g,"\n").trim();if(t.length<2){hide();return}
+  const r=s.getRangeAt(0),host=hostOf2(r.commonAncestorContainer)||(hostOf2(s.anchorNode)&&hostOf2(s.focusNode));if(!host){hide();return}
+  txt=t.slice(0,1200);ctxT=((host.closest(".bot")?.querySelector(".ans"))||host).innerText.slice(0,1800);
+  const rs=[...r.getClientRects()].filter(x=>x.width>1),a=rs[0]||r.getBoundingClientRect(),z=rs[rs.length-1]||a;
+  bar.classList.remove("below");bar.style.left="0px";bar.style.top="0px";const w=bar.offsetWidth,hh=bar.offsetHeight,cx=(a.left+Math.min(a.right,a.left+Math.max(a.width,40)))/2;
+  let x=Math.max(8,Math.min(innerWidth-w-8,cx-w/2)),y=a.top-hh-10;if(y<60){y=z.bottom+10;bar.classList.add("below")}
+  bar.style.left=x+"px";bar.style.top=y+"px";bar.style.setProperty("--cx",Math.max(12,Math.min(w-12,cx-x))+"px");
+  bar.querySelectorAll("[data-sa=explain],[data-sa=define]").forEach(b=>b.disabled=!sample);bar.classList.add("open")}
+ const soon=()=>{clearTimeout(tm);tm=setTimeout(check,12)};
+ document.addEventListener("mouseup",e=>{if(e.target.closest("#selbar,#defc"))return;soon()});
+ document.addEventListener("keyup",e=>{if(e.shiftKey||e.key==="Shift"||((e.metaKey||e.ctrlKey)&&e.key==="a"))soon()});
+ document.addEventListener("selectionchange",()=>{const s=getSelection();if(!s||s.isCollapsed)hide()});
+ let st=0;addEventListener("scroll",()=>{if(!bar.classList.contains("open")&&!dc.classList.contains("open"))return;hide();hideDef();clearTimeout(st);st=setTimeout(check,160)},true);
+ [bar,dc].forEach(el=>el.addEventListener("mousedown",e=>{if(!e.target.closest("textarea,input"))e.preventDefault()}));
+ const act=async k=>{const t=txt;if(k==="copy"){const b=bar.querySelector("[data-sa=copy] span");const done=m=>{b.textContent=m;setTimeout(()=>{b.textContent="Copy";hide()},700)};navigator.clipboard?navigator.clipboard.writeText(t).then(()=>done("Copied"),()=>done("Use ⌘C")):done("Use ⌘C");return}
+  hide();
+  if(k==="ask"){hideDef();getSelection().removeAllRanges();setQuote(t);promptEl.focus();return}
+  if(k==="newchat"){getSelection().removeAllRanges();if(busy){toast("Wait for this run to finish");return}newChat();setQuote(t);promptEl.focus();return}
+  if(k==="explain"){getSelection().removeAllRanges();if(busy){setQuote(t);promptEl.value="Explain this in plain terms.";grow();return}if(!sample)return;send(quoteMd(t)+"\n\nExplain this in plain terms, in the context of the conversation.");return}
+  if(k==="define"){if(!sample)return;const r=getSelection().rangeCount?getSelection().getRangeAt(0).getBoundingClientRect():bar.getBoundingClientRect();
+   $("#defT").textContent=t.length>80?t.slice(0,79)+"…":t;const dd=$("#defD");dc.classList.add("open");const w=dc.offsetWidth;dc.style.left=Math.max(8,Math.min(innerWidth-w-8,r.left+r.width/2-w/2))+"px";dc.style.top=Math.min(innerHeight-dc.offsetHeight-12,r.bottom+10)+"px";
+   const key=t.toLowerCase().slice(0,200);if(DEF.has(key)){dd.className="dd";dd.textContent=DEF.get(key);return}dd.className="dd wait";dd.textContent="Looking it up…";
+   try{const res=await sample(`Define "${t.slice(0,200)}" as it is used in the passage below, in one or two plain sentences for a business reader in the Philippines. No preamble.\n\nPassage:\n${ctxT}`,{modelTier:"quick",cache:true,onText:({text})=>{dd.className="dd";dd.textContent=text}});DEF.set(key,res.text.trim());dd.textContent=res.text.trim()}catch(e){dd.className="dd wait";dd.textContent=e&&e.code==="rate_limited"?"Too many requests. Try again in a minute.":"Could not define that just now."}}};
+ bar.addEventListener("click",e=>{const b=e.target.closest("[data-sa]");if(b)act(b.dataset.sa)});
+ dc.addEventListener("click",e=>{if(e.target.closest("[data-dclose]")){hideDef();return}const b=e.target.closest("[data-sa]");if(b){hideDef();act(b.dataset.sa)}});
+ document.addEventListener("pointerdown",e=>{if(dc.classList.contains("open")&&!e.target.closest("#defc,#selbar"))hideDef()});
+ addEventListener("keydown",e=>{if(e.key==="Escape"&&(bar.classList.contains("open")||dc.classList.contains("open"))){hide();hideDef()}},true);
+ window.__selHide=()=>{hide();hideDef()}})();
+
+/* ---------- your messages: copy, or edit and send again ---------- */
+document.addEventListener("click",e=>{const yc=e.target.closest("[data-ycopy]");if(yc){const k=+yc.closest(".yw").dataset.k,t=cur?.turns[k]?.content||"";const done=m=>{yc.textContent=m;setTimeout(()=>yc.textContent="Copy",1400)};navigator.clipboard?navigator.clipboard.writeText(t).then(()=>done("Copied"),()=>done("Select to copy")):done("Select to copy");return}
+ const ye=e.target.closest("[data-yedit]");if(ye){if(busy){toast("Wait for this run to finish");return}const w=ye.closest(".yw"),k=+w.dataset.k,t=cur?.turns[k];if(!t)return;
+  if(cur.example){toast("Start a new chat to brief EXPIRA yourself");return}
+  const box=document.createElement("div");box.className="yedit";box.innerHTML=`<textarea aria-label="Edit your message"></textarea><div class="ya"><button type="button" class="btn2" data-ycancel>Cancel</button><button type="button" class="btn2" data-ysend style="border-color:var(--ink)">Send</button></div>`;
+  const ta=box.querySelector("textarea");ta.value=t.content;w.querySelector(".you").replaceWith(box);w.querySelector(".yacts").hidden=true;const fit=()=>{ta.style.height="auto";ta.style.height=Math.min(260,ta.scrollHeight)+"px"};fit();ta.addEventListener("input",fit);ta.focus();ta.setSelectionRange(ta.value.length,ta.value.length);
+  ta.addEventListener("keydown",ev=>{if(ev.key==="Escape"){ev.stopPropagation();open(cur)}if(ev.key==="Enter"&&!ev.shiftKey&&!ev.isComposing){ev.preventDefault();box.querySelector("[data-ysend]").click()}});
+  box.querySelector("[data-ycancel]").onclick=()=>open(cur);
+  box.querySelector("[data-ysend]").onclick=()=>{const v=ta.value.trim();if(!v||!sample||busy)return;cur.turns.splice(k);save();open(cur);send(v)};return}});
 
 /* start page */
 const now=new Date(),hr=now.getHours();
@@ -1192,7 +1283,7 @@ function paneHTML(t){
   <div class="grp"><div class="gh"><span><b>Archived chats</b><small>Restore one to bring it back to the sidebar.</small></span></div>${A.length?`<ul class="alist">${A.map(c=>`<li><span>${esc(c.title)}<small class="num">${esc(new Date(c.ts||Date.now()).toLocaleDateString("en-PH",{day:"numeric",month:"short"}))}</small></span><button class="ab" data-unarch="${esc(c.id)}">Restore</button><button class="ab danger" data-purge="${esc(c.id)}">Delete</button></li>`).join("")}</ul>`:`<p class="empty2">Nothing archived.</p>`}</div>
   <div class="srow" style="cursor:default"><span class="l"><b>Copy the library</b><small>Every chat, as JSON, to your clipboard.</small></span><button class="btn2" data-export>Copy JSON</button></div>
   <div class="srow" style="cursor:default"><span class="l"><b>Clear the library</b><small>Deletes every chat and folder in this browser. This cannot be undone.</small></span><button class="btn2 danger" data-clear>Clear</button></div>`}
- return `<h3>About</h3><p class="lede">EXPIRA Console, version 16. Built on Claude for EXPIRA AI Systems and GSSC Integrated Corporation.</p>
+ return `<h3>About</h3><p class="lede">EXPIRA Console, version 17. Built on Claude for EXPIRA AI Systems and GSSC Integrated Corporation.</p>
   <dl class="about"><dt>Orchestrator</dt><dd>Opus 5.5 at low effort; plans at the quick tier</dd><dt>Desks</dt><dd>Light effort at the quick tier, considered at the default tier, deep at the complex tier</dd>
   <dt>Claude</dt><dd class="${sample?"ok":"no"}">${sample?"Linked":"Not linked. Open this page in Claude to brief EXPIRA."}</dd><dt>Parallel Search</dt><dd class="${WEB.ok?"ok":"no"}">${WEB.ok?"Connected":"Not connected"}</dd>
   <dt>Freshness</dt><dd>Every prompt carries today's date; web results are sorted newest first and anything older than the window is flagged</dd><dt>Policy</dt><dd>Escalates above PHP 500,000; at most two redos; a firewall on client-facing answers</dd><dt>Storage</dt><dd>Chats in this browser; run summaries in the runs log</dd></dl>
@@ -1247,7 +1338,7 @@ addEventListener("resize",()=>menu(false));
 $("#optMenu").addEventListener("keydown",e=>{const it=[...$("#optMenu").querySelectorAll('button:not([aria-disabled="true"])')],i=it.indexOf(document.activeElement);if(e.key==="ArrowDown"){e.preventDefault();it[(i+1)%it.length].focus()}if(e.key==="ArrowUp"){e.preventDefault();it[(i-1+it.length)%it.length].focus()}if(e.key==="Escape"){e.stopPropagation();menu(false);$("#optBtn").focus()}});
 setTimeout(drawOpt,30);
 const promptEl=$("#prompt");function phSync(){$("#phx").classList.toggle("gone",!!promptEl.value)}
-function grow(){phSync();promptEl.style.height="auto";const mx=21*7+12;promptEl.style.height=Math.min(promptEl.scrollHeight,mx)+"px";promptEl.style.overflowY=promptEl.scrollHeight>mx?"auto":"hidden";const n=promptEl.value.trim().length;$("#count").textContent=n?`~${ft(tok(promptEl.value))} tokens`:"";$("#count").classList.toggle("on",n>0);$("#send").disabled=busy?false:!n||!sample}
+function grow(){phSync();promptEl.style.height="auto";const mx=21*7+12;promptEl.style.height=Math.min(promptEl.scrollHeight,mx)+"px";promptEl.style.overflowY=promptEl.scrollHeight>mx?"auto":"hidden";const n=promptEl.value.trim().length;$("#count").textContent=n?`~${ft(tok(promptEl.value))} tokens`:"";$("#count").classList.toggle("on",n>0);$("#send").disabled=busy?false:(!n&&!QUOTE)||!sample}
 promptEl.addEventListener("input",grow);
 const PH=["Brief EXPIRA…","Compare lead times from three suppliers…","Draft a scope for an office fit-out…","Check a clause for delay exposure…","Price forty rooms of blackout drapery…"];let phI=0;
 promptEl.addEventListener("input",phSync);
@@ -1460,7 +1551,7 @@ class FlowMap{
     if(rep)p.style.transitionDelay=((this.nodes.get(e.b)?.n.col||1)*.24+.08).toFixed(2)+"s";requestAnimationFrame(()=>requestAnimationFrame(()=>p.classList.add("drawn")))}
    o.e=e;o.f.classList.toggle("on",!!e.on)});
   for(const [id,o] of this.edges)if(!se.has(id)){o.g.remove();this.edges.delete(id)}
-  this.H=L.H;if(this.fresh){this.Hc=L.H;this.fresh=false}this.go()}
+  this.H=L.H;if(this.fresh){this.Hc=L.H;this.fresh=false;this.svg.setAttribute("viewBox",`0 0 ${this.W} ${this.Hc.toFixed(1)}`);this.svg.style.width=this.W+"px";this.svg.style.height=this.Hc.toFixed(1)+"px"}this.go()}
  ends(e){const a=this.nodes.get(e.a),b=this.nodes.get(e.b);if(!a||!b)return null;const ay=a.ry??a.y,by=b.ry??b.y;
   if(this.vert){if(e.dep)return null;const x1=a.x+a.w/2,y1=ay+a.h,x2=b.x+b.w/2,y2=by,dy=(y2-y1)*.5;return [[x1,y1],[x1,y1+dy],[x2,y2-dy],[x2,y2]]}
   if(e.dep){const x=a.x,y1=ay+a.h/2,y2=by+b.h/2,bx=x-Math.min(18,8+Math.abs(y2-y1)*.12);return [[x,y1],[bx,y1],[bx,y2],[x,y2]]}
@@ -1532,7 +1623,7 @@ class FieldMap{
    l.f.classList.toggle("on",!!e.on)});
   for(const [id,l] of this.links)if(!se.has(id)){l.el.remove();l.f.remove();this.links.delete(id)}
   const mk=this.host.querySelector(".mvk");if(mk){const roles=[...new Set((w.steps||[]).map(s=>s.role))],html=roles.map(r=>`<span><i style="background:${RC[r]}"></i>${ROLE[r]}</span>`).join("");if(mk.innerHTML!==html)mk.innerHTML=html}
-  this.alpha=Math.max(this.alpha,this.fresh?1:heat);this.fresh=false;this.go()}
+  this.alpha=Math.max(this.alpha,this.fresh?1:heat);this.fresh=false;this.svg.setAttribute("viewBox",`0 0 ${this.W} ${this.Hc.toFixed(1)}`);this.svg.style.height=this.Hc.toFixed(1)+"px";this.go()}
  clamp(o){const px=Math.max(o.rc+2,o.lw/2+4);o.x=Math.min(this.W-px,Math.max(px,o.x));o.y=Math.min(this.Hc-o.rc-17,Math.max(o.rc+8,o.y))}
  tick(){const A=this.alpha,ALL=[...this.nodes.values()];for(const o of ALL)o.wait=o.born!=null&&o.g.classList.contains("unborn");const L=ALL.filter(o=>!o.wait&&!o.scr),n=L.length,H=this.Hc;
   for(const l of this.links.values()){const a=this.nodes.get(l.e.a),b=this.nodes.get(l.e.b);if(!a||!b||a.wait||b.wait||a.scr||b.scr)continue;let dx=b.x+b.vx-a.x-a.vx,dy=b.y+b.vy-a.y-a.vy;const d=Math.hypot(dx,dy)||1,k=(d-l.d)/d*A*l.s*FORCES.link;dx*=k;dy*=k;b.vx-=dx*.5;b.vy-=dy*.5;a.vx+=dx*.5;a.vy+=dy*.5}
@@ -1636,7 +1727,7 @@ let sample=null,db=null,ctl=null,busy=false;
  if(!sample)$("#phx").textContent="Open this page in Claude to brief EXPIRA";grow();db=await window.claude?.use?.("db")??null;webInit()})();
 open(chats.find(c=>!c.example)||chats[0]);
 
-$("#form").addEventListener("submit",e=>{e.preventDefault();if(busy){ctl?.abort();return}const q=promptEl.value.trim();if(q&&sample)send(q)});
+$("#form").addEventListener("submit",e=>{e.preventDefault();if(busy){ctl?.abort();return}let q=promptEl.value.trim();if((!q&&!QUOTE)||!sample)return;if(QUOTE){q=quoteMd(QUOTE)+"\n\n"+(q||"Tell me more about this.");setQuote("")}send(q)});
 function setBusy(on){busy=on;app.classList.toggle("busy",on);$("#runPill").hidden=!on;const s=$("#send");s.setAttribute("aria-label",on?"Stop":"Send");s.dataset.tip=on?"Stop  Esc":"Send";
  s.innerHTML=on?`<svg viewBox="0 0 16 16"><rect x="4.5" y="4.5" width="7" height="7" rx="1" fill="currentColor"/></svg>`:`<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M8 13V3M3.5 7.5L8 3l4.5 4.5"/></svg>`;grow()}
 const COPY={not_granted:"EXPIRA needs permission to use Claude. Reload to be asked again.",rate_limited:"Too many requests. Wait a minute, then send again.",session_expired:"Your session expired. Sign in again.",refused:"That brief was declined. Rephrase it.",prompt_too_large:"That brief is too long. Shorten it.",invalid_json:"The plan came back unreadable. Send again."};
@@ -1645,7 +1736,7 @@ const COPY={not_granted:"EXPIRA needs permission to use Claude. Reload to be ask
 const ENDS=new Set();let endRaf=0;
 function toEnd(el){ENDS.add(el);if(!endRaf)endRaf=requestAnimationFrame(()=>{endRaf=0;for(const e of ENDS){if(e)e.scrollTop=e.scrollHeight;else if(stick)sc.scrollTop=sc.scrollHeight}ENDS.clear()})}
 async function send(q){
- if(!cur||cur.example){cur={id:"c"+Date.now(),no:nextNo(),title:q.slice(0,52),ts:Date.now(),turns:[],folder:pendingFolder};pendingFolder=null;chats.unshift(cur)}
+ if(!cur||cur.example){cur={id:"c"+Date.now(),no:nextNo(),title:(q.replace(/^(?:> ?.*\n)+\n*/,"")||"Quoted passage").slice(0,52),ts:Date.now(),turns:[],folder:pendingFolder};pendingFolder=null;chats.unshift(cur)}
  const tsQ=Date.now();cur.turns.push({role:"user",content:q,ts:tsQ});promptEl.value="";phSync();open(cur);setBusy(true);ctl=new AbortController();stick=true;closeSheet();
  const safe=OPT.safe,thorough=OPT.desks==="always",direct=OPT.desks==="off",depthDeep=OPT.depth==="deep";let webOn=OPT.web&&WEB.ok;
  if(webOn){try{const lim=await sample.limits();if(!lim||!lim.tools)webOn=false}catch(e){webOn=false}}
