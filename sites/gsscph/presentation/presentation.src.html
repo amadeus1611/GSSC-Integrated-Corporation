@@ -48,6 +48,7 @@ body{font-family:var(--f-body);color:var(--ink)}
 .leaders{position:absolute;inset:0;width:100%;height:100%;overflow:visible}
 .leaders path{fill:none;stroke:var(--gold-primary);stroke-width:1.1;stroke-linecap:round;stroke-linejoin:round;opacity:var(--lo,1)}
 .leaders circle{fill:var(--gold-primary);opacity:var(--lo,1)}
+.leaders .tip{fill:var(--gold-light);opacity:.9}
 #grain{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;opacity:var(--co,0)}
 
 /* ---------------------------------------------------------------- chrome: header, folio, colophon, progress */
@@ -101,6 +102,7 @@ body{font-family:var(--f-body);color:var(--ink)}
 .reg td.name{width:230px;font:400 17px/1.25 var(--f-display)}
 .reg td.what{font-size:13.5px;line-height:1.45;color:var(--on-night-2)}
 .reg tr{opacity:calc(.28 + var(--lit,0) * .72)}
+.reg td.name{transition:color 700ms var(--soft-close),opacity 600ms var(--soft-close)}
 .reg tr.cur td.name{color:var(--gold-light)}
 
 /* scene 3: the file */
@@ -326,7 +328,7 @@ const bez = (x1, y1, x2, y2) => { const X = t => 3 * (1 - t) * (1 - t) * t * x1 
   Y = t => 3 * (1 - t) * (1 - t) * t * y1 + 3 * (1 - t) * t * t * y2 + t * t * t,
   dX = t => 3 * (1 - t) * (1 - t) * x1 + 6 * (1 - t) * t * (x2 - x1) + 3 * t * t * (1 - x2);
   return p => { if (p <= 0) return 0; if (p >= 1) return 1; let t = p; for (let i = 0; i < 8; i++) { const d = dX(t); if (Math.abs(d) < 1e-6) break; t -= (X(t) - p) / d; t = Math.min(1, Math.max(0, t)); } return Y(t); }; };
-const SCENE = bez(.45, 0, .12, 1), BUILD = bez(.33, 0, .12, 1), SOFT = bez(.3, 0, .16, 1);
+const SCENE = bez(.45, 0, .12, 1), BUILD = bez(.33, 0, .12, 1), SOFT = bez(.3, 0, .16, 1), DRAW = bez(.42, 0, .1, 1);   // DRAW: a line leaves gently and lands long
 let vw = 1440, vh = 900;
 const stage = document.getElementById('stage');
 const setVar = (el, k, v) => { const c = el.__v || (el.__v = {}); if (c[k] !== v) { c[k] = v; el.style.setProperty(k, v); } };
@@ -395,10 +397,10 @@ function go(target){
   const scMove = sceneOf(target) !== sceneOf(Math.round(T));
   from = T; to = target; t0 = performance.now();
   const dist = Math.abs(to - from), closes = Math.min(from, to) < 9.5 && Math.max(from, to) > 9.5;
-  // a build is brisk (1.25 s: the render's own lift already eases); a change of scene is unhurried (3.6 s), and leaving
+  // a build is brisk (1.45 s: the part lifts in the first 0.8 s, its line follows); a change of scene is unhurried (3.6 s), and leaving
   // the compass takes longer still (6 s), because it closes completely before anything fades.
   // The timeline runs at an even pace; every piece carries its own soft curve inside its phase.
-  dur = REDUCE ? 1 : scMove ? Math.min(7000, 3600 + (dist - 1) * 300 + (closes ? 2400 : 0)) : Math.min(2600, 1250 + (dist - 1) * 300);
+  dur = REDUCE ? 1 : scMove ? Math.min(7000, 3600 + (dist - 1) * 300 + (closes ? 2400 : 0)) : Math.min(2800, 1450 + (dist - 1) * 300);
   moving = true; history.replaceState(null, '', '#' + target);
 }
 // the next and back keys queue: pressed during a move, the move finishes softly and the next one follows from rest
@@ -420,8 +422,24 @@ const els = [...document.querySelectorAll('[data-in]')].map(el => { let [a, b] =
 const sseg = (a, b) => SOFT(clamp((T - a) / (b - a)));   // a window, eased: every piece arrives and leaves softly
 const leadEls = [];   // one path and one dot per part; paths use pathLength 1, so drawing is a dash offset of 0..1
 for (let p = 0; p < 7; p++) { const path = document.createElementNS('http://www.w3.org/2000/svg', 'path'), dot = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
-  path.setAttribute('pathLength', '1'); path.style.strokeDasharray = '1'; path.style.strokeDashoffset = '1'; dot.setAttribute('r', '0');
-  document.getElementById('leaders').append(path, dot); leadEls[p] = {path, dot, on: false}; }
+  dot.setAttribute('r', '0');
+  const tip = document.createElementNS('http://www.w3.org/2000/svg', 'circle'); tip.setAttribute('r', '0'); tip.setAttribute('class', 'tip');
+  document.getElementById('leaders').append(path, dot, tip); leadEls[p] = {path, dot, tip, on: false}; }
+/* A leader is the website's curve (out of the part's rim, a short straight, then one S into its row), drawn as a
+   polyline of 40 even steps along its own length: the drawn tip moves at exactly the eased speed, never faster on
+   the straight and slower in the bends, as a dash offset on a bezier would. */
+const LN = 40, lp = new Float32Array((LN + 2) * 2), ll = new Float32Array(LN + 2);
+function leaderPath(x, y, tx, ty, draw){
+  let n = 0; const put = (X, Y) => { lp[n * 2] = X; lp[n * 2 + 1] = Y; ll[n] = n ? ll[n - 1] + Math.hypot(X - lp[n * 2 - 2], Y - lp[n * 2 - 1]) : 0; n++; };
+  put(x, y); const x1 = x + 14, c1 = x1 + Math.max(40, (tx - x1) * .3), c2 = tx - Math.max(50, (tx - x1) * .38);
+  for (let i = 0; i <= LN; i++) { const t = i / LN, m = 1 - t;
+    put(m * m * m * x1 + 3 * m * m * t * c1 + 3 * m * t * t * c2 + t * t * t * tx, m * m * m * y + 3 * m * m * t * y + 3 * m * t * t * ty + t * t * t * ty); }
+  const want = ll[n - 1] * draw; let d = `M${x.toFixed(1)},${y.toFixed(1)}`, ex = x, ey = y;
+  for (let i = 1; i < n; i++) {
+    if (ll[i] >= want) { const f = (want - ll[i - 1]) / Math.max(1e-6, ll[i] - ll[i - 1]);
+      ex = lp[i * 2 - 2] + (lp[i * 2] - lp[i * 2 - 2]) * f; ey = lp[i * 2 - 1] + (lp[i * 2 + 1] - lp[i * 2 - 1]) * f; d += ` L${ex.toFixed(1)},${ey.toFixed(1)}`; break; }
+    ex = lp[i * 2]; ey = lp[i * 2 + 1]; d += ` L${ex.toFixed(1)},${ey.toFixed(1)}`; }
+  return {d, ex, ey}; }
 const rows = [...document.querySelectorAll('#reg tbody tr')], gates = [...document.querySelectorAll('#gates .stage-row')], docs = [...document.querySelectorAll('.doc')];
 const panelEl = document.getElementById('panel'), deskCount = document.getElementById('deskCount'), paper = document.getElementById('paper'), chrome = document.getElementById('chrome');
 const whereEl = document.getElementById('where'), folio = document.getElementById('folio'), scnName = document.getElementById('scnName'), ruleI = chrome.querySelector('.rule i');
@@ -429,10 +447,15 @@ document.querySelectorAll('.doc-seal').forEach(im => im.src = document.querySele
 const romans = ['i', 'ii', 'iii', 'iv', 'v', 'vi', 'vii', 'viii', 'ix', 'x'];
 const seg = (a, b) => clamp((T - a) / (b - a));
 // the split sequence: tilt over step 1→2, then one part per step 3..8 (the renderer's own order, star first)
+// Within a step the part lifts over the first 55% (its 12 rendered frames, so the lift reads as film, not a crawl);
+// the rest of the step belongs to its line.
+const LIFT_SHARE = .55;
 function splitFrame(){ const T1 = SEQ.tilt - 1, L = SPLIT - 1;
-  if (T < 1) return 0; if (T < 2) return T1 * (T - 1); return Math.min(L, SEQ.tilt + (T - 2) / 6 * (L - SEQ.tilt)); }
+  if (T < 1) return 0; if (T < 2) return T1 * (T - 1); if (T >= 8) return L;
+  const k = Math.floor(T - 2), u = Math.min(1, (T - 2 - k) / LIFT_SHARE);
+  return Math.min(L, SEQ.tilt + (k + u) * SEQ.per); }
 // a part lifts over the step before its own: the star over 2→3 … the graduated scale over 7→8; the case rests, lit at 8
-const litOf = p => p === 0 ? sseg(8.25, 9) : sseg(8 - p + .25, 9 - p);
+const litOf = p => sseg(s0Of(p) + .72, s0Of(p) + 1);   // the row lights as its line arrives
 const curOf = p => p === 0 ? 9 : 9 - p;
 const s0Of = p => p === 0 ? 8 : 8 - p;   // the step each part's line starts drawing from
 // row geometry, measured once (static in the stage)
@@ -468,23 +491,29 @@ function render(now, newFilm){
     const cx = T > 18 ? 720 : lerp(720, 400, sseg(.58, .95)), cy = T > 18 ? lerp(450, 440, close) : lerp(450, 470, grow);
     setVar(print, 'transform', `translate(${(cx - size / 2 + FILM.wx).toFixed(2)}px, ${(cy - size / 2 + FILM.wy).toFixed(2)}px) scale(${(size / PS).toFixed(4)})`);
     if (newFilm) drawGrain();
-    // LEADERS. One per part, each drawn over the whole of its own step (the case has a step of its own, so two never
-    // start together). A right-angled route with soft corners, as the flow chart's connectors: out from the part's rim
-    // (as rendered), along a private lane, into its row. Earlier lines stay, quieter; the one being drawn is full gold.
+    /* LEADERS, the website's curves with a better ease. A click has two beats: the part lifts (the first 55%), then its
+       line flows out of the settled part and lands in its row as the row lights. Each line keeps its own step, so two
+       never draw together. The last line hands over softly: it dims to a quiet gold while the next one draws. */
     if (!rowY) measureRows();
     const A = kind === 'split' ? SEQ.anchors[Math.min(SPLIT - 1, f)] : null;
     const exit = 1 - sseg(...RETRACT9);   // the lines draw back into their parts before the compass closes
     rows.forEach((r, ri) => { const p = +r.dataset.part, L = leadEls[p], s0 = s0Of(p);
-      const draw = A && T <= RETRACT9[1] ? sseg(s0 + .12, s0 + 1) * exit : 0;
-      if (draw < .005) { if (L.on) { L.on = false; L.path.setAttribute('d', ''); L.dot.setAttribute('r', 0); } return; }
+      const draw = A && T <= RETRACT9[1] ? DRAW(clamp((T - s0 - .38) / .6)) * exit : 0;
+      if (draw < .002) { if (L.on) { L.on = false; L.key = ''; L.path.setAttribute('d', ''); L.dot.setAttribute('r', 0); L.tip.setAttribute('r', 0); } return; }
       L.on = true;
-      const x = cx - size / 2 + A[p][0] * size, y = cy - size / 2 + A[p][1] * size, R = rowY[ri], tx = R.x - 16, ty = R.y;
-      const bx = Math.min(tx - 28, Math.max(x + 30, 706 - p * 7)), rr = Math.min(8, Math.abs(ty - y) / 2), sg = ty > y ? 1 : -1;
-      const d = Math.abs(ty - y) < 1 ? `M${x.toFixed(1)},${y.toFixed(1)} H${tx.toFixed(1)}`
-        : `M${x.toFixed(1)},${y.toFixed(1)} H${(bx - rr).toFixed(1)} Q${bx.toFixed(1)},${y.toFixed(1)} ${bx.toFixed(1)},${(y + sg * rr).toFixed(1)} V${(ty - sg * rr).toFixed(1)} Q${bx.toFixed(1)},${ty.toFixed(1)} ${(bx + rr).toFixed(1)},${ty.toFixed(1)} H${tx.toFixed(1)}`;
-      L.path.setAttribute('d', d); L.path.style.strokeDashoffset = (1 - draw).toFixed(4);
-      L.dot.setAttribute('cx', x.toFixed(1)); L.dot.setAttribute('cy', y.toFixed(1)); L.dot.setAttribute('r', (2.6 * Math.min(1, draw * 4)).toFixed(2));
-      const current = T > s0 - .05 && T < s0 + 1.35; setVar(L.path, '--lo', (current ? 1 : .38).toFixed(2)); setVar(L.dot, '--lo', (current ? 1 : .38).toFixed(2)); });
+      const x = cx - size / 2 + A[p][0] * size, y = cy - size / 2 + A[p][1] * size, R = rowY[ri];
+      // a line at rest is not rebuilt: only a change in its start or its draw rewrites it (the MacBook Air)
+      const key = `${x.toFixed(1)},${y.toFixed(1)},${draw.toFixed(4)}`;
+      if (L.key !== key) { L.key = key;
+        const {d, ex, ey} = leaderPath(x, y, R.x - 16, R.y, draw);
+        L.path.setAttribute('d', d);
+        L.dot.setAttribute('cx', x.toFixed(1)); L.dot.setAttribute('cy', y.toFixed(1)); L.dot.setAttribute('r', (2.4 * SOFT(clamp(draw * 5))).toFixed(2));
+        // a point of light rides the tip while the line is drawn out, and goes out as it lands; never on the retract,
+        // where every line draws back together and six lights at once would be a burst, not a line
+        const tipR = exit > .999 && draw > .001 && draw < .999 ? 2.2 * Math.sin(Math.PI * Math.min(1, draw * 1.15)) : 0;
+        L.tip.setAttribute('cx', ex.toFixed(1)); L.tip.setAttribute('cy', ey.toFixed(1)); L.tip.setAttribute('r', tipR.toFixed(2)); }
+      const lo = (1 - .6 * sseg(s0 + 1.3, s0 + 1.95)).toFixed(3);   // quieter as the next line draws, not a switch
+      setVar(L.path, '--lo', lo); setVar(L.dot, '--lo', lo); });
   }
   // ---- the key lights as each part lifts
   rows.forEach(r => { const p = +r.dataset.part, lit = litOf(p);
