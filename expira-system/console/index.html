@@ -880,6 +880,14 @@ html.calm *,html.calm *::before,html.calm *::after{animation:none!important;tran
 .tip.below::after{top:0}
 .ib{padding:0}.mvx{width:24px;height:24px;border-radius:5px;margin-left:4px}.mvx svg{width:12px!important;height:12px!important;display:block}
 .menu.opt#optMenu{width:232px}.menu .seg2 button{white-space:nowrap;padding:4px 4px}
+/* the document button: no flip; the page lifts and its lines write in */
+#docBtn svg,#docBtn[aria-expanded="true"] svg{transform:none}
+#docBtn svg{transition:transform .5s var(--soft-close)}
+#docBtn:hover svg,#docBtn[aria-expanded="true"] svg{transform:translateY(-1px)}
+#docBtn svg path:last-child{stroke-dasharray:6;stroke-dashoffset:0}
+#docBtn[aria-expanded="true"] svg path:last-child,#docBtn[data-on="1"] svg path:last-child{animation:docwrite .9s var(--soft-close) both}
+@keyframes docwrite{from{stroke-dashoffset:6}to{stroke-dashoffset:0}}
+#docBtn[aria-expanded="true"] svg,#docBtn[data-on="1"] svg{color:var(--gold)}
 </style>
 
 <div class="app has-chat" id="app">
