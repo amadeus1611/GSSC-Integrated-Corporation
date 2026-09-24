@@ -108,8 +108,8 @@ body{font-family:var(--f-body);color:var(--ink)}
 /* scene 2b: how an engagement moves (Fig. 3, walked one build at a time; the site's own routing and copy) */
 .fl-head{left:72px;top:130px;width:600px}
 .fl-title{left:72px;top:186px;width:920px;color:var(--navy-dark)}
-.fl-cap{left:72px;top:300px;width:900px;margin:0;font:italic 400 20px/1.5 var(--f-display);color:var(--slate)}
-.fl-plate{left:72px;top:330px;width:1296px;height:504px}
+.fl-cap{left:72px;top:300px;width:900px;min-height:60px;margin:0;font:italic 400 20px/1.5 var(--f-display);color:var(--slate)}
+.fl-plate{left:72px;top:374px;width:1296px;height:460px}
 .fl-legend{display:flex;gap:22px;font:500 11px/1 var(--f-body);letter-spacing:var(--tracked-tight);text-transform:uppercase;color:var(--slate)}
 .fl-legend span{display:inline-flex;align-items:center;gap:9px}
 .fl-sw{display:inline-block;width:14px;height:10px;border-radius:1px;border:1px solid var(--hairline)}
@@ -417,6 +417,8 @@ const SCENE = bez(.45, 0, .12, 1), BUILD = bez(.33, 0, .12, 1), SOFT = bez(.3, 0
 let vw = 1440, vh = 900;
 const stage = document.getElementById('stage');
 const setVar = (el, k, v) => { const c = el.__v || (el.__v = {}); if (c[k] !== v) { c[k] = v; el.style.setProperty(k, v); } };
+// for SVG geometry attributes (transform, d, cx…) that CSS custom properties cannot drive correctly: same cache-and-skip
+const setAttr = (el, k, v) => { const c = el.__a || (el.__a = {}); v = String(v); if (c[k] !== v) { c[k] = v; el.setAttribute(k, v); } };
 
 /* ------------------------------------------------ the stage fits the screen */
 function fit(){ const s = Math.min(innerWidth / 1440, innerHeight / 900); stage.style.transform = `scale(${s})`; }
@@ -634,6 +636,7 @@ function render(now, newFilm){
     const FT = T - S.flow, k = clamp(Math.ceil(FT), 1, 4) - 1, b = FLOW_BUILDS[k];
     const u0 = cardOnU(b.cards[0] - 1), u1 = cardOnU(b.cards[b.cards.length - 1]);
     const u = FT <= 0 ? cardOnU(0) : lerp(u0, u1, DRAW(clamp(FT - k)));
+    const atRest = Math.abs(FT - Math.round(FT)) < .003;   // a step at rest: the token and its ring are hidden, not parked at 0,0
     let tokX = G.inP[0].x, tokY = G.inP[0].y;
     G.nodes.forEach((nd, i) => { const s0 = i * (NU + 1), np = clamp((u - s0) / NU);
       setVar(nd, '--on', (np >= .995 ? 1 : ease(np)).toFixed(3));
@@ -641,16 +644,22 @@ function render(now, newFilm){
       if (u >= s0) { tokX = G.inP[i].x; tokY = G.inP[i].y; } });
     G.runs.forEach((run, i) => { const s0 = i * (NU + 1), ep = clamp((u - s0 - NU) / 1), L = G.eLen[i] * ease(ep);
       setVar(run, 'stroke-dashoffset', (G.eLen[i] - L).toFixed(1));
-      setVar(run, 'opacity', (ep >= .999 && !b.edges.includes(i) ? .5 : 1).toFixed(2));
+      // an edge stays full strength through its own build; once the NEXT build starts drawing, it settles quieter,
+      // continuously (like the compass leaders' own hand-over), never a hard switch
+      const doneAt = S.flow + G.buildIdxOfEdge[i] + 1;
+      setVar(run, 'opacity', (ep >= .999 ? 1 - .5 * sseg(doneAt + .3, doneAt + .95) : 1).toFixed(3));
       setVar(G.ports[i * 2], '--on', ep > 0 ? '1' : '0'); setVar(G.ports[i * 2 + 1], '--on', ep >= .999 ? '1' : '0');
-      if (ep > 0 && ep < 1) { const pt = run.getPointAtLength(L); tokX = pt.x; tokY = pt.y; } });
-    setVar(G.tok, 'transform', `translate(${tokX.toFixed(1)} ${tokY.toFixed(1)}) rotate(45)`);
-    // the gate: the dashed wall and its tag brighten once, as card 05 (Firewall) lights, and the token gives one soft ring
-    const s0gate = 4 * (NU + 1), gateOn = clamp((u - s0gate) / NU), ringP = clamp((u - s0gate - NU * .85) / .55), ring = ringP > 0 && ringP < 1;
+      if (ep > 0 && ep < 1) { const pt = ptAt(G.runPts[i], L); tokX = pt.x; tokY = pt.y; } });
+    setAttr(G.tok, 'transform', `translate(${tokX.toFixed(1)} ${tokY.toFixed(1)}) rotate(45)`);
+    setVar(G.tok, 'opacity', atRest ? 0 : 1);
+    // the gate: the dashed wall and its tag brighten once, as card 05 (Firewall) lights, and the token gives one soft
+    // ring (a single pulse, never persistent); by build 3 the gate has settled quieter again, continuously
+    const s0gate = 4 * (NU + 1), gateDone = S.flow + 2, gateDecay = 1 - .4 * sseg(gateDone + .3, gateDone + .95);
+    const gateOn = clamp((u - s0gate) / NU) * gateDecay, ringP = clamp((u - s0gate - NU * .85) / .55), ring = !atRest && ringP > 0 && ringP < 1;
     setVar(G.wallA, 'stroke-width', (1 + gateOn * .5).toFixed(2)); setVar(G.wallB, 'stroke-width', (1 + gateOn * .5).toFixed(2));
     setVar(G.wallA, 'opacity', (.6 + gateOn * .4).toFixed(2)); setVar(G.wallB, 'opacity', (.6 + gateOn * .4).toFixed(2));
     setVar(G.tagRect, 'stroke-width', (.75 + gateOn * .5).toFixed(2));
-    setVar(G.ring, 'transform', `translate(${tokX.toFixed(1)} ${tokY.toFixed(1)})`);
+    setAttr(G.ring, 'transform', `translate(${tokX.toFixed(1)} ${tokY.toFixed(1)})`);
     setVar(G.ring, 'r', (8 + clamp(ringP) * 13).toFixed(1)); setVar(G.ring, 'opacity', ring ? (Math.sin(Math.PI * ringP) * .55).toFixed(2) : 0);
     let stepIdx = 0; for (let i = 0; i < n; i++) if (u >= i * (NU + 1)) stepIdx = i;
     if (stepIdx !== G.lastStep) { G.lastStep = stepIdx;
@@ -818,12 +827,25 @@ function buildFlow(){
   tagRect.setAttribute('x', (-len / 2 - 14).toFixed(1)); tagRect.setAttribute('width', (len + 28).toFixed(1));
   const runs = edges.map((_, i) => document.getElementById('flE' + i)), eLen = runs.map(r => r.getTotalLength());
   runs.forEach((r, i) => { r.style.strokeDasharray = eLen[i]; r.style.strokeDashoffset = eLen[i]; });
+  // the token's path, sampled once here (the only place a path is read): 32 points per edge, by arc length, so the
+  // frame loop only interpolates a small cached array — never calls getPointAtLength while the token travels (C7)
+  const SAMP = 32;
+  const runPts = runs.map((r, i) => { const L = eLen[i], pts = [];
+    for (let s = 0; s <= SAMP; s++) { const p = r.getPointAtLength(L * s / SAMP); pts.push({x: p.x, y: p.y, len: L * s / SAMP}); } return pts; });
   const nodes = [...flSvg.querySelectorAll('.fl-nd')], per = 2 * (NW + NH);
   nodes.forEach(nd => { const tr = nd.querySelector('.fl-trace'); tr.style.strokeDasharray = per; tr.style.strokeDashoffset = per; });
   const ports = [...flSvg.querySelectorAll('.fl-port')];
-  FLOW_G = {runs, eLen, nodes, ports, per, inP: FLOW.map((_, i) => inP(i)), tok: document.getElementById('flTok'),
+  const buildIdxOfEdge = edges.map((_, i) => FLOW_BUILDS.findIndex(bb => bb.edges.includes(i)));
+  FLOW_G = {runs, eLen, runPts, nodes, ports, per, buildIdxOfEdge, inP: FLOW.map((_, i) => inP(i)), tok: document.getElementById('flTok'),
     ring: document.getElementById('flRing'), wallA: document.getElementById('flWallA'), wallB: document.getElementById('flWallB'), tagRect, lastStep: -1};
   flCapEl.textContent = FLOW_CAPS[0];
+}
+// given a cached, by-length-sampled polyline (see runPts above) and a target arc length, the point on it — no DOM read
+function ptAt(pts, L){
+  if (L <= 0) return pts[0]; const last = pts[pts.length - 1]; if (L >= last.len) return last;
+  for (let i = 1; i < pts.length; i++) { if (pts[i].len >= L) { const p0 = pts[i - 1], p1 = pts[i], f = (L - p0.len) / Math.max(1e-6, p1.len - p0.len);
+    return {x: p0.x + (p1.x - p0.x) * f, y: p0.y + (p1.y - p0.y) * f}; } }
+  return last;
 }
 
 /* ------------------------------------------------ controls: keys, click, trackpad swipe; F, B, W, number jumps */
