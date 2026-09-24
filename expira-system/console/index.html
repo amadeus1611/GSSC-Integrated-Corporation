@@ -1040,6 +1040,7 @@ html.calm *,html.calm *::before,html.calm *::after{animation:none!important;tran
 #goo{position:absolute;left:50%;top:30%;width:min(560px,100%);height:auto;aspect-ratio:5/3;transform:translate(-50%,-50%);pointer-events:none;filter:blur(6px);z-index:0;opacity:1}
 .hero>*:not(#goo){position:relative;z-index:1}
 @media (prefers-reduced-motion:reduce){#goo{display:none}}
+#ready{display:none!important}.hero .greet{margin-bottom:26px}
 </style>
 
 <div class="app has-chat" id="app">
@@ -1499,7 +1500,9 @@ document.addEventListener("click",e=>{const yc=e.target.closest("[data-ycopy]");
 const now=new Date(),hr=now.getHours();
 const dl=()=>{const d=new Date();$("#dateline").innerHTML=`Vol. I · No. ${pad(nextNo(),3)} · ${esc(d.toLocaleDateString("en-PH",{weekday:"long",day:"numeric",month:"long"}))} · <span class="tm">${pad(d.getHours())}<span class="colon">:</span>${pad(d.getMinutes())}</span>`};dl();setInterval(dl,15000);
 const greetText=()=>(hr<12?"Good morning":hr<18?"Good afternoon":"Good evening")+", "+(PREF.name||"Duke");
-function greetR(){const g=(hr<12?"Good morning":hr<18?"Good afternoon":"Good evening")+", ";$("#greet").innerHTML=[...g].map((c,i)=>`<span class="ch" style="animation-delay:${.04+i*.028}s">${esc(c)}</span>`).join("")+`<em class="ch" style="animation-delay:${.04+g.length*.028+.05}s">${esc(PREF.name||"Duke")}</em>`}greetR();
+const GREETS=(()=>{const d=new Date(),day=d.getDay(),t=hr<5?["Still up","Late one"]:hr<12?["Good morning","Morning"]:hr<18?["Good afternoon","Afternoon"]:["Good evening","Evening"];return [...t,...(day===1?["Happy Monday"]:day===5?["Happy Friday"]:[]),"Welcome back"]})();
+const greetPick=GREETS[Math.floor(Math.random()*GREETS.length)];
+function greetR(){const g=greetPick+", ";$("#greet").innerHTML=[...g].map((c,i)=>`<span class="ch" style="animation-delay:${.04+i*.028}s">${esc(c)}</span>`).join("")+`<em class="ch" style="animation-delay:${.04+g.length*.028+.05}s">${esc(PREF.name||"Duke")}</em>`}greetR();
 function readyUpd(){swap($("#readyT"),`Orchestrator ready · ${OPT.desks==="off"?"answering directly":OPT.desks==="always"?"staffing generously":"staffs each brief itself"} · ${OPT.safe?"client-safe":"internal"}${OPT.depth==="deep"?" · deep":""}${OPT.web&&WEB.ok?" · web on":""}`)}
 const TOC=[["Price a twelve-room hotel repaint in Iloilo","Finance"],["Review the delay clause in a supply contract","Legal"],["Compare three ERP options for GSSC","Decision"],["Canvass office fit-out rates in Iloilo","Research"]];
 $("#toc").innerHTML=TOC.map(([t,s],i)=>`<li class="bi" style="animation-delay:${.15+i*.07}s"><button><span class="n">${i+1}</span><span class="t">${esc(t)}</span><span class="lead"></span><span class="sec">${s}</span></button></li>`).join("");
