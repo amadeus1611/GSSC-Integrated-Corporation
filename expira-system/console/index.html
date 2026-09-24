@@ -78,6 +78,14 @@ body{margin:0;background:var(--bg);color:var(--text);font:300 14.5px/1.6 var(--f
 .item i{font-style:italic;font-family:var(--f-display);font-size:11px;color:var(--mute)}
 .foot{display:flex;align-items:center;gap:10px;padding:12px 8px 0;border-top:var(--rule-hair) solid var(--line-2)}
 .av{width:28px;height:28px;border-radius:50%;background:var(--ink);color:var(--bg);display:grid;place-items:center;font:500 10.5px var(--f-body);letter-spacing:.04em;flex:none}
+.me{display:flex;align-items:center;gap:10px;flex:1;min-width:0;border:0;background:transparent;border-radius:6px;padding:5px 6px;margin:-5px -6px;cursor:pointer;text-align:left;transition:background var(--out) var(--soft-close)}
+.me:hover,.me[aria-expanded="true"]{background:var(--line);transition-duration:var(--in)}
+.seg{display:grid;grid-template-columns:repeat(3,1fr);gap:2px;margin:2px 4px 4px;padding:2px;border-radius:6px;background:var(--well);border:var(--rule-hair) solid var(--line-2)}
+.menu .seg button{flex-direction:column;justify-content:center;gap:4px;padding:8px 4px;font-size:11px;color:var(--soft);border-radius:4px;text-align:center}
+.menu .seg button svg{width:15px;height:15px}
+.menu .seg button[aria-checked="true"]{background:var(--panel);color:var(--ink);box-shadow:0 1px 2px rgba(0,0,0,.12)}
+.menu.up-left{transform-origin:0 100%}
+html.theming,html.theming *,html.theming *::before,html.theming *::after{transition:background-color .7s var(--soft-close),color .7s var(--soft-close),border-color .7s var(--soft-close),fill .7s var(--soft-close)!important}
 .who{font-size:12.5px;line-height:1.3;color:var(--text)}.who small{display:block;color:var(--mute);font-size:11px}
 .ib{width:30px;height:30px;display:grid;place-items:center;border:0;background:transparent;border-radius:5px;cursor:pointer;color:var(--soft);transition:background var(--out) var(--soft-close),color var(--out) var(--soft-close)}
 .ib:hover{background:var(--line);color:var(--ink);transition-duration:var(--in)}
@@ -416,7 +424,7 @@ body{margin:0;background:var(--bg);color:var(--text);font:300 14.5px/1.6 var(--f
     </div>
     <div class="search"><label for="find" class="sr">Search chats</label><input id="find" placeholder="Search chats"></div>
     <div class="recents" id="recents"></div>
-    <div class="foot"><span class="av">DD</span><span class="who">Duke Y. Demayo<small>EXPIRA AI Systems</small></span><button class="ib" id="palBtn" style="margin-left:auto" data-tip="Commands  ⌘K" aria-label="Commands"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1"><path d="M5 3a2 2 0 100 4h6a2 2 0 100-4 2 2 0 00-2 2v6a2 2 0 102-2H5a2 2 0 102 2V5a2 2 0 00-2-2z"/></svg></button></div>
+    <div class="foot"><button class="me" id="me" aria-haspopup="menu" aria-expanded="false" data-tip="Settings"><span class="av">DD</span><span class="who">Duke Y. Demayo<small>EXPIRA AI Systems</small></span></button><button class="ib" id="palBtn" style="margin-left:auto" data-tip="Commands  ⌘K" aria-label="Commands"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1"><path d="M5 3a2 2 0 100 4h6a2 2 0 100-4 2 2 0 00-2 2v6a2 2 0 102-2H5a2 2 0 102 2V5a2 2 0 00-2-2z"/></svg></button></div>
   </nav>
 
   <div class="main" id="main">
@@ -472,6 +480,13 @@ body{margin:0;background:var(--bg);color:var(--text);font:300 14.5px/1.6 var(--f
   <div class="sep"></div>
   <button role="menuitemcheckbox" data-opt="safe"><span class="t">Client-safe<small>Firewall-check every answer and exhibit</small></span><i class="sw"></i></button>
   <button role="menuitemcheckbox" data-opt="web" aria-disabled="true"><span class="t">Web research<small>Connect Parallel Search in claude.ai to enable</small></span><i class="sw"></i></button>
+</div>
+<div class="menu up-left" id="setMenu" role="menu" aria-label="Settings">
+  <div class="mh cap">Appearance</div>
+  <div class="seg" role="radiogroup" aria-label="Appearance"><button role="radio" data-th="system"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1"><rect x="2" y="3" width="12" height="8.5" rx="1"/><path d="M6 13.5h4"/></svg>System</button><button role="radio" data-th="light"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1"><circle cx="8" cy="8" r="3"/><path d="M8 1.5v1.5M8 13v1.5M1.5 8H3M13 8h1.5M3.4 3.4l1 1M11.6 11.6l1 1M3.4 12.6l1-1M11.6 4.4l1-1"/></svg>Light</button><button role="radio" data-th="dark"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1"><path d="M13 9.5A5.5 5.5 0 116.5 3a4.5 4.5 0 006.5 6.5z"/></svg>Dark</button></div>
+  <div class="sep"></div>
+  <button data-act="opts"><span class="t">Brief options<small>Desks, depth, client-safe</small></span></button>
+  <button data-act="keys"><span class="t">Keyboard shortcuts</span><span class="kb">?</span></button>
 </div>
 <div class="veil" id="veil"></div>
 <div class="keys" id="keys" role="dialog" aria-label="Keyboard shortcuts"><div class="cap">Keyboard</div><dl><dt><span class="kb">⌘K</span></dt><dd>Commands</dd><dt><span class="kb">⌥N</span></dt><dd>New chat</dd><dt><span class="kb">⌥L</span></dt><dd>The Dispatch</dd><dt><span class="kb">/</span></dt><dd>Search chats</dd><dt><span class="kb">Enter</span></dt><dd>Send</dd><dt><span class="kb">⇧ Enter</span></dt><dd>New line</dd><dt><span class="kb">Esc</span></dt><dd>Stop or close</dd><dt><span class="kb">?</span></dt><dd>This card</dd></dl></div>
@@ -651,6 +666,17 @@ const sc=$("#scroll");
 $("#fold").onclick=()=>app.classList.add("folded");$("#unfold").onclick=()=>app.classList.remove("folded");if(innerWidth<760)app.classList.add("folded");
 const newChat=()=>{if(busy)return;open(null);promptEl.focus()};$("#newChat").onclick=newChat;
 $("#findBtn").onclick=()=>{$("#side").classList.toggle("searching");$("#find").focus()};
+/* appearance: system, light or dark; remembered per viewer, eased between palettes */
+const HOST_THEME=root.getAttribute("data-theme");let THEME=(()=>{try{return localStorage.getItem("expira.theme")||"system"}catch(e){return "system"}})();
+function applyTheme(v,soft){if(soft&&!reduce){root.classList.add("theming");clearTimeout(applyTheme.t);applyTheme.t=setTimeout(()=>root.classList.remove("theming"),800)}
+ if(v==="system"){if(HOST_THEME)root.setAttribute("data-theme",HOST_THEME);else root.removeAttribute("data-theme")}else root.setAttribute("data-theme",v);
+ THEME=v;try{localStorage.setItem("expira.theme",v)}catch(e){}document.querySelectorAll("[data-th]").forEach(b=>b.setAttribute("aria-checked",String(b.dataset.th===v)))}
+applyTheme(THEME,false);
+function setMenu(o){const m=$("#setMenu"),b=$("#me");o=o??!m.classList.contains("open");if(o){const r=b.getBoundingClientRect(),w=268;m.style.left=Math.max(8,Math.min(innerWidth-w-8,r.left))+"px";const hgt=m.offsetHeight;m.style.top=Math.max(8,r.top-hgt-8)+"px";m.classList.add("open");setTimeout(()=>m.querySelector('[aria-checked="true"]')?.focus(),60)}else m.classList.remove("open");b.setAttribute("aria-expanded",o)}
+$("#me").onclick=e=>{e.stopPropagation();setMenu()};
+$("#setMenu").addEventListener("click",e=>{const t=e.target.closest("[data-th]");if(t){applyTheme(t.dataset.th,true);return}const a=e.target.closest("[data-act]");if(!a)return;setMenu(false);if(a.dataset.act==="keys")setTimeout(()=>keys(true),60);if(a.dataset.act==="opts")setTimeout(()=>menu(true),60)});
+document.addEventListener("pointerdown",e=>{if(!e.target.closest("#setMenu,#me")&&$("#setMenu").classList.contains("open"))setMenu(false)});
+$("#setMenu").addEventListener("keydown",e=>{const it=[...$("#setMenu").querySelectorAll("button")],i=it.indexOf(document.activeElement);if(e.key==="ArrowDown"||e.key==="ArrowRight"){e.preventDefault();it[(i+1)%it.length].focus()}if(e.key==="ArrowUp"||e.key==="ArrowLeft"){e.preventDefault();it[(i-1+it.length)%it.length].focus()}if(e.key==="Escape"){e.stopPropagation();setMenu(false);$("#me").focus()}});
 /* options: desks, depth, client-safe, web; remembered per viewer */
 const OPT=Object.assign({desks:"auto",depth:"standard",safe:true},(()=>{try{return JSON.parse(localStorage.getItem("expira.opt")||"{}")}catch(e){return {}}})());
 const saveOpt=()=>{try{localStorage.setItem("expira.opt",JSON.stringify(OPT))}catch(e){}};
@@ -674,7 +700,7 @@ function prog(){const m=sc.scrollHeight-sc.clientHeight;$("#jump").classList.tog
 sc.addEventListener("scroll",prog,{passive:true});$("#jump").onclick=()=>sc.scrollTo({top:1e9,behavior:reduce?"auto":"smooth"});
 
 /* palette */
-const CMDS=[["Keyboard shortcuts","?",()=>setTimeout(()=>keys(true),30)],["New chat","⌥N",newChat],["Open the Dispatch","⌥L",()=>openLatest()],["Options","",()=>setTimeout(()=>menu(true),60)],["Toggle client-safe","",()=>{OPT.safe=!OPT.safe;saveOpt();drawOpt();toast(OPT.safe?"Client-safe on":"Client-safe off")}],["Search chats","/",()=>{app.classList.remove("folded");$("#side").classList.add("searching");$("#find").focus()}],["Stop the run","Esc",()=>ctl?.abort()],["Toggle sidebar","",()=>app.classList.toggle("folded")]];
+const CMDS=[["Appearance: light","",()=>applyTheme("light",true)],["Appearance: dark","",()=>applyTheme("dark",true)],["Appearance: system","",()=>applyTheme("system",true)],["Settings","",()=>setTimeout(()=>setMenu(true),60)],["Keyboard shortcuts","?",()=>setTimeout(()=>keys(true),30)],["New chat","⌥N",newChat],["Open the Dispatch","⌥L",()=>openLatest()],["Options","",()=>setTimeout(()=>menu(true),60)],["Toggle client-safe","",()=>{OPT.safe=!OPT.safe;saveOpt();drawOpt();toast(OPT.safe?"Client-safe on":"Client-safe off")}],["Search chats","/",()=>{app.classList.remove("folded");$("#side").classList.add("searching");$("#find").focus()}],["Stop the run","Esc",()=>ctl?.abort()],["Toggle sidebar","",()=>app.classList.toggle("folded")]];
 let ps=0;const pal=o=>{$("#pal").classList.toggle("open",o);$("#veil").classList.toggle("open",o);if(o){$("#palIn").value="";ps=0;drawPal();setTimeout(()=>$("#palIn").focus(),30)}};
 function drawPal(){const q=$("#palIn").value.toLowerCase(),L=CMDS.filter(c=>c[0].toLowerCase().includes(q));ps=Math.min(ps,Math.max(0,L.length-1));$("#palList").innerHTML=L.map((c,i)=>`<li class="${i===ps?"on":""}" data-i="${CMDS.indexOf(c)}">${c[0]}${c[1]?`<span class="kb">${c[1]}</span>`:""}</li>`).join("")||`<li class="empty">No command matches.</li>`}
 $("#palIn").addEventListener("input",()=>{ps=0;drawPal()});
@@ -687,6 +713,7 @@ addEventListener("keydown",e=>{const k=e.key.toLowerCase();
  else if(e.altKey&&e.code==="KeyN"){e.preventDefault();newChat()}
  else if(e.altKey&&e.code==="KeyL"){e.preventDefault();openLatest()}
  else if(k==="?"&&!/^(TEXTAREA|INPUT)$/.test(document.activeElement.tagName)){e.preventDefault();keys(!$("#keys").classList.contains("open"))}
+ else if(k==="escape"&&$("#setMenu").classList.contains("open"))setMenu(false);
  else if(k==="escape"&&$("#optMenu").classList.contains("open"))menu(false);
  else if(k==="escape"&&$("#keys").classList.contains("open"))keys(false);
  else if(k==="escape"){if($("#pal").classList.contains("open"))pal(false);else if(busy)ctl?.abort();else showDsp(false)}
