@@ -12,6 +12,22 @@ session, what changed, why, what's still open.
 
 ---
 
+## 2026-09-24 (11) — public mobile number confirmed (proposal for 2.19.0)
+
+**By:** Claude Code (Opus 5.5 session). **Directed by:** Duke Y. Demayo, asked before the live presentation goes
+to clients: "the 3574 one".
+
+**Done:** `docs/proposals/kernel_2_19_0_proposal.json` records the decision.
+- The public mobile number is **+63 928 370 3574**, the canonical `01_identity.contact.mobile`.
+- The `contact_conflict` note, about the alternate +63 917 347 4007, is to be resolved in the next release.
+- The package is not edited; the change waits for a versioned release. The presentation's close already uses
+  the confirmed number.
+
+**Open:** cut 2.19.0 when there is a release to make, and then correct any document that printed the alternate
+number at its next revision.
+
+---
+
 ## 2026-09-23 (10) — kernel 2.18.0: website doctrine v2.0, Squarespace retired
 
 **By:** Claude Code (Opus 5.5 session). **Directed by:** Duke Y. Demayo:

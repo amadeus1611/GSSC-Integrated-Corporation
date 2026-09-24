@@ -1,0 +1,18 @@
+{
+  "role": "Proposed changes for the next GSSC kernel release (after 2.18.0)",
+  "status": "PROPOSED. Apply only as one deliberate versioned release, cut with a new release/cut_release_*.py script, never as a quiet package edit.",
+  "changes": [
+    {
+      "id": 1,
+      "module": "01_identity",
+      "type": "data conflict resolved by management",
+      "decided": "2026-09-24",
+      "decided_by": "Duke Y. Demayo, President",
+      "decision": "The public mobile number is +63 928 370 3574 (the canonical contact.mobile, already in use).",
+      "replace": "contact.contact_conflict (alternate_number_seen +63 917 347 4007; control: verify management's intended public number before the next client release)",
+      "with": "Remove contact_conflict, or mark it resolved: '+63 928 370 3574 confirmed as the public mobile by Duke Y. Demayo, President, 2026-09-24. +63 917 347 4007 is not a public GSSC number and is not to be published.'",
+      "evidence": "Duke's answer in the Claude Code session of 2026-09-24 ('the 3574 one'), when asked before the live presentation is shown to clients.",
+      "also_check": "Any quotation or document that printed +63 917 347 4007 should be corrected at its next revision."
+    }
+  ]
+}
