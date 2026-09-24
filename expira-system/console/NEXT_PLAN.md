@@ -1,70 +1,45 @@
-# EXPIRA Console: v31 plan (handoff)
+# EXPIRA Console: next iteration (v37)
 
-Paste this file into a new Claude Code session to continue. The console is `expira-system/console/index.html`, published at https://claude.ai/artifact/LcLXJASXhWZ56g74sHVRxt. Republish it with the Artifact tool by passing that `url`, and read the live artifact first.
+Paste this into a new Claude Code session to continue.
+
+- **Live console:** `expira-system/console/index.html`, published at https://claude.ai/artifact/LcLXJASXhWZ56g74sHVRxt (version 31, commit f20caf8). Republish it with the Artifact tool by passing that `url`, and read the live artifact first. Omit `capabilities` to keep mcp (Parallel Search), sample, db and downloads.
+- **Branch:** `claude/wizardly-ptolemy-6q4ter`, PR amadeus1611/GSSC-Integrated-Corporation#1.
 
 ## How the build works
+- Chained patch scripts live in the session scratchpad: `v25patch.py` → … → `v36patch.py`, plus `build.py`, `charts31.js` and `goo_gl.js`. Each reads the previous `vNN.src.html` and `vNN.js`.
+- If the scratchpad is gone, edit `index.html` directly. The page's JS is one inline `<script>` and its CSS is one `<style>`; later rules override earlier ones, so append a new block like `/* v37 · … */`.
+- **Test hooks:** `window.__FM` (map instances), `window.__ex(ex)` (exhibits HTML).
+- **Mock harness:** the scratchpad's `test25.js`; lines 1–9 are the setup.
+- **Local server:** `cd expira-system/console && python3 -m http.server 8765`. It sends no charset, so mojibake seen locally is not a bug.
+- **Playwright:** `NODE_PATH=/opt/node22/lib/node_modules`.
 
-- The console is built by chained patch scripts kept in the session scratchpad:
-  - `v25patch.py` → … → `v30patch.py`. Each reads the previous `vNN.src.html` and `vNN.js` and writes the next pair.
-  - `build.py` assembles `index.html`.
-- If the scratchpad is gone, edit `index.html` directly. The page's JS is one inline `<script>`; its CSS is one `<style>` block.
-- Supporting file: `lib/gssc-kernel.json` (the kernel library).
-- Capabilities: `mcp` (Parallel Search web_search/web_fetch), `sample`, `db`, `downloads`. Omit `capabilities` on republish to keep them.
+## Owner's aesthetic (keep)
+- Premium: small type, hairline 1px lines, sharp shapes with 4–8px radii, long stretched shapes, Claude-like calm.
+- Liquid, metaball motion. Everything eases in and out reversibly; nothing pops, snaps, detaches or arrives before its parent.
+- Springs: the CSS vars `--sp-jelly`, `--sp-soft` and `--sp-snap` (damped oscillator → `linear()`). UI chrome overshoots about 1%, accents about 9%.
+- Master-template page: Roman-numeral sections, hairline with a 34px gold lead-in, pull quotes, navy-ruled tables, a wide thread with a 72ch prose measure.
 
-## Owner's aesthetic
+## To do in v37
+1. **Remove the spark glyph** from the composer row's model credit (`cstSync()` → `svg.spark`). Keep the text "Claude Opus 5.5 · DYNAMIC · by Anthropic". Keep the trademark disclaimer in Settings › About.
+2. **Remove the top-right "LINKED" status** (`#sig` / `.sig`). Keep the "Open this page in Claude" placeholder when sample is unavailable.
+3. **Redesign the Dispatch button** (top right, `.dsp-btn`) in the new subtle language:
+   - hairline, 4px radius and small type, with no heavy chip;
+   - a live state that is a quiet gold dot or bead, not a pill;
+   - a reversible hover;
+   - it should match the `.rdx` ↗ button used in run cards.
+   - Research first (compare Claude/Linear/Vercel header controls), then QA it.
+4. **Feathered fades** for content cut off at the edges of a scroll area. Use `mask-image` gradients only where content is actually clipped, and toggle a class from scroll position so the fade disappears at the ends. Candidates:
+   - the chat thread's top edge under the header, and its bottom edge above the dock;
+   - the sidebar chat list;
+   - the Dispatch body and its log (`#olog`);
+   - the side sheet body `#sheetB`;
+   - the settings panels;
+   - figures that scroll sideways on phones (a fade already exists there — make it scroll-aware);
+   - the image tray on phones.
 
-- Premium: small type, thin hairline lines, sharp shapes with 4–8px radii.
-- Long stretched shapes; Claude-like calm.
-- A liquid, metaball motion language.
-- Navy ink with gold accents, in light and dark themes.
-- Springs: `SPRING` in JS and the CSS vars `--sp-jelly`, `--sp-soft`, `--sp-snap` (a damped oscillator emitted as `linear()`).
-  - UI chrome overshoots about 1%; accents about 9%, never more.
-  - Animate transform and opacity only, and honour reduced motion.
+   Avoid anything that animates the mask per frame; use static masks with class toggles, which are cheap.
+5. **Run the QA agent** on all of it: no popping, reversibility, dark mode, 400px width, reduced motion. Then commit, push and republish.
 
-## To do in v31
-
-### 1. Timeline dots off the line (cross-console)
-- The stem is 1px at `left:3px` inside `.run .flow` (padding-left 16px), so its centre is x=3.5.
-  - `.delib p` sits at x=16, so its dot uses `left:-15px` (5px wide). That's correct.
-  - `.strm .se` sits at x=10 (margin-left -6px). Its dot must be `left:-9px`; it's currently -8.
-  - The drip `::after` on `.se` needs `left:-7.75px` for a 2.5px width; on `.sb`, `left:-13.75px`.
-  - The `.sb` dash: `left:-12px`, width 5.
-- Replace the dotted border on web entries with a thin hollow dot.
-- Check other stems too: the Dispatch log `#olog`, the claims ledger, and the sheet timelines. Use whole-pixel positions so high-DPI screens stay crisp.
-
-### 2. Theme switch hangs and changes unevenly
-- `applyTheme(v,soft)` adds `html.theming`, which transitions background, colour and border over 0.7s. Different properties and canvases update at different times.
-- Fix: switch everything instantly inside `document.startViewTransition` for one 0.4s crossfade, and add `html.tnone *{transition:none!important}` for two frames.
-- Fallback: switch instantly.
-- Recolour the canvases right away (GOO `nC=0`; the spectrogram's `lut`).
-
-### 3. Charts: more forms, chosen by the orchestrator, animated, high resolution
-- **Exhibits prompt** (search the code for "You set the exhibits"): allow up to 3 charts. Ask for a form chosen by the data's job:
-  - ranking → `hbar`
-  - composition → `donut` (6 parts or fewer) or `stacked`
-  - change over time → `line` or `area`
-  - cost build-up → `waterfall`
-  - estimates with ranges → `range` (dumbbell; fields `low`, `high`, optional `mid`)
-  - a schedule → `timeline` (`tasks:[{label,start,end}]`, unit weeks or days)
-  - a single headline → `stat`
-  - everything else → `bar`
-- **Rendering:** add renderers alongside `chartFig`.
-  - Keep the categorical palette `--s1…--s5`, which passes validate_palette in light and dark.
-  - Use a 2px surface gap between fills, 4px rounded data ends, recessive axes, and text in text tokens.
-  - Marks carry `data-ro` hover readouts. Extend the pointermove handler: when `FIGS` has no entry, read `[data-ro]`.
-- **Liquid animations, unique per form**, triggered by an IntersectionObserver that turns `.fig.pre` into `.in`, with a 1.5s failsafe:
-  - bars and hbars grow from the baseline with `--sp-soft` and a stagger, plus a small meniscus overshoot at the tip;
-  - lines draw with `pathLength=1` and a dashoffset, and the dots drip in afterwards;
-  - areas fill from the baseline like liquid;
-  - donut segments sweep in (stroke-dasharray, `pathLength=100`) and the centre total counts up;
-  - waterfall steps drop in one after another, and dashed connectors pour between them;
-  - range bars stretch out from the midpoint, with jelly end dots;
-  - timeline bars flow from their start, with the first one jellying in.
-- **High resolution:** a "PNG" button on each figure.
-  - Clone the SVG and inline the computed fill, stroke and font.
-  - Draw it at 3× onto a canvas with the title, on the sheet colour.
-  - Call `downloads.save({filename,data:blob})`; fall back to the clipboard.
-
-### 4. After the build
-- Mock tests: in the scratchpad, `test25.js` lines 1–9 are the setup.
-- Run a QA agent round, commit, push to `claude/wizardly-ptolemy-6q4ter` (PR amadeus1611/GSSC-Integrated-Corporation#1), and republish.
+## Known and verified
+- QA rounds 1–7 are closed.
+- Not yet verified in the real Claude viewer: image upload, the PNG and HTML downloads, and live Parallel Search.
