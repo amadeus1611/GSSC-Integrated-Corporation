@@ -1,0 +1,270 @@
+<title>GSSC Library</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Libre+Baskerville:ital,wght@0,400;1,400&display=swap" rel="stylesheet">
+<style>
+/* The GSSC Library: every work we have built, on four shelves. The master's grammar: ivory paper and navy ink,
+   Libre Baskerville for names, Inter for the working text, the Categorical Header stamp (numeral, dash, category)
+   on each shelf, hairline rules, 1-2 px radii, tabular figures, and gold only for the mark, one rule and what you
+   can act on. At night the paper turns to the site's navy. */
+:root{
+  --ground:#faf8f3; --ground-2:#f3efe4; --plate:#fffdf8; --well:#f3efe4;
+  --ink:#09173d; --ink-2:#4f5663; --ink-3:#7a8090; --navy:#0d2463;
+  --hair:rgba(9,23,61,.12); --hair-2:rgba(9,23,61,.2);
+  --gold:#a8862f; --gold-2:#c8a44d; --gold-wash:rgba(168,134,47,.09);
+  --glyph:#0d2463; --glyph-2:rgba(13,36,99,.35);
+  --shadow:0 1px 0 rgba(9,23,61,.04),0 18px 40px -30px rgba(9,23,61,.35);
+  --wm-filter:none;
+  --f-display:"Libre Baskerville","Baskerville","Hoefler Text",Georgia,serif;
+  --f-body:"Inter",-apple-system,BlinkMacSystemFont,"Segoe UI","Helvetica Neue",Arial,sans-serif;
+  --tracked:.18em; --tracked-tight:.12em;
+  --soft:cubic-bezier(.16,1,.3,1);
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){color-scheme:dark;
+  --ground:#09173d; --ground-2:#0b1c49; --plate:#0e1f4f; --well:#0b1a45;
+  --ink:#f3ecda; --ink-2:#b9bdc9; --ink-3:#8b91a3; --navy:#dfe5f5;
+  --hair:rgba(243,236,218,.12); --hair-2:rgba(243,236,218,.22);
+  --gold:#c8a44d; --gold-2:#e0c27c; --gold-wash:rgba(200,164,77,.12);
+  --glyph:#e8e0cc; --glyph-2:rgba(232,224,204,.35);
+  --shadow:0 1px 0 rgba(0,0,0,.2),0 22px 44px -30px rgba(0,0,0,.8);
+  --wm-filter:brightness(0) invert(.94) sepia(.2)}}
+:root[data-theme="dark"]{color-scheme:dark;
+  --ground:#09173d; --ground-2:#0b1c49; --plate:#0e1f4f; --well:#0b1a45;
+  --ink:#f3ecda; --ink-2:#b9bdc9; --ink-3:#8b91a3; --navy:#dfe5f5;
+  --hair:rgba(243,236,218,.12); --hair-2:rgba(243,236,218,.22);
+  --gold:#c8a44d; --gold-2:#e0c27c; --gold-wash:rgba(200,164,77,.12);
+  --glyph:#e8e0cc; --glyph-2:rgba(232,224,204,.35);
+  --shadow:0 1px 0 rgba(0,0,0,.2),0 22px 44px -30px rgba(0,0,0,.8);
+  --wm-filter:brightness(0) invert(.94) sepia(.2)}
+
+*{box-sizing:border-box}
+body{margin:0;background:var(--ground);color:var(--ink);font:400 15px/1.55 var(--f-body);-webkit-font-smoothing:antialiased}
+::selection{background:var(--gold-wash)}
+a{color:inherit}
+:focus-visible{outline:1px solid var(--gold);outline-offset:3px;border-radius:2px}
+.wrap{max-width:1180px;margin:0 auto;padding-inline:clamp(16px,4vw,48px);padding-block:0 56px}
+
+/* the masthead: the kernel's lockup, the library's name, the edition */
+.mast{display:flex;align-items:center;justify-content:space-between;gap:16px;padding-block:28px 18px}
+.lock{display:flex;align-items:center;gap:12px;text-decoration:none}
+.lock .seal{width:34px;height:34px;display:block}
+.lock .wm{height:17px;width:auto;display:block;filter:var(--wm-filter)}
+.mast .where{font:600 11px/1.3 var(--f-body);letter-spacing:var(--tracked);text-transform:uppercase;color:var(--ink-2);text-align:right}
+.mast .where b{display:block;font-weight:600;color:var(--ink)}
+.rule{position:relative;height:1px;background:var(--hair-2)}
+.rule::before{content:"";position:absolute;left:0;top:0;height:1px;width:96px;background:var(--gold)}
+
+/* the opening: what this is, and how many */
+.open{display:grid;grid-template-columns:minmax(0,1.35fr) minmax(0,1fr);gap:28px 56px;align-items:end;padding-block:44px 34px}
+.chs{display:flex;align-items:center;gap:14px;margin:0 0 18px}
+.chs .num{font:400 26px/1 var(--f-display);color:var(--gold)}
+.chs .dash{width:22px;height:1px;background:var(--gold)}
+.chs .cat{font:600 11px/1 var(--f-body);letter-spacing:var(--tracked);text-transform:uppercase;padding:6px 9px;border:1px solid var(--hair-2);border-radius:1px;color:var(--ink)}
+h1{margin:0;font:400 clamp(30px,4.2vw,46px)/1.12 var(--f-display);letter-spacing:-.012em;text-wrap:balance;color:var(--ink)}
+h1 em{font-style:italic;color:var(--gold)}
+.open p{margin:0;max-width:44ch;color:var(--ink-2);font-size:15.5px}
+.tally{display:flex;gap:0;margin-top:22px;border-top:1px solid var(--hair)}
+.tally div{flex:1;padding:12px 16px 0 0}
+.tally div + div{padding-left:16px;border-left:1px solid var(--hair)}
+.tally b{white-space:nowrap;display:block;font:400 26px/1.1 var(--f-display);font-variant-numeric:lining-nums tabular-nums;color:var(--ink)}
+.tally span{font:600 11px/1.3 var(--f-body);letter-spacing:var(--tracked-tight);text-transform:uppercase;color:var(--ink-3)}
+
+/* the finder: one search field and the four shelves as filters */
+.finder{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:var(--ground);display:flex;flex-wrap:wrap;align-items:center;gap:10px 18px;padding-block:14px;border-bottom:1px solid var(--hair)}
+.search{position:relative;flex:1 1 280px;max-width:420px}
+.search input{width:100%;height:40px;padding:0 44px 0 38px;border:1px solid var(--hair-2);border-radius:2px;background:var(--plate);color:var(--ink);font:400 15px var(--f-body)}
+.search input::placeholder{color:var(--ink-3)}
+.search input:focus{outline:none;border-color:var(--gold)}
+.search svg{position:absolute;left:12px;top:12px;width:16px;height:16px;stroke:var(--ink-3);fill:none;stroke-width:1.5}
+.search kbd{position:absolute;right:10px;top:10px;font:500 11px/18px var(--f-body);padding:0 6px;border:1px solid var(--hair-2);border-radius:2px;color:var(--ink-3)}
+.shelves{display:flex;flex-wrap:wrap;gap:6px}
+.shelves button{height:32px;padding:0 12px;border:1px solid var(--hair);border-radius:2px;background:none;color:var(--ink-2);font:600 11px/1 var(--f-body);letter-spacing:var(--tracked-tight);text-transform:uppercase;cursor:pointer;transition:border-color .5s var(--soft),color .5s var(--soft),background .5s var(--soft)}
+.shelves button:hover{border-color:var(--hair-2);color:var(--ink)}
+.shelves button[aria-pressed="true"]{border-color:var(--gold);color:var(--ink);background:var(--gold-wash)}
+.shelves button i{font-style:normal;font-family:var(--f-display);font-size:13px;letter-spacing:0;text-transform:none;margin-right:7px;color:var(--gold)}
+
+/* a shelf: its stamp, its note, and its works */
+.shelf{padding-top:40px}
+.shelf-head{display:flex;align-items:baseline;justify-content:space-between;gap:16px;margin-bottom:18px}
+.shelf-head .chs{margin:0}
+.shelf-head p{margin:0;color:var(--ink-3);font-size:13.5px;text-align:right}
+.grid{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:18px}
+.grid > .work{grid-column:span 2}
+.grid[data-n="2"] > .work{grid-column:span 3}
+/* a shelf of one: the work lies wide, its mark and name on the left, what it is for in the middle, the actions right */
+.grid[data-n="1"] > .work{grid-column:1 / -1;display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,1.3fr) auto;grid-template-rows:auto 1fr;align-items:start}
+.grid[data-n="1"] .top{grid-column:1;grid-row:1}
+.grid[data-n="1"] .formal{grid-column:1;grid-row:2;margin-bottom:20px}
+.grid[data-n="1"] .purpose{grid-column:2;grid-row:1 / span 2;margin:20px 20px 20px 0;padding-left:24px;border-left:1px solid var(--hair);font-size:15px}
+.grid[data-n="1"] .foot{grid-column:3;grid-row:1 / span 2;border-top:0;border-left:1px solid var(--hair);margin:0;height:100%;flex-direction:column;align-items:stretch;justify-content:center;gap:10px;padding:20px 24px}
+.grid[data-n="1"] .foot .date{margin:0 0 4px}
+.grid[data-n="1"] .url{grid-column:1 / -1}
+
+/* a work: a plate with its drawn mark, its name, what it is for, and the two things you do with it */
+.work{position:relative;display:flex;flex-direction:column;background:var(--plate);border:1px solid var(--hair);border-top:2px solid var(--ink);border-radius:0 0 2px 2px;box-shadow:var(--shadow);transition:border-color .6s var(--soft),transform .6s var(--soft)}
+.work:hover{border-color:var(--hair-2);border-top-color:var(--gold);transform:translateY(-2px)}
+.work .top{display:flex;gap:16px;padding:20px 20px 0}
+.work .mark{flex:none;width:68px;height:68px;border:1px solid var(--hair);border-radius:1px;background:var(--well);display:grid;place-items:center}
+.work .mark svg{width:46px;height:46px;overflow:visible}
+.work .mark .g{fill:none;stroke:var(--glyph);stroke-width:1.2;stroke-linecap:round;stroke-linejoin:round}
+.work .mark .g2{fill:none;stroke:var(--glyph-2);stroke-width:1;stroke-linecap:round}
+.work .mark .a{fill:none;stroke:var(--gold);stroke-width:1.3;stroke-linecap:round;stroke-linejoin:round}
+.work .mark .af{fill:var(--gold);stroke:none}
+.work .id{min-width:0;flex:1}
+.work .kind{display:flex;justify-content:space-between;gap:10px;font:600 11px/1.3 var(--f-body);letter-spacing:var(--tracked-tight);text-transform:uppercase;color:var(--ink-3)}
+.work .kind .st{color:var(--gold)}
+.work h3{margin:8px 0 0;font:400 20px/1.25 var(--f-display);letter-spacing:-.005em;color:var(--ink);text-wrap:balance}
+.work .formal{margin:12px 20px 0;font:italic 400 13px/1.45 var(--f-display);color:var(--ink-2)}
+.work .purpose{margin:10px 20px 0;color:var(--ink-2);font-size:14px;line-height:1.55}
+.work .foot{margin-top:auto;display:flex;align-items:center;gap:12px;padding:16px 20px 16px;border-top:1px solid var(--hair);margin-inline:0;margin-block-start:18px}
+.work .date{white-space:nowrap;font:500 12px/1 var(--f-body);font-variant-numeric:tabular-nums;color:var(--ink-3);letter-spacing:.02em;margin-right:auto}
+.btn{white-space:nowrap;justify-content:center;display:inline-flex;align-items:center;gap:8px;height:34px;padding:0 14px;border-radius:2px;font:600 11.5px/1 var(--f-body);letter-spacing:var(--tracked-tight);text-transform:uppercase;text-decoration:none;cursor:pointer;transition:background .5s var(--soft),border-color .5s var(--soft),color .5s var(--soft)}
+.btn.open-it{background:var(--ink);color:var(--ground);border:1px solid var(--ink)}
+.btn.open-it:hover{background:var(--gold);border-color:var(--gold);color:#fffdf8}
+.btn.copy{background:none;border:1px solid var(--hair-2);color:var(--ink-2)}
+.btn.copy:hover{border-color:var(--gold);color:var(--ink)}
+.btn.copy.done{border-color:var(--gold);color:var(--gold)}
+.btn svg{width:12px;height:12px;stroke:currentColor;fill:none;stroke-width:1.6}
+/* the link itself, as text you can select, for anyone whose clipboard refuses */
+.work .url{display:none;margin:0 20px 14px;font:400 12px/1.4 ui-monospace,SFMono-Regular,Menlo,monospace;color:var(--ink-2);word-break:break-all;user-select:all}
+.work.show-url .url{display:block}
+
+.empty{padding:48px 0;color:var(--ink-2);font:italic 400 16px var(--f-display)}
+.shelf[hidden],.work[hidden]{display:none!important}
+
+/* the colophon */
+.colophon{margin-top:64px;padding-top:18px;border-top:1px solid var(--hair-2);display:grid;grid-template-columns:1fr auto;gap:12px 40px;color:var(--ink-3);font-size:13px}
+.colophon p{margin:0;max-width:60ch}
+.colophon b{color:var(--ink-2);font-weight:500}
+.colophon .ed{font:600 11px/1.5 var(--f-body);letter-spacing:var(--tracked-tight);text-transform:uppercase;text-align:right}
+
+@media (max-width:1020px) and (min-width:761px){ .grid > .work{grid-column:span 3} }
+@media (max-width:760px){
+  .open{grid-template-columns:1fr;padding-block:32px 24px}
+  .mast .where{display:none}
+  .grid{grid-template-columns:1fr} .grid > .work,.grid[data-n] > .work{grid-column:1 / -1}
+  .grid[data-n="1"] > .work{display:flex}
+  .grid[data-n="1"] .purpose{margin:10px 20px 0;padding-left:0;border-left:0;font-size:14px}
+  .grid[data-n="1"] .foot{flex-direction:row;align-items:center;border-left:0;border-top:1px solid var(--hair);margin-top:18px;padding:16px 20px;height:auto}
+  .grid[data-n="1"] .foot .date{margin:0 auto 0 0}
+  .shelf-head{flex-direction:column;align-items:flex-start;gap:8px}
+  .shelf-head p{text-align:left}
+  .colophon{grid-template-columns:1fr} .colophon .ed{text-align:left}
+  .search kbd{display:none}
+}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+
+<div class="wrap">
+  <header class="mast">
+    <a class="lock" href="#top" aria-label="GSSC Integrated Corporation"><img class="seal" src="{{SEAL}}" alt=""><img class="wm" src="{{WORDMARK}}" alt="GSSC"></a>
+    <div class="where"><b>Internal Library</b><span id="edition"></span></div>
+  </header>
+  <div class="rule" id="top"></div>
+
+  <section class="open">
+    <div>
+      <div class="chs"><span class="num">§</span><i class="dash"></i><span class="cat">Internal Library</span></div>
+      <h1>Every work we have built, in <em>one</em> place.</h1>
+    </div>
+    <div>
+      <p>Open anything GSSC uses from here. Each link stays the same when its work is updated, so a bookmark to this page is all you need.</p>
+      <div class="tally" id="tally"></div>
+    </div>
+  </section>
+
+  <div class="finder">
+    <label class="search" for="q"><svg viewBox="0 0 16 16" aria-hidden="true"><circle cx="7" cy="7" r="5"/><path d="M11 11l3.5 3.5"/></svg>
+      <input id="q" type="search" placeholder="Find a work" autocomplete="off" aria-label="Find a work"><kbd>/</kbd></label>
+    <div class="shelves" id="filters" role="group" aria-label="Shelves"></div>
+  </div>
+
+  <main id="shelves"></main>
+  <p class="empty" id="empty" hidden>Nothing on the shelves matches that. Try another word, or clear the search.</p>
+
+  <footer class="colophon">
+    <p><b>Opening a work.</b> Each opens in a new tab. If one asks you to sign in or says it is unavailable, it has not been shared with you yet: ask Duke Y. Demayo, President, for access.</p>
+    <div class="ed" id="colEd"></div>
+  </footer>
+</div>
+
+<!-- the shelves and works: sites/gsscph/hub/entries.json, set in at build time -->
+<script type="application/json" id="data">{{ENTRIES}}</script>
+<script>
+(() => {
+const D = JSON.parse(document.getElementById('data').textContent);
+const MONTHS = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+const longDate = s => { const [y, m, d] = s.split('-').map(Number); return `${d} ${MONTHS[m - 1]} ${y}`; };
+const shortDate = s => { const [y, m, d] = s.split('-').map(Number); return `${String(d).padStart(2, '0')} ${MONTHS[m - 1].slice(0, 3)} ${y}`; };
+const esc = v => String(v).replace(/[&<>"]/g, c => ({'&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;'}[c]));
+
+/* the marks: each work drawn in the master's line, navy with one gold detail. Drawn once, by kind. */
+const sheet = (inner) => `<path class="g" d="M11 4h18l8 8v30H11z"/><path class="g" d="M29 4v8h8"/>${inner}`;
+const GLYPH = {
+  site: `<rect class="g" x="3" y="7" width="40" height="32" rx="1.5"/><path class="g" d="M3 13h40"/><circle class="g2" cx="7" cy="10" r=".6"/><circle class="g2" cx="10" cy="10" r=".6"/>
+    <path class="a" d="M23 17l2 7 6 2-6 2-2 7-2-7-6-2 6-2z"/><circle class="g2" cx="23" cy="26" r="9"/>`,
+  stage: `<rect class="g" x="2" y="8" width="42" height="26" rx="1.5"/><path class="g" d="M17 40h12M23 34v6"/><path class="af" d="M20 16l9 5-9 5z"/><path class="g2" d="M6 30h34"/><path class="a" d="M6 30h14"/>`,
+  profile: `<path class="g2" d="M15 1h18l8 8"/>${sheet(`<circle class="a" cx="24" cy="20" r="5"/><path class="g2" d="M16 31h16M16 35h12"/>`)}`,
+  quotation: sheet(`<path class="g2" d="M15 17h18M15 22h18M15 27h18"/><path class="g2" d="M27 14v18"/><path class="a" d="M15 34h18"/><path class="g" d="M15 37h10"/>`),
+  agreement: sheet(`<path class="g2" d="M15 15h18M15 19h18M15 23h14"/><path class="g" d="M15 36h7M26 36h7"/><path class="a" d="M16 33c2-3 3 1 5-1"/>`),
+  resolution: sheet(`<path class="g2" d="M15 15h4M21 15h12M15 20h4M21 20h12M15 25h4M21 25h9"/><circle class="a" cx="29" cy="35" r="3.5"/>`),
+  certificate: sheet(`<path class="g2" d="M15 15h18M15 19h18M15 23h12"/><circle class="a" cx="24" cy="32" r="4"/><path class="a" d="M22 35.5l-1.5 5 3.5-2 3.5 2-1.5-5"/>`),
+  notarial: sheet(`<path class="g2" d="M15 15h18M15 19h18M15 23h18"/><rect class="a" x="20" y="28" width="12" height="9" rx="1" transform="rotate(-6 26 32)"/>`),
+  console: `<rect class="g" x="3" y="7" width="40" height="32" rx="1.5"/><path class="g" d="M14 7v32"/><path class="g2" d="M6 13h5M6 17h5M6 21h5"/><path class="g2" d="M18 13h20M18 17h14"/><path class="a" d="M18 33l5-5 4 3 5-7 5 4"/>`
+};
+
+const shelvesEl = document.getElementById('shelves'), filtersEl = document.getElementById('filters'), q = document.getElementById('q'), emptyEl = document.getElementById('empty');
+document.getElementById('edition').textContent = `Edition of ${longDate(D.edition)}`;
+document.getElementById('colEd').innerHTML = `GSSC Integrated Corporation<br>Internal Library · ${esc(longDate(D.edition))}`;
+document.getElementById('tally').innerHTML = [[D.works.length, D.works.length === 1 ? 'Work' : 'Works'], [D.shelves.length, 'Shelves'],
+  [shortDate(D.works.map(w => w.updated).sort().pop()), 'Last updated']].map(([v, k]) => `<div><b>${esc(v)}</b><span>${k}</span></div>`).join('');
+
+filtersEl.innerHTML = `<button type="button" data-shelf="" aria-pressed="true">All</button>` +
+  D.shelves.map(s => `<button type="button" data-shelf="${esc(s.key)}" aria-pressed="false"><i>${esc(s.no)}</i>${esc(s.name)}</button>`).join('');
+
+shelvesEl.innerHTML = D.shelves.map(s => {
+  const works = D.works.filter(w => w.shelf === s.key);
+  return `<section class="shelf" data-shelf="${esc(s.key)}">
+    <div class="shelf-head"><div class="chs"><span class="num">${esc(s.no)}</span><i class="dash"></i><span class="cat">${esc(s.name)}</span></div><p>${esc(s.note)} · ${works.length} ${works.length === 1 ? 'work' : 'works'}</p></div>
+    <div class="grid" data-n="${Math.min(works.length, 3)}">${works.map(w => `<article class="work" data-id="${esc(w.id)}" data-find="${esc([w.name, w.formal, w.purpose, w.status, s.name].join(' ').toLowerCase())}">
+      <div class="top"><div class="mark"><svg viewBox="0 0 46 46" aria-hidden="true">${GLYPH[w.glyph] || GLYPH.profile}</svg></div>
+        <div class="id"><div class="kind"><span>${esc(s.name)}</span><span class="st">${esc(w.status)}</span></div><h3>${esc(w.name)}</h3></div></div>
+      <p class="formal">${esc(w.formal)}</p>
+      <p class="purpose">${esc(w.purpose)}</p>
+      <div class="foot"><span class="date">${esc(shortDate(w.updated))}</span>
+        <button class="btn copy" type="button" data-url="${esc(w.url)}" aria-label="Copy the link to ${esc(w.name)}"><svg viewBox="0 0 12 12" aria-hidden="true"><rect x="3.5" y="3.5" width="7" height="7" rx="1"/><path d="M1.5 8V2.5a1 1 0 0 1 1-1H8"/></svg><span>Copy link</span></button>
+        <a class="btn open-it" href="${esc(w.url)}" target="_blank" rel="noopener">Open<svg viewBox="0 0 12 12" aria-hidden="true"><path d="M4 2h6v6M10 2L3 9"/></svg></a></div>
+      <p class="url">${esc(w.url)}</p>
+    </article>`).join('')}</div></section>`;
+}).join('');
+
+/* find: the search narrows every shelf; a shelf filter shows one shelf */
+let shelf = '';
+function apply(){
+  const terms = q.value.trim().toLowerCase().split(/\s+/).filter(Boolean); let shown = 0;
+  shelvesEl.querySelectorAll('.shelf').forEach(sec => {
+    let n = 0;
+    sec.querySelectorAll('.work').forEach(w => { const ok = (!shelf || sec.dataset.shelf === shelf) && terms.every(t => w.dataset.find.includes(t)); w.hidden = !ok; n += ok; });
+    sec.hidden = n === 0; shown += n;
+  });
+  emptyEl.hidden = shown > 0;
+}
+q.addEventListener('input', apply);
+filtersEl.addEventListener('click', e => { const b = e.target.closest('button'); if (!b) return; shelf = b.dataset.shelf;
+  filtersEl.querySelectorAll('button').forEach(x => x.setAttribute('aria-pressed', String(x === b))); apply(); });
+addEventListener('keydown', e => {
+  if (e.key === '/' && document.activeElement !== q) { e.preventDefault(); q.focus(); }
+  else if (e.key === 'Escape' && document.activeElement === q) { q.value = ''; apply(); q.blur(); }
+  else if (e.key === 'Enter' && document.activeElement === q) { const first = shelvesEl.querySelector('.work:not([hidden]) .open-it'); if (first) first.click(); }
+});
+
+/* copy a link; where the clipboard is refused, show the link as text to select */
+shelvesEl.addEventListener('click', e => {
+  const b = e.target.closest('.copy'); if (!b) return;
+  const label = b.querySelector('span'), card = b.closest('.work');
+  const done = ok => { b.classList.toggle('done', ok); label.textContent = ok ? 'Copied' : 'Select below'; if (!ok) card.classList.add('show-url');
+    clearTimeout(b.__t); b.__t = setTimeout(() => { b.classList.remove('done'); label.textContent = 'Copy link'; }, 1800); };
+  try { navigator.clipboard.writeText(b.dataset.url).then(() => done(true), () => done(false)); } catch (err) { done(false); }
+});
+})();
+</script>

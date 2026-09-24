@@ -1,0 +1,38 @@
+{
+  "edition": "2026-09-24",
+  "shelves": [
+    {"key": "public", "no": "I", "name": "Public", "note": "What clients and the public see"},
+    {"key": "presenting", "no": "II", "name": "Presenting", "note": "For meetings and the files clients receive"},
+    {"key": "instruments", "no": "III", "name": "Instruments", "note": "Document masters and templates, kernel 2.18.0"},
+    {"key": "operations", "no": "IV", "name": "Operations", "note": "Internal tools"}
+  ],
+  "works": [
+    {"id": "website", "shelf": "public", "glyph": "site", "name": "Website", "formal": "GSSC Integrated Corporation · Website · Edition I",
+     "purpose": "The showroom site: the compass, the six disciplines, the engagement flow and the economics ledger. Preview before it goes live at gsscph.com.",
+     "status": "Preview", "updated": "2026-09-24", "url": "https://claude.ai/artifact/XCFwjPczMANmFZLhoc8Pnx"},
+    {"id": "presentation", "shelf": "presenting", "glyph": "stage", "name": "Live presentation", "formal": "GSSC Integrated Corporation · Company Profile · Live Presentation",
+     "purpose": "The company profile as a live presentation for client meetings: arrow keys or the trackpad to advance. Present from the offline copy on the laptop.",
+     "status": "Ready", "updated": "2026-09-24", "url": "https://claude.ai/artifact/FpPtbPPNdUb4ovi2Afy7M4"},
+    {"id": "profile", "shelf": "presenting", "glyph": "profile", "name": "Company profile", "formal": "GSSC Integrated Corporation · Company Profile · 2026",
+     "purpose": "The printed company profile: who GSSC is, the disciplines, governance and registrations, set in the master template.",
+     "status": "Issued", "updated": "2026-09-23", "url": "https://claude.ai/artifact/JmcqbHqkZMZLqJqj9nHnrM"},
+    {"id": "quotation", "shelf": "instruments", "glyph": "quotation", "name": "Quotation Master", "formal": "GSSC Universal Quotation Master · v1.7 · Production Detail Lock",
+     "purpose": "The master every client quotation is built from: scope, pricing, terms and the signoff, to the kernel's doctrine.",
+     "status": "Production", "updated": "2026-09-23", "url": "https://claude.ai/artifact/37EQZEGGEXYrmy4LgvvuSt"},
+    {"id": "msa", "shelf": "instruments", "glyph": "agreement", "name": "Client Master Services Agreement", "formal": "GSSC Integrated Corporation · Client Master Services Agreement · Structural Template",
+     "purpose": "The framework contract with a client, under which each accepted quotation becomes a work order.",
+     "status": "Template", "updated": "2026-09-23", "url": "https://claude.ai/artifact/CfKhvtADZ1gPYtaGSjWWQP"},
+    {"id": "resolution", "shelf": "instruments", "glyph": "resolution", "name": "Board Resolution", "formal": "GSSC Integrated Corporation · Board Resolution · Structural Template",
+     "purpose": "The template for resolutions of the Board of Directors.",
+     "status": "Template", "updated": "2026-09-23", "url": "https://claude.ai/artifact/U1VzmXYUqjvBXNrfcATVi2"},
+    {"id": "certificate", "shelf": "instruments", "glyph": "certificate", "name": "Secretary's Certificate", "formal": "GSSC Integrated Corporation · Secretary's Certificate · Structural Template",
+     "purpose": "Certifies a board resolution or minutes. Signed by the Corporate Secretary alone.",
+     "status": "Template", "updated": "2026-09-23", "url": "https://claude.ai/artifact/77xT1JCBN4zxVz7gTQJRw1"},
+    {"id": "notarial", "shelf": "instruments", "glyph": "notarial", "name": "Notarial Acknowledgment", "formal": "GSSC Integrated Corporation · Notarial Acknowledgment · Fallback Template",
+     "purpose": "A stand-alone acknowledgment page for the notary, for when the notary's own form is not used.",
+     "status": "Fallback", "updated": "2026-09-23", "url": "https://claude.ai/artifact/BVVL4Ef1WCLmnsH9yNLQXj"},
+    {"id": "expira", "shelf": "operations", "glyph": "console", "name": "EXPIRA Console", "formal": "GSSC Integrated Corporation · EXPIRA Console",
+     "purpose": "The research desk: ask for a brief, the desks verify it with web research, and it builds GSSC documents to download.",
+     "status": "In use", "updated": "2026-09-24", "url": "https://claude.ai/artifact/LcLXJASXhWZ56g74sHVRxt"}
+  ]
+}
