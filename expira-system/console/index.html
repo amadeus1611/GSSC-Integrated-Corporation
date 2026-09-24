@@ -1292,6 +1292,7 @@ html.theming,html.theming *,html.theming *::before,html.theming *::after{transit
 @keyframes sparkP{0%,100%{opacity:1}50%{opacity:.45}}
 .cbar .mdl{font-size:11px;letter-spacing:.01em}
 .cbar .mdl b{font-weight:500;color:var(--ink)}
+.cbar .by{font:italic 400 10.5px var(--f-display);color:var(--mute)}
 .cbar .mode{font-size:9.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--gold);padding:1px 6px;border:var(--rule-hair) solid var(--line-2);border-radius:3px}
 </style>
 
@@ -2573,7 +2574,7 @@ function attDraw(a){const t=$("#att");t.hidden=false;const an=t.querySelector(".
 function attDrop(id){const el=$("#att").querySelector(`[data-id="${id}"]`);ATT=ATT.filter(x=>x.id!==id);if(el){el.classList.add("out");setTimeout(()=>{el.remove();if(!ATT.length&&!$("#att .an"))$("#att").hidden=true},reduce?0:320)}}
 function attClear(){ATT=[];const t=$("#att");t.innerHTML="";t.hidden=true}
 {const f=$("#form"),bar=document.createElement("div");bar.className="cbar";bar.innerHTML='<div class="cl"></div><div class="cr"><span class="cst" id="cst"></span><i class="spn" aria-hidden="true"></i></div>';f.after(bar);const cl=bar.firstChild,cr=bar.lastChild;["#attIn","#attBtn","#docBtn","#optBtn"].forEach(q=>{const e=$(q);if(e)cl.append(e)});const c=$("#count");if(c)cr.prepend(c)}
-function cstSync(){const e=$("#cst");if(e)e.innerHTML=`<svg class="spark" viewBox="0 0 16 16" aria-hidden="true"><path d="M8 1.2c.5 3.3 1.6 5.2 6.8 6.8-5.2 1.6-6.3 3.5-6.8 6.8-.5-3.3-1.6-5.2-6.8-6.8C6.4 6.4 7.5 4.5 8 1.2z"/></svg><span class="mdl">Claude <b>Opus 5.5</b></span><span class="mode">${OPT.depth==="deep"?"Deep":"Dynamic"}</span>`}setTimeout(cstSync,0);document.addEventListener("click",e=>{if(e.target.closest("#optMenu"))setTimeout(cstSync,0)});
+function cstSync(){const e=$("#cst");if(e)e.innerHTML=`<svg class="spark" viewBox="0 0 16 16" aria-hidden="true"><path d="M8 1.2c.5 3.3 1.6 5.2 6.8 6.8-5.2 1.6-6.3 3.5-6.8 6.8-.5-3.3-1.6-5.2-6.8-6.8C6.4 6.4 7.5 4.5 8 1.2z"/></svg><span class="mdl">Claude <b>Opus 5.5</b></span><span class="mode">${OPT.depth==="deep"?"Deep":"Dynamic"}</span><span class="by">by Anthropic</span>`;if(e)e.dataset.tip="Runs on Claude Opus 5.5, made by Anthropic"}setTimeout(cstSync,0);document.addEventListener("click",e=>{if(e.target.closest("#optMenu"))setTimeout(cstSync,0)});
 async function attInit(){try{IMGCAP=sample?((await sample.limits())?.images||null):null}catch(e){IMGCAP=null}$("#attBtn").hidden=!IMGCAP;if(IMGCAP?.mediaTypes?.length)$("#attIn").accept=IMGCAP.mediaTypes.join(",")}
 $("#attBtn").onclick=()=>$("#attIn").click();
 $("#attIn").onchange=e=>{attAdd([...e.target.files]);e.target.value=""};
