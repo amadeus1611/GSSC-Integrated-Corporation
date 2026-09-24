@@ -1168,6 +1168,23 @@ html.theming,html.theming *,html.theming *::before,html.theming *::after{transit
 @keyframes fgDraw{from{stroke-dashoffset:1}to{stroke-dashoffset:0}}
 @keyframes fgSweep{from{stroke-dasharray:0 100}}
 @media (prefers-reduced-motion:reduce){.fig.pre *{transform:none!important;opacity:1!important;stroke-dasharray:none!important}}
+/* v32 · nothing arrives before its parent */
+.map .eg:not(.drawn)~.fl{opacity:0!important}
+.field .ln,.field .lf{transition:opacity .35s ease}
+.field .ln.hid,.field .lf.hid{opacity:0!important}
+.mini .me.ne{stroke-dasharray:1;stroke-dashoffset:1;animation:fgDraw .5s cubic-bezier(.3,.6,.2,1) .34s forwards}
+.mini .me.dep.ne{stroke-dasharray:none;stroke-dashoffset:0;opacity:0;animation:ink .4s .5s forwards}
+.mini .mn.nb .halo{animation:mnb var(--sp-jelly-d) var(--sp-jelly) both,halo 1.2s ease-in-out .6s infinite}
+.fig.in .wc{animation:ink .35s calc((var(--i) + 1)*110ms + .42s) both}
+.fig.in .stk .vl{animation:ink .45s calc(var(--i)*70ms + 3*110ms + .5s) both}
+.fig.in .fx-hbar .vl,.fig.in.fx-hbar .vl{animation:ink .45s calc(var(--i)*60ms + .5s) both}
+.fig.in .re{animation:fgJ var(--sp-jelly-d) var(--sp-jelly) calc(var(--i)*70ms + .5s) both}
+.fig.in .rm{animation:ink .35s calc(var(--i)*70ms + .7s) both}
+.fig.pre .rm{opacity:0}
+.fig.in.fx-waterfall .vl{animation:ink .4s calc(var(--i)*110ms + .45s) both}
+.fig.in.fx-timeline .mk .lbl{animation:ink .4s calc(var(--i)*90ms) both}
+.fig.in.fx-donut .mk .lbl,.fig.in.fx-donut .vl{animation:ink .4s calc(var(--i)*110ms + .35s) both}
+.fig.in.fx-donut .dt,.fig.in.fx-donut .ds{animation:ink .5s .6s both}
 </style>
 
 <div class="app has-chat" id="app">
@@ -1540,9 +1557,9 @@ function miniSVG(w,live,seenIds,narrow){let {N,E}=graphOf(w);if(narrow){const ns
  const X=narrow?[10,96,190,292,0]:[16,150,300,470,560],RH=24,mx=Math.max(3,...cols.map(c=>c.length)),H=Math.min(250,mx*RH+22),P={};
  cols.forEach((c,ci)=>{const tot=(c.length-1)*RH;c.forEach((n,i)=>P[n.id]=[X[ci],Math.round(H/2-tot/2+i*RH)])});
  const cur=(a,b,back)=>{const [x1,y1]=P[a],[x2,y2]=P[b];const dx=Math.max(24,Math.abs(x2-x1)*.5),o=back?4:0;return `M${x1} ${y1+o}C${x1+(x2>x1?dx:-dx)} ${y1+o},${x2-(x2>x1?dx:-dx)} ${y2+o},${x2} ${y2+o}`};
- const gid="goo"+(++GOOID),on=new Set();let ed="",bd="";
+ const gid="goo"+(++GOOID),on=new Set(),nb=new Set(seenIds?N.filter(n=>!seenIds.has(n.id)).map(n=>n.id):[]);let ed="",bd="";
  E.forEach(e=>{if(!P[e.a]||!P[e.b])return;const back=/>v$/.test(e.id)&&e.a[0]==="a",d=cur(e.a,e.b,back),act=live&&e.on;if(act){on.add(e.a);on.add(e.b)}
-  ed+=`<path class="me${act?" on":""}${e.dep?" dep":""}${back?" bk":""}" d="${d}"/>`;if(act)for(let q=0;q<2;q++)bd+=`<circle class="bd${back?" bk":""}" r="1.7"><animateMotion dur="${back?1.3:1}s" begin="${q*(back?.65:.5)}s" repeatCount="indefinite" path="${d}"/></circle>`});
+  ed+=`<path class="me${act?" on":""}${e.dep?" dep":""}${back?" bk":""}${nb.has(e.a)||nb.has(e.b)?' ne" pathLength="1':""}" d="${d}"/>`;if(act)for(let q=0;q<2;q++)bd+=`<circle class="bd${back?" bk":""}" r="1.7"><animateMotion dur="${back?1.3:1}s" begin="${q*(back?.65:.5)}s" repeatCount="indefinite" path="${d}"/></circle>`});
  let dots="",rings="",labs="";N.forEach(n=>{const p=P[n.id];if(!p)return;const fresh=seenIds&&!seenIds.has(n.id);seenIds&&seenIds.add(n.id);const r=n.kind==="orch"||n.kind==="arb"?4.5:n.kind==="site"||n.kind==="more"?2.6:3.6,st=live&&n.st==="on";
   const c=`<circle class="md k-${n.kind}${n.role?" r-"+n.role:""} s-${n.st}${fresh?" nb":""}" cx="${p[0]}" cy="${p[1]}" r="${r}"/>`;if(n.kind==="site"||n.kind==="more")rings+=c;else dots+=c;
   labs+=`<g class="mn${st?" on":""}${fresh?" nb":""}" data-sheet="${esc(n.id)}" tabindex="0" role="button" aria-label="${esc(MLAB(n))}">${st?`<circle class="halo" cx="${p[0]}" cy="${p[1]}" r="${r+3}"/>`:""}<circle class="hit" cx="${p[0]}" cy="${p[1]}" r="11"/><text x="${p[0]+(n.col===4?7:8)}" y="${p[1]+3.4}">${esc(MLAB(n))}${n.num>1?`<tspan class="nm"> ${n.num}</tspan>`:""}</text></g>`});
@@ -2021,7 +2038,7 @@ class FlowMap{
   for(const [id,o] of this.nodes)if(!seen.has(id)){o.g.remove();this.nodes.delete(id)}
   const se=new Set();E.forEach(e=>{se.add(e.id);let o=this.edges.get(e.id);
    if(!o){const bk=(N.find(n=>n.id===e.a)||{}).col>(N.find(n=>n.id===e.b)||{}).col,g=sv("g"),p=sv("path",{class:"eg"+(e.dep?" dep":"")+(bk?" back":""),...(e.dep?{}:{pathLength:1})}),f=sv("path",{class:"fl"});g.append(p,f);this.gE.append(g);o={g,p,f};this.edges.set(e.id,o);
-    if(rep)p.style.transitionDelay=((this.nodes.get(e.b)?.n.col||1)*.24+.08).toFixed(2)+"s";requestAnimationFrame(()=>requestAnimationFrame(()=>p.classList.add("drawn")))}
+    if(rep)p.style.transitionDelay=((this.nodes.get(e.b)?.n.col||1)*.24+.08).toFixed(2)+"s";requestAnimationFrame(()=>requestAnimationFrame(()=>p.classList.add("drawn")));f.style.transitionDelay=((parseFloat(p.style.transitionDelay)||0)+.6).toFixed(2)+"s"}
    o.e=e;o.f.classList.toggle("on",!!e.on)});
   for(const [id,o] of this.edges)if(!se.has(id)){o.g.remove();this.edges.delete(id)}
   this.H=L.H;if(this.fresh){this.Hc=L.H;this.fresh=false;this.svg.setAttribute("viewBox",`0 0 ${this.W} ${this.Hc.toFixed(1)}`);this.svg.style.width=this.W+"px";this.svg.style.height=this.Hc.toFixed(1)+"px"}this.go()}
@@ -2125,7 +2142,7 @@ class FieldMap{
    for(const o of this.nodes.values()){const want=o.g.classList.contains("unborn")?.1:o.r;if(reduce){o.rc=want;o.rv=0}else{o.rv=(o.rv||0)*.72+(want-o.rc)*.16;o.rc+=o.rv;if(Math.abs(o.rv)>.01||Math.abs(want-o.rc)>.05)mv=true;else{o.rc=want;o.rv=0}}o.rc=Math.max(.1,o.rc);
     const tr=`translate(${f(o.x)},${f(o.y)})`;if(o.tr!==tr){o.g.setAttribute("transform",tr);o.tr=tr}
     if(o.rs!==o.rc){const r=Math.max(.1,o.rc).toFixed(2);o.core.setAttribute("r",r);o.ring.setAttribute("r",r);o.hit.setAttribute("r",Math.max(o.rc+5,12).toFixed(1));o.lab.setAttribute("y",(o.rc+11).toFixed(1));o.rs=o.rc}}
-   for(const l of this.links.values()){const a=this.nodes.get(l.e.a),b=this.nodes.get(l.e.b);if(!a||!b)continue;const k=`${f(a.x)},${f(a.y)},${f(b.x)},${f(b.y)}`;if(l.k===k)continue;l.k=k;
+   for(const l of this.links.values()){const a=this.nodes.get(l.e.a),b=this.nodes.get(l.e.b);if(!a||!b)continue;{const u=a.g.classList.contains("unborn")||b.g.classList.contains("unborn"),yg=u||a.g.classList.contains("young")||b.g.classList.contains("young");if(l.u!==u){l.u=u;l.el.classList.toggle("hid",u)}if(l.yg!==yg){l.yg=yg;l.f.classList.toggle("hid",yg)}}const k=`${f(a.x)},${f(a.y)},${f(b.x)},${f(b.y)}`;if(l.k===k)continue;l.k=k;
     for(const el of [l.el,l.f]){el.setAttribute("x1",f(a.x));el.setAttribute("y1",f(a.y));el.setAttribute("x2",f(b.x));el.setAttribute("y2",f(b.y))}}
    this.svg.setAttribute("viewBox",`0 0 ${this.W} ${f(this.Hc)}`);this.svg.style.height=f(this.Hc)+"px";
    const t=performance.now();this.pl=this.pl.filter(p=>{const u=(t-p.t0)/p.dur;if(u>=1){p.c.remove();return false}const l=this.links.get(p.id),a=l&&this.nodes.get(l.e.a),b=l&&this.nodes.get(l.e.b);if(!a||!b){p.c.remove();return false}
