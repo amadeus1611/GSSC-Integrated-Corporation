@@ -320,6 +320,13 @@ const clamp = (v, a = 0, b = 1) => Math.min(b, Math.max(a, v));
 const lerp = (a, b, t) => a + (b - a) * t;
 const ease = t => 1 - Math.pow(1 - t, 4);
 const inOut = t => t < .5 ? 8 * t * t * t * t : 1 - Math.pow(-2 * t + 2, 4) / 2;
+/* THE CURVES. Nothing starts abruptly and everything lands softly: a cubic bézier with a gentle start and a long close.
+   SCENE carries the camera between scenes, BUILD a step within a scene, SOFT each piece's own arrival and departure. */
+const bez = (x1, y1, x2, y2) => { const X = t => 3 * (1 - t) * (1 - t) * t * x1 + 3 * (1 - t) * t * t * x2 + t * t * t,
+  Y = t => 3 * (1 - t) * (1 - t) * t * y1 + 3 * (1 - t) * t * t * y2 + t * t * t,
+  dX = t => 3 * (1 - t) * (1 - t) * x1 + 6 * (1 - t) * t * (x2 - x1) + 3 * t * t * (1 - x2);
+  return p => { if (p <= 0) return 0; if (p >= 1) return 1; let t = p; for (let i = 0; i < 8; i++) { const d = dX(t); if (Math.abs(d) < 1e-6) break; t -= (X(t) - p) / d; t = Math.min(1, Math.max(0, t)); } return Y(t); }; };
+const SCENE = bez(.45, 0, .12, 1), BUILD = bez(.33, 0, .12, 1), SOFT = bez(.3, 0, .16, 1);
 let vw = 1440, vh = 900;
 const stage = document.getElementById('stage');
 const setVar = (el, k, v) => { const c = el.__v || (el.__v = {}); if (c[k] !== v) { c[k] = v; el.style.setProperty(k, v); } };
@@ -382,19 +389,26 @@ const sceneOf = s => { let k = 0; SCENES.forEach((sc, i) => { if (s >= sc.at) k 
 let T = 0, from = 0, to = 0, t0 = 0, dur = 1, moving = false;
 const startStep = clamp(parseInt(location.hash.slice(1)) || 0, 0, STEPS);
 T = from = to = startStep;
+let pending = null;
 function go(target){
-  target = clamp(Math.round(target), 0, STEPS); if (target === to && moving) return;
+  target = clamp(Math.round(target), 0, STEPS); pending = null; if (target === to && moving) return;
   const scMove = sceneOf(target) !== sceneOf(Math.round(T));
   from = T; to = target; t0 = performance.now();
   const dist = Math.abs(to - from);
-  dur = REDUCE ? 1 : scMove ? Math.min(2600, 1500 + dist * 120) : Math.min(1800, 950 + (dist - 1) * 160);
+  // unhurried: a build takes 1.7 s, a change of scene 2.8 s (a longer jump a little more, never rushed)
+  dur = REDUCE ? 1 : scMove ? Math.min(4200, 2800 + (dist - 1) * 260) : Math.min(2600, 1700 + (dist - 1) * 300);
   moving = true; history.replaceState(null, '', '#' + target);
 }
-const easeMove = (p, scene) => scene ? inOut(p) : ease(p);
+// the next and back keys queue: pressed during a move, the move finishes softly and the next one follows from rest
+function request(target){ target = clamp(target, 0, STEPS); if (moving) { pending = target; return; } go(target); }
+const easeMove = (p, scene) => scene ? SCENE(p) : BUILD(p);
 
 /* ------------------------------------------------ everything is a function of T */
-const els = [...document.querySelectorAll('[data-in]')].map(el => { const [a, b] = el.dataset.in.split(' ').map(Number);
-  const [c, d] = (el.dataset.out || '99 100').split(' ').map(Number); return {el, a, b, c, d}; });
+const els = [...document.querySelectorAll('[data-in]')].map(el => { let [a, b] = el.dataset.in.split(' ').map(Number);
+  let [c, d] = (el.dataset.out || '99 100').split(' ').map(Number);
+  if (b > 0) a = Math.min(a, b - .8); if (c < 99) d = Math.max(d, c + .7);   // room to move, and overlap to cross-fade
+  return {el, a, b, c, d}; });
+const sseg = (a, b) => SOFT(clamp((T - a) / (b - a)));   // a window, eased: every piece arrives and leaves softly
 const leadEls = [];   // one path and one dot per part; paths use pathLength 1, so drawing is a dash offset of 0..1
 for (let p = 0; p < 7; p++) { const path = document.createElementNS('http://www.w3.org/2000/svg', 'path'), dot = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
   path.setAttribute('pathLength', '1'); path.style.strokeDasharray = '1'; path.style.strokeDashoffset = '1'; dot.setAttribute('r', '0');
@@ -409,7 +423,7 @@ const seg = (a, b) => clamp((T - a) / (b - a));
 function splitFrame(){ const T1 = SEQ.tilt - 1, L = SPLIT - 1;
   if (T < 1) return 0; if (T < 2) return T1 * (T - 1); return Math.min(L, SEQ.tilt + (T - 2) / 6 * (L - SEQ.tilt)); }
 // a part lifts over the step before its own: the star over 2→3 … the graduated scale over 7→8; the case rests, lit at 8
-const litOf = p => p === 0 ? seg(8.4, 9) : seg(8 - p + .4, 9 - p);
+const litOf = p => p === 0 ? sseg(8.25, 9) : sseg(8 - p + .25, 9 - p);
 const curOf = p => p === 0 ? 9 : 9 - p;
 const s0Of = p => p === 0 ? 8 : 8 - p;   // the step each part's line starts drawing from
 // row geometry, measured once (static in the stage)
@@ -419,29 +433,29 @@ function measureRows(){ const st = stage.getBoundingClientRect(), s = st.width /
 let last = performance.now(), turnF = 0;
 function render(now, newFilm){
   // ---- scene furniture
-  for (const o of els) { const v = seg(o.a, o.b) * (1 - seg(o.c, o.d)); setVar(o.el, '--v', v.toFixed(3)); setVar(o.el, 'visibility', v < .002 ? 'hidden' : 'visible'); }
+  for (const o of els) { const v = sseg(o.a, o.b) * (1 - sseg(o.c, o.d)); setVar(o.el, '--v', v.toFixed(3)); setVar(o.el, 'visibility', v < .002 ? 'hidden' : 'visible'); }
   const sc = sceneOf(Math.round(T));
-  const day = seg(9.35, 9.95) * (1 - seg(18.1, 18.6));             // the paper rises for the file, and falls for the close
+  const day = sseg(9.15, 9.95) * (1 - sseg(18.05, 18.75));             // the paper rises for the file, and falls for the close
   setVar(paper, '--paper', day.toFixed(3)); setVar(chrome, '--paper', day.toFixed(3)); stage.classList.toggle('day', day > .5);
   setVar(ruleI, '--prog', (T / STEPS).toFixed(4));
   if (whereEl.textContent !== SCENES[sc].where) { whereEl.textContent = SCENES[sc].where; scnName.textContent = SCENES[sc].name; folio.textContent = `${romans[sc]} / ${romans[SCENES.length - 1]}`; }
   // ---- the lava: free on the cover, gathering into the seal on the way to the compass; back, settled, for the close
-  const conv = T < 1 ? seg(0, .62) : T > 18 ? 1 - .35 * seg(18.2, 19) : 1;
-  const lavaOn = 1 - seg(.62, .95) + seg(18.05, 18.7);
+  const conv = T < 1 ? sseg(0, .7) : T > 18 ? 1 - .35 * sseg(18.2, 19) : 1;
+  const lavaOn = 1 - sseg(.5, .95) + sseg(18.05, 18.8);
   setVar(panelEl, '--lava', clamp(lavaOn).toFixed(3));
   setVar(panelEl, '--st', ease(clamp((conv - .65) / .35)).toFixed(3));
   if (lavaOn > .01 && newFilm) drawField(now, conv, FRAME_MS);
   // ---- the compass: the seal becomes the compass (top-down frame 0 at the seal's place and size), then it moves left
-  const co = seg(.55, .9) * (1 - seg(9.05, 9.5)) + seg(18.3, 18.9);
+  const co = sseg(.45, .95) * (1 - sseg(9.02, 9.6)) + sseg(18.25, 18.95);
   setVar(compassEl, '--co', co.toFixed(3));
   if (co > .01) {
     let kind = 'split', f = Math.round(splitFrame());
     if (T > 18) { if (TURN) { kind = 'turn'; if (newFilm) turnF = (turnF + 1) % TURN; f = turnF; } else f = SEQ.tilt - 1; }   // the turntable, once rendered
-    else if (T > 9 && T < 10) f = Math.round(lerp(SPLIT - 1, 0, seg(9, 9.5)));      // it closes as it leaves
+    else if (T > 9 && T < 10) f = Math.round(lerp(SPLIT - 1, 0, sseg(9, 9.6)));      // it closes as it leaves
     showFrame(kind, f);
-    const grow = seg(.55, 1), close = seg(18.3, 19);
-    const size = T > 18 ? lerp(300, 560, ease(close)) : lerp(170, PS, ease(grow));
-    const cx = T > 18 ? 720 : lerp(720, 400, ease(seg(.62, 1))) - seg(9.05, 9.6) * 120, cy = T > 18 ? lerp(450, 440, close) : lerp(450, 470, grow);
+    const grow = sseg(.45, 1), close = sseg(18.25, 19);
+    const size = T > 18 ? lerp(300, 560, close) : lerp(170, PS, grow);
+    const cx = T > 18 ? 720 : lerp(720, 400, sseg(.5, 1)) - sseg(9.02, 9.6) * 120, cy = T > 18 ? lerp(450, 440, close) : lerp(450, 470, grow);
     setVar(print, 'transform', `translate(${(cx - size / 2 + FILM.wx).toFixed(2)}px, ${(cy - size / 2 + FILM.wy).toFixed(2)}px) scale(${(size / PS).toFixed(4)})`);
     if (newFilm) drawGrain();
     // LEADERS. One per part, each drawn over the whole of its own step (the case has a step of its own, so two never
@@ -449,9 +463,9 @@ function render(now, newFilm){
     // (as rendered), along a private lane, into its row. Earlier lines stay, quieter; the one being drawn is full gold.
     if (!rowY) measureRows();
     const A = kind === 'split' ? SEQ.anchors[Math.min(SPLIT - 1, Math.round(splitFrame()))] : null;
-    const exit = 1 - seg(9.02, 9.3);
+    const exit = 1 - sseg(9.02, 9.5);
     rows.forEach((r, ri) => { const p = +r.dataset.part, L = leadEls[p], s0 = s0Of(p);
-      const draw = A && T <= 9.3 ? inOut(seg(s0 + .15, s0 + 1)) * exit : 0;
+      const draw = A && T <= 9.5 ? sseg(s0 + .1, s0 + 1) * exit : 0;
       if (draw < .005) { if (L.on) { L.on = false; L.path.setAttribute('d', ''); L.dot.setAttribute('r', 0); } return; }
       L.on = true;
       const x = cx - size / 2 + A[p][0] * size, y = cy - size / 2 + A[p][1] * size, R = rowY[ri], tx = R.x - 16, ty = R.y;
@@ -467,15 +481,15 @@ function render(now, newFilm){
     setVar(r, '--lit', lit.toFixed(3)); r.classList.toggle('cur', lit > .5 && Math.round(T) === curOf(p)); });
   // ---- the file: one document per step, 9..13; the stamp strikes after acceptance settles
   let got = 0;
-  docs.forEach((d, i) => { const a = ease(seg(9.7 + i, 10 + i)) * (1 - seg(14.05, 14.5)); setVar(d, '--a', a.toFixed(3)); if (i === 2) setVar(d, '--stamp', ease(seg(12.1, 12.5)).toFixed(3)); if (a > .6) got = i + 1; });
+  docs.forEach((d, i) => { const a = sseg(9.25 + i, 10 + i) * (1 - sseg(14.02, 14.6)); setVar(d, '--a', a.toFixed(3)); if (i === 2) setVar(d, '--stamp', sseg(11.7, 12).toFixed(3)); if (a > .6) got = i + 1; });
   gates.forEach((g, i) => { setVar(g, '--lit', (got > i ? 1 : 0).toString()); g.classList.toggle('cur', got - 1 === i); });
   const txt = `${got} of 5 documents`; if (deskCount.textContent !== txt) deskCount.textContent = txt;
   // ---- economics: 6a, 6b, 6c in turn; each grows as it arrives; the tiles count up at the film's cadence
   if (T > 14.4 && T < 18.5) {
-    const win = [[14.6, 15, 15.5, 15.8], [15.55, 16, 16.5, 16.8], [16.55, 17, 99, 100]];   // each chart is complete when its step comes to rest
-    charts.forEach((c, i) => { const [a, b, o1, o2] = win[i], v = seg(a, b) * (1 - seg(o1, o2)); setVar(c, '--v', v.toFixed(3)); setVar(c, 'visibility', v < .002 ? 'hidden' : 'visible');
-      setVar(c, '--g', inOut(seg(a + .12, b)).toFixed(3)); tabs[i].classList.toggle('on', v > .5); });
-    const k = ease(seg(14.6, 15));
+    const win = [[14.3, 15, 15.02, 15.45], [15.4, 16, 16.02, 16.45], [16.4, 17, 99, 100]];   // complete at rest; one leaves before the next arrives
+    charts.forEach((c, i) => { const [a, b, o1, o2] = win[i], v = sseg(a, b) * (1 - sseg(o1, o2)); setVar(c, '--v', v.toFixed(3)); setVar(c, 'visibility', v < .002 ? 'hidden' : 'visible');
+      setVar(c, '--g', sseg(a + .15, b).toFixed(3)); tabs[i].classList.toggle('on', v > .5); });
+    const k = sseg(14.3, 15);
     if (newFilm || !moving) { const r = v => k < 1 ? Math.round(v * k / 100) * 100 : v;
       tileTxt(tD, php(r(M_.tD))); tileTxt(tC, php(r(M_.tC))); tileTxt(tS, `${php(r(M_.tD - M_.tC))} · ${(M_.share * 100 * k).toFixed(1)}%`); }
   }
@@ -484,7 +498,7 @@ function frame(now){
   requestAnimationFrame(frame);
   const newFilm = FILM.tick(now);
   if (moving) { const p = clamp((now - t0) / dur); const sceneMove = sceneOf(to) !== sceneOf(Math.round(from));
-    T = lerp(from, to, easeMove(p, sceneMove)); if (p >= 1) { T = to; moving = false; } }
+    T = lerp(from, to, easeMove(p, sceneMove)); if (p >= 1) { T = to; moving = false; if (pending != null && pending !== to) { const n = pending; pending = null; go(n); } else pending = null; } }
   if (moving || newFilm) render(now, newFilm);
 }
 
@@ -579,8 +593,8 @@ econ();
 /* ------------------------------------------------ controls: keys, click, trackpad swipe; F, B, W, number jumps */
 const blank = document.getElementById('blank'), hint = document.getElementById('hint');
 let typed = '';
-function next(){ hint.classList.add('gone'); go(to + 1); }
-function prev(){ hint.classList.add('gone'); go(to - 1); }
+function next(){ hint.classList.add('gone'); request((pending ?? to) + 1); }
+function prev(){ hint.classList.add('gone'); request((pending ?? to) - 1); }
 addEventListener('keydown', e => {
   if (e.metaKey || e.ctrlKey || e.altKey) return;
   const k = e.key;
