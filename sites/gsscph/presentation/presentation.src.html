@@ -503,7 +503,7 @@ function render(now, newFilm){
       L.on = true;
       const x = cx - size / 2 + A[p][0] * size, y = cy - size / 2 + A[p][1] * size, R = rowY[ri];
       // a line at rest is not rebuilt: only a change in its start or its draw rewrites it (the MacBook Air)
-      const key = `${x.toFixed(1)},${y.toFixed(1)},${draw.toFixed(4)}`;
+      const key = `${x.toFixed(1)},${y.toFixed(1)},${draw.toFixed(4)},${exit > .999}`;   // exit too: the tip depends on it
       if (L.key !== key) { L.key = key;
         const {d, ex, ey} = leaderPath(x, y, R.x - 16, R.y, draw);
         L.path.setAttribute('d', d);

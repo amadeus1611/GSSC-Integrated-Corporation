@@ -34,6 +34,9 @@ jumps.
 | Plan: pass 0's done criterion missed the retract | Note | **Fixed** in §7 |
 | Plan: pass 9 should restate the MAINTENANCE_LOG obligation | Note | **Fixed** in §7 |
 
+**Re-review:** clear, with no blockers or should-fix findings left. One note: the line cache relied on `draw` changing
+whenever the retract began. The retract state is now part of the cache key, so the tip can never go stale.
+
 **Harness** (`qa/run_deck_qa.py`, first run): PASS, 0 fail, 78 warnings.
 - Zero overlap on all four scene changes. The rests are 0.45, 0.58, 0.65 and 0.70 s.
 - Every step returns to the same state after going forward and back.
