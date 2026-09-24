@@ -1,1 +1,6 @@
 date,request_id,step,agent,tier,reason_for_tier,result,redo_count,notes
+2026-09-24,v38-console,D1 routing and budget memo,decision,medium,floor; routine routing decision,pending,0,internal build of the EXPIRA Console v38
+2026-09-24,v38-console,R1 motion engine research,research,medium,floor; no conflicting sources yet,pending,0,emergence from the click point; shadow-safe reveals; springs; physics displacement; metaball budding
+2026-09-24,v38-console,R2 trace and footer research,research,medium,floor,pending,0,execution-trace flow charts; footer action patterns
+2026-09-24,v38-console,Q0 test-first acceptance QA,reviewer,medium,floor,pending,0,acceptance tests for M1-M4 run red on v37 first
+2026-09-24,v38-console,P0 performance baseline,reviewer,medium,floor; optimiser role mapped to reviewer (Bash for profiling; no edits),pending,0,perf script and ranked hot spots
