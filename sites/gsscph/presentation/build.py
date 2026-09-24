@@ -95,5 +95,12 @@ if shutil.which("node"):
 with zipfile.ZipFile(HERE / "dist" / "GSSC-Presentation.zip", "w", zipfile.ZIP_DEFLATED) as z:
     for f in sorted(DIST.rglob("*")):
         if f.is_file(): z.write(f, f.relative_to(DIST.parent))
+# the web preview (the claude.ai artifact holds at most 255 files a version): every other turntable frame, the same
+# 8 s turn. The offline folder and zip, which Duke presents from, keep all 192.
+if complete:
+    web = HERE / "dist" / "web"; shutil.rmtree(web, ignore_errors=True); (web / "assets" / "compass" / "turn").mkdir(parents=True)
+    (web / "index.html").write_text(html.replace("const SPLIT = SEQ.frames, TURN = 192;", "const SPLIT = SEQ.frames, TURN = 96;"), encoding="utf-8")
+    assert "TURN = 96;" in (web / "index.html").read_text(encoding="utf-8")
+    for i in range(96): shutil.copy(DIST / "assets" / "compass" / "turn" / ("t%03d.webp" % (2 * i)), web / "assets" / "compass" / "turn" / ("t%03d.webp" % i))
 size = sum(f.stat().st_size for f in DIST.rglob("*") if f.is_file())
 print("built %s (%.1f MB) from %s%s" % (DIST.relative_to(HERE.parents[2]), size / 1e6, PKG.name, "" if complete else " · turntable not yet rendered"))

@@ -593,7 +593,7 @@ function render(now, newFilm){
   setVar(compassEl, '--co', co.toFixed(3));
   if (co > .01) {
     let kind = 'split', f = Math.round(splitFrame());
-    if (T > C - 1) { if (TURN) { kind = 'turn'; if (newFilm) turnF = (turnF + 1) % TURN; f = turnF; } else f = SEQ.tilt - 1; }   // the turntable, once rendered
+    if (T > C - 1) { if (TURN) { kind = 'turn'; if (newFilm) turnF = Math.floor(now / (8000 / TURN)) % TURN; f = turnF; }   /* one turn every 8 s, whatever the frame count */ else f = SEQ.tilt - 1; }   // the turntable, once rendered
     else if (T > D.end && T < D.end + 1) f = Math.round(lerp(SPLIT - 1, 0, sseg(...CLOSE9)));   // it closes completely (the parts settle back, star last; it lies flat) before it fades
     showFrame(kind, f);
     const grow = sseg(.5, .85), close = sseg(C - .45, C), atClose = T > C - 1;
