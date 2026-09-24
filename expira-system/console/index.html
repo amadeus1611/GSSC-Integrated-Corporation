@@ -1317,7 +1317,11 @@ html.theming,html.theming *,html.theming *::before,html.theming *::after{transit
 .fz.f-s{--fs:22px}.fz.f-e{--fe:26px}
 .fzx.f-s{--fs:18px}.fzx.f-e{--fe:28px}
 #scroll.fz.f-s{--fs:30px}#scroll.fz.f-e{--fe:34px}
-@media (max-width:560px){.fig:hover,.fig:focus-within{-webkit-mask-image:inherit;mask-image:inherit}}
+@media (max-width:560px){.fig{overflow:visible!important}.fig svg.ch{width:560px;max-width:none}.chs{overflow-x:auto;scrollbar-width:none}.chs::-webkit-scrollbar{display:none}}
+.fig{-webkit-mask-image:none!important;mask-image:none!important}
+.chs{position:relative}
+.run .rk{transition:opacity .3s ease}
+.run:hover .rk,.run.open .rk{opacity:0}
 @media (prefers-reduced-motion:reduce){.fz,.fzx{transition:none}}
 </style>
 
@@ -1991,7 +1995,7 @@ addEventListener("keydown",e=>{const k=e.key.toLowerCase();if(k==="escape"&&$("#
  else if(k==="/"&&document.activeElement===document.body){e.preventDefault();app.classList.remove("folded");$("#side").classList.add("searching");$("#find").focus()}});
 
 /* ---------- The Dispatch: it fills in as the work unfolds ---------- */
-const dsp=$("#dsp");const showDsp=o=>{dsp.classList.toggle("open",o);app.classList.toggle("dsp-open",o);if(o)setTimeout(()=>FM.forEach(m=>m.go()),30)};
+const dsp=$("#dsp");const showDsp=o=>{dsp.classList.toggle("open",o);$("#dspBtn")?.setAttribute("aria-expanded",String(!!o));app.classList.toggle("dsp-open",o);if(o)setTimeout(()=>FM.forEach(m=>m.go()),30)};
 $("#dspClose").onclick=()=>showDsp(false);$("#runPill").onclick=()=>showDsp(true);$("#dspBtn").onclick=()=>dsp.classList.contains("open")?showDsp(false):openLatest();$("#dspNav").onclick=()=>openLatest();
 function openLatest(){if(busy){showDsp(true);return}const c=cur||chats[0];if(!c)return;const k=c.turns.map(t=>t.role).lastIndexOf("assistant");if(k<0){toast("No dispatch yet. Brief EXPIRA first.");return}if(c!==cur)open(c);recordedDispatch(c.turns[k].work||{ms:0,steps:[],feed:[],firewall:"off"},c,c.turns[k-1]?.ts||c.turns[k].ts);showDsp(true)}
 function standfirst(w){const s=w.steps||[];if(!s.length)return "EXPIRA answered directly; no desk was needed for this brief.";
@@ -2554,7 +2558,7 @@ function chartX(sp,type,no){const title=sp.title||"",unit=sp.unit||"",note=sp.no
  return `<figure class="fig pre fx-${type}">${FH(no,title,unit,lg)}<svg class="ch" data-fig="${id}" viewBox="0 0 ${W} ${H}" role="img" aria-label="${esc(title)}">${body}</svg>${tbl}${note}</figure>`}
 /* figures come alive when they scroll into view */
 const figIn=f=>{if(!f.classList.contains("pre"))return;f.classList.remove("pre");f.classList.add("in");FIGIO.unobserve(f);countUp(f)};const FIGIO=new IntersectionObserver(es=>es.forEach(en=>{if(en.isIntersecting)figIn(en.target)}),{rootMargin:"0px 0px -40px 0px"});
-function armFigs(root){(root||document).querySelectorAll(".fig").forEach(f=>feather(f,"x"));(root||document).querySelectorAll(".fig.pre:not([data-io])").forEach(f=>{f.dataset.io=1;if(reduce){f.classList.remove("pre");return}FIGIO.observe(f);setTimeout(()=>figIn(f),2500)})}
+function armFigs(root){(root||document).querySelectorAll(".fig svg.ch").forEach(v=>{let w=v.parentElement;if(!w.classList.contains("chs")){w=document.createElement("div");w.className="chs";v.before(w);w.append(v)}feather(w,"x")});(root||document).querySelectorAll(".fig.pre:not([data-io])").forEach(f=>{f.dataset.io=1;if(reduce){f.classList.remove("pre");return}FIGIO.observe(f);setTimeout(()=>figIn(f),2500)})}
 new MutationObserver(()=>armFigs()).observe(document.getElementById("thread"),{childList:true,subtree:true});
 /* high-resolution PNG: the figure redrawn at 3× with its computed colours */
 async function figPNG(fig,btn){const svg=fig.querySelector("svg.ch");if(!svg)return;const vb=svg.viewBox.baseVal,S=3,cl=svg.cloneNode(true),src=[svg,...svg.querySelectorAll("*")],dst=[cl,...cl.querySelectorAll("*")];
@@ -2579,7 +2583,7 @@ const FZ=new WeakSet();
 function feather(el,axis){if(!el||FZ.has(el))return;FZ.add(el);const x=axis==="x";el.classList.add(x?"fzx":"fz");let raf=0;
  const upd=()=>{raf=0;const p=x?el.scrollLeft:el.scrollTop,m=x?el.scrollWidth-el.clientWidth:el.scrollHeight-el.clientHeight;el.classList.toggle("f-s",p>2);el.classList.toggle("f-e",m-p>2)};
  const q=()=>{if(!raf)raf=requestAnimationFrame(upd)};el.addEventListener("scroll",q,{passive:true});new ResizeObserver(q).observe(el);new MutationObserver(q).observe(el,{childList:true,subtree:true});q()}
-function featherAll(){["#scroll","#dspB","#sheetB","#stgP","#olog"].forEach(k=>feather(document.querySelector(k)));const sd=[...($("#side")?.querySelectorAll("*")||[])].find(e=>/(auto|scroll)/.test(getComputedStyle(e).overflowY)&&e.scrollHeight>0);feather(sd);feather($("#att"),"x");document.querySelectorAll(".fig").forEach(f=>feather(f,"x"))}
+function featherAll(){["#scroll","#dspB","#sheetB","#stgP","#olog"].forEach(k=>feather(document.querySelector(k)));const sd=[...($("#side")?.querySelectorAll("*")||[])].find(e=>/(auto|scroll)/.test(getComputedStyle(e).overflowY)&&e.scrollHeight>0);feather(sd);feather($("#att"),"x");armFigs()}
 setTimeout(featherAll,300);new MutationObserver(()=>setTimeout(()=>feather(document.querySelector("#olog")),60)).observe($("#dsp"),{attributes:true,attributeFilter:["class"]});
 /* claim cards: hovering a citation draws its claim out of the marker */
 {const P=$("#cpop");let tm=0,on=null;const host=u=>{try{return new URL(u).hostname.replace(/^www\./,"")}catch(e){return String(u)}};
