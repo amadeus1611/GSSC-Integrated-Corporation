@@ -237,14 +237,6 @@ html.reveal .file:not(.pinned) .doc.in .doc-stamp{opacity:1;transform:rotate(-6d
   background:linear-gradient(to bottom,var(--navy-deep) 0%,var(--navy-deep) 60%,var(--gold-primary) 60%,var(--gold-primary) 85%,var(--slate) 85%,var(--slate) 100%);
   clip-path:inset(0 0 calc((1 - var(--sp,1)) * 100%) 0);opacity:1}
 @media (max-width:760px){ .sec-line{left:8px;width:1.5px} }
-/* iteration B (?spine=b): a gold tick across the rule at the tip, sitting exactly on the clip edge */
-html.spine-b .sec-line::after{content:"";position:absolute;left:50%;top:calc(var(--sp,1) * 100%);width:11px;height:2px;
-  background:var(--gold-primary);transform:translate(-50%,-50%);pointer-events:none}
-/* iteration C (?spine=c): a hairline tick at each CHS stamp / subhead the tip passes, positioned once from the
-   cached heading offsets (JS below), never touched in the frame loop */
-.sec-line .sec-tick{display:none}
-html.spine-c .sec-line .sec-tick{display:block;position:absolute;left:50%;width:9px;height:1px;
-  background:var(--gold-deep);opacity:.85;transform:translate(-50%,-50%);pointer-events:none}
 
 /* the guide: the one persistent aid besides the header. Where you are, how far through, what comes next. */
 .guide{--h:0;position:fixed;z-index:45;right:var(--gutter);top:calc(env(safe-area-inset-top,0px) + 112px - var(--h) * 36px);width:236px;
@@ -1616,10 +1608,6 @@ const rises = [...document.querySelectorAll('[data-rise]')];
 /* the motion mode: scrub (scroll-linked script) or reveal (observer-triggered compositor transitions); see the CSS.
    The spine (.sec-line) is exempt: it is a pure function of scroll in both modes (SPINE_PLAN.md §2.1). */
 const REV = {on: false};
-// spine design iterations B/C (SPINE_PLAN.md §3): off by default, comparison frames behind a query flag
-const SPINE_FLAG = new URLSearchParams(location.search).get('spine');
-if (SPINE_FLAG === 'b') root.classList.add('spine-b'); else if (SPINE_FLAG === 'c') root.classList.add('spine-c');
-const SPINE_C = SPINE_FLAG === 'c';
 function setReveal(on){ if (REV.on === on) return; REV.on = on; root.classList.toggle('reveal', on); }
 const revealIO = new IntersectionObserver(es => { for (const e of es) if (e.isIntersecting || e.boundingClientRect.bottom < 0) { e.target.classList.add('in'); revealIO.unobserve(e.target); } },
   {rootMargin: '0px 0px -8% 0px'});
@@ -1661,10 +1649,6 @@ const cut = {field: false, inst: false};
 const secs = railSecs;
 document.querySelectorAll('.sec').forEach(sec => { const l = document.createElement('i'); l.className = 'sec-line'; l.setAttribute('aria-hidden', 'true'); sec.prepend(l); });
 const secLines = [...document.querySelectorAll('.sec-line')];
-// iteration C (?spine=c): one tick per CHS stamp / subhead the section's rule passes; positions are set once
-// per measureOffsets(), never read or written in the frame loop
-const tickHeads = SPINE_C ? secLines.flatMap(l => [...l.parentElement.querySelectorAll('.chs-stamp, .kicker[data-rise]')]
-  .map(h => [l, h, l.appendChild(Object.assign(document.createElement('i'), {className: 'sec-tick'}))])) : [];
 const guide = {sec: document.getElementById('gSec'), fol: document.getElementById('gFol'), hint: document.getElementById('gHint'), el: document.getElementById('guide'), last: ''};
 // write a custom property only when its value changes: unchanged writes still invalidate style
 const setVar = (el, k, v) => { const c = el.__v || (el.__v = {}); if (c[k] !== v) { c[k] = v; el.style.setProperty(k, v); } };
@@ -1700,8 +1684,6 @@ function measureOffsets(){
          secs: secs.map(e => [absTop(e), e.offsetHeight]), night: nightSecs.map(e => [absTop(e), e.offsetHeight]), docs: docs.map(absTop), el: {}};
   for (const [k, e] of Object.entries({top: topEl, field: fieldStage, inst: instStage, file: roadmap, ink, flow: flowTrack, econ: econEl, tl, col: colophon}))
     OFF.el[k] = [absTop(e), e.offsetHeight];
-  if (SPINE_C) for (const [l, h, tick] of tickHeads) { const [lt, lh] = OFF.lines[secLines.indexOf(l)];
-    tick.style.top = (clamp((absTop(h) - lt) / lh) * 100).toFixed(2) + '%'; }
 }
 // only throw the cache away when the document actually changed height: a sub-element resizing inside a fixed-height
 // pin (the instrument canvas, a doc's transform) fires the observer too, but never moves anything cached here
