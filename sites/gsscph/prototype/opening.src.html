@@ -1,3 +1,5 @@
+<!doctype html>
+<html lang="en">
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>GSSC Showroom Opening</title>
@@ -210,8 +212,25 @@ h1.title .it{font-style:italic;letter-spacing:-.02em}
 a.g-hint:hover{color:var(--navy-dark)}
 body.on-night .guide{color:var(--on-night);background:rgba(9,23,61,.46);border-color:rgba(243,236,218,.16)}
 body.on-night .g-hint,body.on-night .g-fol{color:var(--on-night-2)} body.on-night .g-bar{background:rgba(243,236,218,.14)}
-@media (max-width:860px){ .guide{top:auto;bottom:calc(14px + env(safe-area-inset-bottom,0px));left:var(--gutter);right:var(--gutter);width:auto;padding:8px 12px}
+@media (max-width:860px){ .guide{top:auto;bottom:calc(14px + env(safe-area-inset-bottom,0px));left:var(--gutter);right:var(--gutter);width:auto;padding:8px 12px;
+    transition:opacity 600ms var(--soft-close),transform 600ms var(--soft-close),color 700ms var(--soft-close),background 700ms var(--soft-close)}
   .g-bar{margin:6px 0 0} .g-hint{display:none} }
+/* on a wide screen the guide lives in the header: when the wordmark folds into the mark, the section takes
+   its place, and the header's bottom rule becomes the section's progress. Nothing floats over the text. */
+@media (min-width:861px){
+  .guide{z-index:51;top:env(safe-area-inset-top,0px);left:calc(max(0px, (100vw - var(--maxw)) / 2) + var(--gutter) + 52px);right:auto;width:auto;height:68px;
+    padding:0;border:0;background:none;-webkit-backdrop-filter:none;backdrop-filter:none;display:flex;align-items:center;gap:18px;
+    opacity:clamp(0, calc(var(--h) * 2 - 1), 1);pointer-events:none;margin-top:calc((1 - var(--h)) * 8px)}
+  body.on-night .guide{height:56px;background:none}
+  .g-row{gap:14px}
+  .g-hint{pointer-events:auto;padding-left:18px;border-left:var(--rule-hair) solid rgba(9,23,61,.18)}
+  body.on-night .g-hint{border-left-color:rgba(243,236,218,.2)}
+  .g-hint::after{display:none}
+  .g-bar{position:fixed;left:0;right:0;top:calc(env(safe-area-inset-top,0px) + 67px);margin:0;height:1px;background:transparent}
+  body.on-night .g-bar{top:calc(env(safe-area-inset-top,0px) + 55px);background:transparent}
+}
+@media (min-width:861px) and (max-width:1180px){ .g-hint{display:none} }
+.guide.gone{opacity:0!important;transform:translateY(12px);pointer-events:none}
 @media (prefers-reduced-motion:reduce){ .g-hint::after{animation:none} }
 
 /* printer's marks: every paper section carries registration crosses at its top corners, as a proof sheet does */
@@ -220,7 +239,7 @@ body.on-night .g-hint,body.on-night .g-fol{color:var(--on-night-2)} body.on-nigh
 .sec::before{left:calc(var(--gutter) - 26px)} .sec::after{right:calc(var(--gutter) - 26px)}
 .sec{padding-block:calc(var(--u) * 26) calc(var(--u) * 24);position:relative}
 /* breath: empty paper between a finished segment and the next, so each one is seen whole before the next arrives */
-.breath{height:clamp(160px,32vh,360px)}
+.breath{height:clamp(112px,22vh,260px)}
 .grid12{display:grid;grid-template-columns:repeat(12,minmax(0,1fr));column-gap:24px;row-gap:calc(var(--u) * 5);align-items:start}
 .span-all{grid-column:1 / -1} .col-a{grid-column:1 / span 6} .col-b{grid-column:8 / -1}
 @media (max-width:960px){ .col-a,.col-b{grid-column:1 / -1} }
@@ -236,23 +255,64 @@ table.dt td.no{font:400 18px/1.2 var(--f-display);font-feature-settings:"onum" 1
 table.dt td.name{font:400 19px/1.3 var(--f-display);color:var(--navy-dark);width:30%;letter-spacing:var(--tracked-num)}
 table.dt td.code{font:500 12px/1.4 var(--f-body);letter-spacing:var(--tracked-tight);color:var(--mid-grey);white-space:nowrap;text-align:right}
 table.dt tbody tr td{transition:background 600ms var(--soft-close)}
-@media (max-width:640px){ table.dt{min-width:0} table.dt th:last-child,table.dt td.code{display:none} table.dt td.name{width:38%;font-size:17px} table.dt td,table.dt thead th{padding-inline:10px} table.dt td.no{width:40px} }
+@media (max-width:640px){ table.dt{min-width:0} table.dt th:last-child,table.dt td.code{display:none} table.dt td.name .fig-m{display:block;width:max-content} table.dt td.name{width:38%;font-size:17px} table.dt td,table.dt thead th{padding-inline:10px} table.dt td.no{width:40px} }
 table.dt tbody tr:hover td{background:rgba(230,212,167,.24);transition-duration:180ms}
+table.dt tbody tr td:first-child{box-shadow:inset 0 0 0 transparent;transition:background 600ms var(--soft-close),box-shadow 600ms var(--soft-close)}
+table.dt tbody tr:hover td:first-child{box-shadow:inset 2px 0 0 var(--gold-primary)}
 
-/* roadmap: the master's milestone grid, strong top rule, onum numerals; the gold line draws with scroll */
-.roadmap{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:24px;border-top:var(--rule-strong) solid var(--navy-dark);position:relative;padding-top:28px}
-.roadmap::before{content:"";position:absolute;left:0;top:-1.5px;height:1.5px;width:calc(var(--rm,0) * 100%);background:var(--gold-primary)}
-.stage .n{font:400 40px/1 var(--f-display);font-feature-settings:"onum" 1;color:var(--gold-deep);letter-spacing:var(--tracked-num)}
-.stage .l{margin:16px 0 8px;font:600 11px/1.3 var(--f-body);letter-spacing:var(--tracked);text-transform:uppercase;color:var(--navy-dark)}
-.stage p{margin:0;font-size:15px;line-height:1.55;color:var(--slate)}
-.stage .n{transition:color 900ms var(--soft-close)} .roadmap .stage:not(.lit) .n{color:var(--hairline)}
-@media (max-width:960px){ .roadmap{grid-template-columns:1fr 1fr} }
-@media (max-width:560px){ .roadmap{grid-template-columns:1fr} .stage{display:grid;grid-template-columns:64px 1fr;column-gap:12px} .stage .n{grid-row:span 2} .stage .l{margin-top:4px} }
+/* Fig. 5, the file: the gates on the left, and on the right the document each gate produces, arriving one by
+   one onto a stack, as a client's file actually builds. Pinned on a wide screen; a plain sequence on touch. */
+.file{position:relative;border-top:var(--rule-strong) solid var(--navy-dark)}
+.file::before{content:"";position:absolute;left:0;top:-1.5px;height:1.5px;width:calc(var(--rm,0) * 100%);background:var(--gold-primary)}
+.file.pinned{height:280vh}
+.file-pin{display:grid;grid-template-columns:minmax(0,4fr) minmax(0,7fr);column-gap:clamp(32px,5vw,88px);padding-top:28px}
+.file.pinned .file-pin{position:sticky;top:0;height:100vh;height:100svh;align-items:center;padding-top:0}
+.gates{list-style:none;margin:0;padding:0;display:grid;gap:22px;counter-reset:g}
+.stage{display:grid;grid-template-columns:52px 1fr;column-gap:14px;align-items:start;position:relative;padding-left:14px;border-left:1.5px solid transparent;transition:border-color 700ms var(--soft-close)}
+.stage .n{font:400 34px/1 var(--f-display);font-feature-settings:"onum" 1;color:var(--gold-deep);letter-spacing:var(--tracked-num);transition:color 900ms var(--soft-close)}
+.stage .l{margin:2px 0 6px;font:600 11px/1.3 var(--f-body);letter-spacing:var(--tracked);text-transform:uppercase;color:var(--navy-dark)}
+.stage p{margin:0;font-size:14.5px;line-height:1.5;color:var(--slate)}
+.gates .stage:not(.lit) .n{color:var(--hairline)} .gates .stage:not(.lit) p{color:var(--mid-grey)}
+.gates .stage.cur{border-left-color:var(--gold-primary)}
+.desk{margin:0;position:relative}
+.desk-cap{display:flex;justify-content:space-between;align-items:baseline;gap:16px;margin-bottom:26px;position:relative;z-index:6}
+.desk-count{font:italic 400 14px/1 var(--f-display);color:var(--slate);font-feature-settings:"lnum" 1,"tnum" 1}
+.docs{position:relative}
+.file.pinned .docs{height:min(64vh,560px)}
+.doc{--a:0;position:relative}
+.file.pinned .doc{position:absolute;inset:0 auto auto 0;width:min(100%,560px);z-index:var(--i);
+  transform:translate(calc(var(--i) * 14px), calc(var(--i) * 9px + (1 - var(--a)) * 72vh)) rotate(calc((var(--i) - 2) * .7deg + (1 - var(--a)) * 5deg));
+  opacity:calc(var(--a) * 3)}
+.doc-cap{display:none}
+.doc-page{position:relative;background:#fffdf8;border:1px solid var(--hairline);border-top:var(--rule-strong) solid var(--navy-dark);border-radius:0 0 var(--r) var(--r);
+  padding:18px 24px 20px;box-shadow:0 1px 0 rgba(9,23,61,.04),0 24px 40px -28px rgba(9,23,61,.35);filter:brightness(calc(1 - var(--under,0) * .05))}
+.doc-h{display:flex;align-items:center;gap:10px;padding-bottom:12px;border-bottom:var(--rule-hair) solid var(--hairline)}
+.doc-seal{width:20px;height:20px;flex:none}
+.doc-ref{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font:600 9.5px/1.3 var(--f-body);letter-spacing:var(--tracked-tight);text-transform:uppercase;color:var(--navy-dark)}
+.doc-n{font:400 20px/1 var(--f-display);font-feature-settings:"onum" 1;color:var(--gold-deep)}
+.doc-t{margin:16px 0 12px;font:400 clamp(22px,2vw,28px)/1.15 var(--f-display);letter-spacing:var(--compressed);color:var(--navy-dark)}
+.doc-dl{margin:0;display:grid}
+.doc-dl div{display:grid;grid-template-columns:minmax(0,2fr) minmax(0,3fr);gap:12px;padding:9px 0;border-top:var(--rule-hair) solid var(--hairline)}
+.doc-dl dt{font:600 10px/1.45 var(--f-body);letter-spacing:var(--tracked-cap);text-transform:uppercase;color:var(--slate)}
+.doc-dl dd{margin:0;font-size:14.5px;line-height:1.45;color:var(--ink)}
+.doc-f{margin:12px 0 0;padding-top:10px;border-top:var(--rule-medium) solid var(--navy-dark);font:italic 400 14px/1.45 var(--f-display);color:var(--navy-dark)}
+.doc-stamp{position:absolute;right:22px;bottom:52px;padding:6px 12px;border:1.5px solid rgba(168,134,47,.8);border-radius:1px;font:600 11px/1 var(--f-body);letter-spacing:.3em;text-transform:uppercase;color:var(--gold-deep);
+  transform:rotate(-6deg) scale(calc(1.6 - var(--stamp,0) * .6));opacity:var(--stamp,0);mix-blend-mode:multiply}
+@media (max-width:960px){
+  .file-pin{grid-template-columns:1fr} .gates{display:none}
+  .doc-cap{display:block;margin:0 0 12px;font-size:15px;line-height:1.5;color:var(--slate)} .doc-cap b{display:block;margin-bottom:4px;font:600 11px/1.3 var(--f-body);letter-spacing:var(--tracked);text-transform:uppercase;color:var(--navy-dark)}
+  .doc{margin-bottom:34px;transform:translateY(calc((1 - var(--a)) * 40px)) rotate(calc((var(--i) - 2) * .5deg * var(--a)));opacity:calc(.2 + var(--a) * .8)}
+  .doc-page{padding:16px 18px 18px} .doc-dl div{grid-template-columns:1fr;gap:2px}
+}
 
 /* metric strip: medium navy rule above, hairline below */
 .metric-strip{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));border-top:var(--rule-medium) solid var(--navy-dark);border-bottom:var(--rule-hair) solid var(--hairline)}
 .metric{padding:22px 20px 22px 0;border-right:var(--rule-hair) solid var(--hairline)}
 .metric+.metric{padding-left:20px} .metric:last-child{border-right:0}
+.metric{--k:clamp(0, calc((var(--p, 1) - var(--mi, 0) * .14) / .42), 1)}
+.metric:nth-child(2){--mi:1} .metric:nth-child(3){--mi:2} .metric:nth-child(4){--mi:3}
+.metric-value{transform:scale(calc(1 + (1 - var(--k)) * .14));transform-origin:left bottom;opacity:calc(.15 + var(--k) * .85);filter:blur(calc((1 - var(--k)) * 1.2px));
+  transition:transform 120ms linear}
 .metric-value{display:block;font:400 clamp(17px,1.6vw,25px)/1.2 var(--f-display);color:var(--navy-dark);letter-spacing:var(--tracked-num);font-feature-settings:"onum" 1;white-space:nowrap}
 .metric-label{display:block;margin-top:8px;font:600 10.5px/1.45 var(--f-body);letter-spacing:var(--tracked-cap);text-transform:uppercase;color:var(--slate)}
 @media (max-width:560px){ .metric-strip{grid-template-columns:1fr} .metric{border-right:0!important;padding-left:0!important} .metric+.metric{border-top:var(--rule-hair) solid var(--hairline)} }
@@ -275,7 +335,7 @@ table.dt tbody tr:hover td{background:rgba(230,212,167,.24);transition-duration:
 .flow-fig{margin:0}
 /* on a wide screen the whole figure pins at the centre of the view and plays only while pinned:
    it starts once all of it is in sight, finishes with room to spare, holds, then releases */
-.flow-track.pinned{height:calc(var(--ph) + 120vh)}
+.flow-track.pinned{height:calc(var(--ph) + 95vh)}
 .flow-track.pinned .flow-fig{position:sticky;top:calc(50vh - var(--ph) / 2 + 30px)}
 /* the plate: Fig. 3 is set like a primary exhibit, with a strong rule above, a header strip and its own ground */
 .flow-plate{border:1px solid var(--hairline);border-top:var(--rule-strong) solid var(--navy-dark);border-radius:0 0 var(--r) var(--r);
@@ -375,6 +435,12 @@ table.dt tbody tr:hover td{background:rgba(230,212,167,.24);transition-duration:
 .econ-src summary::-webkit-details-marker{display:none}
 .econ-src summary::after{content:"+";font:400 18px/1 var(--f-display);transition:transform 600ms var(--soft-close)} .econ-src[open] summary::after{transform:rotate(45deg)}
 .econ-src .dt-wrap{padding:0 22px 18px} .econ-src table.dt{min-width:0;margin-top:0} .econ-src table.dt td{font-size:14px;padding:12px 12px}
+.fig-link{color:inherit;text-decoration:none;border-bottom:1px solid rgba(168,134,47,.45);padding-bottom:1px;transition:color 600ms var(--soft-close),border-color 600ms var(--soft-close)}
+.fig-m{display:none;margin:-6px 0 -10px;padding:12px 0;font:500 11px/1.4 var(--f-body);letter-spacing:var(--tracked-tight)}
+.fig-link::after{content:" ↗";font-size:.9em;opacity:0;transition:opacity 600ms var(--soft-close)}
+.fig-link:hover,.fig-link:focus-visible{color:var(--gold-deep);border-bottom-color:var(--gold-deep)} .fig-link:hover::after{opacity:1}
+.tag.focus{border-left-color:var(--gold-light)} .tag.focus .v{color:var(--gold-light)}
+.now.focus .v{color:var(--gold-light)}
 .econ-src a{color:var(--navy-dark);text-decoration:underline;text-decoration-color:var(--gold-primary);text-underline-offset:3px}
 @media (max-width:960px){ .lg-body{grid-template-columns:1fr} .lg-rule{display:none} .econ-ctl{padding:4px var(--gutter-in,18px) 18px;border-bottom:var(--rule-hair) solid var(--navy-dark)}
   .econ-out{padding:24px 18px 22px} .lg-head,.lg-foot{padding:12px 18px} .econ-src summary{padding:0 18px}
@@ -401,13 +467,13 @@ table.dt tbody tr:hover td{background:rgba(230,212,167,.24);transition-duration:
 .tl .tl-ev .d{font:400 22px var(--f-display);fill:var(--navy-dark)}
 .tl .tl-ev .e{font:600 11px var(--f-body);letter-spacing:.14em;text-transform:uppercase;fill:var(--slate)}
 .tl .tl-ev:hover circle{fill:var(--gold-light)}
-.tl-vert{display:none;width:100%;max-width:420px;height:auto;overflow:visible}
+.tl .tl-vert{display:none;width:100%;max-width:420px;height:auto;overflow:visible}
 .tl .tl-vert .tl-run{stroke-dasharray:390;stroke-dashoffset:calc(390 * (1 - var(--d,1)))}
 .tl .tl-vert .tl-ev .st{stroke-dasharray:30;stroke-dashoffset:30} .tl .tl-vert .tl-ev.on .st{stroke-dashoffset:0}
 .tl .tl-vert .tk text{text-anchor:end}
 .tl .tl-vert .tl-ev .d{font-size:20px}
 .dia-scroll{overflow-x:auto;-webkit-overflow-scrolling:touch}
-@media (max-width:700px){ .acct-fig svg{min-width:680px} .tl .dia-scroll{display:none} .tl-vert{display:block} .dia-scroll{margin-inline:calc(var(--gutter) * -1);padding-inline:var(--gutter)} }
+@media (max-width:700px){ .acct-fig svg{min-width:680px} .tl .dia-scroll{display:none} .tl .tl-vert{display:block} .dia-scroll{margin-inline:calc(var(--gutter) * -1);padding-inline:var(--gutter)} }
 
 /* ---------------------------------------------------------------- Fig. 2: the Instrument (night stage) */
 .night{background:var(--navy-dark);color:var(--on-night);position:relative}
@@ -442,6 +508,50 @@ table.dt tbody tr:hover td{background:rgba(230,212,167,.24);transition-duration:
 }
 
 /* ---------------------------------------------------------------- close: gate + colophon */
+/* the inquiry: set like the first page of a quotation. Fields on the left in three numbered sets; on the right
+   the inquiry as it will read, filled in live. It composes an email; nothing is sent from the page. */
+.inq{display:grid;grid-template-columns:minmax(0,7fr) minmax(0,5fr);gap:clamp(28px,4vw,64px);margin-top:calc(var(--u) * 10);align-items:start}
+.inq-set{border:0;margin:0 0 30px;padding:0;min-width:0}
+.inq-set legend{padding:0 0 14px;font:600 10.5px/1.3 var(--f-body);letter-spacing:var(--tracked);text-transform:uppercase;color:var(--gold-primary)}
+.inq-two{display:grid;grid-template-columns:1fr 1fr;gap:18px 24px} .inq-two legend{grid-column:1 / -1}
+.fld{display:flex;flex-direction:column;gap:8px;position:relative;min-width:0} .fld-w{grid-column:1 / -1}
+.fld > span{font:600 10px/1.3 var(--f-body);letter-spacing:var(--tracked-cap);text-transform:uppercase;color:var(--on-night-2)}
+.fld > span i{font:italic 400 12px var(--f-display);letter-spacing:0;text-transform:none;margin-left:6px;opacity:.8}
+.fld input,.fld select,.fld textarea{font:400 17px/1.4 var(--f-display);color:var(--on-night);background:transparent;border:0;border-bottom:1px solid rgba(243,236,218,.3);
+  border-radius:0;padding:6px 0 9px;min-height:44px;transition:border-color 600ms var(--soft-close);-webkit-appearance:none;appearance:none}
+.fld select{background:linear-gradient(135deg,transparent 50%,var(--gold-primary) 50%) right 8px center / 5px 5px no-repeat,linear-gradient(225deg,transparent 50%,var(--gold-primary) 50%) right 3px center / 5px 5px no-repeat;padding-right:22px;cursor:pointer}
+.fld select option{color:var(--ink)}
+.fld textarea{resize:vertical;min-height:84px}
+.fld input::placeholder{color:rgba(243,236,218,.35)}
+.fld input:focus,.fld select:focus,.fld textarea:focus{outline:0;border-bottom-color:var(--gold-primary)}
+.fld input,.fld select,.fld textarea{background-image:linear-gradient(var(--gold-primary),var(--gold-primary));background-size:0% 1px;background-position:0 100%;background-repeat:no-repeat;transition:background-size 700ms var(--soft-close),border-color 600ms var(--soft-close)}
+.fld input:focus,.fld textarea:focus{background-size:100% 1px}
+.chips{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
+.chip{position:relative;cursor:pointer} .chip input{position:absolute;opacity:0;pointer-events:none}
+.chip span{display:flex;align-items:baseline;gap:10px;min-height:44px;padding:11px 12px;border:1px solid rgba(243,236,218,.22);border-radius:var(--r);
+  font:400 14.5px/1.3 var(--f-body);color:var(--on-night-2);transition:border-color 500ms var(--soft-close),background 500ms var(--soft-close),color 500ms var(--soft-close)}
+.chip em{font:400 13px/1 var(--f-display);font-style:normal;font-feature-settings:"onum" 1;color:var(--gold-primary);min-width:22px}
+.chip:hover span{border-color:rgba(243,236,218,.45)}
+.chip input:checked + span{border-color:var(--gold-primary);background:rgba(200,164,77,.12);color:var(--on-night)}
+.chip input:focus-visible + span{outline:1.5px solid var(--gold-primary);outline-offset:2px}
+.inq-err{display:block;margin:8px 0 0;font:italic 400 13px/1.3 var(--f-display);color:#e3b86a;opacity:0;height:0;overflow:hidden;transition:opacity 400ms var(--soft-close)}
+.inq.tried .bad .inq-err,.inq.tried .inq-err.show{opacity:1;height:auto}
+.inq.tried .bad input{border-bottom-color:#e3b86a}
+.inq-card{position:sticky;top:96px;background:#fffdf8;color:var(--ink);border-top:var(--rule-strong) solid var(--gold-primary);border-radius:0 0 var(--r) var(--r);padding:18px 22px 22px;
+  box-shadow:0 30px 60px -30px rgba(0,0,0,.55)}
+.inq-card header{display:flex;justify-content:space-between;align-items:baseline;gap:12px;padding-bottom:12px;border-bottom:var(--rule-hair) solid var(--hairline);
+  font:600 9.5px/1.3 var(--f-body);letter-spacing:var(--tracked-tight);text-transform:uppercase;color:var(--navy-dark)}
+.inq-card header b{font:italic 400 13px/1 var(--f-display);letter-spacing:0;text-transform:none;color:var(--gold-deep)}
+.inq-card dl{margin:0}
+.inq-card dl div{display:grid;grid-template-columns:minmax(0,2fr) minmax(0,3fr);gap:10px;padding:9px 0;border-bottom:var(--rule-hair) solid var(--hairline)}
+.inq-card dt{font:600 9.5px/1.5 var(--f-body);letter-spacing:var(--tracked-cap);text-transform:uppercase;color:var(--slate)}
+.inq-card dd{margin:0;font-size:14px;line-height:1.45;color:var(--ink);overflow-wrap:anywhere}
+.inq-card dd.empty{color:var(--hairline);font-style:italic;font-family:var(--f-display)}
+.inq-note{margin:14px 0 16px;font:italic 400 13.5px/1.5 var(--f-display);color:var(--slate)}
+.inq-go{width:100%;justify-content:center;background:var(--navy-dark);color:var(--on-night)!important;border-color:var(--navy-dark);min-height:48px}
+.inq-go:hover{background:#12245a}
+@media (max-width:960px){ .inq{grid-template-columns:1fr} .inq-card{position:relative;top:0} .chips{grid-template-columns:1fr 1fr} }
+@media (max-width:560px){ .chips{grid-template-columns:1fr} .inq-two{grid-template-columns:1fr} }
 .close{padding-block:calc(var(--u) * 28) 0}
 .gate{border-top:var(--rule-medium) solid rgba(243,236,218,.5);padding-top:28px;display:flex;flex-wrap:wrap;gap:20px 40px;align-items:center;justify-content:space-between}
 .gate p{margin:0;font:italic 400 19px/1.5 var(--f-display);color:var(--on-night-2);max-width:42ch}
@@ -536,14 +646,14 @@ table.dt tbody tr:hover td{background:rgba(230,212,167,.24);transition-duration:
     </div>
     <div class="dt-wrap">
       <table class="dt">
-        <thead><tr><th>No.</th><th>Discipline</th><th>What it covers</th><th style="text-align:right">Register</th></tr></thead>
+        <thead><tr><th>No.</th><th>Discipline</th><th>What it covers</th><th style="text-align:right">Part</th></tr></thead>
         <tbody>
-          <tr><td class="no">I</td><td class="name">Sourcing &amp; procurement</td><td>Strategic sourcing, canvass and supplier coordination held under GSSC governance.</td><td class="code">Fig. 2 · i</td></tr>
-          <tr><td class="no">II</td><td class="name">Site execution</td><td>Civil and construction-adjacent works, electrical and mechanical, signage and fabrication.</td><td class="code">Fig. 2 · ii</td></tr>
-          <tr><td class="no">III</td><td class="name">Supply programmes</td><td>Water filtration and refilling, diesel supply, furniture and fit-out supply.</td><td class="code">Fig. 2 · iii</td></tr>
-          <tr><td class="no">IV</td><td class="name">Management consultancy</td><td>Programme structuring, scope definition and decision-ready documentation.</td><td class="code">PSIC 70200</td></tr>
-          <tr><td class="no">V</td><td class="name">Business support</td><td>Waste programmes, food service and operational support services.</td><td class="code">PSIC 82990</td></tr>
-          <tr><td class="no">VI</td><td class="name">Compliance &amp; documentation</td><td>Quotations, agreements, certificates and notarial instruments prepared to the GSSC standard.</td><td class="code">Fig. 2 · vi</td></tr>
+          <tr><td class="no">I</td><td class="name">Sourcing &amp; procurement<a class="fig-link fig-m" href="#instrument" data-part="0" aria-label="Show part i on Figure 2, the Instrument">Fig. 2 · i</a></td><td>Strategic sourcing, canvass and supplier coordination held under GSSC governance.</td><td class="code"><a class="fig-link" href="#instrument" data-part="0" aria-label="Show part i on Figure 2, the Instrument">Fig. 2 · i</a></td></tr>
+          <tr><td class="no">II</td><td class="name">Site execution<a class="fig-link fig-m" href="#instrument" data-part="1" aria-label="Show part ii on Figure 2, the Instrument">Fig. 2 · ii</a></td><td>Civil and construction-adjacent works, electrical and mechanical, signage and fabrication.</td><td class="code"><a class="fig-link" href="#instrument" data-part="1" aria-label="Show part ii on Figure 2, the Instrument">Fig. 2 · ii</a></td></tr>
+          <tr><td class="no">III</td><td class="name">Supply programmes<a class="fig-link fig-m" href="#instrument" data-part="2" aria-label="Show part iii on Figure 2, the Instrument">Fig. 2 · iii</a></td><td>Water filtration and refilling, diesel supply, furniture and fit-out supply.</td><td class="code"><a class="fig-link" href="#instrument" data-part="2" aria-label="Show part iii on Figure 2, the Instrument">Fig. 2 · iii</a></td></tr>
+          <tr><td class="no">IV</td><td class="name">Management consultancy<a class="fig-link fig-m" href="#instrument" data-part="3" aria-label="Show part iv on Figure 2, the Instrument">Fig. 2 · iv</a></td><td>Programme structuring, scope definition and decision-ready documentation.</td><td class="code"><a class="fig-link" href="#instrument" data-part="3" aria-label="Show part iv on Figure 2, the Instrument">Fig. 2 · iv</a></td></tr>
+          <tr><td class="no">V</td><td class="name">Business support<a class="fig-link fig-m" href="#instrument" data-part="4" aria-label="Show part v on Figure 2, the Instrument">Fig. 2 · v</a></td><td>Waste programmes, food service and operational support services.</td><td class="code"><a class="fig-link" href="#instrument" data-part="4" aria-label="Show part v on Figure 2, the Instrument">Fig. 2 · v</a></td></tr>
+          <tr><td class="no">VI</td><td class="name">Compliance &amp; documentation<a class="fig-link fig-m" href="#instrument" data-part="5" aria-label="Show part vi on Figure 2, the Instrument">Fig. 2 · vi</a></td><td>Quotations, agreements, certificates and notarial instruments prepared to the GSSC standard.</td><td class="code"><a class="fig-link" href="#instrument" data-part="5" aria-label="Show part vi on Figure 2, the Instrument">Fig. 2 · vi</a></td></tr>
         </tbody>
       </table>
     </div>
@@ -593,15 +703,43 @@ table.dt tbody tr:hover td{background:rgba(230,212,167,.24);transition-duration:
     <div class="chs">
       <div class="chs-stamp"><span class="chs-numeral">II</span><span class="chs-dash">—</span><span class="chs-cat" data-rise>Engagement</span></div>
       <h2 class="chs-title" data-rise>From requirement to turnover, one controlled path.</h2>
-      <p class="chs-descriptor" data-rise>Five stages, one programme lead and one acceptance gate. Nothing moves to site before the scope is quoted and accepted.</p>
+      <p class="chs-descriptor" data-rise>Five stages, one programme lead and one acceptance gate. At each gate you receive one document, and together they make one file: what was asked, what was quoted, what was accepted, what was done and what was handed over.</p>
       <div class="chs-rule" data-rise></div>
     </div>
-    <div class="roadmap" id="roadmap">
-      <div class="stage" data-rise><span class="n">i</span><p class="l">Requirement</p><p>A short scope conversation: category, site, timeline and the constraint that shapes the work.</p></div>
-      <div class="stage" data-rise><span class="n">ii</span><p class="l">Scoped quotation</p><p>Bundled work packages, stated assumptions and approved Non-VAT pricing, reconciled to the request.</p></div>
-      <div class="stage" data-rise><span class="n">iii</span><p class="l">Acceptance</p><p>One acceptance gate. Mobilisation is scheduled only against the accepted scope.</p></div>
-      <div class="stage" data-rise><span class="n">iv</span><p class="l">Delivery</p><p>One programme lead coordinates every discipline on site and reports against the quotation.</p></div>
-      <div class="stage" data-rise><span class="n">v</span><p class="l">Turnover</p><p>Documented handover and close-out, filed to the same standard as the quotation.</p></div>
+    <div class="file" id="roadmap">
+      <div class="file-pin">
+        <ol class="gates" aria-hidden="true"><li class="stage"><span class="n">i</span><div><p class="l">Requirement</p><p>A short scope conversation: category, site, timeline and the constraint that shapes the work.</p></div></li><li class="stage"><span class="n">ii</span><div><p class="l">Scoped quotation</p><p>Bundled work packages, stated assumptions and approved Non-VAT pricing, reconciled to the request.</p></div></li><li class="stage"><span class="n">iii</span><div><p class="l">Acceptance</p><p>One acceptance gate. Mobilisation is scheduled only against the accepted scope.</p></div></li><li class="stage"><span class="n">iv</span><div><p class="l">Delivery</p><p>One programme lead coordinates every discipline on site and reports against the quotation.</p></div></li><li class="stage"><span class="n">v</span><div><p class="l">Turnover</p><p>Documented handover and close-out, filed to the same standard as the quotation.</p></div></li></ol>
+        <figure class="desk" aria-label="Figure 5, the file you receive: one document at each gate, from the scope record to the turnover file">
+          <figcaption class="desk-cap"><span class="kicker">Fig. 5 · The file you receive</span><span class="desk-count" id="deskCount">0 of 5 documents</span></figcaption>
+          <div class="docs">
+          <article class="doc" style="--i:0" aria-label="Stage i, Requirement: Your requirement, restated">
+            <p class="doc-cap"><b>i · Requirement</b> A short scope conversation: category, site, timeline and the constraint that shapes the work.</p>
+            <div class="doc-page"><header class="doc-h"><img class="doc-seal" alt=""><span class="doc-ref">GSSC · Scope record</span><span class="doc-n">i</span></header>
+              <h3 class="doc-t">Your requirement, restated</h3><dl class="doc-dl"><div><dt>Category</dt><dd>As you state it</dd></div><div><dt>Site</dt><dd>Location and access</dd></div><div><dt>Timeline</dt><dd>Start and turnover dates</dd></div><div><dt>Constraint</dt><dd>The one that shapes the work</dd></div></dl><p class="doc-f">Confirmed with you before anything is priced.</p></div>
+          </article>
+          <article class="doc" style="--i:1" aria-label="Stage ii, Scoped quotation: The quotation">
+            <p class="doc-cap"><b>ii · Scoped quotation</b> Bundled work packages, stated assumptions and approved Non-VAT pricing, reconciled to the request.</p>
+            <div class="doc-page"><header class="doc-h"><img class="doc-seal" alt=""><span class="doc-ref">GSSC-QUOT-{Client}-{Subject}-2026-001-v1</span><span class="doc-n">ii</span></header>
+              <h3 class="doc-t">The quotation</h3><dl class="doc-dl"><div><dt>Scope</dt><dd>Every discipline, one document</dd></div><div><dt>Assumptions</dt><dd>Stated, not implied</dd></div><div><dt>Pricing</dt><dd>Non-VAT, management-approved</dd></div><div><dt>Validity</dt><dd>30 calendar days unless stated</dd></div></dl><p class="doc-f">Reconciled line by line to your request.</p></div>
+          </article>
+          <article class="doc" style="--i:2" aria-label="Stage iii, Acceptance: Acceptance">
+            <p class="doc-cap"><b>iii · Acceptance</b> One acceptance gate. Mobilisation is scheduled only against the accepted scope.</p>
+            <div class="doc-page"><header class="doc-h"><img class="doc-seal" alt=""><span class="doc-ref">Client Master Services Agreement</span><span class="doc-n">iii</span></header>
+              <h3 class="doc-t">Acceptance</h3><dl class="doc-dl"><div><dt>Signed</dt><dd>Once per client</dd></div><div><dt>Work orders</dt><dd>POs, NTPs and SOWs reference it</dd></div><div><dt>For GSSC</dt><dd>The President</dd></div><div><dt>Then</dt><dd>Mobilisation is scheduled</dd></div></dl><p class="doc-f">Nothing moves to site before this page.</p><span class="doc-stamp" aria-hidden="true">Accepted</span></div>
+          </article>
+          <article class="doc" style="--i:3" aria-label="Stage iv, Delivery: Reports against the quotation">
+            <p class="doc-cap"><b>iv · Delivery</b> One programme lead coordinates every discipline on site and reports against the quotation.</p>
+            <div class="doc-page"><header class="doc-h"><img class="doc-seal" alt=""><span class="doc-ref">GSSC · Progress report</span><span class="doc-n">iv</span></header>
+              <h3 class="doc-t">Reports against the quotation</h3><dl class="doc-dl"><div><dt>From</dt><dd>One programme lead</dd></div><div><dt>Covers</dt><dd>Every discipline on site</dd></div><div><dt>Measured against</dt><dd>The accepted quotation</dd></div><div><dt>Escalation</dt><dd>One point of accountability</dd></div></dl><p class="doc-f">The same numbering as the quotation it answers to.</p></div>
+          </article>
+          <article class="doc" style="--i:4" aria-label="Stage v, Turnover: Documented handover">
+            <p class="doc-cap"><b>v · Turnover</b> Documented handover and close-out, filed to the same standard as the quotation.</p>
+            <div class="doc-page"><header class="doc-h"><img class="doc-seal" alt=""><span class="doc-ref">GSSC · Turnover file</span><span class="doc-n">v</span></header>
+              <h3 class="doc-t">Documented handover</h3><dl class="doc-dl"><div><dt>Close-out</dt><dd>Documented and signed</dd></div><div><dt>Filed</dt><dd>To the quotation’s standard</dd></div><div><dt>Record</dt><dd>Every decision, retrievable</dd></div><div><dt>Held by</dt><dd>You, and GSSC</dd></div></dl><p class="doc-f">The file closes where the quotation opened it.</p></div>
+          </article>
+          </div>
+        </figure>
+      </div>
     </div>
   </section>
 
@@ -698,8 +836,32 @@ table.dt tbody tr:hover td{background:rgba(230,212,167,.24);transition-duration:
       </div>
       <div class="gate">
         <p>One inquiry reaches the management team directly. The reply comes from the programme lead who will carry it.</p>
-        <a class="btn" href="#inquire">Begin an inquiry <span aria-hidden="true">→</span></a>
+        <a class="btn" href="#inq">Begin an inquiry <span aria-hidden="true">→</span></a>
       </div>
+      <form class="inq" id="inq" novalidate aria-label="Inquiry">
+        <div class="inq-fields">
+          <fieldset class="inq-set"><legend>01 · What needs coordinating</legend><div class="chips"><label class="chip"><input type="checkbox" name="d" value="Sourcing & procurement"><span><em>I</em>Sourcing &amp; procurement</span></label><label class="chip"><input type="checkbox" name="d" value="Site execution"><span><em>II</em>Site execution</span></label><label class="chip"><input type="checkbox" name="d" value="Supply programmes"><span><em>III</em>Supply programmes</span></label><label class="chip"><input type="checkbox" name="d" value="Management consultancy"><span><em>IV</em>Management consultancy</span></label><label class="chip"><input type="checkbox" name="d" value="Business support"><span><em>V</em>Business support</span></label><label class="chip"><input type="checkbox" name="d" value="Compliance & documentation"><span><em>VI</em>Compliance &amp; documentation</span></label></div><p class="inq-err" data-for="d">Choose at least one discipline.</p></fieldset>
+          <fieldset class="inq-set inq-two"><legend>02 · The programme</legend>
+            <label class="fld"><span>Programme value</span><select name="v"><option value="">Select</option><option>Under ₱1M</option><option>₱1M to ₱5M</option><option>₱5M to ₱20M</option><option>Over ₱20M</option><option>Not yet known</option></select></label>
+            <label class="fld"><span>Start</span><select name="t"><option value="">Select</option><option>Within a month</option><option>In one to three months</option><option>In three to six months</option><option>Later, planning now</option></select></label>
+            <label class="fld fld-w"><span>Site</span><input name="s" autocomplete="address-level2" placeholder="City, province or site name"></label>
+          </fieldset>
+          <fieldset class="inq-set inq-two"><legend>03 · Who we reply to</legend>
+            <label class="fld"><span>Name</span><input name="n" autocomplete="name" required><em class="inq-err" data-for="n">Your name, please.</em></label>
+            <label class="fld"><span>Organisation</span><input name="o" autocomplete="organization"></label>
+            <label class="fld"><span>Email</span><input name="e" type="email" autocomplete="email" required><em class="inq-err" data-for="e">An email we can reply to.</em></label>
+            <label class="fld"><span>Phone <i>optional</i></span><input name="p" type="tel" autocomplete="tel"></label>
+            <label class="fld fld-w"><span>The constraint that shapes the work <i>optional</i></span><textarea name="c" rows="3"></textarea></label>
+          </fieldset>
+        </div>
+        <aside class="inq-card" aria-live="polite">
+          <header><span>Inquiry · to GSSC Integrated Corporation</span><b>Draft</b></header>
+          <dl id="inqDl"></dl>
+          <p class="inq-note">One inquiry reaches the management team directly. It opens in your mail app, addressed and filled in; nothing is sent until you send it.</p>
+          <button class="btn inq-go" type="submit">Compose the inquiry <span aria-hidden="true">→</span></button>
+        </aside>
+      </form>
+
       <footer class="colophon">
         <span class="fl">Company · Edition I<br>gsscph.com</span>
         <span class="cc"><img src="{{SEAL}}" alt=""><b>GSSC Integrated Corporation</b>management@gsscph.com · (033) 339-7472 · +63 928 370 3574</span>
@@ -1068,6 +1230,23 @@ function sizeInst(){
   inst.w = w; inst.h = h; inst.shown = -1; inst.rectKey = '';
   svgL.setAttribute('viewBox', `0 0 ${w} ${h}`);
 }
+/* The register in Section I links into the figure: each discipline lands the reader on the moment its part
+   has just lifted clear, and that part's label is lit for a moment. */
+function partQ(p){
+  const L = SEQ.frames - 1, N = PARTS.length;
+  const f = p === 0 ? L : Math.min(L, SEQ.tilt + (N - 1 - p) * SEQ.per + SEQ.per + 1);
+  return .06 + (f - SEQ.tilt) / (L - SEQ.tilt) * .45;
+}
+document.querySelectorAll('.fig-link').forEach(a => a.addEventListener('click', e => {
+  e.preventDefault();
+  const p = +a.dataset.part, top = instStage.getBoundingClientRect().top + Math.max(window.scrollY || 0, body.scrollTop || 0);
+  const y = top + partQ(p) * (instStage.offsetHeight - innerHeight);
+  if (lenis) lenis.scrollTo(y, {duration: 1.8, easing: t => 1 - Math.pow(1 - t, 4)}); else scrollTo({top: y, behavior: REDUCE ? 'auto' : 'smooth'});
+  const lit = inst && inst.tags[p]; clearTimeout(partQ.t);
+  document.querySelectorAll('.tag.focus,.now.focus').forEach(x => x.classList.remove('focus'));
+  if (lit) lit.classList.add('focus'); nowEl.classList.add('focus');
+  partQ.t = setTimeout(() => { if (lit) lit.classList.remove('focus'); nowEl.classList.remove('focus'); }, 3600);
+}));
 const iptr = {x: 0, y: 0};
 iv.addEventListener('pointermove', e => { const r = iv.getBoundingClientRect(); iptr.x = (e.clientX - r.left) / r.width - .5; iptr.y = (e.clientY - r.top) / r.height - .5; });
 iv.addEventListener('pointerleave', () => { iptr.x = 0; iptr.y = 0; });
@@ -1097,7 +1276,8 @@ function drawInstrument(t, q, dt, newFilm){
   if (!(newFilm || REDUCE || fi !== I.shown)) return;
   I.tilt.x += (iptr.x - I.tilt.x) * .06; I.tilt.y += (iptr.y - I.tilt.y) * .06;
   // where the print sits: beside the copy on a wide screen, centred low on a phone; the cursor drifts it a little
-  const size = narrow ? Math.min(w * 1.5, h * .8) : Math.min(h * 1.04, w * .62);
+  const op = (() => { const {lift} = seqPose(fi); return lift.slice(1).reduce((a, b) => a + b, 0) / (N - 1); })();
+  const size = narrow ? Math.min(w * lerp(1.2, 1.5, op), h * .8) : Math.min(h * 1.04, w * .62);
   const cx = (narrow ? w * .5 : w * .47) + I.tilt.x * 14, cy = (narrow ? h * .57 : h * .55) + I.tilt.y * 10;
   const rect = [cx - size / 2, cy - size / 2, size, size], rk = rect.map(v => v.toFixed(1)).join();
   if (fi !== I.shown || rk !== I.rectKey) {
@@ -1140,7 +1320,7 @@ function drawInstrument(t, q, dt, newFilm){
     const Y = ty[i].toFixed(1), ex = lerp(x + 14, colX - 14, a);
     const d = a > .01 ? `M${x.toFixed(1)},${y.toFixed(1)} L${(x + 14).toFixed(1)},${y.toFixed(1)} C${(x + 60).toFixed(1)},${y.toFixed(1)} ${(colX - 70).toFixed(1)},${Y} ${ex.toFixed(1)},${Y}` : '';
     if (I.leaders[i].__d !== d) { I.leaders[i].__d = d; I.leaders[i].setAttribute('d', d); I.leaders[i].setAttribute('stroke-opacity', a.toFixed(3)); }
-    setVar(I.tags[i], 'opacity', a.toFixed(3)); setVar(I.tags[i], 'transform', `translate(${colX.toFixed(1)}px, ${(ty[i] - 20).toFixed(1)}px)`);
+    setVar(I.tags[i], 'opacity', a.toFixed(3)); setVar(I.tags[i], 'transform', `translate(${(colX + (1 - a) * 12).toFixed(1)}px, ${(ty[i] - 20).toFixed(1)}px)`);
   });
 }
 
@@ -1208,6 +1388,9 @@ function layoutFlow(){
     ${cards}
     ${edges.map(e => port(e.a, 'o') + port(e.b, 'i')).join('')}
     <circle class="tok-h" r="10"/><rect class="tok" x="-4.5" y="-4.5" width="9" height="9" rx="1" transform="rotate(45)"/>`;
+  // label boxes fit their text as set (the font may differ from the one it was drawn for)
+  flowSvg.querySelectorAll('.wall-tag').forEach(g => { const tx = g.querySelector('text'), r = g.querySelector('rect');
+    const len = tx.getComputedTextLength ? tx.getComputedTextLength() : 220; r.setAttribute('x', (-len / 2 - 14).toFixed(1)); r.setAttribute('width', (len + 28).toFixed(1)); });
   const runs = [...flowSvg.querySelectorAll('.e-run')], trs = [...flowSvg.querySelectorAll('.trace')];
   const eLen = runs.map(r => r.getTotalLength()), per = 2 * (NW + NH);
   runs.forEach((r, i) => { r.style.strokeDasharray = eLen[i]; r.style.strokeDashoffset = eLen[i]; });
@@ -1217,6 +1400,7 @@ function layoutFlow(){
              nodes: [...flowSvg.querySelectorAll('.nd')], tok: flowSvg.querySelector('.tok'), halo: flowSvg.querySelector('.tok-h'), p: 0, lastStep: -1};
 }
 layoutFlow();
+if (document.fonts && document.fonts.ready) document.fonts.ready.then(() => { layoutFlow(); if (flowGeo) sizeFlowTrack(); });
 const flowTrack = document.getElementById('flowTrack');
 function sizeFlowTrack(){
   const h = flowTrack.querySelector('.flow-fig').offsetHeight, pin = h < innerHeight * .78 && !REDUCE && !COARSE;
@@ -1258,6 +1442,36 @@ for (const el of [eV, eN, eM]) el.addEventListener('input', model);
 model();
 
 /* the dateline keeps Iloilo time */
+/* the inquiry: the preview is the inquiry as it will read; composing opens the reader's own mail app with it
+   addressed and filled in (no backend, nothing leaves the page on its own). A draft is kept for this visitor. */
+const inq = document.getElementById('inq'), inqDl = document.getElementById('inqDl');
+const INQ_ROWS = [['Disciplines', f => f.getAll('d').join(', ')], ['Programme value', f => f.get('v')], ['Start', f => f.get('t')], ['Site', f => f.get('s')],
+  ['From', f => [f.get('n'), f.get('o')].filter(Boolean).join(', ')], ['Reply to', f => [f.get('e'), f.get('p')].filter(Boolean).join(' · ')], ['Constraint', f => f.get('c')]];
+const esc = v => String(v).replace(/[&<>"]/g, c => ({'&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;'}[c]));
+function inqRender(){
+  const f = new FormData(inq);
+  inqDl.innerHTML = INQ_ROWS.map(([k, g]) => { const v = (g(f) || '').trim();
+    return `<div><dt>${k}</dt><dd class="${v ? '' : 'empty'}">${v ? esc(v) : 'Not yet given'}</dd></div>`; }).join('');
+  try { localStorage.setItem('gssc-inq', JSON.stringify([...f.entries()])); } catch (e) {}
+}
+function inqCheck(){
+  const f = new FormData(inq), bad = {d: !f.getAll('d').length, n: !(f.get('n') || '').trim(), e: !/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test((f.get('e') || '').trim())};
+  inq.querySelector('.inq-err[data-for="d"]').classList.toggle('show', bad.d);
+  for (const k of ['n', 'e']) inq.querySelector(`[name="${k}"]`).closest('.fld').classList.toggle('bad', bad[k]);
+  return !(bad.d || bad.n || bad.e);
+}
+try { const saved = JSON.parse(localStorage.getItem('gssc-inq') || '[]');
+  for (const [k, v] of saved) { const el = inq.querySelector(`[name="${k}"]${k === 'd' ? `[value="${CSS.escape(v)}"]` : ''}`); if (!el) continue; if (el.type === 'checkbox') el.checked = true; else el.value = v; } } catch (e) {}
+inq.addEventListener('input', () => { inqRender(); if (inq.classList.contains('tried')) inqCheck(); });
+inq.addEventListener('submit', e => {
+  e.preventDefault(); inq.classList.add('tried');
+  if (!inqCheck()) { const first = inq.querySelector('.bad input') || inq.querySelector('.chip input'); if (first) first.focus(); return; }
+  const f = new FormData(inq), subject = `Inquiry · ${f.getAll('d').join(', ')}${f.get('o') ? ' · ' + f.get('o') : ''}`;
+  const bodyText = INQ_ROWS.map(([k, g]) => `${k}: ${(g(f) || '').trim() || '-'}`).join('\n') + '\n\nSent from gsscph.com';
+  location.href = `mailto:management@gsscph.com?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(bodyText)}`;
+});
+inqRender();
+
 const clockEl = document.querySelector('.dateline div span:nth-child(2)');
 const tick = () => { clockEl.textContent = 'Iloilo City · ' + new Intl.DateTimeFormat('en-PH', {timeZone: 'Asia/Manila', hour: '2-digit', minute: '2-digit', hour12: false}).format(new Date()) + ' PHT'; };
 tick(); setInterval(tick, 15000);
@@ -1278,7 +1492,10 @@ const ink = document.getElementById('ink');
 ink.innerHTML = ink.textContent.split(' ').map(w => `<span class="w">${w}</span>`).join(' ');
 const inkWords = [...ink.querySelectorAll('.w')];
 const rises = [...document.querySelectorAll('[data-rise]')];
-const stages = [...document.querySelectorAll('.roadmap .stage')];
+const stages = [...document.querySelectorAll('.gates .stage')], docs = [...document.querySelectorAll('.doc')], deskCount = document.getElementById('deskCount');
+{ const seal = document.querySelector('.colophon .cc img'); document.querySelectorAll('.doc-seal').forEach(im => im.src = seal.src); }   // one copy of the seal in the page
+// Fig. 5 pins only where a pin can never feel like a magnet: a wide screen with a fine pointer
+const sizeFile = () => roadmap.classList.toggle('pinned', !REDUCE && !COARSE && innerWidth > 960 && innerHeight > 620);
 
 /* ------------------------------------------------ the loop: positions are measured from the page */
 const topEl = document.getElementById('top'), roadmap = document.getElementById('roadmap');
@@ -1292,7 +1509,17 @@ const secLines = [...document.querySelectorAll('.sec-line')];
 const guide = {sec: document.getElementById('gSec'), fol: document.getElementById('gFol'), hint: document.getElementById('gHint'), el: document.getElementById('guide'), last: ''};
 // write a custom property only when its value changes: unchanged writes still invalidate style
 const setVar = (el, k, v) => { const c = el.__v || (el.__v = {}); if (c[k] !== v) { c[k] = v; el.style.setProperty(k, v); } };
-const barEl = document.getElementById('bar');
+const barEl = document.getElementById('bar'), colophon = document.querySelector('.colophon');
+const tlEvents = [...tl.querySelectorAll('.tl-ev')]; tlEvents.forEach(e => e.__day = (+e.dataset.day - 1) / 29);
+/* Document offsets of static elements (layout position, so an element's own scroll-linked transform never
+   feeds back into its progress). Re-measured whenever the page's height changes: fonts, resize, an opened table. */
+let OFF = null;
+const absTop = el => { let y = 0; for (let e = el; e; e = e.offsetParent) y += e.offsetTop; return y; };
+function measureOffsets(){
+  OFF = {rise: rises.map(absTop), lines: secLines.map(l => [absTop(l.parentElement), l.parentElement.offsetHeight]),
+         secs: secs.map(e => [absTop(e), e.offsetHeight])};
+}
+if (window.ResizeObserver) new ResizeObserver(() => { OFF = null; }).observe(document.getElementById('top'));
 const shortName = el => el.dataset.rail.split('·').pop().trim();
 // the next frame is booked first, so nothing that fails inside this one can ever stop the page following the scroll
 const safely = (name, fn) => { try { fn(); } catch (e) { if (!safely[name]) { safely[name] = 1; console.error('[' + name + ']', e); } } };
@@ -1305,10 +1532,13 @@ function frame(t){
   const topR = topEl.getBoundingClientRect(), fr = fieldStage.getBoundingClientRect(), ir = instStage.getBoundingClientRect();
   const rr = roadmap.getBoundingClientRect(), inkR = ink.getBoundingClientRect(), flowR = flowTrack.getBoundingClientRect();
   const econR = econEl.getBoundingClientRect(), tlR = tl.getBoundingClientRect();
-  const riseT = rises.map(el => el.getBoundingClientRect().top);
-  const lineR = secLines.map(l => l.parentElement.getBoundingClientRect());
-  const secR = secs.map(el => el.getBoundingClientRect());
-  const nightR = nightSecs.map(el => el.getBoundingClientRect());
+  // the many static elements come from cached document offsets and the scroll position: no layout reads
+  if (!OFF) measureOffsets();
+  const sy = Math.max(window.scrollY || 0, body.scrollTop || 0);   // whichever element scrolls in this viewer
+  const riseT = OFF.rise.map(t => t - sy);
+  const lineR = OFF.lines.map(([t, h]) => ({top: t - sy, height: h}));
+  const secR = OFF.secs.map(([t, h]) => ({top: t - sy, height: h, bottom: t - sy + h}));
+  const nightR = nightSecs.map(el => el.getBoundingClientRect()), colTop = colophon.getBoundingClientRect().top;
   // ---- header: a damped spring off the scroll; the wordmark leads, the dateline and nav settle a beat later
   const target = clamp(Math.max(0, -topR.top) / 180);
   H1 += (target - H1) * (1 - Math.exp(-dt / 110)); H2 += (target - H2) * (1 - Math.exp(-dt / 260));
@@ -1330,8 +1560,24 @@ function frame(t){
   if (ir.top <= 0 && !cut.inst && ir.bottom > vh) FILM.cut(t); cut.inst = ir.top <= 0 && ir.bottom > vh;
   if (inst && ir.bottom > 0 && ir.top < vh) safely('instrument', () => drawInstrument(t, iq, dt, newFilm));
   // ---- paper sections
-  const rm = ease(clamp((vh * .85 - rr.top) / (vh * .6)));
-  setVar(roadmap, '--rm', rm.toFixed(3)); stages.forEach((st, i) => st.classList.toggle('lit', rm >= i / stages.length + .02));
+  /* Fig. 5: pinned, the documents arrive one by one through the pin (done by 85%, then the file holds);
+     unpinned, each document arrives as it reaches the reading line. The stamp lands just after acceptance settles. */
+  if (rr.bottom > -vh && rr.top < vh * 1.5) {
+    const pinned = roadmap.classList.contains('pinned'), n = docs.length;
+    const pr = pinned ? clamp(-rr.top / (rr.height - vh) / .85) : 0;
+    let got = 0, cur = -1;
+    docs.forEach((d, i) => {
+      const a = pinned ? ease(clamp((pr * n - i) / .9)) : ease(clamp((vh * .92 - d.getBoundingClientRect().top) / (vh * .38)));
+      setVar(d, '--a', a.toFixed(3));
+      if (pinned) setVar(d, '--under', clamp(pr * n - i - 1).toFixed(2));
+      if (i === 2) setVar(d, '--stamp', ease(clamp((a - .75) / .25)).toFixed(3));
+      if (a > .6) { got = i + 1; cur = i; }
+    });
+    const rm = pinned ? pr : got / n;
+    setVar(roadmap, '--rm', rm.toFixed(3));
+    stages.forEach((st, i) => { st.classList.toggle('lit', i < got); st.classList.toggle('cur', i === cur); });
+    const txt = `${got} of ${n} documents`; if (deskCount.textContent !== txt) deskCount.textContent = txt;
+  }
   rises.forEach((el, i) => { if (riseT[i] > vh * 1.2 || riseT[i] < -vh) return; setVar(el, '--p', ease(clamp((vh * .96 - riseT[i]) / (vh * .34))).toFixed(2)); });
   { const pr = clamp((vh * .82 - inkR.top) / (inkR.height + vh * .3)), n = inkWords.length;
     inkWords.forEach((w, i) => setVar(w, '--wp', clamp(pr * n * 1.08 - i).toFixed(2))); }
@@ -1377,7 +1623,7 @@ function frame(t){
       txt(hero.D, php(r(econ.sD))); txt(hero.C, php(r(econ.sC))); txt(hero.S, php(r(Math.max(0, econ.sD - econ.sC))));
       txt(hero.P, (econ.share * 100 * g).toFixed(1) + '%'); } }
   { const d = ease(clamp((vh * .82 - tlR.top) / (vh * .55))); setVar(tl, '--d', d.toFixed(3));
-    tl.querySelectorAll('.tl-ev').forEach(e => e.classList.toggle('on', d >= (+e.dataset.day - 1) / 29)); }
+    tlEvents.forEach(e => e.classList.toggle('on', d >= e.__day)); }
   // ---- tone
   const probe = 40, onField = fr.top <= probe && fr.bottom > probe && open > .55;
   body.classList.toggle('on-field', onField);
@@ -1387,6 +1633,7 @@ function frame(t){
   let ci = 0; secR.forEach((r, i) => { if (r.top <= vh * .45) ci = i; });
   const cr = secR[ci], cp = clamp((vh * .45 - cr.top) / cr.height);
   setVar(guide.el, '--gp', cp.toFixed(3));
+  guide.el.classList.toggle('gone', vw <= 860 && (colTop < vh - 40 || sheet.classList.contains('open')));   // the colophon and the index are never covered
   const nx = secs[ci + 1];
   let hint, href = nx ? '#' + nx.id : '#top';
   if (secs[ci] === fieldStage && conv < .99) hint = 'Keep scrolling · the field gathers';
@@ -1403,10 +1650,13 @@ function frame(t){
 // the layout as they are, or every pin and progress would jump under the reader's thumb (the "magnets")
 addEventListener('resize', () => {
   if (COARSE && innerWidth === vw) return;
-  vw = innerWidth; vh = innerHeight; sizeField(); sizeInst(); layoutFlow(); sizeFlowTrack();
+  vw = innerWidth; vh = innerHeight; OFF = null; sizeField(); sizeInst(); layoutFlow(); sizeFlowTrack(); sizeFile();
 });
 safely('build', () => { inst = buildInstrument(); sizeInst(); });
+sizeFile();
 if (REDUCE) {
+  docs.forEach(d => { d.style.setProperty('--a', 1); d.style.setProperty('--stamp', 1); }); stages.forEach(st => st.classList.add('lit'));
+  roadmap.style.setProperty('--rm', 1); deskCount.textContent = docs.length + ' of ' + docs.length + ' documents';
   panel.style.setProperty('--it', '0%'); panel.style.setProperty('--ib', '0%'); panel.style.setProperty('--is', '0px');
   drawField(0, 0, 16);
   FILM.tick(0);
