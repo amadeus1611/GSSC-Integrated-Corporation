@@ -46,7 +46,7 @@ html{background:var(--ivory)}
 body{margin:0;background:var(--ivory);color:var(--ink);font-family:var(--f-body);font-size:var(--fs-body);line-height:var(--lh-body);
   -webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility;font-kerning:normal;font-feature-settings:"kern" 1,"liga" 1}
 /* the paper: a quiet fibre grain over ivory, as on the printed master */
-body::before{content:"";position:fixed;inset:0;pointer-events:none;z-index:0;opacity:.55;mix-blend-mode:multiply;
+body::before{content:"";position:fixed;inset:0;pointer-events:none;z-index:0;opacity:.5;
   background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='300' height='300'><filter id='p'><feTurbulence type='fractalNoise' baseFrequency='.9 .6' numOctaves='4' seed='7' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 .55  0 0 0 0 .5  0 0 0 0 .4  0 0 0 .09 0'/></filter><rect width='100%' height='100%' filter='url(%23p)'/></svg>")}
 main,footer{position:relative;z-index:1}
 a{color:inherit}
@@ -56,14 +56,14 @@ a{color:inherit}
 
 /* ---------------------------------------------------------------- masthead (header logic from the master) */
 .bar{position:fixed;inset:0 0 auto 0;z-index:50;padding-top:env(safe-area-inset-top,0px);color:var(--navy-dark)}
-.bar::before{content:"";position:absolute;inset:0;background:rgba(250,248,243,.86);opacity:var(--h);
-  -webkit-backdrop-filter:blur(16px) saturate(1.15);backdrop-filter:blur(16px) saturate(1.15);transition:background 600ms var(--soft-close)}
+.bar::before{content:"";position:absolute;inset:0;background:rgba(250,248,243,.96);opacity:var(--h);transition:background 600ms var(--soft-close)}   /* no backdrop blur: it re-blurred the artwork under it every frame */
 .bar-row{position:relative;max-width:var(--maxw);margin-inline:auto;padding-inline:var(--gutter);height:68px;transition:height 900ms var(--soft-close);display:flex;align-items:center;justify-content:space-between;gap:24px}
 .lock{display:flex;align-items:center;text-decoration:none;height:40px}
 .lock .mark{height:32px;width:32px;flex:none;transform:rotate(calc(var(--h) * -45deg))}
-.lock .word{height:19px;width:auto;margin-left:calc(12px - var(--h) * 12px);clip-path:inset(0 calc(var(--h) * 100%) 0 0);
-  opacity:calc(1 - var(--h) * 1.1);transform:translateX(calc(var(--h) * -16px)) scaleX(calc(1 - var(--h) * .06));transform-origin:left center;
-  filter:blur(calc(var(--hv,0) * 2.4px));transition:filter 600ms var(--soft-close)}
+/* the wordmark folds on the film clock (24 fps, --hw) while the bar around it moves at the display's rate: a deliberate contrast */
+.lock .word{height:19px;width:auto;margin-left:calc(12px - var(--hw,0) * 12px);clip-path:inset(0 calc(var(--hw,0) * 100%) 0 0);
+  opacity:calc(1 - var(--hw,0) * 1.1);transform:translateX(calc(var(--hw,0) * -16px)) scaleX(calc(1 - var(--hw,0) * .06));transform-origin:left center;
+}
 .lock{position:relative}
 .lock::after{content:"";position:absolute;left:44px;right:0;bottom:-7px;border-bottom:1px solid var(--gold-primary);
   transform-origin:left;transform:scaleX(calc(1 - var(--h2) * 1.4));opacity:calc(.8 - var(--h2) * 1.2)}
@@ -199,8 +199,8 @@ h1.title .it{font-style:italic;letter-spacing:-.02em}
 
 /* the guide: the one persistent aid besides the header. Where you are, how far through, what comes next. */
 .guide{--h:0;position:fixed;z-index:45;right:var(--gutter);top:calc(env(safe-area-inset-top,0px) + 112px - var(--h) * 36px);width:236px;
-  padding:10px 12px 11px;border:1px solid rgba(9,23,61,.16);border-radius:var(--r);background:rgba(250,248,243,.74);
-  -webkit-backdrop-filter:blur(12px);backdrop-filter:blur(12px);color:var(--navy-dark);
+  padding:10px 12px 11px;border:1px solid rgba(9,23,61,.16);border-radius:var(--r);background:rgba(250,248,243,.95);
+  color:var(--navy-dark);
   transition:color 700ms var(--soft-close),background 700ms var(--soft-close),border-color 700ms var(--soft-close)}
 .g-row{display:flex;justify-content:space-between;align-items:baseline;gap:10px;font:600 10px/1.3 var(--f-body);letter-spacing:var(--tracked);text-transform:uppercase}
 .g-fol{font:400 13px/1 var(--f-display);letter-spacing:0;font-feature-settings:"tnum" 1,"lnum" 1;color:var(--mid-grey)}
@@ -210,7 +210,7 @@ h1.title .it{font-style:italic;letter-spacing:-.02em}
 .g-hint::after{content:"";flex:1;height:1px;background:linear-gradient(to right,currentColor,transparent);opacity:.35;transform-origin:left;animation:gpulse 2.8s var(--soft-close) infinite}
 @keyframes gpulse{0%{transform:scaleX(.15);opacity:0}40%{opacity:.4}100%{transform:scaleX(1);opacity:0}}
 a.g-hint:hover{color:var(--navy-dark)}
-body.on-night .guide{color:var(--on-night);background:rgba(9,23,61,.46);border-color:rgba(243,236,218,.16)}
+body.on-night .guide{color:var(--on-night);background:rgba(9,23,61,.9);border-color:rgba(243,236,218,.16)}
 body.on-night .g-hint,body.on-night .g-fol{color:var(--on-night-2)} body.on-night .g-bar{background:rgba(243,236,218,.14)}
 @media (max-width:860px){ .guide{top:auto;bottom:calc(14px + env(safe-area-inset-bottom,0px));left:var(--gutter);right:var(--gutter);width:auto;padding:8px 12px;
     transition:opacity 600ms var(--soft-close),transform 600ms var(--soft-close),color 700ms var(--soft-close),background 700ms var(--soft-close)}
@@ -285,7 +285,7 @@ table.dt tbody tr:hover td:first-child{box-shadow:inset 2px 0 0 var(--gold-prima
   opacity:calc(var(--a) * 3)}
 .doc-cap{display:none}
 .doc-page{position:relative;background:#fffdf8;border:1px solid var(--hairline);border-top:var(--rule-strong) solid var(--navy-dark);border-radius:0 0 var(--r) var(--r);
-  padding:18px 24px 20px;box-shadow:0 1px 0 rgba(9,23,61,.04),0 24px 40px -28px rgba(9,23,61,.35);filter:brightness(calc(1 - var(--under,0) * .05))}
+  padding:18px 24px 20px;box-shadow:0 1px 0 rgba(9,23,61,.04),0 24px 40px -28px rgba(9,23,61,.35)}
 .doc-h{display:flex;align-items:center;gap:10px;padding-bottom:12px;border-bottom:var(--rule-hair) solid var(--hairline)}
 .doc-seal{width:20px;height:20px;flex:none}
 .doc-ref{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font:600 9.5px/1.3 var(--f-body);letter-spacing:var(--tracked-tight);text-transform:uppercase;color:var(--navy-dark)}
@@ -311,7 +311,7 @@ table.dt tbody tr:hover td:first-child{box-shadow:inset 2px 0 0 var(--gold-prima
 .metric+.metric{padding-left:20px} .metric:last-child{border-right:0}
 .metric{--k:clamp(0, calc((var(--p, 1) - var(--mi, 0) * .14) / .42), 1)}
 .metric:nth-child(2){--mi:1} .metric:nth-child(3){--mi:2} .metric:nth-child(4){--mi:3}
-.metric-value{transform:scale(calc(1 + (1 - var(--k)) * .14));transform-origin:left bottom;opacity:calc(.15 + var(--k) * .85);filter:blur(calc((1 - var(--k)) * 1.2px));
+.metric-value{transform:scale(calc(1 + (1 - var(--k)) * .14));transform-origin:left bottom;opacity:calc(.15 + var(--k) * .85););
   transition:transform 120ms linear}
 .metric-value{display:block;font:400 clamp(17px,1.6vw,25px)/1.2 var(--f-display);color:var(--navy-dark);letter-spacing:var(--tracked-num);font-feature-settings:"onum" 1;white-space:nowrap}
 .metric-label{display:block;margin-top:8px;font:600 10.5px/1.45 var(--f-body);letter-spacing:var(--tracked-cap);text-transform:uppercase;color:var(--slate)}
@@ -482,6 +482,11 @@ table.dt tbody tr:hover td:first-child{box-shadow:inset 2px 0 0 var(--gold-prima
 .inst-view{position:absolute;inset:0;cursor:crosshair}
 .inst-view canvas{position:absolute;inset:0;width:100%;height:100%;display:block}
 .inst-view .film-ov{mix-blend-mode:overlay;pointer-events:none}
+/* the print: every frame is an <img> in one stack, and a frame change is a visibility switch. The browser decodes
+   images on its raster threads, so nothing is ever decoded on the main thread; the stack moves by transform only. */
+.print{position:absolute;left:0;top:0;width:var(--ps,600px);height:var(--ps,600px);transform-origin:0 0;will-change:transform;contain:strict}
+.print img{position:absolute;inset:0;width:100%;height:100%;visibility:hidden}
+.print img.on{visibility:visible} .print img.prev{visibility:visible;z-index:-1}
 .inst-copy{position:absolute;left:var(--gutter);top:calc(128px + env(safe-area-inset-top,0px));max-width:340px;z-index:2}
 .inst-copy .kicker{color:var(--gold-primary)}
 .inst-copy h2{margin:16px 0 12px;font:400 clamp(28px,2.6vw,38px)/1.14 var(--f-display);letter-spacing:var(--compressed)}
@@ -683,7 +688,7 @@ table.dt tbody tr:hover td:first-child{box-shadow:inset 2px 0 0 var(--gold-prima
   <section class="inst-stage night" id="instrument" data-rail="Fig. 2 · The Instrument" data-index="I" aria-label="Figure 2, the Instrument: the compass opened into its six disciplines">
     <div class="inst-pin">
       <div class="inst-view" id="instView">
-        <canvas id="inst" aria-hidden="true"></canvas>
+        <div class="print" id="inst" aria-hidden="true"></div>
         <canvas id="instFilm" class="film-ov" aria-hidden="true"></canvas>
         <svg class="leaders" id="leaders" aria-hidden="true"></svg>
         <div class="tags" id="tags"></div>
@@ -891,8 +896,8 @@ const COARSE = matchMedia('(pointer: coarse)').matches;   // touch: native momen
 let lenis = null;
 if (!REDUCE && window.Lenis) {
   const bodyScrolls = /(auto|scroll)/.test(getComputedStyle(body).overflowY) && body.scrollHeight > body.clientHeight + 2;
-  lenis = new Lenis(bodyScrolls ? {wrapper: body, content: body, lerp: .085, wheelMultiplier: .9, anchors: true}
-                                : {lerp: .085, wheelMultiplier: .9, anchors: true});
+  lenis = new Lenis(bodyScrolls ? {wrapper: body, content: body, lerp: .1, wheelMultiplier: .9, anchors: true}
+                                : {lerp: .1, wheelMultiplier: .9, anchors: true});
 }
 
 /* ------------------------------------------------ index sheet */
@@ -910,6 +915,11 @@ sheet.querySelectorAll('a').forEach(a => a.addEventListener('click', () => setSh
    the header and the text stay at the display's own rate: the film is the artwork's, never the UI's.
    Intensities are tokens on :root (--grain, --weave, --flicker, --dust), tuned as one look. */
 const FRAME_MS = 1000 / 24;
+/* QUALITY. The artwork's cost is a dial the page turns itself (see the governor in the loop): level 0 is the
+   full look; each step trades a little resolution in the artwork for a smooth page. The page clock never pays. */
+const QL = [{lava: innerWidth > 1100 ? .75 : 1, film: .5, every: 1}, {lava: .55, film: .5, every: 1}, {lava: .42, film: .35, every: 1}, {lava: .33, film: 0, every: 1},
+  {lava: .33, film: 0, every: 3}];   // the last resort (no graphics hardware): the lava keeps its look and advances every third film frame
+const Q = Object.assign({level: 0}, QL[0]);
 const cssNum = (k, d) => { const v = parseFloat(getComputedStyle(root).getPropertyValue(k)); return isNaN(v) ? d : v; };
 const FILM = {grain: cssNum('--grain', 1), weave: cssNum('--weave', .3), flicker: cssNum('--flicker', .015), dust: REDUCE ? 0 : cssNum('--dust', 1),
   f: -1, seed: 0, wx: 0, wy: 0, fl: 1, dustV: [0, 0, 0, 0], scr: [0, 0, 0, 0], leak: 0, nextDust: 0, nextScr: 0, dustLeft: 0, scrLeft: 0, leakT: -1e9};
@@ -1068,7 +1078,7 @@ if (gl) {
 let FW = 0, FH = 0;
 function sizeField(){
   if (!fx) return;
-  const dpr = Math.min(devicePixelRatio || 1, 1);   // soft footage: 1x playback is indistinguishable and a fraction of the cost
+  const dpr = Math.min(devicePixelRatio || 1, 1) * Q.lava;   // soft footage, played back upscaled: the softness is the look, and a fraction of the cost
   FW = Math.max(2, Math.round(fcv.clientWidth * dpr)); FH = Math.max(2, Math.round(fcv.clientHeight * dpr));
   fcv.width = FW; fcv.height = FH;
   // the lamp itself renders small and is played back large: the softness is the point
@@ -1170,8 +1180,7 @@ void main(){
 }`;
 let inst = null;
 function buildInstrument(){
-  const ctx = ic.getContext('2d');
-  if (!ctx) return null;
+  const ctx = ic;   // the print stack
   // the film pass is a bonus: if WebGL is missing, the print still plays
   const fc = document.getElementById('instFilm'), g2 = fc && fc.getContext('webgl', {antialias: false, alpha: false});
   let fx = null;
@@ -1197,11 +1206,12 @@ function buildInstrument(){
   const N = SEQ.frames, imgs = new Array(N).fill(null), ready = new Array(N).fill(false), busy = new Array(N).fill(false);
   const src = i => `compass/${set}/f${String(i).padStart(3, '0')}.webp`;
   const load = (i, hi) => new Promise(res => { const im = new Image(); im.decoding = 'async'; im.fetchPriority = hi ? 'high' : 'low';
-    im.onload = () => { imgs[i] = im; res(); }; im.onerror = () => res(); im.src = src(i); });
+    im.alt = ''; im.onload = () => { imgs[i] = im; ic.appendChild(im); res(); }; im.onerror = () => res(); im.src = src(i); });
   let decoding = 0;
   const decode = i => { if (!imgs[i] || ready[i] || busy[i]) return; busy[i] = true; decoding++;
     (imgs[i].decode ? imgs[i].decode() : Promise.resolve()).catch(() => {}).then(() => { ready[i] = true; busy[i] = false; decoding--; }); };
-  const want = fi => {   // the playhead and the frames either side of it, nearest first, three decodes in flight at most
+  // img.decode() for the frames around the playhead, off the main thread, so a frame is ready before it is shown
+  const want = fi => {
     for (let d = 0; d <= 10 && decoding < 3; d++) for (const j of d ? [fi + d, fi - d] : [fi]) {
       if (j < 0 || j >= N || !imgs[j] || ready[j] || busy[j]) continue;
       decode(j); } };
@@ -1215,7 +1225,7 @@ function buildInstrument(){
   svgL.innerHTML = PARTS.map(() => '<path fill="none" stroke="rgba(200,164,77,.7)" stroke-width="1"/>').join('');
   tagsEl.innerHTML = PARTS.map(([n, p, c]) => `<div class="tag"><span class="c">${n ? `<em>${n}</em>` : ''}${p}</span><span class="v">${c}</span></div>`).join('');
   phaseEl.innerHTML = PARTS.map(() => '<i></i>').join('') + '<span>Closed</span>';
-  return {ctx, fx, fc, imgs, ready, want, decode, loadAll, shown: -1, rectKey: '', f: 0,
+  return {ctx, fx, fc, imgs, ready, want, decode, loadAll, shown: -1, rectKey: '', f: 0, prev: null,
           leaders: [...svgL.children], tags: [...tagsEl.children], ticks: [...phaseEl.querySelectorAll('i')], phaseLabel: phaseEl.querySelector('span'),
           tilt: {x: 0, y: 0}, w: 0, h: 0, k: 1};
 }
@@ -1223,11 +1233,10 @@ function sizeInst(){
   if (!inst) return;
   const w = iv.clientWidth, h = iv.clientHeight;
   // the print at up to 1.5 device pixels per CSS pixel; the film layer at one CSS pixel (or less on wide screens), upscaled softly
-  const pr = Math.min(devicePixelRatio || 1, 1.5);
-  ic.width = Math.round(w * pr); ic.height = Math.round(h * pr); inst.pr = pr;
-  const k = w > 1100 ? .8 : 1; inst.k = k;
+  inst.S0 = vw <= 860 ? Math.min(w * 1.5, h * .8) : Math.min(h * 1.04, w * .62); ic.style.setProperty('--ps', inst.S0.toFixed(0) + 'px');
+  const k = Q.film || .35; inst.k = k; if (inst.fc) inst.fc.style.display = Q.film ? '' : 'none';
   if (inst.fx) { inst.fc.width = Math.round(w * k); inst.fc.height = Math.round(h * k); inst.fx.gl.viewport(0, 0, inst.fc.width, inst.fc.height); }
-  inst.w = w; inst.h = h; inst.shown = -1; inst.rectKey = '';
+  inst.w = w; inst.h = h;
   svgL.setAttribute('viewBox', `0 0 ${w} ${h}`);
 }
 /* The register in Section I links into the figure: each discipline lands the reader on the moment its part
@@ -1271,7 +1280,9 @@ function drawInstrument(t, q, dt, newFilm){
   I.f += (frameFor(q) - I.f) * (1 - Math.exp(-dt / 120));
   let fi = Math.round(clamp(I.f, 0, SEQ.frames - 1));
   I.want(fi);
-  if (!I.ready[fi]) { let b = -1; for (let d = 1; d < SEQ.frames && b < 0; d++) { if (I.ready[fi - d]) b = fi - d; else if (I.ready[fi + d]) b = fi + d; } if (b < 0) return; fi = b; }
+  // the nearest frame already decoded (else the nearest loaded one: the browser decodes it on its own threads)
+  const pick = has => { if (has(fi)) return fi; for (let d = 1; d < SEQ.frames; d++) { if (has(fi - d)) return fi - d; if (has(fi + d)) return fi + d; } return -1; };
+  { const b = pick(j => I.ready[j]); fi = b >= 0 ? b : pick(j => !!I.imgs[j]); if (fi < 0) return; }
   // the print, its leaders and its labels move together, on the film's cadence: one coherent picture per film frame
   if (!(newFilm || REDUCE || fi !== I.shown)) return;
   I.tilt.x += (iptr.x - I.tilt.x) * .06; I.tilt.y += (iptr.y - I.tilt.y) * .06;
@@ -1279,16 +1290,19 @@ function drawInstrument(t, q, dt, newFilm){
   const op = (() => { const {lift} = seqPose(fi); return lift.slice(1).reduce((a, b) => a + b, 0) / (N - 1); })();
   const size = narrow ? Math.min(w * lerp(1.2, 1.5, op), h * .8) : Math.min(h * 1.04, w * .62);
   const cx = (narrow ? w * .5 : w * .47) + I.tilt.x * 14, cy = (narrow ? h * .57 : h * .55) + I.tilt.y * 10;
-  const rect = [cx - size / 2, cy - size / 2, size, size], rk = rect.map(v => v.toFixed(1)).join();
-  if (fi !== I.shown || rk !== I.rectKey) {
-    I.shown = fi; I.rectKey = rk;
-    const c = I.ctx, p = I.pr; c.setTransform(p, 0, 0, p, 0, 0); c.clearRect(0, 0, w, h);
-    c.imageSmoothingQuality = 'high'; c.drawImage(I.imgs[fi], rect[0], rect[1], size, size);
+  const rect = [cx - size / 2, cy - size / 2, size, size];
+  // a frame change: the new frame shows over the old, and the old one stays under it for one film frame, so a frame
+  // still being rasterised never leaves a gap
+  if (I.prev && I.prev !== I.imgs[fi]) { I.prev.classList.remove('prev'); I.prev = null; }
+  if (fi !== I.shown) {
+    const old = I.imgs[I.shown]; I.shown = fi;
+    if (old && old !== I.imgs[fi]) { old.classList.remove('on'); old.classList.add('prev'); I.prev = old; }
+    I.imgs[fi].classList.remove('prev'); I.imgs[fi].classList.add('on');
   }
+  // where it sits, plus the gate weave (a fraction of a pixel, as a projector would): one transform, compositor only
+  setVar(ic, 'transform', `translate(${(rect[0] + FILM.wx).toFixed(2)}px, ${(rect[1] + FILM.wy).toFixed(2)}px) scale(${(size / I.S0).toFixed(4)})`);
   if (I.fx && (newFilm || REDUCE)) {
     const G = I.fx.gl; G.uniform2f(I.fx.res, w * I.k, h * I.k); filmUniforms(G, I.fx); G.drawArrays(G.TRIANGLE_STRIP, 0, 4);
-    // the gate weave moves the print by a fraction of a pixel, as a projector would
-    setVar(ic, 'transform', `translate(${FILM.wx.toFixed(2)}px, ${FILM.wy.toFixed(2)}px)`);
   }
   // the state, read back from the frame on screen: labels always describe what the reader sees
   const {tilt, lift} = seqPose(fi), closing = q >= .58;
@@ -1501,6 +1515,16 @@ const sizeFile = () => roadmap.classList.toggle('pinned', !REDUCE && !COARSE && 
 const topEl = document.getElementById('top'), roadmap = document.getElementById('roadmap');
 const railSecs = [...document.querySelectorAll('[data-rail]')], nightSecs = [...document.querySelectorAll('.night')];
 let last = performance.now(), H1 = 0, H2 = 0, fieldT = 0;
+/* Judged every ~0.75 s of artwork on screen: frames far over budget (slowest tenth under ~30 fps) step the artwork
+   down at once; moderately over (under ~48 fps) twice in a row steps it down; after five smooth windows it tries one
+   level up again, but never back to a level that already failed on this device. */
+const GOV = {d: [], span: 0, bad: 0, good: 0, failed: new Set()};
+function setQ(l){ Object.assign(Q, QL[l], {level: l}); sizeField(); sizeInst(); document.documentElement.dataset.q = l; }
+function govern(){
+  const d = GOV.d.sort((a, b) => a - b), p90 = d[Math.floor(d.length * .9)]; GOV.d = []; GOV.span = 0;
+  if (p90 > 21) { GOV.good = 0; if ((++GOV.bad >= 2 || p90 > 34) && Q.level < QL.length - 1) { GOV.failed.add(Q.level); setQ(Q.level + 1); GOV.bad = 0; } }
+  else if (p90 < 18.5) { GOV.bad = 0; if (++GOV.good >= 5 && Q.level > 0 && !GOV.failed.has(Q.level - 1)) { setQ(Q.level - 1); GOV.good = 0; } }
+}
 const cut = {field: false, inst: false};
 // one frame = read every position first, then write; never interleaved, so the browser lays out once
 const secs = railSecs;
@@ -1525,7 +1549,7 @@ const shortName = el => el.dataset.rail.split('·').pop().trim();
 const safely = (name, fn) => { try { fn(); } catch (e) { if (!safely[name]) { safely[name] = 1; console.error('[' + name + ']', e); } } };
 function frame(t){
   if (!REDUCE) requestAnimationFrame(frame);
-  const dt = Math.min(64, t - last); last = t;
+  const raw = t - last, dt = Math.min(64, raw); last = t;
   if (lenis) lenis.raf(t);
   const newFilm = FILM.tick(t);          // the artwork advances at 24 fps; everything else at the display's rate
   // ---- read
@@ -1542,8 +1566,8 @@ function frame(t){
   // ---- header: a damped spring off the scroll; the wordmark leads, the dateline and nav settle a beat later
   const target = clamp(Math.max(0, -topR.top) / 180);
   H1 += (target - H1) * (1 - Math.exp(-dt / 110)); H2 += (target - H2) * (1 - Math.exp(-dt / 260));
+  if (newFilm) setVar(barEl, '--hw', ease(H1).toFixed(3));
   setVar(barEl, '--h', ease(H1).toFixed(3)); setVar(barEl, '--h2', ease(H2).toFixed(3)); setVar(guide.el, '--h', ease(H1).toFixed(3));
-  setVar(barEl, '--hv', clamp(Math.abs(target - H1) * 5).toFixed(2));
   // ---- Fig. 1: opens within the first screen of the pin, has gathered by 80% of it, then holds complete
   const span = fieldStage.offsetHeight - vh;
   const open = clamp((-fr.top + vh * .6) / vh), conv = clamp((-fr.top - vh * .3) / ((span - vh * .3) * .68));
@@ -1552,7 +1576,7 @@ function frame(t){
   setVar(panel, '--ib', lerp(11, 0, eo).toFixed(2) + '%'); setVar(panel, '--feather', (1 - eo).toFixed(3));
   setVar(fieldStage, '--open', eo.toFixed(3));
   setVar(panel, '--st', ease(clamp((conv - .65) / .35)).toFixed(3));
-  if (newFilm && fr.bottom > -40 && fr.top < vh + 40) { safely('field', () => drawField(t, conv, Math.min(84, t - (fieldT || t - FRAME_MS)))); fieldT = t; }
+  if (newFilm && FILM.f % Q.every === 0 && fr.bottom > -40 && fr.top < vh + 40) { safely('field', () => drawField(t, conv, Math.min(84, t - (fieldT || t - FRAME_MS)))); fieldT = t; }
   if (open > .5 && !cut.field) FILM.cut(t); cut.field = open > .5;          // a scene begins: a moment of light leak
   // ---- Fig. 2
   const iq = clamp(-ir.top / (instStage.offsetHeight - vh));
@@ -1624,6 +1648,8 @@ function frame(t){
       txt(hero.P, (econ.share * 100 * g).toFixed(1) + '%'); } }
   { const d = ease(clamp((vh * .82 - tlR.top) / (vh * .55))); setVar(tl, '--d', d.toFixed(3));
     tlEvents.forEach(e => e.classList.toggle('on', d >= e.__day)); }
+  // ---- the governor: while artwork is on screen the page watches its own frame times and turns the artwork's dial
+  if (raw < 400 && ((fr.bottom > 0 && fr.top < vh) || (ir.bottom > 0 && ir.top < vh))) { GOV.d.push(raw); GOV.span += raw; if (GOV.span > 750 && GOV.d.length >= 8) govern(); }
   // ---- tone
   const probe = 40, onField = fr.top <= probe && fr.bottom > probe && open > .55;
   body.classList.toggle('on-field', onField);
