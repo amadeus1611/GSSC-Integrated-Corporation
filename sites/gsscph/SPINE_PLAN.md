@@ -100,3 +100,14 @@ Only **A** ships. B, C and D are not built; they stay listed here only as ideas.
 ## 6. Log
 
 - **Round 0 (lead):** the diagnosis and the probe. Baseline: FAIL (4 mode-switch jumps, 1 no-scroll jump).
+- **Round 1 (builder)** landed in two commits: a25dcb8 (iteration A) and 6f4c43c (the B and C iterations removed,
+  per Duke).
+  - **Root cause of the +66 px jump.** The offsets cache was thrown away on any resize inside the page (a
+    pinned figure's canvas), even when the document height had not changed. It was then re-measured from the
+    section's box rather than the rule's own box.
+  - **Probe:** PASS. The tip is within 1–2 px of the reading line, bands drift 0.000 px per px of scroll, and a
+    mode switch moves the rule 0 px.
+- **Round 1 (reviewer):** clear. One note, not blocking: the mode-switch test now passes structurally, because
+  the spine no longer reacts to reveal mode at all. The hysteresis timing itself has no automated test; if it
+  ever regresses, add a `window.__CAD` hook.
+- **Shipped 2026-09-24:** merged (ceecd75), probe PASS on the merge, and the website republished (version 21).
