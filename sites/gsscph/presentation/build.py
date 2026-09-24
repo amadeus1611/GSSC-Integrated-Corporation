@@ -69,6 +69,13 @@ for f in sorted((HERE / "fonts").glob("*.woff2")):
     css = css.replace(f.name, "data:font/woff2;base64," + base64.b64encode(f.read_bytes()).decode())
 html = html.replace('<link rel="stylesheet" href="assets/fonts/fonts.css">', "<style>" + css + "</style>")
 shutil.rmtree(DIST / "assets" / "fonts", ignore_errors=True)
+# never ship a broken script: every inline script must parse (node --check), or the build stops
+import subprocess, tempfile
+if shutil.which("node"):
+    for i, js in enumerate(re.findall(r"<script>(.*?)</script>", html, re.S)):
+        with tempfile.NamedTemporaryFile("w", suffix=".js", delete=False) as t: t.write(js)
+        r = subprocess.run(["node", "--check", t.name], capture_output=True, text=True)
+        if r.returncode: raise SystemExit("HARD STOP: script %d does not parse:\n%s" % (i, r.stderr[:800]))
 (DIST / "index.html").write_text(html, encoding="utf-8")
 (DIST / "READ ME.txt").write_text("GSSC Integrated Corporation · Company profile, the live presentation\n\n"
     "Open index.html in Google Chrome. No internet needed.\n"
