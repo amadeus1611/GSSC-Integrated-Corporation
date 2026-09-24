@@ -951,7 +951,7 @@ html.calm *,html.calm *::before,html.calm *::after{animation:none!important;tran
 .optb.ab1[hidden]{display:none}
 .att{max-width:720px;width:100%;margin:0 auto 6px;display:flex;flex-wrap:wrap;gap:6px;align-items:center}
 .att[hidden]{display:none}
-.ac{position:relative;display:flex;align-items:center;gap:9px;width:224px;height:38px;margin:0;padding:0 5px 0 4px;border:var(--rule-hair) solid var(--line-2);border-radius:6px;background:var(--panel);box-shadow:var(--shadow);transform-origin:10% 100%;animation:acIn .62s var(--soft-close) both}
+.ac{position:relative;flex:none;display:flex;align-items:center;gap:9px;width:224px;height:38px;margin:0;padding:0 5px 0 4px;border:var(--rule-hair) solid var(--line-3);border-radius:6px;background:var(--panel);transform-origin:10% 100%;animation:acIn .62s var(--soft-close) both}
 .ac .th{width:30px;height:30px;flex:none;border-radius:4px;overflow:hidden;background:var(--well)}
 .ac .th img{width:100%;height:100%;object-fit:cover;display:block;animation:fillup .95s .12s cubic-bezier(.3,.7,.2,1) both}
 .ac figcaption{flex:1;min-width:0;display:flex;flex-direction:column;gap:1px;line-height:1.25}
@@ -964,6 +964,8 @@ html.calm *,html.calm *::before,html.calm *::after{animation:none!important;tran
 @keyframes acIn{0%{opacity:0;transform:translateY(12px) scale(.16,.5);border-radius:18px}42%{opacity:1;transform:translateY(-1px) scale(1.03,.93);border-radius:10px}68%{transform:scale(.99,1.02)}100%{transform:none;border-radius:6px}}
 @keyframes acOut{to{opacity:0;transform:scale(.3,.7);filter:blur(2px)}}
 @keyframes fillup{from{clip-path:inset(100% 0 0 0 round 50% 50% 0 0)}60%{clip-path:inset(0 0 0 0 round 40% 40% 0 0/14% 14% 0 0)}to{clip-path:inset(0 0 0 0 round 0)}}
+@media (max-width:560px){.att{flex-wrap:nowrap;overflow-x:auto;scrollbar-width:none}.att::-webkit-scrollbar{display:none}.ac{width:184px}.att .an{flex:none;white-space:nowrap}}
+.busy .att .ac{opacity:.6}.busy .att:not(:has(.an))::after{content:"Next message";flex:none;font:italic 400 11px var(--f-display);color:var(--mute)}
 .att .an{font:italic 400 11.5px var(--f-display);color:var(--soft);animation:ink .5s both}
 .dock.drop .comp{border-color:var(--gold);box-shadow:0 0 0 3px var(--gold-wash),var(--shadow)}
 .yim{display:flex;flex-wrap:wrap;gap:5px;margin:1px 0 7px}
@@ -972,7 +974,7 @@ html.calm *,html.calm *::before,html.calm *::after{animation:none!important;tran
 .yi img{width:100%;height:100%;object-fit:cover;display:block}
 .lbx{position:fixed;inset:0;z-index:95;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;padding:32px 16px;background:color-mix(in srgb,var(--sheet) 86%,transparent);-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px);cursor:zoom-out}
 .lbx[hidden]{display:none}
-.lbx img{max-width:min(92vw,1100px);max-height:80vh;border-radius:4px;box-shadow:var(--shadow);transform-origin:center}
+.lbx img{min-width:120px;max-width:min(92vw,1100px);max-height:80vh;border-radius:4px;box-shadow:var(--shadow);transform-origin:center}
 .lbx p{margin:0;font-size:10.5px;letter-spacing:.04em;color:var(--soft)}
 /* v27 · mercury segments and poured menus */
 .seg2,.menu .seg{position:relative}
@@ -1390,7 +1392,7 @@ function inThis(html){const d=document.createElement("div");d.innerHTML=html;con
 function meta(text){const w=(text.match(/\S+/g)||[]).length;return `<span>${w} words · ${Math.max(1,Math.round(w/220))} min read</span>`}
 function botHTML(t,k,last){const a=md(t.content);return `<div class="bot" data-k="${k}"><div class="by">${BYLINE}<time class="num">${hhmm(t.ts)}</time></div>${t.work?runHTML(t.work,k,false,{open:false}):""}<div class="ans">${a}</div>${exhibitsHTML(t.ex,false)}<div class="docw">${docCardHTML(t.doc)}</div>${fupsHTML(t.work)}${inThis(a)}<div class="filed capt"><span>Filed ${hhmm(t.ts)}</span><i class="dotsep"></i>${meta(t.content)}${acts(k)}</div></div>`}
 setTimeout(filesCount,0);
-function open(c){window.__selHide&&window.__selHide();cur=c;app.classList.toggle("has-chat",!!c);GRAIN.run(!c&&PREF.grain);
+function open(c){if(c!==cur&&$("#att"))attClear();window.__selHide&&window.__selHide();cur=c;app.classList.toggle("has-chat",!!c);GRAIN.run(!c&&PREF.grain);
  closeSheet();if(c){crumb();const la=c.turns.map(t=>t.role).lastIndexOf("assistant");$("#thread").innerHTML=c.turns.map((t,k)=>t.role==="user"?youHTML(t,k):botHTML(t,k,k===la)).join("");$("#main").append($("#dock"));FM.forEach(m=>{if(!m.host.isConnected)m.kill()});mountMaps();mountDocs();stick=true;requestAnimationFrame(()=>{sc.scrollTop=1e9;prog()})}
  else{$("#heroDock").append($("#dock"));$("#thread").innerHTML="";$("#crumb").textContent="";showDsp(false)}
  renderRecents()}
@@ -1406,7 +1408,7 @@ document.addEventListener("click",e=>{
  const cc=e.target.closest("[data-cpc]");if(cc){const t=cc.closest(".code").querySelector("pre").innerText;navigator.clipboard?.writeText(t).then(()=>{cc.textContent="Copied";setTimeout(()=>cc.textContent="Copy",1400)},()=>toast("Select the code to copy it"));return}
  const tv=e.target.closest("[data-tv]");if(tv){const f=tv.closest(".fig"),t=f.querySelector(".tv");t.hidden=!t.hidden;tv.textContent=t.hidden?"Table":"Chart";f.querySelector("svg.ch").style.display=t.hidden?"":"none";return}
  const c=e.target.closest("[data-copy]");if(c){const t=c.closest(".bot").querySelector(".ans").innerText;const done=m=>{c.textContent=m;clearTimeout(c._t);c._t=setTimeout(()=>c.textContent="Copy",1600)};navigator.clipboard?navigator.clipboard.writeText(t).then(()=>done("Copied"),()=>done("Select to copy")):done("Select to copy");return}
- const r=e.target.closest("[data-regen]");if(r){if(busy)return;if(cur?.example){toast("Start a new chat to brief EXPIRA yourself");return}const k=+r.closest(".bot").dataset.k,q=cur.turns[k-1]?.content;if(q){cur.turns.splice(k-1);save();open(cur);send(q)}return}
+ const r=e.target.closest("[data-regen]");if(r){if(busy)return;if(cur?.example){toast("Start a new chat to brief EXPIRA yourself");return}const k=+r.closest(".bot").dataset.k,q=cur.turns[k-1]?.content;if(q){const fa=cur.turns[k-1]._att||[];cur.turns.splice(k-1);save();open(cur);send(q,{att:fa})}return}
  const d=e.target.closest("[data-read]");if(d){if(busy&&d.dataset.read==="live"){showDsp(true);return}const k=+d.dataset.read,t=cur.turns[k];if(!t||!t.work)return;recordedDispatch(t.work,cur,cur.turns[k-1]?.ts||t.ts);showDsp(true);return}
  const pk=e.target.closest("[data-notes]");if(pk){const dk=pk.closest(".desk");dk.classList.toggle("show");pk.textContent=dk.classList.contains("show")?"Close notes":"Read notes"}});
 
@@ -1456,7 +1458,7 @@ document.addEventListener("click",e=>{const yc=e.target.closest("[data-ycopy]");
   const ta=box.querySelector("textarea");ta.value=t.content;w.querySelector(".you").replaceWith(box);w.querySelector(".yacts").hidden=true;const fit=()=>{ta.style.height="auto";ta.style.height=Math.min(260,ta.scrollHeight)+"px"};fit();ta.addEventListener("input",fit);ta.focus();ta.setSelectionRange(ta.value.length,ta.value.length);
   ta.addEventListener("keydown",ev=>{if(ev.key==="Escape"){ev.stopPropagation();open(cur)}if(ev.key==="Enter"&&!ev.shiftKey&&!ev.isComposing){ev.preventDefault();box.querySelector("[data-ysend]").click()}});
   box.querySelector("[data-ycancel]").onclick=()=>open(cur);
-  box.querySelector("[data-ysend]").onclick=()=>{const v=ta.value.trim();if(!v||!sample||busy)return;cur.turns.splice(k);save();open(cur);send(v)};return}});
+  box.querySelector("[data-ysend]").onclick=()=>{const v=ta.value.trim();if(!v||!sample||busy)return;const fa=t._att||[];cur.turns.splice(k);save();open(cur);send(v,{att:fa})};return}});
 
 /* start page */
 const now=new Date(),hr=now.getHours();
@@ -2147,16 +2149,16 @@ document.addEventListener("click",e=>{const b=e.target.closest(".seg2 button,.me
  document.addEventListener("pointerover",e=>{const c=e.target.closest?.(".cite");if(c){clearTimeout(tm);if(c!==on)tm=setTimeout(()=>show(c),130)}else if(on&&!e.target.closest?.("#cpop")){clearTimeout(tm);tm=setTimeout(hide,140)}});
  document.addEventListener("focusin",e=>{const c=e.target.closest?.(".cite");if(c)show(c)});document.addEventListener("click",e=>{if(e.target.closest(".cite"))hide();const f=e.target.closest(".fu");if(f){promptEl.value=f.dataset.fu;grow();phSync&&phSync();promptEl.focus()}},true);addEventListener("scroll",hide,true)}
 /* attachments: images the viewer picks, pastes or drops ride along with the brief */
-let ATT=[],IMGCAP=null;
-const fmtB=b=>b>=1048576?(b/1048576).toFixed(1)+" MB":Math.max(1,Math.round(b/1024))+" KB";
+var ATT=[],IMGCAP=null;
+const fmtB=b=>b>=1e6?(b/1e6).toFixed(b>=1e7?0:1)+" MB":Math.max(1,Math.round(b/1e3))+" KB";
 async function thumbOf(f){try{const bm=await createImageBitmap(f),k=Math.min(1,200/Math.max(bm.width,bm.height)),c=document.createElement("canvas");c.width=Math.max(1,Math.round(bm.width*k));c.height=Math.max(1,Math.round(bm.height*k));c.getContext("2d").drawImage(bm,0,0,c.width,c.height);return{w:bm.width,h:bm.height,thumb:c.toDataURL("image/jpeg",.74)}}catch(e){return null}}
 function attNote(t){const a=$("#att");a.hidden=false;let n=a.querySelector(".an");if(!n){a.insertAdjacentHTML("beforeend",'<span class="an"></span>');n=a.querySelector(".an")}n.textContent=t;clearTimeout(attNote.t);attNote.t=setTimeout(()=>{n.remove();if(!ATT.length)a.hidden=true},3200)}
-async function attAdd(files){if(!IMGCAP)return;const types=IMGCAP.mediaTypes||[];for(const f of files){if(!/^image\//.test(f.type))continue;
- if(ATT.length>=IMGCAP.maxCount){attNote(`Up to ${IMGCAP.maxCount} images a message.`);break}
- if(types.length&&!types.includes(f.type)){attNote(`${f.name||"That file"}: this format is not supported.`);continue}
- if(IMGCAP.maxInputBytes&&f.size>IMGCAP.maxInputBytes){attNote(`${f.name} is over ${fmtB(IMGCAP.maxInputBytes)}.`);continue}
- const m=await thumbOf(f);if(!m){attNote(`${f.name||"That image"} could not be read.`);continue}
- const a={file:f,name:f.name&&f.name!=="image.png"?f.name:"Pasted image",size:f.size,...m,id:Math.random().toString(36).slice(2,8)};ATT.push(a);attDraw(a)}}
+async function attAdd(files){if(!IMGCAP)return;const types=IMGCAP.mediaTypes||[],sk=[];for(const f of files){const nm=f.name||"image";
+ if(ATT.length>=IMGCAP.maxCount){sk.push(`${nm}: over ${IMGCAP.maxCount} a message`);continue}
+ if(!/^image\//.test(f.type)||(types.length&&!types.includes(f.type))){sk.push(`${nm}: format`);continue}
+ if(IMGCAP.maxInputBytes&&f.size>IMGCAP.maxInputBytes){sk.push(`${nm}: over ${fmtB(IMGCAP.maxInputBytes)}`);continue}
+ const m=await thumbOf(f);if(!m){sk.push(`${nm}: unreadable`);continue}
+ const a={file:f,name:f.name&&f.name!=="image.png"?f.name:"Pasted image",size:f.size,...m,id:Math.random().toString(36).slice(2,8)};ATT.push(a);attDraw(a)}if(sk.length)attNote(`${sk.length} skipped · ${sk.join(" · ")}`)}
 function attDraw(a){const t=$("#att");t.hidden=false;const an=t.querySelector(".an");(an?an.insertAdjacentHTML.bind(an,"beforebegin"):t.insertAdjacentHTML.bind(t,"beforeend"))(`<figure class="ac" data-id="${a.id}"><span class="th"><img alt="" src="${a.thumb}"></span><figcaption><b>${esc(a.name)}</b><i class="num">${a.w}×${a.h} · ${fmtB(a.size)}</i></figcaption><button type="button" class="ax" aria-label="Remove ${esc(a.name)}"><svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.2"><path d="M3 3l6 6M9 3l-6 6"/></svg></button></figure>`)}
 function attDrop(id){const el=$("#att").querySelector(`[data-id="${id}"]`);ATT=ATT.filter(x=>x.id!==id);if(el){el.classList.add("out");setTimeout(()=>{el.remove();if(!ATT.length&&!$("#att .an"))$("#att").hidden=true},reduce?0:320)}}
 function attClear(){ATT=[];const t=$("#att");t.innerHTML="";t.hidden=true}
@@ -2186,10 +2188,10 @@ const COPY={not_granted:"EXPIRA needs permission to use Claude. Reload to be ask
 /* scroll requests collect and land once per frame */
 const ENDS=new Set();let endRaf=0;
 function toEnd(el){ENDS.add(el);if(!endRaf)endRaf=requestAnimationFrame(()=>{endRaf=0;for(const e of ENDS){if(e)e.scrollTop=e.scrollHeight;else if(stick)sc.scrollTop=sc.scrollHeight}ENDS.clear()})}
-async function send(q){const KL=await KLIB.load().catch(()=>null),docPre=DOCSEL||docIntent(q);setDoc(null);
+async function send(q,re){const KL=await KLIB.load().catch(()=>null),docPre=DOCSEL||docIntent(q);setDoc(null);
  if(!cur||cur.example){cur={id:"c"+Date.now(),no:nextNo(),title:(q.replace(/^(?:> ?.*\n)+\n*/,"")||"Quoted passage").slice(0,52),ts:Date.now(),turns:[],folder:pendingFolder};pendingFolder=null;chats.unshift(cur)}
- const tsQ=Date.now();const IMGS=ATT.slice();attClear();const IM=IMGS.length?{images:IMGS.map(a=>a.file)}:{};
- const ut={role:"user",content:q,ts:tsQ};if(IMGS.length)ut.imgs=IMGS.map(a=>{const m={name:a.name,w:a.w,h:a.h,thumb:a.thumb};Object.defineProperty(m,"url",{value:URL.createObjectURL(a.file),enumerable:false});return m});cur.turns.push(ut);
+ const tsQ=Date.now();const IMGS=re?(re.att||[]):ATT.slice();if(!re)attClear();const IM=IMGS.length?{images:IMGS.map(a=>a.file)}:{};
+ const ut={role:"user",content:q,ts:tsQ};if(IMGS.length)ut.imgs=IMGS.map(a=>{const m={name:a.name,w:a.w,h:a.h,thumb:a.thumb};Object.defineProperty(m,"url",{value:URL.createObjectURL(a.file),enumerable:false});return m});Object.defineProperty(ut,"_att",{value:IMGS,enumerable:false});cur.turns.push(ut);
  if(IMGS.length)q+=`\n\n[Attached: ${IMGS.length} image${IMGS.length>1?"s":""} (${IMGS.map(a=>a.name).join(", ")}). They are shown to you with this message: read them closely and use what they show. Say so if something in them cannot be made out.]`;promptEl.value="";phSync();open(cur);setBusy(true);ctl=new AbortController();stick=true;closeSheet();
  const safe=OPT.safe,thorough=OPT.desks==="always",direct=OPT.desks==="off",depthDeep=OPT.depth==="deep";let webOn=OPT.web&&WEB.ok;
  if(webOn){try{const lim=await sample.limits();if(!lim||!lim.tools)webOn=false}catch(e){webOn=false}}
