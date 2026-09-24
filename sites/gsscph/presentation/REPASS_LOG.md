@@ -42,7 +42,28 @@ beautiful though. Apply the same extra agent qa checker, then coordinates with b
 | The mobile number is the canonical one, but 01_identity asks to confirm the public number before a client release | Note | **For Duke**, before the deck is shown to a client |
 | The end card is on-grammar, restrained, and a clean bookend; every fact matches 01_identity | Note | — |
 
-**The flowchart (builder agent, in its own worktree):** in progress.
+**The flowchart (builder agent, in its own worktree)**
+- **The scene.** "How an engagement moves" sits between Six disciplines and The file you receive, in 5 steps:
+  - the plate with Inquiry;
+  - inside GSSC;
+  - the gate;
+  - the client lane;
+  - the record.
+- **One source.** The FLOW data and the captions are spliced from the site's Fig. 3 and Fig. 5, never
+  retyped.
+- **Merged.** Merge commit 684869e. The deck harness passes on the merged deck: 26 steps, zero overlap on all
+  six scene changes, rests between 0.39 and 0.69 s.
+
+**Review of the flowchart** (the reviewer). Each finding goes to the builder:
+
+| Finding | Level | Answer |
+|---|---|---|
+| A stray gold triangle at the diagram's corner on every step. The token and ring positions were written as CSS with SVG syntax, silently dropped, so they sat at 0,0 | Blocker | To the builder: write the SVG attribute, and hide the token when idle |
+| The build caption has one line of room; the gate caption wraps and loses "are removed." under the plate | Blocker | To the builder: room for two lines, and every caption checked |
+| The gate's brighten and ring never decay | Should fix | To the builder: one pulse on arrival, then the gate settles |
+| Earlier edges drop to .5 as a hard switch | Should fix | To the builder: a continuous fade, like the leaders |
+| `getPointAtLength` runs in the render loop (C7) | Should fix | To the builder: a cached polyline at build time |
+| The diagram is close to the site's Fig. 3 one for one; its distinctness is the walk-through and the captions (C2) | Note | **Kept, deliberately.** Duke asked for "the flowchart thing" itself, so the exhibit is the same and the deck adds the walk-through. Revisit in pass 3 if it reads as a copy |
 
 ## Pass 0 · Leaders, better ease (2026-09-24)
 
