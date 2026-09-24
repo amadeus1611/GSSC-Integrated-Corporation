@@ -136,11 +136,28 @@ body{font-family:var(--f-body);color:var(--ink)}
 .desk-count i{font:italic 400 15px/1 var(--f-display);color:var(--slate);font-feature-settings:"lnum" 1,"tnum" 1}
 
 /* scene 4: close */
-.end-kick{left:0;right:0;top:170px;text-align:center}
-.end-title{left:0;right:0;top:206px;text-align:center}
-.end-title .h2{color:var(--on-night)}
-.end-contact{left:0;right:0;top:690px;text-align:center;color:var(--on-night-2);font:400 14px/1.8 var(--f-body);letter-spacing:.04em}
-.end-contact b{display:block;font:600 11px/1.6 var(--f-body);letter-spacing:var(--tracked);text-transform:uppercase;color:var(--on-night)}
+/* the close: the stamp, the question, the compass turning in the settled lava, and a register to write it down from */
+.end-head{left:0;right:0;top:138px;display:flex;justify-content:center}
+.end-title{left:0;right:0;top:188px;text-align:center}
+.end-title .h2{color:var(--on-night);font-size:46px;text-wrap:balance}
+.end-title em{font-style:italic;color:var(--gold-light)}
+.end-reg{left:50%;top:688px;width:1060px;margin:0 0 0 -530px;display:grid;grid-template-columns:1.75fr 1.3fr 1fr 1fr;
+  border-top:1px solid rgba(200,164,77,.75);padding-top:18px}
+.end-reg > div{padding:0 22px;border-left:1px solid rgba(243,236,218,.14)} .end-reg > div:first-child{border-left:0;padding-left:0}
+.end-reg dt{font:600 11px/1.3 var(--f-body);letter-spacing:var(--tracked);text-transform:uppercase;color:var(--gold-primary);margin:0 0 9px}
+.end-reg dd{margin:0;font:400 15px/1.5 var(--f-display);color:var(--on-night)}
+.end-reg .er-office dd span{display:block;white-space:nowrap}
+.end-reg dd.fig{font-variant-numeric:tabular-nums lining-nums;font-feature-settings:"lnum" 1,"tnum" 1}
+/* the end card: centred under the seal the lava gathers into; the wordmark opens from its centre, the rule draws,
+   the name settles its tracking. Staged from the one --v of the card, so it runs back exactly */
+.end-slate{left:0;right:0;top:650px;display:flex;flex-direction:column;align-items:center;transform:none!important;opacity:1!important;
+  --w:clamp(0, calc((var(--v,0) - .25) / .55), 1); --r:clamp(0, calc((var(--v,0) - .45) / .45), 1); --n:clamp(0, calc((var(--v,0) - .55) / .45), 1)}
+.es-wm{height:40px;filter:brightness(0) invert(.94) sepia(.2);clip-path:inset(0 calc((1 - var(--w)) * 50%));opacity:var(--w)}
+.es-rl{display:block;width:300px;height:1px;margin-top:24px;background:var(--gold-primary);transform:scaleX(var(--r));opacity:var(--r)}
+.es-ic{margin:18px 0 0;font:600 12px/1 var(--f-body);letter-spacing:calc(.34em + (1 - var(--n)) * .36em);text-transform:uppercase;color:var(--on-night);opacity:var(--n);padding-left:.34em}
+.es-col{position:absolute;top:156px;margin:0;white-space:nowrap;font:italic 400 14px/1 var(--f-display);color:var(--on-night-2);opacity:var(--n)}
+.es-col span{margin:0 12px;font-style:normal;color:var(--gold-primary)} .es-col b{font-weight:400;font-style:normal;font-feature-settings:"lnum" 1,"tnum" 1;letter-spacing:.02em}
+.chrome{opacity:var(--chr,1)}
 
 /* ---------------------------------------------------------------- scene 4: economics (a richer exhibit than the site's) */
 .eco-head{left:72px;top:130px;width:600px}
@@ -292,9 +309,26 @@ body{font-family:var(--f-body);color:var(--ink)}
 
   <!-- 5 · close -->
   <section class="scene" data-scene="close">
-    <p class="t kicker end-kick" data-in="0">IV · Inquire</p>
-    <div class="t end-title" data-in="0"><h2 class="h2">Tell us what needs coordinating.<br>We answer for the whole of it.</h2></div>
-    <p class="t end-contact" data-in="0"><b>GSSC Integrated Corporation</b>Regus, 3F Festive Walk Mall, Iloilo Business Park, Mandurriao, Iloilo City 5000<br>management@gsscph.com · (033) 339-7472 · +63 928 370 3574</p>
+    <div class="t x end-head night-t" data-in="0"><div class="chs"><span class="num">IV</span><i class="dash"></i><span class="cat">Inquire</span></div></div>
+    <div class="t end-title" data-in="0"><h2 class="h2">Tell us what needs coordinating.<br>We answer for the <em>whole</em> of it.</h2></div>
+    <!-- the contact register: kernel 01_identity principal_office.full and contact, as set there -->
+    <dl class="t end-reg" data-in="0">
+      <div class="er-office"><dt>Principal office</dt><dd><span>Regus, 3F Festive Walk Mall,</span> <span>Iloilo Business Park, Megaworld Boulevard,</span> <span>Mandurriao, Iloilo City 5000</span></dd></div>
+      <div><dt>Write</dt><dd>management@gsscph.com</dd></div>
+      <div><dt>Telephone</dt><dd class="fig">(033) 339-7472</dd></div>
+      <div><dt>Mobile</dt><dd class="fig">+63 928 370 3574</dd></div>
+    </dl>
+  </section>
+
+  <!-- the end card: the compass goes back into the lava, the wax gathers into the seal (the cover, in reverse), and the
+       wordmark opens under it as it did in the opening title card -->
+  <section class="scene" data-scene="end">
+    <div class="t end-slate" data-in="0">
+      <img class="es-wm" src="{{WORDMARK}}" alt="GSSC">
+      <i class="es-rl"></i>
+      <p class="es-ic">Integrated Corporation</p>
+      <p class="es-col">gsscph.com<span>·</span>SEC Company Registration No. <b>2026060254196-01</b></p>
+    </div>
   </section>
 
   <!-- the master's chrome: lockup, section, rule with progress, colophon and folio -->
@@ -393,7 +427,8 @@ const SCENES = [
   {key: 'disc', len: 9, name: 'Six disciplines', where: 'I · Capabilities', closes: true},
   {key: 'file', len: 5, name: 'The file you receive', where: 'II · Engagement'},
   {key: 'eco', len: 4, name: 'Economics', where: 'III · Economics'},
-  {key: 'close', len: 1, name: 'Close', where: 'IV · Inquire'}];
+  {key: 'close', len: 1, name: 'Close', where: 'IV · Inquire'},
+  {key: 'end', len: 1, name: 'GSSC', where: 'GSSC Integrated Corporation', card: true}];   // the end card: no chrome, no folio
 const S = {}; { let at = 0; for (const sc of SCENES) { sc.at = at; sc.end = at + sc.len - 1; S[sc.key] = at; at += sc.len; } }
 const STEPS = SCENES[SCENES.length - 1].end;
 root.dataset.steps = STEPS;   // for the QA harness
@@ -487,15 +522,18 @@ function render(now, newFilm){
   const day = sseg(...PAGE9) * (1 - sseg(C - .55, C - .25));
   setVar(paper, '--paper', day.toFixed(3)); setVar(chrome, '--paper', day.toFixed(3)); stage.classList.toggle('day', day > .5);
   setVar(ruleI, '--prog', (T / STEPS).toFixed(4));
-  if (whereEl.textContent !== SCENES[sc].where) { whereEl.textContent = SCENES[sc].where; scnName.textContent = SCENES[sc].name; folio.textContent = `${romans[sc]} / ${romans[SCENES.length - 1]}`; }
+  if (whereEl.textContent !== SCENES[sc].where) { whereEl.textContent = SCENES[sc].where; scnName.textContent = SCENES[sc].name; folio.textContent = `${romans[sc]} / ${romans[SCENES.filter(x => !x.card).length - 1]}`; }
+  // the end card stands alone: the master's chrome withdraws while it forms
+  const CL = SCENES.find(x => x.key === 'close'); setVar(chrome, '--chr', (1 - sseg(CL.end + .55, CL.end + .85)).toFixed(3));
   // ---- the lava: free on the cover, gathering into the seal on the way to the compass; back, settled, for the close
-  const conv = T < 1 ? sseg(0, .4) : T > C - 1 ? 1 - .35 * sseg(C - .45, C) : 1;   // the wax gathers into the seal as the cover leaves
+  // the wax gathers into the seal as the cover leaves; loosens for the close; and gathers again, into the seal, for the end card
+  const conv = T < 1 ? sseg(0, .4) : T > CL.end ? .65 + .35 * sseg(CL.end + .55, CL.end + .95) : T > C - 1 ? 1 - .35 * sseg(C - .45, C) : 1;
   const lavaOn = 1 - sseg(.55, .8) + sseg(C - .5, C - .2);
   setVar(panelEl, '--lava', clamp(lavaOn).toFixed(3));
   setVar(panelEl, '--st', ease(clamp((conv - .65) / .35)).toFixed(3));
   if (lavaOn > .01 && newFilm) drawField(now, conv, FRAME_MS);
   // ---- the compass: the seal becomes the compass (top-down frame 0 at the seal's place and size), then it moves left
-  const co = sseg(.5, .7) * (1 - sseg(...FADE9)) + sseg(C - .45, C - .15);
+  const co = sseg(.5, .7) * (1 - sseg(...FADE9)) + sseg(C - .45, C - .15) * (1 - sseg(CL.end, CL.end + .4));   // it returns to the lava before the end card
   setVar(compassEl, '--co', co.toFixed(3));
   if (co > .01) {
     let kind = 'split', f = Math.round(splitFrame());
@@ -503,8 +541,9 @@ function render(now, newFilm){
     else if (T > D.end && T < D.end + 1) f = Math.round(lerp(SPLIT - 1, 0, sseg(...CLOSE9)));   // it closes completely (the parts settle back, star last; it lies flat) before it fades
     showFrame(kind, f);
     const grow = sseg(.5, .85), close = sseg(C - .45, C), atClose = T > C - 1;
-    const size = atClose ? lerp(300, 560, close) : lerp(170, PS, grow);
-    const cx = atClose ? 720 : lerp(720, 400, sseg(.58, .95)), cy = atClose ? lerp(450, 440, close) : lerp(450, 470, grow);
+    // at the close it rises out of the settled lava to sit between the question and the register, clear of both
+    const size = atClose ? lerp(300, 470, close) : lerp(170, PS, grow);
+    const cx = atClose ? 720 : lerp(720, 400, sseg(.58, .95)), cy = atClose ? lerp(450, 468, close) : lerp(450, 470, grow);
     setVar(print, 'transform', `translate(${(cx - size / 2 + FILM.wx).toFixed(2)}px, ${(cy - size / 2 + FILM.wy).toFixed(2)}px) scale(${(size / PS).toFixed(4)})`);
     if (newFilm) drawGrain();
     /* LEADERS, the website's curves with a better ease. A click has two beats: the part lifts (the first 55%), then its

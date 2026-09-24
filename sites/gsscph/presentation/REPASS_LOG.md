@@ -3,6 +3,37 @@
 One entry per pass, newest first: what changed, the reviewer's findings and how each was answered, and what is
 still open. The plan is `REPASS_PLAN.md`.
 
+## Round 2 · The flowchart, the close, the end card (2026-09-24)
+
+**Duke:** "Add the flowchart thing too... in the presentation. Refine the last page, more custom, it looks
+beautiful though. Apply the same extra agent qa checker, then coordinates with builder agent."
+
+**Groundwork (lead)**
+- **Scenes by length.** Each scene carries its length, and every timing window is written from its own
+  scene's start, so adding a scene renumbers nothing.
+- **Scenes by name.** Scenes are named (`data-scene="close"`), not numbered.
+- **Verified unchanged.** The harness gave the same overlap and rest figures before and after, and every
+  state returns.
+
+**The close (lead)**
+- **Header.** The master's stamp (IV, dash, Inquire) replaces the plain kicker, and "whole" is set in italic
+  light gold.
+- **Compass.** It sits between the question and the register, clear of both, at 470 px (it was 560 and ran
+  under the title).
+- **Contact register.** Four labelled columns (Principal office, Write, Telephone, Mobile), with one gold
+  rule, hairline dividers and tabular figures. The address is corrected to kernel 01 `principal_office.full`:
+  "Megaworld Boulevard" was missing.
+
+**The end card (lead, new)**
+- **The scene.** It is a scene of its own (a full scene change) and is not counted in the folio.
+- **The sequence.** The compass returns to the lava, the wax gathers into the seal as on the cover, and the
+  master's chrome withdraws. Then the wordmark opens from its centre, as in the opening title card. The gold
+  rule draws, and "Integrated Corporation" settles its tracking.
+- **Colophon.** gsscph.com and the SEC company registration number (kernel 01), as the site shows them.
+- **Staging.** It is staged from one `--v`, so it runs back exactly.
+
+**The flowchart (builder agent, in its own worktree):** in progress.
+
 ## Pass 0 · Leaders, better ease (2026-09-24)
 
 **Duke:** "the line connecting animation for the compass needs to have a better iteration, smoother... keep that
