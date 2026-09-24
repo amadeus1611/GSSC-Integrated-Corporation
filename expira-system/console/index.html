@@ -1169,6 +1169,21 @@ html.theming,html.theming *,html.theming *::before,html.theming *::after{transit
 @keyframes fgSweep{from{stroke-dasharray:0 100}}
 @media (prefers-reduced-motion:reduce){.fig.pre *{transform:none!important;opacity:1!important;stroke-dasharray:none!important}}
 /* v32 · nothing arrives before its parent */
+.strm .se.new::before{animation-delay:.32s!important}
+.strm li.new>span,.strm li.new .sx{animation-delay:.36s!important}
+.fig .stk{transform-box:view-box}
+.fig.pre .stk{transform:scaleY(0)}
+.fig.pre .sg{transform:none}
+.fig.in .sg{animation:none}
+.fig.in .stk{animation:fgY var(--sp-soft-d) var(--sp-soft) calc(var(--i)*80ms) both}
+.fig .rl{transform-origin:0 50%}
+.fig.pre .ch text.dl{opacity:0}
+.fig.in .ch text.dl{animation:ink .45s 1s both}
+.ch .dt,.ch .ds{pointer-events:none}
+.mini .md.s-wait{opacity:.6}
+.field .fn text{transition:opacity .3s ease .3s}
+.field .fn.unborn text,.field .fn.young text{opacity:0;transition:none}
+@media (max-width:560px){.fig{overflow-x:auto}.fig svg.ch{width:560px;max-width:none}}
 .map .eg:not(.drawn)~.fl{opacity:0!important}
 .field .ln,.field .lf{transition:opacity .35s ease}
 .field .ln.hid,.field .lf.hid{opacity:0!important}
@@ -1178,7 +1193,8 @@ html.theming,html.theming *,html.theming *::before,html.theming *::after{transit
 .fig.in .wc{animation:ink .35s calc((var(--i) + 1)*110ms + .42s) both}
 .fig.in .stk .vl{animation:ink .45s calc(var(--i)*70ms + 3*110ms + .5s) both}
 .fig.in .fx-hbar .vl,.fig.in.fx-hbar .vl{animation:ink .45s calc(var(--i)*60ms + .5s) both}
-.fig.in .re{animation:fgJ var(--sp-jelly-d) var(--sp-jelly) calc(var(--i)*70ms + .5s) both}
+.fig.in .re{animation:fgJ var(--sp-jelly-d) var(--sp-jelly) calc(var(--i)*70ms) both}
+.fig.in .rl{animation:fgX .7s var(--sp-soft) calc(var(--i)*70ms + .18s) both}
 .fig.in .rm{animation:ink .35s calc(var(--i)*70ms + .7s) both}
 .fig.pre .rm{opacity:0}
 .fig.in.fx-waterfall .vl{animation:ink .4s calc(var(--i)*110ms + .45s) both}
@@ -1559,7 +1575,7 @@ function miniSVG(w,live,seenIds,narrow){let {N,E}=graphOf(w);if(narrow){const ns
  const cur=(a,b,back)=>{const [x1,y1]=P[a],[x2,y2]=P[b];const dx=Math.max(24,Math.abs(x2-x1)*.5),o=back?4:0;return `M${x1} ${y1+o}C${x1+(x2>x1?dx:-dx)} ${y1+o},${x2-(x2>x1?dx:-dx)} ${y2+o},${x2} ${y2+o}`};
  const gid="goo"+(++GOOID),on=new Set(),nb=new Set(seenIds?N.filter(n=>!seenIds.has(n.id)).map(n=>n.id):[]);let ed="",bd="";
  E.forEach(e=>{if(!P[e.a]||!P[e.b])return;const back=/>v$/.test(e.id)&&e.a[0]==="a",d=cur(e.a,e.b,back),act=live&&e.on;if(act){on.add(e.a);on.add(e.b)}
-  ed+=`<path class="me${act?" on":""}${e.dep?" dep":""}${back?" bk":""}${nb.has(e.a)||nb.has(e.b)?' ne" pathLength="1':""}" d="${d}"/>`;if(act)for(let q=0;q<2;q++)bd+=`<circle class="bd${back?" bk":""}" r="1.7"><animateMotion dur="${back?1.3:1}s" begin="${q*(back?.65:.5)}s" repeatCount="indefinite" path="${d}"/></circle>`});
+  ed+=`<path class="me${act?" on":""}${e.dep?" dep":""}${back?" bk":""}${nb.has(e.a)||nb.has(e.b)?' ne" pathLength="1':""}" d="${d}"/>`;if(act&&!nb.has(e.a)&&!nb.has(e.b))for(let q=0;q<2;q++)bd+=`<circle class="bd${back?" bk":""}" r="1.7"><animateMotion dur="${back?1.3:1}s" begin="-${q*(back?.65:.5)}s" repeatCount="indefinite" path="${d}"/></circle>`});
  let dots="",rings="",labs="";N.forEach(n=>{const p=P[n.id];if(!p)return;const fresh=seenIds&&!seenIds.has(n.id);seenIds&&seenIds.add(n.id);const r=n.kind==="orch"||n.kind==="arb"?4.5:n.kind==="site"||n.kind==="more"?2.6:3.6,st=live&&n.st==="on";
   const c=`<circle class="md k-${n.kind}${n.role?" r-"+n.role:""} s-${n.st}${fresh?" nb":""}" cx="${p[0]}" cy="${p[1]}" r="${r}"/>`;if(n.kind==="site"||n.kind==="more")rings+=c;else dots+=c;
   labs+=`<g class="mn${st?" on":""}${fresh?" nb":""}" data-sheet="${esc(n.id)}" tabindex="0" role="button" aria-label="${esc(MLAB(n))}">${st?`<circle class="halo" cx="${p[0]}" cy="${p[1]}" r="${r+3}"/>`:""}<circle class="hit" cx="${p[0]}" cy="${p[1]}" r="11"/><text x="${p[0]+(n.col===4?7:8)}" y="${p[1]+3.4}">${esc(MLAB(n))}${n.num>1?`<tspan class="nm"> ${n.num}</tspan>`:""}</text></g>`});
@@ -2377,7 +2393,7 @@ function chartX(sp,type,no){const title=sp.title||"",unit=sp.unit||"",note=sp.no
   tbl=TBL(["",S[0]?.name||title],labels.map((lb,i)=>[lb,fmtV(v[i],unit)]))}
  else if(type==="stacked"){const n=labels.length;if(!n||!S.length)return "";const tot=labels.map((_,i)=>S.reduce((a,x)=>a+(isNaN(x.values[i])?0:Math.max(0,x.values[i])),0)),tk=nice(0,Math.max(...tot)),tN=tk[tk.length-1],m={l:54,r:10,t:14,b:26},pw=W-m.l-m.r,ph=H-m.t-m.b,y=v=>m.t+(1-v/tN)*ph,band=pw/n,bw=Math.min(band*.56,56);
   tk.forEach(v=>body+=`<line class="${v===0?"ax":"gl"}" x1="${m.l}" x2="${W-m.r}" y1="${y(v)}" y2="${y(v)}"/><text x="${m.l-8}" y="${y(v)+3}" text-anchor="end">${esc(fmtV(v,""))}</text>`);
-  labels.forEach((lb,i)=>{const cx=m.l+band*(i+.5);let acc=0;body+=`<g class="mk stk" style="--i:${i}">`;S.forEach((x,j)=>{const v=Math.max(0,x.values[i]||0);if(!v)return;const y0=y(acc),y1=y(acc+v);acc+=v;body+=`<rect class="sg" data-ro="${esc(`<b>${esc(lb)}</b><span><i style="background:var(--s${j+1})"></i>${esc(x.name)} <em class="num">${esc(fmtV(v,unit))}</em></span>`)}" x="${cx-bw/2}" y="${y1+1}" width="${bw}" height="${Math.max(0,y0-y1-2)}" rx="${j===S.length-1?3:1}" fill="var(--s${j+1})" style="--j:${j}"/>`});
+  labels.forEach((lb,i)=>{const cx=m.l+band*(i+.5);let acc=0;body+=`<g class="mk stk" style="--i:${i};transform-origin:0 ${y(0)}px">`;S.forEach((x,j)=>{const v=Math.max(0,x.values[i]||0);if(!v)return;const y0=y(acc),y1=y(acc+v);acc+=v;body+=`<rect class="sg" data-ro="${esc(`<b>${esc(lb)}</b><span><i style="background:var(--s${j+1})"></i>${esc(x.name)} <em class="num">${esc(fmtV(v,unit))}</em></span>`)}" x="${cx-bw/2}" y="${y1+1}" width="${bw}" height="${Math.max(0,y0-y1-2)}" rx="${j===S.length-1?3:1}" fill="var(--s${j+1})" style="--j:${j}"/>`});
    body+=`<text class="vl num" x="${cx}" y="${y(tot[i])-5}" text-anchor="middle">${esc(fmtV(tot[i],unit))}</text></g><text x="${cx}" y="${H-8}" text-anchor="middle">${esc(cut(lb,14))}</text>`});
   lg=`<div class="lg">${S.map((x,j)=>`<span><i style="background:var(--s${j+1})"></i>${esc(x.name)}</span>`).join("")}</div>`;tbl=TBL(["",...S.map(x=>x.name),"Total"],labels.map((lb,i)=>[lb,...S.map(x=>fmtV(x.values[i],unit)),fmtV(tot[i],unit)]))}
  else if(type==="donut"){let parts=labels.map((lb,i)=>({lb,v:Math.max(0,Number((S[0]||{values:[]}).values[i])||0)})).filter(p=>p.v>0);if(parts.length<2)return "";if(parts.length>5){const rest=parts.slice(4).reduce((a,p)=>a+p.v,0);parts=parts.slice(0,4).concat([{lb:"Other",v:rest,o:1}])}
@@ -2389,23 +2405,23 @@ function chartX(sp,type,no){const title=sp.title||"",unit=sp.unit||"",note=sp.no
  else if(type==="waterfall"){const v=(S[0]||{values:[]}).values.map(x=>isNaN(x)?0:x);if(!labels.length)return "";const L=[...labels,sp.total||"Total"],n=L.length;let run=0;const st=v.map(d=>{const a=run;run+=d;return[a,run,d]});st.push([0,run,run,1]);
   const all=st.flatMap(s=>[s[0],s[1]]),tk=nice(Math.min(0,...all),Math.max(0,...all)),t0=tk[0],tN=tk[tk.length-1],m={l:58,r:10,t:16,b:30},pw=W-m.l-m.r,ph=H-m.t-m.b,y=q=>m.t+(1-(q-t0)/(tN-t0))*ph,band=pw/n,bw=Math.min(band*.62,58);
   tk.forEach(q=>body+=`<line class="${q===0?"ax":"gl"}" x1="${m.l}" x2="${W-m.r}" y1="${y(q)}" y2="${y(q)}"/><text x="${m.l-8}" y="${y(q)+3}" text-anchor="end">${esc(fmtV(q,""))}</text>`);
-  st.forEach((s,i)=>{const cx=m.l+band*(i+.5),top=y(Math.max(s[0],s[1])),bot=y(Math.min(s[0],s[1])),tot=s[3],c=tot?"var(--ink)":s[2]<0?"var(--s4)":"var(--s1)";
+  st.forEach((s,i)=>{const cx=m.l+band*(i+.5),top=y(Math.max(s[0],s[1])),bot=y(Math.min(s[0],s[1])),tot=s[3],c=tot?"color-mix(in srgb,var(--ink) 72%,var(--sheet))":s[2]<0?"var(--s4)":"var(--s1)";
    body+=`<g class="mk wf" style="--i:${i}" data-ro="${esc(ROW(L[i],s[2],unit,c)+(tot?"":`<span>running <em class="num">${esc(fmtV(s[1],unit))}</em></span>`))}"><rect x="${cx-band/2}" y="${m.t}" width="${band}" height="${ph}" fill="transparent"/><rect class="wb" x="${cx-bw/2}" y="${top}" width="${bw}" height="${Math.max(1.5,bot-top)}" rx="2" fill="${c}"/><text class="vl num" x="${cx}" y="${top-5}" text-anchor="middle">${esc((s[2]>0&&!tot?"+":"")+fmtV(s[2],unit))}</text></g><text x="${cx}" y="${H-10}" text-anchor="middle"${tot?' class="tl"':""}>${esc(cut(L[i],13))}</text>`;
    if(i<n-1){const nx=m.l+band*(i+1.5);body+=`<line class="wc" style="--i:${i}" x1="${cx+bw/2}" x2="${nx-bw/2}" y1="${y(s[1])}" y2="${y(s[1])}"/>`}});
   tbl=TBL(["","Change","Running"],st.map((s,i)=>[L[i],fmtV(s[2],unit),fmtV(s[1],unit)]))}
- else if(type==="range"){const lo=(sp.low||[]).map(Number),hi2=(sp.high||[]).map(Number),mid=(sp.mid||[]).map(Number),n=labels.length;if(!n)return "";const RH=26;H=n*RH+30;const all=[...lo,...hi2].filter(x=>!isNaN(x)),tk=nice(Math.min(...all),Math.max(...all)),t0=tk[0],tN=tk[tk.length-1],m={l:150,r:20},pw=W-m.l-m.r,x=q=>m.l+(q-t0)/(tN-t0)*pw;
+ else if(type==="range"){const nz=x=>x==null||x===""?NaN:Number(x),lo=(sp.low||[]).map(nz),hi2=(sp.high||[]).map(nz),mid=(sp.mid||[]).map(nz),n=labels.length;if(!n)return "";const RH=26;H=n*RH+30;const all=[...lo,...hi2].filter(x=>!isNaN(x)),tk=nice(Math.min(...all),Math.max(...all)),t0=tk[0],tN=tk[tk.length-1],m={l:150,r:20},pw=W-m.l-m.r,x=q=>m.l+(q-t0)/(tN-t0)*pw;
   tk.forEach(q=>body+=`<line class="gl" x1="${x(q)}" x2="${x(q)}" y1="6" y2="${H-22}"/><text x="${x(q)}" y="${H-8}" text-anchor="middle">${esc(fmtV(q,""))}</text>`);
   labels.forEach((lb,i)=>{if(isNaN(lo[i])||isNaN(hi2[i]))return;const y=16+i*RH,a=x(lo[i]),b=x(hi2[i]),c=(a+b)/2;body+=`<g class="mk rg" style="--i:${i};--o:${c}px" data-ro="${esc(`<b>${esc(lb)}</b><span><em class="num">${esc(fmtV(lo[i],unit))}</em> to <em class="num">${esc(fmtV(hi2[i],unit))}</em></span>${isNaN(mid[i])?"":`<span>typical <em class="num">${esc(fmtV(mid[i],unit))}</em></span>`}`)}"><rect x="0" y="${y-11}" width="${W}" height="${RH}" fill="transparent"/><text class="lbl" x="${m.l-12}" y="${y+4}" text-anchor="end">${esc(cut(lb,24))}</text><line class="rl" x1="${a}" x2="${b}" y1="${y}" y2="${y}"/><circle class="re" cx="${a}" cy="${y}" r="4.5"/><circle class="re" cx="${b}" cy="${y}" r="4.5"/>${isNaN(mid[i])?"":`<line class="rm" x1="${x(mid[i])}" x2="${x(mid[i])}" y1="${y-6}" y2="${y+6}"/>`}</g>`});
   tbl=TBL(["","Low","High",...(mid.length?["Typical"]:[])],labels.map((lb,i)=>[lb,fmtV(lo[i],unit),fmtV(hi2[i],unit),...(mid.length?[fmtV(mid[i],unit)]:[])]))}
- else if(type==="timeline"){const T=(sp.tasks||[]).filter(t=>t&&t.label!=null&&!isNaN(+t.start)&&!isNaN(+t.end)).slice(0,12);if(!T.length)return "";const RH=24;H=T.length*RH+32;const tk=nice(Math.min(...T.map(t=>+t.start)),Math.max(...T.map(t=>+t.end))),t0=tk[0],tN=tk[tk.length-1],m={l:160,r:16},pw=W-m.l-m.r,x=q=>m.l+(q-t0)/(tN-t0)*pw;
+ else if(type==="timeline"){const T=(sp.tasks||[]).filter(t=>t&&t.label!=null&&t.start!=null&&t.end!=null&&!isNaN(+t.start)&&!isNaN(+t.end)&&+t.end>=+t.start).slice(0,12);if(!T.length)return "";const RH=24;H=T.length*RH+32;const tk=nice(Math.min(...T.map(t=>+t.start)),Math.max(...T.map(t=>+t.end))),t0=tk[0],tN=tk[tk.length-1],m={l:160,r:16},pw=W-m.l-m.r,x=q=>m.l+(q-t0)/(tN-t0)*pw;
   tk.forEach(q=>body+=`<line class="gl" x1="${x(q)}" x2="${x(q)}" y1="4" y2="${H-22}"/><text x="${x(q)}" y="${H-8}" text-anchor="middle">${esc(fmtV(q,""))}${q===tN&&unit?" "+esc(unit):""}</text>`);
   T.forEach((t,i)=>{const y=8+i*RH,a=x(+t.start),b=Math.max(a+3,x(+t.end));body+=`<g class="mk tln" style="--i:${i}" data-ro="${esc(`<b>${esc(t.label)}</b><span><em class="num">${esc(fmtV(+t.start,""))}–${esc(fmtV(+t.end,""))}</em> ${esc(unit)}</span>`)}"><rect x="0" y="${y-3}" width="${W}" height="${RH}" fill="transparent"/><text class="lbl" x="${m.l-12}" y="${y+12}" text-anchor="end">${esc(cut(t.label,26))}</text><rect class="tb2" x="${a}" y="${y+2}" width="${b-a}" height="${RH-10}" rx="3" fill="var(--s${(i%5)+1})" style="transform-origin:${a}px 0"/></g>`});
   tbl=TBL(["Task","Start","End"],T.map(t=>[t.label,String(t.start),String(t.end)]))}
  else return "";
  return `<figure class="fig pre fx-${type}">${FH(no,title,unit,lg)}<svg class="ch" data-fig="${id}" viewBox="0 0 ${W} ${H}" role="img" aria-label="${esc(title)}">${body}</svg>${tbl}${note}</figure>`}
 /* figures come alive when they scroll into view */
-const FIGIO=new IntersectionObserver(es=>es.forEach(en=>{if(en.isIntersecting){en.target.classList.remove("pre");en.target.classList.add("in");FIGIO.unobserve(en.target);countUp(en.target)}}),{rootMargin:"0px 0px -40px 0px"});
-function armFigs(root){(root||document).querySelectorAll(".fig.pre:not([data-io])").forEach(f=>{f.dataset.io=1;if(reduce){f.classList.remove("pre");return}FIGIO.observe(f);setTimeout(()=>{if(f.classList.contains("pre")){f.classList.remove("pre");f.classList.add("in")}},2500)})}
+const figIn=f=>{if(!f.classList.contains("pre"))return;f.classList.remove("pre");f.classList.add("in");FIGIO.unobserve(f);countUp(f)};const FIGIO=new IntersectionObserver(es=>es.forEach(en=>{if(en.isIntersecting)figIn(en.target)}),{rootMargin:"0px 0px -40px 0px"});
+function armFigs(root){(root||document).querySelectorAll(".fig.pre:not([data-io])").forEach(f=>{f.dataset.io=1;if(reduce){f.classList.remove("pre");return}FIGIO.observe(f);setTimeout(()=>figIn(f),2500)})}
 new MutationObserver(()=>armFigs()).observe(document.getElementById("thread"),{childList:true,subtree:true});
 /* high-resolution PNG: the figure redrawn at 3× with its computed colours */
 async function figPNG(fig,btn){const svg=fig.querySelector("svg.ch");if(!svg)return;const vb=svg.viewBox.baseVal,S=3,cl=svg.cloneNode(true),src=[svg,...svg.querySelectorAll("*")],dst=[cl,...cl.querySelectorAll("*")];
