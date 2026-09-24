@@ -84,7 +84,7 @@ a{color:inherit}
   transition:background 600ms var(--soft-close),color 600ms var(--soft-close),border-color 600ms var(--soft-close)}
 .btn:hover{background:var(--navy-dark);color:var(--ivory);border-color:var(--navy-dark);transition-duration:180ms}
 .nav .btn{padding:10px 14px}
-.index-btn{display:none}
+.index-btn{display:none;min-height:44px}
 /* the dateline: the master's caption-date bar, present at the very top, folded away as you scroll */
 .dateline{position:relative;max-width:var(--maxw);margin-inline:auto;padding-inline:var(--gutter);height:calc(34px * (1 - var(--h2)));overflow:hidden;opacity:clamp(0, calc(1 - var(--h2) * 2.4), 1)}
 .dateline div{display:flex;justify-content:space-between;gap:16px;border-top:var(--rule-hair) solid var(--hairline);padding-top:9px;
@@ -183,18 +183,27 @@ h1.title .it{font-style:italic;letter-spacing:-.02em}
 /* Fig. 1: the field. Inset figure at rest; opens to full bleed with scroll. Corners stay at the master's 2px. */
 .field-stage{position:relative;height:280vh}
 .field-pin{position:sticky;top:0;height:100vh;height:100svh;overflow:hidden}
-.panel{position:absolute;inset:0;cursor:crosshair;background:var(--navy-dark);
-  clip-path:inset(var(--it,15%) var(--is,var(--gutter)) var(--ib,11%) var(--is,var(--gutter)) round var(--r))}
-/* a soft inner edge while the figure is inset: a few pixels of paper light bleeding into the glass.
-   It thins to nothing as the figure reaches full bleed, so the final frame is truly edge to edge. */
-.panel-edge{position:absolute;top:var(--it,15%);bottom:var(--ib,11%);left:var(--is,var(--gutter));right:var(--is,var(--gutter));pointer-events:none;border-radius:var(--r);
-  box-shadow:inset 0 0 calc(var(--feather,0) * 16px) calc(var(--feather,0) * 1px) rgba(250,248,243,calc(var(--feather,0) * .5))}
+.panel{position:absolute;inset:0;cursor:crosshair;background:var(--navy-dark);--ins:clamp(20px,6vw,104px)}
+/* The window onto the lava: four page-coloured mattes over it, each withdrawing by transform alone, so opening to
+   full bleed is compositor work (no clip-path, no layout, no repainted blur, frame after frame). Each matte carries
+   a few pixels of paper light on its inner edge, which thins with the matte and is gone at full bleed. */
+.matte{position:absolute;background:var(--ivory);pointer-events:none;will-change:transform}
+.matte::after{content:"";position:absolute;pointer-events:none}
+.mt{left:0;right:0;top:0;height:15%;transform-origin:top;transform:scaleY(calc(1 - var(--open,0)))}
+.mb{left:0;right:0;bottom:0;height:11%;transform-origin:bottom;transform:scaleY(calc(1 - var(--open,0)))}
+.ml{top:0;bottom:0;left:0;width:var(--ins);transform-origin:left;transform:scaleX(calc(1 - var(--open,0)))}
+.mr{top:0;bottom:0;right:0;width:var(--ins);transform-origin:right;transform:scaleX(calc(1 - var(--open,0)))}
+.mt::after{left:0;right:0;top:100%;height:16%;background:linear-gradient(rgba(250,248,243,.4),rgba(250,248,243,0))}
+.mb::after{left:0;right:0;bottom:100%;height:18%;background:linear-gradient(to top,rgba(250,248,243,.4),rgba(250,248,243,0))}
+.ml::after{top:0;bottom:0;left:100%;width:14%;background:linear-gradient(to right,rgba(250,248,243,.4),rgba(250,248,243,0))}
+.mr::after{top:0;bottom:0;right:100%;width:14%;background:linear-gradient(to left,rgba(250,248,243,.4),rgba(250,248,243,0))}
 .panel canvas{position:absolute;inset:0;width:100%;height:100%;display:block;touch-action:pan-y}
 .panel .seat{position:absolute;left:50%;top:50%;width:clamp(64px,7vw,104px);pointer-events:none;
   transform:translate(-50%,-50%) scale(calc(.7 + var(--st,0) * .3)) rotate(calc((1 - var(--st,0)) * -45deg));opacity:var(--st,0);
   filter:drop-shadow(0 6px 24px rgba(200,164,77,.28))}
 .field-cap{position:absolute;left:0;right:0;bottom:calc(11% - 44px);opacity:calc(1 - var(--open,0) * 2.2)}
-.panel-label{position:absolute;margin:0;left:calc(var(--is,var(--gutter)) + 24px);right:calc(var(--is,var(--gutter)) + 24px);top:max(calc(var(--it,15%) + 20px),calc(76px + env(safe-area-inset-top,0px)));
+.panel-label{--ins:clamp(20px,6vw,104px);position:absolute;margin:0;left:24px;right:auto;top:0;will-change:transform;
+  transform:translate(calc(var(--ins) * (1 - var(--open,0))), max(calc(15svh * (1 - var(--open,0)) + 20px), calc(76px + env(safe-area-inset-top,0px))));
   display:flex;justify-content:space-between;gap:12px;font:600 10.5px/1.3 var(--f-body);letter-spacing:var(--tracked);text-transform:uppercase;
   color:rgba(230,212,167,.8);pointer-events:none}
 .panel-label span:last-child{color:rgba(243,236,218,.5);font-weight:500;letter-spacing:var(--tracked-tight)}
@@ -454,7 +463,8 @@ table.dt tbody tr:hover td:first-child{box-shadow:inset 2px 0 0 var(--gold-prima
 .lg-notes .ns span{display:block;margin-bottom:2px;font:600 9.5px/1.3 var(--f-body);letter-spacing:var(--tracked-cap);text-transform:uppercase;color:var(--mid-grey)}
 .lg-notes a{color:var(--navy-dark);text-decoration:underline;text-decoration-color:var(--gold-primary);text-underline-offset:3px}
 .fn{font:500 10px/0 var(--f-body);vertical-align:super;margin-left:3px;letter-spacing:0}
-.fn a{color:var(--gold-deep);text-decoration:none;padding:2px}
+.fn a{color:var(--gold-deep);text-decoration:none;position:relative;padding:0 2px}
+.hit::after{content:"";position:absolute;inset:-14px -12px}   /* a 44px target around a small mark, without moving the line */
 .brow{transition:background 500ms var(--soft-close)} .brow.hl{background:rgba(230,212,167,.18)}
 @media (max-width:1100px){ .lg-notes ol{grid-template-columns:1fr 1fr;gap:14px 22px} }
 @media (max-width:560px){ .lg-notes{padding:16px 18px 18px} .lg-notes ol{grid-template-columns:1fr} }
@@ -469,7 +479,7 @@ table.dt tbody tr:hover td:first-child{box-shadow:inset 2px 0 0 var(--gold-prima
   .econ-hero{grid-template-columns:1fr} .econ-hero > div + div{padding-left:0;border-left:0;border-top:var(--rule-hair) solid var(--hairline)}
   .econ-hero{border-top:0} .econ-hero > div{padding-right:0} .brow{grid-template-columns:1fr} .lg-stamp{right:14px} }
 /* touch: a larger thumb to catch, a taller hit area */
-@media (pointer:coarse){ .ctl input[type=range]{height:36px} .ctl input[type=range]::-webkit-slider-thumb{width:20px;height:20px;margin-top:-10px}
+@media (pointer:coarse){ .btn{min-height:44px} .lg-fol{padding:15px 0;margin:-15px 0} .ctl input[type=range]{height:44px} .ctl input[type=range]::-webkit-slider-thumb{width:20px;height:20px;margin-top:-10px}
   .ctl input[type=range]::-moz-range-thumb{width:18px;height:18px} }
 
 /* Fig. 4: the record (real dates from kernel 01_identity) */
@@ -651,7 +661,7 @@ table.dt tbody tr:hover td:first-child{box-shadow:inset 2px 0 0 var(--gold-prima
       <div class="panel" id="panel">
         <canvas id="fieldCanvas" aria-hidden="true"></canvas>
         <img class="seat" src="{{SEAL}}" alt="">
-        <div class="panel-edge"></div>
+        <i class="matte mt"></i><i class="matte mb"></i><i class="matte ml"></i><i class="matte mr"></i>
       </div>
       <p class="panel-label" id="panelLabel" aria-hidden="true"><span>Fig. 1 · The field</span></p>
       <div class="field-cap wrap"><p class="figcaption"><b>Fig. 1</b><i>Gold wax under glass, lit from below. It gathers toward your hand, lets go slowly, and closes on the seal.</i></p></div>
@@ -941,7 +951,7 @@ sheet.querySelectorAll('a').forEach(a => a.addEventListener('click', () => setSh
 const FRAME_MS = 1000 / 24;
 /* QUALITY. The artwork's cost is a dial the page turns itself (see the governor in the loop): level 0 is the
    full look; each step trades a little resolution in the artwork for a smooth page. The page clock never pays. */
-const QL = [{lava: innerWidth > 1100 ? .75 : 1, film: .5, every: 1}, {lava: .55, film: .5, every: 1}, {lava: .42, film: .35, every: 1}, {lava: .33, film: 0, every: 1},
+const QL = [{lava: 1, film: .5, every: 1}, {lava: .75, film: .5, every: 1}, {lava: .55, film: .35, every: 1}, {lava: .42, film: 0, every: 1},
   {lava: .33, film: 0, every: 3}];   // the last resort (no graphics hardware): the lava keeps its look and advances every third film frame
 const Q = Object.assign({level: 0}, QL[0]);
 const cssNum = (k, d) => { const v = parseFloat(getComputedStyle(root).getPropertyValue(k)); return isNaN(v) ? d : v; };
@@ -995,6 +1005,10 @@ const filmUniforms = (g, L) => { g.uniform4f(L.film, FILM.seed, FILM.fl, FILM.gr
 const panel = document.getElementById('panel'), fcv = document.getElementById('fieldCanvas'), fieldStage = document.getElementById('field');
 const panelLabel = document.getElementById('panelLabel');
 const gl = fcv.getContext('webgl', {antialias: false, alpha: false, premultipliedAlpha: false});
+const SOFT_GL = (() => { try { const x = gl && gl.getExtension('WEBGL_debug_renderer_info');
+  return !!x && /swiftshader|llvmpipe|softpipe|software|basic render/i.test(gl.getParameter(x.UNMASKED_RENDERER_WEBGL)); } catch (e) { return false; } })();
+if (SOFT_GL) Object.assign(Q, QL[3], {level: 3});
+document.documentElement.dataset.q = Q.level;
 const NB = 11;
 const VS = 'attribute vec2 a; void main(){ gl_Position = vec4(a, 0., 1.); }';
 const FS_A = `precision highp float;
@@ -1107,6 +1121,8 @@ function sizeField(){
   fcv.width = FW; fcv.height = FH;
   // the lamp itself renders small and is played back large: the softness is the point
   fx.lw = Math.max(2, Math.round(Math.min(fcv.clientWidth, vw < 700 ? 340 : 480))); fx.lh = Math.max(2, Math.round(fx.lw * FH / FW));
+  // a pixel budget, not just a width: a portrait phone would otherwise simulate a taller lamp than a desktop does
+  { const cap = 150000 * Math.max(.35, Q.lava), k = Math.min(1, Math.sqrt(cap / (fx.lw * fx.lh))); fx.lw = Math.max(2, Math.round(fx.lw * k)); fx.lh = Math.max(2, Math.round(fx.lh * k)); }
   for (const o of [fx.tex, ...fx.acc]) {
     gl.bindTexture(gl.TEXTURE_2D, o.t);
     gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, fx.lw, fx.lh, 0, gl.RGBA, gl.UNSIGNED_BYTE, null);
@@ -1242,14 +1258,16 @@ function buildInstrument(){
   load(0, true).then(() => decode(0));
   const idle = window.requestIdleCallback ? f => requestIdleCallback(f, {timeout: 400}) : f => setTimeout(f, 60);
   let loading = null;
-  const loadAll = () => loading || (loading = (async () => {
+  const self = {};
+  const loadAll = () => loading || (loading = (async () => { self.busy = true;
     // coarse to fine, so a fast scroll always has a frame close by
     const order = []; for (const st of [8, 4, 2, 1]) for (let i = 0; i < N; i += st) if (!order.includes(i)) order.push(i);
-    for (let k = 0; k < order.length; k += 4) { await new Promise(idle); await Promise.all(order.slice(k, k + 4).map(i => imgs[i] ? 0 : load(i))); } })());
+    for (let k = 0; k < order.length; k += 4) { await new Promise(idle); await Promise.all(order.slice(k, k + 4).map(i => imgs[i] ? 0 : load(i))); }
+    self.busy = false; })());
   svgL.innerHTML = PARTS.map(() => '<path fill="none" stroke="rgba(200,164,77,.7)" stroke-width="1"/>').join('');
   tagsEl.innerHTML = PARTS.map(([n, p, c]) => `<div class="tag"><span class="c">${n ? `<em>${n}</em>` : ''}${p}</span><span class="v">${c}</span></div>`).join('');
   phaseEl.innerHTML = PARTS.map(() => '<i></i>').join('') + '<span>Closed</span>';
-  return {ctx, fx, fc, imgs, ready, want, decode, loadAll, shown: -1, rectKey: '', f: 0, prev: null,
+  return {ctx, fx, fc, imgs, ready, want, decode, loadAll, get busyLoading(){ return !!self.busy; }, shown: -1, rectKey: '', f: 0, prev: null,
           leaders: [...svgL.children], tags: [...tagsEl.children], ticks: [...phaseEl.querySelectorAll('i')], phaseLabel: phaseEl.querySelector('span'),
           tilt: {x: 0, y: 0}, w: 0, h: 0, k: 1};
 }
@@ -1312,7 +1330,7 @@ function drawInstrument(t, q, dt, newFilm){
   I.tilt.x += (iptr.x - I.tilt.x) * .06; I.tilt.y += (iptr.y - I.tilt.y) * .06;
   // where the print sits: beside the copy on a wide screen, centred low on a phone; the cursor drifts it a little
   const op = (() => { const {lift} = seqPose(fi); return lift.slice(1).reduce((a, b) => a + b, 0) / (N - 1); })();
-  const size = narrow ? Math.min(w * lerp(1.2, 1.5, op), h * .8) : Math.min(h * 1.04, w * .62);
+  const size = narrow ? Math.min(w * lerp(1.08, 1.5, op), h * .8) : Math.min(h * 1.04, w * .62);
   const cx = (narrow ? w * .5 : w * .47) + I.tilt.x * 14, cy = (narrow ? h * .57 : h * .55) + I.tilt.y * 10;
   const rect = [cx - size / 2, cy - size / 2, size, size];
   // a frame change: the new frame shows over the old, and the old one stays under it for one film frame, so a frame
@@ -1453,7 +1471,7 @@ const barsEl = document.getElementById('bars'), econEl = document.getElementById
 const php = v => '₱' + Math.round(v).toLocaleString('en-PH');
 const ROWS = [['Invoices processed', 'one per supplier, per month'], ['Purchase orders', 'award and one change each'],
               ['Coordination time', 'a manager’s hours on the interfaces'], ['Interface rework', 'the gaps between trades']];
-barsEl.innerHTML = ROWS.map(([k, s], i) => `<div class="brow" data-n="${i}"><div class="k">${k}<sup class="fn"><a href="#en${i + 1}" aria-label="Note ${i + 1}">${i + 1}</a></sup><small>${s}</small></div><div class="bpair">
+barsEl.innerHTML = ROWS.map(([k, s], i) => `<div class="brow" data-n="${i}"><div class="k">${k}<sup class="fn"><a class="hit" href="#en${i + 1}" aria-label="Note ${i + 1}">${i + 1}</a></sup><small>${s}</small></div><div class="bpair">
   <div class="eb d"><b></b><em></em></div><div class="eb c"><b></b><em></em></div></div></div>`).join('');
 const barD = [...barsEl.querySelectorAll('.eb.d')], barC = [...barsEl.querySelectorAll('.eb.c')];
 // a line and its note light together, from either side
@@ -1543,15 +1561,21 @@ const sizeFile = () => roadmap.classList.toggle('pinned', !REDUCE && !COARSE && 
 const topEl = document.getElementById('top'), roadmap = document.getElementById('roadmap');
 const railSecs = [...document.querySelectorAll('[data-rail]')], nightSecs = [...document.querySelectorAll('.night')];
 let last = performance.now(), H1 = 0, H2 = 0, fieldT = 0;
-/* Judged every ~0.75 s of artwork on screen: frames far over budget (slowest tenth under ~30 fps) step the artwork
-   down at once; moderately over (under ~48 fps) twice in a row steps it down; after five smooth windows it tries one
-   level up again, but never back to a level that already failed on this device. */
-const GOV = {d: [], span: 0, bad: 0, good: 0, failed: new Set()};
-function setQ(l){ Object.assign(Q, QL[l], {level: l}); sizeField(); sizeInst(); document.documentElement.dataset.q = l; }
+/* THE GOVERNOR, judged every ~0.75 s while artwork is on screen, on the 75th percentile frame (one-off spikes, such
+   as a font or an image arriving, never count). Over ~45 fps twice running steps the artwork down; under ~25 fps steps
+   it down at once. Five smooth windows try one level up again; a level that failed may be retried after 30 s.
+   It is deaf for a moment after load, after a resize, after its own change and while the compass frames arrive, so it
+   never blames the lava for someone else's work. Hardware stops at level 3 (full 24 fps, lower resolution);
+   the 8 fps last resort is for software renderers only. */
+const GOV = {d: [], span: 0, bad: 0, good: 0, failed: new Map(), deafUntil: performance.now() + 2500};
+const GOV_MAX = SOFT_GL ? QL.length - 1 : QL.length - 2;
+function setQ(l){ Object.assign(Q, QL[l], {level: l}); sizeField(); sizeInst(); document.documentElement.dataset.q = l; GOV.deafUntil = performance.now() + 1200; }
 function govern(){
-  const d = GOV.d.sort((a, b) => a - b), p90 = d[Math.floor(d.length * .9)]; GOV.d = []; GOV.span = 0;
-  if (p90 > 21) { GOV.good = 0; if ((++GOV.bad >= 2 || p90 > 34) && Q.level < QL.length - 1) { GOV.failed.add(Q.level); setQ(Q.level + 1); GOV.bad = 0; } }
-  else if (p90 < 18.5) { GOV.bad = 0; if (++GOV.good >= 5 && Q.level > 0 && !GOV.failed.has(Q.level - 1)) { setQ(Q.level - 1); GOV.good = 0; } }
+  const d = GOV.d.sort((a, b) => a - b), p75 = d[Math.floor(d.length * .75)], now = performance.now(); GOV.d = []; GOV.span = 0;
+  if (now < GOV.deafUntil || (inst && inst.busyLoading)) return;
+  if (p75 > 22) { GOV.good = 0; if ((++GOV.bad >= 2 || p75 > 40) && Q.level < GOV_MAX) { GOV.failed.set(Q.level, now); setQ(Q.level + 1); GOV.bad = 0; } }
+  else if (p75 < 18.5) { GOV.bad = 0; const f = GOV.failed.get(Q.level - 1);
+    if (++GOV.good >= 5 && Q.level > 0 && (!f || now - f > 30000)) { setQ(Q.level - 1); GOV.good = 0; } }
 }
 const cut = {field: false, inst: false};
 // one frame = read every position first, then write; never interleaved, so the browser lays out once
@@ -1613,16 +1637,14 @@ function frame(t){
   // ---- Fig. 1: opens within the first screen of the pin, has gathered by 80% of it, then holds complete
   const span = fieldStage.offsetHeight - vh;
   const open = clamp((-fr.top + vh * .6) / vh), conv = clamp((-fr.top - vh * .3) / ((span - vh * .3) * .68));
-  const eo = ease(open), inset = Math.min(104, Math.max(20, vw * .06));
-  for (const el of [panel, panelLabel]) { setVar(el, '--it', lerp(15, 0, eo).toFixed(2) + '%'); setVar(el, '--is', lerp(inset, 0, eo).toFixed(1) + 'px'); }
-  setVar(panel, '--ib', lerp(11, 0, eo).toFixed(2) + '%'); setVar(panel, '--feather', (1 - eo).toFixed(3));
-  setVar(fieldStage, '--open', eo.toFixed(3));
+  const eo = ease(open);
+  setVar(fieldStage, '--open', eo.toFixed(4));   // the mattes, the label and the caption all read this one value
   setVar(panel, '--st', ease(clamp((conv - .65) / .35)).toFixed(3));
   if (newFilm && FILM.f % Q.every === 0 && fr.bottom > -40 && fr.top < vh + 40) { safely('field', () => drawField(t, conv, Math.min(84, t - (fieldT || t - FRAME_MS)))); fieldT = t; }
   if (open > .5 && !cut.field) FILM.cut(t); cut.field = open > .5;          // a scene begins: a moment of light leak
   // ---- Fig. 2
   const iq = clamp(-ir.top / (instStage.offsetHeight - vh));
-  if (inst && ir.top < vh * 4) inst.loadAll();
+  if (inst && ir.top < vh * 4 && (ir.top < vh * 1.5 || !(fr.bottom > 0 && fr.top < vh))) inst.loadAll();
   if (ir.top <= 0 && !cut.inst && ir.bottom > vh) FILM.cut(t); cut.inst = ir.top <= 0 && ir.bottom > vh;
   if (inst && ir.bottom > 0 && ir.top < vh) safely('instrument', () => drawInstrument(t, iq, dt, newFilm));
   // ---- paper sections
@@ -1718,14 +1740,14 @@ function frame(t){
 // the layout as they are, or every pin and progress would jump under the reader's thumb (the "magnets")
 addEventListener('resize', () => {
   if (COARSE && innerWidth === vw) return;
-  vw = innerWidth; vh = innerHeight; OFF = null; navCur = undefined; setNav(navId); sizeField(); sizeInst(); layoutFlow(); sizeFlowTrack(); sizeFile();
+  vw = innerWidth; vh = innerHeight; OFF = null; GOV.deafUntil = performance.now() + 1500; navCur = undefined; setNav(navId); sizeField(); sizeInst(); layoutFlow(); sizeFlowTrack(); sizeFile();
 });
 safely('build', () => { inst = buildInstrument(); sizeInst(); });
 sizeFile();
 if (REDUCE) {
   docs.forEach(d => { d.style.setProperty('--a', 1); d.style.setProperty('--stamp', 1); }); stages.forEach(st => st.classList.add('lit'));
   roadmap.style.setProperty('--rm', 1); deskCount.textContent = docs.length + ' of ' + docs.length + ' documents';
-  panel.style.setProperty('--it', '0%'); panel.style.setProperty('--ib', '0%'); panel.style.setProperty('--is', '0px');
+  fieldStage.style.setProperty('--open', 1);
   drawField(0, 0, 16);
   FILM.tick(0);
   if (inst) { const L = SEQ.frames - 1; inst.loadAll().then(() => inst.imgs[L] && inst.imgs[L].decode()).catch(() => {}).then(() => { inst.ready[L] = true; inst.f = L; drawInstrument(0, .55, 1e4, true); }); }

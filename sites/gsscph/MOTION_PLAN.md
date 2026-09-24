@@ -91,3 +91,27 @@ What made the difference:
   - the nav no longer animates its spacing, so the marker always sits true;
   - the dateline's right-hand slot carries the SEC registration (it repeated "Iloilo City"), and phones
     show only the edition line.
+
+## Round 3 (Duke: "the lava seems unoptimized again"; "I can see the edges of the rendered alpha")
+
+- **Compass shadows cropped:** the shadow catcher's shadow reached the right and bottom frame edges at up
+  to 0.19 alpha, so it ended in a straight line over the navy. `export_web.py` now feathers all alpha to
+  zero across the outer 12% of each frame (edge alpha 0.000). The QA harness checks it on every run.
+- **Lava, cause 1: the governor could be fooled.** The compass frames started downloading while the lava
+  was on screen. The spikes they caused were blamed on the lava, which was stepped down (lower resolution,
+  or 8 fps) and barred from recovering. Now:
+  - it judges on the 75th percentile;
+  - it is deaf after load, resizes, its own changes, and while frames arrive;
+  - the frames never start loading while the lava is on screen;
+  - failed levels may be retried after 30 s;
+  - hardware never drops below 24 fps;
+  - software renderers are detected and start low.
+- **Lava, cause 2: the reveal repainted every frame.** `clip-path` insets, an inner edge with a
+  re-blurred shadow, and a label positioned by `top`/`left` all changed on every scroll frame. Now four
+  page-coloured mattes withdraw by `transform`, and the label moves by `transform`: compositor only.
+  Lava section, desktop: 17 / 50 → 17 / 17 ms.
+- **Lava, cause 3:** on a portrait phone the low-resolution simulation was taller than the desktop's. It
+  now has a pixel budget tied to the quality level. Phone lava in software: 17 / 50 → 17 / 33 ms.
+- **QA:** `sites/gsscph/qa/QA_PROMPT.md` (the pass to run) and `qa/run_qa.py` (the harness: direct and
+  sandboxed loads at both widths, errors, overflow, label fit, one timeline, header rule, tap targets,
+  compass edge alpha, banned text, per-section frame times, contact sheets, `out/REPORT.md`).

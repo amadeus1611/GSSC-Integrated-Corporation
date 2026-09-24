@@ -31,6 +31,11 @@ def grade(im):
     rgb = rgb * (1 + t * (np.array([1.03, 1., .95], np.float32) - 1)) + np.array([.004, .012, .03], np.float32) * (1 - lum)
     P = rgb * al + halo
     A = np.clip(np.maximum(al, halo.max(-1, keepdims=True)), 0, 1)
+    # the shadow catcher's soft shadow runs off the frame to the right and below: feather everything to nothing across
+    # the outer 12% of the frame, so no straight edge of alpha ever shows over the page (the compass never reaches it)
+    n = im.width; u = np.minimum(np.arange(n), np.arange(n)[::-1]) / (n * .12)
+    e = np.clip(u, 0, 1); e = e * e * (3 - 2 * e); edge = (e[:, None] * e[None, :])[..., None].astype(np.float32)
+    P, A = P * edge, A * edge
     out = np.where(A > 1e-4, P / np.maximum(A, 1e-4), 0)
     return Image.fromarray((np.concatenate([np.clip(out, 0, 1), A], -1) * 255 + .5).astype(np.uint8), "RGBA")
 
