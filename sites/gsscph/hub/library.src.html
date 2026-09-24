@@ -79,10 +79,12 @@ html.theming,html.theming *{transition:background-color .7s var(--soft-close),co
 .item .it-t{display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .item .it-m{display:block;font-size:10.5px;color:var(--mute);max-height:0;opacity:0;overflow:hidden;transition:max-height .6s var(--soft-close),opacity .4s ease}
 .item:hover .it-m,.item:focus-visible .it-m{max-height:16px;opacity:1}
-.foot{display:flex;align-items:center;gap:10px;padding:12px 8px 0;border-top:var(--rule-hair) solid var(--line-2)}
+.foot{display:flex;align-items:center;gap:10px;margin:0 8px;padding:12px 0 0;border-top:var(--rule-hair) solid var(--line-2)}
+/* the gear: its hover square is the seal's size and ends exactly where the rule above ends */
+.foot .ib{width:28px;height:28px;margin-left:auto}
 .av{width:28px;height:28px;border-radius:50%;background:var(--seal-bg);border:var(--rule-hair) solid var(--line-2);display:grid;place-items:center;flex:none;overflow:hidden}
 .av img{width:24px;height:24px}
-.who{font-size:12.5px;line-height:1.3;color:var(--text);min-width:0}.who small{display:block;color:var(--mute);font-size:11px}
+.who{font-size:12.5px;line-height:1.3;color:var(--text);min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.who small{display:block;color:var(--mute);font-size:11px}
 .ib{width:30px;height:30px;display:grid;place-items:center;border:0;background:transparent;border-radius:5px;cursor:pointer;color:var(--soft);flex:none;transition:background var(--out) var(--soft-close),color var(--out) var(--soft-close)}
 .ib:hover,.ib[aria-expanded="true"]{background:var(--line);color:var(--ink);transition-duration:var(--in)}
 .ib svg{width:15px;height:15px}
@@ -189,8 +191,8 @@ html.theming,html.theming *{transition:background-color .7s var(--soft-close),co
     <div class="nav" id="nav"></div>
     <div class="recents"><div class="sh cap">Recently updated</div><div id="recent"></div></div>
     <div class="foot">
-      <span class="av"><img src="{{SEAL}}" alt=""></span><span class="who">GSSC Integrated Corporation<small>Internal Library</small></span>
-      <button class="ib" id="setBtn" style="margin-left:auto" aria-label="Settings" aria-haspopup="menu" aria-expanded="false" aria-controls="settings" title="Settings"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1"><circle cx="8" cy="8" r="2.1"/><path d="M8 1.8l1.1 1.6 1.9-.4.5 1.9 1.8.8-.6 1.8 1.1 1.6-1.6 1.1.2 1.9-1.9.3-.8 1.8-1.8-.7L8 14.2l-1.1-1.6-1.9.4-.5-1.9-1.8-.8.6-1.8L2.2 7l1.6-1.1-.2-1.9 1.9-.3.8-1.8 1.8.7z"/></svg></button>
+      <span class="av"><img src="{{SEAL}}" alt=""></span><span class="who">GSSC Library<small>Integrated Corporation</small></span>
+      <button class="ib" id="setBtn" aria-label="Settings" aria-haspopup="menu" aria-expanded="false" aria-controls="settings" title="Settings"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1"><circle cx="8" cy="8" r="2.1"/><path d="M8 1.8l1.1 1.6 1.9-.4.5 1.9 1.8.8-.6 1.8 1.1 1.6-1.6 1.1.2 1.9-1.9.3-.8 1.8-1.8-.7L8 14.2l-1.1-1.6-1.9.4-.5-1.9-1.8-.8.6-1.8L2.2 7l1.6-1.1-.2-1.9 1.9-.3.8-1.8 1.8.7z"/></svg></button>
     </div>
   </nav>
   <div class="scrim" id="scrim"></div>
