@@ -49,6 +49,17 @@ html = html.replace("{{DOCS}}", docs)
 # Exhibit III's notes and sources, the same four lines as the site
 html = html.replace("{{NOTES}}", between(site, '<section class="lg-notes"', "      </section>").split("<ol>", 1)[1].rsplit("</ol>", 1)[0].join(["<ol>", "</ol>"]))
 
+# Fig. 3, the engagement flow: the site's own step data, one source of truth for the deck's new scene
+html = html.replace("{{FLOW}}", between(site, "const FLOW = [", "];") + "];")
+# the flow's per-build captions: step 0 reuses the Requirement gate's own wording (already spliced above as
+# {{GATES}}); steps 1-4 are the site's own Fig. 3 body, split into its own written sentences, one per build
+req_cap = re.search(r'<p class="l">Requirement</p><p>(.*?)</p>', gates).group(1)
+flow_body_tag = '<p class="flow-body" data-rise>'
+flow_body = between(site, flow_body_tag, "</p>")[len(flow_body_tag):]
+flow_sentences = [s.strip() + "." for s in flow_body.strip().rstrip(".").split(". ")]
+assert len(flow_sentences) == 4, flow_sentences
+html = html.replace("{{FLOW_CAPS}}", json.dumps([req_cap] + flow_sentences))
+
 # the compass: the split's anchors, and the turntable when it has been rendered
 html = html.replace("{{COMPASS}}", (COMPASS / "anchors.json").read_text(encoding="utf-8").strip())
 turn_png = sorted((COMPASS / "frames_turntable").glob("t[0-9][0-9][0-9].png"))
