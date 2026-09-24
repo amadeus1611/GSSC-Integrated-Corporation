@@ -879,6 +879,7 @@ html.calm *,html.calm *::before,html.calm *::after{animation:none!important;tran
 .tip::after{content:"";position:absolute;left:var(--ax,50%);top:100%;width:6px;height:6px;margin:-3px 0 0 -3px;background:var(--ink);transform:rotate(45deg);border-radius:1px}
 .tip.below::after{top:0}
 .ib{padding:0}.mvx{width:24px;height:24px;border-radius:5px;margin-left:4px}.mvx svg{width:12px!important;height:12px!important;display:block}
+.menu.opt#optMenu{width:232px}.menu .seg2 button{white-space:nowrap;padding:4px 4px}
 </style>
 
 <div class="app has-chat" id="app">
@@ -959,7 +960,7 @@ html.calm *,html.calm *::before,html.calm *::after{animation:none!important;tran
   <div class="mh cap">Depth</div>
   <div class="seg2" role="radiogroup" aria-label="Depth"><button role="menuitemradio" data-opt="depth" data-v="standard" data-hint="Desks start at their floor.">Standard</button><button role="menuitemradio" data-opt="depth" data-v="deep" data-hint="Research and decision desks start at deep effort.">Deep</button></div>
   <div class="mh cap">Freshness</div>
-  <div class="seg2 s3" role="radiogroup" aria-label="Freshness"><button role="menuitemradio" data-opt="fresh" data-v="3" data-hint="Prefer sources from the last 90 days.">90 days</button><button role="menuitemradio" data-opt="fresh" data-v="12" data-hint="Prefer sources from the last 12 months.">12 months</button><button role="menuitemradio" data-opt="fresh" data-v="any" data-hint="No preference for recent sources.">Any</button></div>
+  <div class="seg2 s3" role="radiogroup" aria-label="Freshness"><button role="menuitemradio" data-opt="fresh" data-v="3" data-hint="Prefer sources from the last 90 days.">90 days</button><button role="menuitemradio" data-opt="fresh" data-v="12" data-hint="Prefer sources from the last 12 months.">12 mo</button><button role="menuitemradio" data-opt="fresh" data-v="any" data-hint="No preference for recent sources.">Any</button></div>
   <div class="sep"></div>
   <button role="menuitemcheckbox" data-opt="safe" data-hint="Firewall-check every answer and exhibit.">Client-safe<i class="sw"></i></button>
   <button role="menuitemcheckbox" data-opt="web" aria-disabled="true" id="webOpt" data-hint="Checking Parallel Search…">Web research<i class="sw"></i></button>
@@ -1445,7 +1446,7 @@ function drawOpt(){$("#optMenu").querySelectorAll("[data-opt]").forEach(b=>{cons
  const n={off:1,auto:2,always:3}[OPT.desks];$("#optBtn").querySelectorAll(".ic i").forEach((i,k)=>i.classList.toggle("on",k<n));readyUpd()}
 function menu(o){const m=$("#optMenu"),b=$("#optBtn");o=o??!m.classList.contains("open");if(o){closeCtx();setMenu(false);acctMenu(false);closeSheet();hint(null,true);const r=b.getBoundingClientRect(),w=212;m.style.left=Math.max(8,Math.min(innerWidth-w-8,r.right-w))+"px";const hgt=m.offsetHeight;let y=r.top-hgt-8;if(y<8)y=Math.min(innerHeight-hgt-8,r.bottom+8);m.style.top=y+"px";m.classList.add("open");setTimeout(()=>m.querySelector('[aria-checked="true"]')?.focus(),60)}else m.classList.remove("open");b.setAttribute("aria-expanded",o)}
 $("#optBtn").onclick=e=>{e.stopPropagation();menu()};
-$("#optMenu").addEventListener("click",e=>{const b=e.target.closest("[data-opt]");if(!b||b.getAttribute("aria-disabled")==="true")return;const k=b.dataset.opt;if(k==="safe")OPT.safe=!OPT.safe;else if(k==="web")OPT.web=!OPT.web;else OPT[k]=b.dataset.v;saveOpt();drawOpt();clearTimeout(menu.t);menu.t=setTimeout(()=>{menu(false);$("#optBtn").focus({preventScroll:true})},240)});
+$("#optMenu").addEventListener("click",e=>{const b=e.target.closest("[data-opt]");if(!b||b.getAttribute("aria-disabled")==="true")return;const k=b.dataset.opt;if(k==="safe")OPT.safe=!OPT.safe;else if(k==="web")OPT.web=!OPT.web;else OPT[k]=b.dataset.v;saveOpt();drawOpt();});
 function hint(t,now){const el=$("#optHint");if(t==null){const c=$("#optMenu").querySelector('[data-opt="desks"][aria-checked="true"]');t=c?c.dataset.hint:""}if(el.textContent===t)return;if(now||reduce){el.textContent=t;return}el.classList.add("swap");clearTimeout(el._t);el._t=setTimeout(()=>{el.textContent=t;el.classList.remove("swap")},150)}
 ["pointerover","focusin"].forEach(ev=>$("#optMenu").addEventListener(ev,e=>{const b=e.target.closest("[data-hint]");if(b)hint(b.dataset.hint)}));
 $("#optMenu").addEventListener("pointerleave",()=>hint(null));
