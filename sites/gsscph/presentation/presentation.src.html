@@ -231,7 +231,7 @@ body{font-family:var(--f-body);color:var(--ink)}
   <div class="compass" id="compass"><div class="print" id="print"></div><svg class="leaders" id="leaders" viewBox="0 0 1440 900"></svg><canvas id="grain"></canvas></div>
 
   <!-- 1 · cover -->
-  <section class="scene" data-scene="0">
+  <section class="scene" data-scene="cover">
     <p class="t kicker cover-kick" data-in="start">GSSC Integrated Corporation · Company profile · 2026</p>
     <div class="t cover-title" data-in="start"><h1 class="h1">One point of accountability for <em>integrated</em> programmes.</h1></div>
     <p class="t sub cover-sub" data-in="start">Sourcing · Site execution · Supply · Consultancy · Support</p>
@@ -239,7 +239,7 @@ body{font-family:var(--f-body);color:var(--ink)}
   </section>
 
   <!-- 2 · six disciplines (the compass opens part by part; the table is its key) -->
-  <section class="scene" data-scene="1">
+  <section class="scene" data-scene="disc">
     <div class="t x cap-head night-t" data-in="0"><div class="chs"><span class="num">I</span><i class="dash"></i><span class="cat">Capabilities</span></div></div>
     <div class="t x cap-title" data-in="0"><h2 class="h2">Six disciplines under one accountable programme.</h2></div>
     <div class="t cap-table" data-in="0">
@@ -256,7 +256,7 @@ body{font-family:var(--f-body);color:var(--ink)}
   </section>
 
   <!-- 3 · the file you receive -->
-  <section class="scene" data-scene="2">
+  <section class="scene" data-scene="file">
     <div class="t x file-head day-t" data-in="0"><div class="chs"><span class="num">II</span><i class="dash"></i><span class="cat">Engagement</span></div></div>
     <div class="t x file-title" data-in="0"><h2 class="h2">At each gate, one document. Together, one file.</h2></div>
     <ol class="t gates" id="gates" data-in="0">{{GATES}}</ol>
@@ -265,7 +265,7 @@ body{font-family:var(--f-body);color:var(--ink)}
   </section>
 
   <!-- 4 · economics: the site's model, drawn three ways, live -->
-  <section class="scene" data-scene="3">
+  <section class="scene" data-scene="eco">
     <div class="t x eco-head day-t" data-in="0"><div class="chs"><span class="num">III</span><i class="dash"></i><span class="cat">Economics</span></div></div>
     <div class="t x eco-title" data-in="0"><h2 class="h2">What coordinating it yourself costs.</h2></div>
     <p class="t eco-dek" data-in="0">A client who buys each discipline separately also buys the work of holding them together. Move the figures to your programme.</p>
@@ -291,7 +291,7 @@ body{font-family:var(--f-body);color:var(--ink)}
   </section>
 
   <!-- 5 · close -->
-  <section class="scene" data-scene="4">
+  <section class="scene" data-scene="close">
     <p class="t kicker end-kick" data-in="0">IV · Inquire</p>
     <div class="t end-title" data-in="0"><h2 class="h2">Tell us what needs coordinating.<br>We answer for the whole of it.</h2></div>
     <p class="t end-contact" data-in="0"><b>GSSC Integrated Corporation</b>Regus, 3F Festive Walk Mall, Iloilo Business Park, Mandurriao, Iloilo City 5000<br>management@gsscph.com · (033) 339-7472 · +63 928 370 3574</p>
@@ -427,7 +427,7 @@ const ARRIVE = k => k > 0 && SCENES[k - 1].closes ? SCENES[k - 1].end + .72 : SC
 const D = SCENES[1], RETRACT9 = [D.end, D.end + .18], CLOSE9 = [D.end + .08, D.end + .42], FADE9 = LEAVE(D), PAGE9 = [D.end + .64, D.end + .74];
 // an element arrives on its scene's step data-in (counted from the scene's start; "start": there from the first frame)
 // and leaves with its scene; a build within a scene arrives over the second half of its step
-const els = [...document.querySelectorAll('[data-in]')].map(el => { const k = +el.closest('.scene').dataset.scene, sc = SCENES[k];
+const els = [...document.querySelectorAll('[data-in]')].map(el => { const k = SCENES.findIndex(x => x.key === el.closest('.scene').dataset.scene), sc = SCENES[k];
   const rel = el.dataset.in === 'start' ? null : +el.dataset.in;
   const b = rel === null ? -1 : sc.at + rel, a = rel === null ? -2 : rel === 0 ? ARRIVE(k) : b - .45;
   const [c, d] = k < SCENES.length - 1 ? LEAVE(sc) : [99, 100];
