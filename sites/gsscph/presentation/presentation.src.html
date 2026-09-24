@@ -394,10 +394,11 @@ function go(target){
   target = clamp(Math.round(target), 0, STEPS); pending = null; if (target === to && moving) return;
   const scMove = sceneOf(target) !== sceneOf(Math.round(T));
   from = T; to = target; t0 = performance.now();
-  const dist = Math.abs(to - from);
-  // unhurried: a build takes 1.7 s, a change of scene 2.8 s (a longer jump a little more, never rushed)
-  // the timeline runs at an even pace; every piece carries its own soft curve inside its phase
-  dur = REDUCE ? 1 : scMove ? Math.min(5200, 3600 + (dist - 1) * 300) : Math.min(3000, 1900 + (dist - 1) * 350);
+  const dist = Math.abs(to - from), closes = Math.min(from, to) < 9.5 && Math.max(from, to) > 9.5;
+  // a build is brisk (1.25 s: the render's own lift already eases); a change of scene is unhurried (3.6 s), and leaving
+  // the compass takes longer still (6 s), because it closes completely before anything fades.
+  // The timeline runs at an even pace; every piece carries its own soft curve inside its phase.
+  dur = REDUCE ? 1 : scMove ? Math.min(7000, 3600 + (dist - 1) * 300 + (closes ? 2400 : 0)) : Math.min(2600, 1250 + (dist - 1) * 300);
   moving = true; history.replaceState(null, '', '#' + target);
 }
 // the next and back keys queue: pressed during a move, the move finishes softly and the next one follows from rest
@@ -405,11 +406,16 @@ function request(target){ target = clamp(target, 0, STEPS); if (moving) { pendin
 const easeMove = p => p;   // even: the softness belongs to each piece, not to the clock
 
 /* ------------------------------------------------ everything is a function of T */
+// leaving the disciplines (9 → 10): lines retract [9, 9.18], the compass closes [9.08, 9.42], the scene fades
+// [9.42, 9.64], the page turns in the rest [9.64, 9.74], the file arrives [9.72, 10]
+const RETRACT9 = [9, 9.18], CLOSE9 = [9.08, 9.42], FADE9 = [9.42, 9.64], PAGE9 = [9.64, 9.74], ARRIVE10 = 9.72;
 const els = [...document.querySelectorAll('[data-in]')].map(el => { let [a, b] = el.dataset.in.split(' ').map(Number);
   let [c, d] = (el.dataset.out || '99 100').split(' ').map(Number);
-  /* PHASES, never overlapping: in any move, what leaves takes the first 40%, the stage rests for the next 15%, and
-     what arrives takes the last 45%. So a scene has fully gone, and the room has been still, before the next appears. */
-  if (b > 0) a = b - .45; if (c < 99) { c = Math.floor(c + .001); d = c + .4; }
+  /* PHASES, never overlapping: in a move, what leaves takes the first 40%, the stage rests for the next 15%, and what
+     arrives takes the last 45%. So a scene has fully gone, and the room has been still, before the next appears.
+     Leaving the disciplines has a phase before that: the lines retract and the compass closes, THEN the scene fades. */
+  if (b > 0) a = b === 10 ? ARRIVE10 : b - .45;
+  if (c < 99) { c = Math.floor(c + .001); [c, d] = c === 9 ? FADE9 : [c, c + .4]; }
   return {el, a, b, c, d}; });
 const sseg = (a, b) => SOFT(clamp((T - a) / (b - a)));   // a window, eased: every piece arrives and leaves softly
 const leadEls = [];   // one path and one dot per part; paths use pathLength 1, so drawing is a dash offset of 0..1
@@ -437,8 +443,9 @@ let last = performance.now(), turnF = 0;
 function render(now, newFilm){
   // ---- scene furniture
   for (const o of els) { const v = sseg(o.a, o.b) * (1 - sseg(o.c, o.d)); setVar(o.el, '--v', v.toFixed(3)); setVar(o.el, 'visibility', v < .002 ? 'hidden' : 'visible'); }
-  const sc = sceneOf(Math.round(T));
-  const day = sseg(9.45, 9.75) * (1 - sseg(18.45, 18.75));        // the page turns in the rest between scenes             // the paper rises for the file, and falls for the close
+  // the header's scene name changes in the rest, once the old scene has gone (never while it is still on screen)
+  const fl = Math.floor(T), sc = sceneOf(T - fl >= (fl === 9 ? FADE9[1] + .01 - 9 : .47) ? fl + 1 : fl);
+  const day = sseg(...PAGE9) * (1 - sseg(18.45, 18.75));        // the page turns in the rest between scenes             // the paper rises for the file, and falls for the close
   setVar(paper, '--paper', day.toFixed(3)); setVar(chrome, '--paper', day.toFixed(3)); stage.classList.toggle('day', day > .5);
   setVar(ruleI, '--prog', (T / STEPS).toFixed(4));
   if (whereEl.textContent !== SCENES[sc].where) { whereEl.textContent = SCENES[sc].where; scnName.textContent = SCENES[sc].name; folio.textContent = `${romans[sc]} / ${romans[SCENES.length - 1]}`; }
@@ -449,26 +456,26 @@ function render(now, newFilm){
   setVar(panelEl, '--st', ease(clamp((conv - .65) / .35)).toFixed(3));
   if (lavaOn > .01 && newFilm) drawField(now, conv, FRAME_MS);
   // ---- the compass: the seal becomes the compass (top-down frame 0 at the seal's place and size), then it moves left
-  const co = sseg(.5, .7) * (1 - sseg(9, 9.4)) + sseg(18.55, 18.85);
+  const co = sseg(.5, .7) * (1 - sseg(...FADE9)) + sseg(18.55, 18.85);
   setVar(compassEl, '--co', co.toFixed(3));
   if (co > .01) {
     let kind = 'split', f = Math.round(splitFrame());
     if (T > 18) { if (TURN) { kind = 'turn'; if (newFilm) turnF = (turnF + 1) % TURN; f = turnF; } else f = SEQ.tilt - 1; }   // the turntable, once rendered
-    else if (T > 9 && T < 10) f = Math.round(lerp(SPLIT - 1, 0, sseg(9, 9.4)));      // it closes as it leaves
+    else if (T > 9 && T < 10) f = Math.round(lerp(SPLIT - 1, 0, sseg(...CLOSE9)));   // it closes completely (the parts settle back, star last; it lies flat) before it fades
     showFrame(kind, f);
     const grow = sseg(.5, .85), close = sseg(18.55, 19);
     const size = T > 18 ? lerp(300, 560, close) : lerp(170, PS, grow);
-    const cx = T > 18 ? 720 : lerp(720, 400, sseg(.58, .95)) - sseg(9, 9.4) * 120, cy = T > 18 ? lerp(450, 440, close) : lerp(450, 470, grow);
+    const cx = T > 18 ? 720 : lerp(720, 400, sseg(.58, .95)), cy = T > 18 ? lerp(450, 440, close) : lerp(450, 470, grow);
     setVar(print, 'transform', `translate(${(cx - size / 2 + FILM.wx).toFixed(2)}px, ${(cy - size / 2 + FILM.wy).toFixed(2)}px) scale(${(size / PS).toFixed(4)})`);
     if (newFilm) drawGrain();
     // LEADERS. One per part, each drawn over the whole of its own step (the case has a step of its own, so two never
     // start together). A right-angled route with soft corners, as the flow chart's connectors: out from the part's rim
     // (as rendered), along a private lane, into its row. Earlier lines stay, quieter; the one being drawn is full gold.
     if (!rowY) measureRows();
-    const A = kind === 'split' ? SEQ.anchors[Math.min(SPLIT - 1, Math.round(splitFrame()))] : null;
-    const exit = 1 - sseg(9, 9.4);
+    const A = kind === 'split' ? SEQ.anchors[Math.min(SPLIT - 1, f)] : null;
+    const exit = 1 - sseg(...RETRACT9);   // the lines draw back into their parts before the compass closes
     rows.forEach((r, ri) => { const p = +r.dataset.part, L = leadEls[p], s0 = s0Of(p);
-      const draw = A && T <= 9.4 ? sseg(s0 + .12, s0 + 1) * exit : 0;
+      const draw = A && T <= RETRACT9[1] ? sseg(s0 + .12, s0 + 1) * exit : 0;
       if (draw < .005) { if (L.on) { L.on = false; L.path.setAttribute('d', ''); L.dot.setAttribute('r', 0); } return; }
       L.on = true;
       const x = cx - size / 2 + A[p][0] * size, y = cy - size / 2 + A[p][1] * size, R = rowY[ri], tx = R.x - 16, ty = R.y;
@@ -485,7 +492,7 @@ function render(now, newFilm){
   // ---- the file: one document per step, 9..13; the stamp strikes after acceptance settles
   let got = 0;
   // the first document arrives with its scene; each later one is a build
-  docs.forEach((d, i) => { const a = sseg(i ? 9.12 + i : 9.55, 10 + i) * (1 - sseg(14, 14.4)); setVar(d, '--a', a.toFixed(3)); if (i === 2) setVar(d, '--stamp', sseg(11.7, 12).toFixed(3)); if (a > .6) got = i + 1; });
+  docs.forEach((d, i) => { const a = sseg(i ? 9.12 + i : ARRIVE10, 10 + i) * (1 - sseg(14, 14.4)); setVar(d, '--a', a.toFixed(3)); if (i === 2) setVar(d, '--stamp', sseg(11.7, 12).toFixed(3)); if (a > .6) got = i + 1; });
   gates.forEach((g, i) => { setVar(g, '--lit', (got > i ? 1 : 0).toString()); g.classList.toggle('cur', got - 1 === i); });
   const txt = `${got} of 5 documents`; if (deskCount.textContent !== txt) deskCount.textContent = txt;
   // ---- economics: 6a, 6b, 6c in turn; each grows as it arrives; the tiles count up at the film's cadence
