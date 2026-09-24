@@ -181,8 +181,8 @@ html.reveal [data-rise].in{transform:none;opacity:1}
 html.reveal .kicker[data-rise],html.reveal .subline[data-rise],html.reveal .chs-cat[data-rise]{letter-spacing:var(--tracked)}
 html.reveal .chs-rule[data-rise]{transform:none;opacity:1;scale:0 1;transition:scale 1300ms var(--soft-close)}
 html.reveal .chs-rule[data-rise].in{scale:1 1}
-html.reveal .sec-line{transform:scaleY(0);opacity:1;transition:transform 2400ms var(--soft-close)}
-html.reveal .sec.in > .sec-line{transform:scaleY(1)}
+/* the spine (.sec-line) is a pure function of scroll in every mode: no reveal-mode rule for it, no transition on
+   it anywhere, so it never has a state of its own to jump between (SPINE_PLAN.md §2.1) */
 html.reveal .metric-value{transform:scale(1.14);opacity:.15;transition:transform 900ms var(--soft-close),opacity 900ms var(--soft-close)}
 html.reveal .metric-strip.in .metric-value{transform:none;opacity:1}
 html.reveal .metric-strip.in .metric:nth-child(2) .metric-value{transition-delay:130ms}
@@ -230,9 +230,12 @@ html.reveal .file:not(.pinned) .doc.in .doc-stamp{opacity:1;transform:rotate(-6d
 /* ---------------------------------------------------------------- sections on paper */
 /* the spine belongs to the section it measures: a navy, gold and slate rule in the left margin that
    draws down as the section is read, and is gone with it */
+/* the rule is drawn full length, always; the scroll only uncovers it (a clip-path inset), so the navy/gold/slate
+   bands are fixed to the page and never travel as the rule lengthens (SPINE_PLAN.md §2.3). Constant opacity: the
+   rule is drawn or not drawn, never faded (§2.6). No transition anywhere on it (§2.1): it is a pure read of --sp. */
 .sec-line{position:absolute;left:calc(var(--gutter) * .42);top:calc(var(--u) * 16);bottom:calc(var(--u) * 14);width:2px;pointer-events:none;
   background:linear-gradient(to bottom,var(--navy-deep) 0%,var(--navy-deep) 60%,var(--gold-primary) 60%,var(--gold-primary) 85%,var(--slate) 85%,var(--slate) 100%);
-  transform-origin:top;transform:scaleY(var(--sp,1));opacity:calc(.25 + var(--sp,1) * .75)}
+  clip-path:inset(0 0 calc((1 - var(--sp,1)) * 100%) 0);opacity:1}
 @media (max-width:760px){ .sec-line{left:8px;width:1.5px} }
 
 /* the guide: the one persistent aid besides the header. Where you are, how far through, what comes next. */
@@ -1602,7 +1605,8 @@ const ink = document.getElementById('ink');
 ink.innerHTML = ink.textContent.split(' ').map(w => `<span class="w">${w}</span>`).join(' ');
 const inkWords = [...ink.querySelectorAll('.w')];
 const rises = [...document.querySelectorAll('[data-rise]')];
-/* the motion mode: scrub (scroll-linked script) or reveal (observer-triggered compositor transitions); see the CSS */
+/* the motion mode: scrub (scroll-linked script) or reveal (observer-triggered compositor transitions); see the CSS.
+   The spine (.sec-line) is exempt: it is a pure function of scroll in both modes (SPINE_PLAN.md §2.1). */
 const REV = {on: false};
 function setReveal(on){ if (REV.on === on) return; REV.on = on; root.classList.toggle('reveal', on); }
 const revealIO = new IntersectionObserver(es => { for (const e of es) if (e.isIntersecting || e.boundingClientRect.bottom < 0) { e.target.classList.add('in'); revealIO.unobserve(e.target); } },
@@ -1624,7 +1628,11 @@ let last = performance.now(), H1 = 0, H2 = 0, fieldT = 0;
    It is deaf for a moment after load, after a resize, after its own change and while the compass frames arrive, so it
    never blames the lava for someone else's work. Hardware stops at level 3 (full 24 fps, lower resolution);
    the 8 fps last resort is for software renderers only. */
-const GOV = {d: [], span: 0, bad: 0, good: 0, failed: new Map(), deafUntil: performance.now() + 2500}, CAD = {d: [], base: 16.7};
+const GOV = {d: [], span: 0, bad: 0, good: 0, failed: new Map(), deafUntil: performance.now() + 2500};
+// hi/lo: consecutive ~0.75s windows at/over 26ms (mode on) or under 20ms (mode off); the spine and everything
+// else it steadies never switch mid-scroll — lastMoveT (set from the already-read scroll position, no extra
+// read) must be 300ms in the past (SPINE_PLAN.md §2.5)
+const CAD = {d: [], base: 16.7, hi: 0, lo: 0, lastSy: null, lastMoveT: 0};
 const GOV_MAX = SOFT_GL ? QL.length - 1 : QL.length - 2;
 function setQ(l){ Object.assign(Q, QL[l], {level: l}); sizeField(); sizeInst(); document.documentElement.dataset.q = l; GOV.deafUntil = performance.now() + 1200; }
 function govern(){
@@ -1661,16 +1669,26 @@ function setNav(id){
 }
 const tlEvents = [...tl.querySelectorAll('.tl-ev')]; tlEvents.forEach(e => e.__day = (+e.dataset.day - 1) / 29);
 /* Document offsets of static elements (layout position, so an element's own scroll-linked transform never
-   feeds back into its progress). Re-measured whenever the page's height changes: fonts, resize, an opened table. */
+   feeds back into its progress). Re-measured whenever the page's height changes: fonts, resize, an opened table.
+   The spine's own box (top + rendered length) is cached here too, not its section's: the tip is progress against
+   the rule's own box, per SPINE_PLAN.md §2.2 — this also fixes the +66px no-scroll jump in Capabilities (see the
+   ResizeObserver below: the old code nulled OFF, and remeasured against the *section*, on any resize under #top,
+   including ones that never changed the document's total height — a canvas resize inside a pinned figure, a doc's
+   own transform-driven box. That spurious remeasure landed mid-frame with the scroll unchanged, so the section's
+   cached top (and hence the tip) jumped by whatever that transient sub-layout was worth, even though nothing the
+   reader can see actually moved on the page). */
 let OFF = null;
 const absTop = el => { let y = 0; for (let e = el; e; e = e.offsetParent) y += e.offsetTop; return y; };
 function measureOffsets(){
-  OFF = {rise: rises.map(absTop), lines: secLines.map(l => [absTop(l.parentElement), l.parentElement.offsetHeight]),
+  OFF = {rise: rises.map(absTop), lines: secLines.map(l => [absTop(l), l.offsetHeight]),
          secs: secs.map(e => [absTop(e), e.offsetHeight]), night: nightSecs.map(e => [absTop(e), e.offsetHeight]), docs: docs.map(absTop), el: {}};
   for (const [k, e] of Object.entries({top: topEl, field: fieldStage, inst: instStage, file: roadmap, ink, flow: flowTrack, econ: econEl, tl, col: colophon}))
     OFF.el[k] = [absTop(e), e.offsetHeight];
 }
-if (window.ResizeObserver) new ResizeObserver(() => { OFF = null; }).observe(document.getElementById('top'));
+// only throw the cache away when the document actually changed height: a sub-element resizing inside a fixed-height
+// pin (the instrument canvas, a doc's transform) fires the observer too, but never moves anything cached here
+let lastDocH = -1;
+if (window.ResizeObserver) new ResizeObserver(() => { const h = topEl.scrollHeight; if (h !== lastDocH) { lastDocH = h; OFF = null; } }).observe(topEl);
 const shortName = el => el.dataset.rail.split('·').pop().trim();
 // the next frame is booked first, so nothing that fails inside this one can ever stop the page following the scroll
 const safely = (name, fn) => { try { fn(); } catch (e) { if (!safely[name]) { safely[name] = 1; console.error('[' + name + ']', e); } } };
@@ -1733,7 +1751,8 @@ function frame(t){
   if (!REV.on) rises.forEach((el, i) => { if (riseT[i] > vh * 1.2 || riseT[i] < -vh) return; setVar(el, '--p', ease(clamp((vh * .96 - riseT[i]) / (vh * .34))).toFixed(2)); });
   { const pr = clamp((vh * .82 - inkR.top) / (inkR.height + vh * .3)), n = inkWords.length;
     inkWords.forEach((w, i) => setVar(w, '--wp', clamp(pr * n * 1.08 - i).toFixed(2))); }
-  if (!REV.on) secLines.forEach((l, i) => { const r = lineR[i]; setVar(l, '--sp', clamp((vh * .7 - r.top) / r.height).toFixed(3)); });
+  // the spine: a pure read of the scroll, in every mode (SPINE_PLAN.md §2.1) — no `!REV.on` guard
+  secLines.forEach((l, i) => { const r = lineR[i]; setVar(l, '--sp', clamp((vh * .7 - r.top) / r.height).toFixed(3)); });
   if (flowGeo && flowR.bottom > -100 && flowR.top < vh + 100) {
     /* SEQUENCE. The figure advances one unit at a time: a card receives the path (its border traces
        itself around, 0.6 of a unit), then the connector to the next card draws (1 unit). Scroll sets
@@ -1779,8 +1798,15 @@ function frame(t){
   // ---- cadence: the interval this device actually gives the page (60, 120, or a 30 fps cap: iOS Low Power Mode and
   // cross-origin iframes before the first tap). A cap is not slowness: it switches motion to reveal mode and moves the
   // artwork's budget, but never costs the artwork its quality.
+  if (CAD.lastSy === null || Math.abs(sy - CAD.lastSy) > .5) CAD.lastMoveT = t;
+  CAD.lastSy = sy;
   if (raw < 400) { CAD.d.push(raw); if (CAD.d.length >= 90) { const c = CAD.d.sort((a, b) => a - b); CAD.base = c[c.length >> 1]; CAD.d = [];
-    if (!COARSE && !REDUCE) setReveal(CAD.base >= 26); } }
+    if (CAD.base >= 26) { CAD.hi++; CAD.lo = 0; } else if (CAD.base < 20) { CAD.lo++; CAD.hi = 0; } else { CAD.hi = 0; CAD.lo = 0; }
+    const still = t - CAD.lastMoveT > 300;
+    if (!COARSE && !REDUCE && still) {
+      if (!REV.on && CAD.hi >= 2) { setReveal(true); CAD.hi = 0; }
+      else if (REV.on && CAD.lo >= 3) { setReveal(false); CAD.lo = 0; }
+    } } }
   // ---- the governor: while artwork is on screen the page watches its own frame times and turns the artwork's dial
   if (raw < 400 && ((fr.bottom > 0 && fr.top < vh) || (ir.bottom > 0 && ir.top < vh))) { GOV.d.push(raw); GOV.span += raw; if (GOV.span > 750 && GOV.d.length >= 8) govern(); }
   // ---- tone
