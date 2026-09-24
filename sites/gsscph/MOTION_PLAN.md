@@ -69,3 +69,25 @@ What made the difference:
 - **The wordmark's fold now steps at 24 fps (`--hw`, set only on film frames) while the bar stays smooth**,
   as the deliberate contrast.
 - Lenis `lerp` is 0.1.
+
+## Header v3 (Duke: "the divider line gets longer … clips with the other lines")
+
+- **Cause:** three lines moved at once in the first ~100px of scroll:
+  - the masthead rule stretched to full width;
+  - the dateline's hairline rode up toward it;
+  - the gold progress line was pinned at a fixed height about 5px above the condensed bar's edge.
+
+  Mid-fold, the wordmark also overlapped the incoming section label.
+- **Now: one rule, three layers on the same pixel row, cross-faded, never stretched.**
+  - At the top it is the master's navy masthead rule, inset between the margins.
+  - Condensed it is a full-bleed hairline carrying the section's progress in gold.
+  - The dateline fades out, hairline included, before it folds; it folds straight up.
+  - The wordmark (on the film clock) is gone by mid-fold. The section label arrives after it, sliding out
+    from the mark.
+- **Additions:**
+  - one gold section marker slides under the nav link for the section being read (Fig. 2 counts as
+    Section I), and the other links recede slightly;
+  - in Section V the Inquire button fills instead;
+  - the nav no longer animates its spacing, so the marker always sits true;
+  - the dateline's right-hand slot carries the SEC registration (it repeated "Iloilo City"), and phones
+    show only the edition line.

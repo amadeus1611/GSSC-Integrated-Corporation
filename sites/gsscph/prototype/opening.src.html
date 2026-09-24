@@ -62,12 +62,20 @@ a{color:inherit}
 .lock .mark{height:32px;width:32px;flex:none;transform:rotate(calc(var(--h) * -45deg))}
 /* the wordmark folds on the film clock (24 fps, --hw) while the bar around it moves at the display's rate: a deliberate contrast */
 .lock .word{height:19px;width:auto;margin-left:calc(12px - var(--hw,0) * 12px);clip-path:inset(0 calc(var(--hw,0) * 100%) 0 0);
-  opacity:calc(1 - var(--hw,0) * 1.1);transform:translateX(calc(var(--hw,0) * -16px)) scaleX(calc(1 - var(--hw,0) * .06));transform-origin:left center;
+  opacity:clamp(0, calc(1 - var(--hw,0) * 1.9), 1);transform:translateX(calc(var(--hw,0) * -16px)) scaleX(calc(1 - var(--hw,0) * .06));transform-origin:left center;
 }
 .lock{position:relative}
 .lock::after{content:"";position:absolute;left:44px;right:0;bottom:-7px;border-bottom:1px solid var(--gold-primary);
-  transform-origin:left;transform:scaleX(calc(1 - var(--h2) * 1.4));opacity:calc(.8 - var(--h2) * 1.2)}
-.nav{display:flex;align-items:center;gap:calc(30px - var(--h2) * 6px);transform:translateX(calc(var(--h2) * 4px))}
+  transform-origin:left;transform:scaleX(calc(1 - var(--hw,0) * 1.4));opacity:clamp(0, calc(.8 - var(--hw,0) * 2.2), 1)}
+.nav{display:flex;align-items:center;gap:26px;position:relative}
+/* the section marker: one gold hairline that slides under the link for the section being read */
+.nav-ink{position:absolute;left:0;bottom:12px;height:1px;width:var(--nw,0px);background:var(--gold-primary);transform:translateX(var(--nx,0px));
+  opacity:var(--no,0);transition:transform 700ms var(--soft-close),width 700ms var(--soft-close),opacity 500ms var(--soft-close);pointer-events:none}
+.nav a.btn.is-cur{background:var(--navy-dark);color:var(--ivory)} body.on-night .nav a.btn.is-cur{background:var(--gold-primary);border-color:var(--gold-primary);color:var(--navy-dark)}
+.nav a.btn{transition:background 600ms var(--soft-close),color 600ms var(--soft-close),border-color 600ms var(--soft-close)}
+.nav a[aria-current]{color:var(--navy-dark)} body.on-night .nav a[aria-current]{color:var(--on-night)}
+.nav a:not(.btn){transition:color 500ms var(--soft-close),opacity 500ms var(--soft-close)}
+.nav:has(a[aria-current]) a:not(.btn):not([aria-current]){opacity:.72}
 .nav a:not(.btn){font:500 11.5px/1 var(--f-body);letter-spacing:var(--tracked-cap);text-transform:uppercase;text-decoration:none;
   padding:8px 0;border-bottom:1px solid transparent;transition:border-color 600ms var(--soft-close),color 600ms var(--soft-close)}
 .nav a:not(.btn):hover{border-bottom-color:var(--gold-primary);transition-duration:180ms}
@@ -78,14 +86,17 @@ a{color:inherit}
 .nav .btn{padding:10px 14px}
 .index-btn{display:none}
 /* the dateline: the master's caption-date bar, present at the very top, folded away as you scroll */
-.dateline{position:relative;max-width:var(--maxw);margin-inline:auto;padding-inline:var(--gutter);height:calc(34px * (1 - var(--h2)));overflow:hidden;opacity:calc(1 - var(--h2) * 1.5);
-  transform:translateY(calc(var(--h2) * -8px))}
+.dateline{position:relative;max-width:var(--maxw);margin-inline:auto;padding-inline:var(--gutter);height:calc(34px * (1 - var(--h2)));overflow:hidden;opacity:clamp(0, calc(1 - var(--h2) * 2.4), 1)}
 .dateline div{display:flex;justify-content:space-between;gap:16px;border-top:var(--rule-hair) solid var(--hairline);padding-top:9px;
   font:500 10.5px/1 var(--f-body);letter-spacing:var(--tracked-tight);text-transform:uppercase;color:var(--mid-grey);white-space:nowrap}
-/* the masthead rule: inset between the margins at the top, it runs edge to edge once condensed */
-.mast-rule{position:relative;height:0;margin-inline:auto;max-width:calc(var(--maxw) + (100vw - var(--maxw)) * var(--h));
-  padding-inline:calc(var(--gutter) * (1 - var(--h)))}
-.mast-rule::after{content:"";display:block;border-bottom:var(--rule-medium) solid currentColor;opacity:calc(.9 - var(--h) * .75)}
+/* ONE rule at the bar's edge. At the top it is the master's masthead rule, inset between the margins; condensed it
+   is a full-bleed hairline that carries the section's progress in gold. The three layers sit on the same pixel row
+   and cross-fade: nothing stretches sideways, and no two rules are ever on screen at once. */
+.mast{position:relative;height:1px}
+.mast i{position:absolute;top:0;height:1px;display:block;pointer-events:none}
+.mr-a{left:calc(max(0px, (100% - var(--maxw)) / 2) + var(--gutter));right:calc(max(0px, (100% - var(--maxw)) / 2) + var(--gutter));background:currentColor;opacity:calc(.9 * (1 - var(--h)))}
+.mr-b{left:0;right:0;background:currentColor;opacity:calc(var(--h) * .14)}
+.mr-p{left:0;right:0;background:var(--gold-primary);transform-origin:left;transform:scaleX(var(--gp,0));opacity:calc(var(--h) * .9)}
 body.on-night .bar{color:var(--on-night)}
 body.on-night .bar::before{background:rgba(9,23,61,.72)}
 body.on-night .lock .word{filter:brightness(0) invert(.94) sepia(.2)}
@@ -94,12 +105,11 @@ body.on-night .bar-row{height:56px}
 body.on-night .lock .mark{height:28px;width:28px}
 .lock .mark{transition:height 900ms var(--soft-close),width 900ms var(--soft-close)}
 body.on-field .bar::before{background:linear-gradient(to bottom,rgba(5,11,30,.55),rgba(5,11,30,0));-webkit-backdrop-filter:none;backdrop-filter:none;opacity:1}
-body.on-night .mast-rule{opacity:1!important}
-body.on-night .mast-rule::after{border-color:rgba(200,164,77,.38);opacity:1}
-body.on-field .mast-rule::after{border-color:rgba(230,212,167,.22)}
+body.on-night .mr-b{background:var(--gold-primary);opacity:calc(var(--h) * .3)}
+body.on-field .mr-b{background:rgba(230,212,167,.6)}
 body.on-night .dateline{opacity:0}
 body.on-night .dateline div{border-top-color:rgba(243,236,218,.18);color:var(--on-night-2)}
-@media (max-width:860px){ .nav a:not(.btn){display:none} .nav .btn[href]{display:none} .index-btn{display:inline-flex} .dateline div span:nth-child(2){display:none} }
+@media (max-width:860px){ .nav-ink{display:none} .nav a:not(.btn){display:none} .nav .btn[href]{display:none} .index-btn{display:inline-flex} .dateline div span:nth-child(n+2){display:none} }
 
 /* the index sheet (mobile menu) is a contents page: toc rows, numerals, leaders, folios */
 .sheet{position:fixed;inset:0;z-index:60;background:var(--ivory);padding:calc(96px + env(safe-area-inset-top,0px)) var(--gutter) 40px;
@@ -220,14 +230,13 @@ body.on-night .g-hint,body.on-night .g-fol{color:var(--on-night-2)} body.on-nigh
 @media (min-width:861px){
   .guide{z-index:51;top:env(safe-area-inset-top,0px);left:calc(max(0px, (100vw - var(--maxw)) / 2) + var(--gutter) + 52px);right:auto;width:auto;height:68px;
     padding:0;border:0;background:none;-webkit-backdrop-filter:none;backdrop-filter:none;display:flex;align-items:center;gap:18px;
-    opacity:clamp(0, calc(var(--h) * 2 - 1), 1);pointer-events:none;margin-top:calc((1 - var(--h)) * 8px)}
+    --ga:clamp(0, calc((var(--h) - .62) / .38), 1);opacity:var(--ga);pointer-events:none;transform:translateX(calc((1 - var(--ga)) * -10px))}
   body.on-night .guide{height:56px;background:none}
   .g-row{gap:14px}
   .g-hint{pointer-events:auto;padding-left:18px;border-left:var(--rule-hair) solid rgba(9,23,61,.18)}
   body.on-night .g-hint{border-left-color:rgba(243,236,218,.2)}
   .g-hint::after{display:none}
-  .g-bar{position:fixed;left:0;right:0;top:calc(env(safe-area-inset-top,0px) + 67px);margin:0;height:1px;background:transparent}
-  body.on-night .g-bar{top:calc(env(safe-area-inset-top,0px) + 55px);background:transparent}
+  .g-bar{display:none}
 }
 @media (min-width:861px) and (max-width:1180px){ .g-hint{display:none} }
 .guide.gone{opacity:0!important;transform:translateY(12px);pointer-events:none}
@@ -591,11 +600,12 @@ table.dt tbody tr:hover td:first-child{box-shadow:inset 2px 0 0 var(--gold-prima
       <a href="#economics">Economics</a>
       <a href="#verification">Verification</a>
       <a class="btn" href="#inquire">Inquire</a>
+      <i class="nav-ink" aria-hidden="true"></i>
       <button class="btn index-btn" type="button" id="indexBtn" aria-expanded="false" aria-controls="sheet">Index</button>
     </nav>
   </div>
-  <div class="dateline" aria-hidden="true"><div><span>Company · GSSC-WEB-2026 · Edition I</span><span>Iloilo Business Park · Mandurriao</span><span>Iloilo City · Philippines</span></div></div>
-  <div class="mast-rule" aria-hidden="true"></div>
+  <div class="dateline" aria-hidden="true"><div><span>Company · GSSC-WEB-2026 · Edition I</span><span>Iloilo Business Park · Mandurriao</span><span>SEC Reg. 2026060254196-01</span></div></div>
+  <div class="mast" aria-hidden="true"><i class="mr-a"></i><i class="mr-b"></i><i class="mr-p"></i></div>
 </header>
 
 <aside class="guide" id="guide" aria-label="Reading guide"><div class="g-row"><span id="gSec">Company · Cover</span><span class="g-fol" id="gFol">01 / 08</span></div><div class="g-bar"><i></i></div><a class="g-hint" id="gHint" href="#statement">Scroll to begin</a></aside>
@@ -1534,6 +1544,20 @@ const guide = {sec: document.getElementById('gSec'), fol: document.getElementByI
 // write a custom property only when its value changes: unchanged writes still invalidate style
 const setVar = (el, k, v) => { const c = el.__v || (el.__v = {}); if (c[k] !== v) { c[k] = v; el.style.setProperty(k, v); } };
 const barEl = document.getElementById('bar'), colophon = document.querySelector('.colophon');
+/* the section marker under the nav: Fig. 2 belongs to Section I, the opening sections to none */
+const navLinks = [...document.querySelectorAll('.nav a:not(.btn)')], navInk = document.querySelector('.nav-ink'), navBtn = document.querySelector('.nav a.btn[href="#inquire"]');
+const NAVMAP = {capabilities: '#capabilities', instrument: '#capabilities', engagement: '#engagement', economics: '#economics', verification: '#verification'};
+let navCur, navId = '';
+function setNav(id){
+  navId = id; navBtn.classList.toggle('is-cur', id === 'inquire'); const href = NAVMAP[id] || null; if (href === navCur) return;
+  const wasHidden = !navCur; navCur = href;
+  const a = navLinks.find(l => l.getAttribute('href') === href);
+  navLinks.forEach(l => l === a ? l.setAttribute('aria-current', 'true') : l.removeAttribute('aria-current'));
+  if (!a) { navInk.style.setProperty('--no', 0); return; }
+  if (wasHidden) navInk.style.transition = 'none';     // appearing: arrive in place, then slide from there on
+  navInk.style.setProperty('--nx', a.offsetLeft + 'px'); navInk.style.setProperty('--nw', a.offsetWidth + 'px'); navInk.style.setProperty('--no', 1);
+  if (wasHidden) { void navInk.offsetWidth; navInk.style.transition = ''; }
+}
 const tlEvents = [...tl.querySelectorAll('.tl-ev')]; tlEvents.forEach(e => e.__day = (+e.dataset.day - 1) / 29);
 /* Document offsets of static elements (layout position, so an element's own scroll-linked transform never
    feeds back into its progress). Re-measured whenever the page's height changes: fonts, resize, an opened table. */
@@ -1658,7 +1682,7 @@ function frame(t){
   // in the breathing space between sections, the guide stays with the section just finished
   let ci = 0; secR.forEach((r, i) => { if (r.top <= vh * .45) ci = i; });
   const cr = secR[ci], cp = clamp((vh * .45 - cr.top) / cr.height);
-  setVar(guide.el, '--gp', cp.toFixed(3));
+  setVar(guide.el, '--gp', cp.toFixed(3)); setVar(barEl, '--gp', cp.toFixed(3)); setNav(secs[ci].id);
   guide.el.classList.toggle('gone', vw <= 860 && (colTop < vh - 40 || sheet.classList.contains('open')));   // the colophon and the index are never covered
   const nx = secs[ci + 1];
   let hint, href = nx ? '#' + nx.id : '#top';
@@ -1676,7 +1700,7 @@ function frame(t){
 // the layout as they are, or every pin and progress would jump under the reader's thumb (the "magnets")
 addEventListener('resize', () => {
   if (COARSE && innerWidth === vw) return;
-  vw = innerWidth; vh = innerHeight; OFF = null; sizeField(); sizeInst(); layoutFlow(); sizeFlowTrack(); sizeFile();
+  vw = innerWidth; vh = innerHeight; OFF = null; navCur = undefined; setNav(navId); sizeField(); sizeInst(); layoutFlow(); sizeFlowTrack(); sizeFile();
 });
 safely('build', () => { inst = buildInstrument(); sizeInst(); });
 sizeFile();
