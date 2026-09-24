@@ -586,7 +586,10 @@ function render(now, newFilm){
   const conv = T < 1 ? sseg(0, .4) : T > CL.end ? .65 + .35 * sseg(CL.end + .55, CL.end + .95) : T > C - 1 ? 1 - .35 * sseg(C - .45, C) : 1;
   const lavaOn = 1 - sseg(.55, .8) + sseg(C - .5, C - .2);
   setVar(panelEl, '--lava', clamp(lavaOn).toFixed(3));
-  setVar(panelEl, '--st', ease(clamp((conv - .65) / .35)).toFixed(3));
+  // the seal in the lava belongs to the cover and the end card; on the close only the compass is shown (the lava is
+  // still hidden when this gate closes at C-1, and the end card's seal forms after CL.end+.55)
+  const sealOn = T > C - 1 && T <= CL.end + .5 ? 0 : 1;
+  setVar(panelEl, '--st', (ease(clamp((conv - .65) / .35)) * sealOn).toFixed(3));
   if (lavaOn > .01 && newFilm) drawField(now, conv, FRAME_MS);
   // ---- the compass: the seal becomes the compass (top-down frame 0 at the seal's place and size), then it moves left
   const co = sseg(.5, .7) * (1 - sseg(...FADE9)) + sseg(C - .45, C - .15) * (1 - sseg(CL.end, CL.end + .4));   // it returns to the lava before the end card
