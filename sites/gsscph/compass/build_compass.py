@@ -8,6 +8,7 @@ Runs on Blender's Python module (pip install bpy==4.2.0, Python 3.11):
     python build_compass.py --frames 0-53    # render a range (split the work across processes)
     python build_compass.py --anchors        # recompute anchors.json only
     python build_compass.py --save           # write compass.blend only
+    python build_compass.py --shot turntable # the presentation's turntable loop (frames_turntable/)
 
 Output: frames/f###.png (RGBA, film-transparent with a shadow catcher) and anchors.json (per frame,
 the screen position of each part's right-hand rim, for the page's leader lines). The page never runs
@@ -283,6 +284,24 @@ scene.view_settings.view_transform = "AgX"; scene.view_settings.look = "AgX - Me
 scene.view_settings.exposure = .15
 
 OUT.mkdir(exist_ok=True)
+# ------------------------------------------------------------------ extra shots (the presentation)
+# --shot turntable [--test]: the closed compass turning once on its table, a seamless 192-frame loop (8 s a turn at 24 fps), low raking view
+if "--shot" in args:
+    shot = args[args.index("--shot") + 1]
+    if shot == "turntable":
+        N = 192; odir = HERE / "frames_turntable"; odir.mkdir(exist_ok=True)
+        scene.render.resolution_x = scene.render.resolution_y = 600 if TEST else 1100
+        apply(0)
+        for p in P: p.location.z = 0; p.rotation_euler.z = 0
+        elev, dist, tgt = math.radians(26), 23.5, Vector((0, 0, .15))
+        for f in (TEST or range(N)):
+            az = -math.pi / 2 + f / N * math.tau          # starts where the site's view starts, turns once
+            cam.location = tgt + Vector((math.cos(az) * math.cos(elev) * dist, math.sin(az) * math.cos(elev) * dist, math.sin(elev) * dist))
+            d = tgt - cam.location; cam.rotation_euler = d.to_track_quat("-Z", "Y").to_euler(); cam.data.dof.focus_distance = d.length
+            bpy.context.view_layer.update()
+            scene.render.filepath = str(odir / (f"test{f:03d}.png" if TEST else f"t{f:03d}.png"))
+            bpy.ops.render.render(write_still=True); print("frame", f, flush=True)
+    sys.exit(0)
 if "--save" in args:
     bpy.ops.wm.save_as_mainfile(filepath=str(HERE / "compass.blend"), relative_remap=True, compress=True); sys.exit(0)
 if "--save" in args or not (TEST or RANGE or "--anchors" in args):

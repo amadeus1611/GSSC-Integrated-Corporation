@@ -41,16 +41,20 @@ def grade(im):
 
 HERE = pathlib.Path(__file__).resolve().parent
 OUT = HERE.parent / "prototype" / "compass"
-for sub, size, q in (("d", 1000, 56), ("m", 640, 56)):
-    (OUT / sub).mkdir(parents=True, exist_ok=True)
-    total = 0
-    for png in sorted((HERE / "frames").glob("f[0-9][0-9][0-9].png")):
-        dst = OUT / sub / (png.stem + ".webp")
-        if dst.exists() and dst.stat().st_mtime > png.stat().st_mtime:
-            total += dst.stat().st_size; continue
+
+def export(pngs, dst, size, q):
+    """grade, feather and write each PNG as WebP at `size`; skips files already up to date; returns total bytes"""
+    dst.mkdir(parents=True, exist_ok=True); total = 0
+    for png in pngs:
+        out = dst / (png.stem + ".webp")
+        if out.exists() and out.stat().st_mtime > png.stat().st_mtime:
+            total += out.stat().st_size; continue
         im = Image.open(png).convert("RGBA")
         if im.width != size: im = im.resize((size, size), Image.LANCZOS)
-        im = grade(im)
-        im.save(dst, "WEBP", quality=q, method=6, alpha_quality=70)
-        total += dst.stat().st_size
-    print(sub, "%.1f MB" % (total / 1e6))
+        grade(im).save(out, "WEBP", quality=q, method=6, alpha_quality=70); total += out.stat().st_size
+    return total
+
+if __name__ == "__main__":
+    for sub, size, q in (("d", 1000, 56), ("m", 640, 56)):
+        total = export(sorted((HERE / "frames").glob("f[0-9][0-9][0-9].png")), OUT / sub, size, q)
+        print(sub, "%.1f MB" % (total / 1e6))
