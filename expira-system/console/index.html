@@ -49,7 +49,7 @@ body{margin:0;background:var(--bg);color:var(--text);font:300 14.5px/1.6 var(--f
 .w{animation:word .32s ease-out both}
 @keyframes word{from{opacity:0}to{opacity:1}}
 .grain{position:relative;isolation:isolate}
-.grain::after{content:"";position:absolute;inset:-4%;pointer-events:none;background-image:var(--grain);background-size:150px;mix-blend-mode:soft-light;opacity:.6;-webkit-mask:var(--gmask) center/contain no-repeat;mask:var(--gmask) center/contain no-repeat}
+.grain::after{content:"";position:absolute;inset:0;pointer-events:none;background-image:var(--grain);background-size:150px;mix-blend-mode:soft-light;opacity:.6;-webkit-mask:var(--gmask) center/contain no-repeat;mask:var(--gmask) center/contain no-repeat}
 
 .app{display:flex;height:100%}
 
@@ -148,12 +148,31 @@ body{margin:0;background:var(--bg);color:var(--text);font:300 14.5px/1.6 var(--f
 .pw{flex:1;min-width:0;position:relative}
 .phx{position:absolute;left:10px;top:6px;right:8px;pointer-events:none;color:var(--mute);font-size:14.5px;line-height:21px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;transition:opacity .5s ease,transform .7s var(--soft-close),filter .5s ease}
 .phx.out{opacity:0;transform:translateY(-3px);filter:blur(2px)}
-.phx.gone{opacity:0!important;transition-duration:.12s}
+.phx.gone,.pw:focus-within .phx{opacity:0!important;transition-duration:.12s}
+.pw:not(:focus-within) #prompt::placeholder{color:transparent}
+.pw #prompt{width:100%}
 .ctl{display:flex;align-items:center;gap:0;flex:none}
 .tg{display:flex;align-items:center;gap:6px;border:0;background:transparent;height:30px;padding:0 8px;border-radius:4px;cursor:pointer;font-size:11.5px;color:var(--mute);transition:background var(--out) var(--soft-close),color var(--out) var(--soft-close)}
 .tg:hover{background:var(--line);color:var(--ink);transition-duration:var(--in)}
 .tg i{width:5px;height:5px;border-radius:50%;border:var(--rule-medium) solid var(--mute);transition:background .3s ease,border-color .3s ease,transform .5s var(--soft-close)}
 .tg[aria-pressed="true"]{color:var(--text)}.tg[aria-pressed="true"] i{background:var(--gold);border-color:var(--gold);transform:scale(1.15)}
+.optb{display:flex;align-items:center;gap:7px;height:28px;border:var(--rule-hair) solid var(--line-2);background:transparent;border-radius:4px;padding:0 8px;margin-right:4px;cursor:pointer;font-size:11.5px;color:var(--soft);white-space:nowrap;transition:border-color var(--out) var(--soft-close),color var(--out) var(--soft-close),background var(--out) var(--soft-close)}
+.optb:hover,.optb[aria-expanded="true"]{border-color:var(--line-3);color:var(--ink);background:var(--line);transition-duration:var(--in)}
+.optb svg{width:9px;height:9px;transition:transform .6s var(--soft-close)}.optb[aria-expanded="true"] svg{transform:rotate(180deg)}
+.optb .ic{display:inline-flex;gap:2px}.optb .ic i{width:3px;height:8px;border-radius:1px;background:var(--line-3);transition:background .4s ease}.optb .ic i.on{background:var(--gold)}
+.menu{position:fixed;left:0;top:0;z-index:85;width:268px;background:var(--panel);border:var(--rule-hair) solid var(--line-3);border-radius:8px;box-shadow:var(--shadow);padding:6px;opacity:0;visibility:hidden;transform:translateY(6px) scale(.985);filter:blur(4px);pointer-events:none;transform-origin:100% 100%;transition:opacity .35s var(--soft-close),transform .7s var(--soft-close),filter .5s var(--soft-close),visibility 0s .7s}
+.menu.open{opacity:1;visibility:visible;transform:none;filter:none;pointer-events:auto;transition-delay:0s}
+.menu .mh{padding:8px 8px 4px}
+.menu .sep{height:var(--rule-hair);background:var(--line-2);margin:6px 4px}
+.menu button{display:flex;align-items:center;gap:10px;width:100%;border:0;background:transparent;border-radius:5px;padding:7px 8px;cursor:pointer;text-align:left;color:var(--text);font-size:12.5px;transition:background .3s ease}
+.menu button:hover,.menu button:focus-visible{background:var(--line);outline:none}
+.menu .t{flex:1;display:flex;flex-direction:column;gap:1px}.menu small{font-size:11px;color:var(--mute);line-height:1.35}
+.menu .ck{width:12px;height:12px;flex:none;position:relative}.menu [aria-checked="true"] .ck::after{content:"";position:absolute;left:3px;top:0;width:4px;height:8px;border:solid var(--gold);border-width:0 1.2px 1.2px 0;transform:rotate(45deg);animation:tick .4s ease both}
+@keyframes tick{from{opacity:0}to{opacity:1}}
+.menu .sw{width:24px;height:14px;flex:none;border-radius:999px;background:var(--line-3);position:relative;transition:background .4s ease}
+.menu .sw::after{content:"";position:absolute;left:2px;top:2px;width:10px;height:10px;border-radius:50%;background:var(--panel);transition:transform .6s var(--soft-close)}
+.menu [aria-checked="true"] .sw{background:var(--gold)}.menu [aria-checked="true"] .sw::after{transform:translateX(10px)}
+.menu [aria-disabled="true"]{opacity:.55;cursor:default}
 .count{font-size:10.5px;color:var(--mute);padding:0 6px;opacity:0;transition:opacity var(--out) var(--soft-close);white-space:nowrap}
 .count.on{opacity:1}
 .send{width:30px;height:30px;flex:none;border-radius:4px;border:0;background:var(--ink);color:var(--bg);display:grid;place-items:center;cursor:pointer;transition:opacity var(--out) var(--soft-close),transform var(--out) var(--soft-close)}
@@ -379,6 +398,7 @@ body{margin:0;background:var(--bg);color:var(--text);font:300 14.5px/1.6 var(--f
 .tip{position:fixed;left:0;top:0;z-index:95;background:var(--ink);color:var(--bg);font:400 11px var(--f-body);padding:4px 8px;border-radius:4px;white-space:nowrap;pointer-events:none;opacity:0;transform:translateY(2px);transition:opacity .16s ease,transform .3s var(--soft-close)}
 .tip.on{opacity:1;transform:none}
 .jump{position:absolute;left:50%;bottom:calc(100% + 8px);transform:translate(-50%,6px);opacity:0;pointer-events:none;border:var(--rule-hair) solid var(--line-3);background:var(--panel);border-radius:5px;box-shadow:var(--shadow);font-size:11.5px;color:var(--soft);padding:5px 10px;cursor:pointer;transition:opacity .6s var(--soft-close),transform .9s var(--soft-close)}
+.app:not(.has-chat) .jump{display:none}
 .jump.show{opacity:1;transform:translate(-50%,0);pointer-events:auto}
 .dock{position:relative}
 
@@ -424,11 +444,10 @@ body{margin:0;background:var(--bg);color:var(--text);font:300 14.5px/1.6 var(--f
       <button class="jump" id="jump" type="button">Latest ↓</button>
       <form class="comp" id="form">
         <label for="prompt" class="sr">Message EXPIRA</label>
-        <div class="pw"><textarea id="prompt" rows="1" placeholder=""></textarea><span class="phx" id="phx" aria-hidden="true">Brief EXPIRA…</span></div>
+        <div class="pw"><textarea id="prompt" rows="1" placeholder="Brief EXPIRA…"></textarea><span class="phx" id="phx" aria-hidden="true">Brief EXPIRA…</span></div>
         <div class="ctl">
           <span class="count num" id="count"></span>
-          <button type="button" class="tg" id="safe" aria-pressed="true" data-tip="Client-safe: scan answers for supplier names, costs and margins"><i></i><span>Client-safe</span></button>
-          <button type="button" class="tg" id="deep" aria-pressed="false" data-tip="Always consult the specialist desks"><i></i><span>Desks</span></button>
+          <button type="button" class="optb" id="optBtn" aria-haspopup="menu" aria-expanded="false"><span class="ic" aria-hidden="true"><i></i><i></i><i></i></span><span id="optSum">Auto</span><svg viewBox="0 0 10 10" fill="none" stroke="currentColor" stroke-width="1"><path d="M2.5 6.5L5 4l2.5 2.5"/></svg></button>
           <button type="submit" class="send" id="send" aria-label="Send" data-tip="Send"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M8 13V3M3.5 7.5L8 3l4.5 4.5"/></svg></button>
         </div>
       </form>
@@ -442,6 +461,18 @@ body{margin:0;background:var(--bg);color:var(--text);font:300 14.5px/1.6 var(--f
   <div class="dsp-b" id="dspB"></div>
 </aside>
 
+<div class="menu" id="optMenu" role="menu" aria-label="Options">
+  <div class="mh cap">Desks</div>
+  <button role="menuitemradio" data-opt="desks" data-v="auto"><span class="t">Auto<small>EXPIRA decides when a brief needs desks</small></span><i class="ck"></i></button>
+  <button role="menuitemradio" data-opt="desks" data-v="always"><span class="t">Always<small>Consult desks on every brief</small></span><i class="ck"></i></button>
+  <button role="menuitemradio" data-opt="desks" data-v="off"><span class="t">Off<small>Answer directly; fastest</small></span><i class="ck"></i></button>
+  <div class="mh cap">Depth</div>
+  <button role="menuitemradio" data-opt="depth" data-v="standard"><span class="t">Standard<small>Desks start at their floor</small></span><i class="ck"></i></button>
+  <button role="menuitemradio" data-opt="depth" data-v="deep"><span class="t">Deep<small>Research and decision start at deep effort</small></span><i class="ck"></i></button>
+  <div class="sep"></div>
+  <button role="menuitemcheckbox" data-opt="safe"><span class="t">Client-safe<small>Firewall-check every answer and exhibit</small></span><i class="sw"></i></button>
+  <button role="menuitemcheckbox" data-opt="web" aria-disabled="true"><span class="t">Web research<small>Connect Parallel Search in claude.ai to enable</small></span><i class="sw"></i></button>
+</div>
 <div class="veil" id="veil"></div>
 <div class="keys" id="keys" role="dialog" aria-label="Keyboard shortcuts"><div class="cap">Keyboard</div><dl><dt><span class="kb">⌘K</span></dt><dd>Commands</dd><dt><span class="kb">⌥N</span></dt><dd>New chat</dd><dt><span class="kb">⌥L</span></dt><dd>The Dispatch</dd><dt><span class="kb">/</span></dt><dd>Search chats</dd><dt><span class="kb">Enter</span></dt><dd>Send</dd><dt><span class="kb">⇧ Enter</span></dt><dd>New line</dd><dt><span class="kb">Esc</span></dt><dd>Stop or close</dd><dt><span class="kb">?</span></dt><dd>This card</dd></dl></div>
 <div class="pal" id="pal" role="dialog" aria-label="Commands"><label for="palIn" class="sr">Command</label><input id="palIn" placeholder="Type a command…"><ul id="palList"></ul></div>
@@ -609,7 +640,7 @@ document.addEventListener("click",e=>{
 const now=new Date(),hr=now.getHours();
 const dl=()=>{const d=new Date();$("#dateline").innerHTML=`Vol. I · No. ${pad(nextNo(),3)} · ${esc(d.toLocaleDateString("en-PH",{weekday:"long",day:"numeric",month:"long"}))} · <span class="tm">${pad(d.getHours())}<span class="colon">:</span>${pad(d.getMinutes())}</span>`};dl();setInterval(dl,15000);
 (()=>{const g=(hr<12?"Good morning":hr<18?"Good afternoon":"Good evening")+", ";$("#greet").innerHTML=[...g].map((c,i)=>`<span class="ch" style="animation-delay:${.04+i*.028}s">${esc(c)}</span>`).join("")+`<em class="ch" style="animation-delay:${.04+g.length*.028+.05}s">Duke</em>`})();
-const readyUpd=()=>{const safe=$("#safe").getAttribute("aria-pressed")==="true",deep=$("#deep").getAttribute("aria-pressed")==="true";swap($("#readyT"),`Orchestrator ready · five desks on call · ${safe?"client-safe":"internal"}${deep?" · desks always":""}`)};
+function readyUpd(){swap($("#readyT"),`Orchestrator ready · ${OPT.desks==="off"?"answering directly":"five desks on call"} · ${OPT.safe?"client-safe":"internal"}${OPT.depth==="deep"?" · deep":""}`)}
 const TOC=[["Price a twelve-room hotel repaint in Iloilo","Finance"],["Review the delay clause in a supply contract","Legal"],["Compare three ERP options for GSSC","Decision"],["Canvass office fit-out rates in Iloilo","Research"]];
 $("#toc").innerHTML=TOC.map(([t,s],i)=>`<li class="bi" style="animation-delay:${.15+i*.07}s"><button><span class="n">${i+1}</span><span class="t">${esc(t)}</span><span class="lead"></span><span class="sec">${s}</span></button></li>`).join("");
 $("#toc").addEventListener("click",e=>{const b=e.target.closest("button");if(!b)return;promptEl.value=b.querySelector(".t").textContent;grow();promptEl.focus();promptEl.setSelectionRange(1e4,1e4)});
@@ -620,19 +651,30 @@ const sc=$("#scroll");
 $("#fold").onclick=()=>app.classList.add("folded");$("#unfold").onclick=()=>app.classList.remove("folded");if(innerWidth<760)app.classList.add("folded");
 const newChat=()=>{if(busy)return;open(null);promptEl.focus()};$("#newChat").onclick=newChat;
 $("#findBtn").onclick=()=>{$("#side").classList.toggle("searching");$("#find").focus()};
-const toggle=id=>{const b=$("#"+id);b.setAttribute("aria-pressed",b.getAttribute("aria-pressed")!=="true")};
-$("#safe").onclick=()=>{toggle("safe");readyUpd()};$("#deep").onclick=()=>{toggle("deep");readyUpd()};setTimeout(readyUpd,50);
-const promptEl=$("#prompt");
-function grow(){promptEl.style.height="auto";const mx=21*7+12;promptEl.style.height=Math.min(promptEl.scrollHeight,mx)+"px";promptEl.style.overflowY=promptEl.scrollHeight>mx?"auto":"hidden";const n=promptEl.value.trim().length;$("#count").textContent=n?`~${ft(tok(promptEl.value))} tokens`:"";$("#count").classList.toggle("on",n>0);$("#send").disabled=busy?false:!n||!sample}
+/* options: desks, depth, client-safe, web; remembered per viewer */
+const OPT=Object.assign({desks:"auto",depth:"standard",safe:true},(()=>{try{return JSON.parse(localStorage.getItem("expira.opt")||"{}")}catch(e){return {}}})());
+const saveOpt=()=>{try{localStorage.setItem("expira.opt",JSON.stringify(OPT))}catch(e){}};
+function drawOpt(){$("#optMenu").querySelectorAll("[data-opt]").forEach(b=>{const k=b.dataset.opt;b.setAttribute("aria-checked",k==="safe"?String(OPT.safe):k==="web"?"false":String(OPT[k]===b.dataset.v))});
+ $("#optSum").textContent=[{auto:"Auto",always:"Desks always",off:"Direct"}[OPT.desks],OPT.depth==="deep"?"Deep":"",OPT.safe?"":"Internal"].filter(Boolean).join(" · ");
+ const n={off:1,auto:2,always:3}[OPT.desks];$("#optBtn").querySelectorAll(".ic i").forEach((i,k)=>i.classList.toggle("on",k<n));readyUpd()}
+function menu(o){const m=$("#optMenu"),b=$("#optBtn");o=o??!m.classList.contains("open");if(o){const r=b.getBoundingClientRect(),w=268;m.style.left=Math.max(8,Math.min(innerWidth-w-8,r.right-w))+"px";const hgt=m.offsetHeight;let y=r.top-hgt-8;if(y<8)y=Math.min(innerHeight-hgt-8,r.bottom+8);m.style.top=y+"px";m.classList.add("open");setTimeout(()=>m.querySelector('[aria-checked="true"]')?.focus(),60)}else m.classList.remove("open");b.setAttribute("aria-expanded",o)}
+$("#optBtn").onclick=e=>{e.stopPropagation();menu()};
+$("#optMenu").addEventListener("click",e=>{const b=e.target.closest("[data-opt]");if(!b||b.getAttribute("aria-disabled")==="true")return;const k=b.dataset.opt;if(k==="safe")OPT.safe=!OPT.safe;else OPT[k]=b.dataset.v;saveOpt();drawOpt()});
+document.addEventListener("pointerdown",e=>{if(!e.target.closest("#optMenu,#optBtn")&&$("#optMenu").classList.contains("open"))menu(false)});
+addEventListener("resize",()=>menu(false));
+$("#optMenu").addEventListener("keydown",e=>{const it=[...$("#optMenu").querySelectorAll('button:not([aria-disabled="true"])')],i=it.indexOf(document.activeElement);if(e.key==="ArrowDown"){e.preventDefault();it[(i+1)%it.length].focus()}if(e.key==="ArrowUp"){e.preventDefault();it[(i-1+it.length)%it.length].focus()}if(e.key==="Escape"){e.stopPropagation();menu(false);$("#optBtn").focus()}});
+setTimeout(drawOpt,30);
+const promptEl=$("#prompt");function phSync(){$("#phx").classList.toggle("gone",!!promptEl.value)}
+function grow(){phSync();promptEl.style.height="auto";const mx=21*7+12;promptEl.style.height=Math.min(promptEl.scrollHeight,mx)+"px";promptEl.style.overflowY=promptEl.scrollHeight>mx?"auto":"hidden";const n=promptEl.value.trim().length;$("#count").textContent=n?`~${ft(tok(promptEl.value))} tokens`:"";$("#count").classList.toggle("on",n>0);$("#send").disabled=busy?false:!n||!sample}
 promptEl.addEventListener("input",grow);
 const PH=["Brief EXPIRA…","Compare lead times from three suppliers…","Draft a scope for an office fit-out…","Check a clause for delay exposure…","Price forty rooms of blackout drapery…"];let phI=0;
-const phSync=()=>$("#phx").classList.toggle("gone",!!promptEl.value);promptEl.addEventListener("input",phSync);
+promptEl.addEventListener("input",phSync);
 setInterval(()=>{if(promptEl.value||document.activeElement===promptEl||busy||!sample||reduce)return;const p=$("#phx");p.classList.add("out");setTimeout(()=>{phI=(phI+1)%PH.length;p.textContent=PH[phI];p.classList.remove("out")},500)},5200);promptEl.addEventListener("keydown",e=>{if(e.key==="Enter"&&!e.shiftKey&&!e.isComposing){e.preventDefault();$("#form").requestSubmit()}});
 function prog(){const m=sc.scrollHeight-sc.clientHeight;$("#jump").classList.toggle("show",m-sc.scrollTop>260)}
 sc.addEventListener("scroll",prog,{passive:true});$("#jump").onclick=()=>sc.scrollTo({top:1e9,behavior:reduce?"auto":"smooth"});
 
 /* palette */
-const CMDS=[["Keyboard shortcuts","?",()=>setTimeout(()=>keys(true),30)],["New chat","⌥N",newChat],["Open the Dispatch","⌥L",()=>openLatest()],["Toggle client-safe","",()=>toggle("safe")],["Toggle specialists","",()=>toggle("deep")],["Search chats","/",()=>{app.classList.remove("folded");$("#side").classList.add("searching");$("#find").focus()}],["Stop the run","Esc",()=>ctl?.abort()],["Toggle sidebar","",()=>app.classList.toggle("folded")]];
+const CMDS=[["Keyboard shortcuts","?",()=>setTimeout(()=>keys(true),30)],["New chat","⌥N",newChat],["Open the Dispatch","⌥L",()=>openLatest()],["Options","",()=>setTimeout(()=>menu(true),60)],["Toggle client-safe","",()=>{OPT.safe=!OPT.safe;saveOpt();drawOpt();toast(OPT.safe?"Client-safe on":"Client-safe off")}],["Search chats","/",()=>{app.classList.remove("folded");$("#side").classList.add("searching");$("#find").focus()}],["Stop the run","Esc",()=>ctl?.abort()],["Toggle sidebar","",()=>app.classList.toggle("folded")]];
 let ps=0;const pal=o=>{$("#pal").classList.toggle("open",o);$("#veil").classList.toggle("open",o);if(o){$("#palIn").value="";ps=0;drawPal();setTimeout(()=>$("#palIn").focus(),30)}};
 function drawPal(){const q=$("#palIn").value.toLowerCase(),L=CMDS.filter(c=>c[0].toLowerCase().includes(q));ps=Math.min(ps,Math.max(0,L.length-1));$("#palList").innerHTML=L.map((c,i)=>`<li class="${i===ps?"on":""}" data-i="${CMDS.indexOf(c)}">${c[0]}${c[1]?`<span class="kb">${c[1]}</span>`:""}</li>`).join("")||`<li class="empty">No command matches.</li>`}
 $("#palIn").addEventListener("input",()=>{ps=0;drawPal()});
@@ -645,6 +687,7 @@ addEventListener("keydown",e=>{const k=e.key.toLowerCase();
  else if(e.altKey&&e.code==="KeyN"){e.preventDefault();newChat()}
  else if(e.altKey&&e.code==="KeyL"){e.preventDefault();openLatest()}
  else if(k==="?"&&!/^(TEXTAREA|INPUT)$/.test(document.activeElement.tagName)){e.preventDefault();keys(!$("#keys").classList.contains("open"))}
+ else if(k==="escape"&&$("#optMenu").classList.contains("open"))menu(false);
  else if(k==="escape"&&$("#keys").classList.contains("open"))keys(false);
  else if(k==="escape"){if($("#pal").classList.contains("open"))pal(false);else if(busy)ctl?.abort();else showDsp(false)}
  else if(k==="/"&&document.activeElement===document.body){e.preventDefault();app.classList.remove("folded");$("#side").classList.add("searching");$("#find").focus()}});
@@ -752,7 +795,7 @@ const COPY={not_granted:"EXPIRA needs permission to use Claude. Reload to be ask
 async function send(q){
  if(!cur||cur.example){cur={id:"c"+Date.now(),no:nextNo(),title:q.slice(0,52),ts:Date.now(),turns:[]};chats.unshift(cur)}
  const tsQ=Date.now();cur.turns.push({role:"user",content:q,ts:tsQ});promptEl.value="";phSync();open(cur);setBusy(true);ctl=new AbortController();
- const safe=$("#safe").getAttribute("aria-pressed")==="true",deep=$("#deep").getAttribute("aria-pressed")==="true";
+ const safe=OPT.safe,deep=OPT.desks==="always",direct=OPT.desks==="off",depthDeep=OPT.depth==="deep";
  const bot=document.createElement("div");bot.className="bot bi";
  bot.innerHTML=`<div class="by">${BYLINE}<time class="num">${hhmm(Date.now())}</time></div><div class="think running open"><button class="think-h" type="button" aria-expanded="true">${GLYPH}<span class="lbl">Reading the brief</span><span class="t num">00:00</span>${CHEV}</button><div class="sheen"></div><div class="think-b"><div><ol class="ev"></ol><button class="rd" data-read="live">Open the dispatch</button></div></div></div><div class="ans"></div><div class="exw"></div>`;
  $("#thread").append(bot);sc.scrollTop=1e9;
@@ -772,14 +815,14 @@ async function send(q){
  const history=cur.turns.slice(-7,-1).map(t=>`${t.role==="user"?"User":"EXPIRA"}: ${t.content.slice(0,1200)}`).join("\n\n");
  F(null,`Received the brief: about ${ft(tok(q))} tokens.`);
  try{
-  const plan=await sample.json(`You are the EXPIRA orchestrator (EXPIRA AI Systems, sister company of GSSC Integrated Corporation, Iloilo, Philippines).
+  const plan=direct?{title:q.split(/\s+/).slice(0,6).join(" "),kind:"direct answer",rationale:"Desks are off; answering directly.",steps:[]}:await sample.json(`You are the EXPIRA orchestrator (EXPIRA AI Systems, sister company of GSSC Integrated Corporation, Iloilo, Philippines).
 Plan the work. ${deep?"The user asked for specialists: plan at least one desk.":"Small talk, simple facts or quick edits need no desk."}
 Roles: research (medium|high, floor medium), finance (high), legal (high), decision (medium|high, floor medium), builder (medium).
 Use as many desks as the brief truly needs, from 0 to 8. Split broad research into parallel research desks by sub-question. Start each at its floor; use high for research/decision only if the amount exceeds PHP 500,000, sources may conflict, or there is legal exposure.
 Reply with only JSON: {"title": string (3-6 words), "kind": string (what sort of brief this is, under 8 words), "rationale": string (one sentence: why this plan), "steps": [{"role": string, "tier": string, "task": string (short phrase, sentence case, no full stop), "why": string (under 12 words), "after": [1-based step numbers it needs]}]}
 ${history?`Conversation so far:\n${history}\n\n`:""}New message: ${q}`,{modelTier:"quick",cache:false,signal:ctl.signal});
   if(cur.turns.length===1&&plan.title){cur.title=String(plan.title).slice(0,60);$("#ttl").innerHTML=`${esc(cur.title)} <span class="ttl-ref">· No. ${pad(cur.no,3)}</span>`;renderRecents();swap($("#dxT"),cur.title)}
-  const steps=(plan.steps||[]).filter(s=>ROSTER[s.role]).slice(0,8).map(s=>{const R=ROSTER[s.role];let tier=R.tiers.includes(s.tier)?s.tier:R.floor;if(TIERS[tier].n<TIERS[R.floor].n)tier=R.floor;return{role:s.role,tier,task:String(s.task||""),why:String(s.why||""),after:(s.after||[]).map(Number).filter(n=>n>0&&n<=8),redo:0}});
+  const steps=(plan.steps||[]).filter(s=>ROSTER[s.role]).slice(0,8).map(s=>{const R=ROSTER[s.role];let tier=R.tiers.includes(s.tier)?s.tier:R.floor;if(TIERS[tier].n<TIERS[R.floor].n)tier=R.floor;if(depthDeep&&R.tiers.includes("high"))tier="high";return{role:s.role,tier,task:String(s.task||""),why:String(s.why||""),after:(s.after||[]).map(Number).filter(n=>n>0&&n<=8),redo:0}});
   work.steps=steps;const outs=[];think.O=0;
   F(null,`Classified the brief: <em>${esc(plan.kind||"general enquiry")}</em>.`);if(plan.rationale)F(null,esc(plan.rationale));
   $("#lvN").textContent=steps.length?`${words(steps.length)} desk${steps.length>1?"s":""}`:"Direct";
@@ -850,7 +893,7 @@ Answer:\n${fin.text.slice(0,5000)}\n\nNotes:\n${steps.map((s,i)=>`[${s.role}]\n$
   const code=e&&e.code;th.classList.remove("running");swap(lbl,code==="cancelled"?"Stopped":"Interrupted");
   if(e&&e.text)ans.innerHTML=md(e.text);F(code==="cancelled"?"Stopped at your request":"Interrupted",code==="cancelled"?"Stopped at your request.":"Interrupted.");
   if(code!=="cancelled")toast(COPY[code]||"Something interrupted that. Send it again.");
-  if(code==="not_granted"||code==="sampling_disabled")sample=null;cur.turns.pop();save();
+  if(code==="not_granted"||code==="sampling_disabled")sample=null;save();
  }finally{clearInterval(tick);clearInterval(sigIv);for(const k in think)think[k]=0;setTimeout(()=>{stopPlates();const l=document.querySelector(".plate .lv");if(l){l.classList.remove("on");$("#lvT").textContent="Recorded"}},1400);setBusy(false)}
 }
 })();
