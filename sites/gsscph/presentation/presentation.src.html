@@ -116,8 +116,8 @@ body{font-family:var(--f-body);color:var(--ink)}
 .fl-sw-c{background:var(--ivory)}
 .fl-sw-g{background:repeating-linear-gradient(45deg,rgba(9,23,61,.12) 0 1px,transparent 1px 4px),var(--ivory-deep)}
 .fl-sw-w{border:1px dashed var(--gold-deep);background:rgba(230,212,167,.35)}
-.fl-dia{position:absolute;left:0;right:0;top:44px;bottom:40px;padding:18px 22px 16px}
-.fl-dia svg{display:block;width:100%;height:auto}
+.fl-dia{position:absolute;left:0;right:0;top:44px;bottom:40px;padding:18px 22px 16px;overflow:hidden}
+.fl-dia svg{display:block;width:100%;height:100%}
 .fl-foot{position:absolute;left:0;right:0;bottom:0;height:40px;display:flex;align-items:center;padding:0 22px;
   border-top:1px solid var(--hairline);font:italic 400 15px/1.3 var(--f-display);color:var(--navy-dark);font-feature-settings:"lnum" 1}
 /* the flow's own SVG parts, kept out of the master's class names (fl- prefix throughout) */
@@ -318,7 +318,7 @@ body{font-family:var(--f-body);color:var(--ink)}
     <div class="t fl-plate" data-in="0"><div class="panel-plate" style="position:absolute;inset:0">
       <div class="plate-h"><span>Fig. 3 · Engagement flow</span><span class="fl-legend">
         <span><i class="fl-sw fl-sw-c"></i>Client-facing</span><span><i class="fl-sw fl-sw-g"></i>Inside GSSC</span><span><i class="fl-sw fl-sw-w"></i>Firewall gate</span></span></div>
-      <div class="fl-dia"><svg id="flSvg" viewBox="0 0 1400 430" role="img" aria-label="The GSSC engagement flow across the firewall"></svg></div>
+      <div class="fl-dia"><svg id="flSvg" viewBox="0 0 1400 430" preserveAspectRatio="xMidYMid meet" role="img" aria-label="The GSSC engagement flow across the firewall"></svg></div>
       <div class="fl-foot"><span id="flStep">Step 01 of 10 · Inquiry</span></div>
     </div></div>
   </section>
