@@ -61,8 +61,8 @@ The probe is `qa/spine_probe.py`. Its baseline was run on 2026-09-24, before any
 | C | A + **heading ticks**: a hairline tick on the spine at each CHS stamp / subhead in the section, which the tip passes | The margin becomes a table of contents you can see | Uses cached offsets of the headings. The master's grammar (C1) allows hairline rules |
 | D | **The bead** (an alternative to growth): a static hairline track the full height of the section, with a 48 px gold segment that travels with the reading line | Nothing grows at all: the steadiest possible reading | Loses the "drawn down as read" idea. Show it to Duke only as a comparison frame |
 
-The builder builds **A**. It then renders **B** and **C** behind a query flag (`?spine=b`, `?spine=c`) for
-comparison frames, and leaves them off by default. Duke picks. D is a still mock only.
+**Decision (Duke, 2026-09-24):** "no more 2 optional versions, just ship the scroll linked one... you decide."
+Only **A** ships. B, C and D are not built; they stay listed here only as ideas.
 
 ---
 
@@ -70,7 +70,7 @@ comparison frames, and leaves them off by default. Duke picks. D is a still mock
 
 - **Lead (me):** owns this plan and the log. Merges, publishes, and settles any disagreement between the
   agents, or takes it to Duke.
-- **builder subagent:** implements §2 and iteration A (plus the B/C flags) in its own worktree, on top of
+- **builder subagent:** implements §2 and iteration A in its own worktree, on top of
   `origin/claude/gssc-quotation-logging-system-iujvwx`. It touches only the spine, the cadence hysteresis and
   the offset re-measure, and it adds the band test to `qa/spine_probe.py`.
 - **reviewer subagent (QA):** after every builder round, it verifies the diff against §2, runs the probe and the
