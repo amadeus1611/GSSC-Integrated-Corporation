@@ -1299,6 +1299,26 @@ html.theming,html.theming *,html.theming *::before,html.theming *::after{transit
 .menu.opt{transform-origin:0 100%}
 .credit.legal{margin-top:14px;padding-top:10px;border-top:var(--rule-hair) solid var(--line-2)}
 @media (max-width:560px){.fig{-webkit-mask-image:linear-gradient(90deg,#000 calc(100% - 28px),rgba(0,0,0,.25));mask-image:linear-gradient(90deg,#000 calc(100% - 28px),rgba(0,0,0,.25))}.fig:hover,.fig:focus-within{-webkit-mask-image:none;mask-image:none}}
+/* v37 · quiet header, feathered edges */
+.sig,#sig{display:none!important}
+.dsp-btn{gap:6px;height:24px;padding:0 9px 0 8px;border:var(--rule-hair) solid var(--line-2);border-radius:4px;background:none;font-size:11px;letter-spacing:.02em;color:var(--soft);transition:border-color .45s var(--soft-close),color .45s var(--soft-close),background .45s var(--soft-close)}
+.dsp-btn:hover,.dsp-btn[aria-expanded="true"],.dsp-open .dsp-btn{border-color:var(--line-3);color:var(--ink);background:var(--well)}
+.dsp-btn svg{width:12px;height:12px;flex:none}
+.dsp-btn svg .pn{transition:transform .6s var(--sp-soft)}
+.dsp-btn:hover svg .pn,.dsp-open .dsp-btn svg .pn{transform:translateX(-2.5px)}
+.dsp-btn i{width:0;height:4px;margin-right:-6px;border-radius:50%;background:var(--gold);opacity:0;animation:none;transition:width .45s var(--sp-soft),margin .45s var(--sp-soft),opacity .3s ease}
+.busy .dsp-btn i{width:4px;margin-right:0;opacity:1;animation:breathe 2.4s var(--release) infinite}
+.runpill{height:24px;padding:0 9px;border:var(--rule-hair) solid var(--line-2);border-radius:4px;background:none;font-size:11px}
+@property --fs{syntax:"<length>";inherits:false;initial-value:0px}
+@property --fe{syntax:"<length>";inherits:false;initial-value:0px}
+.fz,.fzx{--fs:0px;--fe:0px;transition:--fs .35s ease,--fe .35s ease}
+.fz{-webkit-mask-image:linear-gradient(to bottom,transparent 0,#000 var(--fs),#000 calc(100% - var(--fe)),transparent 100%);mask-image:linear-gradient(to bottom,transparent 0,#000 var(--fs),#000 calc(100% - var(--fe)),transparent 100%)}
+.fzx{-webkit-mask-image:linear-gradient(to right,transparent 0,#000 var(--fs),#000 calc(100% - var(--fe)),transparent 100%)!important;mask-image:linear-gradient(to right,transparent 0,#000 var(--fs),#000 calc(100% - var(--fe)),transparent 100%)!important}
+.fz.f-s{--fs:22px}.fz.f-e{--fe:26px}
+.fzx.f-s{--fs:18px}.fzx.f-e{--fe:28px}
+#scroll.fz.f-s{--fs:30px}#scroll.fz.f-e{--fe:34px}
+@media (max-width:560px){.fig:hover,.fig:focus-within{-webkit-mask-image:inherit;mask-image:inherit}}
+@media (prefers-reduced-motion:reduce){.fz,.fzx{transition:none}}
 </style>
 
 <div class="app has-chat" id="app">
@@ -1320,7 +1340,7 @@ html.theming,html.theming *,html.theming *::before,html.theming *::after{transit
       <button class="ib" id="unfold" aria-label="Open sidebar" data-tip="Open sidebar"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1"><rect x="1.5" y="2.5" width="13" height="11" rx="1.5"/><path d="M6 2.5v11"/></svg></button>
       <span class="crumb" id="crumb"></span><button class="ttl" id="ttl" data-tip="Rename  F2"></button>
       <div class="r">
-        <button class="runpill" id="runPill" hidden><i></i><span id="runT">Working</span><span class="num" id="runE">00:00</span></button><button class="dsp-btn" id="dspBtn"><i></i>Dispatch</button>
+        <button class="runpill" id="runPill" hidden><i></i><span id="runT">Working</span><span class="num" id="runE">00:00</span></button><button class="dsp-btn" id="dspBtn" data-tip="The Dispatch  ⌘L"><i aria-hidden="true"></i><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.1" aria-hidden="true"><rect x="1.5" y="2.5" width="13" height="11" rx="1.5"/><path class="pn" d="M10 2.5v11"/></svg><span>Dispatch</span></button>
         <span class="sig capt" id="sig"><i></i><span id="sigT">Linking</span></span>
       </div>
     </header>
@@ -2534,7 +2554,7 @@ function chartX(sp,type,no){const title=sp.title||"",unit=sp.unit||"",note=sp.no
  return `<figure class="fig pre fx-${type}">${FH(no,title,unit,lg)}<svg class="ch" data-fig="${id}" viewBox="0 0 ${W} ${H}" role="img" aria-label="${esc(title)}">${body}</svg>${tbl}${note}</figure>`}
 /* figures come alive when they scroll into view */
 const figIn=f=>{if(!f.classList.contains("pre"))return;f.classList.remove("pre");f.classList.add("in");FIGIO.unobserve(f);countUp(f)};const FIGIO=new IntersectionObserver(es=>es.forEach(en=>{if(en.isIntersecting)figIn(en.target)}),{rootMargin:"0px 0px -40px 0px"});
-function armFigs(root){(root||document).querySelectorAll(".fig.pre:not([data-io])").forEach(f=>{f.dataset.io=1;if(reduce){f.classList.remove("pre");return}FIGIO.observe(f);setTimeout(()=>figIn(f),2500)})}
+function armFigs(root){(root||document).querySelectorAll(".fig").forEach(f=>feather(f,"x"));(root||document).querySelectorAll(".fig.pre:not([data-io])").forEach(f=>{f.dataset.io=1;if(reduce){f.classList.remove("pre");return}FIGIO.observe(f);setTimeout(()=>figIn(f),2500)})}
 new MutationObserver(()=>armFigs()).observe(document.getElementById("thread"),{childList:true,subtree:true});
 /* high-resolution PNG: the figure redrawn at 3× with its computed colours */
 async function figPNG(fig,btn){const svg=fig.querySelector("svg.ch");if(!svg)return;const vb=svg.viewBox.baseVal,S=3,cl=svg.cloneNode(true),src=[svg,...svg.querySelectorAll("*")],dst=[cl,...cl.querySelectorAll("*")];
@@ -2554,6 +2574,13 @@ window.__ex=(ex)=>exhibitsHTML(ex,true);
   P.innerHTML=`<div class="ch"><span>${esc(d.toLocaleDateString("en-PH",{month:"short",day:"numeric"}))} · ${d.toLocaleTimeString("en-PH",{hour:"numeric",minute:"2-digit"})}</span><span class="cf num">${us.length} brief${us.length===1?"":"s"}</span></div><p class="ct">${esc(c.title)}</p>${us[0]?`<p class="cq">${esc(clip(us[0].content.replace(/^>.*\n+/gm,""),150))}</p>`:""}${w?`<div class="cs">${[(w.steps||[]).length?`<span>${(w.steps||[]).length} desks</span>`:"",w.web?`<span>${w.web} sources</span>`:"",w.ledger&&w.ledger.claims?`<span>${w.ledger.claims.filter(x=>x.v==="supported"||x.v==="derived").length}/${w.ledger.claims.length} grounded</span>`:"",w.doc&&!w.doc.error?`<span>${esc(DOCT[w.doc.type]||"Document")}</span>`:""].filter(Boolean).join("")}</div>`:""}`;
   P.hidden=false;const r=el.getBoundingClientRect(),q=P.getBoundingClientRect();P.style.left=Math.min(innerWidth-q.width-12,r.right+10)+"px";P.style.top=Math.max(12,Math.min(innerHeight-q.height-12,r.top+r.height/2-q.height/2))+"px";requestAnimationFrame(()=>P.classList.add("in"))};
  document.addEventListener("pointerover",e=>{const it=e.target.closest?.(".row .item[data-id]");if(it){if(it===on)return;clearTimeout(tm);tm=setTimeout(()=>show(it),on?60:520)}else if(on&&!e.target.closest?.("#chov"))hide()});addEventListener("scroll",hide,true);document.addEventListener("pointerdown",hide,true)}
+/* feathered edges */
+const FZ=new WeakSet();
+function feather(el,axis){if(!el||FZ.has(el))return;FZ.add(el);const x=axis==="x";el.classList.add(x?"fzx":"fz");let raf=0;
+ const upd=()=>{raf=0;const p=x?el.scrollLeft:el.scrollTop,m=x?el.scrollWidth-el.clientWidth:el.scrollHeight-el.clientHeight;el.classList.toggle("f-s",p>2);el.classList.toggle("f-e",m-p>2)};
+ const q=()=>{if(!raf)raf=requestAnimationFrame(upd)};el.addEventListener("scroll",q,{passive:true});new ResizeObserver(q).observe(el);new MutationObserver(q).observe(el,{childList:true,subtree:true});q()}
+function featherAll(){["#scroll","#dspB","#sheetB","#stgP","#olog"].forEach(k=>feather(document.querySelector(k)));const sd=[...($("#side")?.querySelectorAll("*")||[])].find(e=>/(auto|scroll)/.test(getComputedStyle(e).overflowY)&&e.scrollHeight>0);feather(sd);feather($("#att"),"x");document.querySelectorAll(".fig").forEach(f=>feather(f,"x"))}
+setTimeout(featherAll,300);new MutationObserver(()=>setTimeout(()=>feather(document.querySelector("#olog")),60)).observe($("#dsp"),{attributes:true,attributeFilter:["class"]});
 /* claim cards: hovering a citation draws its claim out of the marker */
 {const P=$("#cpop");let tm=0,on=null;const host=u=>{try{return new URL(u).hostname.replace(/^www\./,"")}catch(e){return String(u)}};
  const show=el=>{const w=workOf(el),c=w?.ledger?.claims?.find(x=>String(x.id)===el.dataset.claim);if(!c)return;on=el;
@@ -2580,7 +2607,7 @@ function attDraw(a){const t=$("#att");t.hidden=false;const an=t.querySelector(".
 function attDrop(id){const el=$("#att").querySelector(`[data-id="${id}"]`);ATT=ATT.filter(x=>x.id!==id);if(el){el.classList.add("out");setTimeout(()=>{el.remove();if(!ATT.length&&!$("#att .an"))$("#att").hidden=true},reduce?0:320)}}
 function attClear(){ATT=[];const t=$("#att");t.innerHTML="";t.hidden=true}
 {const f=$("#form"),bar=document.createElement("div");bar.className="cbar";bar.innerHTML='<div class="cl"></div><div class="cr"><span class="cst" id="cst"></span><i class="spn" aria-hidden="true"></i></div>';f.after(bar);const cl=bar.firstChild,cr=bar.lastChild;["#attIn","#attBtn","#docBtn","#optBtn"].forEach(q=>{const e=$(q);if(e)cl.append(e)});const c=$("#count");if(c)cr.prepend(c)}
-function cstSync(){const e=$("#cst");if(e)e.innerHTML=`<svg class="spark" viewBox="0 0 16 16" aria-hidden="true"><path d="M8 1.2c.5 3.3 1.6 5.2 6.8 6.8-5.2 1.6-6.3 3.5-6.8 6.8-.5-3.3-1.6-5.2-6.8-6.8C6.4 6.4 7.5 4.5 8 1.2z"/></svg><span class="mdl">Claude <b>Opus 5.5</b></span><span class="mode">${OPT.depth==="deep"?"Deep":"Dynamic"}</span><span class="by">by Anthropic</span>`;if(e)e.dataset.tip="Runs on Claude Opus 5.5, made by Anthropic"}setTimeout(cstSync,0);document.addEventListener("click",e=>{if(e.target.closest("#optMenu"))setTimeout(cstSync,0)});
+function cstSync(){const e=$("#cst");if(e)e.innerHTML=`<span class="mdl">Claude <b>Opus 5.5</b></span><span class="mode">${OPT.depth==="deep"?"Deep":"Dynamic"}</span><span class="by">by Anthropic</span>`;if(e)e.dataset.tip="Runs on Claude Opus 5.5, made by Anthropic"}setTimeout(cstSync,0);document.addEventListener("click",e=>{if(e.target.closest("#optMenu"))setTimeout(cstSync,0)});
 async function attInit(){try{IMGCAP=sample?((await sample.limits())?.images||null):null}catch(e){IMGCAP=null}$("#attBtn").hidden=!IMGCAP;if(IMGCAP?.mediaTypes?.length)$("#attIn").accept=IMGCAP.mediaTypes.join(",")}
 $("#attBtn").onclick=()=>$("#attIn").click();
 $("#attIn").onchange=e=>{attAdd([...e.target.files]);e.target.value=""};
