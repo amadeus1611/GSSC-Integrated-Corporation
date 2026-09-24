@@ -105,6 +105,44 @@ body{font-family:var(--f-body);color:var(--ink)}
 .reg td.name{transition:color 700ms var(--soft-close),opacity 600ms var(--soft-close)}
 .reg tr.cur td.name{color:var(--gold-light)}
 
+/* scene 2b: how an engagement moves (Fig. 3, walked one build at a time; the site's own routing and copy) */
+.fl-head{left:72px;top:130px;width:600px}
+.fl-title{left:72px;top:186px;width:920px;color:var(--navy-dark)}
+.fl-cap{left:72px;top:300px;width:900px;margin:0;font:italic 400 20px/1.5 var(--f-display);color:var(--slate)}
+.fl-plate{left:72px;top:330px;width:1296px;height:504px}
+.fl-legend{display:flex;gap:22px;font:500 11px/1 var(--f-body);letter-spacing:var(--tracked-tight);text-transform:uppercase;color:var(--slate)}
+.fl-legend span{display:inline-flex;align-items:center;gap:9px}
+.fl-sw{display:inline-block;width:14px;height:10px;border-radius:1px;border:1px solid var(--hairline)}
+.fl-sw-c{background:var(--ivory)}
+.fl-sw-g{background:repeating-linear-gradient(45deg,rgba(9,23,61,.12) 0 1px,transparent 1px 4px),var(--ivory-deep)}
+.fl-sw-w{border:1px dashed var(--gold-deep);background:rgba(230,212,167,.35)}
+.fl-dia{position:absolute;left:0;right:0;top:44px;bottom:40px;padding:18px 22px 16px}
+.fl-dia svg{display:block;width:100%;height:auto}
+.fl-foot{position:absolute;left:0;right:0;bottom:0;height:40px;display:flex;align-items:center;padding:0 22px;
+  border-top:1px solid var(--hairline);font:italic 400 15px/1.3 var(--f-display);color:var(--navy-dark);font-feature-settings:"lnum" 1}
+/* the flow's own SVG parts, kept out of the master's class names (fl- prefix throughout) */
+.fl-lane-in{fill:url(#flHatch)} .fl-lane-c{fill:transparent}
+.fl-lane-t{font:600 10px var(--f-body);letter-spacing:.2em;text-transform:uppercase;fill:var(--mid-grey)}
+.fl-wall{stroke:var(--gold-deep)}
+.fl-wall-tag rect{fill:var(--ivory);stroke:var(--gold-deep)}
+.fl-wall-tag text{font:600 9.5px var(--f-body);letter-spacing:.18em;text-transform:uppercase;fill:var(--gold-deep);text-anchor:middle}
+.fl-ring{fill:none;stroke:var(--gold-primary);stroke-width:1.2}
+.fl-e-track{fill:none;stroke:rgba(9,23,61,.16);stroke-width:1;stroke-dasharray:1 4;stroke-linecap:round}
+.fl-e-run{fill:none;stroke:var(--navy-dark);stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round}
+.fl-e-run.x{stroke:var(--gold-deep)}
+.fl-port{fill:color-mix(in srgb,var(--ivory),var(--gold-primary) calc(var(--on,0) * 100%));
+  stroke:color-mix(in srgb,rgba(9,23,61,.3),var(--gold-deep) calc(var(--on,0) * 100%));stroke-width:1}
+.fl-card{fill:var(--ivory);stroke:var(--hairline);stroke-width:1}
+.fl-trace{fill:none;stroke:var(--navy-dark);stroke-width:1.25}
+.fl-nd.gate .fl-card{fill:rgba(250,246,234,1);stroke:var(--gold-deep);stroke-dasharray:3 3}
+.fl-nd.gate .fl-trace{stroke:var(--gold-deep)}
+.fl-nd .fl-n{font:400 14px var(--f-display);font-feature-settings:"onum" 1;fill:color-mix(in srgb,var(--hairline),var(--gold-deep) calc(var(--on,0) * 100%))}
+.fl-nd .fl-k{font:600 8.5px var(--f-body);letter-spacing:.2em;text-transform:uppercase;fill:color-mix(in srgb,var(--hairline),var(--mid-grey) calc(var(--on,0) * 100%));text-anchor:end}
+.fl-nd .fl-t{font:400 16px var(--f-display);letter-spacing:-.01em;fill:color-mix(in srgb,var(--mid-grey),var(--navy-dark) calc(var(--on,0) * 100%))}
+.fl-nd .fl-s{font:italic 400 11.5px var(--f-display);fill:var(--slate);opacity:var(--on,0)}
+.fl-nd .fl-bar{fill:var(--gold-primary);transform-box:fill-box;transform-origin:left;transform:scaleX(var(--on,0))}
+.fl-tok{fill:var(--gold-primary);stroke:var(--gold-deep);stroke-width:.75}
+
 /* scene 3: the file */
 .file-head{left:72px;top:130px;width:560px}
 .file-title{left:72px;top:186px;width:640px;color:var(--navy-dark)}
@@ -255,6 +293,19 @@ body{font-family:var(--f-body);color:var(--ink)}
     </div>
   </section>
 
+  <!-- 2b · how an engagement moves (the site's Fig. 3, walked one build at a time on the ivory paper) -->
+  <section class="scene" data-scene="flow">
+    <div class="t x fl-head day-t" data-in="0"><div class="chs"><span class="num">II</span><i class="dash"></i><span class="cat">Engagement</span></div></div>
+    <div class="t x fl-title" data-in="0"><h2 class="h2">Everything inside the line is ours to carry. Only the quotation crosses it.</h2></div>
+    <p class="t fl-cap day-t" id="flCap" data-in="0"></p>
+    <div class="t fl-plate" data-in="0"><div class="panel-plate" style="position:absolute;inset:0">
+      <div class="plate-h"><span>Fig. 3 · Engagement flow</span><span class="fl-legend">
+        <span><i class="fl-sw fl-sw-c"></i>Client-facing</span><span><i class="fl-sw fl-sw-g"></i>Inside GSSC</span><span><i class="fl-sw fl-sw-w"></i>Firewall gate</span></span></div>
+      <div class="fl-dia"><svg id="flSvg" viewBox="0 0 1400 430" role="img" aria-label="The GSSC engagement flow across the firewall"></svg></div>
+      <div class="fl-foot"><span id="flStep">Step 01 of 10 · Inquiry</span></div>
+    </div></div>
+  </section>
+
   <!-- 3 · the file you receive -->
   <section class="scene" data-scene="file">
     <div class="t x file-head day-t" data-in="0"><div class="chs"><span class="num">II</span><i class="dash"></i><span class="cat">Engagement</span></div></div>
@@ -391,6 +442,7 @@ function drawGrain(){ if (!gfx) return; gg.uniform2f(gfx.res, 720, 450); filmUni
 const SCENES = [
   {key: 'cover', len: 1, name: 'Cover', where: 'Company profile'},
   {key: 'disc', len: 9, name: 'Six disciplines', where: 'I · Capabilities', closes: true},
+  {key: 'flow', len: 5, name: 'How an engagement moves', where: 'II · Engagement'},
   {key: 'file', len: 5, name: 'The file you receive', where: 'II · Engagement'},
   {key: 'eco', len: 4, name: 'Economics', where: 'III · Economics'},
   {key: 'close', len: 1, name: 'Close', where: 'IV · Inquire'}];
@@ -534,6 +586,36 @@ function render(now, newFilm){
   // ---- the key lights as each part lifts
   rows.forEach(r => { const p = +r.dataset.part, lit = litOf(p);
     setVar(r, '--lit', lit.toFixed(3)); r.classList.toggle('cur', lit > .5 && Math.round(T) === curOf(p)); });
+  // ---- Fig. 3, the engagement flow: one continuous eased token per build, over that build's own chain of edges;
+  // each card lights as the token reaches it; earlier builds' edges stay drawn, but quieter
+  if (FLOW_G && T > S.flow - 1 && T < S.file) {
+    const G = FLOW_G, NU = .6, n = G.nodes.length, cardOnU = i => i * (NU + 1) + NU;
+    const FT = T - S.flow, k = clamp(Math.ceil(FT), 1, 4) - 1, b = FLOW_BUILDS[k];
+    const u0 = cardOnU(b.cards[0] - 1), u1 = cardOnU(b.cards[b.cards.length - 1]);
+    const u = FT <= 0 ? cardOnU(0) : lerp(u0, u1, DRAW(clamp(FT - k)));
+    let tokX = G.inP[0].x, tokY = G.inP[0].y;
+    G.nodes.forEach((nd, i) => { const s0 = i * (NU + 1), np = clamp((u - s0) / NU);
+      setVar(nd, '--on', (np >= .995 ? 1 : ease(np)).toFixed(3));
+      setVar(nd.querySelector('.fl-trace'), 'stroke-dashoffset', (G.per * (1 - ease(np))).toFixed(1));
+      if (u >= s0) { tokX = G.inP[i].x; tokY = G.inP[i].y; } });
+    G.runs.forEach((run, i) => { const s0 = i * (NU + 1), ep = clamp((u - s0 - NU) / 1), L = G.eLen[i] * ease(ep);
+      setVar(run, 'stroke-dashoffset', (G.eLen[i] - L).toFixed(1));
+      setVar(run, 'opacity', (ep >= .999 && !b.edges.includes(i) ? .5 : 1).toFixed(2));
+      setVar(G.ports[i * 2], '--on', ep > 0 ? '1' : '0'); setVar(G.ports[i * 2 + 1], '--on', ep >= .999 ? '1' : '0');
+      if (ep > 0 && ep < 1) { const pt = run.getPointAtLength(L); tokX = pt.x; tokY = pt.y; } });
+    setVar(G.tok, 'transform', `translate(${tokX.toFixed(1)} ${tokY.toFixed(1)}) rotate(45)`);
+    // the gate: the dashed wall and its tag brighten once, as card 05 (Firewall) lights, and the token gives one soft ring
+    const s0gate = 4 * (NU + 1), gateOn = clamp((u - s0gate) / NU), ringP = clamp((u - s0gate - NU * .85) / .55), ring = ringP > 0 && ringP < 1;
+    setVar(G.wallA, 'stroke-width', (1 + gateOn * .5).toFixed(2)); setVar(G.wallB, 'stroke-width', (1 + gateOn * .5).toFixed(2));
+    setVar(G.wallA, 'opacity', (.6 + gateOn * .4).toFixed(2)); setVar(G.wallB, 'opacity', (.6 + gateOn * .4).toFixed(2));
+    setVar(G.tagRect, 'stroke-width', (.75 + gateOn * .5).toFixed(2));
+    setVar(G.ring, 'transform', `translate(${tokX.toFixed(1)} ${tokY.toFixed(1)})`);
+    setVar(G.ring, 'r', (8 + clamp(ringP) * 13).toFixed(1)); setVar(G.ring, 'opacity', ring ? (Math.sin(Math.PI * ringP) * .55).toFixed(2) : 0);
+    let stepIdx = 0; for (let i = 0; i < n; i++) if (u >= i * (NU + 1)) stepIdx = i;
+    if (stepIdx !== G.lastStep) { G.lastStep = stepIdx;
+      flStepEl.textContent = `Step ${String(stepIdx + 1).padStart(2, '0')} of ${n} · ${FLOW[stepIdx][1]}`;
+      flCapEl.textContent = FLOW_CAPS[buildOfCard(stepIdx)]; }
+  }
   // ---- the file: one document per step; the first arrives with its scene, each later one is a build; the stamp
   // strikes after acceptance settles
   let got = 0; const FK = SCENES.findIndex(x => x.key === 'file'), FL = LEAVE(SCENES[FK]);
@@ -646,6 +728,63 @@ function econ(){
 for (const el of [eV, eN, eM]) { el.addEventListener('input', econ); el.addEventListener('keydown', e => e.stopPropagation()); el.addEventListener('wheel', e => e.stopPropagation(), {passive: true}); }
 econ();
 
+/* ------------------------------------------------ Fig. 3, the engagement flow (the site's own step data and port-to-port
+   routing, spliced in and built once at init; every later frame only writes a handful of cached CSS vars — no DOM
+   reads in the loop). Five builds (S.flow+0..+4): the plate arrives with card 01; then, for each build, one
+   continuous eased token travels the whole chain of edges of that build, and each card lights as the token reaches
+   it. The gate (build 2) brightens the dashed wall and its tag once, with one soft ring from the token, then crosses. */
+{{FLOW}}
+const FLOW_CAPS = {{FLOW_CAPS}};   // step 0's caption is Fig. 5's own Requirement wording; 1-4 are Fig. 3's own sentences
+const FLOW_BUILDS = [
+  {edges: [0, 1, 2], cards: [1, 2, 3]},   // build 1 (S.flow 0→1): inside GSSC — Inquiry → Research → Pricing → Decision
+  {edges: [3, 4], cards: [4, 5]},         // build 2 (1→2): the gate — Decision → Firewall → Quotation
+  {edges: [5, 6, 7], cards: [6, 7, 8]},   // build 3 (2→3): the client lane — Quotation → Acceptance → Delivery → Turnover
+  {edges: [8], cards: [9]},               // build 4 (3→4): the record — Turnover → Record, back inside GSSC
+];
+const buildOfCard = i => i === 0 ? 0 : FLOW_BUILDS.findIndex(b => b.cards.includes(i)) + 1;
+const flSvg = document.getElementById('flSvg'), flStepEl = document.getElementById('flStep'), flCapEl = document.getElementById('flCap');
+let FLOW_G = null;
+function elbowH(a, b, R){ if (Math.abs(b.y - a.y) < .5) return `M${a.x} ${a.y} H${b.x}`;
+  const m = (a.x + b.x) / 2, s = Math.sign(b.y - a.y), r = Math.min(R, Math.abs(b.y - a.y) / 2, (b.x - a.x) / 2);
+  return `M${a.x} ${a.y} H${m - r} Q${m} ${a.y} ${m} ${a.y + s * r} V${b.y - s * r} Q${m} ${b.y} ${m + r} ${b.y} H${b.x}`; }
+function buildFlow(){
+  const n = FLOW.length, NW = 112, NH = 104, R = 10, pitch = 132, x0 = 84, wy = 222, yc = 58, yi = 280, W = 1400, H = 430;
+  const pos = FLOW.map((f, i) => ({x: x0 + i * pitch, y: f[0] === 'c' ? yc : f[0] === 'i' ? yi : wy - NH / 2}));
+  const outP = i => ({x: pos[i].x + NW, y: pos[i].y + NH / 2}), inP = i => ({x: pos[i].x, y: pos[i].y + NH / 2});
+  const edges = []; for (let i = 0; i < n - 1; i++) edges.push({a: outP(i), b: inP(i + 1), d: elbowH(outP(i), inP(i + 1), R), cross: FLOW[i][0] === 'w' || FLOW[i + 1][0] === 'w'});
+  const lane = f => f[0] === 'c' ? 'Client' : f[0] === 'i' ? 'GSSC' : 'Gate';
+  const cards = FLOW.map((f, i) => `<g class="fl-nd${f[0] === 'w' ? ' gate' : ''}" transform="translate(${pos[i].x},${pos[i].y})">
+    <rect class="fl-card" width="${NW}" height="${NH}" rx="2"/><rect class="fl-trace" width="${NW}" height="${NH}" rx="2"/>
+    <text class="fl-n" x="12" y="24">${String(i + 1).padStart(2, '0')}</text><text class="fl-k" x="${NW - 12}" y="23">${lane(f)}</text>
+    <text class="fl-t" x="12" y="62">${f[1]}</text><text class="fl-s" x="12" y="80">${f[2]}</text>
+    <rect class="fl-bar" x="12" y="${NH - 7}" width="${NW - 24}" height="1.5"/></g>`).join('');
+  const port = p => `<rect class="fl-port" x="${(p.x - 3.5).toFixed(1)}" y="${(p.y - 3.5).toFixed(1)}" width="7" height="7" rx="1"/>`;
+  flSvg.innerHTML = `<defs><pattern id="flHatch" width="6" height="6" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><rect width="6" height="6" fill="rgba(243,239,228,.9)"/><line x1="0" y1="0" x2="0" y2="6" stroke="rgba(9,23,61,.07)" stroke-width="1"/></pattern></defs>
+    <rect class="fl-lane-c" x="0" y="0" width="${W}" height="${wy}"/><rect class="fl-lane-in" x="0" y="${wy}" width="${W}" height="${H - wy}"/>
+    <text class="fl-lane-t" transform="translate(34 ${wy / 2}) rotate(-90)" text-anchor="middle">Client-facing</text>
+    <text class="fl-lane-t" transform="translate(34 ${(wy + H) / 2}) rotate(-90)" text-anchor="middle">Inside GSSC</text>
+    <line class="fl-wall" id="flWallA" x1="60" y1="${wy - 2}" x2="${W - 20}" y2="${wy - 2}" stroke-dasharray="2 4"/>
+    <line class="fl-wall" id="flWallB" x1="60" y1="${wy + 2}" x2="${W - 20}" y2="${wy + 2}" stroke-dasharray="2 4"/>
+    <g class="fl-wall-tag" id="flTag" transform="translate(${x0 + 2 * pitch + NW / 2} ${wy})"><rect x="-116" y="-10" width="232" height="20" rx="1"/><text y="3.5">Firewall · nothing internal crosses</text></g>
+    ${edges.map(e => `<path class="fl-e-track" d="${e.d}"/>`).join('')}
+    ${edges.map((e, i) => `<path class="fl-e-run${e.cross ? ' x' : ''}" id="flE${i}" d="${e.d}"/>`).join('')}
+    ${cards}
+    ${edges.map(e => port(e.a) + port(e.b)).join('')}
+    <circle class="fl-ring" id="flRing" r="0" opacity="0"/>
+    <rect class="fl-tok" id="flTok" x="-4.5" y="-4.5" width="9" height="9" rx="1" transform="rotate(45)"/>`;
+  const tag = document.getElementById('flTag'), tagText = tag.querySelector('text'), tagRect = tag.querySelector('rect');
+  const len = tagText.getComputedTextLength ? tagText.getComputedTextLength() : 220;
+  tagRect.setAttribute('x', (-len / 2 - 14).toFixed(1)); tagRect.setAttribute('width', (len + 28).toFixed(1));
+  const runs = edges.map((_, i) => document.getElementById('flE' + i)), eLen = runs.map(r => r.getTotalLength());
+  runs.forEach((r, i) => { r.style.strokeDasharray = eLen[i]; r.style.strokeDashoffset = eLen[i]; });
+  const nodes = [...flSvg.querySelectorAll('.fl-nd')], per = 2 * (NW + NH);
+  nodes.forEach(nd => { const tr = nd.querySelector('.fl-trace'); tr.style.strokeDasharray = per; tr.style.strokeDashoffset = per; });
+  const ports = [...flSvg.querySelectorAll('.fl-port')];
+  FLOW_G = {runs, eLen, nodes, ports, per, inP: FLOW.map((_, i) => inP(i)), tok: document.getElementById('flTok'),
+    ring: document.getElementById('flRing'), wallA: document.getElementById('flWallA'), wallB: document.getElementById('flWallB'), tagRect, lastStep: -1};
+  flCapEl.textContent = FLOW_CAPS[0];
+}
+
 /* ------------------------------------------------ controls: keys, click, trackpad swipe; F, B, W, number jumps */
 const blank = document.getElementById('blank'), hint = document.getElementById('hint');
 let typed = '';
@@ -681,7 +820,7 @@ addEventListener('wheel', e => { e.preventDefault(); const now = performance.now
   await Promise.all([document.fonts ? document.fonts.ready : 0, ...first.map(j => j().then(() => { done++; tickBar(); }))]);
   for (let k = 0; k < SPLIT - 1; k += 6) await Promise.all(rest.slice(k, Math.min(k + 6, SPLIT - 1)).map(j => j().then(() => { done++; tickBar(); })));
   await new Promise(r => setTimeout(r, Math.max(0, 3400 - (performance.now() - t0))));
-  measureRows(); render(performance.now(), true); intro.classList.add('done');
+  measureRows(); buildFlow(); render(performance.now(), true); intro.classList.add('done');
   requestAnimationFrame(frame); setTimeout(() => hint.classList.add('gone'), 7000);
   for (let k = SPLIT - 1; k < rest.length; k += 4) await Promise.all(rest.slice(k, k + 4).map(j => j()));   // the turntable, in the background
 })();
