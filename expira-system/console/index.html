@@ -1116,6 +1116,58 @@ html.calm *,html.calm *::before,html.calm *::after{animation:none!important;tran
 @media (prefers-reduced-motion:reduce){.mini .halo{display:none}}
 #goo.gl{filter:none}
 @media (max-width:560px){.run.open .rv{position:static;margin:2px 0 6px 26px}.run.open .run-h .lbl{padding-right:0!important;white-space:normal}.mini .mn text{font-size:11px}}
+/* v31 · dots on the stem, one-step theme change, charts that pour in */
+.fig-h .tb+.tb{margin-left:14px}
+.strm .se::before{left:-9px}
+.strm .se.k-web::before{border-style:solid}
+.strm .se.new::after{left:-7.75px}
+.strm .sb.new::after{left:-13.75px}
+.strm .sb::before{left:-12px;width:5px}
+html.tnone *,html.tnone *::before,html.tnone *::after{transition:none!important}
+html.theming,html.theming *,html.theming *::before,html.theming *::after{transition:none!important}
+::view-transition-old(root),::view-transition-new(root){animation-duration:.42s;animation-timing-function:cubic-bezier(.4,0,.2,1)}
+.ch text.lbl{fill:var(--text);font-size:10.5px}
+.ch text.vl{fill:var(--soft);font-size:10px}
+.ch text.tl{fill:var(--ink);font-weight:500}
+.ch .dt{font:400 17px var(--f-display);fill:var(--ink)}
+.ch .ds{fill:var(--mute);font-size:8.5px;letter-spacing:.16em;text-transform:uppercase}
+.ch .rl{stroke:var(--s1);stroke-width:3;stroke-linecap:round}
+.ch .re{fill:var(--sheet);stroke:var(--s1);stroke-width:2}
+.ch .rm{stroke:var(--ink);stroke-width:1.5}
+.ch .wc{stroke:var(--line-3);stroke-width:1;stroke-dasharray:2 3}
+.ch .mk{transition:opacity .2s}
+.ch.hov:has(.mk.on) .mk:not(.on){opacity:.45}
+.ch .mk.on .lbl,.ch .mk.on .vl{fill:var(--ink)}
+.ch .dn{transition:stroke-width .25s var(--soft-close)}
+.ch .dn.on{stroke-width:22}
+.fig .bar,.fig .sg,.fig .wb,.fig .ar{transform-box:fill-box;transform-origin:50% 100%}
+.fig .hb,.fig .tb2{transform-box:fill-box;transform-origin:0 50%}
+.fig .rl{transform-box:fill-box;transform-origin:50% 50%}
+.fig .re{transform-box:fill-box;transform-origin:50% 50%}
+.fig.pre .bar,.fig.pre .sg,.fig.pre .ar{transform:scaleY(0)}
+.fig.pre .hb,.fig.pre .tb2,.fig.pre .rl{transform:scaleX(0)}
+.fig.pre .wb,.fig.pre .re,.fig.pre .vl,.fig.pre .wc,.fig.pre .mk .lbl,.fig.pre .dt,.fig.pre .ds{opacity:0}
+.fig.pre .ln{stroke-dasharray:1;stroke-dashoffset:1}
+.fig.pre .dn{stroke-dasharray:0 100}
+.fig.in .bar{animation:fgY var(--sp-jelly-d) var(--sp-jelly) calc(var(--i)*55ms) both}
+.fig.in .sg{animation:fgY var(--sp-soft-d) var(--sp-soft) calc(var(--i)*70ms + var(--j)*110ms) both}
+.fig.in .ar{animation:fgY .9s var(--sp-soft) .25s both}
+.fig.in .hb{animation:fgX var(--sp-jelly-d) var(--sp-jelly) calc(var(--i)*60ms) both}
+.fig.in .tb2{animation:fgX var(--sp-jelly-d) var(--sp-jelly) calc(var(--i)*90ms) both}
+.fig.in .rl{animation:fgX .7s var(--sp-soft) calc(var(--i)*70ms) both}
+.fig.in .re{animation:fgJ var(--sp-jelly-d) var(--sp-jelly) calc(var(--i)*70ms + .3s) both}
+.fig.in .wb{animation:fgDrop var(--sp-jelly-d) var(--sp-jelly) calc(var(--i)*110ms) both}
+.fig.in .wc{animation:ink .4s calc(var(--i)*110ms + .3s) both}
+.fig.in .ln{stroke-dasharray:1;animation:fgDraw 1.1s cubic-bezier(.3,.6,.2,1) calc(var(--i)*150ms) both}
+.fig.in .dn{animation:fgSweep .95s var(--sp-soft) calc(var(--i)*110ms) both}
+.fig.in .vl,.fig.in .mk .lbl,.fig.in .dt,.fig.in .ds{animation:ink .5s calc(var(--i,0)*60ms + .3s) both}
+@keyframes fgY{from{transform:scaleY(0)}}
+@keyframes fgX{from{transform:scaleX(0)}}
+@keyframes fgJ{from{transform:scale(0)}}
+@keyframes fgDrop{from{transform:translateY(-16px) scaleY(.3);opacity:0}}
+@keyframes fgDraw{from{stroke-dashoffset:1}to{stroke-dashoffset:0}}
+@keyframes fgSweep{from{stroke-dasharray:0 100}}
+@media (prefers-reduced-motion:reduce){.fig.pre *{transform:none!important;opacity:1!important;stroke-dasharray:none!important}}
 </style>
 
 <div class="app has-chat" id="app">
@@ -1310,6 +1362,7 @@ const fmtV=(v,u)=>{if(v==null||isNaN(v))return "—";const a=Math.abs(v);let t=a
 function nice(lo,hi,n=4){if(lo===hi){hi=lo+1}const r=hi-lo,raw=r/n,p=Math.pow(10,Math.floor(Math.log10(raw))),f=raw/p,st=(f<=1?1:f<=2?2:f<=5?5:10)*p,a=Math.floor(lo/st)*st,b=Math.ceil(hi/st)*st,t=[];for(let v=a;v<=b+st/2;v+=st)t.push(+v.toFixed(10));return t}
 function chartFig(json,no){let sp;try{sp=JSON.parse(json)}catch(e){try{sp=JSON.parse(json.replace(/\/\/[^\n]*/g,"").replace(/,\s*([}\]])/g,"$1").replace(/[“”]/g,'"'))}catch(e2){return `<p class="setting">A figure could not be set from this data.</p>`}}
  const type=String(sp.type||"bar").toLowerCase(),title=sp.title||"",unit=sp.unit||"";
+ if(["hbar","stacked","donut","waterfall","range","timeline"].includes(type))return chartX(sp,type,no);
  if(type==="stat")return `<figure class="fig"><div class="fig-h"><span class="no">Fig. ${no}</span><span class="tt">${esc(title)}</span></div><div class="stat-fig"><span class="big">${esc(fmtV(Number(sp.value),unit))}</span><span class="sub">${esc(sp.caption||"")}</span></div>${sp.note?`<p class="note">${esc(sp.note)}</p>`:""}</figure>`;
  const labels=(sp.labels||[]).map(String).slice(0,24),S=(sp.series||[]).filter(x=>Array.isArray(x.values)).slice(0,5).map(x=>({name:String(x.name||""),values:labels.map((_,i)=>Number(x.values[i]))}));
  if(!labels.length||!S.length)return "";
@@ -1322,9 +1375,9 @@ function chartFig(json,no){let sp;try{sp=JSON.parse(json)}catch(e){try{sp=JSON.p
  if(!line){const gw=Math.min(band*.72,S.length*30),bw=(gw-2*(S.length-1))/S.length,z=y(Math.max(t0,Math.min(0,tN)));
   S.forEach((x,j)=>x.values.forEach((v,i)=>{if(isNaN(v))return;const x0=cx(i)-gw/2+j*(bw+2),yt=y(v),h=Math.abs(z-yt),r=Math.min(4,bw/2,h);
    const d=v>=0?`M${x0},${z}V${yt+r}Q${x0},${yt} ${x0+r},${yt}H${x0+bw-r}Q${x0+bw},${yt} ${x0+bw},${yt+r}V${z}Z`:`M${x0},${z}V${yt-r}Q${x0},${yt} ${x0+r},${yt}H${x0+bw-r}Q${x0+bw},${yt} ${x0+bw},${yt-r}V${z}Z`;
-   marks+=`<path class="bar" data-i="${i}" d="${d}" fill="var(--s${j+1})"/>`}));}
- else{S.forEach((x,j)=>{const pts=x.values.map((v,i)=>isNaN(v)?null:[cx(i),y(v)]).filter(Boolean);if(type==="area"&&pts.length)marks+=`<polygon points="${pts.map(p=>p.join(",")).join(" ")} ${pts[pts.length-1][0]},${y(Math.max(t0,0))} ${pts[0][0]},${y(Math.max(t0,0))}" fill="var(--s${j+1})" opacity=".1"/>`;
-   marks+=`<polyline points="${pts.map(p=>p.join(",")).join(" ")}" fill="none" stroke="var(--s${j+1})" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/>`;
+   marks+=`<path class="bar" style="--i:${i}" data-i="${i}" d="${d}" fill="var(--s${j+1})"/>`}));}
+ else{S.forEach((x,j)=>{const pts=x.values.map((v,i)=>isNaN(v)?null:[cx(i),y(v)]).filter(Boolean);if(type==="area"&&pts.length)marks+=`<polygon points="${pts.map(p=>p.join(",")).join(" ")} ${pts[pts.length-1][0]},${y(Math.max(t0,0))} ${pts[0][0]},${y(Math.max(t0,0))}" fill="var(--s${j+1})" opacity=".1" class="ar"/>`;
+   marks+=`<polyline class="ln" pathLength="1" style="--i:${j}" points="${pts.map(p=>p.join(",")).join(" ")}" fill="none" stroke="var(--s${j+1})" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/>`;
    x.values.forEach((v,i)=>{if(!isNaN(v))marks+=`<circle class="dot" data-i="${i}" cx="${cx(i)}" cy="${y(v)}" r="4" fill="var(--s${j+1})"/>`})});
   marks+=`<line class="xh" x1="0" x2="0" y1="${m.t}" y2="${H-m.b}"/>`;
   if(direct){const ends=S.map((x,j)=>{let k=n-1;while(k>0&&isNaN(x.values[k]))k--;return{j,y:y(x.values[k]),t:x.name}}).sort((a,b)=>a.y-b.y);for(let k=1;k<ends.length;k++)if(ends[k].y-ends[k-1].y<13)ends[k].y=ends[k-1].y+13;
@@ -1333,12 +1386,12 @@ function chartFig(json,no){let sp;try{sp=JSON.parse(json)}catch(e){try{sp=JSON.p
  const id="f"+(++figSeq);FIGS.set(id,{labels,S,unit,line,n,W,m,pw,band});
  const legend=S.length>=2?`<div class="lg">${S.map((x,j)=>`<span><i style="background:var(--s${j+1})"></i>${esc(x.name)}</span>`).join("")}</div>`:"";
  const table=`<div class="tw tv" hidden><table><thead><tr><th></th>${S.map(x=>`<th>${esc(x.name||title)}</th>`).join("")}</tr></thead><tbody>${labels.map((lb,i)=>`<tr><td>${esc(lb)}</td>${S.map(x=>`<td>${esc(fmtV(x.values[i],unit))}</td>`).join("")}</tr>`).join("")}</tbody></table></div>`;
- return `<figure class="fig"><div class="fig-h"><span class="no">Fig. ${no}</span><span class="tt">${esc(title)}</span>${unit?`<span class="capt">${esc(unit)}</span>`:""}<button class="tb" data-tv>Table</button></div>${legend}<div class="ro">${RO0}</div><svg class="ch" data-fig="${id}" viewBox="0 0 ${W} ${H}" role="img" aria-label="${esc(title)}">${g}${marks}${hit}</svg>${table}${sp.note?`<p class="note">${esc(sp.note)}</p>`:""}</figure>`}
+ return `<figure class="fig pre fx-${line?type:"bar"}"><div class="fig-h"><span class="no">Fig. ${no}</span><span class="tt">${esc(title)}</span>${unit?`<span class="capt">${esc(unit)}</span>`:""}<button class="tb" data-tv>Table</button><button class="tb" data-png aria-label="Save as PNG">PNG</button></div>${legend}<div class="ro">${RO0}</div><svg class="ch" data-fig="${id}" viewBox="0 0 ${W} ${H}" role="img" aria-label="${esc(title)}">${g}${marks}${hit}</svg>${table}${sp.note?`<p class="note">${esc(sp.note)}</p>`:""}</figure>`}
 /* chart hover: a crosshair, and the values read out inside the figure; nothing floats over the chat */
 const RO0=`<span class="ro-h">Point at the plate to read values</span>`;
 (()=>{let last=null;
- const clear=()=>{if(!last)return;last.classList.remove("hov");last.querySelectorAll(".on").forEach(e=>e.classList.remove("on"));const ro=last.closest(".fig")?.querySelector(".ro");if(ro)ro.innerHTML=RO0;last._i=null;last=null};
- document.addEventListener("pointermove",e=>{const svg=e.target.closest&&e.target.closest("svg.ch");if(!svg){clear();return}const G=FIGS.get(svg.dataset.fig);if(!G){clear();return}
+ const clear=()=>{if(!last)return;last.classList.remove("hov");last.querySelectorAll(".on").forEach(e=>e.classList.remove("on"));const ro=last.closest(".fig")?.querySelector(".ro");if(ro)ro.innerHTML=RO0;last._i=null;last._m=null;last=null};
+ document.addEventListener("pointermove",e=>{const svg=e.target.closest&&e.target.closest("svg.ch");if(!svg){clear();return}const G=FIGS.get(svg.dataset.fig);if(!G){const mk=e.target.closest("[data-ro]");if(last&&last!==svg)clear();last=svg;svg.classList.add("hov");if(svg._m===mk)return;svg._m=mk;svg.querySelectorAll(".on").forEach(x=>x.classList.remove("on"));const ro=svg.closest(".fig")?.querySelector(".ro");if(mk){mk.classList.add("on");if(ro)ro.innerHTML=mk.dataset.ro}else if(ro)ro.innerHTML=RO0;return}
   const r=svg.getBoundingClientRect(),sx=(e.clientX-r.left)*G.W/r.width;let i=G.line?Math.round((sx-G.m.l)/(G.n>1?G.pw/(G.n-1):1)):Math.floor((sx-G.m.l)/G.band);i=Math.max(0,Math.min(G.n-1,i));
   if(last&&last!==svg)clear();last=svg;svg.classList.add("hov");if(svg._i===i)return;svg._i=i;svg.querySelectorAll(".on").forEach(el=>el.classList.remove("on"));svg.querySelectorAll(`[data-i="${i}"]`).forEach(el=>el.classList.add("on"));
   if(G.line){const x=G.m.l+(G.n===1?G.pw/2:i*G.pw/(G.n-1));const xh=svg.querySelector(".xh");xh.setAttribute("x1",x);xh.setAttribute("x2",x)}
@@ -1528,7 +1581,7 @@ const GOO=(()=>{let cv=null,tm=0,t0=0,gl=null,pr=null,uB,uC,uR,cpu=null,rgb=[.66
  function frameCPU(s){const x=cv.getContext("2d"),W=cv.width,H=cv.height;if(!cpu)cpu=x.createImageData(W,H);const d=cpu.data,P=B.map(b=>[.5+.36*Math.sin(s*b.sx*.35+b.a),.5+.34*Math.cos(s*b.sy*.35+b.a*1.3),b.r*b.r]),c=rgb.map(v=>v*255);
   for(let y=0;y<H;y++)for(let xx=0;xx<W;xx++){const u=xx/W,v=y/W;let f=0;for(const p of P){const dx=u-p[0],dy=v-p[1]*H/W;f+=p[2]/(dx*dx+dy*dy+1e-4)}const k=(y*W+xx)*4,a=f<.9?0:f<1.15?(f-.9)/.25:1;d[k]=c[0];d[k+1]=c[1];d[k+2]=c[2];d[k+3]=a*(dk?(f>1.6?44:58):(f>1.6?28:36))}x.putImageData(cpu,0,0)}
  function loop(){tm=setTimeout(loop,gl?42:90);if(document.hidden)return;if(nC++%60===0)colour();const s=(performance.now()-t0)/1000;gl?frameGL(s):frameCPU(s)}
- return{run(on){if(!cv){cv=document.getElementById("goo");if(!cv)return;if(!initGL()){cv.width=100;cv.height=60}}if(on&&!reduce&&!tm){t0=performance.now()-4e4;nC=0;loop()}else if((!on||reduce)&&tm){clearTimeout(tm);tm=0}}}})();
+ return{recolor(){nC=0},run(on){if(!cv){cv=document.getElementById("goo");if(!cv)return;if(!initGL()){cv.width=100;cv.height=60}}if(on&&!reduce&&!tm){t0=performance.now()-4e4;nC=0;loop()}else if((!on||reduce)&&tm){clearTimeout(tm);tm=0}}}})();
 function open(c){GOO.run(!c);if(c!==cur&&$("#att"))attClear();window.__selHide&&window.__selHide();cur=c;app.classList.toggle("has-chat",!!c);GRAIN.run(!c&&PREF.grain);
  closeSheet();if(c){crumb();const la=c.turns.map(t=>t.role).lastIndexOf("assistant");$("#thread").innerHTML=c.turns.map((t,k)=>t.role==="user"?youHTML(t,k):botHTML(t,k,k===la)).join("");$("#main").append($("#dock"));FM.forEach(m=>{if(!m.host.isConnected)m.kill()});mountMaps();mountDocs();stick=true;requestAnimationFrame(()=>{sc.scrollTop=1e9;prog()})}
  else{$("#heroDock").append($("#dock"));$("#thread").innerHTML="";$("#crumb").textContent="";showDsp(false)}
@@ -1617,7 +1670,7 @@ const newChat=()=>{if(busy)return;open(null);promptEl.focus()};$("#newChat").onc
 $("#findBtn").onclick=()=>{$("#side").classList.toggle("searching");$("#find").focus()};
 /* appearance: system, light or dark; remembered per viewer, eased between palettes */
 const HOST_THEME=root.getAttribute("data-theme");let THEME=(()=>{try{return localStorage.getItem("expira.theme")||"system"}catch(e){return "system"}})();
-function applyTheme(v,soft){if(soft&&!reduce){root.classList.add("theming");clearTimeout(applyTheme.t);applyTheme.t=setTimeout(()=>root.classList.remove("theming"),800)}
+function applyTheme(v,soft){if(soft&&!reduce&&document.startViewTransition&&!applyTheme.vt){applyTheme.vt=1;try{const t=document.startViewTransition(()=>applyTheme(v,false));t.finished.finally(()=>applyTheme.vt=0)}catch(e){applyTheme.vt=0;applyTheme(v,false)}return}root.classList.add("tnone");requestAnimationFrame(()=>requestAnimationFrame(()=>root.classList.remove("tnone")));try{GOO.recolor()}catch(e){}
  if(v==="system"){if(HOST_THEME)root.setAttribute("data-theme",HOST_THEME);else root.removeAttribute("data-theme")}else root.setAttribute("data-theme",v);
  THEME=v;try{localStorage.setItem("expira.theme",v)}catch(e){}document.querySelectorAll("[data-th]").forEach(b=>b.setAttribute("aria-checked",String(b.dataset.th===v)))}
 applyTheme(THEME,false);
@@ -1865,7 +1918,7 @@ function synthSig(w,keys){const N=Math.max(60,Math.round((w.ms||60000)/250)),S=w
   const A=keys.indexOf("A");if(t>.5&&t<.56)mask|=1<<A;if(t>=.56&&t<.94)fr[A]=Math.round(1+Math.random()*7);fr.push(mask);out.push(fr)}return out}
 
 /* ---------- exhibits: key figures, charts, a comparison and sources, built from the desks' notes ---------- */
-function exhibitsHTML(ex,live){if(!ex)return "";const facts=(ex.facts||[]).filter(f=>f&&f.value!=null).slice(0,4),charts=(ex.charts||[]).slice(0,2),mx=ex.matrix&&Array.isArray(ex.matrix.rows)&&ex.matrix.rows.length?ex.matrix:null,src=(ex.sources||[]).filter(s=>s&&s.title).slice(0,8);
+function exhibitsHTML(ex,live){if(!ex)return "";const facts=(ex.facts||[]).filter(f=>f&&f.value!=null).slice(0,4),charts=(ex.charts||[]).slice(0,3),mx=ex.matrix&&Array.isArray(ex.matrix.rows)&&ex.matrix.rows.length?ex.matrix:null,src=(ex.sources||[]).filter(s=>s&&s.title).slice(0,8);
  if(!facts.length&&!charts.length&&!mx&&!src.length)return "";let k=0;const it=h=>`<div class="exi" style="animation-delay:${(k++)*.09}s">${h}</div>`;let o="";
  if(facts.length)o+=it(`<div class="facts">${facts.map(f=>`<div class="fact"><span class="v num" ${live?`data-count="${esc(f.value)}"`:""}>${esc(String(f.value))}</span><span class="lb">${esc(f.label||"")}</span>${f.note?`<span class="nt">${esc(f.note)}</span>`:""}</div>`).join("")}</div>`);
  charts.forEach((c,i)=>{const h=chartFig(JSON.stringify(c),i+1);if(h)o+=it(h)});
@@ -2295,6 +2348,61 @@ const SPRING=(()=>{const ok=typeof CSS!=="undefined"&&CSS.supports&&CSS.supports
  const mk=(k,c)=>{const m=1,w0=Math.sqrt(k/m),z=c/(2*Math.sqrt(k*m)),wd=w0*Math.sqrt(Math.max(1e-6,1-z*z));const x=t=>z<1?1-Math.exp(-z*w0*t)*(Math.cos(wd*t)+z*w0/wd*Math.sin(wd*t)):1-Math.exp(-w0*t)*(1+w0*t);
   let T=.1;while(T<3&&!(Math.abs(1-x(T))<.002&&Math.abs(1-x(T+.08))<.002))T+=.02;const n=Math.min(64,Math.max(24,Math.round(T*40)));const pts=[];for(let i=0;i<=n;i++)pts.push(+x(T*i/n).toFixed(4));pts[n]=1;return{e:`linear(${pts.join(", ")})`,ms:Math.round(T*1000)}};
  const S={jelly:mk(420,25),soft:mk(210,24),snap:mk(520,34)};if(ok){const r=document.documentElement.style;for(const [k,v] of Object.entries(S)){r.setProperty("--sp-"+k,v.e);r.setProperty("--sp-"+k+"-d",v.ms+"ms")}}return ok?S:null})();
+/* ---------- more forms: ranked bars, stacked, donut, waterfall, ranges, timeline; each animates in its own liquid way ---------- */
+const ROW=(lb,v,u,c)=>`<b>${esc(lb)}</b><span>${c?`<i style="background:${c}"></i>`:""}<em class="num">${esc(fmtV(v,u))}</em></span>`;
+const FH=(no,title,unit,extra)=>`<div class="fig-h"><span class="no">Fig. ${no}</span><span class="tt">${esc(title)}</span>${unit?`<span class="capt">${esc(unit)}</span>`:""}<button class="tb" data-tv>Table</button><button class="tb" data-png aria-label="Save as PNG">PNG</button></div>${extra||""}<div class="ro">${RO0}</div>`;
+const TBL=(head,rows)=>`<div class="tw tv" hidden><table><thead><tr>${head.map(h=>`<th>${esc(h)}</th>`).join("")}</tr></thead><tbody>${rows.map(r=>`<tr>${r.map(c=>`<td>${esc(c)}</td>`).join("")}</tr>`).join("")}</tbody></table></div>`;
+const cut=(s,n)=>{s=String(s);return s.length>n?s.slice(0,n-1)+"…":s};
+function chartX(sp,type,no){const title=sp.title||"",unit=sp.unit||"",note=sp.note?`<p class="note">${esc(sp.note)}</p>`:"";const id="x"+(++figSeq);let W=640,H=200,body="",tbl="",lg="";
+ const labels=(sp.labels||[]).map(String).slice(0,16),S=(sp.series||[]).filter(x=>Array.isArray(x.values)).slice(0,5).map(x=>({name:String(x.name||""),values:labels.map((_,i)=>Number(x.values[i]))}));
+ if(type==="hbar"){const v=(S[0]||{values:[]}).values,n=labels.length;if(!n)return "";const RH=22;H=n*RH+14;const lw=150,m={l:lw,r:74},pw=W-m.l-m.r,hi=Math.max(0,...v.filter(x=>!isNaN(x)))||1;
+  labels.forEach((lb,i)=>{const y=8+i*RH,w=Math.max(0,(v[i]||0)/hi*pw);body+=`<g class="mk" data-ro="${esc(ROW(lb,v[i],unit,"var(--s1)"))}" style="--i:${i}"><rect class="hr" x="0" y="${y-2}" width="${W}" height="${RH}" fill="transparent"/><text x="${lw-10}" y="${y+11}" text-anchor="end" class="lbl">${esc(cut(lb,24))}</text><rect class="hb" x="${m.l}" y="${y+3}" width="${w}" height="${RH-10}" rx="3" fill="var(--s1)"/><text class="vl num" x="${m.l+w+7}" y="${y+11.5}">${esc(fmtV(v[i],unit))}</text></g>`});
+  tbl=TBL(["",S[0]?.name||title],labels.map((lb,i)=>[lb,fmtV(v[i],unit)]))}
+ else if(type==="stacked"){const n=labels.length;if(!n||!S.length)return "";const tot=labels.map((_,i)=>S.reduce((a,x)=>a+(isNaN(x.values[i])?0:Math.max(0,x.values[i])),0)),tk=nice(0,Math.max(...tot)),tN=tk[tk.length-1],m={l:54,r:10,t:14,b:26},pw=W-m.l-m.r,ph=H-m.t-m.b,y=v=>m.t+(1-v/tN)*ph,band=pw/n,bw=Math.min(band*.56,56);
+  tk.forEach(v=>body+=`<line class="${v===0?"ax":"gl"}" x1="${m.l}" x2="${W-m.r}" y1="${y(v)}" y2="${y(v)}"/><text x="${m.l-8}" y="${y(v)+3}" text-anchor="end">${esc(fmtV(v,""))}</text>`);
+  labels.forEach((lb,i)=>{const cx=m.l+band*(i+.5);let acc=0;body+=`<g class="mk stk" style="--i:${i}">`;S.forEach((x,j)=>{const v=Math.max(0,x.values[i]||0);if(!v)return;const y0=y(acc),y1=y(acc+v);acc+=v;body+=`<rect class="sg" data-ro="${esc(`<b>${esc(lb)}</b><span><i style="background:var(--s${j+1})"></i>${esc(x.name)} <em class="num">${esc(fmtV(v,unit))}</em></span>`)}" x="${cx-bw/2}" y="${y1+1}" width="${bw}" height="${Math.max(0,y0-y1-2)}" rx="${j===S.length-1?3:1}" fill="var(--s${j+1})" style="--j:${j}"/>`});
+   body+=`<text class="vl num" x="${cx}" y="${y(tot[i])-5}" text-anchor="middle">${esc(fmtV(tot[i],unit))}</text></g><text x="${cx}" y="${H-8}" text-anchor="middle">${esc(cut(lb,14))}</text>`});
+  lg=`<div class="lg">${S.map((x,j)=>`<span><i style="background:var(--s${j+1})"></i>${esc(x.name)}</span>`).join("")}</div>`;tbl=TBL(["",...S.map(x=>x.name),"Total"],labels.map((lb,i)=>[lb,...S.map(x=>fmtV(x.values[i],unit)),fmtV(tot[i],unit)]))}
+ else if(type==="donut"){let parts=labels.map((lb,i)=>({lb,v:Math.max(0,Number((S[0]||{values:[]}).values[i])||0)})).filter(p=>p.v>0);if(parts.length<2)return "";if(parts.length>5){const rest=parts.slice(4).reduce((a,p)=>a+p.v,0);parts=parts.slice(0,4).concat([{lb:"Other",v:rest,o:1}])}
+  const T=parts.reduce((a,p)=>a+p.v,0);W=640;H=180;const cx=110,cy=90,r=64;let acc=0;
+  parts.forEach((p,i)=>{const pct=p.v/T*100,g=parts.length>1?.8:0,c=p.o?"var(--mute)":`var(--s${i+1})`;body+=`<circle class="dn" data-ro="${esc(ROW(p.lb,p.v,unit,c)+`<span class="num">${pct.toFixed(1)}%</span>`)}" cx="${cx}" cy="${cy}" r="${r}" pathLength="100" fill="none" stroke="${c}" stroke-width="18" stroke-dasharray="${Math.max(.1,pct-g)} ${100-Math.max(.1,pct-g)}" stroke-dashoffset="${-acc+25}" style="--da:${Math.max(.1,pct-g)};--i:${i}"/>`;acc+=pct});
+  body+=`<text class="dt num" x="${cx}" y="${cy+2}" text-anchor="middle" data-count="${esc(fmtV(T,unit))}">${esc(fmtV(T,unit))}</text><text class="ds" x="${cx}" y="${cy+17}" text-anchor="middle">Total</text>`;
+  parts.forEach((p,i)=>{const y=34+i*24,c=p.o?"var(--mute)":`var(--s${i+1})`;body+=`<g class="mk" style="--i:${i}" data-ro="${esc(ROW(p.lb,p.v,unit,c))}"><rect x="232" y="${y-9}" width="380" height="20" fill="transparent"/><rect x="236" y="${y-5}" width="10" height="10" rx="2" fill="${c}"/><text class="lbl" x="256" y="${y+4}">${esc(cut(p.lb,34))}</text><text class="vl num" x="600" y="${y+4}" text-anchor="end">${esc(fmtV(p.v,unit))}  ·  ${(p.v/T*100).toFixed(0)}%</text></g>`});
+  tbl=TBL(["","Value","Share"],parts.map(p=>[p.lb,fmtV(p.v,unit),(p.v/T*100).toFixed(1)+"%"]))}
+ else if(type==="waterfall"){const v=(S[0]||{values:[]}).values.map(x=>isNaN(x)?0:x);if(!labels.length)return "";const L=[...labels,sp.total||"Total"],n=L.length;let run=0;const st=v.map(d=>{const a=run;run+=d;return[a,run,d]});st.push([0,run,run,1]);
+  const all=st.flatMap(s=>[s[0],s[1]]),tk=nice(Math.min(0,...all),Math.max(0,...all)),t0=tk[0],tN=tk[tk.length-1],m={l:58,r:10,t:16,b:30},pw=W-m.l-m.r,ph=H-m.t-m.b,y=q=>m.t+(1-(q-t0)/(tN-t0))*ph,band=pw/n,bw=Math.min(band*.62,58);
+  tk.forEach(q=>body+=`<line class="${q===0?"ax":"gl"}" x1="${m.l}" x2="${W-m.r}" y1="${y(q)}" y2="${y(q)}"/><text x="${m.l-8}" y="${y(q)+3}" text-anchor="end">${esc(fmtV(q,""))}</text>`);
+  st.forEach((s,i)=>{const cx=m.l+band*(i+.5),top=y(Math.max(s[0],s[1])),bot=y(Math.min(s[0],s[1])),tot=s[3],c=tot?"var(--ink)":s[2]<0?"var(--s4)":"var(--s1)";
+   body+=`<g class="mk wf" style="--i:${i}" data-ro="${esc(ROW(L[i],s[2],unit,c)+(tot?"":`<span>running <em class="num">${esc(fmtV(s[1],unit))}</em></span>`))}"><rect x="${cx-band/2}" y="${m.t}" width="${band}" height="${ph}" fill="transparent"/><rect class="wb" x="${cx-bw/2}" y="${top}" width="${bw}" height="${Math.max(1.5,bot-top)}" rx="2" fill="${c}"/><text class="vl num" x="${cx}" y="${top-5}" text-anchor="middle">${esc((s[2]>0&&!tot?"+":"")+fmtV(s[2],unit))}</text></g><text x="${cx}" y="${H-10}" text-anchor="middle"${tot?' class="tl"':""}>${esc(cut(L[i],13))}</text>`;
+   if(i<n-1){const nx=m.l+band*(i+1.5);body+=`<line class="wc" style="--i:${i}" x1="${cx+bw/2}" x2="${nx-bw/2}" y1="${y(s[1])}" y2="${y(s[1])}"/>`}});
+  tbl=TBL(["","Change","Running"],st.map((s,i)=>[L[i],fmtV(s[2],unit),fmtV(s[1],unit)]))}
+ else if(type==="range"){const lo=(sp.low||[]).map(Number),hi2=(sp.high||[]).map(Number),mid=(sp.mid||[]).map(Number),n=labels.length;if(!n)return "";const RH=26;H=n*RH+30;const all=[...lo,...hi2].filter(x=>!isNaN(x)),tk=nice(Math.min(...all),Math.max(...all)),t0=tk[0],tN=tk[tk.length-1],m={l:150,r:20},pw=W-m.l-m.r,x=q=>m.l+(q-t0)/(tN-t0)*pw;
+  tk.forEach(q=>body+=`<line class="gl" x1="${x(q)}" x2="${x(q)}" y1="6" y2="${H-22}"/><text x="${x(q)}" y="${H-8}" text-anchor="middle">${esc(fmtV(q,""))}</text>`);
+  labels.forEach((lb,i)=>{if(isNaN(lo[i])||isNaN(hi2[i]))return;const y=16+i*RH,a=x(lo[i]),b=x(hi2[i]),c=(a+b)/2;body+=`<g class="mk rg" style="--i:${i};--o:${c}px" data-ro="${esc(`<b>${esc(lb)}</b><span><em class="num">${esc(fmtV(lo[i],unit))}</em> to <em class="num">${esc(fmtV(hi2[i],unit))}</em></span>${isNaN(mid[i])?"":`<span>typical <em class="num">${esc(fmtV(mid[i],unit))}</em></span>`}`)}"><rect x="0" y="${y-11}" width="${W}" height="${RH}" fill="transparent"/><text class="lbl" x="${m.l-12}" y="${y+4}" text-anchor="end">${esc(cut(lb,24))}</text><line class="rl" x1="${a}" x2="${b}" y1="${y}" y2="${y}"/><circle class="re" cx="${a}" cy="${y}" r="4.5"/><circle class="re" cx="${b}" cy="${y}" r="4.5"/>${isNaN(mid[i])?"":`<line class="rm" x1="${x(mid[i])}" x2="${x(mid[i])}" y1="${y-6}" y2="${y+6}"/>`}</g>`});
+  tbl=TBL(["","Low","High",...(mid.length?["Typical"]:[])],labels.map((lb,i)=>[lb,fmtV(lo[i],unit),fmtV(hi2[i],unit),...(mid.length?[fmtV(mid[i],unit)]:[])]))}
+ else if(type==="timeline"){const T=(sp.tasks||[]).filter(t=>t&&t.label!=null&&!isNaN(+t.start)&&!isNaN(+t.end)).slice(0,12);if(!T.length)return "";const RH=24;H=T.length*RH+32;const tk=nice(Math.min(...T.map(t=>+t.start)),Math.max(...T.map(t=>+t.end))),t0=tk[0],tN=tk[tk.length-1],m={l:160,r:16},pw=W-m.l-m.r,x=q=>m.l+(q-t0)/(tN-t0)*pw;
+  tk.forEach(q=>body+=`<line class="gl" x1="${x(q)}" x2="${x(q)}" y1="4" y2="${H-22}"/><text x="${x(q)}" y="${H-8}" text-anchor="middle">${esc(fmtV(q,""))}${q===tN&&unit?" "+esc(unit):""}</text>`);
+  T.forEach((t,i)=>{const y=8+i*RH,a=x(+t.start),b=Math.max(a+3,x(+t.end));body+=`<g class="mk tln" style="--i:${i}" data-ro="${esc(`<b>${esc(t.label)}</b><span><em class="num">${esc(fmtV(+t.start,""))}–${esc(fmtV(+t.end,""))}</em> ${esc(unit)}</span>`)}"><rect x="0" y="${y-3}" width="${W}" height="${RH}" fill="transparent"/><text class="lbl" x="${m.l-12}" y="${y+12}" text-anchor="end">${esc(cut(t.label,26))}</text><rect class="tb2" x="${a}" y="${y+2}" width="${b-a}" height="${RH-10}" rx="3" fill="var(--s${(i%5)+1})" style="transform-origin:${a}px 0"/></g>`});
+  tbl=TBL(["Task","Start","End"],T.map(t=>[t.label,String(t.start),String(t.end)]))}
+ else return "";
+ return `<figure class="fig pre fx-${type}">${FH(no,title,unit,lg)}<svg class="ch" data-fig="${id}" viewBox="0 0 ${W} ${H}" role="img" aria-label="${esc(title)}">${body}</svg>${tbl}${note}</figure>`}
+/* figures come alive when they scroll into view */
+const FIGIO=new IntersectionObserver(es=>es.forEach(en=>{if(en.isIntersecting){en.target.classList.remove("pre");en.target.classList.add("in");FIGIO.unobserve(en.target);countUp(en.target)}}),{rootMargin:"0px 0px -40px 0px"});
+function armFigs(root){(root||document).querySelectorAll(".fig.pre:not([data-io])").forEach(f=>{f.dataset.io=1;if(reduce){f.classList.remove("pre");return}FIGIO.observe(f);setTimeout(()=>{if(f.classList.contains("pre")){f.classList.remove("pre");f.classList.add("in")}},2500)})}
+new MutationObserver(()=>armFigs()).observe(document.getElementById("thread"),{childList:true,subtree:true});
+/* high-resolution PNG: the figure redrawn at 3× with its computed colours */
+async function figPNG(fig,btn){const svg=fig.querySelector("svg.ch");if(!svg)return;const vb=svg.viewBox.baseVal,S=3,cl=svg.cloneNode(true),src=[svg,...svg.querySelectorAll("*")],dst=[cl,...cl.querySelectorAll("*")];
+ src.forEach((el,i)=>{const cs=getComputedStyle(el),d=dst[i];["fill","stroke","stroke-width","opacity","font-size","font-family","font-weight","font-style","letter-spacing","stroke-dasharray","stroke-dashoffset","stroke-linecap","paint-order"].forEach(p=>{const v=cs.getPropertyValue(p);if(v)d.style.setProperty(p,v)});d.style.animation="none";d.style.transition="none";d.removeAttribute("class")});
+ dst.forEach(d=>{if(d.style)d.style.transform="none"});cl.setAttribute("xmlns","http://www.w3.org/2000/svg");cl.setAttribute("width",vb.width);cl.setAttribute("height",vb.height);
+ const img=new Image();await new Promise((ok,no)=>{img.onload=ok;img.onerror=no;img.src="data:image/svg+xml;charset=utf-8,"+encodeURIComponent(new XMLSerializer().serializeToString(cl))});
+ const pad=28,th=44,c=document.createElement("canvas");c.width=(vb.width+pad*2)*S;c.height=(vb.height+pad*2+th)*S;const x=c.getContext("2d");x.scale(S,S);const rs=getComputedStyle(document.documentElement),title=fig.querySelector(".fig-h .tt")?.textContent||"Figure";
+ x.fillStyle=rs.getPropertyValue("--sheet").trim()||"#fff";x.fillRect(0,0,c.width,c.height);x.fillStyle=rs.getPropertyValue("--gold").trim();x.font='italic 12px "Libre Baskerville",Georgia,serif';x.fillText(fig.querySelector(".fig-h .no")?.textContent||"",pad,pad+10);
+ x.fillStyle=rs.getPropertyValue("--ink").trim();x.font='15px "Libre Baskerville",Georgia,serif';x.fillText(title,pad,pad+30);x.drawImage(img,pad,pad+th,vb.width,vb.height);
+ const blob=await new Promise(z=>c.toBlob(z,"image/png")),name=(title.toLowerCase().replace(/[^a-z0-9]+/g,"-").replace(/^-|-$/g,"")||"figure")+"@3x.png",t=btn.textContent;
+ const dl=await window.claude?.use?.("downloads")??null;try{if(dl){await dl.save({filename:name,data:blob});btn.textContent="Saved"}else{await navigator.clipboard.write([new ClipboardItem({"image/png":blob})]);btn.textContent="Copied"}}catch(e){btn.textContent=e&&e.code==="declined"?"Declined":"Not saved"}setTimeout(()=>btn.textContent=t,1600)}
+document.addEventListener("click",e=>{const b=e.target.closest("[data-png]");if(b){const f=b.closest(".fig");if(f)figPNG(f,b).catch(()=>{b.textContent="Not saved";setTimeout(()=>b.textContent="PNG",1600)})}});
+window.__ex=(ex)=>exhibitsHTML(ex,true);
+
 /* claim cards: hovering a citation draws its claim out of the marker */
 {const P=$("#cpop");let tm=0,on=null;const host=u=>{try{return new URL(u).hostname.replace(/^www\./,"")}catch(e){return String(u)}};
  const show=el=>{const w=workOf(el),c=w?.ledger?.claims?.find(x=>String(x.id)===el.dataset.claim);if(!c)return;on=el;
@@ -2529,7 +2637,7 @@ Use ONLY figures and facts present in the answer and the claims ledger below, an
 ${work.ledger&&work.ledger.claims.length?`Ledger:\n${ledText()}\n`:""} Omit anything that would not help. If nothing numeric exists, return empty lists.
 Reply with only JSON:
 {"facts":[{"label": string (2-4 words), "value": string (e.g. "PHP 952,560" or "5–7 weeks"), "note": string (optional, under 8 words)}] (0-4 items),
- "charts":[{"type":"bar"|"line"|"area","title": string,"unit": string,"labels":[strings],"series":[{"name": string,"values":[numbers]}],"note": string}] (0-2 items, each needs at least 2 labels),
+ "charts":[{"type":"bar"|"hbar"|"stacked"|"line"|"area"|"donut"|"waterfall"|"range"|"timeline","title": string,"unit": string,"labels":[strings],"series":[{"name": string,"values":[numbers]}],"low":[numbers],"high":[numbers],"mid":[numbers],"tasks":[{"label": string,"start": number,"end": number}],"total": string,"note": string}] (0-3 items). Choose each chart's form by the job its data does, after reading the research: a ranking or comparison of one measure across items -> "hbar" (sort largest first); parts of a whole (2-6 parts) -> "donut" (one series) or "stacked" (parts across items); change over time -> "line" or "area"; a cost or price build-up from components to a total -> "waterfall" (series[0].values are the step amounts; "total" names the last bar); estimates given as low-high ranges -> "range" (labels with low/high, optional mid); a schedule or phases -> "timeline" (tasks with start/end in the unit, e.g. weeks); a few items with several measures -> "bar". Include only the fields the chosen form uses. Never chart a single number; put it in facts. Do not repeat the same data in two charts.
  "matrix": {"title": string,"columns":[strings],"rows":[{"name": string,"cells":[strings, numbers, or integer ratings 0-5]}],"note": string} or null,
  "sources":[{"title": string,"url": string (only if given in the notes),"note": string}] (0-6 items)}
 ${safe?"CLIENT-SAFE: no supplier names, supplier costs, margins or internal figures.":""}
