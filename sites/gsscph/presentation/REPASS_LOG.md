@@ -32,6 +32,16 @@ beautiful though. Apply the same extra agent qa checker, then coordinates with b
 - **Colophon.** gsscph.com and the SEC company registration number (kernel 01), as the site shows them.
 - **Staging.** It is staged from one `--v`, so it runs back exactly.
 
+**Review of the groundwork, the close and the end card** (the reviewer), with the answers:
+
+| Finding | Level | Answer |
+|---|---|---|
+| The header and folio read the end card's name while the close is still on screen | Blocker, as filed | **Partly right, fixed.** The close has already faded when the name flips (the leave is [L, L+.40]), so it never labels a visible close. But for about half a second of the rest, the header named the end card before the chrome withdrew. The header now never takes the end card's name |
+| The refactor flattened the stagger of scene furniture (.6/.66/.75) | Should fix | **Not a regression; kept as is, raised for pass 2.** The stagger was already gone one commit earlier: the phased timing (Duke: "never overlap") set every arrival to `b − .45` whatever the first number said (verified on d345ac3, line 419). A small cascade inside the arrival phase is a pass 2 question for the motion table |
+| `const D = SCENES[1]` is the last lookup by position; scene ii will sit before 'disc' | Should fix | **Fixed:** found by its key |
+| The mobile number is the canonical one, but 01_identity asks to confirm the public number before a client release | Note | **For Duke**, before the deck is shown to a client |
+| The end card is on-grammar, restrained, and a clean bookend; every fact matches 01_identity | Note | — |
+
 **The flowchart (builder agent, in its own worktree):** in progress.
 
 ## Pass 0 · Leaders, better ease (2026-09-24)

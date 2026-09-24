@@ -459,7 +459,7 @@ const easeMove = p => p;   // even: the softness belongs to each piece, not to t
    the next scene arrives [L+.72, L+1]. */
 const LEAVE = sc => sc.closes ? [sc.end + .42, sc.end + .64] : [sc.end, sc.end + .4];
 const ARRIVE = k => k > 0 && SCENES[k - 1].closes ? SCENES[k - 1].end + .72 : SCENES[k].at - .45;   // when scene k starts to arrive
-const D = SCENES[1], RETRACT9 = [D.end, D.end + .18], CLOSE9 = [D.end + .08, D.end + .42], FADE9 = LEAVE(D), PAGE9 = [D.end + .64, D.end + .74];
+const D = SCENES.find(x => x.key === 'disc'), RETRACT9 = [D.end, D.end + .18], CLOSE9 = [D.end + .08, D.end + .42], FADE9 = LEAVE(D), PAGE9 = [D.end + .64, D.end + .74];
 // an element arrives on its scene's step data-in (counted from the scene's start; "start": there from the first frame)
 // and leaves with its scene; a build within a scene arrives over the second half of its step
 const els = [...document.querySelectorAll('[data-in]')].map(el => { const k = SCENES.findIndex(x => x.key === el.closest('.scene').dataset.scene), sc = SCENES[k];
@@ -516,7 +516,9 @@ function render(now, newFilm){
   // ---- scene furniture
   for (const o of els) { const v = sseg(o.a, o.b) * (1 - sseg(o.c, o.d)); setVar(o.el, '--v', v.toFixed(3)); setVar(o.el, 'visibility', v < .002 ? 'hidden' : 'visible'); }
   // the header's scene name changes in the rest, once the old scene has gone (never while it is still on screen)
-  const fl = Math.floor(T), lv = SCENES.find(x => x.end === fl), sc = sceneOf(lv && T - fl >= LEAVE(lv)[1] + .01 - fl ? fl + 1 : fl);
+  const fl = Math.floor(T), lv = SCENES.find(x => x.end === fl);
+  // (the end card has no chrome of its own: the header keeps the close's name while the chrome withdraws)
+  const sc = Math.min(sceneOf(lv && T - fl >= LEAVE(lv)[1] + .01 - fl ? fl + 1 : fl), SCENES.findIndex(x => x.card) - 1);
   const C = S.close, E = S.eco, F = S.file;
   // the paper rises in the rest after the compass closes, and falls in the rest before the close
   const day = sseg(...PAGE9) * (1 - sseg(C - .55, C - .25));
