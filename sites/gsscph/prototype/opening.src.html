@@ -264,7 +264,7 @@ table.dt td.no{font:400 18px/1.2 var(--f-display);font-feature-settings:"onum" 1
 table.dt td.name{font:400 19px/1.3 var(--f-display);color:var(--navy-dark);width:30%;letter-spacing:var(--tracked-num)}
 table.dt td.code{font:500 12px/1.4 var(--f-body);letter-spacing:var(--tracked-tight);color:var(--mid-grey);white-space:nowrap;text-align:right}
 table.dt tbody tr td{transition:background 600ms var(--soft-close)}
-@media (max-width:640px){ table.dt{min-width:0} table.dt th:last-child,table.dt td.code{display:none} table.dt td.name .fig-m{display:block;width:max-content} table.dt td.name{width:38%;font-size:17px} table.dt td,table.dt thead th{padding-inline:10px} table.dt td.no{width:40px} }
+@media (max-width:640px){ table.dt{min-width:0} table.dt:has(td.code) th:last-child,table.dt td.code{display:none} table.dt td.name .fig-m{display:block;width:max-content} table.dt td.name{width:38%;font-size:17px} table.dt td,table.dt thead th{padding-inline:10px} table.dt td.no{width:40px} }
 table.dt tbody tr:hover td{background:rgba(230,212,167,.24);transition-duration:180ms}
 table.dt tbody tr td:first-child{box-shadow:inset 0 0 0 transparent;transition:background 600ms var(--soft-close),box-shadow 600ms var(--soft-close)}
 table.dt tbody tr:hover td:first-child{box-shadow:inset 2px 0 0 var(--gold-primary)}
@@ -407,7 +407,7 @@ table.dt tbody tr:hover td:first-child{box-shadow:inset 2px 0 0 var(--gold-prima
   font:600 9.5px/1 var(--f-body);letter-spacing:.24em;text-transform:uppercase;color:var(--gold-deep);transform:rotate(-3deg);opacity:.9}
 .lg-foot{border-top:var(--rule-hair) solid var(--hairline);background:linear-gradient(180deg,rgba(243,239,228,.6),rgba(243,239,228,.2))}
 .lg-res{font:italic 400 15px/1.45 var(--f-display);color:var(--navy-dark);font-feature-settings:"lnum" 1,"tnum" 1}
-.lg-fol{font:600 10px/1.3 var(--f-body);letter-spacing:var(--tracked-tight);text-transform:uppercase;color:var(--mid-grey)}
+.lg-fol{font:600 10px/1.3 var(--f-body);letter-spacing:var(--tracked-tight);text-transform:uppercase;color:var(--mid-grey);text-decoration:none;border-bottom:1px solid transparent;transition:color 500ms var(--soft-close),border-color 500ms var(--soft-close)} .lg-fol:hover{color:var(--navy-dark);border-bottom-color:var(--gold-primary)}
 .ctl{padding:18px 0 16px;border-bottom:var(--rule-hair) solid var(--hairline)}
 .ctl label{display:flex;min-height:24px;justify-content:space-between;align-items:baseline;gap:12px;font:600 10.5px/1.4 var(--f-body);letter-spacing:var(--tracked-cap);text-transform:uppercase;color:var(--navy-dark)}
 .ctl output{min-width:5.2ch;text-align:right;font:400 21px/1 var(--f-display);letter-spacing:var(--tracked-num);text-transform:none;font-feature-settings:"lnum" 1,"tnum" 1}
@@ -438,21 +438,34 @@ table.dt tbody tr:hover td:first-child{box-shadow:inset 2px 0 0 var(--gold-prima
 .eb em{margin-left:10px;font:500 12.5px/1 var(--f-body);font-style:normal;font-feature-settings:"tnum" 1;color:var(--ink);white-space:nowrap}
 .eb.c em.x{font:italic 400 13px/1 var(--f-display);color:var(--slate)}
 .econ-note{margin:16px 0 0;font:italic 400 14px/1.5 var(--f-display);color:var(--slate);max-width:62ch}
-.econ-src{margin:0}
-.econ-src summary{cursor:pointer;list-style:none;display:flex;justify-content:space-between;align-items:center;min-height:44px;padding:0 22px;border-top:var(--rule-hair) solid var(--hairline);border-bottom:var(--rule-hair) solid var(--hairline);
-  font:600 10.5px/1 var(--f-body);letter-spacing:var(--tracked-cap);text-transform:uppercase;color:var(--navy-dark)}
-.econ-src summary::-webkit-details-marker{display:none}
-.econ-src summary::after{content:"+";font:400 18px/1 var(--f-display);transition:transform 600ms var(--soft-close)} .econ-src[open] summary::after{transform:rotate(45deg)}
-.econ-src .dt-wrap{padding:0 22px 18px} .econ-src table.dt{min-width:0;margin-top:0} .econ-src table.dt td{font-size:14px;padding:12px 12px}
+/* the notes: as on a statement of account, every line carries a note number and the notes sit, always visible,
+   at the foot of the exhibit. Each note: what is assumed, and its source, labelled as such. */
+.lg-notes{border-top:var(--rule-hair) solid var(--hairline);padding:18px 22px 22px;background:#fdfcf8}
+.lg-notes-h{display:flex;justify-content:space-between;align-items:baseline;gap:8px 20px;flex-wrap:wrap;margin:0 0 14px}
+.lg-notes-h span{font:600 10.5px/1.3 var(--f-body);letter-spacing:var(--tracked);text-transform:uppercase;color:var(--navy-dark)}
+.lg-notes-h i{font:italic 400 13.5px/1.4 var(--f-display);color:var(--slate)}
+.lg-notes ol{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:0 22px}
+.lg-notes li{padding:12px 0 4px;border-top:var(--rule-medium) solid var(--navy-dark);transition:border-color 500ms var(--soft-close);scroll-margin-top:120px}
+.lg-notes li.hl{border-top-color:var(--gold-primary)}
+.lg-notes .nk{display:flex;align-items:baseline;gap:9px;margin:0 0 6px;font:600 10.5px/1.35 var(--f-body);letter-spacing:var(--tracked-cap);text-transform:uppercase;color:var(--navy-dark)}
+.lg-notes .nk b{font:400 17px/1 var(--f-display);font-feature-settings:"lnum" 1;letter-spacing:0;color:var(--gold-deep)}
+.lg-notes .nt{margin:0 0 10px;font-size:13.5px;line-height:1.5;color:var(--ink)}
+.lg-notes .ns{margin:0;padding-top:8px;border-top:var(--rule-hair) solid var(--hairline);font-size:12.5px;line-height:1.5;color:var(--slate)}
+.lg-notes .ns span{display:block;margin-bottom:2px;font:600 9.5px/1.3 var(--f-body);letter-spacing:var(--tracked-cap);text-transform:uppercase;color:var(--mid-grey)}
+.lg-notes a{color:var(--navy-dark);text-decoration:underline;text-decoration-color:var(--gold-primary);text-underline-offset:3px}
+.fn{font:500 10px/0 var(--f-body);vertical-align:super;margin-left:3px;letter-spacing:0}
+.fn a{color:var(--gold-deep);text-decoration:none;padding:2px}
+.brow{transition:background 500ms var(--soft-close)} .brow.hl{background:rgba(230,212,167,.18)}
+@media (max-width:1100px){ .lg-notes ol{grid-template-columns:1fr 1fr;gap:14px 22px} }
+@media (max-width:560px){ .lg-notes{padding:16px 18px 18px} .lg-notes ol{grid-template-columns:1fr} }
 .fig-link{color:inherit;text-decoration:none;border-bottom:1px solid rgba(168,134,47,.45);padding-bottom:1px;transition:color 600ms var(--soft-close),border-color 600ms var(--soft-close)}
 .fig-m{display:none;margin:-6px 0 -10px;padding:12px 0;font:500 11px/1.4 var(--f-body);letter-spacing:var(--tracked-tight)}
 .fig-link::after{content:" ↗";font-size:.9em;opacity:0;transition:opacity 600ms var(--soft-close)}
 .fig-link:hover,.fig-link:focus-visible{color:var(--gold-deep);border-bottom-color:var(--gold-deep)} .fig-link:hover::after{opacity:1}
 .tag.focus{border-left-color:var(--gold-light)} .tag.focus .v{color:var(--gold-light)}
 .now.focus .v{color:var(--gold-light)}
-.econ-src a{color:var(--navy-dark);text-decoration:underline;text-decoration-color:var(--gold-primary);text-underline-offset:3px}
 @media (max-width:960px){ .lg-body{grid-template-columns:1fr} .lg-rule{display:none} .econ-ctl{padding:4px var(--gutter-in,18px) 18px;border-bottom:var(--rule-hair) solid var(--navy-dark)}
-  .econ-out{padding:24px 18px 22px} .lg-head,.lg-foot{padding:12px 18px} .econ-src summary{padding:0 18px}
+  .econ-out{padding:24px 18px 22px} .lg-head,.lg-foot{padding:12px 18px}
   .econ-hero{grid-template-columns:1fr} .econ-hero > div + div{padding-left:0;border-left:0;border-top:var(--rule-hair) solid var(--hairline)}
   .econ-hero{border-top:0} .econ-hero > div{padding-right:0} .brow{grid-template-columns:1fr} .lg-stamp{right:14px} }
 /* touch: a larger thumb to catch, a taller hit area */
@@ -786,15 +799,16 @@ table.dt tbody tr:hover td:first-child{box-shadow:inset 2px 0 0 var(--gold-prima
           <p class="econ-note">Illustrative model of the client's own overhead, built from published benchmarks. It excludes the coordinator's fee, which GSSC quotes per engagement, so read it as what one point of accountability lifts off your side of the table.</p>
         </div>
       </div>
-      <div class="lg-foot"><span class="lg-res" id="lgRes"></span><span class="lg-fol">Sources: APQC · BSP · PayScale PH · CII</span></div>
-      <details class="econ-src"><summary>Assumptions and sources</summary>
-          <div class="dt-wrap"><table class="dt"><thead><tr><th>Line</th><th>Assumption</th><th>Source</th></tr></thead><tbody>
-            <tr><td class="name">Invoices</td><td>One invoice per supplier per month, at ₱1,344 each (US$21.40 median cost to process an AP invoice, at ₱62.80)</td><td><a href="https://www.apqc.org/resource-library/resource/total-cost-process-accounts-payable-invoice-processed">APQC</a> · <a href="https://www.bsp.gov.ph/statistics/external/tab12_pus.aspx">BSP rate, 22 Sep 2026</a></td></tr>
-            <tr><td class="name">Purchase orders</td><td>Two per supplier (award and one change), at ₱2,135 each (US$34, the midpoint of US$14–54)</td><td><a href="https://www.apqc.org/resource-library/resource/how-efficient-your-procurement-process-benchmarks-reveal-wide-performance">APQC</a></td></tr>
-            <tr><td class="name">Coordination time</td><td>Three hours a week per supplier of a manager's time, at ₱346 an hour (₱720,000 a year over 2,080 hours)</td><td><a href="https://www.payscale.com/research/PH/Job=Project_Manager%2C_Construction/Salary/038fa076/Manila-Project-Management">PayScale PH</a></td></tr>
-            <tr><td class="name">Interface rework</td><td>Rework averages 5% of project cost, 17% of it from communication failures between trades: 0.85% of programme value, carried by the client when no one owns the interfaces</td><td><a href="https://www.planradar.com/us/cost-of-rework-construction/">CII via PlanRadar</a></td></tr>
-          </tbody></table></div>
-      </details>
+      <div class="lg-foot"><span class="lg-res" id="lgRes"></span><a class="lg-fol" href="#lgNotesH">Notes 1–4 · APQC · BSP · PayScale PH · CII</a></div>
+      <section class="lg-notes" aria-labelledby="lgNotesH">
+        <p class="lg-notes-h" id="lgNotesH"><span>Notes and sources</span><i>Every figure above traces to one of these four lines.</i></p>
+        <ol>
+          <li id="en1" data-n="0"><p class="nk"><b>1</b>Invoices</p><p class="nt">One invoice per supplier per month, at ₱1,344 each (US$21.40 median cost to process an AP invoice, at ₱62.80)</p><p class="ns"><span>Source</span><a href="https://www.apqc.org/resource-library/resource/total-cost-process-accounts-payable-invoice-processed">APQC</a> · <a href="https://www.bsp.gov.ph/statistics/external/tab12_pus.aspx">BSP rate, 22 Sep 2026</a></p></li>
+          <li id="en2" data-n="1"><p class="nk"><b>2</b>Purchase orders</p><p class="nt">Two per supplier (award and one change), at ₱2,135 each (US$34, the midpoint of US$14–54)</p><p class="ns"><span>Source</span><a href="https://www.apqc.org/resource-library/resource/how-efficient-your-procurement-process-benchmarks-reveal-wide-performance">APQC</a></p></li>
+          <li id="en3" data-n="2"><p class="nk"><b>3</b>Coordination time</p><p class="nt">Three hours a week per supplier of a manager's time, at ₱346 an hour (₱720,000 a year over 2,080 hours)</p><p class="ns"><span>Source</span><a href="https://www.payscale.com/research/PH/Job=Project_Manager%2C_Construction/Salary/038fa076/Manila-Project-Management">PayScale PH</a></p></li>
+          <li id="en4" data-n="3"><p class="nk"><b>4</b>Interface rework</p><p class="nt">Rework averages 5% of project cost, 17% of it from communication failures between trades: 0.85% of programme value, carried by the client when no one owns the interfaces</p><p class="ns"><span>Source</span><a href="https://www.planradar.com/us/cost-of-rework-construction/">CII via PlanRadar</a></p></li>
+        </ol>
+      </section>
     </figure>
   </section>
 
@@ -1439,9 +1453,13 @@ const barsEl = document.getElementById('bars'), econEl = document.getElementById
 const php = v => '₱' + Math.round(v).toLocaleString('en-PH');
 const ROWS = [['Invoices processed', 'one per supplier, per month'], ['Purchase orders', 'award and one change each'],
               ['Coordination time', 'a manager’s hours on the interfaces'], ['Interface rework', 'the gaps between trades']];
-barsEl.innerHTML = ROWS.map(([k, s]) => `<div class="brow"><div class="k">${k}<small>${s}</small></div><div class="bpair">
+barsEl.innerHTML = ROWS.map(([k, s], i) => `<div class="brow" data-n="${i}"><div class="k">${k}<sup class="fn"><a href="#en${i + 1}" aria-label="Note ${i + 1}">${i + 1}</a></sup><small>${s}</small></div><div class="bpair">
   <div class="eb d"><b></b><em></em></div><div class="eb c"><b></b><em></em></div></div></div>`).join('');
 const barD = [...barsEl.querySelectorAll('.eb.d')], barC = [...barsEl.querySelectorAll('.eb.c')];
+// a line and its note light together, from either side
+{ const pairs = [...barsEl.querySelectorAll('.brow')].map(r => [r, document.getElementById('en' + (+r.dataset.n + 1))]);
+  for (const [r, n] of pairs) for (const el of [r, n]) { el.addEventListener('pointerenter', () => { r.classList.add('hl'); n.classList.add('hl'); });
+    el.addEventListener('pointerleave', () => { r.classList.remove('hl'); n.classList.remove('hl'); }); } }
 const hero = {D: document.getElementById('hD'), C: document.getElementById('hC'), S: document.getElementById('hS'), P: document.getElementById('hP')};
 const lgSum = document.getElementById('lgSum'), lgRes = document.getElementById('lgRes'), ledger = econEl;
 const econ = {tD: 0, tC: 0, sD: 0, sC: 0, share: 0};
