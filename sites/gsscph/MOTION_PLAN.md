@@ -115,3 +115,15 @@ What made the difference:
 - **QA:** `sites/gsscph/qa/QA_PROMPT.md` (the pass to run) and `qa/run_qa.py` (the harness: direct and
   sandboxed loads at both widths, errors, overflow, label fit, one timeline, header rule, tap targets,
   compass edge alpha, banned text, per-section frame times, contact sheets, `out/REPORT.md`).
+
+## Round 4 (Duke: "why does the lava flash black every so often? Just on first opening?")
+
+- **Cause 1, first opening:** an undrawn WebGL canvas shows black. The lava drew only on film frames, so it
+  appeared black for up to one film frame (125 ms at the lowest level), then faded in from black through its
+  persistence blend. Measured on the old build: one frame at brightness 0.0, then 33, 38, 41 and so on.
+  **Fix:** the first frame paints as soon as the panel comes near (1.5 screens ahead), whatever the film
+  clock says, and persistence starts clean. The new build shows the lava immediately.
+- **Cause 2, "every so often":** every quality-dial move resized the canvas, which wipes it to black until
+  the next film frame; the compass's film layer did the same, and black blended over the print darkens it.
+  **Fix:** a resize repaints in the same task (the browser never presents the wiped buffer); only real size
+  changes reallocate; the dial tries a better level at most once every 20 s.

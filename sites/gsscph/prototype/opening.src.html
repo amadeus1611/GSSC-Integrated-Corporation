@@ -1062,8 +1062,8 @@ void main(){
   gl_FragColor = vec4(col, 1.);
 }`;
 const FS_F = `precision highp float;
-uniform sampler2D uCur, uPrev; uniform vec2 uRes;
-void main(){ vec2 uv = gl_FragCoord.xy / uRes; gl_FragColor = vec4(mix(texture2D(uCur, uv).rgb, texture2D(uPrev, uv).rgb, .34), 1.); }`;
+uniform sampler2D uCur, uPrev; uniform vec2 uRes; uniform float uKeep;
+void main(){ vec2 uv = gl_FragCoord.xy / uRes; gl_FragColor = vec4(mix(texture2D(uCur, uv).rgb, texture2D(uPrev, uv).rgb, uKeep), 1.); }`;
 const FS_B = `precision highp float;
 uniform sampler2D uTex; uniform vec2 uRes, uJit; uniform float uTime;
 ${FILM_GLSL}
@@ -1109,7 +1109,7 @@ if (gl) {
   const fbo = tex.f;
   const loc = (pr, n) => gl.getUniformLocation(pr, n);
   fx = {A, B, F, buf, tex, acc, ping: 0, fbo, lw: 0, lh: 0, aA: gl.getAttribLocation(A, 'a'), aB: gl.getAttribLocation(B, 'a'), aF: gl.getAttribLocation(F, 'a'),
-        f: {cur: loc(F, 'uCur'), prev: loc(F, 'uPrev'), res: loc(F, 'uRes')},
+        f: {cur: loc(F, 'uCur'), prev: loc(F, 'uPrev'), res: loc(F, 'uRes'), keep: loc(F, 'uKeep')},
         a: {res: loc(A, 'uRes'), time: loc(A, 'uTime'), conv: loc(A, 'uConv'), b: loc(A, 'uB')},
         b: {res: loc(B, 'uRes'), time: loc(B, 'uTime'), jit: loc(B, 'uJit'), tex: loc(B, 'uTex'), ...filmLocs(gl, B)}};
 }
@@ -1117,7 +1117,12 @@ let FW = 0, FH = 0;
 function sizeField(){
   if (!fx) return;
   const dpr = Math.min(devicePixelRatio || 1, 1) * Q.lava;   // soft footage, played back upscaled: the softness is the look, and a fraction of the cost
-  FW = Math.max(2, Math.round(fcv.clientWidth * dpr)); FH = Math.max(2, Math.round(fcv.clientHeight * dpr));
+  const nw = Math.max(2, Math.round(fcv.clientWidth * dpr)), nh = Math.max(2, Math.round(fcv.clientHeight * dpr));
+  if (nw === FW && nh === FH && fx.lw) return;
+  FW = nw; FH = nh;
+  /* Resizing a WebGL canvas wipes it to black, and the lava only draws again on its next film frame: shown in between,
+     that was a black flash (on first load, and whenever the quality dial moved). So a resize repaints at once, in the
+     same task, before the browser can present the wiped buffer; and the persistence starts clean. */
   fcv.width = FW; fcv.height = FH;
   // the lamp itself renders small and is played back large: the softness is the point
   fx.lw = Math.max(2, Math.round(Math.min(fcv.clientWidth, vw < 700 ? 340 : 480))); fx.lh = Math.max(2, Math.round(fx.lw * FH / FW));
@@ -1130,6 +1135,8 @@ function sizeField(){
     gl.framebufferTexture2D(gl.FRAMEBUFFER, gl.COLOR_ATTACHMENT0, gl.TEXTURE_2D, o.t, 0);
   }
   gl.bindFramebuffer(gl.FRAMEBUFFER, null);
+  fx.fresh = true;
+  if (fx.lastConv != null) drawField(fx.lastT, fx.lastConv, 0);
 }
 sizeField();
 // a lamp: a pooled mass at the bottom, a small one at the top, and wax that rises, stretches and sinks
@@ -1144,6 +1151,7 @@ panel.addEventListener('pointerleave', () => { ptr.active = false; });
 const U = new Float32Array(NB * 4);
 function drawField(t, conv, dt){
   if (!fx) return;
+  fx.lastT = t; fx.lastConv = conv;
   const aspect = fcv.clientWidth / Math.max(1, fcv.clientHeight), portrait = aspect < 1, rf = portrait ? .8 : 1;
   const idle = !ptr.active || performance.now() - ptr.last > 2600;
   const mx = idle ? Math.sin(t * .00017) * aspect * .3 : ptr.x, my = idle ? Math.sin(t * .00023 + 1) * .2 : ptr.y;
@@ -1174,7 +1182,7 @@ function drawField(t, conv, dt){
   gl.useProgram(fx.F); gl.enableVertexAttribArray(fx.aF); gl.vertexAttribPointer(fx.aF, 2, gl.FLOAT, false, 0, 0);
   gl.activeTexture(gl.TEXTURE0); gl.bindTexture(gl.TEXTURE_2D, fx.tex.t); gl.uniform1i(fx.f.cur, 0);
   gl.activeTexture(gl.TEXTURE1); gl.bindTexture(gl.TEXTURE_2D, src.t); gl.uniform1i(fx.f.prev, 1);
-  gl.uniform2f(fx.f.res, fx.lw, fx.lh);
+  gl.uniform2f(fx.f.res, fx.lw, fx.lh); gl.uniform1f(fx.f.keep, fx.fresh ? 0 : .34); fx.fresh = false;
   gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
   gl.bindFramebuffer(gl.FRAMEBUFFER, null); gl.viewport(0, 0, FW, FH);
   gl.useProgram(fx.B); gl.enableVertexAttribArray(fx.aB); gl.vertexAttribPointer(fx.aB, 2, gl.FLOAT, false, 0, 0);
@@ -1277,7 +1285,10 @@ function sizeInst(){
   // the print at up to 1.5 device pixels per CSS pixel; the film layer at one CSS pixel (or less on wide screens), upscaled softly
   inst.S0 = vw <= 860 ? Math.min(w * 1.5, h * .8) : Math.min(h * 1.04, w * .62); ic.style.setProperty('--ps', inst.S0.toFixed(0) + 'px');
   const k = Q.film || .35; inst.k = k; if (inst.fc) inst.fc.style.display = Q.film ? '' : 'none';
-  if (inst.fx) { inst.fc.width = Math.round(w * k); inst.fc.height = Math.round(h * k); inst.fx.gl.viewport(0, 0, inst.fc.width, inst.fc.height); }
+  if (inst.fx) { const cw = Math.round(w * k), ch = Math.round(h * k);
+    if (cw !== inst.fc.width || ch !== inst.fc.height) {   // a resize wipes it; an overlay of black would darken the print: repaint now
+      inst.fc.width = cw; inst.fc.height = ch; const G = inst.fx.gl; G.viewport(0, 0, cw, ch);
+      G.uniform2f(inst.fx.res, cw, ch); filmUniforms(G, inst.fx); G.drawArrays(G.TRIANGLE_STRIP, 0, 4); } }
   inst.w = w; inst.h = h;
   svgL.setAttribute('viewBox', `0 0 ${w} ${h}`);
 }
@@ -1575,7 +1586,7 @@ function govern(){
   if (now < GOV.deafUntil || (inst && inst.busyLoading)) return;
   if (p75 > 22) { GOV.good = 0; if ((++GOV.bad >= 2 || p75 > 40) && Q.level < GOV_MAX) { GOV.failed.set(Q.level, now); setQ(Q.level + 1); GOV.bad = 0; } }
   else if (p75 < 18.5) { GOV.bad = 0; const f = GOV.failed.get(Q.level - 1);
-    if (++GOV.good >= 5 && Q.level > 0 && (!f || now - f > 30000)) { setQ(Q.level - 1); GOV.good = 0; } }
+    if (++GOV.good >= 5 && Q.level > 0 && (!f || now - f > 30000) && now - (GOV.lastUp || 0) > 20000) { setQ(Q.level - 1); GOV.good = 0; GOV.lastUp = now; } }
 }
 const cut = {field: false, inst: false};
 // one frame = read every position first, then write; never interleaved, so the browser lays out once
@@ -1640,7 +1651,8 @@ function frame(t){
   const eo = ease(open);
   setVar(fieldStage, '--open', eo.toFixed(4));   // the mattes, the label and the caption all read this one value
   setVar(panel, '--st', ease(clamp((conv - .65) / .35)).toFixed(3));
-  if (newFilm && FILM.f % Q.every === 0 && fr.bottom > -40 && fr.top < vh + 40) { safely('field', () => drawField(t, conv, Math.min(84, t - (fieldT || t - FRAME_MS)))); fieldT = t; }
+  // first paint as soon as it comes near (never shown undrawn: an undrawn WebGL canvas is black), then on the film clock
+  if (((newFilm && FILM.f % Q.every === 0) || (fx && fx.lastConv == null)) && fr.bottom > -40 && fr.top < vh * 1.5) { safely('field', () => drawField(t, conv, Math.min(84, t - (fieldT || t - FRAME_MS)))); fieldT = t; }
   if (open > .5 && !cut.field) FILM.cut(t); cut.field = open > .5;          // a scene begins: a moment of light leak
   // ---- Fig. 2
   const iq = clamp(-ir.top / (instStage.offsetHeight - vh));
