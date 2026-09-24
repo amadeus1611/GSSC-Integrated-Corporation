@@ -1294,6 +1294,11 @@ html.theming,html.theming *,html.theming *::before,html.theming *::after{transit
 .cbar .mdl b{font-weight:500;color:var(--ink)}
 .cbar .by{font:italic 400 10.5px var(--f-display);color:var(--mute)}
 .cbar .mode{font-size:9.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--gold);padding:1px 6px;border:var(--rule-hair) solid var(--line-2);border-radius:3px}
+/* v36 · QA round 7 */
+.ans :where(p,ul,ol):not(.fig *):not(.exh *){max-width:72ch}
+.menu.opt{transform-origin:0 100%}
+.credit.legal{margin-top:14px;padding-top:10px;border-top:var(--rule-hair) solid var(--line-2)}
+@media (max-width:560px){.fig{-webkit-mask-image:linear-gradient(90deg,#000 calc(100% - 28px),rgba(0,0,0,.25));mask-image:linear-gradient(90deg,#000 calc(100% - 28px),rgba(0,0,0,.25))}.fig:hover,.fig:focus-within{-webkit-mask-image:none;mask-image:none}}
 </style>
 
 <div class="app has-chat" id="app">
@@ -1709,7 +1714,7 @@ const GOO=(()=>{let cv=null,tm=0,t0=0,gl=null,pr=null,uB,uC,uR,cpu=null,rgb=[.66
   for(let y=0;y<H;y++)for(let xx=0;xx<W;xx++){const u=xx/W,v=y/W;let f=0;for(const p of P){const dx=u-p[0],dy=v-p[1]*H/W;f+=p[2]/(dx*dx+dy*dy+1e-4)}const k=(y*W+xx)*4,a=f<.9?0:f<1.15?(f-.9)/.25:1;d[k]=c[0];d[k+1]=c[1];d[k+2]=c[2];d[k+3]=a*(dk?(f>1.6?44:58):(f>1.6?28:36))}x.putImageData(cpu,0,0)}
  function loop(){tm=setTimeout(loop,gl?42:90);if(document.hidden)return;if(nC++%60===0)colour();const s=(performance.now()-t0)/1000;gl?frameGL(s):frameCPU(s)}
  return{recolor(){nC=0},run(on){if(!cv){cv=document.getElementById("goo");if(!cv)return;if(!initGL()){cv.width=100;cv.height=60}}if(on&&!reduce&&!tm){t0=performance.now()-4e4;nC=0;loop()}else if((!on||reduce)&&tm){clearTimeout(tm);tm=0}}}})();
-function open(c){GOO.run(!c);if(c!==cur&&$("#att"))attClear();window.__selHide&&window.__selHide();cur=c;app.classList.toggle("has-chat",!!c);GRAIN.run(!c&&PREF.grain);
+function open(c){GOO.run(!c);setTimeout(()=>armFigs(),60);if(c!==cur&&$("#att"))attClear();window.__selHide&&window.__selHide();cur=c;app.classList.toggle("has-chat",!!c);GRAIN.run(!c&&PREF.grain);
  closeSheet();if(c){crumb();const la=c.turns.map(t=>t.role).lastIndexOf("assistant");$("#thread").innerHTML=c.turns.map((t,k)=>t.role==="user"?youHTML(t,k):botHTML(t,k,k===la)).join("");$("#main").append($("#dock"));FM.forEach(m=>{if(!m.host.isConnected)m.kill()});mountMaps();mountDocs();stick=true;requestAnimationFrame(()=>{sc.scrollTop=1e9;prog()})}
  else{$("#heroDock").append($("#dock"));$("#thread").innerHTML="";$("#crumb").textContent="";showDsp(false)}
  renderRecents()}
@@ -1875,6 +1880,7 @@ function paneHTML(t){
   <dl class="about"><dt>Orchestrator</dt><dd>Opus 5.5 at low effort; plans at the quick tier</dd><dt>Desks</dt><dd>Light effort at the quick tier, considered at the default tier, deep at the complex tier</dd>
   <dt>Claude</dt><dd class="${sample?"ok":"no"}">${sample?"Linked":"Not linked. Open this page in Claude to brief EXPIRA."}</dd><dt>Parallel Search</dt><dd class="${WEB.ok?"ok":"no"}">${WEB.ok?"Connected":"Not connected"}</dd>
   <dt>Truth</dt><dd>The decision agent staffs the desks, then weighs every claim they file against the pages read; the answer cites the ledger; an auditor checks each factual line before filing</dd><dt>Kernel</dt><dd>The GSSC kernel ships inside the console; desks read the doctrine that governs them, and documents are built by a port of the kernel's own builder, checked byte for byte against it</dd><dt>Freshness</dt><dd>Every prompt carries today's date; web results are sorted newest first and anything older than the window is flagged</dd><dt>Policy</dt><dd>Escalates above PHP 500,000; at most two redos; a firewall on client-facing answers</dd><dt>Storage</dt><dd>Chats in this browser; run summaries in the runs log</dd></dl>
+  <p class="credit legal">Claude and Anthropic are trademarks of Anthropic, PBC. EXPIRA Console runs on Claude through the Claude app; it is built by EXPIRA AI Systems and is not affiliated with or endorsed by Anthropic.</p>
   <p class="credit">The field view follows Obsidian's graph forces on a d3-force style integrator. Nodes are born as liquid after Hiroyuki Sato's metaball, as Varun Vachhar explains it.</p>`}
 function syncStg(){const m=$("#setMenu");
  m.querySelectorAll("[data-th]").forEach(b=>b.setAttribute("aria-checked",String(b.dataset.th===THEME)));
@@ -1916,7 +1922,7 @@ const saveOpt=()=>{try{localStorage.setItem("expira.opt",JSON.stringify(OPT))}ca
 function drawOpt(){$("#optMenu").querySelectorAll("[data-opt]").forEach(b=>{const k=b.dataset.opt;b.setAttribute("aria-checked",k==="safe"?String(OPT.safe):k==="web"?String(!!(OPT.web&&WEB.ok)):String(OPT[k]===b.dataset.v))});
  $("#optSum").textContent=[{auto:"Auto",always:"Thorough",off:"Direct"}[OPT.desks],OPT.depth==="deep"?"Deep":"",OPT.safe?"":"Internal",OPT.web&&WEB.ok?"Web":""].filter(Boolean).join(" · ");
  const n={off:1,auto:2,always:3}[OPT.desks];$("#optBtn").querySelectorAll(".ic i").forEach((i,k)=>i.classList.toggle("on",k<n));readyUpd()}
-function menu(o){const m=$("#optMenu"),b=$("#optBtn");o=o??!m.classList.contains("open");if(o){closeCtx();setMenu(false);acctMenu(false);closeSheet();hint(null,true);const r=b.getBoundingClientRect(),w=212;m.style.left=Math.max(8,Math.min(innerWidth-w-8,r.right-w))+"px";const hgt=m.offsetHeight;let y=r.top-hgt-8;if(y<8)y=Math.min(innerHeight-hgt-8,r.bottom+8);m.style.top=y+"px";m.classList.add("open");setTimeout(()=>m.querySelector('[aria-checked="true"]')?.focus(),60)}else m.classList.remove("open");b.setAttribute("aria-expanded",o)}
+function menu(o){const m=$("#optMenu"),b=$("#optBtn");o=o??!m.classList.contains("open");if(o){closeCtx();setMenu(false);acctMenu(false);closeSheet();hint(null,true);const r=b.getBoundingClientRect(),w=212;m.style.left=Math.max(8,Math.min(innerWidth-w-8,r.left))+"px";const hgt=m.offsetHeight;let y=r.top-hgt-8;if(y<8)y=Math.min(innerHeight-hgt-8,r.bottom+8);m.style.top=y+"px";m.classList.add("open");setTimeout(()=>m.querySelector('[aria-checked="true"]')?.focus(),60)}else m.classList.remove("open");b.setAttribute("aria-expanded",o)}
 $("#optBtn").onclick=e=>{e.stopPropagation();menu()};
 $("#optMenu").addEventListener("click",e=>{const b=e.target.closest("[data-opt]");if(!b||b.getAttribute("aria-disabled")==="true")return;const k=b.dataset.opt;if(k==="safe")OPT.safe=!OPT.safe;else if(k==="web")OPT.web=!OPT.web;else OPT[k]=b.dataset.v;saveOpt();drawOpt();});
 function hint(t,now){const el=$("#optHint");if(t==null){const c=$("#optMenu").querySelector('[data-opt="desks"][aria-checked="true"]');t=c?c.dataset.hint:""}if(el.textContent===t)return;if(now||reduce){el.textContent=t;return}el.classList.add("swap");clearTimeout(el._t);el._t=setTimeout(()=>{el.textContent=t;el.classList.remove("swap")},150)}
@@ -1961,7 +1967,7 @@ addEventListener("keydown",e=>{const k=e.key.toLowerCase();if(k==="escape"&&$("#
  else if(k==="escape"&&$("#setMenu").classList.contains("open"))setMenu(false);
  else if(k==="escape"&&$("#optMenu").classList.contains("open"))menu(false);
  else if(k==="escape"&&$("#keys").classList.contains("open"))keys(false);
- else if(k==="escape"){if($("#pal").classList.contains("open"))pal(false);else if(busy&&promptEl.value.trim()){promptEl.value="";grow();sendSync()}else if($("#dsp").classList.contains("open"))showDsp(false);else if(document.querySelector("#mfs.open,#docv.open,#setMenu.open,.menu.open,#lbx:not([hidden])"))return;else if(busy)ctl?.abort()}
+ else if(k==="escape"){if($("#docMenu").classList.contains("open")){docMenu(false);return}if($("#pal").classList.contains("open"))pal(false);else if(busy&&promptEl.value.trim()){promptEl.value="";grow();sendSync()}else if($("#dsp").classList.contains("open"))showDsp(false);else if(document.querySelector("#mfs.open,#docv.open,#setMenu.open,.menu.open,#lbx:not([hidden])"))return;else if(busy)ctl?.abort()}
  else if(k==="/"&&document.activeElement===document.body){e.preventDefault();app.classList.remove("folded");$("#side").classList.add("searching");$("#find").focus()}});
 
 /* ---------- The Dispatch: it fills in as the work unfolds ---------- */
@@ -2314,7 +2320,7 @@ function sheetPush(w,id){const sh=$("#sheet"),B=$("#sheetB"),st=sh._stack=sh._st
  st.push({id:sh._id,html:B.innerHTML,top:B.scrollTop,title:sheetTitle(B)});if(st.length>4)st.shift();sh._id=id;sheetPeek();sheetSwap(html,1)}
 function sheetPop(to){const sh=$("#sheet"),st=sh._stack||[];if(!st.length)return false;const i=to==null?st.length-1:to,x=st[i];st.length=i;sh._id=x.id;sheetPeek();sheetSwap(x.html,-1);$("#sheetB").scrollTop=x.top;return true}
 document.addEventListener("click",e=>{const p=e.target.closest("[data-spop]");if(p){e.stopPropagation();sheetPop(+p.dataset.spop)}},true);
-function openSheet(w,id,anchor){const sh=$("#sheet");if(!w||!anchor)return;if(sh.classList.contains("open")&&anchor.closest&&anchor.closest("#sheet")){sheetPush(w,id);return}sh._stack=[];sheetPeek();if(sh.classList.contains("open")&&sh._id===id&&sh._w===w){closeSheet();return}acctMenu(false);const html=sheetHTML(w,id);if(!html)return;closeCtx();menu(false);setMenu(false);
+function openSheet(w,id,anchor){const sh=$("#sheet");if(!w||!anchor)return;if(sh.classList.contains("open")&&anchor.closest&&anchor.closest("#sheet")){sheetPush(w,id);return}if(sh._stack&&sh._stack.length){sh._stack=[];sheetPeek();if(sh._id!==id)sh._id=null}else{sh._stack=[];sheetPeek()}if(sh.classList.contains("open")&&sh._id===id&&sh._w===w){closeSheet();return}acctMenu(false);const html=sheetHTML(w,id);if(!html)return;closeCtx();menu(false);setMenu(false);
  document.querySelectorAll(".map .sel").forEach(x=>x.classList.remove("sel"));if(anchor.closest&&anchor.closest(".map"))anchor.classList.add("sel");
  sh._w=w;sh._id=id;sh.style.transition="none";sh.classList.remove("open");$("#sheetB").innerHTML=html;$("#sheetB").scrollTop=0;$("#sheetB").querySelectorAll(".si").forEach((x,i)=>x.style.animationDelay=(.1+i*.06).toFixed(2)+"s");
  const r=anchor.getBoundingClientRect(),sw=Math.min(380,innerWidth-24);sh.style.width=sw+"px";const hh=sh.offsetHeight;
@@ -2426,7 +2432,7 @@ function docIntent(q){const t=String(q||"").replace(/^(?:> ?.*\n)+\n*/,"");if(!/
 let DOCSEL=null;
 function setDoc(t){DOCSEL=t||null;$("#dbar").hidden=!DOCSEL;$("#dbT").textContent=DOCSEL?`${DOCT[DOCSEL]}, from the kernel`:"";$("#docSum").textContent=DOCSEL?DOCT[DOCSEL]:"Document";$("#docBtn").dataset.on=DOCSEL?"1":"";$("#docMenu").querySelectorAll("[data-dt]").forEach(b=>b.setAttribute("aria-checked",String((b.dataset.dt||null)===DOCSEL)))}
 $("#dbX").onclick=()=>setDoc(null);
-function docMenu(o){const m=$("#docMenu"),b=$("#docBtn");o=o??!m.classList.contains("open");if(o){closeCtx();menu(false);setMenu(false);acctMenu(false);closeSheet();const r=b.getBoundingClientRect(),w=212;m.style.left=Math.max(8,Math.min(innerWidth-w-8,r.right-w))+"px";m.style.top="0px";m.classList.add("open");const hh=m.offsetHeight;let y=r.top-hh-8;if(y<8)y=Math.min(innerHeight-hh-8,r.bottom+8);m.style.top=y+"px";setTimeout(()=>m.querySelector('[aria-checked="true"]')?.focus(),60)}else m.classList.remove("open");b.setAttribute("aria-expanded",String(!!o))}
+function docMenu(o){const m=$("#docMenu"),b=$("#docBtn");o=o??!m.classList.contains("open");if(o){closeCtx();menu(false);setMenu(false);acctMenu(false);closeSheet();const r=b.getBoundingClientRect(),w=212;m.style.left=Math.max(8,Math.min(innerWidth-w-8,r.left))+"px";m.style.top="0px";m.classList.add("open");const hh=m.offsetHeight;let y=r.top-hh-8;if(y<8)y=Math.min(innerHeight-hh-8,r.bottom+8);m.style.top=y+"px";setTimeout(()=>m.querySelector('[aria-checked="true"]')?.focus(),60)}else m.classList.remove("open");b.setAttribute("aria-expanded",String(!!o))}
 $("#docBtn").onclick=e=>{e.stopPropagation();docMenu()};
 $("#docMenu").addEventListener("click",e=>{const b=e.target.closest("[data-dt]");if(!b)return;setDoc(b.dataset.dt||null);setTimeout(()=>{docMenu(false);promptEl.focus()},200)});
 document.addEventListener("pointerdown",e=>{if($("#docMenu").classList.contains("open")&&!e.target.closest("#docMenu,#docBtn"))docMenu(false)});
