@@ -46,6 +46,8 @@ html = html.replace("{{GATES}}", gates.replace('<li class="stage">', '<li class=
 docs = between(site, '<div class="docs">', "        </figure>")
 docs = docs[len('<div class="docs">'):docs.rindex("</div>")]
 html = html.replace("{{DOCS}}", docs)
+# Exhibit III's notes and sources, the same four lines as the site
+html = html.replace("{{NOTES}}", between(site, '<section class="lg-notes"', "      </section>").split("<ol>", 1)[1].rsplit("</ol>", 1)[0].join(["<ol>", "</ol>"]))
 
 # the compass: the split's anchors, and the turntable when it has been rendered
 html = html.replace("{{COMPASS}}", (COMPASS / "anchors.json").read_text(encoding="utf-8").strip())

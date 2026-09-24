@@ -46,7 +46,8 @@ body{font-family:var(--f-body);color:var(--ink)}
 .print img{position:absolute;inset:0;width:100%;height:100%;visibility:hidden}
 .print img.on{visibility:visible}
 .leaders{position:absolute;inset:0;width:100%;height:100%;overflow:visible}
-.leaders path{fill:none;stroke:rgba(200,164,77,.75);stroke-width:1}
+.leaders path{fill:none;stroke:var(--gold-primary);stroke-width:1.1;stroke-linecap:round;stroke-linejoin:round;opacity:var(--lo,1)}
+.leaders circle{fill:var(--gold-primary);opacity:var(--lo,1)}
 #grain{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;opacity:var(--co,0)}
 
 /* ---------------------------------------------------------------- chrome: header, folio, colophon, progress */
@@ -139,12 +140,76 @@ body{font-family:var(--f-body);color:var(--ink)}
 .end-contact{left:0;right:0;top:690px;text-align:center;color:var(--on-night-2);font:400 14px/1.8 var(--f-body);letter-spacing:.04em}
 .end-contact b{display:block;font:600 11px/1.6 var(--f-body);letter-spacing:var(--tracked);text-transform:uppercase;color:var(--on-night)}
 
+/* ---------------------------------------------------------------- scene 4: economics (a richer exhibit than the site's) */
+.eco-head{left:72px;top:130px;width:600px}
+.eco-title{left:72px;top:186px;width:560px;color:var(--navy-dark)}
+.eco-dek{left:72px;top:300px;width:520px;margin:0;font:italic 400 16px/1.5 var(--f-display);color:var(--slate)}
+.eco-inputs{left:72px;top:392px;width:520px}
+.panel-plate{background:#fdfcf8;border:1px solid var(--hairline);border-top:4px double var(--navy-dark);border-radius:0 0 var(--r) var(--r);box-shadow:0 24px 44px -34px rgba(9,23,61,.35)}
+.plate-h{display:flex;justify-content:space-between;align-items:baseline;gap:16px;padding:12px 18px;border-bottom:1px solid var(--hairline);
+  font:600 10px/1.3 var(--f-body);letter-spacing:var(--tracked);text-transform:uppercase;color:var(--navy-dark)}
+.plate-h i{font:italic 400 13.5px/1 var(--f-display);letter-spacing:0;text-transform:none;color:var(--slate)}
+.ctls{display:grid;grid-template-columns:repeat(3,1fr);gap:0;background:var(--ivory-deep);border-bottom:1px solid var(--hairline)}
+.ctl{padding:12px 16px 10px;border-right:1px solid var(--hairline)} .ctl:last-child{border-right:0}
+.ctl label{display:flex;justify-content:space-between;align-items:baseline;font:600 9.5px/1.3 var(--f-body);letter-spacing:var(--tracked-cap);text-transform:uppercase;color:var(--navy-dark)}
+.ctl output{font:400 18px/1 var(--f-display);letter-spacing:0;text-transform:none;font-feature-settings:"lnum" 1,"tnum" 1}
+.ctl input{-webkit-appearance:none;appearance:none;width:100%;margin:12px 0 2px;height:22px;background:transparent;cursor:pointer}
+.ctl input::-webkit-slider-runnable-track{height:1px;background:linear-gradient(to right,var(--navy-dark) var(--f,50%),var(--hairline) var(--f,50%))}
+.ctl input::-webkit-slider-thumb{-webkit-appearance:none;width:12px;height:12px;margin-top:-6px;border-radius:1px;background:var(--ivory);border:1.5px solid var(--navy-dark);transform:rotate(45deg)}
+.tiles{display:grid;grid-template-columns:1fr 1fr;gap:0}
+.tile{padding:16px 18px 14px;border-right:1px solid var(--hairline);border-bottom:1px solid var(--hairline);text-align:right}
+.tile:nth-child(2n){border-right:0}
+.tile .v{display:block;height:1.15em;font:400 34px/1.1 var(--f-display);font-variant-numeric:tabular-nums lining-nums;color:var(--navy-dark);contain:layout paint}
+.tile .l{display:block;margin-top:10px;padding-top:8px;border-top:1px solid var(--hairline);font:600 9.5px/1.4 var(--f-body);letter-spacing:var(--tracked-cap);text-transform:uppercase;color:var(--slate)}
+.tile.d .v{color:#2a4a9e} .tile.c .v{color:var(--gold-deep)}
+.tile.w{grid-column:1 / -1;border-right:0;border-bottom:0;display:flex;justify-content:space-between;align-items:baseline;text-align:left}
+.tile.w .v{font-size:26px;color:var(--navy-dark)} .tile.w .l{border:0;margin:0;padding:0}
+.stamp-il{position:absolute;right:16px;top:-12px;padding:4px 9px;border:1px solid rgba(168,134,47,.7);border-radius:1px;background:#fdfcf8;
+  font:600 9px/1 var(--f-body);letter-spacing:.24em;text-transform:uppercase;color:var(--gold-deep);transform:rotate(-3deg)}
+.eco-plate{left:640px;top:130px;width:728px;height:640px}
+.eco-plate .plate-h{position:relative}
+.figtabs{display:flex;gap:14px} .figtabs b{font:600 10px/1 var(--f-body);letter-spacing:var(--tracked-cap);color:var(--hairline);transition:color 500ms var(--soft-close)}
+.figtabs b.on{color:var(--gold-deep)}
+.chart{position:absolute;left:0;right:0;top:44px;bottom:0;padding:18px 22px 16px;opacity:var(--v,0);transform:translate3d(0,calc((1 - var(--v,0)) * 14px),0)}
+.chart h4{margin:0 0 4px;font:400 22px/1.2 var(--f-display);letter-spacing:var(--compressed);color:var(--navy-dark)}
+.chart p.cap{margin:0 0 10px;font:italic 400 13.5px/1.45 var(--f-display);color:var(--slate)}
+.chart svg{display:block;overflow:visible}
+.chart .ax{stroke:var(--hairline);stroke-width:1} .chart .grid{stroke:rgba(9,23,61,.07);stroke-width:1}
+.chart .tk{font:500 11px var(--f-body);fill:var(--mid-grey);font-feature-settings:"tnum" 1}
+.chart .lb{font:500 12px var(--f-body);fill:var(--ink);font-feature-settings:"tnum" 1}
+.chart .lb.b{font:600 10px var(--f-body);letter-spacing:.12em;text-transform:uppercase;fill:var(--slate)}
+.chart .nm{font:400 15px var(--f-display);fill:var(--navy-dark)}
+.chart .gr{transform-box:fill-box;transform-origin:left;transform:scaleX(var(--g,0))}
+.chart .gu{transform-box:fill-box;transform-origin:bottom;transform:scaleY(var(--g,0))}
+.chart .ln{fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.legend{display:flex;gap:22px;margin:0 0 8px;font:600 10px/1 var(--f-body);letter-spacing:var(--tracked-cap);text-transform:uppercase;color:var(--navy-dark)}
+.legend span{display:inline-flex;align-items:center;gap:8px} .legend i{width:16px;height:8px;border-radius:1px;display:inline-block}
+.eco-notes{left:72px;right:72px;top:790px}
+.eco-notes ol{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(4,1fr);gap:0 22px}
+.eco-notes li{padding-top:8px;border-top:1px solid var(--navy-dark);font-size:11.5px;line-height:1.4;color:var(--slate)}
+.eco-notes .nk{margin:0 0 3px;font:600 9.5px/1.3 var(--f-body);letter-spacing:var(--tracked-cap);text-transform:uppercase;color:var(--navy-dark)}
+.eco-notes .nk b{font:400 14px/1 var(--f-display);color:var(--gold-deep);margin-right:6px;letter-spacing:0}
+.eco-notes .nt{display:none} .eco-notes .ns{margin:0} .eco-notes .ns span{display:none}
+.eco-notes a{color:var(--navy-dark);text-decoration:underline;text-decoration-color:var(--gold-primary);text-underline-offset:2px}
+
+/* ---------------------------------------------------------------- the intro: GSSC, like the opening of a film */
+.intro{position:fixed;inset:0;z-index:100;background:var(--navy-dark);display:grid;place-items:center;transition:opacity 1100ms var(--soft-close)}
+.intro.done{opacity:0;pointer-events:none}
+.intro .card{position:relative;display:grid;justify-items:center;gap:0;transition:transform 1100ms var(--soft-close),opacity 900ms var(--soft-close)}
+.intro.done .card{transform:translateY(-18px) scale(.98);opacity:0}
+.intro .lk{display:flex;align-items:center;gap:22px;height:64px}
+.intro .mk{width:58px;height:58px;animation:mk 1400ms var(--soft-close) both}
+.intro .wm{height:36px;filter:brightness(0) invert(.94) sepia(.2);animation:wm 1500ms var(--soft-close) 450ms both}
+.intro .rl{width:440px;height:1px;margin-top:26px;background:rgba(243,236,218,.14);position:relative;overflow:hidden}
+.intro .rl b{position:absolute;inset:0;background:var(--gold-primary);transform-origin:left;transform:scaleX(var(--lp,0));transition:transform 500ms var(--soft-close)}
+.intro .ic{margin-top:16px;font:600 11px/1 var(--f-body);letter-spacing:.34em;text-transform:uppercase;color:var(--on-night);animation:ic 1400ms var(--soft-close) 1250ms both}
+.intro .ed{margin-top:14px;font:italic 400 14px/1 var(--f-display);color:var(--on-night-2);animation:fd 1200ms var(--soft-close) 1700ms both}
+@keyframes mk{from{opacity:0;transform:rotate(-90deg) scale(.6)}to{opacity:1;transform:none}}
+@keyframes wm{from{opacity:0;clip-path:inset(0 100% 0 0);transform:translateX(-18px) scaleX(.9)}to{opacity:1;clip-path:inset(0 0 0 0);transform:none}}
+@keyframes ic{from{opacity:0;letter-spacing:.7em}to{opacity:1;letter-spacing:.34em}}
+@keyframes fd{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+
 /* ---------------------------------------------------------------- utilities: loading, blank, help */
-.loading{position:fixed;inset:0;background:var(--navy-dark);display:grid;place-items:center;z-index:100;transition:opacity 900ms var(--soft-close)}
-.loading.done{opacity:0;pointer-events:none}
-.loading div{text-align:center;color:var(--on-night-2);font:italic 400 16px/1.5 var(--f-display)}
-.loading i{display:block;width:240px;height:1px;margin:18px auto 0;background:rgba(243,236,218,.18);position:relative}
-.loading i b{position:absolute;inset:0;background:var(--gold-primary);transform-origin:left;transform:scaleX(var(--lp,0));transition:transform 300ms linear}
 .blank{position:fixed;inset:0;z-index:90;opacity:0;pointer-events:none;transition:opacity 600ms var(--soft-close)}
 .blank.on{opacity:1;pointer-events:auto}
 .hint{position:fixed;left:50%;bottom:74px;transform:translateX(-50%);z-index:80;font:500 11px/1 var(--f-body);letter-spacing:.08em;color:rgba(243,236,218,.55);
@@ -173,9 +238,9 @@ body{font-family:var(--f-body);color:var(--ink)}
 
   <!-- 2 · six disciplines (the compass opens part by part; the table is its key) -->
   <section class="scene" data-scene="1">
-    <div class="t x cap-head night-t" data-in=".6 1" data-out="8.02 8.3"><div class="chs"><span class="num">I</span><i class="dash"></i><span class="cat">Capabilities</span></div></div>
-    <div class="t x cap-title" data-in=".66 1" data-out="8.02 8.32"><h2 class="h2">Six disciplines under one accountable programme.</h2></div>
-    <div class="t cap-table" data-in=".75 1" data-out="8.04 8.36">
+    <div class="t x cap-head night-t" data-in=".6 1" data-out="9.02 9.3"><div class="chs"><span class="num">I</span><i class="dash"></i><span class="cat">Capabilities</span></div></div>
+    <div class="t x cap-title" data-in=".66 1" data-out="9.02 9.32"><h2 class="h2">Six disciplines under one accountable programme.</h2></div>
+    <div class="t cap-table" data-in=".75 1" data-out="9.04 9.36">
       <table class="reg" id="reg"><thead><tr><th>No.</th><th>Discipline</th><th>What it covers</th></tr></thead><tbody>
         <tr data-part="6"><td class="no">★</td><td class="name">GSSC</td><td class="what">One programme lead, one scoped quotation, one point of accountability.</td></tr>
         <tr data-part="5"><td class="no">VI</td><td class="name">Compliance &amp; documentation</td><td class="what">Quotations, agreements, certificates and notarial instruments to the GSSC standard.</td></tr>
@@ -190,29 +255,60 @@ body{font-family:var(--f-body);color:var(--ink)}
 
   <!-- 3 · the file you receive -->
   <section class="scene" data-scene="2">
-    <div class="t x file-head day-t" data-in="8.55 9" data-out="13.02 13.3"><div class="chs"><span class="num">II</span><i class="dash"></i><span class="cat">Engagement</span></div></div>
-    <div class="t x file-title" data-in="8.6 9" data-out="13.02 13.32"><h2 class="h2">At each gate, one document. Together, one file.</h2></div>
-    <ol class="t gates" id="gates" data-in="8.7 9" data-out="13.04 13.34">{{GATES}}</ol>
-    <div class="t desk-count" data-in="8.7 9" data-out="13.02 13.3"><span class="kicker" style="color:var(--gold-deep)">Fig. 5 · The file you receive</span><i id="deskCount">0 of 5 documents</i></div>
+    <div class="t x file-head day-t" data-in="9.55 10" data-out="14.02 14.3"><div class="chs"><span class="num">II</span><i class="dash"></i><span class="cat">Engagement</span></div></div>
+    <div class="t x file-title" data-in="9.6 10" data-out="14.02 14.32"><h2 class="h2">At each gate, one document. Together, one file.</h2></div>
+    <ol class="t gates" id="gates" data-in="9.7 10" data-out="14.04 14.34">{{GATES}}</ol>
+    <div class="t desk-count" data-in="9.7 10" data-out="14.02 14.3"><span class="kicker" style="color:var(--gold-deep)">Fig. 5 · The file you receive</span><i id="deskCount">0 of 5 documents</i></div>
     <div class="desk" id="desk">{{DOCS}}</div>
   </section>
 
-  <!-- 4 · close -->
+  <!-- 4 · economics: the site's model, drawn three ways, live -->
   <section class="scene" data-scene="3">
-    <p class="t kicker end-kick" data-in="13.55 14">V · Inquire</p>
-    <div class="t end-title" data-in="13.6 14"><h2 class="h2">Tell us what needs coordinating.<br>We answer for the whole of it.</h2></div>
-    <p class="t end-contact" data-in="13.7 14"><b>GSSC Integrated Corporation</b>Regus, 3F Festive Walk Mall, Iloilo Business Park, Mandurriao, Iloilo City 5000<br>management@gsscph.com · (033) 339-7472 · +63 928 370 3574</p>
+    <div class="t x eco-head day-t" data-in="14.55 15" data-out="18.02 18.3"><div class="chs"><span class="num">III</span><i class="dash"></i><span class="cat">Economics</span></div></div>
+    <div class="t x eco-title" data-in="14.6 15" data-out="18.02 18.32"><h2 class="h2">What coordinating it yourself costs.</h2></div>
+    <p class="t eco-dek" data-in="14.66 15" data-out="18.02 18.32">A client who buys each discipline separately also buys the work of holding them together. Move the figures to your programme.</p>
+    <div class="t eco-inputs live" data-in="14.7 15" data-out="18.04 18.34"><div class="panel-plate" style="position:relative">
+      <div class="plate-h"><span>Exhibit III · Your programme</span><i id="ecoSum"></i></div>
+      <div class="ctls">
+        <div class="ctl"><label for="eV">Value <output id="oV"></output></label><input id="eV" type="range" min="1" max="50" step="0.5" value="5"></div>
+        <div class="ctl"><label for="eN">Disciplines <output id="oN"></output></label><input id="eN" type="range" min="2" max="10" step="1" value="6"></div>
+        <div class="ctl"><label for="eM">Months <output id="oM"></output></label><input id="eM" type="range" min="1" max="12" step="1" value="4"></div>
+      </div>
+      <div class="tiles">
+        <div class="tile d"><span class="v" id="tD"></span><span class="l">Carried by the client, buying direct</span></div>
+        <div class="tile c"><span class="v" id="tC"></span><span class="l">Carried by the client, one coordinator</span></div>
+        <div class="tile w"><span class="l">Overhead lifted off the client</span><span class="v" id="tS"></span></div>
+      </div>
+      <span class="stamp-il">Illustrative</span>
+    </div></div>
+    <div class="t eco-plate" data-in="14.75 15" data-out="18.04 18.36"><div class="panel-plate" style="position:absolute;inset:0">
+      <div class="plate-h"><span>Fig. 6 · The overhead, three ways</span><span class="figtabs"><b id="ft0">6a · Where it goes</b><b id="ft1">6b · What is lifted</b><b id="ft2">6c · How it scales</b></span></div>
+      <div class="chart" id="ch0"></div><div class="chart" id="ch1"></div><div class="chart" id="ch2"></div>
+    </div></div>
+    <div class="t eco-notes" data-in="17.6 18" data-out="18.04 18.34">{{NOTES}}</div>
+  </section>
+
+  <!-- 5 · close -->
+  <section class="scene" data-scene="4">
+    <p class="t kicker end-kick" data-in="18.55 19">IV · Inquire</p>
+    <div class="t end-title" data-in="18.6 19"><h2 class="h2">Tell us what needs coordinating.<br>We answer for the whole of it.</h2></div>
+    <p class="t end-contact" data-in="18.7 19"><b>GSSC Integrated Corporation</b>Regus, 3F Festive Walk Mall, Iloilo Business Park, Mandurriao, Iloilo City 5000<br>management@gsscph.com · (033) 339-7472 · +63 928 370 3574</p>
   </section>
 
   <!-- the master's chrome: lockup, section, rule with progress, colophon and folio -->
   <div class="chrome" id="chrome">
     <div class="mast"><span class="lock"><img class="mark" src="{{SEAL}}" alt=""><img class="word" src="{{WORDMARK}}" alt="GSSC"><img class="word day" src="{{WORDMARK}}" alt=""></span><span class="where" id="where">Company profile</span></div>
     <div class="rule"><i></i></div>
-    <div class="foot"><span>GSSC Integrated Corporation · Company profile · Edition I</span><span id="scnName">Cover</span><span class="folio" id="folio">i / iv</span></div>
+    <div class="foot"><span>GSSC Integrated Corporation · Company profile · Edition I</span><span id="scnName">Cover</span><span class="folio" id="folio">i / v</span></div>
   </div>
 </div></div>
 
-<div class="loading" id="loading"><div>Preparing the room<i><b></b></i></div></div>
+<div class="intro" id="intro"><div class="card">
+  <div class="lk"><img class="mk" src="{{SEAL}}" alt=""><img class="wm" src="{{WORDMARK}}" alt="GSSC"></div>
+  <div class="rl"><b></b></div>
+  <div class="ic">Integrated Corporation</div>
+  <div class="ed">Company profile · Edition I</div>
+</div></div>
 <div class="blank" id="blank"></div>
 <p class="hint" id="hint">→ or click to begin · ← back · F full screen · B black · W white</p>
 
@@ -278,10 +374,10 @@ if (gg) {
 function drawGrain(){ if (!gfx) return; gg.uniform2f(gfx.res, 720, 450); filmUniforms(gg, gfx); gg.drawArrays(gg.TRIANGLE_STRIP, 0, 4); }
 
 /* ------------------------------------------------ the timeline
-   Steps are integers. 0 cover · 1 disciplines at rest · 2 tilted · 3..8 one part each · 9..13 one document each ·
-   14 close. Between two steps T glides (a build eases out; a scene change eases in and out, like a camera move). */
-const STEPS = 14, SCENES = [{at: 0, name: 'Cover', where: 'Company profile'}, {at: 1, name: 'Six disciplines', where: 'I · Capabilities'},
-  {at: 9, name: 'The file you receive', where: 'II · Engagement'}, {at: 14, name: 'Close', where: 'V · Inquire'}];
+   Steps are integers. 0 cover · 1 disciplines at rest · 2 tilted · 3..8 one part lifts each · 9 the case ·
+   10..14 one document each · 15 economics: where it goes · 16 what is lifted · 17 how it scales · 18 notes · 19 close. Between two steps T glides (a build eases out; a scene change eases in and out, like a camera move). */
+const STEPS = 19, SCENES = [{at: 0, name: 'Cover', where: 'Company profile'}, {at: 1, name: 'Six disciplines', where: 'I · Capabilities'},
+  {at: 10, name: 'The file you receive', where: 'II · Engagement'}, {at: 15, name: 'Economics', where: 'III · Economics'}, {at: 19, name: 'Close', where: 'IV · Inquire'}];
 const sceneOf = s => { let k = 0; SCENES.forEach((sc, i) => { if (s >= sc.at) k = i; }); return k; };
 let T = 0, from = 0, to = 0, t0 = 0, dur = 1, moving = false;
 const startStep = clamp(parseInt(location.hash.slice(1)) || 0, 0, STEPS);
@@ -299,6 +395,10 @@ const easeMove = (p, scene) => scene ? inOut(p) : ease(p);
 /* ------------------------------------------------ everything is a function of T */
 const els = [...document.querySelectorAll('[data-in]')].map(el => { const [a, b] = el.dataset.in.split(' ').map(Number);
   const [c, d] = (el.dataset.out || '99 100').split(' ').map(Number); return {el, a, b, c, d}; });
+const leadEls = [];   // one path and one dot per part; paths use pathLength 1, so drawing is a dash offset of 0..1
+for (let p = 0; p < 7; p++) { const path = document.createElementNS('http://www.w3.org/2000/svg', 'path'), dot = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+  path.setAttribute('pathLength', '1'); path.style.strokeDasharray = '1'; path.style.strokeDashoffset = '1'; dot.setAttribute('r', '0');
+  document.getElementById('leaders').append(path, dot); leadEls[p] = {path, dot, on: false}; }
 const rows = [...document.querySelectorAll('#reg tbody tr')], gates = [...document.querySelectorAll('#gates .stage-row')], docs = [...document.querySelectorAll('.doc')];
 const panelEl = document.getElementById('panel'), deskCount = document.getElementById('deskCount'), paper = document.getElementById('paper'), chrome = document.getElementById('chrome');
 const whereEl = document.getElementById('where'), folio = document.getElementById('folio'), scnName = document.getElementById('scnName'), ruleI = chrome.querySelector('.rule i');
@@ -309,8 +409,9 @@ const seg = (a, b) => clamp((T - a) / (b - a));
 function splitFrame(){ const T1 = SEQ.tilt - 1, L = SPLIT - 1;
   if (T < 1) return 0; if (T < 2) return T1 * (T - 1); return Math.min(L, SEQ.tilt + (T - 2) / 6 * (L - SEQ.tilt)); }
 // a part lifts over the step before its own: the star over 2→3 … the graduated scale over 7→8; the case rests, lit at 8
-const litOf = p => p === 0 ? seg(7.6, 8) : seg(8 - p + .4, 9 - p);
-const curOf = p => p === 0 ? 8 : 9 - p;
+const litOf = p => p === 0 ? seg(8.4, 9) : seg(8 - p + .4, 9 - p);
+const curOf = p => p === 0 ? 9 : 9 - p;
+const s0Of = p => p === 0 ? 8 : 8 - p;   // the step each part's line starts drawing from
 // row geometry, measured once (static in the stage)
 let rowY = null;
 function measureRows(){ const st = stage.getBoundingClientRect(), s = st.width / 1440;
@@ -320,47 +421,64 @@ function render(now, newFilm){
   // ---- scene furniture
   for (const o of els) { const v = seg(o.a, o.b) * (1 - seg(o.c, o.d)); setVar(o.el, '--v', v.toFixed(3)); setVar(o.el, 'visibility', v < .002 ? 'hidden' : 'visible'); }
   const sc = sceneOf(Math.round(T));
-  const day = seg(8.35, 8.95) * (1 - seg(13.1, 13.6));             // the paper rises for the file, and falls for the close
+  const day = seg(9.35, 9.95) * (1 - seg(18.1, 18.6));             // the paper rises for the file, and falls for the close
   setVar(paper, '--paper', day.toFixed(3)); setVar(chrome, '--paper', day.toFixed(3)); stage.classList.toggle('day', day > .5);
   setVar(ruleI, '--prog', (T / STEPS).toFixed(4));
   if (whereEl.textContent !== SCENES[sc].where) { whereEl.textContent = SCENES[sc].where; scnName.textContent = SCENES[sc].name; folio.textContent = `${romans[sc]} / ${romans[SCENES.length - 1]}`; }
   // ---- the lava: free on the cover, gathering into the seal on the way to the compass; back, settled, for the close
-  const conv = T < 1 ? seg(0, .62) : T > 13 ? 1 - .35 * seg(13.2, 14) : 1;
-  const lavaOn = 1 - seg(.62, .95) + seg(13.05, 13.7);
+  const conv = T < 1 ? seg(0, .62) : T > 18 ? 1 - .35 * seg(18.2, 19) : 1;
+  const lavaOn = 1 - seg(.62, .95) + seg(18.05, 18.7);
   setVar(panelEl, '--lava', clamp(lavaOn).toFixed(3));
   setVar(panelEl, '--st', ease(clamp((conv - .65) / .35)).toFixed(3));
   if (lavaOn > .01 && newFilm) drawField(now, conv, FRAME_MS);
   // ---- the compass: the seal becomes the compass (top-down frame 0 at the seal's place and size), then it moves left
-  const co = seg(.55, .9) * (1 - seg(8.05, 8.5)) + seg(13.3, 13.9);
+  const co = seg(.55, .9) * (1 - seg(9.05, 9.5)) + seg(18.3, 18.9);
   setVar(compassEl, '--co', co.toFixed(3));
   if (co > .01) {
     let kind = 'split', f = Math.round(splitFrame());
-    if (T > 13) { if (TURN) { kind = 'turn'; if (newFilm) turnF = (turnF + 1) % TURN; f = turnF; } else f = SEQ.tilt - 1; }   // the turntable, once rendered
-    else if (T > 8 && T < 9) f = Math.round(lerp(SPLIT - 1, 0, seg(8, 8.5)));      // it closes as it leaves
+    if (T > 18) { if (TURN) { kind = 'turn'; if (newFilm) turnF = (turnF + 1) % TURN; f = turnF; } else f = SEQ.tilt - 1; }   // the turntable, once rendered
+    else if (T > 9 && T < 10) f = Math.round(lerp(SPLIT - 1, 0, seg(9, 9.5)));      // it closes as it leaves
     showFrame(kind, f);
-    const grow = seg(.55, 1), close = seg(13.3, 14);
-    const size = T > 13 ? lerp(300, 560, ease(close)) : lerp(170, PS, ease(grow));
-    const cx = T > 13 ? 720 : lerp(720, 400, ease(seg(.62, 1))) - seg(8.05, 8.6) * 120, cy = T > 13 ? lerp(450, 440, close) : lerp(450, 470, grow);
+    const grow = seg(.55, 1), close = seg(18.3, 19);
+    const size = T > 18 ? lerp(300, 560, ease(close)) : lerp(170, PS, ease(grow));
+    const cx = T > 18 ? 720 : lerp(720, 400, ease(seg(.62, 1))) - seg(9.05, 9.6) * 120, cy = T > 18 ? lerp(450, 440, close) : lerp(450, 470, grow);
     setVar(print, 'transform', `translate(${(cx - size / 2 + FILM.wx).toFixed(2)}px, ${(cy - size / 2 + FILM.wy).toFixed(2)}px) scale(${(size / PS).toFixed(4)})`);
     if (newFilm) drawGrain();
-    // leaders: from each lifted part's rim (as rendered) to its row in the key
+    // LEADERS. One per part, each drawn over the whole of its own step (the case has a step of its own, so two never
+    // start together). A right-angled route with soft corners, as the flow chart's connectors: out from the part's rim
+    // (as rendered), along a private lane, into its row. Earlier lines stay, quieter; the one being drawn is full gold.
     if (!rowY) measureRows();
     const A = kind === 'split' ? SEQ.anchors[Math.min(SPLIT - 1, Math.round(splitFrame()))] : null;
-    let d = '';
-    if (A && T >= 2.4 && T <= 8.3) rows.forEach(r => { const p = +r.dataset.part, lit = litOf(p);
-      const fade = lit * (1 - seg(8.02, 8.3)); if (fade < .02) return;
-      const x = cx - size / 2 + A[p][0] * size, y = cy - size / 2 + A[p][1] * size, R = rowY[rows.indexOf(r)], ex = lerp(x + 10, R.x - 14, fade);
-      d += `M${x.toFixed(1)},${y.toFixed(1)} C${(x + 90).toFixed(1)},${y.toFixed(1)} ${(R.x - 120).toFixed(1)},${R.y.toFixed(1)} ${ex.toFixed(1)},${R.y.toFixed(1)} `; });
-    if (leadersEl.__d !== d) { leadersEl.__d = d; leadersEl.innerHTML = d ? `<path d="${d}"/>` : ''; }
+    const exit = 1 - seg(9.02, 9.3);
+    rows.forEach((r, ri) => { const p = +r.dataset.part, L = leadEls[p], s0 = s0Of(p);
+      const draw = A && T <= 9.3 ? inOut(seg(s0 + .15, s0 + 1)) * exit : 0;
+      if (draw < .005) { if (L.on) { L.on = false; L.path.setAttribute('d', ''); L.dot.setAttribute('r', 0); } return; }
+      L.on = true;
+      const x = cx - size / 2 + A[p][0] * size, y = cy - size / 2 + A[p][1] * size, R = rowY[ri], tx = R.x - 16, ty = R.y;
+      const bx = Math.min(tx - 28, Math.max(x + 30, 706 - p * 7)), rr = Math.min(8, Math.abs(ty - y) / 2), sg = ty > y ? 1 : -1;
+      const d = Math.abs(ty - y) < 1 ? `M${x.toFixed(1)},${y.toFixed(1)} H${tx.toFixed(1)}`
+        : `M${x.toFixed(1)},${y.toFixed(1)} H${(bx - rr).toFixed(1)} Q${bx.toFixed(1)},${y.toFixed(1)} ${bx.toFixed(1)},${(y + sg * rr).toFixed(1)} V${(ty - sg * rr).toFixed(1)} Q${bx.toFixed(1)},${ty.toFixed(1)} ${(bx + rr).toFixed(1)},${ty.toFixed(1)} H${tx.toFixed(1)}`;
+      L.path.setAttribute('d', d); L.path.style.strokeDashoffset = (1 - draw).toFixed(4);
+      L.dot.setAttribute('cx', x.toFixed(1)); L.dot.setAttribute('cy', y.toFixed(1)); L.dot.setAttribute('r', (2.6 * Math.min(1, draw * 4)).toFixed(2));
+      const current = T > s0 - .05 && T < s0 + 1.35; setVar(L.path, '--lo', (current ? 1 : .38).toFixed(2)); setVar(L.dot, '--lo', (current ? 1 : .38).toFixed(2)); });
   }
   // ---- the key lights as each part lifts
   rows.forEach(r => { const p = +r.dataset.part, lit = litOf(p);
     setVar(r, '--lit', lit.toFixed(3)); r.classList.toggle('cur', lit > .5 && Math.round(T) === curOf(p)); });
   // ---- the file: one document per step, 9..13; the stamp strikes after acceptance settles
   let got = 0;
-  docs.forEach((d, i) => { const a = ease(seg(8.7 + i, 9 + i)) * (1 - seg(13.05, 13.5)); setVar(d, '--a', a.toFixed(3)); if (i === 2) setVar(d, '--stamp', ease(seg(11.1, 11.5)).toFixed(3)); if (a > .6) got = i + 1; });
+  docs.forEach((d, i) => { const a = ease(seg(9.7 + i, 10 + i)) * (1 - seg(14.05, 14.5)); setVar(d, '--a', a.toFixed(3)); if (i === 2) setVar(d, '--stamp', ease(seg(12.1, 12.5)).toFixed(3)); if (a > .6) got = i + 1; });
   gates.forEach((g, i) => { setVar(g, '--lit', (got > i ? 1 : 0).toString()); g.classList.toggle('cur', got - 1 === i); });
   const txt = `${got} of 5 documents`; if (deskCount.textContent !== txt) deskCount.textContent = txt;
+  // ---- economics: 6a, 6b, 6c in turn; each grows as it arrives; the tiles count up at the film's cadence
+  if (T > 14.4 && T < 18.5) {
+    const win = [[14.6, 15, 15.5, 15.8], [15.55, 16, 16.5, 16.8], [16.55, 17, 99, 100]];   // each chart is complete when its step comes to rest
+    charts.forEach((c, i) => { const [a, b, o1, o2] = win[i], v = seg(a, b) * (1 - seg(o1, o2)); setVar(c, '--v', v.toFixed(3)); setVar(c, 'visibility', v < .002 ? 'hidden' : 'visible');
+      setVar(c, '--g', inOut(seg(a + .12, b)).toFixed(3)); tabs[i].classList.toggle('on', v > .5); });
+    const k = ease(seg(14.6, 15));
+    if (newFilm || !moving) { const r = v => k < 1 ? Math.round(v * k / 100) * 100 : v;
+      tileTxt(tD, php(r(M_.tD))); tileTxt(tC, php(r(M_.tC))); tileTxt(tS, `${php(r(M_.tD - M_.tC))} · ${(M_.share * 100 * k).toFixed(1)}%`); }
+  }
 }
 function frame(now){
   requestAnimationFrame(frame);
@@ -369,6 +487,94 @@ function frame(now){
     T = lerp(from, to, easeMove(p, sceneMove)); if (p >= 1) { T = to; moving = false; } }
   if (moving || newFilm) render(now, newFilm);
 }
+
+/* ------------------------------------------------ Exhibit III: the site's model (every figure traces to the notes), drawn three ways
+   6a where the overhead goes (paired bars, by line) · 6b what one coordinator lifts (a waterfall from one total to the other) ·
+   6c how it scales with the number of disciplines (two lines, this programme marked). Blue is buying direct, gold is one
+   coordinator (the site's validated pair); what is lifted is neutral. Every mark has a tooltip; every series is labelled. */
+const E$ = {inv: 1344, po: 2135, hr: 346, hrsWk: 3, rework: .0085};
+const php = v => '₱' + Math.round(v).toLocaleString('en-PH');
+const kphp = v => v >= 1e6 ? '₱' + (v / 1e6).toFixed(v >= 1e7 ? 0 : 1) + 'M' : '₱' + Math.round(v / 1e3) + 'k';
+const eV = document.getElementById('eV'), eN = document.getElementById('eN'), eM = document.getElementById('eM');
+const tD = document.getElementById('tD'), tC = document.getElementById('tC'), tS = document.getElementById('tS'), ecoSum = document.getElementById('ecoSum');
+const charts = [0, 1, 2].map(i => document.getElementById('ch' + i)), tabs = [0, 1, 2].map(i => document.getElementById('ft' + i));
+const tileTxt = (el, v) => { if (el.textContent !== v) el.textContent = v; };
+const LINES = [['Invoices processed', 'one per supplier, per month'], ['Purchase orders', 'award and one change each'],
+               ['Coordination time', 'a manager’s hours on the interfaces'], ['Interface rework', 'the gaps between trades']];
+const BLUE = '#2a4a9e', GOLD = '#a8862f', LIFT = '#b9bcc2';
+function modelFor(V, N, M){ const wk = M * 4.33;
+  const d = [N * M * E$.inv, N * 2 * E$.po, E$.hrsWk * wk * N * E$.hr, E$.rework * V], c = [M * E$.inv, 2 * E$.po, E$.hrsWk * wk * E$.hr, 0];
+  const tD = d.reduce((a, b) => a + b), tC = c.reduce((a, b) => a + b); return {d, c, tD, tC, share: (tD - tC) / V}; }
+let M_ = modelFor(5e6, 6, 4);
+const W = 684, esc = t => String(t).replace(/&/g, '&amp;').replace(/</g, '&lt;');
+function draw6a(m){
+  const x0 = 214, x1 = W - 96, max = Math.max(...m.d), sc = v => (x1 - x0) * v / max, rowH = 92;
+  let g = '';
+  m.d.forEach((v, i) => { const y = 14 + i * rowH, [k, sub] = LINES[i];
+    g += `<line class="grid" x1="0" x2="${W}" y1="${y + rowH - 12}" y2="${y + rowH - 12}"/>
+      <text class="nm" x="0" y="${y + 18}">${k}<tspan class="tk" x="0" dy="20">${sub}</tspan></text>
+      <g class="gr"><rect x="${x0}" y="${y + 4}" width="${Math.max(2, sc(v)).toFixed(1)}" height="18" rx="1.5" fill="${BLUE}"><title>${k}, buying direct: ${php(v)}</title></rect>
+      <rect x="${x0}" y="${y + 26}" width="${Math.max(2, sc(m.c[i])).toFixed(1)}" height="18" rx="1.5" fill="${GOLD}"><title>${k}, one coordinator: ${m.c[i] ? php(m.c[i]) : 'held by the coordinator'}</title></rect></g>
+      <text class="lb" x="${x0 + sc(v) + 8}" y="${y + 18}">${php(v)}</text>
+      <text class="lb" x="${x0 + Math.max(2, sc(m.c[i])) + 8}" y="${y + 40}" ${m.c[i] ? '' : 'font-style="italic" fill="#4f5663"'}>${m.c[i] ? php(m.c[i]) : 'Held by the coordinator'}</text>`; });
+  charts[0].innerHTML = `<h4>Where the overhead goes</h4><p class="cap">Four lines a client carries when it buys each discipline separately, against one coordinator.</p>
+    <div class="legend"><span><i style="background:${BLUE}"></i>Buying direct</span><span><i style="background:${GOLD}"></i>One coordinator</span></div>
+    <svg width="${W}" height="${14 + 4 * rowH}" role="img" aria-label="Paired bars: overhead by line, buying direct against one coordinator">${g}</svg>`;
+}
+function draw6b(m){
+  const H = 400, top = 30, base = H - 58, sy = v => (base - top) * v / m.tD, cw = 70, gap = (W - 60 - 6 * cw) / 5;
+  const cols = [{k: 'Buying direct', v: m.tD, y0: 0, fill: BLUE, lab: php(m.tD)}]; let run = m.tD;
+  const names = ['Invoices', 'Purchase orders', 'Coordination', 'Rework'];
+  m.d.forEach((v, i) => { const lift = v - m.c[i]; run -= lift; cols.push({k: names[i], v: lift, y0: run, fill: LIFT, lab: '−' + php(lift), lifted: true}); });
+  cols.push({k: 'One coordinator', v: m.tC, y0: 0, fill: GOLD, lab: php(m.tC)});
+  let g = `<line class="ax" x1="40" x2="${W}" y1="${base}" y2="${base}"/>`;
+  for (let t = 0; t <= 4; t++) { const v = m.tD * t / 4, y = base - sy(v); g += `<line class="grid" x1="40" x2="${W}" y1="${y}" y2="${y}"/><text class="tk" x="34" y="${y + 4}" text-anchor="end">${kphp(v)}</text>`; }
+  cols.forEach((c, i) => { const x = 60 + i * (cw + gap), y = base - sy(c.y0 + c.v), h = Math.max(1.5, sy(c.v));
+    if (i > 0) { const prevTop = base - sy(i === cols.length - 1 ? c.v : cols[i - 1].y0 + (cols[i - 1].lifted ? 0 : cols[i - 1].v)); }
+    g += `<g class="gu"><rect x="${x}" y="${y}" width="${cw}" height="${h}" rx="1.5" fill="${c.fill}"><title>${c.k}: ${c.lab}</title></rect></g>
+      <text class="lb" x="${x + cw / 2}" y="${y - 8}" text-anchor="middle" ${c.lifted ? 'fill="#4f5663"' : ''}>${c.lab}</text>
+      <text class="lb b" x="${x + cw / 2}" y="${base + 20}" text-anchor="middle">${c.k.split(' ')[0]}</text>${c.k.includes(' ') ? `<text class="lb b" x="${x + cw / 2}" y="${base + 34}" text-anchor="middle">${c.k.split(' ').slice(1).join(' ')}</text>` : ''}`;
+    if (i < cols.length - 1) { const nx = 60 + (i + 1) * (cw + gap), ly = base - sy(i === 0 ? c.v : c.y0); g += `<line x1="${x + cw}" x2="${nx}" y1="${ly}" y2="${ly}" stroke="#7a818d" stroke-width="1" stroke-dasharray="2 3"/>`; } });
+  charts[1].innerHTML = `<h4>What one coordinator lifts</h4><p class="cap">From the client's overhead buying direct, line by line, to its overhead with one point of accountability.</p>
+    <div class="legend"><span><i style="background:${BLUE}"></i>Buying direct</span><span><i style="background:${LIFT}"></i>Lifted off the client</span><span><i style="background:${GOLD}"></i>One coordinator</span></div>
+    <svg width="${W}" height="${H}" role="img" aria-label="Waterfall from ${php(m.tD)} to ${php(m.tC)}">${g}</svg>`;
+}
+function draw6c(m, V, N, M){
+  const H = 400, top = 18, base = H - 50, x0 = 64, x1 = W - 120, Ns = [2, 3, 4, 5, 6, 7, 8, 9, 10];
+  const ms = Ns.map(n => modelFor(V, n, M)), max = Math.max(...ms.map(q => q.tD)) * 1.08;
+  const sx = n => x0 + (x1 - x0) * (n - 2) / 8, sy = v => base - (base - top) * v / max;
+  const path = key => ms.map((q, i) => `${i ? 'L' : 'M'}${sx(Ns[i]).toFixed(1)},${sy(q[key]).toFixed(1)}`).join(' ');
+  let g = `<line class="ax" x1="${x0}" x2="${x1}" y1="${base}" y2="${base}"/>`;
+  for (let t = 0; t <= 4; t++) { const v = max * t / 4; g += `<line class="grid" x1="${x0}" x2="${x1}" y1="${sy(v)}" y2="${sy(v)}"/><text class="tk" x="${x0 - 8}" y="${sy(v) + 4}" text-anchor="end">${kphp(v)}</text>`; }
+  Ns.forEach(n => { g += `<text class="tk" x="${sx(n)}" y="${base + 18}" text-anchor="middle">${n}</text>`; });
+  g += `<text class="lb b" x="${(x0 + x1) / 2}" y="${base + 40}" text-anchor="middle">Disciplines bought separately</text>`;
+  const area = path('tD') + ' ' + [...ms].reverse().map((q, i) => `L${sx(Ns[Ns.length - 1 - i]).toFixed(1)},${sy(q.tC).toFixed(1)}`).join(' ') + ' Z';
+  g += `<path d="${area}" fill="${BLUE}" opacity=".06"/>`;
+  g += `<path class="ln" d="${path('tD')}" stroke="${BLUE}" pathLength="1" style="stroke-dasharray:1;stroke-dashoffset:calc(1 - var(--g,0))"/>`;
+  g += `<path class="ln" d="${path('tC')}" stroke="${GOLD}" pathLength="1" style="stroke-dasharray:1;stroke-dashoffset:calc(1 - var(--g,0))"/>`;
+  const last = ms[ms.length - 1];
+  g += `<text class="lb" x="${x1 + 10}" y="${sy(last.tD) + 4}" fill="${'#1a1d24'}">Buying direct</text><text class="lb" x="${x1 + 10}" y="${sy(last.tC) + 4}">One coordinator</text>`;
+  ms.forEach((q, i) => { g += `<circle cx="${sx(Ns[i])}" cy="${sy(q.tD)}" r="10" fill="transparent"><title>${Ns[i]} disciplines, buying direct: ${php(q.tD)}</title></circle>
+    <circle cx="${sx(Ns[i])}" cy="${sy(q.tC)}" r="10" fill="transparent"><title>${Ns[i]} disciplines, one coordinator: ${php(q.tC)}</title></circle>`; });
+  const cur = ms[N - 2], cx = sx(N);
+  g += `<line x1="${cx}" x2="${cx}" y1="${sy(cur.tD)}" y2="${sy(cur.tC)}" stroke="#1a1d24" stroke-width="1" stroke-dasharray="2 3" opacity="calc(var(--g,0))"/>
+    <circle cx="${cx}" cy="${sy(cur.tD)}" r="4.5" fill="${BLUE}" stroke="#fdfcf8" stroke-width="2" style="opacity:var(--g,0)"/><circle cx="${cx}" cy="${sy(cur.tC)}" r="4.5" fill="${GOLD}" stroke="#fdfcf8" stroke-width="2" style="opacity:var(--g,0)"/>
+    <text class="lb" x="${cx + 10}" y="${(sy(cur.tD) + sy(cur.tC)) / 2 + 4}" style="opacity:var(--g,0)">This programme: ${php(cur.tD - cur.tC)} lifted</text>`;
+  charts[2].innerHTML = `<h4>How it scales</h4><p class="cap">The client's own overhead as disciplines are bought separately, for ${kphp(V)} over ${M} ${M === 1 ? 'month' : 'months'}. Each discipline adds its own invoices, orders and hours; one coordinator does not.</p>
+    <div class="legend"><span><i style="background:${BLUE}"></i>Buying direct</span><span><i style="background:${GOLD}"></i>One coordinator</span></div>
+    <svg width="${W}" height="${H}" role="img" aria-label="Overhead against the number of disciplines, two lines">${g}</svg>`;
+}
+function econ(){
+  const V = +eV.value * 1e6, N = +eN.value, M = +eM.value;
+  document.getElementById('oV').textContent = '₱' + (+eV.value).toLocaleString('en-PH', {maximumFractionDigits: 1}) + 'M';
+  document.getElementById('oN').textContent = N; document.getElementById('oM').textContent = M;
+  for (const el of [eV, eN, eM]) el.style.setProperty('--f', ((el.value - el.min) / (el.max - el.min) * 100) + '%');
+  M_ = modelFor(V, N, M); ecoSum.textContent = `${kphp(V)} · ${N} disciplines · ${M} ${M === 1 ? 'month' : 'months'}`;
+  draw6a(M_); draw6b(M_); draw6c(M_, V, N, M);
+  tileTxt(tD, php(M_.tD)); tileTxt(tC, php(M_.tC)); tileTxt(tS, `${php(M_.tD - M_.tC)} · ${(M_.share * 100).toFixed(1)}%`);
+}
+for (const el of [eV, eN, eM]) { el.addEventListener('input', econ); el.addEventListener('keydown', e => e.stopPropagation()); el.addEventListener('wheel', e => e.stopPropagation(), {passive: true}); }
+econ();
 
 /* ------------------------------------------------ controls: keys, click, trackpad swipe; F, B, W, number jumps */
 const blank = document.getElementById('blank'), hint = document.getElementById('hint');
@@ -394,19 +600,20 @@ addEventListener('wheel', e => { e.preventDefault(); const now = performance.now
   wheelAcc += Math.abs(e.deltaX) > Math.abs(e.deltaY) ? e.deltaX : e.deltaY;
   if (Math.abs(wheelAcc) > 60) { (wheelAcc > 0 ? next : prev)(); wheelAcc = 0; wheelLock = now + 650; } }, {passive: false});
 
-/* ------------------------------------------------ preparing the room: fonts and the first frames, then the rest */
+/* ------------------------------------------------ the intro: the lockup opens like a title card, the gold rule is the loading
+   progress, and when everything the first scenes need is decoded (and the card has played, 3.4 s at least) it gives way */
 (async () => {
-  const bar = document.querySelector('.loading i b'), L = document.getElementById('loading');
+  const intro = document.getElementById('intro'), bar = intro.querySelector('.rl'), t0 = performance.now();
   const first = [...loadSet('split', 1, 'split', 'f'), ...(TURN ? loadSet('turn', 1, 'turn', 't') : [])];
   const rest = [...loadSet('split', SPLIT, 'split', 'f').slice(1), ...(TURN ? loadSet('turn', TURN, 'turn', 't').slice(1) : [])];
-  let done = 0; const total = first.length + rest.length;
-  const tickBar = () => bar.style.setProperty('--lp', (done / total).toFixed(3));
+  const need = first.length + Math.min(rest.length, SPLIT - 1); let done = 0;
+  const tickBar = () => bar.style.setProperty('--lp', Math.min(1, done / need).toFixed(3));
   await Promise.all([document.fonts ? document.fonts.ready : 0, ...first.map(j => j().then(() => { done++; tickBar(); }))]);
-  // everything the first scenes need decodes before the curtain lifts; the turntable follows in the background
-  for (let k = 0; k < rest.length; k += 6) { await Promise.all(rest.slice(k, k + 6).map(j => j().then(() => { done++; tickBar(); }))); if (k === 90) break; }
-  measureRows(); render(performance.now(), true); L.classList.add('done');
-  (async () => { for (let k = 96; k < rest.length; k += 4) await Promise.all(rest.slice(k, k + 4).map(j => j().then(() => { done++; tickBar(); }))); })();
+  for (let k = 0; k < SPLIT - 1; k += 6) await Promise.all(rest.slice(k, Math.min(k + 6, SPLIT - 1)).map(j => j().then(() => { done++; tickBar(); })));
+  await new Promise(r => setTimeout(r, Math.max(0, 3400 - (performance.now() - t0))));
+  measureRows(); render(performance.now(), true); intro.classList.add('done');
   requestAnimationFrame(frame); setTimeout(() => hint.classList.add('gone'), 7000);
+  for (let k = SPLIT - 1; k < rest.length; k += 4) await Promise.all(rest.slice(k, k + 4).map(j => j()));   // the turntable, in the background
 })();
 })();
 </script>
