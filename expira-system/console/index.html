@@ -68,9 +68,52 @@ body{margin:0;background:var(--bg);color:var(--text);font:300 14.5px/1.6 var(--f
 .kb{font:400 10px var(--f-body);letter-spacing:.06em;color:var(--mute);border:var(--rule-hair) solid var(--line-2);border-radius:3px;padding:1px 5px}
 .search{display:none;padding:0 8px 10px}.side.searching .search{display:block}
 .search input{width:100%;border:0;border-bottom:var(--rule-hair) solid var(--line-3);background:transparent;padding:6px 0;outline:none;font-size:13px}
-.recents{flex:1;overflow:auto}
-.grp{padding:14px 8px 6px}
-.item{display:block;width:100%;text-align:left;border:0;background:transparent;padding:7px 8px;border-radius:5px;cursor:pointer;color:var(--soft);font-size:13px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;transition:background var(--out) var(--soft-close),color var(--out) var(--soft-close)}
+.recents{flex:1;overflow:auto;margin:0 -4px;padding:0 4px 8px}
+.sec{margin-top:6px}
+.sh{display:flex;align-items:center;gap:6px;padding:12px 8px 4px}
+.sh .cap{flex:1}
+.ib.sm{width:20px;height:20px;border-radius:4px}.ib.sm svg{width:11px;height:11px}
+.sh .ib.sm{opacity:0;transition:opacity .4s ease}.side:hover .sh .ib.sm,.sh .ib.sm:focus-visible{opacity:1}
+.row{position:relative;display:flex;align-items:center;border-radius:5px;transition:background var(--out) var(--soft-close);animation:evIn .5s var(--soft-close) both}
+.row:hover{background:var(--line);transition-duration:var(--in)}
+.row.on{background:var(--line-2)}
+.row.dragging{opacity:.4}
+.row .item{flex:1;min-width:0;background:transparent!important}
+.row .dots{position:absolute;right:4px;top:50%;transform:translateY(-50%);width:22px;height:22px;border:0;border-radius:4px;background:transparent;color:var(--mute);cursor:pointer;display:grid;place-items:center;opacity:0;transition:opacity .3s ease,background .3s ease,color .3s ease}
+.row:hover .dots,.row.on .dots,.row .dots:focus-visible,.row .dots[aria-expanded="true"]{opacity:1}
+.row .dots:hover,.row .dots[aria-expanded="true"]{background:var(--line-2);color:var(--ink)}
+.row .dots svg{width:12px;height:12px}
+.row .pin{position:absolute;right:10px;top:50%;margin-top:-4.5px;width:9px;height:9px;color:var(--gold);transition:opacity .3s ease}
+.row:hover .pin,.row.on .pin,.row:focus-within .pin{opacity:0}
+.item .it-f{font-size:10px;color:var(--mute);margin-left:6px}
+.rn-in{width:100%;border:var(--rule-hair) solid var(--gold);border-radius:4px;background:var(--panel);color:var(--ink);font:inherit;font-size:13px;padding:5px 7px;outline:none}
+.fold .fh{display:flex;align-items:center;gap:7px;width:100%;border:0;background:transparent;border-radius:5px;padding:6px 30px 6px 6px;cursor:pointer;text-align:left;color:var(--text);font-size:13px;transition:background var(--out) var(--soft-close)}
+.fold .fh:hover{background:var(--line);transition-duration:var(--in)}
+.fold .fh .car{width:9px;height:9px;color:var(--mute);transition:transform .6s var(--soft-close);flex:none}
+.fold.open .fh .car{transform:rotate(90deg)}
+.fold .fh .fi{width:13px;height:13px;color:var(--gold);flex:none}
+.fold .fh .fn{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.fold .fh .fc{font-size:10.5px;color:var(--mute)}
+.fold .fb{display:grid;grid-template-rows:0fr;transition:grid-template-rows .7s var(--soft-close)}
+.fold.open .fb{grid-template-rows:1fr}.fold .fb>div{overflow:hidden;padding-left:14px}
+.fold .fb .empty{padding:4px 8px 6px;font-size:12px}
+.fold.drop>.row,.fold.drop .fh,.dropzone.drop{background:var(--gold-wash);box-shadow:inset 0 0 0 var(--rule-hair) var(--gold)}
+.menu.ctx{width:224px;transform-origin:0 0}
+.menu .sub{display:none;border-left:var(--rule-hair) solid var(--line-2);margin:2px 0 2px 12px;padding-left:4px}
+.menu .sub.open{display:block;animation:evIn .4s var(--soft-close) both}
+.menu button .ic{width:14px;height:14px;color:var(--soft);flex:none}
+.menu button.danger{color:var(--bad)}.menu button.danger .ic{color:var(--bad)}
+.menu .mh.plain{text-transform:none;letter-spacing:0;font-size:11.5px}
+.crumb{font:400 12.5px var(--f-body);color:var(--mute);white-space:nowrap;display:flex;align-items:center;gap:6px}
+.crumb:empty{display:none}.crumb::after{content:"/";color:var(--line-3)}
+.ttl{border:0;background:transparent;padding:3px 6px;margin-left:-6px;border-radius:4px;cursor:text;min-width:0;text-align:left;transition:background var(--out) var(--soft-close)}
+.ttl:hover{background:var(--line);transition-duration:var(--in)}
+.ttl .rn-in{font:400 13.5px var(--f-display);min-width:240px}
+.toast{display:flex;align-items:center;gap:12px;pointer-events:auto}
+.toast .ua{border:0;background:none;padding:0;cursor:pointer;color:var(--gold);font:italic 400 12.5px var(--f-display)}
+.toast .ua:hover{color:var(--ink)}
+.grp{padding:12px 8px 4px}
+.item{display:block;width:100%;text-align:left;border:0;background:transparent;padding:6px 30px 6px 8px;border-radius:5px;cursor:pointer;color:var(--soft);font-size:12.5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;transition:background var(--out) var(--soft-close),color var(--out) var(--soft-close)}
 .item:hover{background:var(--line);color:var(--text);transition-duration:var(--in)}
 .item.on{background:var(--line-2);color:var(--ink)}
 .item .it-t{display:block;overflow:hidden;text-overflow:ellipsis}.item .it-m{display:block;font-size:10.5px;color:var(--mute);max-height:0;opacity:0;transition:max-height .6s var(--soft-close),opacity .4s ease}
@@ -430,7 +473,7 @@ html.theming,html.theming *,html.theming *::before,html.theming *::after{transit
   <div class="main" id="main">
         <header class="top">
       <button class="ib" id="unfold" aria-label="Open sidebar" data-tip="Open sidebar"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1"><rect x="1.5" y="2.5" width="13" height="11" rx="1.5"/><path d="M6 2.5v11"/></svg></button>
-      <span class="ttl" id="ttl"></span>
+      <span class="crumb" id="crumb"></span><button class="ttl" id="ttl" data-tip="Rename  F2"></button>
       <div class="r">
         <button class="runpill" id="runPill" hidden><i></i><span id="runT">Working</span><span class="num" id="runE">00:00</span></button><button class="dsp-btn" id="dspBtn"><i></i>Dispatch</button>
         <span class="sig capt" id="sig"><i></i><span id="sigT">Linking</span></span>
@@ -486,8 +529,10 @@ html.theming,html.theming *,html.theming *::before,html.theming *::after{transit
   <div class="seg" role="radiogroup" aria-label="Appearance"><button role="radio" data-th="system"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1"><rect x="2" y="3" width="12" height="8.5" rx="1"/><path d="M6 13.5h4"/></svg>System</button><button role="radio" data-th="light"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1"><circle cx="8" cy="8" r="3"/><path d="M8 1.5v1.5M8 13v1.5M1.5 8H3M13 8h1.5M3.4 3.4l1 1M11.6 11.6l1 1M3.4 12.6l1-1M11.6 4.4l1-1"/></svg>Light</button><button role="radio" data-th="dark"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1"><path d="M13 9.5A5.5 5.5 0 116.5 3a4.5 4.5 0 006.5 6.5z"/></svg>Dark</button></div>
   <div class="sep"></div>
   <button data-act="opts"><span class="t">Brief options<small>Desks, depth, client-safe</small></span></button>
+  <button data-act="archived"><span class="t">Archived chats<small id="archN">None</small></span></button>
   <button data-act="keys"><span class="t">Keyboard shortcuts</span><span class="kb">?</span></button>
 </div>
+<div class="menu ctx" id="ctx" role="menu" aria-label="Actions"></div>
 <div class="veil" id="veil"></div>
 <div class="keys" id="keys" role="dialog" aria-label="Keyboard shortcuts"><div class="cap">Keyboard</div><dl><dt><span class="kb">⌘K</span></dt><dd>Commands</dd><dt><span class="kb">⌥N</span></dt><dd>New chat</dd><dt><span class="kb">⌥L</span></dt><dd>The Dispatch</dd><dt><span class="kb">/</span></dt><dd>Search chats</dd><dt><span class="kb">Enter</span></dt><dd>Send</dd><dt><span class="kb">⇧ Enter</span></dt><dd>New line</dd><dt><span class="kb">Esc</span></dt><dd>Stop or close</dd><dt><span class="kb">?</span></dt><dd>This card</dd></dl></div>
 <div class="pal" id="pal" role="dialog" aria-label="Commands"><label for="palIn" class="sr">Command</label><input id="palIn" placeholder="Type a command…"><ul id="palList"></ul></div>
@@ -619,14 +664,84 @@ const EX={id:"example",no:13,title:"Belmont drapery refit",example:true,ts:T0,tu
   work:{ms:94000,firewall:"clear",steps:[{role:"research",tier:"medium",task:"Iloilo rates and lead times for drapery and track",v:"pass",ms:14000,out:"Blackout drapery, hotel grade: PHP 9,500–13,800 per window (verified).\nCeiling track: PHP 2,100–2,900 per metre (verified).\nLead time 5–7 weeks (staff canvass, unverified).\nCONFIDENCE: medium"},{role:"finance",tier:"high",task:"An indicative budget for forty rooms",v:"pass",ms:38000,out:"Per room PHP 22,050. 40 rooms PHP 882,000. Contingency 8% PHP 70,560. Total PHP 952,560 before VAT.\nCONFIDENCE: medium"},{role:"legal",tier:"high",task:"Contract risks behind a December deadline",v:"pass",ms:33000,out:"Cap liquidated damages at 10%; exclude delay from late sample approval; variations by signed order only. Counsel: LD wording.\nCONFIDENCE: high"},{role:"decision",tier:"medium",task:"How the company should proceed",v:"pass",ms:21000,out:"Recommend phased. Options: full push, phased, January start. Duke decides schedule and contingency.\nCONFIDENCE: high"}],
   flow:[0,2,6,9,7,4,8,12,15,11,9,6,10,14,9,5,3,6,8,4,2,1],
   feed:[[400,null,"Received the brief: about 45 tokens."],[1600,null,"Classified the brief: <em>hotel fit-out, scope and price</em>."],[1700,null,"Rates, a budget, contract risk and a recommendation each need their own desk."],[1800,"Commissioned <em>four desks</em>","Commissioned four desks."],[2000,null,"Opened desk I: research desk at <em>considered</em> effort, local rates and lead times."],[2240,null,"Opened desk II: finance desk at <em>deep</em> effort, budget over PHP 500,000."],[2480,null,"Desk II waits for desk I."],[2720,null,"Opened desk III: legal desk at <em>deep</em> effort, deadline exposure."],[2960,null,"Opened desk IV: decision desk at <em>considered</em> effort, choose a schedule."],[16200,"The research desk filed its notes","Desk I filed 48 tokens of notes in 14 s."],[38400,"The finance desk filed its notes","Desk II filed 30 tokens of notes in 38 s."],[39800,"The legal desk filed its notes","Desk III filed 36 tokens of notes in 33 s."],[41000,"All four passed review","Review: all four pieces pass."],[88000,"Set the exhibits","Set the exhibits: three figures, one chart, a comparison, sources."],[91200,"Firewall clear","Firewall: clear. Nothing restricted leaves with this answer."],[94000,"Delivered","Delivered in 1 min 34 s."]]}}]};
-let chats=store.get()||[];if(!chats.find(c=>c.id==="example"))chats.push(EX);let cur=null;
+let chats=store.get()||[];if(!chats.find(c=>c.id==="example")&&!(()=>{try{return localStorage.getItem("expira.noExample")}catch(e){return null}})())chats.push(EX);let cur=null;
 const save=()=>store.set(chats);const nextNo=()=>Math.max(13,...chats.map(c=>c.no||0))+1;
-function renderRecents(){const q=$("#find").value.trim().toLowerCase(),today=new Date().toDateString(),g={Today:[],Earlier:[]};
- chats.filter(c=>!q||c.title.toLowerCase().includes(q)).forEach(c=>g[!c.example&&new Date(c.ts).toDateString()===today?"Today":"Earlier"].push(c));
- $("#recents").innerHTML=Object.entries(g).filter(([,v])=>v.length).map(([k,v])=>`<div class="cap grp">${k}</div>`+v.map(c=>{const w=[...c.turns].reverse().find(t=>t.work)?.work;return `<button class="item ${cur&&cur.id===c.id?"on":""}" data-id="${esc(c.id)}" data-tip="No. ${pad(c.no||0,3)} · ${esc(new Date(c.ts).toLocaleDateString("en-PH",{day:"numeric",month:"short"}))}"><span class="it-t">${esc(c.title)}${c.example?" <i>example</i>":""}</span>${w?`<span class="it-m num">${(w.steps||[]).length?words(w.steps.length)+" desk"+(w.steps.length>1?"s":""):"Direct"} · ${mmss(w.ms)}</span>`:""}</button>`}).join("")).join("")||`<div class="grp empty">Nothing matches.</div>`}
+/* ---------- chat library: pins, folders, archive, rename, delete with undo ---------- */
+let FOLDERS=(()=>{try{return JSON.parse(localStorage.getItem("expira.folders")||"[]")}catch(e){return []}})();
+const saveF=()=>{try{localStorage.setItem("expira.folders",JSON.stringify(FOLDERS))}catch(e){}};
+const I={dots:`<svg viewBox="0 0 12 12" fill="currentColor"><circle cx="2.5" cy="6" r="1"/><circle cx="6" cy="6" r="1"/><circle cx="9.5" cy="6" r="1"/></svg>`,
+ car:`<svg class="car" viewBox="0 0 10 10" fill="none" stroke="currentColor" stroke-width="1.2"><path d="M3.5 2L6.5 5 3.5 8"/></svg>`,
+ fold:`<svg class="fi" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1"><path d="M1.5 4.5a1 1 0 011-1h3.6l1.5 1.5h5.9a1 1 0 011 1v6.5a1 1 0 01-1 1h-11a1 1 0 01-1-1z"/></svg>`,
+ pin:`<svg class="pin" viewBox="0 0 10 10" fill="currentColor"><path d="M5 .8l1.3 2.6 2.9.4-2.1 2 .5 2.9L5 7.4 2.4 8.7l.5-2.9-2.1-2 2.9-.4z"/></svg>`,
+ ren:`<svg class="ic" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1"><path d="M10.5 2.5l3 3-7.5 7.5H3v-3z"/></svg>`,
+ pinI:`<svg class="ic" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1"><path d="M8 1.8l1.9 3.8 4.2.6-3 3 .7 4.2L8 11.4l-3.8 2 .7-4.2-3-3 4.2-.6z"/></svg>`,
+ mv:`<svg class="ic" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1"><path d="M1.5 4.5a1 1 0 011-1h3.6l1.5 1.5h5.9a1 1 0 011 1v6.5a1 1 0 01-1 1h-11a1 1 0 01-1-1zM6 9h4.5M8.8 7.2L10.5 9l-1.7 1.8"/></svg>`,
+ ar:`<svg class="ic" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1"><rect x="2" y="3" width="12" height="3" rx=".6"/><path d="M3 6v6.5a1 1 0 001 1h8a1 1 0 001-1V6M6.5 9h3"/></svg>`,
+ del:`<svg class="ic" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1"><path d="M2.5 4.5h11M6 4.5V3h4v1.5M4 4.5l.7 9h6.6l.7-9"/></svg>`,
+ plus:`<svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.2"><path d="M6 2v8M2 6h8"/></svg>`};
+const folderOf=c=>FOLDERS.find(f=>f.id===c.folder);
+function rowHTML(c,showFolder){const w=[...c.turns].reverse().find(t=>t.work)?.work,f=showFolder&&folderOf(c);
+ return `<div class="row ${cur&&cur.id===c.id?"on":""}" draggable="true" data-id="${esc(c.id)}"><button class="item" data-id="${esc(c.id)}"><span class="it-t">${esc(c.title)}${c.example?" <i>example</i>":""}${f?`<span class="it-f">${esc(f.name)}</span>`:""}</span>${w?`<span class="it-m num">${(w.steps||[]).length?words(w.steps.length)+" desk"+(w.steps.length>1?"s":""):"Direct"} · ${mmss(w.ms)}${w.web?" · web":""}</span>`:""}</button>${c.pinned?I.pin:""}<button class="dots" data-cmenu="${esc(c.id)}" aria-label="Chat actions" aria-haspopup="menu" aria-expanded="false">${I.dots}</button></div>`}
+function renderRecents(){const q=$("#find").value.trim().toLowerCase(),live=chats.filter(c=>!c.archived&&(!q||c.title.toLowerCase().includes(q)));
+ const now=Date.now(),day=new Date().toDateString(),pinned=live.filter(c=>c.pinned);let o="";
+ if(pinned.length)o+=`<div class="sec"><div class="sh"><span class="cap">Pinned</span></div>${pinned.map(c=>rowHTML(c,true)).join("")}</div>`;
+ o+=`<div class="sec"><div class="sh"><span class="cap">Folders</span><button class="ib sm" data-newf data-tip="New folder" aria-label="New folder">${I.plus}</button></div>${FOLDERS.map(f=>{const cs=live.filter(c=>c.folder===f.id&&!c.pinned);if(q&&!cs.length&&!f.name.toLowerCase().includes(q))return "";
+  return `<div class="fold ${f.open||q?"open":""}" data-fid="${esc(f.id)}"><div class="row"><button class="fh" data-ftoggle="${esc(f.id)}">${I.car}${I.fold}<span class="fn">${esc(f.name)}</span><span class="fc num">${cs.length||""}</span></button><button class="dots" data-fmenu="${esc(f.id)}" aria-label="Folder actions" aria-haspopup="menu" aria-expanded="false">${I.dots}</button></div><div class="fb"><div>${cs.map(c=>rowHTML(c,false)).join("")||`<div class="empty">Drag chats here</div>`}</div></div></div>`}).join("")||`<div class="grp empty" style="padding-top:2px">No folders yet.</div>`}</div>`;
+ const loose=live.filter(c=>!c.pinned&&!folderOf(c)),g=[["Today",[]],["Previous 7 days",[]],["Older",[]]];
+ loose.forEach(c=>{const t=c.ts||0;g[!c.example&&new Date(t).toDateString()===day?0:now-t<7*864e5&&!c.example?1:2][1].push(c)});
+ o+=`<div class="sec dropzone" data-unfile>${g.filter(([,v])=>v.length).map(([k,v])=>`<div class="sh"><span class="cap">${k}</span></div>`+v.map(c=>rowHTML(c,false)).join("")).join("")||(q?`<div class="grp empty">Nothing matches.</div>`:"")}</div>`;
+ $("#recents").innerHTML=o;const n=chats.filter(c=>c.archived).length;const an=$("#archN");if(an)an.textContent=n?`${n} chat${n>1?"s":""}`:"None"}
 $("#find").addEventListener("input",renderRecents);
-$("#recents").addEventListener("click",e=>{const b=e.target.closest(".item");if(!b||busy)return;open(chats.find(c=>c.id===b.dataset.id));if(innerWidth<760)app.classList.add("folded")});
-
+$("#recents").addEventListener("click",e=>{
+ const nf=e.target.closest("[data-newf]");if(nf){newFolder();return}
+ const ft=e.target.closest("[data-ftoggle]");if(ft){const f=FOLDERS.find(x=>x.id===ft.dataset.ftoggle);f.open=!f.open;saveF();ft.closest(".fold").classList.toggle("open",f.open);return}
+ const cm=e.target.closest("[data-cmenu]");if(cm){e.stopPropagation();chatMenu(cm.dataset.cmenu,cm);return}
+ const fm=e.target.closest("[data-fmenu]");if(fm){e.stopPropagation();folderMenu(fm.dataset.fmenu,fm);return}
+ const b=e.target.closest(".item");if(!b||busy||b.querySelector(".rn-in"))return;open(chats.find(c=>c.id===b.dataset.id));if(innerWidth<760)app.classList.add("folded")});
+$("#recents").addEventListener("contextmenu",e=>{const r=e.target.closest(".row[data-id]");if(!r)return;e.preventDefault();chatMenu(r.dataset.id,{getBoundingClientRect:()=>({left:e.clientX,right:e.clientX,top:e.clientY,bottom:e.clientY}),setAttribute(){}})});
+/* drag a chat onto a folder, or back onto the recents */
+let dragId=null;
+$("#recents").addEventListener("dragstart",e=>{const r=e.target.closest(".row[data-id]");if(!r)return;dragId=r.dataset.id;r.classList.add("dragging");e.dataTransfer.effectAllowed="move";try{e.dataTransfer.setData("text/plain",dragId)}catch(x){}});
+$("#recents").addEventListener("dragend",()=>{dragId=null;document.querySelectorAll(".dragging,.drop").forEach(x=>x.classList.remove("dragging","drop"))});
+$("#recents").addEventListener("dragover",e=>{if(!dragId)return;const t=e.target.closest(".fold,[data-unfile]");document.querySelectorAll(".drop").forEach(x=>x!==t&&x.classList.remove("drop"));if(t){e.preventDefault();t.classList.add("drop")}});
+$("#recents").addEventListener("drop",e=>{const t=e.target.closest(".fold,[data-unfile]");if(!t||!dragId)return;e.preventDefault();const c=chats.find(x=>x.id===dragId);if(!c)return;const fid=t.dataset.fid||null;if(c.folder===fid)return;c.folder=fid;if(fid){const f=FOLDERS.find(x=>x.id===fid);f.open=true;saveF();toast(`Moved to <em>${esc(f.name)}</em>`)}else toast("Moved to recents");save();renderRecents();crumb()});
+/* context menus */
+const ctx=$("#ctx");let ctxBtn=null;
+function placeMenu(m,anchor,w){const r=anchor.getBoundingClientRect();m.style.left=Math.max(8,Math.min(innerWidth-w-8,r.left))+"px";m.style.top="0px";m.classList.add("open");const hh=m.offsetHeight;let y=r.bottom+4;if(y+hh>innerHeight-8)y=Math.max(8,r.top-hh-4);m.style.top=y+"px"}
+function closeCtx(){ctx.classList.remove("open");if(ctxBtn&&ctxBtn.setAttribute)ctxBtn.setAttribute("aria-expanded","false");ctxBtn=null}
+function chatMenu(id,btn){const c=chats.find(x=>x.id===id);if(!c)return;closeCtx();ctxBtn=btn;
+ ctx.innerHTML=`<div class="mh plain">${esc(c.title)}</div><button data-a="rename">${I.ren}<span class="t">Rename</span><span class="kb">F2</span></button><button data-a="pin">${I.pinI}<span class="t">${c.pinned?"Unpin":"Pin"}</span></button><button data-a="move">${I.mv}<span class="t">Move to folder</span>${CHEV}</button>
+ <div class="sub" id="ctxSub">${FOLDERS.filter(f=>f.id!==c.folder).map(f=>`<button data-a="to" data-f="${esc(f.id)}">${I.fold.replace('class="fi"','class="ic"')}<span class="t">${esc(f.name)}</span></button>`).join("")}${c.folder?`<button data-a="to" data-f="">${I.mv}<span class="t">Out of folder</span></button>`:""}<button data-a="tonew">${I.plus.replace("<svg",'<svg class="ic"')}<span class="t">New folder…</span></button></div>
+ <div class="sep"></div><button data-a="archive">${I.ar}<span class="t">Archive</span></button><button data-a="delete" class="danger">${I.del}<span class="t">Delete</span></button>`;
+ ctx.dataset.id=id;delete ctx.dataset.fid;placeMenu(ctx,btn,224);btn.setAttribute("aria-expanded","true");setTimeout(()=>ctx.querySelector("button")?.focus(),50)}
+function folderMenu(fid,btn){const f=FOLDERS.find(x=>x.id===fid);if(!f)return;closeCtx();ctxBtn=btn;
+ ctx.innerHTML=`<div class="mh plain">${esc(f.name)}</div><button data-a="frename">${I.ren}<span class="t">Rename folder</span></button><button data-a="fnewchat">${I.plus.replace("<svg",'<svg class="ic"')}<span class="t">New chat in folder</span></button><div class="sep"></div><button data-a="fdelete" class="danger">${I.del}<span class="t">Delete folder<small>Its chats move to recents</small></span></button>`;
+ ctx.dataset.fid=fid;delete ctx.dataset.id;placeMenu(ctx,btn,224);btn.setAttribute("aria-expanded","true");setTimeout(()=>ctx.querySelector("button")?.focus(),50)}
+ctx.addEventListener("click",e=>{const b=e.target.closest("[data-a]");if(!b)return;const a=b.dataset.a,c=chats.find(x=>x.id===ctx.dataset.id),f=FOLDERS.find(x=>x.id===ctx.dataset.fid);
+ if(a==="move"){$("#ctxSub").classList.toggle("open");return}
+ closeCtx();
+ if(a==="rename")renameChat(c);if(a==="pin"){c.pinned=!c.pinned;save();renderRecents();toast(c.pinned?"Pinned":"Unpinned")}
+ if(a==="to"){c.folder=b.dataset.f||null;const nf=folderOf(c);if(nf){nf.open=true;saveF()}save();renderRecents();crumb();toast(nf?`Moved to <em>${esc(nf.name)}</em>`:"Moved to recents")}
+ if(a==="tonew")newFolder(c);if(a==="archive")archiveChat(c);if(a==="delete")deleteChat(c);
+ if(a==="frename")renameFolder(f);if(a==="fnewchat"){newChat();pendingFolder=f.id}if(a==="fdelete")deleteFolder(f)});
+ctx.addEventListener("keydown",e=>{const it=[...ctx.querySelectorAll("button")].filter(x=>x.offsetParent),i=it.indexOf(document.activeElement);if(e.key==="ArrowDown"){e.preventDefault();it[(i+1)%it.length]?.focus()}if(e.key==="ArrowUp"){e.preventDefault();it[(i-1+it.length)%it.length]?.focus()}if(e.key==="Escape"){e.stopPropagation();closeCtx()}});
+document.addEventListener("pointerdown",e=>{if(ctx.classList.contains("open")&&!e.target.closest("#ctx,[data-cmenu],[data-fmenu]"))closeCtx()});
+let pendingFolder=null;
+/* rename in place: Enter keeps, Esc cancels */
+function inlineEdit(host,value,done){const inp=document.createElement("input");inp.className="rn-in";inp.value=value;inp.maxLength=80;const prev=host.innerHTML;host.innerHTML="";host.append(inp);inp.focus();inp.select();let fin=false;
+ const end=ok=>{if(fin)return;fin=true;const v=inp.value.trim();if(ok&&v&&v!==value)done(v);else{host.innerHTML=prev}};
+ inp.addEventListener("keydown",e=>{e.stopPropagation();if(e.key==="Enter"){e.preventDefault();end(true)}if(e.key==="Escape"){e.preventDefault();end(false)}});inp.addEventListener("blur",()=>end(true));inp.addEventListener("click",e=>e.stopPropagation())}
+function renameChat(c){if(!c)return;const row=[...document.querySelectorAll(`.row[data-id="${CSS.escape(c.id)}"] .it-t`)][0];const host=row||$("#ttl");inlineEdit(host,c.title,v=>{c.title=v;save();renderRecents();if(cur===c)crumb();toast("Renamed")})}
+function renameFolder(f){const host=document.querySelector(`.fold[data-fid="${CSS.escape(f.id)}"] .fn`);inlineEdit(host,f.name,v=>{f.name=v;saveF();renderRecents();crumb();toast("Folder renamed")})}
+function newFolder(moveChat){const f={id:"f"+Date.now().toString(36),name:"New folder",open:true};FOLDERS.push(f);saveF();if(moveChat){moveChat.folder=f.id;save()}renderRecents();requestAnimationFrame(()=>renameFolder(f))}
+function deleteFolder(f){const moved=chats.filter(c=>c.folder===f.id);const idx=FOLDERS.indexOf(f);FOLDERS.splice(idx,1);moved.forEach(c=>c.folder=null);saveF();save();renderRecents();crumb();
+ toastUndo(`Deleted <em>${esc(f.name)}</em>`,()=>{FOLDERS.splice(idx,0,f);moved.forEach(c=>c.folder=f.id);saveF();save();renderRecents();crumb()})}
+function archiveChat(c){c.archived=true;save();if(cur===c)open(null);renderRecents();toastUndo("Archived",()=>{c.archived=false;save();renderRecents()})}
+function deleteChat(c){const idx=chats.indexOf(c);chats.splice(idx,1);save();if(c.example)try{localStorage.setItem("expira.noExample","1")}catch(e){}if(cur===c)open(null);renderRecents();
+ toastUndo(`Deleted <em>${esc(c.title.length>28?c.title.slice(0,27)+"…":c.title)}</em>`,()=>{chats.splice(idx,0,c);if(c.example)try{localStorage.removeItem("expira.noExample")}catch(e){}save();renderRecents()})}
+function toastUndo(h,undo){const box=$("#toasts");box.innerHTML="";const e=document.createElement("div");e.className="toast";e.style.animationDuration="5.2s";e.innerHTML=`<span>${h}</span><button class="ua">Undo</button>`;e.querySelector(".ua").onclick=()=>{undo();e.remove();toast("Restored")};box.append(e);clearTimeout(box._t);box._t=setTimeout(()=>e.remove(),5300)}
+function crumb(){const f=cur&&folderOf(cur);$("#crumb").textContent=f?f.name:"";if(cur)$("#ttl").innerHTML=`${esc(cur.title)} <span class="ttl-ref">· No. ${pad(cur.no||0,3)}</span>`}
+$("#ttl").onclick=()=>{if(cur&&!$("#ttl").querySelector(".rn-in"))inlineEdit($("#ttl"),cur.title,v=>{cur.title=v;save();renderRecents();crumb();toast("Renamed")})};
 const evLi=f=>f[1]?`<li><span>${f[1]}</span><span class="x num">${mmss(f[0])}</span></li>`:"";
 function summary(w){const n=(w.steps||[]).length;return (n?`Consulted ${words(n).toLowerCase()} desk${n>1?"s":""}`:"Answered directly")+(w.firewall==="clear"?" · firewall clear":w.firewall==="blocked"?" · held for internal use":"")}
 function thinkHTML(w,k){w.feed=w.feed||[];return `<div class="think settled"><button class="think-h" type="button" aria-expanded="false">${GLYPH}<span class="lbl">${summary(w)}</span><span class="t num">${mmss(w.ms)}</span>${CHEV}</button><div class="sheen"></div><div class="think-b"><div><ol class="ev">${(w.feed||[]).map(evLi).join("")}</ol><button class="rd" data-read="${k}">Open the dispatch</button></div></div></div>`}
@@ -637,8 +752,8 @@ function inThis(html){const d=document.createElement("div");d.innerHTML=html;con
 function meta(text){const w=(text.match(/\S+/g)||[]).length;return `<span>${w} words · ${Math.max(1,Math.round(w/220))} min read</span>`}
 function botHTML(t,k){const a=md(t.content);return `<div class="bot" data-k="${k}"><div class="by">${BYLINE}<time class="num" data-tip="${esc(longDate(t.ts))}">${hhmm(t.ts)}</time></div>${t.work?thinkHTML(t.work,k):""}${inThis(a)}<div class="ans">${a}</div>${exhibitsHTML(t.ex,false)}<div class="filed capt"><span>Filed ${hhmm(t.ts)}</span><i class="dotsep"></i>${meta(t.content)}${ACTS}</div></div>`}
 function open(c){cur=c;app.classList.toggle("has-chat",!!c);
- if(c){$("#ttl").innerHTML=`${esc(c.title)} <span class="ttl-ref">· No. ${pad(c.no||0,3)}</span>`;$("#thread").innerHTML=c.turns.map((t,k)=>t.role==="user"?youHTML(t):botHTML(t,k)).join("");$("#main").append($("#dock"));requestAnimationFrame(()=>{sc.scrollTop=1e9;prog()})}
- else{$("#heroDock").append($("#dock"));$("#thread").innerHTML="";showDsp(false)}
+ if(c){crumb();$("#thread").innerHTML=c.turns.map((t,k)=>t.role==="user"?youHTML(t):botHTML(t,k)).join("");$("#main").append($("#dock"));requestAnimationFrame(()=>{sc.scrollTop=1e9;prog()})}
+ else{$("#heroDock").append($("#dock"));$("#thread").innerHTML="";$("#crumb").textContent="";showDsp(false)}
  renderRecents()}
 document.addEventListener("click",e=>{
  const h=e.target.closest(".think-h");if(h){const t=h.closest(".think");t.classList.toggle("open");h.setAttribute("aria-expanded",t.classList.contains("open"));return}
@@ -674,9 +789,11 @@ function applyTheme(v,soft){if(soft&&!reduce){root.classList.add("theming");clea
 applyTheme(THEME,false);
 function setMenu(o){const m=$("#setMenu"),b=$("#me");o=o??!m.classList.contains("open");if(o){const r=b.getBoundingClientRect(),w=268;m.style.left=Math.max(8,Math.min(innerWidth-w-8,r.left))+"px";const hgt=m.offsetHeight;m.style.top=Math.max(8,r.top-hgt-8)+"px";m.classList.add("open");setTimeout(()=>m.querySelector('[aria-checked="true"]')?.focus(),60)}else m.classList.remove("open");b.setAttribute("aria-expanded",o)}
 $("#me").onclick=e=>{e.stopPropagation();setMenu()};
-$("#setMenu").addEventListener("click",e=>{const t=e.target.closest("[data-th]");if(t){applyTheme(t.dataset.th,true);return}const a=e.target.closest("[data-act]");if(!a)return;setMenu(false);if(a.dataset.act==="keys")setTimeout(()=>keys(true),60);if(a.dataset.act==="opts")setTimeout(()=>menu(true),60)});
+$("#setMenu").addEventListener("click",e=>{const t=e.target.closest("[data-th]");if(t){applyTheme(t.dataset.th,true);return}const a=e.target.closest("[data-act]");if(!a)return;setMenu(false);if(a.dataset.act==="keys")setTimeout(()=>keys(true),60);if(a.dataset.act==="archived")setTimeout(archivedMenu,60);if(a.dataset.act==="opts")setTimeout(()=>menu(true),60)});
 document.addEventListener("pointerdown",e=>{if(!e.target.closest("#setMenu,#me")&&$("#setMenu").classList.contains("open"))setMenu(false)});
 $("#setMenu").addEventListener("keydown",e=>{const it=[...$("#setMenu").querySelectorAll("button")],i=it.indexOf(document.activeElement);if(e.key==="ArrowDown"||e.key==="ArrowRight"){e.preventDefault();it[(i+1)%it.length].focus()}if(e.key==="ArrowUp"||e.key==="ArrowLeft"){e.preventDefault();it[(i-1+it.length)%it.length].focus()}if(e.key==="Escape"){e.stopPropagation();setMenu(false);$("#me").focus()}});
+function archivedMenu(){const A=chats.filter(c=>c.archived);ctxBtn=$("#me");ctx.innerHTML=`<div class="mh cap">Archived chats</div>${A.map(c=>`<button data-arch="${esc(c.id)}"><span class="t">${esc(c.title)}<small>Restore</small></span></button>`).join("")||`<div class="mh plain" style="color:var(--mute)">Nothing archived.</div>`}`;delete ctx.dataset.id;delete ctx.dataset.fid;placeMenu(ctx,$("#me"),224)}
+document.addEventListener("click",e=>{const r=e.target.closest("[data-arch]");if(!r)return;const c=chats.find(x=>x.id===r.dataset.arch);c.archived=false;save();renderRecents();closeCtx();toast("Restored")});
 /* options: desks, depth, client-safe, web; remembered per viewer */
 const OPT=Object.assign({desks:"auto",depth:"standard",safe:true,web:true},(()=>{try{return JSON.parse(localStorage.getItem("expira.opt")||"{}")}catch(e){return {}}})());
 const saveOpt=()=>{try{localStorage.setItem("expira.opt",JSON.stringify(OPT))}catch(e){}};
@@ -700,7 +817,7 @@ function prog(){const m=sc.scrollHeight-sc.clientHeight;$("#jump").classList.tog
 sc.addEventListener("scroll",prog,{passive:true});$("#jump").onclick=()=>sc.scrollTo({top:1e9,behavior:reduce?"auto":"smooth"});
 
 /* palette */
-const CMDS=[["Appearance: light","",()=>applyTheme("light",true)],["Appearance: dark","",()=>applyTheme("dark",true)],["Appearance: system","",()=>applyTheme("system",true)],["Settings","",()=>setTimeout(()=>setMenu(true),60)],["Keyboard shortcuts","?",()=>setTimeout(()=>keys(true),30)],["New chat","⌥N",newChat],["Open the Dispatch","⌥L",()=>openLatest()],["Options","",()=>setTimeout(()=>menu(true),60)],["Toggle client-safe","",()=>{OPT.safe=!OPT.safe;saveOpt();drawOpt();toast(OPT.safe?"Client-safe on":"Client-safe off")}],["Search chats","/",()=>{app.classList.remove("folded");$("#side").classList.add("searching");$("#find").focus()}],["Stop the run","Esc",()=>ctl?.abort()],["Toggle sidebar","",()=>app.classList.toggle("folded")]];
+const CMDS=[["Appearance: light","",()=>applyTheme("light",true)],["Appearance: dark","",()=>applyTheme("dark",true)],["Appearance: system","",()=>applyTheme("system",true)],["Settings","",()=>setTimeout(()=>setMenu(true),60)],["Keyboard shortcuts","?",()=>setTimeout(()=>keys(true),30)],["New chat","⌥N",newChat],["Open the Dispatch","⌥L",()=>openLatest()],["Options","",()=>setTimeout(()=>menu(true),60)],["Toggle client-safe","",()=>{OPT.safe=!OPT.safe;saveOpt();drawOpt();toast(OPT.safe?"Client-safe on":"Client-safe off")}],["New folder","",()=>newFolder()],["Rename this chat","F2",()=>cur&&renameChat(cur)],["Archive this chat","",()=>cur&&!busy&&archiveChat(cur)],["Delete this chat","",()=>cur&&!busy&&deleteChat(cur)],["Search chats","/",()=>{app.classList.remove("folded");$("#side").classList.add("searching");$("#find").focus()}],["Stop the run","Esc",()=>ctl?.abort()],["Toggle sidebar","",()=>app.classList.toggle("folded")]];
 let ps=0;const pal=o=>{$("#pal").classList.toggle("open",o);$("#veil").classList.toggle("open",o);if(o){$("#palIn").value="";ps=0;drawPal();setTimeout(()=>$("#palIn").focus(),30)}};
 function drawPal(){const q=$("#palIn").value.toLowerCase(),L=CMDS.filter(c=>c[0].toLowerCase().includes(q));ps=Math.min(ps,Math.max(0,L.length-1));$("#palList").innerHTML=L.map((c,i)=>`<li class="${i===ps?"on":""}" data-i="${CMDS.indexOf(c)}">${c[0]}${c[1]?`<span class="kb">${c[1]}</span>`:""}</li>`).join("")||`<li class="empty">No command matches.</li>`}
 $("#palIn").addEventListener("input",()=>{ps=0;drawPal()});
@@ -713,6 +830,8 @@ addEventListener("keydown",e=>{const k=e.key.toLowerCase();
  else if(e.altKey&&e.code==="KeyN"){e.preventDefault();newChat()}
  else if(e.altKey&&e.code==="KeyL"){e.preventDefault();openLatest()}
  else if(k==="?"&&!/^(TEXTAREA|INPUT)$/.test(document.activeElement.tagName)){e.preventDefault();keys(!$("#keys").classList.contains("open"))}
+ else if(e.key==="F2"&&cur&&!/^(TEXTAREA|INPUT)$/.test(document.activeElement.tagName)){e.preventDefault();renameChat(cur)}
+ else if(k==="escape"&&ctx.classList.contains("open"))closeCtx();
  else if(k==="escape"&&$("#setMenu").classList.contains("open"))setMenu(false);
  else if(k==="escape"&&$("#optMenu").classList.contains("open"))menu(false);
  else if(k==="escape"&&$("#keys").classList.contains("open"))keys(false);
@@ -837,7 +956,7 @@ function setBusy(on){busy=on;app.classList.toggle("busy",on);$("#runPill").hidde
 const COPY={not_granted:"EXPIRA needs permission to use Claude. Reload to be asked again.",rate_limited:"Too many requests. Wait a minute, then send again.",session_expired:"Your session expired. Sign in again.",refused:"That brief was declined. Rephrase it.",prompt_too_large:"That brief is too long. Shorten it.",invalid_json:"The plan came back unreadable. Send again."};
 
 async function send(q){
- if(!cur||cur.example){cur={id:"c"+Date.now(),no:nextNo(),title:q.slice(0,52),ts:Date.now(),turns:[]};chats.unshift(cur)}
+ if(!cur||cur.example){cur={id:"c"+Date.now(),no:nextNo(),title:q.slice(0,52),ts:Date.now(),turns:[],folder:pendingFolder};pendingFolder=null;chats.unshift(cur)}
  const tsQ=Date.now();cur.turns.push({role:"user",content:q,ts:tsQ});promptEl.value="";phSync();open(cur);setBusy(true);ctl=new AbortController();
  const safe=OPT.safe,deep=OPT.desks==="always",direct=OPT.desks==="off",depthDeep=OPT.depth==="deep";let webOn=OPT.web&&WEB.ok;const webSrc=new Map();
  if(webOn){try{const lim=await sample.limits();if(!lim||!lim.tools)webOn=false}catch(e){webOn=false}}
@@ -866,7 +985,7 @@ Roles: research (medium|high, floor medium), finance (high), legal (high), decis
 Use as many desks as the brief truly needs, from 0 to 8. Split broad research into parallel research desks by sub-question. Start each at its floor; use high for research/decision only if the amount exceeds PHP 500,000, sources may conflict, or there is legal exposure.
 Reply with only JSON: {"title": string (3-6 words), "kind": string (what sort of brief this is, under 8 words), "rationale": string (one sentence: why this plan), "steps": [{"role": string, "tier": string, "task": string (short phrase, sentence case, no full stop), "why": string (under 12 words), "after": [1-based step numbers it needs]}]}
 ${history?`Conversation so far:\n${history}\n\n`:""}New message: ${q}`,{modelTier:"quick",cache:false,signal:ctl.signal});
-  if(cur.turns.length===1&&plan.title){cur.title=String(plan.title).slice(0,60);$("#ttl").innerHTML=`${esc(cur.title)} <span class="ttl-ref">· No. ${pad(cur.no,3)}</span>`;renderRecents();swap($("#dxT"),cur.title)}
+  if(cur.turns.length===1&&plan.title){cur.title=String(plan.title).slice(0,60);crumb();renderRecents();swap($("#dxT"),cur.title)}
   const steps=(plan.steps||[]).filter(s=>ROSTER[s.role]).slice(0,8).map(s=>{const R=ROSTER[s.role];let tier=R.tiers.includes(s.tier)?s.tier:R.floor;if(TIERS[tier].n<TIERS[R.floor].n)tier=R.floor;if(depthDeep&&R.tiers.includes("high"))tier="high";return{role:s.role,tier,task:String(s.task||""),why:String(s.why||""),after:(s.after||[]).map(Number).filter(n=>n>0&&n<=8),redo:0}});
   work.steps=steps;const outs=[];think.O=0;if(webOn&&steps.some(x=>WEB_ROLES.has(x.role)))F(null,"Web research is on for research, legal and decision desks.");
   F(null,`Classified the brief: <em>${esc(plan.kind||"general enquiry")}</em>.`);if(plan.rationale)F(null,esc(plan.rationale));
