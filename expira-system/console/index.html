@@ -1042,6 +1042,78 @@ html.calm *,html.calm *::before,html.calm *::after{animation:none!important;tran
 .hero>*:not(#goo){position:relative;z-index:1}
 @media (prefers-reduced-motion:reduce){#goo{display:none}}
 #ready{display:none!important}.hero .greet{margin-bottom:26px}
+/* v30 · two views (Log · Map), a denser quieter log, the mini map with liquid junctions, springs */
+:root{--sp-jelly:cubic-bezier(.3,1.5,.4,1);--sp-jelly-d:600ms;--sp-soft:cubic-bezier(.2,.9,.25,1.04);--sp-soft-d:560ms;--sp-snap:cubic-bezier(.2,.8,.2,1);--sp-snap-d:320ms}
+.run{position:relative}
+.run .rv{position:absolute;right:36px;top:6px;display:flex;align-items:center;gap:6px;opacity:0;pointer-events:none;transform:translateY(-2px);transition:opacity .3s var(--soft-close),transform .45s var(--soft-close)}
+.run.open .rv{opacity:1;pointer-events:auto;transform:none}
+.run.running .rv{right:84px}
+.run.open .run-h .rk{visibility:hidden}
+.run.settled.open .run-h .lbl{padding-right:118px}
+.run.running.open .run-h .lbl{padding-right:150px}
+.vs{position:relative;display:inline-grid;grid-auto-flow:column;gap:0;height:20px;padding:1px;border:var(--rule-hair) solid var(--line-2);border-radius:4px;background:var(--well)}
+.vs button{position:relative;z-index:1;border:0;background:none;padding:0 9px;border-radius:3px;font-size:9.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--mute);cursor:pointer;transition:color .3s}
+.vs button[aria-pressed="true"]{color:var(--ink);background:var(--panel);box-shadow:0 0 0 var(--rule-hair) var(--line-2)}
+.vs button:hover{color:var(--ink)}
+.rdx{width:20px;height:20px;display:grid;place-items:center;border:var(--rule-hair) solid var(--line-2);border-radius:4px;background:none;color:var(--mute);cursor:pointer;padding:0;transition:color .3s,border-color .3s}
+.rdx:hover{color:var(--gold);border-color:var(--line-3)}.rdx svg{width:10px;height:10px}
+.run .mrow{display:none!important}
+.run[data-view="log"] .mini{display:none}
+.run[data-view="map"] .flow,.run[data-view="map"] .cost,.run[data-view="map"] .ledw{display:none}
+.run .mini{margin:6px 0 2px;min-height:96px;animation:ink .5s var(--soft-close) both}
+.run .mini:empty::before{content:"The map fills in as desks are staffed.";display:block;padding:34px 0;text-align:center;font:italic 400 12px var(--f-display);color:var(--mute)}
+.mini svg{display:block;width:100%;max-width:700px;overflow:visible}
+.mini .me{fill:none;stroke:var(--line-3);stroke-width:1;opacity:.55;transition:opacity .4s,stroke .4s}
+.mini .me.on{stroke:var(--gold);opacity:.8}
+.mini .me.dep{stroke-dasharray:2 3;opacity:.35}
+.mini .me.bk{stroke:var(--gold);opacity:.22}
+.mini .me.bk.on{opacity:.6}
+.mini .bd{fill:var(--gold)}
+.mini .md{stroke:none;fill:var(--soft)}
+.mini .md.k-orch{fill:var(--ink)}.mini .md.k-arb{fill:var(--gold)}.mini .md.k-conn{fill:var(--sheet);stroke:var(--gold);stroke-width:1.2}
+.mini .md.k-ans,.mini .md.k-doc{fill:var(--ink)}
+.mini .md.r-research{fill:var(--s1)}.mini .md.r-finance{fill:var(--s2)}.mini .md.r-legal{fill:var(--s4)}.mini .md.r-decision{fill:var(--s5)}
+.mini .md.s-wait{opacity:.35}.mini .md.s-bad{fill:var(--bad)}
+.mini .md.k-site,.mini .md.k-more{fill:var(--sheet);stroke:var(--line-3);stroke-width:1}
+.mini .md,.mini .halo{transform-box:fill-box;transform-origin:center}
+.mini .md.nb{animation:mnb var(--sp-jelly-d) var(--sp-jelly) both}
+@keyframes mnb{from{transform:scale(.1)}to{transform:scale(1)}}
+.mini .halo{fill:none;stroke:var(--gold);stroke-width:1;opacity:.5;animation:halo 1.2s ease-in-out infinite}
+@keyframes halo{0%,100%{transform:scale(.8);opacity:.55}50%{transform:scale(1.25);opacity:.12}}
+.mini .hit{fill:transparent}
+.mini text{font:400 10.5px var(--f-body);fill:var(--soft);letter-spacing:.01em;paint-order:stroke;stroke:var(--sheet);stroke-width:3.5px;stroke-linejoin:round}
+.mini text .nm{fill:var(--mute);font-size:9.5px}
+.mini .mn{cursor:pointer;outline:none;transition:opacity .15s}
+.mini .mn.on text{fill:var(--ink)}
+.mini .mn.nb text{animation:ink .6s .12s var(--soft-close) both}
+.mini svg:has(.mn:hover) .mn:not(:hover){opacity:.4}
+.mini .mn:hover text,.mini .mn:focus-visible text{fill:var(--ink)}
+.run[data-off] *,.run[data-off] *::before,.run[data-off] *::after{animation-play-state:paused!important}
+/* a denser, quieter log */
+.run .flow{margin:6px 0 0;padding-left:16px}
+.run .flow::before{left:3px;top:7px;background:linear-gradient(var(--line-2),var(--line) 70%,transparent)}
+.run .delib p{font-size:12px;line-height:1.5;padding:1px 0}
+.run .delib p::before,.strm .se::before{width:5px;height:5px;top:.66em;left:-15px}
+.strm .se::before{left:-8px}
+.strm .se{font-size:11.5px;line-height:1.45;padding:1px 6px;margin-left:-6px;gap:10px}
+.strm .se .x{font-size:9.5px}
+.strm .sb{padding:6px 0 1px;font-size:8.5px;letter-spacing:.18em}
+.strm .sb::before{left:-14px;width:4px}
+.strm li.new::after{left:-13.5px;width:2.5px;height:6px}
+.strm .se.new::before{animation:mnb var(--sp-jelly-d) var(--sp-jelly) both .12s}
+.fbtn{font-size:10px;height:18px;padding:0 8px 0 6px}
+.cost{margin:6px 0 0 16px;gap:5px}
+.cost .cl{font-size:8.5px;gap:2px 12px}
+.cost .cl b{font-size:10px}
+.dpn{height:20px;font-size:10.5px;padding:0 7px}
+.dpn span{font-size:8.5px}
+.run .now{font-size:12px;margin-left:24px}
+.ac{animation:acIn2 var(--sp-jelly-d) var(--sp-jelly) both}
+@keyframes acIn2{from{opacity:0;transform:translateY(8px) scale(.4,.7)}to{opacity:1;transform:none}}
+.fu{animation:fuIn2 var(--sp-soft-d) var(--sp-soft) calc(var(--i)*.07s + .08s) both}
+@keyframes fuIn2{from{opacity:0;transform:translateY(-4px) scale(.7,.9);transform-origin:0 0}to{opacity:1;transform:none}}
+@media (max-width:560px){.run .rv{right:44px}.run.open .run-h .lbl{padding-right:130px}.mini text{font-size:12px}}
+@media (prefers-reduced-motion:reduce){.mini .halo{display:none}}
 </style>
 
 <div class="app has-chat" id="app">
@@ -1407,10 +1479,26 @@ function fupsHTML(w){const L=w&&w.ledger;if(!L)return "";const open=(L.claims||[
  return `<div class="fups"><span class="cap">Open threads</span>${open.map((c,i)=>`<button type="button" class="fu" style="--i:${i}" data-fu="${esc(q(c))}"><b class="num">c${c.id}</b><span>${esc(q(c))}</span><svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.1" aria-hidden="true"><path d="M3.5 8.5l5-5M4.5 3.5h4v4"/></svg></button>`).join("")}</div>`}
 function costHTML(w){const ph=w.ph||{},ks=Object.keys(PHB).filter(k=>ph[k]&&!ph[k].skip&&ph[k].e!=null&&ph[k].s!=null);if(!ks.length&&!(w.steps||[]).length)return "";const t=tokLine(w);
  return `<div class="cost">${ks.length?`<div class="cl">${ks.map(k=>{const d=Math.max(0,ph[k].e-ph[k].s);return `<span>${PHB[k]}<b class="num">${d<1000?"<1 s":fmt(d)}</b></span>`}).join("")}${t?`<span class="tk">Tokens<b class="num">${t.replace(" tokens","")}</b></span>`:""}</div>`:""}${(w.steps||[]).length?`<div class="dp">${w.steps.map((st,i)=>`<button type="button" class="dpn" data-fu="${esc(`Go deeper on desk ${ROMAN[i]} (${ROLE[st.role]}${st.focus?`, ${st.focus}`:""}): `)}"><b class="num">${ROMAN[i]}</b>${ROLE[st.role]}${st.focus?`<i>${esc(st.focus)}</i>`:""}<span>Deepen</span></button>`).join("")}</div>`:""}</div>`}
+const MLAB=n=>n.kind==="orch"?"Orchestrator":n.kind==="arb"?"Decision":n.kind==="agent"?`${n.rn} ${ROLE[n.role]||n.role}`:n.kind==="conn"?"Search":n.kind==="ans"?"Answer":n.kind==="doc"?"Document":n.kind==="more"?n.t1:String(n.t1||"").replace(/^www\./,"").slice(0,22);
+let GOOID=0;
+function miniSVG(w,live,seenIds){const {N,E}=graphOf(w);if(N.length<2)return "";const cols=[[],[],[],[],[]];N.forEach(n=>{if(n.kind!=="ans"&&n.kind!=="doc"&&cols[n.col])cols[n.col].push(n)});N.filter(n=>n.kind==="ans"||n.kind==="doc").forEach(n=>cols[1].push(n));
+ const X=[16,150,300,470,560],RH=24,mx=Math.max(3,...cols.map(c=>c.length)),H=Math.min(250,mx*RH+22),P={};
+ cols.forEach((c,ci)=>{const tot=(c.length-1)*RH;c.forEach((n,i)=>P[n.id]=[X[ci],Math.round(H/2-tot/2+i*RH)])});
+ const cur=(a,b,back)=>{const [x1,y1]=P[a],[x2,y2]=P[b];const dx=Math.max(24,Math.abs(x2-x1)*.5),o=back?4:0;return `M${x1} ${y1+o}C${x1+(x2>x1?dx:-dx)} ${y1+o},${x2-(x2>x1?dx:-dx)} ${y2+o},${x2} ${y2+o}`};
+ const gid="goo"+(++GOOID),on=new Set();let ed="",bd="";
+ E.forEach(e=>{if(!P[e.a]||!P[e.b])return;const back=/>v$/.test(e.id)&&e.a[0]==="a",d=cur(e.a,e.b,back),act=live&&e.on;if(act){on.add(e.a);on.add(e.b)}
+  ed+=`<path class="me${act?" on":""}${e.dep?" dep":""}${back?" bk":""}" d="${d}"/>`;if(act)for(let q=0;q<2;q++)bd+=`<circle class="bd${back?" bk":""}" r="1.7"><animateMotion dur="${back?1.3:1}s" begin="${q*(back?.65:.5)}s" repeatCount="indefinite" path="${d}"/></circle>`});
+ let dots="",rings="",labs="";N.forEach(n=>{const p=P[n.id];if(!p)return;const fresh=seenIds&&!seenIds.has(n.id);seenIds&&seenIds.add(n.id);const r=n.kind==="orch"||n.kind==="arb"?4.5:n.kind==="site"||n.kind==="more"?2.6:3.6,st=live&&n.st==="on";
+  const c=`<circle class="md k-${n.kind}${n.role?" r-"+n.role:""} s-${n.st}${fresh?" nb":""}" cx="${p[0]}" cy="${p[1]}" r="${r}"/>`;if(n.kind==="site"||n.kind==="more")rings+=c;else dots+=c;
+  labs+=`<g class="mn${st?" on":""}${fresh?" nb":""}" data-sheet="${esc(n.id)}" tabindex="0" role="button" aria-label="${esc(MLAB(n))}">${st?`<circle class="halo" cx="${p[0]}" cy="${p[1]}" r="${r+3}"/>`:""}<circle class="hit" cx="${p[0]}" cy="${p[1]}" r="11"/><text x="${p[0]+(n.col===4?7:8)}" y="${p[1]+3.4}">${esc(MLAB(n))}${n.num>1?`<tspan class="nm"> ${n.num}</tspan>`:""}</text></g>`});
+ return `<svg viewBox="0 0 700 ${H}" preserveAspectRatio="xMinYMid meet" style="height:${H}px"><defs><filter id="${gid}" x="-20%" y="-20%" width="140%" height="140%"><feGaussianBlur in="SourceGraphic" stdDeviation="1.6" result="b"/><feColorMatrix in="b" values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 16 -6" result="g"/><feComposite in="SourceGraphic" in2="g" operator="atop"/></filter></defs><g class="eds">${ed}</g>${rings}<g filter="url(#${gid})">${dots}${bd}</g><g class="lbs">${labs}</g></svg>`}
+function miniDraw(run,w,live){const m=run.querySelector(".mini");if(!m)return;const {N,E}=graphOf(w),sig=N.map(n=>n.id+n.st).join()+"|"+E.map(e=>e.on?1:0).join("")+(live?1:0);if(m._sig===sig)return;m._sig=sig;m._ids=m._ids||new Set();m.innerHTML=miniSVG(w,live,m._ids)}
+function runView(run,v,remember){if(!run.querySelector(".vs"))v="log";run.dataset.view=v;run.querySelectorAll(".vs [data-view]").forEach(b=>b.setAttribute("aria-pressed",b.dataset.view===v));if(v==="map"){const b=run.closest(".bot"),w=b&&(b._work||cur?.turns[+b.dataset.k]?.work);if(w)miniDraw(run,w,run.classList.contains("running"))}if(remember)try{localStorage.setItem("expira.runview",v)}catch(e){}}
+const viewDefault=()=>{try{return localStorage.getItem("expira.runview")||"log"}catch(e){return "log"}};
 function runHTML(w,k,live,o={}){const M=w.map||{},th=M.thinking||[],n=(w.feed||[]).filter(f=>f[1]).length,op=live||o.open;
  const dl=live?(o.direct?"":`<div class="delib"><span class="cap">Deliberation</span><p class="typing">Reading the brief</p></div>`):th.length?`<div class="delib"><span class="cap">Deliberation</span>${th.map(t=>`<p>${esc(t)}</p>`).join("")}</div>`:"";
- return `<div class="run ${live?"running":"settled"}${op?" open":""}"><button class="run-h" type="button" aria-expanded="${!!op}">${GLYPH}<span class="lbl">${live?(o.direct?"Considering":"Deliberating"):esc(summary(w))}</span><span class="rk num">${live?"":tokLine(w)}</span><span class="t num">${mmss(w.ms||0)}</span>${CHEV}</button><div class="sheen"></div>${railHTML(w,live,o)}
- <p class="now" aria-live="polite"></p><div class="run-b"><div><div class="flow">${dl}<ol class="strm">${live?"":streamHTML(w)}</ol></div>${live?"":costHTML(w)}<div class="staff" hidden></div><div class="mrow">${(live&&!o.direct)||(w.steps||[]).length?`<button class="mapt" type="button" aria-expanded="false"><svg viewBox="0 0 16 16" width="12" height="12" fill="none" stroke="currentColor" stroke-width="1.2"><circle cx="3.5" cy="8" r="1.8"/><circle cx="12.5" cy="3.8" r="1.8"/><circle cx="12.5" cy="12.2" r="1.8"/><path d="M5.2 7.2 10.8 4.6M5.2 8.8l5.6 2.6"/></svg><span>Map</span></button>`:""}<button class="rd" data-read="${live?"live":k}">Open the dispatch</button></div><div class="mapw"></div><div class="ledw">${live?"":ledgerHTML(w)}</div>
+ return `<div class="run ${live?"running":"settled"}${op?" open":""}" data-view="${(live&&!o.direct)||(w.steps||[]).length?viewDefault():"log"}"><button class="run-h" type="button" aria-expanded="${!!op}">${GLYPH}<span class="lbl">${live?(o.direct?"Considering":"Deliberating"):esc(summary(w))}</span><span class="rk num">${live?"":tokLine(w)}</span><span class="t num">${mmss(w.ms||0)}</span>${CHEV}</button>${(live&&!o.direct)||(w.steps||[]).length?`<div class="rv" role="group" aria-label="View"><span class="vs"><button type="button" data-view="log" aria-pressed="true">Log</button><button type="button" data-view="map" aria-pressed="false">Map</button></span><button type="button" class="rdx" data-read="${live?"live":k}" aria-label="Open the Dispatch" data-tip="The Dispatch"><svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.1"><path d="M4.5 3h4.5v4.5M9 3 3.5 8.5"/></svg></button></div>`:`<div class="rv"><button type="button" class="rdx" data-read="${live?"live":k}" aria-label="Open the Dispatch" data-tip="The Dispatch"><svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.1"><path d="M4.5 3h4.5v4.5M9 3 3.5 8.5"/></svg></button></div>`}<div class="sheen"></div>${railHTML(w,live,o)}
+ <p class="now" aria-live="polite"></p><div class="run-b"><div><div class="flow">${dl}<ol class="strm">${live?"":streamHTML(w)}</ol></div>${live?"":costHTML(w)}<div class="staff" hidden></div><div class="mini" aria-label="Map of this run"></div><div class="mapw" hidden></div><div class="ledw">${live?"":ledgerHTML(w)}</div>
  <div class="logw${live?" open":""}"><button class="logt" type="button"><span class="cap">Log</span><span class="n num">${n||""}</span>${CHEV}</button><div class="logb"><div><ol class="ev">${(w.feed||[]).map(evLi).join("")}</ol></div></div></div>
  </div></div><p class="rnote" hidden></p></div>`}
 function splitQuote(c){const m=String(c).match(/^((?:> ?.*(?:\n|$))+)\n*([\s\S]*)$/);return m?[m[1].replace(/^> ?/gm,"").trim(),m[2]]:["",String(c)]}
@@ -1434,7 +1522,7 @@ function open(c){GOO.run(!c);if(c!==cur&&$("#att"))attClear();window.__selHide&&
  else{$("#heroDock").append($("#dock"));$("#thread").innerHTML="";$("#crumb").textContent="";showDsp(false)}
  renderRecents()}
 document.addEventListener("click",e=>{
- const rh=e.target.closest(".run-h");if(rh){const t=rh.closest(".run");t.classList.add("pinned");t.classList.toggle("open");rh.setAttribute("aria-expanded",t.classList.contains("open"));if(t.classList.contains("open"))mountMaps();return}
+ const rh=e.target.closest(".run-h");if(rh){const t=rh.closest(".run");if(t.dataset.view==="map")requestAnimationFrame(()=>runView(t,"map"));t.classList.add("pinned");t.classList.toggle("open");rh.setAttribute("aria-expanded",t.classList.contains("open"));if(t.classList.contains("open"))mountMaps();return}
  const lt=e.target.closest(".logt");if(lt){lt.closest(".logw").classList.toggle("open");return}
  const shb=e.target.closest("[data-sheet]");if(shb){openSheet($("#sheet")._w,shb.dataset.sheet,shb);return}
  const dso=e.target.closest("[data-docopen-sheet]");if(dso){const w=$("#sheet")._w;if(w&&w.doc)openDoc(w.doc);return}
@@ -1782,9 +1870,9 @@ function countUp(root){if(reduce)return;root.querySelectorAll("[data-count]").fo
 const SVGN="http://www.w3.org/2000/svg";
 const sv=(t,a={})=>{const e=document.createElementNS(SVGN,t);for(const k in a)e.setAttribute(k,a[k]);return e};
 const hostOf=u=>{try{return new URL(u).hostname.replace(/^www\./,"")}catch(e){return ""}};
-const FM=new Set();
+const FM=new Set();window.__FM=FM;
 /* a map only works while someone can see it: on screen, tab visible, and its panel open */
-const seen=m=>m.vis&&!document.hidden&&!m.host.closest(".dsp:not(.open),.stg:not(.open),.mfs:not(.open),.mapw:not(.show)");
+const seen=m=>m.vis&&!document.hidden&&!m.host.closest(".dsp:not(.open),.stg:not(.open),.mfs:not(.open),.run .mapw");
 const SPEC={0:{w:100,h:40,g:12},1:{w:112,h:40,g:0},2:{w:162,h:34,g:8},3:{w:126,h:36,g:0},4:{w:120,h:22,g:6}},COLN=["ORCHESTRATOR","DECISION","DESKS","CONNECTOR","SOURCES"],SITES=9;
 function hostsOf(P){const hs=[];(P||[]).forEach(p=>{const h=hostOf(p.url);if(!h)return;let o=hs.find(x=>x.h===h);if(!o)hs.push(o={h,n:0,t:0});o.n++;o.t+=tok(p.ex)});return hs}
 function graphOf(w){const S=w.steps||[],M=w.map||{},L=w.ledger,N=[],E=[],t=performance.now(),webOn=s=>s._live&&s._web&&t-s._web<4000,lt=ledgerStats(L);
@@ -1989,7 +2077,15 @@ $("#mfsX").onclick=closeFS;
 document.addEventListener("click",e=>{const b=e.target.closest("[data-mfs]");if(b)mapFS(b)});
 document.addEventListener("click",e=>{const f=e.target.closest(".fbtn");if(f){const ol=f.closest(".strm");ol.classList.add("all");ol.querySelectorAll(".old").forEach(x=>x.classList.remove("old"));f.parentElement.remove();return}
  const m=e.target.closest(".mapt");if(m){const r=m.closest(".run"),hs=r.querySelector(".mapw"),on=!hs.classList.contains("show");hs.classList.toggle("show",on);m.setAttribute("aria-expanded",on);if(on){if(!hs.children.length)mountMaps();requestAnimationFrame(()=>FM.forEach(x=>x.host===hs&&x.sync&&x.sync()))}}});
-function mountMaps(){document.querySelectorAll("#thread .run.open .mapw:empty").forEach(hst=>{const b=hst.closest(".bot"),w=b&&(b._work||cur?.turns[+b.dataset.k]?.work);if(w&&(w.steps||[]).length)mkMap(hst,()=>w,{replay:true})})}
+document.addEventListener("click",e=>{const vb=e.target.closest(".vs [data-view]");if(vb){e.stopPropagation();const r=vb.closest(".run");if(!r.classList.contains("open")){r.classList.add("open","pinned");r.querySelector(".run-h").setAttribute("aria-expanded","true")}runView(r,vb.dataset.view,true);return}
+ const mn=e.target.closest(".mini .mn");if(mn){const b=mn.closest(".bot"),w=b&&(b._work||cur?.turns[+b.dataset.k]?.work);if(w)openSheet(w,mn.dataset.sheet,mn);return}},true);
+document.addEventListener("keydown",e=>{if((e.key==="Enter"||e.key===" ")&&e.target.closest?.(".mini .mn")){e.preventDefault();e.target.click()}});
+function wakeMaps(){const f=()=>FM.forEach(m=>{if(!m.host.isConnected)return;if(m.host.getBoundingClientRect().width){m.vis=true;try{m.sync()}catch(e){}m.go&&m.go()}});requestAnimationFrame(f);setTimeout(f,420);setTimeout(f,900)}
+{const mo=new MutationObserver(wakeMaps);["#dsp","#mfs","#setMenu"].forEach(q=>{const el=$(q);if(el)mo.observe(el,{attributes:true,attributeFilter:["class"]})})}
+/* cards off-screen rest: their loops pause, their SMIL beads stop */
+const RUNIO=new IntersectionObserver(es=>es.forEach(en=>{const r=en.target;r.toggleAttribute("data-off",!en.isIntersecting);r.querySelectorAll(".mini svg").forEach(v=>{try{en.isIntersecting?v.unpauseAnimations():v.pauseAnimations()}catch(e){}})}),{rootMargin:"200px"});
+new MutationObserver(()=>document.querySelectorAll("#thread .run:not([data-io])").forEach(r=>{r.dataset.io=1;RUNIO.observe(r)})).observe(document.getElementById("thread"),{childList:true,subtree:true});
+function mountMaps(){return;document.querySelectorAll("#thread .run.open .mapw:empty").forEach(hst=>{const b=hst.closest(".bot"),w=b&&(b._work||cur?.turns[+b.dataset.k]?.work);if(w&&(w.steps||[]).length)mkMap(hst,()=>w,{replay:true})})}
 const workOf=el=>{const b=el.closest(".bot");return b&&(b._work||cur?.turns[+b.dataset.k]?.work)};
 
 /* the sheet: what a node holds, spread open from the node itself */
@@ -2168,7 +2264,7 @@ open(chats.find(c=>!c.example)||chats[0]);
 {let lastBtn=null;document.addEventListener("pointerdown",e=>{lastBtn=e.target.closest("button,[role=button]")},true);document.addEventListener("keydown",e=>{if(e.key==="Enter"||e.key===" ")lastBtn=document.activeElement},true);
  const pour=(m,open)=>{if(reduce)return;const b=m._from;if(!b||!b.isConnected||m.contains(b))return;const r=b.getBoundingClientRect(),q=m.getBoundingClientRect();if(!q.width||!r.width)return;
   const cl=(v,mx)=>Math.max(0,Math.min(v,mx)),from=`inset(${cl(r.top-q.top,q.height-6)}px ${cl(q.right-r.right,q.width-24)}px ${cl(q.bottom-r.bottom,q.height-6)}px ${cl(r.left-q.left,q.width-24)}px round 12px)`;
-  m.animate(open?[{clipPath:from},{clipPath:"inset(0px 0px 0px 0px round 11px)",offset:.62},{clipPath:"inset(0px 0px 0px 0px round 8px)"}]:[{clipPath:"inset(0px 0px 0px 0px round 8px)"},{clipPath:from}],{duration:open?640:280,easing:open?"cubic-bezier(.32,.6,.18,1)":"cubic-bezier(.5,0,.75,0)"})};
+  m.animate(open?[{clipPath:from},{clipPath:"inset(0px 0px 0px 0px round 11px)",offset:.62},{clipPath:"inset(0px 0px 0px 0px round 8px)"}]:[{clipPath:"inset(0px 0px 0px 0px round 8px)"},{clipPath:from}],{duration:open?(SPRING?SPRING.soft.ms:640):280,easing:open?(SPRING?SPRING.soft.e:"cubic-bezier(.32,.6,.18,1)"):"cubic-bezier(.5,0,.75,0)"})};
  const mo=new MutationObserver(ms=>ms.forEach(x=>{const m=x.target,o=m.classList.contains("open");if(o===!!m._o)return;m._o=o;if(o){m._from=lastBtn;requestAnimationFrame(()=>pour(m,true))}else pour(m,false)}));
  document.querySelectorAll(".menu,#mfs,#setMenu,#docv").forEach(m=>mo.observe(m,{attributes:true,attributeFilter:["class"]}))}
 /* mercury: the selected segment or tab slides across, stretching between the two */
@@ -2178,10 +2274,15 @@ document.addEventListener("click",e=>{const b=e.target.closest(".seg2 button,.me
   const L=x=>x.left-gr.left,T=x=>x.top-gr.top,hz=Math.abs(L(c)-L(a))>=Math.abs(T(c)-T(a));g2.classList.add("moving");
   const mid=hz?{left:Math.min(L(a),L(c))+"px",width:Math.max(L(a)+a.width,L(c)+c.width)-Math.min(L(a),L(c))+"px",top:(T(a)+T(c))/2+1.5+"px",height:Math.min(a.height,c.height)-3+"px"}
              :{top:Math.min(T(a),T(c))+"px",height:Math.max(T(a)+a.height,T(c)+c.height)-Math.min(T(a),T(c))+"px",left:(L(a)+L(c))/2+2+"px",width:Math.min(a.width,c.width)-4+"px"};
-  const an=m.animate([{left:L(a)+"px",top:T(a)+"px",width:a.width+"px",height:a.height+"px"},{...mid,offset:.42},{left:L(c)+"px",top:T(c)+"px",width:c.width+"px",height:c.height+"px"}],{duration:hz?440:520,easing:"cubic-bezier(.3,.7,.2,1)"});an.onfinish=an.oncancel=()=>g2.classList.remove("moving")})},true)}
+  const an=m.animate([{left:L(a)+"px",top:T(a)+"px",width:a.width+"px",height:a.height+"px"},{...mid,offset:.42},{left:L(c)+"px",top:T(c)+"px",width:c.width+"px",height:c.height+"px"}],{duration:SPRING?SPRING.soft.ms:(hz?440:520),easing:SPRING?SPRING.soft.e:"cubic-bezier(.3,.7,.2,1)"});an.onfinish=an.oncancel=()=>g2.classList.remove("moving")})},true)}
 document.addEventListener("keydown",e=>{if(e.metaKey||e.ctrlKey||e.altKey||e.target.closest?.("input,textarea,[contenteditable]"))return;const r=[...document.querySelectorAll("#thread .run")].pop();if(!r)return;
- if(e.key==="."){e.preventDefault();r.querySelector(".run-h").click()}else if(e.key==="m"){const t=r.querySelector(".mapt");if(!t)return;e.preventDefault();if(!r.classList.contains("open"))r.querySelector(".run-h").click();t.click()}});
-{const D=$("#dsp");let held=[];new MutationObserver(()=>{if(D.classList.contains("open")){held.forEach(a=>{try{a.play()}catch(e){}});held=[]}else{held=D.getAnimations({subtree:true}).filter(a=>a.playState==="running");held.forEach(a=>a.pause())}}).observe(D,{attributes:true,attributeFilter:["class"]})}
+ if(e.key==="."){e.preventDefault();r.querySelector(".run-h").click()}else if(e.key==="m"){if(!r.querySelector(".vs"))return;e.preventDefault();if(!r.classList.contains("open")){r.classList.add("open","pinned");r.querySelector(".run-h").setAttribute("aria-expanded","true")}runView(r,r.dataset.view==="map"?"log":"map",true)}});
+{const D=$("#dsp");let held=[];new MutationObserver(()=>{if(D.classList.contains("open")){held.forEach(a=>{try{a.play()}catch(e){}});held=[]}else{held=D.getAnimations({subtree:true}).filter(a=>a.playState==="running"&&a.effect&&a.effect.target!==D&&!(typeof CSSTransition!=="undefined"&&a instanceof CSSTransition)&&!(a instanceof CSSAnimation&&/^(blurIn|evIn)$/.test(a.animationName)));held.forEach(a=>a.pause())}}).observe(D,{attributes:true,attributeFilter:["class"]})}
+/* springs: a damped harmonic oscillator, sampled into linear() easing */
+const SPRING=(()=>{const ok=typeof CSS!=="undefined"&&CSS.supports&&CSS.supports("animation-timing-function","linear(0, 1)");
+ const mk=(k,c)=>{const m=1,w0=Math.sqrt(k/m),z=c/(2*Math.sqrt(k*m)),wd=w0*Math.sqrt(Math.max(1e-6,1-z*z));const x=t=>z<1?1-Math.exp(-z*w0*t)*(Math.cos(wd*t)+z*w0/wd*Math.sin(wd*t)):1-Math.exp(-w0*t)*(1+w0*t);
+  let T=.1;while(T<3&&!(Math.abs(1-x(T))<.002&&Math.abs(1-x(T+.08))<.002))T+=.02;const n=Math.min(64,Math.max(24,Math.round(T*40)));const pts=[];for(let i=0;i<=n;i++)pts.push(+x(T*i/n).toFixed(4));pts[n]=1;return{e:`linear(${pts.join(", ")})`,ms:Math.round(T*1000)}};
+ const S={jelly:mk(420,25),soft:mk(210,24),snap:mk(520,34)};if(ok){const r=document.documentElement.style;for(const [k,v] of Object.entries(S)){r.setProperty("--sp-"+k,v.e);r.setProperty("--sp-"+k+"-d",v.ms+"ms")}}return ok?S:null})();
 /* claim cards: hovering a citation draws its claim out of the marker */
 {const P=$("#cpop");let tm=0,on=null;const host=u=>{try{return new URL(u).hostname.replace(/^www\./,"")}catch(e){return String(u)}};
  const show=el=>{const w=workOf(el),c=w?.ledger?.claims?.find(x=>String(x.id)===el.dataset.claim);if(!c)return;on=el;
@@ -2249,7 +2350,7 @@ async function send(q,re){const KL=await KLIB.load().catch(()=>null),docPre=DOCS
  $("#thread").append(bot);sc.scrollTop=1e9;
  const run=bot.querySelector(".run"),lbl=run.querySelector(".lbl"),tEl=run.querySelector(".run-h .t"),rk=run.querySelector(".rk"),evs=run.querySelector(".ev"),logN=run.querySelector(".logt .n"),dlb=run.querySelector(".delib"),strm=run.querySelector(".strm"),nowEl=run.querySelector(".now"),stf=run.querySelector(".staff"),mapH=run.querySelector(".mapw"),note=run.querySelector(".rnote"),ans=bot.querySelector(".ans"),exw=bot.querySelector(".exw");
  shell(cur,tsQ,true);
- if(!direct){mkMap(mapH,()=>work,{live:true});mkMap($("#dxMap"),()=>work,{live:true})}else $("#dxMapF").hidden=true;
+ if(!direct){mkMap($("#dxMap"),()=>work,{live:true})}else $("#dxMapF").hidden=true;
  const mapSync=()=>FM.forEach(m=>m.get()===work&&m.sync()),mapPulse=(a,b)=>FM.forEach(m=>m.get()===work&&m.pulse(a,b));
  const dropMap=()=>{FM.forEach(m=>{if(m.get()===work){m.kill();m.host.innerHTML=""}});$("#dxMapF").hidden=true};
  const setNow=t=>{if(!nowEl||!t||nowEl.textContent===t)return;nowEl.textContent=t;nowEl.classList.remove("ink");void nowEl.offsetWidth;nowEl.classList.add("ink");clearTimeout(nowEl._i);nowEl._i=setTimeout(()=>nowEl.classList.remove("ink"),800)};
@@ -2269,7 +2370,7 @@ async function send(q,re){const KL=await KLIB.load().catch(()=>null),docPre=DOCS
  const openBand=key=>{if(!work.sigKeys.includes(key)){work.sigKeys.push(key);work.sig.forEach(fr=>fr.splice(work.sigKeys.length-1,0,0))}plates.main&&plates.main.addBand(key)};
  let aText="",tickN=0;const totTok=()=>work.steps.reduce((a,s)=>a+tok(s.out),0)+tok(aText);
  const setT=(el,v)=>{if(el&&el._t!==v){el._t=v;el.textContent=v}};const tick=setInterval(()=>{const e=now();setT(tEl,mmss(e));setT($("#runE"),mmss(e));if(lbl.textContent!==$("#runT").textContent&&!lbl.classList.contains("swap"))$("#runT").textContent=lbl.textContent;const tt=totTok();setT(rk,tt?ft(tt)+" tokens":"");
-  work.steps.forEach((s,i)=>{if(s._t0&&s._live)setT($("#dm"+i),fmt(performance.now()-s._t0))});if(++tickN%4===0)mapSync()},250);
+  work.steps.forEach((s,i)=>{if(s._t0&&s._live)setT($("#dm"+i),fmt(performance.now()-s._t0))});if(++tickN%4===0){mapSync();if(run.dataset.view==="map")miniDraw(run,work,true)}},250);
  const follow=()=>{if(stick)sc.scrollTop=1e9};
  /* F(short line for the card's log, fuller line for the Dispatch's log) */
  const F=(short,long)=>{const f=[now(),short,long||short];work.feed.push(f);if(strm&&f[2]){strm.insertAdjacentHTML("beforeend",stLi(f));{const li=strm.lastElementChild;li.classList.add("new");setTimeout(()=>li.classList.remove("new"),reduce?0:li.classList.contains("mo")?2200:1400)}foldStream(strm);setNow(plainT(f[2]))}if(short){evs.insertAdjacentHTML("beforeend",evLi(f));toEnd(evs);logN.textContent=evs.children.length}const ol=$("#olog");if(ol){ol.insertAdjacentHTML("beforeend",logLi(f));toEnd(ol)}toEnd(null)};
@@ -2434,7 +2535,7 @@ ${PG.length?`Web sources the desks consulted, newest first (use these urls in "s
    steps:steps.map(s=>({role:s.role,tier:s.tier,focus:s.focus,task:s.task,why:s.why,after:s.after,web:!!s.web,v:s.v,redo:s.redo,ms:s.ms,searches:s.searches||0,out:(s.out||"").slice(0,4000)})),web:M.pages.length,ledger:work.ledger?{claims:work.ledger.claims.map(c=>Object.assign({},c)),audit:work.ledger.audit||null}:null,atok:work.atok||tok(fin2.text),
    map:{thinking:M.thinking.slice(0,6).map(t=>clip(t,240)),rationale:clip(M.rationale,240),kind:clip(M.kind,80),calls:M.calls.slice(0,40),pages:M.pages.slice(0,30)}}});save();
   try{if(db)await db.collection("runs").doc("r"+Date.now()).set({ts:Date.now(),request:q.slice(0,160),steps:steps.map(s=>({role:s.role,tier:s.tier,focus:s.focus||"",verdict:s.v||"",redo:s.redo})),firewall:work.firewall})}catch(e){}
-  const k=cur.turns.length-1;bot.dataset.k=k;bot.classList.add("fresh");run.classList.remove("running");run.classList.add("settled");swap(lbl,summary(work));tEl.textContent=mmss(work.ms);setTimeout(()=>{if(!run.classList.contains("pinned")){run.classList.remove("open");run.querySelector(".run-h").setAttribute("aria-expanded","false")}},1100);rk.textContent=tokLine(cur.turns[k].work);
+  const k=cur.turns.length-1;bot.dataset.k=k;bot.classList.add("fresh");run.classList.remove("running");run.classList.add("settled");swap(lbl,summary(work));tEl.textContent=mmss(work.ms);{const mi=run.querySelector(".mini");if(mi){mi._sig=null;if(run.dataset.view==="map")setTimeout(()=>miniDraw(run,cur.turns[cur.turns.length-1].work,false),60)}}setTimeout(()=>{if(!run.classList.contains("pinned")){run.classList.remove("open");run.querySelector(".run-h").setAttribute("aria-expanded","false")}},1100);rk.textContent=tokLine(cur.turns[k].work);
   run.querySelector("[data-read]").dataset.read=k;run.querySelector(".flow")?.insertAdjacentHTML("afterend",costHTML(cur.turns[k].work));if(work.firewall==="blocked")ans.innerHTML=md(content);
   bot.insertAdjacentHTML("beforeend",`<div class="bi">${inThis(ans.innerHTML)}</div>${fupsHTML(cur.turns[k].work)}<div class="filed capt bi"><span>Filed ${hhmm(Date.now())}</span><i class="dotsep"></i>${meta(content)}${acts(k)}</div>`);
   finishTop(cur.turns[k].work);
