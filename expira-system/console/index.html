@@ -888,6 +888,130 @@ html.calm *,html.calm *::before,html.calm *::after{animation:none!important;tran
 #docBtn[aria-expanded="true"] svg path:last-child,#docBtn[data-on="1"] svg path:last-child{animation:docwrite .9s var(--soft-close) both}
 @keyframes docwrite{from{stroke-dashoffset:6}to{stroke-dashoffset:0}}
 #docBtn[aria-expanded="true"] svg,#docBtn[data-on="1"] svg{color:var(--gold)}
+/* v25 · the thinking line: one live sentence, a stream beneath it that drips in, moments that swell and settle */
+.run .rail,.run .staff,.run .logw{display:none!important}
+.run{padding:7px 12px 8px;border-radius:7px}
+.run-h{padding:1px 0 5px;font-size:12.5px}
+.run-h .lbl{letter-spacing:.005em;transition:opacity .28s var(--soft-close),filter .28s var(--soft-close)}
+.run-h .lbl.swap{opacity:0;filter:blur(3px)}
+.run.settled .run-h .t{display:none}
+.run .now{display:none;margin:-1px 0 5px 26px;font:italic 400 12.5px/1.45 var(--f-display);color:var(--soft);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.run.running .now:not(:empty){display:block}
+.run .now.ink{animation:ink .7s var(--soft-close) both}
+.run .flow{position:relative;margin:8px 0 2px;padding-left:18px}
+.run .flow::before{content:"";position:absolute;left:4px;top:8px;bottom:10px;width:1px;background:linear-gradient(var(--line-3),var(--line) 70%,transparent)}
+.run .delib{margin:0 0 2px;padding:0;border:0}
+.run .delib .cap{display:none}
+.run .delib p{position:relative;margin:0;padding:2px 0;font-size:12.5px}
+.run .delib p::before,.strm .se::before{content:"";position:absolute;left:-17px;top:.72em;width:7px;height:7px;border-radius:50%;background:var(--sheet);border:1px solid var(--line-3);box-sizing:border-box}
+.run .delib p::before{border-color:var(--gold)}
+.strm{list-style:none;margin:0;padding:0}
+.strm li{position:relative}
+.strm .se{display:flex;gap:12px;align-items:baseline;margin:0 0 0 -7px;padding:2px 7px;border-radius:5px;font-size:12px;line-height:1.5;color:var(--soft)}
+.strm .se::before{left:-10px}
+.strm .se .sx{flex:1;min-width:0}
+.strm .se em{font-style:italic;color:var(--text)}
+.strm .se .x{font-size:10px;color:var(--mute);flex:none;letter-spacing:.02em}
+.strm .se.k-desk::before{background:var(--line-3)}
+.strm .se.k-web::before{border-style:dotted}
+.strm .se.mo{color:var(--text)}
+.strm .se.mo::before{border-color:var(--gold);background:var(--gold)}
+.strm .se.k-end::before{background:var(--ink);border-color:var(--ink)}
+.strm .sb{padding:9px 0 3px;font-size:9px;letter-spacing:.16em;text-transform:uppercase;color:var(--mute)}
+.strm .sb::before{content:"";position:absolute;left:-16px;top:50%;margin-top:3px;width:5px;height:1px;background:var(--line-3)}
+.strm .sb:first-child{padding-top:3px}
+.strm .old{display:none}
+.strm .fold{padding:1px 0 4px}
+.fbtn{display:inline-flex;align-items:center;gap:8px;border:var(--rule-hair) solid var(--line-2);background:none;border-radius:4px;padding:1px 9px 1px 7px;cursor:pointer;font-size:10.5px;color:var(--soft);transition:border-color .3s,color .3s}
+.fbtn:hover{border-color:var(--line-3);color:var(--ink)}
+.fbtn i{width:14px;height:1px;background:var(--line-3);box-shadow:0 -3px 0 var(--line-2),0 3px 0 var(--line-2)}
+/* liquid: a drop runs down the stem, lands, and the dot jellies; the words ink in */
+.strm li.new::after{content:"";position:absolute;left:-15.5px;top:-6px;width:3px;height:7px;border-radius:50% 50% 50% 50%/62% 62% 38% 38%;background:var(--gold);pointer-events:none;animation:drip .36s cubic-bezier(.55,0,.85,.35) both}
+.strm .sb.new::after{top:0}
+.strm .se.new::before{animation:jelly .7s .24s var(--soft-close) both}
+.strm li.new>span,.strm li.new .sx{animation:ink .6s .12s var(--soft-close) both}
+.strm .se.mo.new{animation:swell 1.6s .2s var(--soft-close) both}
+@keyframes drip{0%{transform:translateY(-8px) scaleY(1.7);opacity:0}25%{opacity:.9}82%{transform:translateY(13px) scaleY(1.25);opacity:.9}100%{transform:translateY(15px) scale(2.2,.35);opacity:0}}
+@keyframes jelly{0%{transform:scale(.15)}38%{transform:scale(1.4,.72)}58%{transform:scale(.88,1.14)}78%{transform:scale(1.06,.96)}100%{transform:scale(1)}}
+@keyframes ink{from{opacity:0;filter:blur(3px);transform:translateY(-2px)}to{opacity:1;filter:none;transform:none}}
+@keyframes swell{0%{background:transparent;box-shadow:inset 0 0 0 0 transparent}30%{background:var(--gold-wash);box-shadow:inset 1px 0 0 0 var(--gold)}70%{background:var(--gold-wash)}100%{background:transparent;box-shadow:inset 0 0 0 0 transparent}}
+/* the map sits behind a toggle and pours open from it */
+.run .mrow{display:flex;align-items:center;gap:14px;margin-top:8px;padding-top:7px;border-top:var(--rule-hair) solid var(--line)}
+.mapt{display:inline-flex;gap:6px;align-items:center;border:0;background:none;padding:0;cursor:pointer;font-size:9.5px;letter-spacing:.16em;text-transform:uppercase;color:var(--soft);transition:color .3s}
+.mapt:hover,.mapt[aria-expanded="true"]{color:var(--ink)}
+.mapt[aria-expanded="true"] svg{color:var(--gold)}
+.run .mrow .rd{margin:0 0 0 auto;font-size:11.5px}
+.run .mapw{display:none;border-top:0;padding-top:8px}
+.run .mapw.show{display:block;animation:pour .75s var(--soft-close) both}
+@media (prefers-reduced-motion:reduce){.strm li.new::after{display:none}}
+@media (max-width:560px){.run-h .rk{display:none}.run.settled .run-h .lbl{white-space:normal;line-height:1.4}}
+@keyframes pour{from{clip-path:inset(0 88% 92% 0 round 16px);opacity:.3}to{clip-path:inset(0 0 0 0 round 6px);opacity:1}}
+/* v26 · attachments: long, thin cards that drip out of the composer; the thumbnail fills like a meniscus */
+.optb.ab1{width:28px;padding:0;justify-content:center}.optb.ab1 svg{width:14px;height:14px}
+.optb.ab1[hidden]{display:none}
+.att{max-width:720px;width:100%;margin:0 auto 6px;display:flex;flex-wrap:wrap;gap:6px;align-items:center}
+.att[hidden]{display:none}
+.ac{position:relative;display:flex;align-items:center;gap:9px;width:224px;height:38px;margin:0;padding:0 5px 0 4px;border:var(--rule-hair) solid var(--line-2);border-radius:6px;background:var(--panel);box-shadow:var(--shadow);transform-origin:10% 100%;animation:acIn .62s var(--soft-close) both}
+.ac .th{width:30px;height:30px;flex:none;border-radius:4px;overflow:hidden;background:var(--well)}
+.ac .th img{width:100%;height:100%;object-fit:cover;display:block;animation:fillup .95s .12s cubic-bezier(.3,.7,.2,1) both}
+.ac figcaption{flex:1;min-width:0;display:flex;flex-direction:column;gap:1px;line-height:1.25}
+.ac b{font-weight:500;font-size:11.5px;color:var(--ink);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ac i{font-style:normal;font-size:10px;color:var(--mute);letter-spacing:.01em}
+.ac .ax{width:20px;height:20px;flex:none;border:0;background:none;border-radius:4px;padding:0;color:var(--mute);cursor:pointer;display:grid;place-items:center;opacity:0;transition:opacity .2s,color .2s,background .2s}
+.ac:hover .ax,.ac .ax:focus-visible{opacity:1}.ac .ax:hover{color:var(--ink);background:var(--well)}.ac .ax svg{width:10px;height:10px}
+@media (hover:none){.ac .ax{opacity:1}}
+.ac.out{animation:acOut .32s var(--soft-close) both}
+@keyframes acIn{0%{opacity:0;transform:translateY(12px) scale(.16,.5);border-radius:18px}42%{opacity:1;transform:translateY(-1px) scale(1.03,.93);border-radius:10px}68%{transform:scale(.99,1.02)}100%{transform:none;border-radius:6px}}
+@keyframes acOut{to{opacity:0;transform:scale(.3,.7);filter:blur(2px)}}
+@keyframes fillup{from{clip-path:inset(100% 0 0 0 round 50% 50% 0 0)}60%{clip-path:inset(0 0 0 0 round 40% 40% 0 0/14% 14% 0 0)}to{clip-path:inset(0 0 0 0 round 0)}}
+.att .an{font:italic 400 11.5px var(--f-display);color:var(--soft);animation:ink .5s both}
+.dock.drop .comp{border-color:var(--gold);box-shadow:0 0 0 3px var(--gold-wash),var(--shadow)}
+.yim{display:flex;flex-wrap:wrap;gap:5px;margin:1px 0 7px}
+.yi{width:68px;height:50px;padding:0;border:var(--rule-hair) solid var(--line-2);border-radius:5px;overflow:hidden;background:var(--well);cursor:zoom-in;transition:border-color .25s,transform .35s var(--soft-close)}
+.yi:hover{border-color:var(--line-3);transform:translateY(-1px)}
+.yi img{width:100%;height:100%;object-fit:cover;display:block}
+.lbx{position:fixed;inset:0;z-index:95;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;padding:32px 16px;background:color-mix(in srgb,var(--sheet) 86%,transparent);-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px);cursor:zoom-out}
+.lbx[hidden]{display:none}
+.lbx img{max-width:min(92vw,1100px);max-height:80vh;border-radius:4px;box-shadow:var(--shadow);transform-origin:center}
+.lbx p{margin:0;font-size:10.5px;letter-spacing:.04em;color:var(--soft)}
+/* v27 · mercury segments and poured menus */
+.seg2,.menu .seg{position:relative}
+.seg2>button,.menu .seg>button{position:relative;z-index:1}
+.merc{position:absolute;z-index:0;border-radius:3px;background:var(--panel);box-shadow:0 1px 2px rgba(0,0,0,.1);pointer-events:none;opacity:0}
+.moving>.merc{opacity:1}
+.moving>button[aria-checked="true"]{background:transparent!important;box-shadow:none!important}
+.menu .seg .merc{border-radius:4px}
+/* v28 · claim cards, open threads, documents that drip in */
+.cpop{position:fixed;z-index:88;width:300px;padding:9px 11px 8px;background:var(--panel);border:var(--rule-hair) solid var(--line-3);border-radius:6px;box-shadow:var(--shadow);pointer-events:auto}
+.cpop[hidden]{display:none}
+.cpop::after{content:"";position:absolute;left:var(--ax,50%);top:100%;width:6px;height:6px;margin:-3px 0 0 -3px;background:var(--panel);border:solid var(--line-3);border-width:0 var(--rule-hair) var(--rule-hair) 0;transform:rotate(45deg)}
+.cpop.below::after{top:0;transform:rotate(-135deg)}
+.cpop .ch{display:flex;align-items:center;gap:8px;font-size:9px;letter-spacing:.14em;text-transform:uppercase;color:var(--mute)}
+.cpop .ch b{font-weight:500;letter-spacing:0;text-transform:none;color:var(--gold);font-size:10px}
+.cpop .ch .cf{margin-left:auto;letter-spacing:.02em;text-transform:none;font-size:10px}
+.cpop .vd{display:inline-flex;align-items:center;gap:5px}
+.cpop .vd i{width:5px;height:5px;border-radius:50%;background:var(--mute)}
+.cpop .v-supported i{background:var(--good,#2f6b4f)}.cpop .v-derived i{background:none;border:1px solid var(--good,#2f6b4f);box-sizing:border-box}.cpop .v-partial i{background:var(--gold)}.cpop .v-conflict i,.cpop .v-unsupported i{background:var(--bad)}
+.cpop p{margin:6px 0 6px;font-size:12.5px;line-height:1.5;color:var(--ink)}
+.cpop .cs{display:flex;flex-wrap:wrap;gap:4px;margin-bottom:6px}
+.cpop .cs span{font-size:10.5px;color:var(--soft);border:var(--rule-hair) solid var(--line-2);border-radius:3px;padding:0 5px}
+.cpop .cs em{font:italic 400 11.5px/1.45 var(--f-display);color:var(--soft)}
+.cpop .cx{display:block;font:italic 400 11px var(--f-display);color:var(--gold)}
+.fups{display:flex;flex-direction:column;align-items:flex-start;gap:4px;margin:14px 0 0}
+.fups .cap{margin-bottom:2px;color:var(--mute)}
+.fu{display:inline-flex;align-items:center;gap:10px;width:min(100%,480px);height:30px;padding:0 10px;border:var(--rule-hair) solid var(--line-2);border-radius:4px;background:transparent;cursor:pointer;text-align:left;font-size:12px;color:var(--text);animation:fuIn .7s calc(var(--i)*.09s + .1s) var(--soft-close) both;transition:border-color .3s,background .3s}
+.fu:hover{border-color:var(--line-3);background:var(--well)}
+.fu b{font-weight:500;font-size:10px;color:var(--gold);flex:none}
+.fu span{flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.fu svg{width:11px;height:11px;flex:none;color:var(--mute);transition:transform .35s var(--soft-close),color .3s}
+.fu:hover svg{transform:translate(1px,-1px);color:var(--ink)}
+@keyframes fuIn{0%{opacity:0;transform:translateY(-6px) scale(.6,.8);transform-origin:0 0;border-radius:14px}55%{opacity:1;transform:scale(1.015,.97);border-radius:6px}100%{opacity:1;transform:none;border-radius:4px}}
+.bot.bi .docc{animation:docIn .8s var(--soft-close) both;transform-origin:0 0}
+@keyframes docIn{0%{opacity:0;transform:translateY(-8px) scale(.4,.6);border-radius:18px}50%{opacity:1;transform:scale(1.01,.98);border-radius:9px}100%{transform:none}}
+.docc .th iframe{animation:fillup 1.1s cubic-bezier(.3,.7,.2,1) both}
+[data-docsave]{position:relative}
+[data-docsave].drip::after{content:"";position:absolute;left:50%;top:-10px;width:4px;height:8px;margin-left:-2px;border-radius:50% 50% 50% 50%/62% 62% 38% 38%;background:var(--gold);pointer-events:none;animation:drip .5s cubic-bezier(.55,0,.85,.35) both}
+@media (prefers-reduced-motion:reduce){[data-docsave].drip::after{display:none}}
 </style>
 
 <div class="app has-chat" id="app">
@@ -929,12 +1053,13 @@ html.calm *,html.calm *::before,html.calm *::after{animation:none!important;tran
       <button class="jump" id="jump" type="button">Latest ↓</button>
       <div class="qbar dbar" id="dbar" hidden><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.1" aria-hidden="true"><path d="M3.5 1.5h6l3 3v10h-9z"/><path d="M9.5 1.5v3h3M5.5 8h5M5.5 10.5h5M5.5 13h3"/></svg><span class="qk">Will build</span><span class="qt" id="dbT"></span><button type="button" class="ib sm" id="dbX" aria-label="Do not build a document"><svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.2"><path d="M3 3l6 6M9 3l-6 6"/></svg></button></div>
       <div class="qbar" id="qbar" hidden><svg viewBox="0 0 16 16" fill="currentColor" aria-hidden="true"><path d="M3 9.5C3 6.8 4.6 5 7 4.5l.4.9C5.9 6 5.2 7 5.1 8H7v4H3zM9 9.5C9 6.8 10.6 5 13 4.5l.4.9C11.9 6 11.2 7 11.1 8H13v4H9z"/></svg><span class="qk">Asking about</span><span class="qt" id="qt"></span><button type="button" class="ib sm" id="qx" aria-label="Remove the quote"><svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.2"><path d="M3 3l6 6M9 3l-6 6"/></svg></button></div>
+      <div class="att" id="att" hidden></div>
       <form class="comp" id="form">
         <label for="prompt" class="sr">Message EXPIRA</label>
         <div class="pw"><textarea id="prompt" rows="1" placeholder="Brief EXPIRA…"></textarea><span class="phx" id="phx" aria-hidden="true">Brief EXPIRA…</span></div>
         <div class="ctl">
           <span class="count num" id="count"></span>
-          <button type="button" class="optb" id="docBtn" aria-haspopup="menu" aria-expanded="false" data-tip="Make a document"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.1" aria-hidden="true"><path d="M3.5 1.5h6l3 3v10h-9z"/><path d="M9.5 1.5v3h3M5.5 8h5M5.5 10.5h5M5.5 13h3"/></svg><span id="docSum">Document</span></button><button type="button" class="optb" id="optBtn" aria-haspopup="menu" aria-expanded="false"><span class="ic" aria-hidden="true"><i></i><i></i><i></i></span><span id="optSum">Auto</span><svg viewBox="0 0 10 10" fill="none" stroke="currentColor" stroke-width="1"><path d="M2.5 6.5L5 4l2.5 2.5"/></svg></button>
+          <input type="file" id="attIn" multiple hidden accept="image/*"><button type="button" class="optb ab1" id="attBtn" aria-label="Attach images" data-tip="Attach images" hidden><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.1" aria-hidden="true"><path d="M10.6 4.6 5.5 9.7a1.6 1.6 0 0 0 2.3 2.3l5.3-5.3a3 3 0 0 0-4.2-4.2L3.5 7.9a4.3 4.3 0 0 0 6.1 6.1l3.5-3.5"/></svg></button><button type="button" class="optb" id="docBtn" aria-haspopup="menu" aria-expanded="false" data-tip="Make a document"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.1" aria-hidden="true"><path d="M3.5 1.5h6l3 3v10h-9z"/><path d="M9.5 1.5v3h3M5.5 8h5M5.5 10.5h5M5.5 13h3"/></svg><span id="docSum">Document</span></button><button type="button" class="optb" id="optBtn" aria-haspopup="menu" aria-expanded="false"><span class="ic" aria-hidden="true"><i></i><i></i><i></i></span><span id="optSum">Auto</span><svg viewBox="0 0 10 10" fill="none" stroke="currentColor" stroke-width="1"><path d="M2.5 6.5L5 4l2.5 2.5"/></svg></button>
           <button type="submit" class="send" id="send" aria-label="Send" data-tip="Send"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M8 13V3M3.5 7.5L8 3l4.5 4.5"/></svg></button>
         </div>
       </form>
@@ -943,6 +1068,8 @@ html.calm *,html.calm *::before,html.calm *::after{animation:none!important;tran
   </div>
 </div>
 
+<div class="cpop" id="cpop" role="tooltip" hidden></div>
+<div class="lbx" id="lbx" hidden><img alt=""><p></p></div>
 <aside class="dsp" id="dsp" aria-label="The Dispatch">
   <div class="dsp-h"><span class="cap">The Dispatch</span><span class="cap num" id="dspNo"></span><button class="ib" id="dspClose" aria-label="Close" data-tip="Close  Esc"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.1"><path d="M4 4l8 8M12 4l-8 8"/></svg></button></div>
   <div class="dsp-b" id="dspB"></div>
@@ -1222,7 +1349,7 @@ function ledgerHTML(w,full){const L=w&&w.ledger;if(!L||!(L.claims||[]).length)re
  <ol class="lc">${L.claims.map((c,i)=>`<li><button type="button" class="lci v-${c.v}" data-claim="${c.id}" style="animation-delay:${Math.min(i*.04,.6)}s"><b class="num">c${c.id}</b><span class="tx">${esc(c.text)}</span><span class="vd"><i></i>${VL[c.v]||c.v}</span></button></li>`).join("")}</ol>${L.audit?`<p class="aud">${L.audit.flags?`The auditor found ${words(L.audit.flags).toLowerCase()} ungrounded statement${L.audit.flags>1?"s":""} in the draft; the answer was revised.`:"The auditor found every factual statement in the answer backed by the ledger."}</p>`:""}</div>`}
 const evLi=f=>f[1]?`<li><span>${f[1]}</span><span class="x num">${mmss(f[0])}</span></li>`:"";
 function summary_(w){const n=(w.steps||[]).length,p=(w.map&&w.map.pages||[]).length;return (n?`Staffed ${words(n).toLowerCase()} desk${n>1?"s":""}`:"Answered directly")+(p?` · ${p} source${p>1?"s":""}`:"")+(w.firewall==="clear"?" · firewall clear":w.firewall==="blocked"?" · held for internal use":"")}
-function summary(w){const t=ledgerStats(w.ledger);return summary_(w)+(t.n?` · ${t.g}/${t.n} grounded`:"")}
+function summary(w){const t=ledgerStats(w.ledger);return (w.ms?"Worked for "+fmt(w.ms)+" · ":"")+summary_(w)+(t.n?` · ${t.g}/${t.n} grounded`:"")}
 const tokLine=w=>{const t=w.tok||(w.steps||[]).reduce((a,s)=>a+tok(s.out),0);return t?ft(t)+" tokens":""};
 const chipHTML=(r,n)=>`<span class="chip" data-r="${r}">${ROLE[r]||r}<b>${n>1?"×"+n:""}</b></span>`;
 function staffHTML(S){const g={};(S||[]).forEach(s=>g[s.role]=(g[s.role]||0)+1);return Object.entries(g).map(([r,n])=>chipHTML(r,n)).join("")}
@@ -1232,27 +1359,43 @@ function railHTML(w,live,o={}){let keys,st={};
  else if(w.ph){keys=Object.keys(PHN).filter(k=>w.ph[k]);keys.forEach(k=>{const p=w.ph[k];st[k]=p.skip?["skip",""]:p.e!=null?["done",fmt(p.e-(p.s||p.e))]:["stop",""]})}
  else{keys=[...((w.steps||[]).length?["plan","desks","review"]:[]),"answer",...(w.firewall&&w.firewall!=="off"?["firewall"]:[])];keys.forEach(k=>st[k]=["done",""])}
  return `<ol class="rail" aria-label="Stages">${keys.map(k=>{const [c,t]=st[k]||["",""];return `<li data-ph="${k}" class="${c}${k==="firewall"&&w.firewall==="blocked"?" bad":""}"><i></i><span>${PHN[k]}</span><span class="num">${t}</span></li>`}).join("")}</ol>`}
+const PHB={plan:"Deliberation",desks:"Desks",review:"Verification",answer:"Answer",audit:"Audit",doc:"Document",exhibits:"Exhibits",firewall:"Firewall"};
+const plainT=h=>{const d=document.createElement("div");d.innerHTML=h;return d.textContent};
+function evKind(t){t=String(t||"");return /Firewall/.test(t)?"k-fw mo":/^Ledger|claims? grounded/.test(t)?"k-led mo":/^Built|Document held|kernel builder|Planned a document/.test(t)?"k-doc mo":/^Audit|^Revised/.test(t)?"k-au":/filed .*notes/.test(t)?"k-desk mo":/searched|read |checked the web|Web research/.test(t)?"k-web":/[Dd]esk|Staffed/.test(t)?"k-desk":/^Delivered|^Stopped|^Interrupted/.test(t)?"k-end":""}
+const stLi=f=>`<li class="se ${evKind(f[2]||f[1])}"><span class="sx">${f[2]||f[1]}</span><span class="x num">${mmss(f[0])}</span></li>`;
+const sbLi=k=>`<li class="sb"><span>${PHB[k]}</span></li>`;
+const foldLi=n=>`<li class="fold"><button type="button" class="fbtn"><i></i><span>${n} earlier step${n>1?"s":""}</span></button></li>`;
+function streamHTML(w){const F=(w.feed||[]).filter(f=>f[2]||f[1]),ph=w.ph||{};const br=Object.keys(PHB).filter(k=>ph[k]&&!ph[k].skip&&ph[k].s!=null).map(k=>[k==="plan"?-1:ph[k].s,k]).sort((a,b)=>a[0]-b[0]);const it=[];let j=0;
+ F.forEach(f=>{while(j<br.length&&br[j][0]<=f[0]){it.push([sbLi(br[j][1]),0]);j++}it.push([stLi(f),1])});
+ const se=it.filter(x=>x[1]).length;if(se<=9)return it.map(x=>x[0]).join("");let keep=0,cut=it.length;for(let i=it.length-1;i>=0;i--){if(it[i][1]&&++keep===7){cut=i;break}}
+ return foldLi(it.slice(0,cut).filter(x=>x[1]).length)+it.map((x,i)=>i<cut?x[0].replace(/^<li class="/,'<li class="old '):x[0]).join("")}
+function foldStream(ol){if(!ol||ol.classList.contains("all"))return;const it=[...ol.children].filter(x=>!x.classList.contains("fold")),se=it.filter(x=>x.classList.contains("se"));if(se.length<=9)return;
+ const cut=it.indexOf(se[se.length-7]);let n=0;it.forEach((x,i)=>{const o=i<cut;x.classList.toggle("old",o);if(o&&x.classList.contains("se"))n++});
+ let p=ol.querySelector(".fold");if(!p){ol.insertAdjacentHTML("afterbegin",foldLi(n));p=ol.querySelector(".fold")}else p.querySelector("span").textContent=`${n} earlier step${n>1?"s":""}`}
+function fupsHTML(w){const L=w&&w.ledger;if(!L)return "";const open=(L.claims||[]).filter(c=>c.v==="unsupported"||c.v==="partial"||c.v==="conflict").slice(0,3);if(!open.length)return "";
+ const q=c=>(c.v==="conflict"?"Settle the conflict on: ":c.v==="partial"?"Firm up: ":"Find a source for: ")+c.text.replace(/\.$/,"");
+ return `<div class="fups"><span class="cap">Open threads</span>${open.map((c,i)=>`<button type="button" class="fu" style="--i:${i}" data-fu="${esc(q(c))}"><b class="num">c${c.id}</b><span>${esc(q(c))}</span><svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.1" aria-hidden="true"><path d="M3.5 8.5l5-5M4.5 3.5h4v4"/></svg></button>`).join("")}</div>`}
 function runHTML(w,k,live,o={}){const M=w.map||{},th=M.thinking||[],n=(w.feed||[]).filter(f=>f[1]).length,op=live||o.open;
  const dl=live?(o.direct?"":`<div class="delib"><span class="cap">Deliberation</span><p class="typing">Reading the brief</p></div>`):th.length?`<div class="delib"><span class="cap">Deliberation</span>${th.map(t=>`<p>${esc(t)}</p>`).join("")}</div>`:"";
  return `<div class="run ${live?"running":"settled"}${op?" open":""}"><button class="run-h" type="button" aria-expanded="${!!op}">${GLYPH}<span class="lbl">${live?(o.direct?"Considering":"Deliberating"):esc(summary(w))}</span><span class="rk num">${live?"":tokLine(w)}</span><span class="t num">${mmss(w.ms||0)}</span>${CHEV}</button><div class="sheen"></div>${railHTML(w,live,o)}
- <div class="run-b"><div>${dl}<div class="staff">${live?"":staffHTML(w.steps)}</div><div class="mapw"></div><div class="ledw">${live?"":ledgerHTML(w)}</div>
- <div class="logw${live?" open":""}"><button class="logt" type="button"><span class="cap">Log</span><span class="n num">${n||""}</span>${CHEV}</button><div class="logb"><div><ol class="ev">${(w.feed||[]).map(evLi).join("")}</ol><button class="rd" data-read="${live?"live":k}">Open the dispatch</button></div></div></div>
+ <p class="now" aria-live="polite"></p><div class="run-b"><div><div class="flow">${dl}<ol class="strm">${live?"":streamHTML(w)}</ol></div><div class="staff" hidden></div><div class="mrow">${(live&&!o.direct)||(w.steps||[]).length?`<button class="mapt" type="button" aria-expanded="false"><svg viewBox="0 0 16 16" width="12" height="12" fill="none" stroke="currentColor" stroke-width="1.2"><circle cx="3.5" cy="8" r="1.8"/><circle cx="12.5" cy="3.8" r="1.8"/><circle cx="12.5" cy="12.2" r="1.8"/><path d="M5.2 7.2 10.8 4.6M5.2 8.8l5.6 2.6"/></svg><span>Map</span></button>`:""}<button class="rd" data-read="${live?"live":k}">Open the dispatch</button></div><div class="mapw"></div><div class="ledw">${live?"":ledgerHTML(w)}</div>
+ <div class="logw${live?" open":""}"><button class="logt" type="button"><span class="cap">Log</span><span class="n num">${n||""}</span>${CHEV}</button><div class="logb"><div><ol class="ev">${(w.feed||[]).map(evLi).join("")}</ol></div></div></div>
  </div></div><p class="rnote" hidden></p></div>`}
 function splitQuote(c){const m=String(c).match(/^((?:> ?.*(?:\n|$))+)\n*([\s\S]*)$/);return m?[m[1].replace(/^> ?/gm,"").trim(),m[2]]:["",String(c)]}
-function youHTML(t,k){const [qt,body]=splitQuote(t.content);return `<div class="yw bi" data-k="${k}"><div class="you">${qt?`<span class="yq">${esc(qt)}</span>`:""}${esc(body)}</div><span class="yacts"><button class="ab" data-ycopy>Copy</button><button class="ab" data-yedit>Edit</button></span></div>`}
+function youHTML(t,k){const [qt,body]=splitQuote(t.content);return `<div class="yw bi" data-k="${k}"><div class="you">${(t.imgs||[]).length?`<span class="yim">${t.imgs.map((m,i)=>`<button type="button" class="yi" data-lbx="${i}" aria-label="Open ${esc(m.name)}"><img alt="" src="${m.thumb}"></button>`).join("")}</span>`:""}${qt?`<span class="yq">${esc(qt)}</span>`:""}${esc(body)}</div><span class="yacts"><button class="ab" data-ycopy>Copy</button><button class="ab" data-yedit>Edit</button></span></div>`}
 function youHTML_old(t){return `<div class="you bi">${esc(t.content)}</div>`}
 const acts=k=>`<span class="acts"><button class="ab" data-copy>Copy</button><button class="ab" data-regen>Retry</button><button class="ab" data-read="${k}">Dispatch</button></span>`;
 const BYLINE=`${MARK}<span class="who">EXPIRA</span>`;
 function inThis(html){const d=document.createElement("div");d.innerHTML=html;const hs=[...d.querySelectorAll("h3")];if(hs.length<3)return "";return `<nav class="inthis"><span class="cap">In this answer</span>${hs.map((x,i)=>`<button data-sec="${i}" style="animation-delay:${i*.05}s"><b>§${i+1}</b>${esc(x.textContent)}</button>`).join("")}</nav>`}
 function meta(text){const w=(text.match(/\S+/g)||[]).length;return `<span>${w} words · ${Math.max(1,Math.round(w/220))} min read</span>`}
-function botHTML(t,k,last){const a=md(t.content);return `<div class="bot" data-k="${k}"><div class="by">${BYLINE}<time class="num">${hhmm(t.ts)}</time></div>${t.work?runHTML(t.work,k,false,{open:last}):""}<div class="ans">${a}</div>${exhibitsHTML(t.ex,false)}<div class="docw">${docCardHTML(t.doc)}</div>${inThis(a)}<div class="filed capt"><span>Filed ${hhmm(t.ts)}</span><i class="dotsep"></i>${meta(t.content)}${acts(k)}</div></div>`}
+function botHTML(t,k,last){const a=md(t.content);return `<div class="bot" data-k="${k}"><div class="by">${BYLINE}<time class="num">${hhmm(t.ts)}</time></div>${t.work?runHTML(t.work,k,false,{open:false}):""}<div class="ans">${a}</div>${exhibitsHTML(t.ex,false)}<div class="docw">${docCardHTML(t.doc)}</div>${fupsHTML(t.work)}${inThis(a)}<div class="filed capt"><span>Filed ${hhmm(t.ts)}</span><i class="dotsep"></i>${meta(t.content)}${acts(k)}</div></div>`}
 setTimeout(filesCount,0);
 function open(c){window.__selHide&&window.__selHide();cur=c;app.classList.toggle("has-chat",!!c);GRAIN.run(!c&&PREF.grain);
  closeSheet();if(c){crumb();const la=c.turns.map(t=>t.role).lastIndexOf("assistant");$("#thread").innerHTML=c.turns.map((t,k)=>t.role==="user"?youHTML(t,k):botHTML(t,k,k===la)).join("");$("#main").append($("#dock"));FM.forEach(m=>{if(!m.host.isConnected)m.kill()});mountMaps();mountDocs();stick=true;requestAnimationFrame(()=>{sc.scrollTop=1e9;prog()})}
  else{$("#heroDock").append($("#dock"));$("#thread").innerHTML="";$("#crumb").textContent="";showDsp(false)}
  renderRecents()}
 document.addEventListener("click",e=>{
- const rh=e.target.closest(".run-h");if(rh){const t=rh.closest(".run");t.classList.toggle("open");rh.setAttribute("aria-expanded",t.classList.contains("open"));if(t.classList.contains("open"))mountMaps();return}
+ const rh=e.target.closest(".run-h");if(rh){const t=rh.closest(".run");t.classList.add("pinned");t.classList.toggle("open");rh.setAttribute("aria-expanded",t.classList.contains("open"));if(t.classList.contains("open"))mountMaps();return}
  const lt=e.target.closest(".logt");if(lt){lt.closest(".logw").classList.toggle("open");return}
  const shb=e.target.closest("[data-sheet]");if(shb){openSheet($("#sheet")._w,shb.dataset.sheet,shb);return}
  const dso=e.target.closest("[data-docopen-sheet]");if(dso){const w=$("#sheet")._w;if(w&&w.doc)openDoc(w.doc);return}
@@ -1600,7 +1743,7 @@ const sv=(t,a={})=>{const e=document.createElementNS(SVGN,t);for(const k in a)e.
 const hostOf=u=>{try{return new URL(u).hostname.replace(/^www\./,"")}catch(e){return ""}};
 const FM=new Set();
 /* a map only works while someone can see it: on screen, tab visible, and its panel open */
-const seen=m=>m.vis&&!document.hidden&&!m.host.closest(".dsp:not(.open),.stg:not(.open),.mfs:not(.open)");
+const seen=m=>m.vis&&!document.hidden&&!m.host.closest(".dsp:not(.open),.stg:not(.open),.mfs:not(.open),.mapw:not(.show)");
 const SPEC={0:{w:100,h:40,g:12},1:{w:112,h:40,g:0},2:{w:162,h:34,g:8},3:{w:126,h:36,g:0},4:{w:120,h:22,g:6}},COLN=["ORCHESTRATOR","DECISION","DESKS","CONNECTOR","SOURCES"],SITES=9;
 function hostsOf(P){const hs=[];(P||[]).forEach(p=>{const h=hostOf(p.url);if(!h)return;let o=hs.find(x=>x.h===h);if(!o)hs.push(o={h,n:0,t:0});o.n++;o.t+=tok(p.ex)});return hs}
 function graphOf(w){const S=w.steps||[],M=w.map||{},L=w.ledger,N=[],E=[],t=performance.now(),webOn=s=>s._live&&s._web&&t-s._web<4000,lt=ledgerStats(L);
@@ -1803,6 +1946,8 @@ function mapFS(btn){const host=btn.closest(".mapw"),m=[...FM].find(x=>x.host===h
 function closeFS(){const o=$("#mfs");if(!o.classList.contains("open"))return;o.classList.remove("open");$("#veil").classList.remove("open");FM.forEach(x=>{if(x.opt.fs)x.kill()})}
 $("#mfsX").onclick=closeFS;
 document.addEventListener("click",e=>{const b=e.target.closest("[data-mfs]");if(b)mapFS(b)});
+document.addEventListener("click",e=>{const f=e.target.closest(".fbtn");if(f){const ol=f.closest(".strm");ol.classList.add("all");ol.querySelectorAll(".old").forEach(x=>x.classList.remove("old"));f.parentElement.remove();return}
+ const m=e.target.closest(".mapt");if(m){const r=m.closest(".run"),hs=r.querySelector(".mapw"),on=!hs.classList.contains("show");hs.classList.toggle("show",on);m.setAttribute("aria-expanded",on);if(on){if(!hs.children.length)mountMaps();requestAnimationFrame(()=>FM.forEach(x=>x.host===hs&&x.sync&&x.sync()))}}});
 function mountMaps(){document.querySelectorAll("#thread .run.open .mapw:empty").forEach(hst=>{const b=hst.closest(".bot"),w=b&&(b._work||cur?.turns[+b.dataset.k]?.work);if(w&&(w.steps||[]).length)mkMap(hst,()=>w,{replay:true})})}
 const workOf=el=>{const b=el.closest(".bot");return b&&(b._work||cur?.turns[+b.dataset.k]?.work)};
 
@@ -1969,17 +2114,72 @@ const docThumbIO=new IntersectionObserver(es=>es.forEach(async en=>{if(!en.isInt
 const docOf=el=>{const b=el.closest(".bot");if(!b)return null;return b._doc||(cur&&cur.turns[+b.dataset.k]&&cur.turns[+b.dataset.k].doc)||null};
 function mountDocs(){document.querySelectorAll("#thread .docc[data-doc]:not([data-seen])").forEach(c=>{c.dataset.seen=1;docThumbIO.observe(c)})}
 document.addEventListener("click",async e=>{const o=e.target.closest("[data-docopen]");if(o){const d=docOf(o);if(d)openDoc(d);return}
- const sv=e.target.closest("[data-docsave]");if(sv){const d=docOf(sv);if(!d)return;const t=sv.textContent;sv.textContent="Preparing…";const ok=await saveDoc(d);sv.textContent=ok?"Saved":t;setTimeout(()=>sv.textContent="Download",1800);return}
+ const sv=e.target.closest("[data-docsave]");if(sv){const d=docOf(sv);if(!d)return;const t=sv.textContent;sv.textContent="Preparing…";sv.classList.remove("drip");void sv.offsetWidth;sv.classList.add("drip");const ok=await saveDoc(d);sv.textContent=ok?"Saved":t;setTimeout(()=>sv.textContent="Download",1800);return}
  const fo=e.target.closest("[data-fopen]"),fs2=e.target.closest("[data-fsave]");if(fo||fs2){const [cid,k]=(fo||fs2).dataset[fo?"fopen":"fsave"].split("|"),c=chats.find(x=>x.id===cid),d=c&&c.turns[+k]&&c.turns[+k].doc;if(!d)return;if(fo){setMenu(false);openDoc(d)}else{const b=fs2;b.textContent="Preparing…";const ok=await saveDoc(d);b.textContent=ok?"Saved":"Download";setTimeout(()=>b.textContent="Download",1800)}return}
  const kt=e.target.closest("[data-ktpl]");if(kt){const K=await KLIB.load().catch(()=>null);const d=K&&K.derivatives.find(x=>x.file===kt.dataset.ktpl);if(d){setMenu(false);openDoc({type:d.type,src:d.src,second:d.second_signatory,basis:"The kernel's stock template, unfilled."},d.title)}}});
 /* ---------- runtime ---------- */
 let sample=null,db=null,ctl=null,busy=false;
 (async()=>{sample=await window.claude?.use?.("sample")??null;$("#sig").className="sig capt"+(sample?" live":"");swap($("#sigT"),sample?"Linked":"Preview");
- if(!sample)$("#phx").textContent="Open this page in Claude to brief EXPIRA";grow();db=await window.claude?.use?.("db")??null;webInit()})();
+ if(!sample)$("#phx").textContent="Open this page in Claude to brief EXPIRA";grow();attInit();db=await window.claude?.use?.("db")??null;webInit()})();
 open(chats.find(c=>!c.example)||chats[0]);
 
-$("#form").addEventListener("submit",e=>{e.preventDefault();if(busy){ctl?.abort();return}let q=promptEl.value.trim();if((!q&&!QUOTE)||!sample)return;if(QUOTE){q=quoteMd(QUOTE)+"\n\n"+(q||"Tell me more about this.");setQuote("")}send(q)});
-function setBusy(on){busy=on;app.classList.toggle("busy",on);$("#runPill").hidden=!on;const s=$("#send");s.setAttribute("aria-label",on?"Stop":"Send");s.dataset.tip=on?"Stop  Esc":"Send";
+/* liquid menus: every popover pours out of the control that opened it and drains back into it */
+{let lastBtn=null;document.addEventListener("pointerdown",e=>{lastBtn=e.target.closest("button,[role=button]")},true);document.addEventListener("keydown",e=>{if(e.key==="Enter"||e.key===" ")lastBtn=document.activeElement},true);
+ const pour=(m,open)=>{if(reduce)return;const b=m._from;if(!b||!b.isConnected||m.contains(b))return;const r=b.getBoundingClientRect(),q=m.getBoundingClientRect();if(!q.width||!r.width)return;
+  const cl=(v,mx)=>Math.max(0,Math.min(v,mx)),from=`inset(${cl(r.top-q.top,q.height-6)}px ${cl(q.right-r.right,q.width-24)}px ${cl(q.bottom-r.bottom,q.height-6)}px ${cl(r.left-q.left,q.width-24)}px round 12px)`;
+  m.animate(open?[{clipPath:from},{clipPath:"inset(0px 0px 0px 0px round 11px)",offset:.62},{clipPath:"inset(0px 0px 0px 0px round 8px)"}]:[{clipPath:"inset(0px 0px 0px 0px round 8px)"},{clipPath:from}],{duration:open?640:280,easing:open?"cubic-bezier(.32,.6,.18,1)":"cubic-bezier(.5,0,.75,0)"})};
+ const mo=new MutationObserver(ms=>ms.forEach(x=>{const m=x.target,o=m.classList.contains("open");if(o===!!m._o)return;m._o=o;if(o){m._from=lastBtn;requestAnimationFrame(()=>pour(m,true))}else pour(m,false)}));
+ document.querySelectorAll(".menu").forEach(m=>mo.observe(m,{attributes:true,attributeFilter:["class"]}))}
+/* mercury: the selected segment slides across, stretching between the two */
+document.addEventListener("click",e=>{const b=e.target.closest(".seg2 button,.menu .seg button");if(!b||reduce)return;const g=b.parentElement,o=g.querySelector('[aria-checked="true"]');if(!o||o===b)return;const gr=g.getBoundingClientRect(),a=o.getBoundingClientRect();
+ requestAnimationFrame(()=>{const g2=b.isConnected?b.parentElement:g;const n=g2.querySelector('[aria-checked="true"]');if(!n||n===o&&o.isConnected)return;const c=n.getBoundingClientRect();let m=g2.querySelector(":scope>.merc");if(!m){m=document.createElement("i");m.className="merc";g2.prepend(m)}
+  const L=x=>x.left-gr.left,T=x=>x.top-gr.top,l0=Math.min(L(a),L(c)),r0=Math.max(L(a)+a.width,L(c)+c.width);g2.classList.add("moving");
+  const an=m.animate([{left:L(a)+"px",top:T(a)+"px",width:a.width+"px",height:a.height+"px"},{left:l0+"px",top:(T(a)+T(c))/2+1.5+"px",width:r0-l0+"px",height:Math.min(a.height,c.height)-3+"px",offset:.42},{left:L(c)+"px",top:T(c)+"px",width:c.width+"px",height:c.height+"px"}],{duration:440,easing:"cubic-bezier(.3,.7,.2,1)"});an.onfinish=an.oncancel=()=>g2.classList.remove("moving")})},true);
+/* claim cards: hovering a citation draws its claim out of the marker */
+{const P=$("#cpop");let tm=0,on=null;const host=u=>{try{return new URL(u).hostname.replace(/^www\./,"")}catch(e){return String(u)}};
+ const show=el=>{const w=workOf(el),c=w?.ledger?.claims?.find(x=>String(x.id)===el.dataset.claim);if(!c)return;on=el;
+  P.innerHTML=`<div class="ch"><span class="vd v-${c.v}"><i></i>${VL[c.v]||c.v}</span><b class="num">c${c.id}</b>${c.conf?`<span class="cf num">${Math.round(c.conf*100)}% sure</span>`:""}</div><p>${esc(c.text)}</p>${(c.urls||[]).length?`<div class="cs">${c.urls.slice(0,3).map(u=>`<span>${esc(host(u))}</span>`).join("")}</div>`:c.note?`<div class="cs"><em>${esc(c.note)}</em></div>`:""}<span class="cx">Click for the evidence</span>`;
+  P.hidden=false;const r=el.getBoundingClientRect(),q=P.getBoundingClientRect();const x=Math.max(12,Math.min(innerWidth-q.width-12,r.left+r.width/2-q.width/2));let y=r.top-q.height-9,below=false;if(y<12){y=r.bottom+9;below=true}
+  P.style.left=x+"px";P.style.top=y+"px";const ox=Math.max(8,Math.min(q.width-8,r.left+r.width/2-x));P.style.setProperty("--ax",ox+"px");P.classList.toggle("below",below);
+  if(!reduce){const a=Math.max(0,ox-6),b=Math.max(0,q.width-ox-6),from=below?`inset(0px ${b}px ${q.height-6}px ${a}px round 8px)`:`inset(${q.height-6}px ${b}px 0px ${a}px round 8px)`;
+   P.animate([{clipPath:from},{clipPath:"inset(0px 0px 0px 0px round 8px)",offset:.6},{clipPath:"inset(0px 0px 0px 0px round 6px)"}],{duration:440,easing:"cubic-bezier(.3,.6,.2,1)"})}};
+ const hide=()=>{on=null;P.hidden=true};
+ document.addEventListener("pointerover",e=>{const c=e.target.closest?.(".cite");if(c){clearTimeout(tm);if(c!==on)tm=setTimeout(()=>show(c),130)}else if(on&&!e.target.closest?.("#cpop")){clearTimeout(tm);tm=setTimeout(hide,140)}});
+ document.addEventListener("focusin",e=>{const c=e.target.closest?.(".cite");if(c)show(c)});document.addEventListener("click",e=>{if(e.target.closest(".cite"))hide();const f=e.target.closest(".fu");if(f){promptEl.value=f.dataset.fu;grow();phSync&&phSync();promptEl.focus()}},true);addEventListener("scroll",hide,true)}
+/* attachments: images the viewer picks, pastes or drops ride along with the brief */
+let ATT=[],IMGCAP=null;
+const fmtB=b=>b>=1048576?(b/1048576).toFixed(1)+" MB":Math.max(1,Math.round(b/1024))+" KB";
+async function thumbOf(f){try{const bm=await createImageBitmap(f),k=Math.min(1,200/Math.max(bm.width,bm.height)),c=document.createElement("canvas");c.width=Math.max(1,Math.round(bm.width*k));c.height=Math.max(1,Math.round(bm.height*k));c.getContext("2d").drawImage(bm,0,0,c.width,c.height);return{w:bm.width,h:bm.height,thumb:c.toDataURL("image/jpeg",.74)}}catch(e){return null}}
+function attNote(t){const a=$("#att");a.hidden=false;let n=a.querySelector(".an");if(!n){a.insertAdjacentHTML("beforeend",'<span class="an"></span>');n=a.querySelector(".an")}n.textContent=t;clearTimeout(attNote.t);attNote.t=setTimeout(()=>{n.remove();if(!ATT.length)a.hidden=true},3200)}
+async function attAdd(files){if(!IMGCAP)return;const types=IMGCAP.mediaTypes||[];for(const f of files){if(!/^image\//.test(f.type))continue;
+ if(ATT.length>=IMGCAP.maxCount){attNote(`Up to ${IMGCAP.maxCount} images a message.`);break}
+ if(types.length&&!types.includes(f.type)){attNote(`${f.name||"That file"}: this format is not supported.`);continue}
+ if(IMGCAP.maxInputBytes&&f.size>IMGCAP.maxInputBytes){attNote(`${f.name} is over ${fmtB(IMGCAP.maxInputBytes)}.`);continue}
+ const m=await thumbOf(f);if(!m){attNote(`${f.name||"That image"} could not be read.`);continue}
+ const a={file:f,name:f.name&&f.name!=="image.png"?f.name:"Pasted image",size:f.size,...m,id:Math.random().toString(36).slice(2,8)};ATT.push(a);attDraw(a)}}
+function attDraw(a){const t=$("#att");t.hidden=false;const an=t.querySelector(".an");(an?an.insertAdjacentHTML.bind(an,"beforebegin"):t.insertAdjacentHTML.bind(t,"beforeend"))(`<figure class="ac" data-id="${a.id}"><span class="th"><img alt="" src="${a.thumb}"></span><figcaption><b>${esc(a.name)}</b><i class="num">${a.w}×${a.h} · ${fmtB(a.size)}</i></figcaption><button type="button" class="ax" aria-label="Remove ${esc(a.name)}"><svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.2"><path d="M3 3l6 6M9 3l-6 6"/></svg></button></figure>`)}
+function attDrop(id){const el=$("#att").querySelector(`[data-id="${id}"]`);ATT=ATT.filter(x=>x.id!==id);if(el){el.classList.add("out");setTimeout(()=>{el.remove();if(!ATT.length&&!$("#att .an"))$("#att").hidden=true},reduce?0:320)}}
+function attClear(){ATT=[];const t=$("#att");t.innerHTML="";t.hidden=true}
+async function attInit(){try{IMGCAP=sample?((await sample.limits())?.images||null):null}catch(e){IMGCAP=null}$("#attBtn").hidden=!IMGCAP;if(IMGCAP?.mediaTypes?.length)$("#attIn").accept=IMGCAP.mediaTypes.join(",")}
+$("#attBtn").onclick=()=>$("#attIn").click();
+$("#attIn").onchange=e=>{attAdd([...e.target.files]);e.target.value=""};
+$("#att").addEventListener("click",e=>{const x=e.target.closest(".ax");if(x)attDrop(x.closest(".ac").dataset.id)});
+document.addEventListener("paste",e=>{if(!IMGCAP)return;const fs=[...(e.clipboardData?.files||[])].filter(f=>/^image\//.test(f.type));if(fs.length){e.preventDefault();attAdd(fs)}});
+{const dk=$("#dock");["dragenter","dragover"].forEach(ev=>dk.addEventListener(ev,e=>{if(!IMGCAP||![...(e.dataTransfer?.types||[])].includes("Files"))return;e.preventDefault();dk.classList.add("drop")}));
+ dk.addEventListener("dragleave",e=>{if(!dk.contains(e.relatedTarget))dk.classList.remove("drop")});dk.addEventListener("drop",e=>{if(!IMGCAP)return;e.preventDefault();dk.classList.remove("drop");attAdd([...e.dataTransfer.files])})}
+/* the lightbox: the image stretches out of its thumbnail and back */
+{const L=$("#lbx"),im=L.querySelector("img");let from=null;
+ const close=()=>{if(L.hidden)return;const r=from&&from.isConnected?from.getBoundingClientRect():null,f=im.getBoundingClientRect();
+  const a=r&&!reduce?im.animate([{transform:"none"},{transform:`translate(${r.left+r.width/2-(f.left+f.width/2)}px,${r.top+r.height/2-(f.top+f.height/2)}px) scale(${r.width/f.width},${r.height/f.height})`,borderRadius:"12px"}],{duration:360,easing:"cubic-bezier(.4,0,.2,1)"}):null;
+  L.animate([{opacity:1},{opacity:0}],{duration:reduce?0:360,easing:"ease-in"}).onfinish=()=>{L.hidden=true}};
+ document.addEventListener("click",e=>{const b=e.target.closest(".yi");if(b){const k=+b.closest(".yw").dataset.k,m=cur?.turns[k]?.imgs?.[+b.dataset.lbx];if(!m)return;from=b;
+   im.onerror=()=>{im.onerror=null;im.src=m.thumb};im.src=m.url||m.thumb;L.querySelector("p").textContent=`${m.name} · ${m.w}×${m.h}`;L.hidden=false;
+   const r=b.getBoundingClientRect();requestAnimationFrame(()=>{const f=im.getBoundingClientRect();if(!reduce&&f.width)im.animate([{transform:`translate(${r.left+r.width/2-(f.left+f.width/2)}px,${r.top+r.height/2-(f.top+f.height/2)}px) scale(${r.width/f.width},${r.height/f.height})`,borderRadius:"12px"},{transform:"none",borderRadius:"4px"}],{duration:560,easing:"cubic-bezier(.2,.9,.25,1.06)"})});
+   L.animate([{opacity:0},{opacity:1}],{duration:reduce?0:280});return}
+  if(e.target.closest("#lbx"))close()});
+ document.addEventListener("keydown",e=>{if(e.key==="Escape"&&!L.hidden){e.stopPropagation();close()}},true)}
+$("#form").addEventListener("submit",e=>{e.preventDefault();if(busy){ctl?.abort();return}let q=promptEl.value.trim();if((!q&&!QUOTE&&!ATT.length)||!sample)return;if(!q&&!QUOTE)q=ATT.length>1?"Take a look at these images.":"Take a look at this image.";if(QUOTE){q=quoteMd(QUOTE)+"\n\n"+(q||"Tell me more about this.");setQuote("")}send(q)});
+function setBusy(on){if(busy!==on&&!reduce){const b=$("#send");b.animate([{transform:"none",borderRadius:"4px"},{transform:"scale(.7,.84)",borderRadius:"50%",offset:.34},{transform:"scale(1.07,.95)",borderRadius:"6px",offset:.68},{transform:"none",borderRadius:"4px"}],{duration:540,easing:"cubic-bezier(.3,.7,.2,1)"})}busy=on;app.classList.toggle("busy",on);$("#runPill").hidden=!on;const s=$("#send");s.setAttribute("aria-label",on?"Stop":"Send");s.dataset.tip=on?"Stop  Esc":"Send";
  s.innerHTML=on?`<svg viewBox="0 0 16 16"><rect x="4.5" y="4.5" width="7" height="7" rx="1" fill="currentColor"/></svg>`:`<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M8 13V3M3.5 7.5L8 3l4.5 4.5"/></svg>`;grow()}
 const COPY={not_granted:"EXPIRA needs permission to use Claude. Reload to be asked again.",rate_limited:"Too many requests. Wait a minute, then send again.",session_expired:"Your session expired. Sign in again.",refused:"That brief was declined. Rephrase it.",prompt_too_large:"That brief is too long. Shorten it.",invalid_json:"The plan came back unreadable. Send again."};
 
@@ -1988,7 +2188,9 @@ const ENDS=new Set();let endRaf=0;
 function toEnd(el){ENDS.add(el);if(!endRaf)endRaf=requestAnimationFrame(()=>{endRaf=0;for(const e of ENDS){if(e)e.scrollTop=e.scrollHeight;else if(stick)sc.scrollTop=sc.scrollHeight}ENDS.clear()})}
 async function send(q){const KL=await KLIB.load().catch(()=>null),docPre=DOCSEL||docIntent(q);setDoc(null);
  if(!cur||cur.example){cur={id:"c"+Date.now(),no:nextNo(),title:(q.replace(/^(?:> ?.*\n)+\n*/,"")||"Quoted passage").slice(0,52),ts:Date.now(),turns:[],folder:pendingFolder};pendingFolder=null;chats.unshift(cur)}
- const tsQ=Date.now();cur.turns.push({role:"user",content:q,ts:tsQ});promptEl.value="";phSync();open(cur);setBusy(true);ctl=new AbortController();stick=true;closeSheet();
+ const tsQ=Date.now();const IMGS=ATT.slice();attClear();const IM=IMGS.length?{images:IMGS.map(a=>a.file)}:{};
+ const ut={role:"user",content:q,ts:tsQ};if(IMGS.length)ut.imgs=IMGS.map(a=>{const m={name:a.name,w:a.w,h:a.h,thumb:a.thumb};Object.defineProperty(m,"url",{value:URL.createObjectURL(a.file),enumerable:false});return m});cur.turns.push(ut);
+ if(IMGS.length)q+=`\n\n[Attached: ${IMGS.length} image${IMGS.length>1?"s":""} (${IMGS.map(a=>a.name).join(", ")}). They are shown to you with this message: read them closely and use what they show. Say so if something in them cannot be made out.]`;promptEl.value="";phSync();open(cur);setBusy(true);ctl=new AbortController();stick=true;closeSheet();
  const safe=OPT.safe,thorough=OPT.desks==="always",direct=OPT.desks==="off",depthDeep=OPT.depth==="deep";let webOn=OPT.web&&WEB.ok;
  if(webOn){try{const lim=await sample.limits();if(!lim||!lim.tools)webOn=false}catch(e){webOn=false}}
  const K=cur.turns.length,t0=performance.now(),now=()=>performance.now()-t0;
@@ -1996,16 +2198,17 @@ async function send(q){const KL=await KLIB.load().catch(()=>null),docPre=DOCSEL|
  const bot=document.createElement("div");bot.className="bot bi";bot.dataset.k=K;bot._work=work;
  bot.innerHTML=`<div class="by">${BYLINE}<time class="num">${hhmm(Date.now())}</time></div>${runHTML(work,K,true,{direct,safe,doc:!!docPre})}<div class="ans"></div><div class="exw"></div><div class="docw"></div>`;
  $("#thread").append(bot);sc.scrollTop=1e9;
- const run=bot.querySelector(".run"),lbl=run.querySelector(".lbl"),tEl=run.querySelector(".run-h .t"),rk=run.querySelector(".rk"),evs=run.querySelector(".ev"),logN=run.querySelector(".logt .n"),dlb=run.querySelector(".delib"),stf=run.querySelector(".staff"),mapH=run.querySelector(".mapw"),note=run.querySelector(".rnote"),ans=bot.querySelector(".ans"),exw=bot.querySelector(".exw");
+ const run=bot.querySelector(".run"),lbl=run.querySelector(".lbl"),tEl=run.querySelector(".run-h .t"),rk=run.querySelector(".rk"),evs=run.querySelector(".ev"),logN=run.querySelector(".logt .n"),dlb=run.querySelector(".delib"),strm=run.querySelector(".strm"),nowEl=run.querySelector(".now"),stf=run.querySelector(".staff"),mapH=run.querySelector(".mapw"),note=run.querySelector(".rnote"),ans=bot.querySelector(".ans"),exw=bot.querySelector(".exw");
  shell(cur,tsQ,true);
  if(!direct){mkMap(mapH,()=>work,{live:true});mkMap($("#dxMap"),()=>work,{live:true})}else $("#dxMapF").hidden=true;
  const mapSync=()=>FM.forEach(m=>m.get()===work&&m.sync()),mapPulse=(a,b)=>FM.forEach(m=>m.get()===work&&m.pulse(a,b));
  const dropMap=()=>{FM.forEach(m=>{if(m.get()===work){m.kill();m.host.innerHTML=""}});$("#dxMapF").hidden=true};
+ const setNow=t=>{if(!nowEl||!t||nowEl.textContent===t)return;nowEl.textContent=t;nowEl.classList.remove("ink");void nowEl.offsetWidth;nowEl.classList.add("ink");clearTimeout(nowEl._i);nowEl._i=setTimeout(()=>nowEl.classList.remove("ink"),800)};
  const say=(t,cls)=>{note.hidden=false;note.className="rnote"+(cls?" "+cls:"");note.textContent=t};
  /* the rail: every stage keeps its place; pending, working, done or skipped */
  const PHL={plan:"Deliberating",desks:"Desks at work",review:"Weighing the claims",answer:"Writing the answer",audit:"Auditing the answer",doc:"Building the document",exhibits:"Setting the exhibits",firewall:"Checking the firewall"};
  const P=(k,st)=>{const li=run.querySelector(`.rail [data-ph="${k}"]`),ph=work.ph[k]=work.ph[k]||{};
-  if(st==="on"){ph.s=now();if(li)li.classList.add("on");swap(lbl,PHL[k])}
+  if(st==="on"){ph.s=now();if(li)li.classList.add("on");swap(lbl,PHL[k]);if(strm){strm.insertAdjacentHTML(k==="plan"?"afterbegin":"beforeend",sbLi(k));const li=k==="plan"?strm.firstElementChild:strm.lastElementChild;li.classList.add("new");setTimeout(()=>li.classList.remove("new"),reduce?0:1400)}}
   else if(st==="done"){ph.e=now();if(li){li.classList.remove("on");li.classList.add("done");li.querySelector(".num").textContent=fmt(ph.e-(ph.s??ph.e))}}
   else if(st==="skip"){ph.skip=1;if(li)li.classList.add("skip")}};
  /* the signal hub: every voice (orchestrator, answer, each desk) feeds the plates */
@@ -2019,7 +2222,7 @@ async function send(q){const KL=await KLIB.load().catch(()=>null),docPre=DOCSEL|
   work.steps.forEach((s,i)=>{if(s._t0&&s._live)setT($("#dm"+i),fmt(performance.now()-s._t0))});if(++tickN%4===0)mapSync()},250);
  const follow=()=>{if(stick)sc.scrollTop=1e9};
  /* F(short line for the card's log, fuller line for the Dispatch's log) */
- const F=(short,long)=>{const f=[now(),short,long||short];work.feed.push(f);if(short){evs.insertAdjacentHTML("beforeend",evLi(f));toEnd(evs);logN.textContent=evs.children.length}const ol=$("#olog");if(ol){ol.insertAdjacentHTML("beforeend",logLi(f));toEnd(ol)}toEnd(null)};
+ const F=(short,long)=>{const f=[now(),short,long||short];work.feed.push(f);if(strm&&f[2]){strm.insertAdjacentHTML("beforeend",stLi(f));{const li=strm.lastElementChild;li.classList.add("new");setTimeout(()=>li.classList.remove("new"),reduce?0:li.classList.contains("mo")?2200:1400)}foldStream(strm);setNow(plainT(f[2]))}if(short){evs.insertAdjacentHTML("beforeend",evLi(f));toEnd(evs);logN.textContent=evs.children.length}const ol=$("#olog");if(ol){ol.insertAdjacentHTML("beforeend",logLi(f));toEnd(ol)}toEnd(null)};
  const history=cur.turns.slice(-7,-1).map(t=>`${t.role==="user"?"User":"EXPIRA"}: ${t.content.slice(0,1200)}`).join("\n\n");
  const normStep=r=>{if(!r||!ROSTER[r.role])return null;const R=ROSTER[r.role];let tier=R.tiers.includes(r.tier)?r.tier:R.floor;if(TIERS[tier].n<TIERS[R.floor].n)tier=R.floor;if(depthDeep&&R.tiers.includes("high"))tier="high";
   return{role:r.role,tier,focus:clip(r.focus||"",42),task:String(r.task||""),why:String(r.why||""),after:(Array.isArray(r.after)?r.after:[]).map(Number).filter(n=>n>0&&n<=8),redo:0,web:!!(webOn&&WEB_ROLES.has(r.role)&&r.web!==false)}};
@@ -2034,7 +2237,7 @@ async function send(q){const KL=await KLIB.load().catch(()=>null),docPre=DOCSEL|
   let plan;
   if(direct){work.docPlan=docPre?{type:docPre,second:null,brief:q}:null;plan={title:q.split(/\s+/).slice(0,6).join(" "),kind:"direct answer",rationale:"Desks are off; answering directly.",steps:[]}}
   else{P("plan","on");let rawN=0;const dps=[dlb.querySelector("p")];
-   const paint=(th,partial)=>{th.forEach((t,i)=>{let el=dps[i];if(!el){el=document.createElement("p");dlb.append(el);dps[i]=el}if(el.textContent!==t)el.textContent=t;el.classList.toggle("typing",!!partial&&i===th.length-1)})};
+   let thN=0;const paint=(th,partial)=>{if(th.length>thN&&th.length>1){thN=th.length;setNow(th[th.length-2])}th.forEach((t,i)=>{let el=dps[i];if(!el){el=document.createElement("p");dlb.append(el);dps[i]=el}if(el.textContent!==t)el.textContent=t;el.classList.toggle("typing",!!partial&&i===th.length-1)})};
    plan=await sample.json(`You are the EXPIRA orchestrator (EXPIRA AI Systems, sister company of GSSC Integrated Corporation, Iloilo, Philippines). Think briefly, then staff this brief.
 ${KL?`The GSSC kernel ${KL.kernel_version} is loaded, with templates for: quotation, company_profile, contract, secretary_certificate, board_resolution, notarial_acknowledgment. Second signatories (for contract, secretary_certificate, board_resolution) come from: ${Object.keys(KL.kernel["02_governance"].active_officers).filter(k=>k!=="duke_y_demayo").join(", ")}. If the user asks for one of these documents, set "document" and staff the desks that gather its facts.${docPre?` The user has asked for a ${DOCT[docPre]}: set "document" with type "${docPre}".`:""}`:""}
 ${todayLine()} When the brief depends on current facts (prices, rates, rules, news), plan for the newest figures.
@@ -2046,7 +2249,7 @@ Reply with only JSON, keys in this order:
  "title": string (3-6 words), "kind": string (what sort of brief, under 8 words), "rationale": string (one sentence),
  "document": null, or {"type": "quotation"|"company_profile"|"contract"|"secretary_certificate"|"board_resolution"|"notarial_acknowledgment", "second_signatory": string or null, "brief": string (what the document must contain)} when the user asks for a GSSC document to be produced,
  "steps": [{"role": string, "focus": string (2-3 words naming this desk's slice, e.g. "Supplier rates"), "tier": string, "task": string (short phrase, sentence case, no full stop), "why": string (under 12 words), "web": boolean, "after": [1-based step numbers it needs]}]}
-${history?`Conversation so far:\n${history}\n\n`:""}New message: ${q}`,{modelTier:"quick",cache:false,signal:ctl.signal,onText:({text})=>{const p=peekPlan(text);if(p.thinking.length){work.map.thinking=p.thinking;paint(p.thinking,p.partial)}for(;rawN<p.steps.length;rawN++)addStep(p.steps[rawN]);follow()}});
+${history?`Conversation so far:\n${history}\n\n`:""}New message: ${q}`,{modelTier:"quick",cache:false,...IM,signal:ctl.signal,onText:({text})=>{const p=peekPlan(text);if(p.thinking.length){work.map.thinking=p.thinking;paint(p.thinking,p.partial)}for(;rawN<p.steps.length;rawN++)addStep(p.steps[rawN]);follow()}});
    const th=(Array.isArray(plan.thinking)&&plan.thinking.length?plan.thinking:work.map.thinking).map(String).filter(Boolean).slice(0,6);work.map.thinking=th;
    if(th.length)paint(th,false);else{dps[0].classList.remove("typing");dps[0].textContent=String(plan.rationale||"Planned the work.")}
    (Array.isArray(plan.steps)?plan.steps:[]).slice(rawN).forEach(addStep);
@@ -2068,7 +2271,7 @@ ${history?`Conversation so far:\n${history}\n\n`:""}New message: ${q}`,{modelTie
       onSources:list=>{const fresh=[];list.forEach(r=>{if(!r.url||work.map.pages.some(p=>p.url===r.url))return;const hh=hostOf(r.url);if(hh&&!work.map.pages.some(p=>hostOf(p.url)===hh))fresh.push(hh);work.map.pages.push({url:r.url,title:clip(r.title,140),date:r.published||null,ex:clip(r.excerpt,700),i,q:s._lq?clip(s._lq,90):""})});
        s.srcN+=list.length;pend[key]=(pend[key]||0)+20;$("#dq"+i).textContent=`${s.searches} search${s.searches>1?"es":""} · ${s.srcN} sources`;mapSync();fresh.slice(0,6).forEach((hh,j)=>setTimeout(()=>mapPulse("c","s:"+hh),160+j*110))},
       onError:code=>{if(["server_not_connected","needs_reauth","not_in_manifest","blocked_by_policy","selection_required"].includes(code)){webOn=false;say(MCP_COPY[code]||"Web research is unavailable.","warn")}F(null,`Web research failed for desk ${ROMAN[i]}${code?` (${esc(code)})`:""}.`)}}):null;
-    try{const r=await sample(brief(s,i),{modelTier:TIERS[s.tier].m,cache:false,signal:ctl.signal,...(tools?{tools}:{}),onText:({text})=>{pend[key]=(pend[key]||0)+Math.max(0,text.length-len);len=text.length;s.out=text;if(!s._raf)s._raf=requestAnimationFrame(()=>{s._raf=0;out.textContent=s.out;if(out.parentElement.classList.contains("show"))toEnd(out);const q=$("#dq"+i),v=(s.searches?`${s.searches} search${s.searches>1?"es":""} · `:"")+ft(tok(s.out))+" tokens";if(q&&q.textContent!==v)q.textContent=v})}});
+    try{const r=await sample(brief(s,i),{modelTier:TIERS[s.tier].m,cache:false,...IM,signal:ctl.signal,...(tools?{tools}:{}),onText:({text})=>{pend[key]=(pend[key]||0)+Math.max(0,text.length-len);len=text.length;s.out=text;if(!s._raf)s._raf=requestAnimationFrame(()=>{s._raf=0;out.textContent=s.out;if(out.parentElement.classList.contains("show"))toEnd(out);const q=$("#dq"+i),v=(s.searches?`${s.searches} search${s.searches>1?"es":""} · `:"")+ft(tok(s.out))+" tokens";if(q&&q.textContent!==v)q.textContent=v})}});
      outs[i]=r.text;s.out=r.text;return r.text}
     finally{s._live=false;think[key]=0;s.ms=performance.now()-s._t0;$("#dm"+i).textContent=fmt(s.ms);stE.className="st";swap(stE,"Filed");mapSync()}};
    const done=[];steps.forEach((s,i)=>done[i]=(async()=>{for(const n of s.after)if(n-1<i&&done[n-1])await done[n-1];const r=await runOne(i);F(`Desk ${ROMAN[i]} filed its notes`,`Desk ${ROMAN[i]} filed ${ft(tok(r))} tokens of notes in ${fmt(s.ms)}.`);return r})());
@@ -2095,7 +2298,7 @@ Desks:
 ${pend2.map(i=>`Step ${i+1} (${steps[i].role}${steps[i].focus?", "+steps[i].focus:""}) task: ${steps[i].task}\n${(outs[i]||"").slice(0,2600)}`).join("\n\n---\n\n")}
 
 Sources:
-${srcList||"(none: judge figures unsupported unless they are arithmetic from given inputs)"}`,{modelTier:arbTier,cache:false,signal:ctl.signal,...(arbTools?{tools:arbTools}:{})})}
+${srcList||"(none: judge figures unsupported unless they are arithmetic from given inputs)"}`,{modelTier:arbTier,cache:false,...IM,signal:ctl.signal,...(arbTools?{tools:arbTools}:{})})}
     catch(e){if(e&&e.code==="cancelled")throw e;rv=null;F("Verification unavailable","The decision agent could not return a ledger; the notes go forward unverified.")}
     think.O=0;work._va=0;const fail=[];
     for(const r of (rv&&Array.isArray(rv.desks))?rv.desks:[]){const i=Number(r.step)-1;if(!steps[i]||!pend2.includes(i))continue;steps[i].v=r.verdict==="fail"&&steps[i].redo<2?"fail":"pass";steps[i].feedback=r.reason;if(steps[i].v==="fail"){fail.push(i);F(`Returned desk ${ROMAN[i]}`,`Decision agent returned desk ${ROMAN[i]}: ${esc(r.reason||"it did not answer its task")}.`)}}
@@ -2124,7 +2327,7 @@ Style: precise, calm, editorial. Lead with the answer. Use "### " headings, "- "
 ${safe?"CLIENT-SAFE: never include supplier names or contacts, supplier costs or cost basis, margins, markup, bank details, facility locations or internal worksheets.":""}
 ${work.ledger&&work.ledger.claims.length?`Claims ledger, weighed by the decision agent. Cite a claim as [c3] right after the sentence that uses it. State supported and derived claims as fact; give partial and conflict claims with their caveat and date; present unsupported claims only as estimates or assumptions, or leave them out. Never introduce a figure, date or name that is not in the ledger or the user's message.\n${ledText()}\n\n`:""}${history?`Conversation so far:\n${history}\n\n`:""}${steps.length?`Desk notes (context only; the ledger decides what is true):\n${steps.map((s,i)=>`[${s.role}${s.focus?", "+s.focus:""}, ${s.tier} effort]\n${(outs[i]||"").slice(0,1800)}`).join("\n\n")}\n\n`:""}Latest message: ${q}`;
   const sst={h:[]};let first=true,sRaf=0;
-  const fin=await sample(input,{modelTier:steps.length?"default":"quick",cache:false,signal:ctl.signal,onText:({text})=>{pend.A=(pend.A||0)+Math.max(0,text.length-aText.length);aText=text;if(first){first=false;think.A=0}if(!sRaf)sRaf=requestAnimationFrame(()=>{sRaf=0;streamInto(ans,aText,sst);follow()})}});
+  const fin=await sample(input,{modelTier:steps.length?"default":"quick",cache:false,...IM,signal:ctl.signal,onText:({text})=>{pend.A=(pend.A||0)+Math.max(0,text.length-aText.length);aText=text;if(first){first=false;think.A=0}if(!sRaf)sRaf=requestAnimationFrame(()=>{sRaf=0;streamInto(ans,aText,sst);follow()})}});
   const fin2={text:fin.text};cancelAnimationFrame(sRaf);sRaf=0;aText=fin2.text;ans.innerHTML=md(fin2.text);think.A=0;work._aw=0;work.atok=tok(fin2.text);P("answer","done");F(null,`Composed the answer: about ${ft(tok(fin2.text))} tokens.`);
   /* the compiler's last pass: every factual line in the answer must trace to the ledger */
   if(work.ledger&&work.ledger.claims.length){P("audit","on");work._au=1;mapSync();
@@ -2181,12 +2384,12 @@ ${PG.length?`Web sources the desks consulted, newest first (use these urls in "s
    steps:steps.map(s=>({role:s.role,tier:s.tier,focus:s.focus,task:s.task,why:s.why,after:s.after,web:!!s.web,v:s.v,redo:s.redo,ms:s.ms,searches:s.searches||0,out:(s.out||"").slice(0,4000)})),web:M.pages.length,ledger:work.ledger?{claims:work.ledger.claims.map(c=>Object.assign({},c)),audit:work.ledger.audit||null}:null,atok:work.atok||tok(fin2.text),
    map:{thinking:M.thinking.slice(0,6).map(t=>clip(t,240)),rationale:clip(M.rationale,240),kind:clip(M.kind,80),calls:M.calls.slice(0,40),pages:M.pages.slice(0,30)}}});save();
   try{if(db)await db.collection("runs").doc("r"+Date.now()).set({ts:Date.now(),request:q.slice(0,160),steps:steps.map(s=>({role:s.role,tier:s.tier,focus:s.focus||"",verdict:s.v||"",redo:s.redo})),firewall:work.firewall})}catch(e){}
-  const k=cur.turns.length-1;bot.dataset.k=k;bot.classList.add("fresh");run.classList.remove("running");run.classList.add("settled");swap(lbl,summary(work));tEl.textContent=mmss(work.ms);rk.textContent=tokLine(cur.turns[k].work);
+  const k=cur.turns.length-1;bot.dataset.k=k;bot.classList.add("fresh");run.classList.remove("running");run.classList.add("settled");swap(lbl,summary(work));tEl.textContent=mmss(work.ms);setTimeout(()=>{if(!run.classList.contains("pinned")){run.classList.remove("open");run.querySelector(".run-h").setAttribute("aria-expanded","false")}},1100);rk.textContent=tokLine(cur.turns[k].work);
   run.querySelector("[data-read]").dataset.read=k;if(work.firewall==="blocked")ans.innerHTML=md(content);
-  bot.insertAdjacentHTML("beforeend",`<div class="bi">${inThis(ans.innerHTML)}</div><div class="filed capt bi"><span>Filed ${hhmm(Date.now())}</span><i class="dotsep"></i>${meta(content)}${acts(k)}</div>`);
+  bot.insertAdjacentHTML("beforeend",`<div class="bi">${inThis(ans.innerHTML)}</div>${fupsHTML(cur.turns[k].work)}<div class="filed capt bi"><span>Filed ${hhmm(Date.now())}</span><i class="dotsep"></i>${meta(content)}${acts(k)}</div>`);
   finishTop(cur.turns[k].work);
  }catch(e){
-  const code=e&&e.code;run.classList.remove("running");swap(lbl,code==="cancelled"?"Stopped":"Interrupted");run.querySelectorAll(".rail li.on").forEach(li=>{li.classList.remove("on");li.classList.add("stop")});
+  const code=e&&e.code;work.ms=now();run.classList.remove("running");run.classList.add("settled");swap(lbl,(code==="cancelled"?"Stopped":"Interrupted")+" after "+fmt(work.ms));if(code==="cancelled")setTimeout(()=>{if(!run.classList.contains("pinned")){run.classList.remove("open");run.querySelector(".run-h").setAttribute("aria-expanded","false")}},1100);run.querySelectorAll(".rail li.on").forEach(li=>{li.classList.remove("on");li.classList.add("stop")});
   if(e&&e.text)ans.innerHTML=md(e.text);F(code==="cancelled"?"Stopped at your request":"Interrupted",code==="cancelled"?"Stopped at your request.":"Interrupted.");
   if(code!=="cancelled")say(COPY[code]||"Something interrupted that. Send it again.");
   if(code==="not_granted"||code==="sampling_disabled")sample=null;save();
