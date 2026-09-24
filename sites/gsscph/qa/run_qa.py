@@ -73,6 +73,12 @@ def main():
                 if mode == "sandbox":   # the hosted preview: must scroll the compass without errors
                     J("window.scrollTo(0, document.getElementById('instrument').getBoundingClientRect().top + scrollY + innerHeight * 1.5)"); pg.wait_for_timeout(2500)
                     if errs: find("fail", f"{name}/sandbox", "errors in the compass: " + "; ".join(errs[:3]))
+                    # never two compass frames on screen at once (that read as a ghosted, doubled compass on iPhone)
+                    most = 0
+                    for k in range(12):
+                        J("window.scrollBy(0, innerHeight * .18)"); pg.wait_for_timeout(120)
+                        most = max(most, J("[...document.querySelectorAll('.print img')].filter(i => getComputedStyle(i).visibility === 'visible').length"))
+                    if most > 1: find("fail", f"{name}/sandbox", f"{most} compass frames visible at once (ghosting)")
                     ph = J("document.getElementById('phase').textContent + ' | ' + document.getElementById('now').textContent")
                     if not ph.strip(" |"): find("fail", f"{name}/sandbox", "the compass shows no state (frames not playing?)")
                     pg.close(); continue
