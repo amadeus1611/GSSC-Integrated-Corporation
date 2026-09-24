@@ -31,6 +31,8 @@ for token, key in (("{{SEAL}}", "seal"), ("{{WORDMARK}}", "wordmark")):
     if hashlib.sha256(base64.b64decode(a["base64"])).hexdigest() != a["sha256_of_decoded_image"]:
         raise SystemExit("HARD STOP: %s hash mismatch" % key)
     html = html.replace(token, "data:%s;base64,%s" % (a["mime_type"], a["base64"]))
+# EXPIRA's wordmark (from EXPIRA Console's own mask), for the sidebar
+html = html.replace("{{EXPIRA_WM}}", "data:image/png;base64," + base64.b64encode((HERE / "expira_wordmark.png").read_bytes()).decode())
 html = html.replace("{{ENTRIES}}", json.dumps(entries, ensure_ascii=False).replace("</", "<\\/"))
 assert "{{" not in html
 (HERE / "dist").mkdir(exist_ok=True)

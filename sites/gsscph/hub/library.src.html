@@ -1,191 +1,232 @@
 <title>GSSC Library</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Libre+Baskerville:ital,wght@0,400;1,400&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@200..600&family=Libre+Baskerville:ital@0;1&display=swap" rel="stylesheet">
 <style>
-/* The GSSC Library: every work we have built, on four shelves. The master's grammar: ivory paper and navy ink,
-   Libre Baskerville for names, Inter for the working text, the Categorical Header stamp (numeral, dash, category)
-   on each shelf, hairline rules, 1-2 px radii, tabular figures, and gold only for the mark, one rule and what you
-   can act on. At night the paper turns to the site's navy. */
+/* The GSSC Library, in EXPIRA's hand: EXPIRA is GSSC's technology, so the Library is set as one of its instruments.
+   Its tokens are EXPIRA Console's own (paper and ink, the light Inter, Baskerville for names, tracked capitals,
+   hairlines, the soft close), with the app's shell: a sidebar of shelves, a quiet top bar, and a start page that
+   greets you. Light, dark, or the system's, chosen under Settings. */
 :root{
-  --ground:#faf8f3; --ground-2:#f3efe4; --plate:#fffdf8; --well:#f3efe4;
-  --ink:#09173d; --ink-2:#4f5663; --ink-3:#7a8090; --navy:#0d2463;
-  --hair:rgba(9,23,61,.12); --hair-2:rgba(9,23,61,.2);
-  --gold:#a8862f; --gold-2:#c8a44d; --gold-wash:rgba(168,134,47,.09);
-  --glyph:#0d2463; --glyph-2:rgba(13,36,99,.35);
-  --shadow:0 1px 0 rgba(9,23,61,.04),0 18px 40px -30px rgba(9,23,61,.35);
-  --wm-filter:none;
-  --f-display:"Libre Baskerville","Baskerville","Hoefler Text",Georgia,serif;
+  --bg:#FAF8F3;--side:#F3EFE4;--panel:#FFFFFF;--well:#F4F1E8;--sheet:#FFFEFB;
+  --ink:#0B1A3F;--text:#2B303B;--soft:#5E6573;--mute:#8C919B;
+  --line:rgba(11,26,63,.09);--line-2:rgba(11,26,63,.16);--line-3:rgba(11,26,63,.26);
+  --gold:#A8862F;--gold-2:#C8A45A;--gold-wash:rgba(168,134,47,.08);--head:#C8A45A;
+  --ok:#2F6B4F;
+  --shadow:0 1px 1px rgba(11,26,63,.04),0 10px 30px -18px rgba(11,26,63,.28);
+  --mark-a:#2C3549;--mark-b:#09101E;--seal-bg:#FFFFFF;
+  --f-display:"Libre Baskerville","Hoefler Text",Georgia,"Times New Roman",serif;
   --f-body:"Inter",-apple-system,BlinkMacSystemFont,"Segoe UI","Helvetica Neue",Arial,sans-serif;
-  --tracked:.18em; --tracked-tight:.12em;
-  --soft:cubic-bezier(.16,1,.3,1);
+  --tracked:.18em;--tracked-tight:.12em;--tracked-num:-.012em;
+  --rule-hair:.5px;--rule-medium:1px;
+  --soft-close:cubic-bezier(0.16,1,0.3,1);--release:cubic-bezier(0.65,0,0.35,1);
+  --in:180ms;--out:600ms;
 }
 @media (prefers-color-scheme:dark){:root:not([data-theme="light"]){color-scheme:dark;
-  --ground:#09173d; --ground-2:#0b1c49; --plate:#0e1f4f; --well:#0b1a45;
-  --ink:#f3ecda; --ink-2:#b9bdc9; --ink-3:#8b91a3; --navy:#dfe5f5;
-  --hair:rgba(243,236,218,.12); --hair-2:rgba(243,236,218,.22);
-  --gold:#c8a44d; --gold-2:#e0c27c; --gold-wash:rgba(200,164,77,.12);
-  --glyph:#e8e0cc; --glyph-2:rgba(232,224,204,.35);
-  --shadow:0 1px 0 rgba(0,0,0,.2),0 22px 44px -30px rgba(0,0,0,.8);
-  --wm-filter:brightness(0) invert(.94) sepia(.2)}}
+  --bg:#0E1320;--side:#0A0F1A;--panel:#151C2C;--well:#121928;--sheet:#111827;
+  --ink:#EDE7D9;--text:#D9D3C5;--soft:#A3A8B3;--mute:#737A88;
+  --line:rgba(237,231,217,.07);--line-2:rgba(237,231,217,.13);--line-3:rgba(237,231,217,.22);
+  --gold:#C8A45A;--gold-2:#D9B873;--gold-wash:rgba(200,164,90,.09);--head:#E3C27E;--ok:#8FC3A6;
+  --shadow:0 1px 1px rgba(0,0,0,.3),0 14px 40px -18px rgba(0,0,0,.7);--mark-a:#C9C2B2;--mark-b:#8F98A8;--seal-bg:#EDE7D9}}
 :root[data-theme="dark"]{color-scheme:dark;
-  --ground:#09173d; --ground-2:#0b1c49; --plate:#0e1f4f; --well:#0b1a45;
-  --ink:#f3ecda; --ink-2:#b9bdc9; --ink-3:#8b91a3; --navy:#dfe5f5;
-  --hair:rgba(243,236,218,.12); --hair-2:rgba(243,236,218,.22);
-  --gold:#c8a44d; --gold-2:#e0c27c; --gold-wash:rgba(200,164,77,.12);
-  --glyph:#e8e0cc; --glyph-2:rgba(232,224,204,.35);
-  --shadow:0 1px 0 rgba(0,0,0,.2),0 22px 44px -30px rgba(0,0,0,.8);
-  --wm-filter:brightness(0) invert(.94) sepia(.2)}
+  --bg:#0E1320;--side:#0A0F1A;--panel:#151C2C;--well:#121928;--sheet:#111827;
+  --ink:#EDE7D9;--text:#D9D3C5;--soft:#A3A8B3;--mute:#737A88;
+  --line:rgba(237,231,217,.07);--line-2:rgba(237,231,217,.13);--line-3:rgba(237,231,217,.22);
+  --gold:#C8A45A;--gold-2:#D9B873;--gold-wash:rgba(200,164,90,.09);--head:#E3C27E;--ok:#8FC3A6;
+  --shadow:0 1px 1px rgba(0,0,0,.3),0 14px 40px -18px rgba(0,0,0,.7);--mark-a:#C9C2B2;--mark-b:#8F98A8;--seal-bg:#EDE7D9}
 
-*{box-sizing:border-box}
-body{margin:0;background:var(--ground);color:var(--ink);font:400 15px/1.55 var(--f-body);-webkit-font-smoothing:antialiased}
-::selection{background:var(--gold-wash)}
-a{color:inherit}
-:focus-visible{outline:1px solid var(--gold);outline-offset:3px;border-radius:2px}
-.wrap{max-width:1180px;margin:0 auto;padding-inline:clamp(16px,4vw,48px);padding-block:0 56px}
+html,body{height:100%}
+body{margin:0;background:var(--bg);color:var(--text);font:300 14.5px/1.6 var(--f-body);-webkit-font-smoothing:antialiased;overflow:hidden}
+*{box-sizing:border-box} button,input{font:inherit;color:inherit}
+::selection{background:var(--gold-wash);color:var(--ink)}
+:focus-visible{outline:var(--rule-medium) solid var(--gold);outline-offset:2px;border-radius:3px}
+.sr{position:absolute;left:-9999px}
+.num{font-variant-numeric:tabular-nums;letter-spacing:var(--tracked-num)}
+.cap{font-size:10px;font-weight:400;letter-spacing:var(--tracked);text-transform:uppercase;color:var(--mute)}
+.capt{font-size:10px;font-weight:400;letter-spacing:var(--tracked-tight);text-transform:uppercase;color:var(--mute)}
+@keyframes blurIn{from{opacity:.001;filter:blur(5px);transform:translateY(6px)}to{opacity:1;filter:none;transform:none}}
+.bi{animation:blurIn .9s var(--soft-close) both;animation-delay:calc(var(--d,0) * 55ms)}
+@keyframes breathe{50%{opacity:.25}}
+@keyframes float{50%{transform:translateY(-3px)}}
+html.theming,html.theming *{transition:background-color .7s var(--soft-close),color .7s var(--soft-close),border-color .7s var(--soft-close),fill .7s var(--soft-close)!important}
 
-/* the masthead: the kernel's lockup, the library's name, the edition */
-.mast{display:flex;align-items:center;justify-content:space-between;gap:16px;padding-block:28px 18px}
-.lock{display:flex;align-items:center;gap:12px;text-decoration:none}
-.lock .seal{width:34px;height:34px;display:block}
-.lock .wm{height:17px;width:auto;display:block;filter:var(--wm-filter)}
-.mast .where{font:600 11px/1.3 var(--f-body);letter-spacing:var(--tracked);text-transform:uppercase;color:var(--ink-2);text-align:right}
-.mast .where b{display:block;font-weight:600;color:var(--ink)}
-.rule{position:relative;height:1px;background:var(--hair-2)}
-.rule::before{content:"";position:absolute;left:0;top:0;height:1px;width:96px;background:var(--gold)}
+.app{display:flex;height:100%}
 
-/* the opening: what this is, and how many */
-.open{display:grid;grid-template-columns:minmax(0,1.35fr) minmax(0,1fr);gap:28px 56px;align-items:end;padding-block:44px 34px}
-.chs{display:flex;align-items:center;gap:14px;margin:0 0 18px}
-.chs .num{font:400 26px/1 var(--f-display);color:var(--gold)}
-.chs .dash{width:22px;height:1px;background:var(--gold)}
-.chs .cat{font:600 11px/1 var(--f-body);letter-spacing:var(--tracked);text-transform:uppercase;padding:6px 9px;border:1px solid var(--hair-2);border-radius:1px;color:var(--ink)}
-h1{margin:0;font:400 clamp(30px,4.2vw,46px)/1.12 var(--f-display);letter-spacing:-.012em;text-wrap:balance;color:var(--ink)}
-h1 em{font-style:italic;color:var(--gold)}
-.open p{margin:0;max-width:44ch;color:var(--ink-2);font-size:15.5px}
-.tally{display:flex;gap:0;margin-top:22px;border-top:1px solid var(--hair)}
-.tally div{flex:1;padding:12px 16px 0 0}
-.tally div + div{padding-left:16px;border-left:1px solid var(--hair)}
-.tally b{white-space:nowrap;display:block;font:400 26px/1.1 var(--f-display);font-variant-numeric:lining-nums tabular-nums;color:var(--ink)}
-.tally span{font:600 11px/1.3 var(--f-body);letter-spacing:var(--tracked-tight);text-transform:uppercase;color:var(--ink-3)}
+/* ---------- the sidebar: the mark, the shelves, what changed lately, and who this belongs to ---------- */
+.side{width:256px;flex:none;background:var(--side);border-right:var(--rule-hair) solid var(--line-2);display:flex;flex-direction:column;padding:16px 10px 12px;z-index:20}
+.brand{display:flex;align-items:center;gap:10px;padding:2px 8px 4px}
+.brand .mark{width:40px}
+.wm{width:70px;height:15px;background:var(--ink);-webkit-mask:url({{EXPIRA_WM}}) center/contain no-repeat;mask:url({{EXPIRA_WM}}) center/contain no-repeat}
+.brand-sub{padding:0 8px 16px 58px;margin-top:-2px}
+.find{position:relative;margin:0 8px 12px}
+.find input{width:100%;border:0;border-bottom:var(--rule-hair) solid var(--line-3);background:transparent;padding:6px 26px 6px 22px;outline:none;font-size:13px}
+.find input::placeholder{color:var(--mute)}
+.find input:focus{border-bottom-color:var(--gold)}
+.find svg{position:absolute;left:0;top:9px;width:14px;height:14px;color:var(--mute)}
+.find .kb{position:absolute;right:0;top:6px}
+.kb{font:400 10px var(--f-body);letter-spacing:.06em;color:var(--mute);border:var(--rule-hair) solid var(--line-2);border-radius:3px;padding:1px 5px}
+.nav{display:flex;flex-direction:column;gap:1px;margin-bottom:10px}
+.navb{display:flex;align-items:center;gap:10px;border:0;background:transparent;padding:8px 8px;border-radius:5px;cursor:pointer;color:var(--text);text-align:left;font-size:13.5px;transition:background var(--out) var(--soft-close),color var(--out) var(--soft-close)}
+.navb:hover{background:var(--line);transition-duration:var(--in)}
+.navb.on{background:var(--line-2);color:var(--ink)}
+.navb .n{width:18px;flex:none;font:400 12px var(--f-display);color:var(--gold);text-align:center}
+.navb svg{width:15px;height:15px;color:var(--soft);flex:none;margin:0 1.5px}
+.navb .ct{margin-left:auto;font-size:11px;color:var(--mute)}
+.sh{padding:12px 8px 4px}
+.recents{flex:1;overflow:auto;margin:0 -4px;padding:0 4px 8px}
+.item{display:block;width:100%;text-align:left;border:0;background:transparent;padding:6px 8px;border-radius:5px;cursor:pointer;color:var(--soft);font-size:12.5px;text-decoration:none;transition:background var(--out) var(--soft-close),color var(--out) var(--soft-close)}
+.item:hover{background:var(--line);color:var(--text);transition-duration:var(--in)}
+.item .it-t{display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.item .it-m{display:block;font-size:10.5px;color:var(--mute);max-height:0;opacity:0;overflow:hidden;transition:max-height .6s var(--soft-close),opacity .4s ease}
+.item:hover .it-m,.item:focus-visible .it-m{max-height:16px;opacity:1}
+.foot{display:flex;align-items:center;gap:10px;padding:12px 8px 0;border-top:var(--rule-hair) solid var(--line-2)}
+.av{width:28px;height:28px;border-radius:50%;background:var(--seal-bg);border:var(--rule-hair) solid var(--line-2);display:grid;place-items:center;flex:none;overflow:hidden}
+.av img{width:24px;height:24px}
+.who{font-size:12.5px;line-height:1.3;color:var(--text);min-width:0}.who small{display:block;color:var(--mute);font-size:11px}
+.ib{width:30px;height:30px;display:grid;place-items:center;border:0;background:transparent;border-radius:5px;cursor:pointer;color:var(--soft);flex:none;transition:background var(--out) var(--soft-close),color var(--out) var(--soft-close)}
+.ib:hover,.ib[aria-expanded="true"]{background:var(--line);color:var(--ink);transition-duration:var(--in)}
+.ib svg{width:15px;height:15px}
 
-/* the finder: one search field and the four shelves as filters */
-.finder{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:var(--ground);display:flex;flex-wrap:wrap;align-items:center;gap:10px 18px;padding-block:14px;border-bottom:1px solid var(--hair)}
-.search{position:relative;flex:1 1 280px;max-width:420px}
-.search input{width:100%;height:40px;padding:0 44px 0 38px;border:1px solid var(--hair-2);border-radius:2px;background:var(--plate);color:var(--ink);font:400 15px var(--f-body)}
-.search input::placeholder{color:var(--ink-3)}
-.search input:focus{outline:none;border-color:var(--gold)}
-.search svg{position:absolute;left:12px;top:12px;width:16px;height:16px;stroke:var(--ink-3);fill:none;stroke-width:1.5}
-.search kbd{position:absolute;right:10px;top:10px;font:500 11px/18px var(--f-body);padding:0 6px;border:1px solid var(--hair-2);border-radius:2px;color:var(--ink-3)}
-.shelves{display:flex;flex-wrap:wrap;gap:6px}
-.shelves button{height:32px;padding:0 12px;border:1px solid var(--hair);border-radius:2px;background:none;color:var(--ink-2);font:600 11px/1 var(--f-body);letter-spacing:var(--tracked-tight);text-transform:uppercase;cursor:pointer;transition:border-color .5s var(--soft),color .5s var(--soft),background .5s var(--soft)}
-.shelves button:hover{border-color:var(--hair-2);color:var(--ink)}
-.shelves button[aria-pressed="true"]{border-color:var(--gold);color:var(--ink);background:var(--gold-wash)}
-.shelves button i{font-style:normal;font-family:var(--f-display);font-size:13px;letter-spacing:0;text-transform:none;margin-right:7px;color:var(--gold)}
+/* ---------- settings: a small menu that rises from the gear ---------- */
+.menu{position:fixed;z-index:85;width:268px;background:var(--panel);border:var(--rule-hair) solid var(--line-3);border-radius:8px;box-shadow:var(--shadow);padding:6px;opacity:0;visibility:hidden;transform:translateY(6px) scale(.985);filter:blur(4px);pointer-events:none;transform-origin:0 100%;transition:opacity .35s var(--soft-close),transform .7s var(--soft-close),filter .5s var(--soft-close),visibility 0s .7s}
+.menu.open{opacity:1;visibility:visible;transform:none;filter:none;pointer-events:auto;transition-delay:0s}
+.menu .mh{padding:8px 8px 6px}
+.seg{display:grid;grid-template-columns:repeat(3,1fr);gap:2px;margin:2px 4px 4px;padding:2px;border-radius:6px;background:var(--well);border:var(--rule-hair) solid var(--line-2)}
+.seg button{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;padding:8px 4px;font-size:11px;color:var(--soft);border:0;background:transparent;border-radius:4px;cursor:pointer;transition:background var(--out) var(--soft-close),color var(--out) var(--soft-close)}
+.seg button svg{width:15px;height:15px}
+.seg button[aria-checked="true"]{background:var(--panel);color:var(--ink);box-shadow:0 1px 2px rgba(0,0,0,.12)}
+.menu .mi{display:flex;align-items:center;gap:10px;width:100%;border:0;background:transparent;padding:8px;border-radius:5px;cursor:pointer;text-align:left;font-size:13px;color:var(--text);transition:background var(--out) var(--soft-close)}
+.menu .mi:hover{background:var(--line);transition-duration:var(--in)}
+.menu .mi svg{width:14px;height:14px;color:var(--soft);flex:none}
+.menu .sep{height:var(--rule-hair);background:var(--line-2);margin:6px 4px}
+.menu .note{padding:4px 8px 6px;font-size:11.5px;color:var(--mute);line-height:1.5}
 
-/* a shelf: its stamp, its note, and its works */
-.shelf{padding-top:40px}
-.shelf-head{display:flex;align-items:baseline;justify-content:space-between;gap:16px;margin-bottom:18px}
-.shelf-head .chs{margin:0}
-.shelf-head p{margin:0;color:var(--ink-3);font-size:13.5px;text-align:right}
-.grid{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:18px}
-.grid > .work{grid-column:span 2}
-.grid[data-n="2"] > .work{grid-column:span 3}
-/* a shelf of one: the work lies wide, its mark and name on the left, what it is for in the middle, the actions right */
-.grid[data-n="1"] > .work{grid-column:1 / -1;display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,1.3fr) auto;grid-template-rows:auto 1fr;align-items:start}
-.grid[data-n="1"] .top{grid-column:1;grid-row:1}
-.grid[data-n="1"] .formal{grid-column:1;grid-row:2;margin-bottom:20px}
-.grid[data-n="1"] .purpose{grid-column:2;grid-row:1 / span 2;margin:20px 20px 20px 0;padding-left:24px;border-left:1px solid var(--hair);font-size:15px}
-.grid[data-n="1"] .foot{grid-column:3;grid-row:1 / span 2;border-top:0;border-left:1px solid var(--hair);margin:0;height:100%;flex-direction:column;align-items:stretch;justify-content:center;gap:10px;padding:20px 24px}
-.grid[data-n="1"] .foot .date{margin:0 0 4px}
-.grid[data-n="1"] .url{grid-column:1 / -1}
+/* ---------- the main column ---------- */
+.main{flex:1;min-width:0;display:flex;flex-direction:column;position:relative}
+.top{height:50px;flex:none;display:flex;align-items:center;gap:10px;padding:0 16px;border-bottom:var(--rule-hair) solid transparent;transition:border-color var(--out) var(--soft-close)}
+.main.scrolled .top{border-bottom-color:var(--line-2)}
+#menuBtn{display:none}
+.crumb{font:400 12.5px var(--f-body);color:var(--mute);white-space:nowrap;display:flex;align-items:center;gap:6px}
+.crumb::after{content:"/";color:var(--line-3)}
+.ttl{font:400 13.5px var(--f-display);color:var(--ink);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.top .r{margin-left:auto;display:flex;align-items:center;gap:6px}
+.sig{display:flex;align-items:center;gap:7px;padding:0 6px}
+.sig i{width:5px;height:5px;border-radius:50%;background:var(--ok);animation:breathe 3.2s var(--release) infinite}
+.scroll{flex:1;overflow-y:auto;padding:0 20px}
+.page{max-width:760px;margin:0 auto;padding:26px 0 64px}
 
-/* a work: a plate with its drawn mark, its name, what it is for, and the two things you do with it */
-.work{position:relative;display:flex;flex-direction:column;background:var(--plate);border:1px solid var(--hair);border-top:2px solid var(--ink);border-radius:0 0 2px 2px;box-shadow:var(--shadow);transition:border-color .6s var(--soft),transform .6s var(--soft)}
-.work:hover{border-color:var(--hair-2);border-top-color:var(--gold);transform:translateY(-2px)}
-.work .top{display:flex;gap:16px;padding:20px 20px 0}
-.work .mark{flex:none;width:68px;height:68px;border:1px solid var(--hair);border-radius:1px;background:var(--well);display:grid;place-items:center}
-.work .mark svg{width:46px;height:46px;overflow:visible}
-.work .mark .g{fill:none;stroke:var(--glyph);stroke-width:1.2;stroke-linecap:round;stroke-linejoin:round}
-.work .mark .g2{fill:none;stroke:var(--glyph-2);stroke-width:1;stroke-linecap:round}
-.work .mark .a{fill:none;stroke:var(--gold);stroke-width:1.3;stroke-linecap:round;stroke-linejoin:round}
-.work .mark .af{fill:var(--gold);stroke:none}
-.work .id{min-width:0;flex:1}
-.work .kind{display:flex;justify-content:space-between;gap:10px;font:600 11px/1.3 var(--f-body);letter-spacing:var(--tracked-tight);text-transform:uppercase;color:var(--ink-3)}
-.work .kind .st{color:var(--gold)}
-.work h3{margin:8px 0 0;font:400 20px/1.25 var(--f-display);letter-spacing:-.005em;color:var(--ink);text-wrap:balance}
-.work .formal{margin:12px 20px 0;font:italic 400 13px/1.45 var(--f-display);color:var(--ink-2)}
-.work .purpose{margin:10px 20px 0;color:var(--ink-2);font-size:14px;line-height:1.55}
-.work .foot{margin-top:auto;display:flex;align-items:center;gap:12px;padding:16px 20px 16px;border-top:1px solid var(--hair);margin-inline:0;margin-block-start:18px}
-.work .date{white-space:nowrap;font:500 12px/1 var(--f-body);font-variant-numeric:tabular-nums;color:var(--ink-3);letter-spacing:.02em;margin-right:auto}
-.btn{white-space:nowrap;justify-content:center;display:inline-flex;align-items:center;gap:8px;height:34px;padding:0 14px;border-radius:2px;font:600 11.5px/1 var(--f-body);letter-spacing:var(--tracked-tight);text-transform:uppercase;text-decoration:none;cursor:pointer;transition:background .5s var(--soft),border-color .5s var(--soft),color .5s var(--soft)}
-.btn.open-it{background:var(--ink);color:var(--ground);border:1px solid var(--ink)}
-.btn.open-it:hover{background:var(--gold);border-color:var(--gold);color:#fffdf8}
-.btn.copy{background:none;border:1px solid var(--hair-2);color:var(--ink-2)}
-.btn.copy:hover{border-color:var(--gold);color:var(--ink)}
-.btn.copy.done{border-color:var(--gold);color:var(--gold)}
-.btn svg{width:12px;height:12px;stroke:currentColor;fill:none;stroke-width:1.6}
-/* the link itself, as text you can select, for anyone whose clipboard refuses */
-.work .url{display:none;margin:0 20px 14px;font:400 12px/1.4 ui-monospace,SFMono-Regular,Menlo,monospace;color:var(--ink-2);word-break:break-all;user-select:all}
+/* the start: the date, the mark, a greeting, and how much is here */
+.hero{display:flex;flex-direction:column;align-items:center;padding:26px 0 8px;text-align:center}
+.dateline{display:flex;align-items:center;gap:14px;margin-bottom:26px}
+.dateline::before,.dateline::after{content:"";width:40px;height:var(--rule-hair);background:var(--line-3)}
+.mark-w{width:132px;margin-bottom:20px;animation:float 7s ease-in-out infinite}
+.mark-w svg{width:100%;display:block}
+.greet{font:400 clamp(22px,2.8vw,30px)/1.25 var(--f-display);color:var(--ink);margin:0 0 10px;text-wrap:balance}
+.greet em{font-style:italic;color:var(--gold);background:linear-gradient(100deg,var(--gold) 0 40%,var(--head) 50%,var(--gold) 60% 100%);background-size:300% 100%;background-position:100% 0;-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;animation:breath 9s var(--release) 2.4s infinite}
+@keyframes breath{0%,72%{background-position:100% 0}100%{background-position:-50% 0}}
+.ready{display:flex;align-items:center;gap:8px;margin:0}
+.ready i{width:5px;height:5px;border-radius:50%;background:var(--ok);animation:breathe 3.2s var(--release) infinite}
+.lede{margin:18px 0 0;max-width:52ch;color:var(--soft);font-size:14px}
+
+/* the contents: each shelf a heading and a panel of works */
+.shelf{margin-top:34px}
+.shelf-h{display:flex;align-items:baseline;gap:10px;margin:0 0 10px;padding:0 2px}
+.shelf-h .n{font:400 13px var(--f-display);color:var(--gold);width:22px}
+.shelf-h h2{margin:0;font:400 16px var(--f-display);color:var(--ink)}
+.shelf-h .lead{flex:1;border-bottom:var(--rule-hair) dotted var(--line-3);transform:translateY(-4px)}
+.shelf-h .note{font:italic 400 12.5px var(--f-display);color:var(--soft)}
+.panel{background:var(--panel);border:var(--rule-hair) solid var(--line-2);border-radius:6px;box-shadow:var(--shadow);overflow:hidden}
+.work{display:grid;grid-template-columns:44px minmax(0,1fr) auto;gap:4px 16px;align-items:start;padding:16px 16px 16px 14px;transition:background var(--out) var(--soft-close)}
+.work + .work{border-top:var(--rule-hair) solid var(--line-2)}
+.work:hover{background:var(--sheet);transition-duration:var(--in)}
+.glyph{width:44px;height:44px;border-radius:6px;background:var(--well);border:var(--rule-hair) solid var(--line-2);display:grid;place-items:center;margin-top:2px}
+.glyph svg{width:30px;height:30px;overflow:visible}
+.glyph .g{fill:none;stroke:var(--soft);stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round}
+.glyph .g2{fill:none;stroke:var(--line-3);stroke-width:1.3;stroke-linecap:round}
+.glyph .a{fill:none;stroke:var(--gold);stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round}
+.glyph .af{fill:var(--gold)}
+.w-t{display:flex;align-items:baseline;gap:10px;flex-wrap:wrap}
+.w-t h3{margin:0;font:400 15.5px/1.35 var(--f-display);color:var(--ink)}
+.st{font-size:9.5px;letter-spacing:var(--tracked-tight);text-transform:uppercase;color:var(--gold);border:var(--rule-hair) solid color-mix(in srgb,var(--gold) 55%,transparent);border-radius:3px;padding:1px 6px}
+.formal{margin:3px 0 0;font:italic 400 12px/1.45 var(--f-display);color:var(--mute)}
+.purpose{margin:6px 0 0;font-size:13.5px;line-height:1.55;color:var(--soft)}
+.w-r{display:flex;flex-direction:column;align-items:flex-end;gap:10px;padding-top:2px}
+.w-r .date{font-size:11px;color:var(--mute);white-space:nowrap}
+.acts{display:flex;align-items:center;gap:4px}
+.open-it{display:flex;align-items:center;gap:7px;border:var(--rule-hair) solid var(--line-2);background:transparent;border-radius:5px;padding:5px 10px;font-size:12px;color:var(--ink);text-decoration:none;white-space:nowrap;transition:border-color var(--out) var(--soft-close),background var(--out) var(--soft-close),color var(--out) var(--soft-close)}
+.open-it:hover{border-color:var(--gold);background:var(--gold-wash);transition-duration:var(--in)}
+.open-it svg{width:11px;height:11px}
+.url{grid-column:2 / -1;display:none;margin:6px 0 0;font:400 11.5px/1.4 ui-monospace,SFMono-Regular,Menlo,monospace;color:var(--soft);word-break:break-all;user-select:all}
 .work.show-url .url{display:block}
+.empty{margin:40px 0;text-align:center;font:italic 400 14px var(--f-display);color:var(--soft)}
+.colophon{margin-top:44px;padding-top:14px;border-top:var(--rule-hair) solid var(--line-2);display:flex;justify-content:space-between;gap:10px 24px;flex-wrap:wrap;font-size:12px;color:var(--mute)}
+.colophon p{margin:0;max-width:56ch}
 
-.empty{padding:48px 0;color:var(--ink-2);font:italic 400 16px var(--f-display)}
-.shelf[hidden],.work[hidden]{display:none!important}
+.toasts{position:fixed;left:50%;bottom:40px;transform:translateX(-50%);z-index:80;pointer-events:none}
+.toast{background:var(--ink);color:var(--bg);font-size:12.5px;padding:7px 14px;border-radius:5px;box-shadow:var(--shadow);opacity:0;transform:translateY(6px);filter:blur(3px);transition:opacity .35s var(--soft-close),transform .7s var(--soft-close),filter .5s var(--soft-close)}
+.toast.on{opacity:1;transform:none;filter:none}
+.work[hidden],.shelf[hidden]{display:none!important}
 
-/* the colophon */
-.colophon{margin-top:64px;padding-top:18px;border-top:1px solid var(--hair-2);display:grid;grid-template-columns:1fr auto;gap:12px 40px;color:var(--ink-3);font-size:13px}
-.colophon p{margin:0;max-width:60ch}
-.colophon b{color:var(--ink-2);font-weight:500}
-.colophon .ed{font:600 11px/1.5 var(--f-body);letter-spacing:var(--tracked-tight);text-transform:uppercase;text-align:right}
-
-@media (max-width:1020px) and (min-width:761px){ .grid > .work{grid-column:span 3} }
-@media (max-width:760px){
-  .open{grid-template-columns:1fr;padding-block:32px 24px}
-  .mast .where{display:none}
-  .grid{grid-template-columns:1fr} .grid > .work,.grid[data-n] > .work{grid-column:1 / -1}
-  .grid[data-n="1"] > .work{display:flex}
-  .grid[data-n="1"] .purpose{margin:10px 20px 0;padding-left:0;border-left:0;font-size:14px}
-  .grid[data-n="1"] .foot{flex-direction:row;align-items:center;border-left:0;border-top:1px solid var(--hair);margin-top:18px;padding:16px 20px;height:auto}
-  .grid[data-n="1"] .foot .date{margin:0 auto 0 0}
-  .shelf-head{flex-direction:column;align-items:flex-start;gap:8px}
-  .shelf-head p{text-align:left}
-  .colophon{grid-template-columns:1fr} .colophon .ed{text-align:left}
-  .search kbd{display:none}
+@media (max-width:860px){
+  .side{position:fixed;left:0;top:0;bottom:0;transform:translateX(-100%);transition:transform var(--out) var(--soft-close);box-shadow:var(--shadow)}
+  .app.drawer .side{transform:none}
+  #menuBtn{display:grid}
+  .scrim{position:fixed;inset:0;z-index:15;background:rgba(9,16,30,.25);opacity:0;pointer-events:none;transition:opacity var(--out) var(--soft-close)}
+  .app.drawer .scrim{opacity:1;pointer-events:auto}
+  .work{grid-template-columns:40px minmax(0,1fr)}
+  .glyph{width:40px;height:40px}
+  .w-r{grid-column:2;flex-direction:row;align-items:center;justify-content:space-between;padding-top:8px}
+  .shelf-h .note{display:none}
 }
-@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+@media (prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important}}
 </style>
 
-<div class="wrap">
-  <header class="mast">
-    <a class="lock" href="#top" aria-label="GSSC Integrated Corporation"><img class="seal" src="{{SEAL}}" alt=""><img class="wm" src="{{WORDMARK}}" alt="GSSC"></a>
-    <div class="where"><b>Internal Library</b><span id="edition"></span></div>
-  </header>
-  <div class="rule" id="top"></div>
-
-  <section class="open">
-    <div>
-      <div class="chs"><span class="num">§</span><i class="dash"></i><span class="cat">Internal Library</span></div>
-      <h1>Every work we have built, in <em>one</em> place.</h1>
+<div class="app" id="app">
+  <nav class="side" id="side" aria-label="Library">
+    <div class="brand"><svg class="mark" viewBox="0 0 1413 425" role="img" aria-label="EXPIRA mark"><polygon points="0,0 233,0 391,100 206,425 40,425 0,302" fill="var(--mark-a)"/><polygon points="233,0 728,0 391,100" fill="var(--gold)"/><polygon points="391,100 728,0 778,0 871,225 1166,425 1058,425" fill="var(--mark-a)"/><polygon points="391,100 1058,425 206,425" fill="var(--mark-b)"/><polygon points="918,0 1043,0 1408,425 1241,425 968,192" fill="var(--gold)"/><polygon points="1043,0 1340,0 1408,425" fill="var(--mark-b)"/></svg><span class="wm" role="img" aria-label="EXPIRA"></span></div>
+    <div class="brand-sub capt">Library</div>
+    <label class="find" for="q"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.1" aria-hidden="true"><circle cx="7" cy="7" r="4.5"/><path d="M10.5 10.5L14 14"/></svg><span class="sr">Find a work</span><input id="q" type="search" placeholder="Find a work" autocomplete="off"><span class="kb">/</span></label>
+    <div class="nav" id="nav"></div>
+    <div class="recents"><div class="sh cap">Recently updated</div><div id="recent"></div></div>
+    <div class="foot">
+      <span class="av"><img src="{{SEAL}}" alt=""></span><span class="who">GSSC Integrated Corporation<small>Internal Library</small></span>
+      <button class="ib" id="setBtn" style="margin-left:auto" aria-label="Settings" aria-haspopup="menu" aria-expanded="false" aria-controls="settings" title="Settings"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1"><circle cx="8" cy="8" r="2.1"/><path d="M8 1.8l1.1 1.6 1.9-.4.5 1.9 1.8.8-.6 1.8 1.1 1.6-1.6 1.1.2 1.9-1.9.3-.8 1.8-1.8-.7L8 14.2l-1.1-1.6-1.9.4-.5-1.9-1.8-.8.6-1.8L2.2 7l1.6-1.1-.2-1.9 1.9-.3.8-1.8 1.8.7z"/></svg></button>
     </div>
-    <div>
-      <p>Open anything GSSC uses from here. Each link stays the same when its work is updated, so a bookmark to this page is all you need.</p>
-      <div class="tally" id="tally"></div>
-    </div>
-  </section>
+  </nav>
+  <div class="scrim" id="scrim"></div>
 
-  <div class="finder">
-    <label class="search" for="q"><svg viewBox="0 0 16 16" aria-hidden="true"><circle cx="7" cy="7" r="5"/><path d="M11 11l3.5 3.5"/></svg>
-      <input id="q" type="search" placeholder="Find a work" autocomplete="off" aria-label="Find a work"><kbd>/</kbd></label>
-    <div class="shelves" id="filters" role="group" aria-label="Shelves"></div>
+  <div class="menu" id="settings" role="menu" aria-label="Settings">
+    <div class="mh cap">Appearance</div>
+    <div class="seg" role="radiogroup" aria-label="Appearance">
+      <button type="button" role="radio" data-theme-set="system" aria-checked="true"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.1"><rect x="2" y="3" width="12" height="8.5" rx="1"/><path d="M6 14h4M8 11.5V14"/></svg>System</button>
+      <button type="button" role="radio" data-theme-set="light" aria-checked="false"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.1"><circle cx="8" cy="8" r="2.8"/><path d="M8 1.5v1.6M8 12.9v1.6M1.5 8h1.6M12.9 8h1.6M3.4 3.4l1.1 1.1M11.5 11.5l1.1 1.1M3.4 12.6l1.1-1.1M11.5 4.5l1.1-1.1"/></svg>Light</button>
+      <button type="button" role="radio" data-theme-set="dark" aria-checked="false"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.1"><path d="M13 9.6A5.5 5.5 0 0 1 6.4 3a5.5 5.5 0 1 0 6.6 6.6z"/></svg>Dark</button>
+    </div>
+    <div class="sep"></div>
+    <button class="mi" type="button" id="copyLib" role="menuitem"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.1"><rect x="5" y="5" width="8.5" height="8.5" rx="1.2"/><path d="M3 10.5V3.8A1.3 1.3 0 0 1 4.3 2.5H10.5"/></svg>Copy the Library's link</button>
+    <p class="note" id="setNote"></p>
   </div>
 
-  <main id="shelves"></main>
-  <p class="empty" id="empty" hidden>Nothing on the shelves matches that. Try another word, or clear the search.</p>
-
-  <footer class="colophon">
-    <p><b>Opening a work.</b> Each opens in a new tab. If one asks you to sign in or says it is unavailable, it has not been shared with you yet: ask Duke Y. Demayo, President, for access.</p>
-    <div class="ed" id="colEd"></div>
-  </footer>
+  <div class="main" id="main">
+    <header class="top">
+      <button class="ib" id="menuBtn" aria-label="Open the shelves" aria-controls="side"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1"><rect x="1.5" y="2.5" width="13" height="11" rx="1.5"/><path d="M6 2.5v11"/></svg></button>
+      <span class="crumb">Library</span><span class="ttl" id="ttl">All works</span>
+      <div class="r"><span class="sig capt"><i></i><span id="sigT">Current</span></span></div>
+    </header>
+    <div class="scroll" id="scroll"><div class="page">
+      <section class="hero">
+        <div class="dateline cap bi" id="dateline"></div>
+        <div class="mark-w bi" style="--d:1"><svg viewBox="0 0 1413 425" role="img" aria-label="EXPIRA mark"><polygon points="0,0 233,0 391,100 206,425 40,425 0,302" fill="var(--mark-a)"/><polygon points="233,0 728,0 391,100" fill="var(--gold)"/><polygon points="391,100 728,0 778,0 871,225 1166,425 1058,425" fill="var(--mark-a)"/><polygon points="391,100 1058,425 206,425" fill="var(--mark-b)"/><polygon points="918,0 1043,0 1408,425 1241,425 968,192" fill="var(--gold)"/><polygon points="1043,0 1340,0 1408,425" fill="var(--mark-b)"/></svg></div>
+        <h1 class="greet bi" style="--d:2" id="greet">The GSSC <em>Library</em></h1>
+        <p class="ready capt bi" style="--d:3"><i></i><span id="readyT"></span></p>
+        <p class="lede bi" style="--d:4">Every work GSSC has built, in one place. Each link stays the same when its work is updated, so this page is the only bookmark you need.</p>
+      </section>
+      <div id="shelves"></div>
+      <p class="empty" id="empty" hidden>Nothing matches that. Try another word, or clear the search.</p>
+      <footer class="colophon"><p>Each work opens in a new tab. If one asks you to sign in or says it is unavailable, it has not been shared with you yet: ask Duke Y. Demayo, President, for access.</p><span id="colEd"></span></footer>
+    </div></div>
+  </div>
+  <div class="toasts"><div class="toast" id="toast" role="status" aria-live="polite"></div></div>
 </div>
 
 <!-- the shelves and works: sites/gsscph/hub/entries.json, set in at build time -->
@@ -193,78 +234,112 @@ h1 em{font-style:italic;color:var(--gold)}
 <script>
 (() => {
 const D = JSON.parse(document.getElementById('data').textContent);
+const root = document.documentElement, app = document.getElementById('app');
 const MONTHS = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
-const longDate = s => { const [y, m, d] = s.split('-').map(Number); return `${d} ${MONTHS[m - 1]} ${y}`; };
-const shortDate = s => { const [y, m, d] = s.split('-').map(Number); return `${String(d).padStart(2, '0')} ${MONTHS[m - 1].slice(0, 3)} ${y}`; };
+const DAYS = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+const parts = s => s.split('-').map(Number);
+const longDate = s => { const [y, m, d] = parts(s); return `${d} ${MONTHS[m - 1]} ${y}`; };
+const shortDate = s => { const [y, m, d] = parts(s); return `${d} ${MONTHS[m - 1].slice(0, 3)} ${y}`; };
 const esc = v => String(v).replace(/[&<>"]/g, c => ({'&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;'}[c]));
+const shelfOf = k => D.shelves.find(s => s.key === k);
 
-/* the marks: each work drawn in the master's line, navy with one gold detail. Drawn once, by kind. */
-const sheet = (inner) => `<path class="g" d="M11 4h18l8 8v30H11z"/><path class="g" d="M29 4v8h8"/>${inner}`;
+/* ---- appearance: System follows the device; Light and Dark hold. Kept in this browser only. */
+const store = {get(){ try { return localStorage.getItem('gssc-library-theme'); } catch (e) { return null; } },
+               set(v){ try { localStorage.setItem('gssc-library-theme', v); } catch (e) {} }};
+function applyTheme(t, animate){
+  if (animate) { root.classList.add('theming'); setTimeout(() => root.classList.remove('theming'), 800); }
+  if (t === 'light' || t === 'dark') root.setAttribute('data-theme', t); else root.removeAttribute('data-theme');
+  document.querySelectorAll('[data-theme-set]').forEach(b => b.setAttribute('aria-checked', String(b.dataset.themeSet === (t || 'system'))));
+}
+applyTheme(store.get() || 'system', false);
+
+/* ---- the marks: each work drawn in one line, with one gold detail */
+const sheet = inner => `<path class="g" d="M8 3h11l5 5v19H8z"/><path class="g" d="M19 3v5h5"/>${inner}`;
 const GLYPH = {
-  site: `<rect class="g" x="3" y="7" width="40" height="32" rx="1.5"/><path class="g" d="M3 13h40"/><circle class="g2" cx="7" cy="10" r=".6"/><circle class="g2" cx="10" cy="10" r=".6"/>
-    <path class="a" d="M23 17l2 7 6 2-6 2-2 7-2-7-6-2 6-2z"/><circle class="g2" cx="23" cy="26" r="9"/>`,
-  stage: `<rect class="g" x="2" y="8" width="42" height="26" rx="1.5"/><path class="g" d="M17 40h12M23 34v6"/><path class="af" d="M20 16l9 5-9 5z"/><path class="g2" d="M6 30h34"/><path class="a" d="M6 30h14"/>`,
-  profile: `<path class="g2" d="M15 1h18l8 8"/>${sheet(`<circle class="a" cx="24" cy="20" r="5"/><path class="g2" d="M16 31h16M16 35h12"/>`)}`,
-  quotation: sheet(`<path class="g2" d="M15 17h18M15 22h18M15 27h18"/><path class="g2" d="M27 14v18"/><path class="a" d="M15 34h18"/><path class="g" d="M15 37h10"/>`),
-  agreement: sheet(`<path class="g2" d="M15 15h18M15 19h18M15 23h14"/><path class="g" d="M15 36h7M26 36h7"/><path class="a" d="M16 33c2-3 3 1 5-1"/>`),
-  resolution: sheet(`<path class="g2" d="M15 15h4M21 15h12M15 20h4M21 20h12M15 25h4M21 25h9"/><circle class="a" cx="29" cy="35" r="3.5"/>`),
-  certificate: sheet(`<path class="g2" d="M15 15h18M15 19h18M15 23h12"/><circle class="a" cx="24" cy="32" r="4"/><path class="a" d="M22 35.5l-1.5 5 3.5-2 3.5 2-1.5-5"/>`),
-  notarial: sheet(`<path class="g2" d="M15 15h18M15 19h18M15 23h18"/><rect class="a" x="20" y="28" width="12" height="9" rx="1" transform="rotate(-6 26 32)"/>`),
-  console: `<rect class="g" x="3" y="7" width="40" height="32" rx="1.5"/><path class="g" d="M14 7v32"/><path class="g2" d="M6 13h5M6 17h5M6 21h5"/><path class="g2" d="M18 13h20M18 17h14"/><path class="a" d="M18 33l5-5 4 3 5-7 5 4"/>`
+  site: `<rect class="g" x="2" y="5" width="26" height="20" rx="1.5"/><path class="g" d="M2 9.5h26"/><path class="a" d="M15 12.5l1.3 4.3 4 1.2-4 1.2L15 23.5l-1.3-4.3-4-1.2 4-1.2z"/>`,
+  stage: `<rect class="g" x="1.5" y="5" width="27" height="17" rx="1.5"/><path class="g" d="M11 26.5h8M15 22v4.5"/><path class="af" d="M12.5 10l6 3.5-6 3.5z"/>`,
+  profile: sheet(`<circle class="a" cx="16" cy="13.5" r="3.2"/><path class="g2" d="M11 20h10M11 23h7"/>`),
+  quotation: sheet(`<path class="g2" d="M11 11h10M11 14.5h10M11 18h10"/><path class="a" d="M11 22h10"/>`),
+  agreement: sheet(`<path class="g2" d="M11 10.5h10M11 13.5h10M11 16.5h7"/><path class="g" d="M11 23h4M17 23h4"/><path class="a" d="M11.5 21c1.5-2 2 .6 3.3-.6"/>`),
+  resolution: sheet(`<path class="g2" d="M11 10.5h2M14.5 10.5h6.5M11 14h2M14.5 14h6.5M11 17.5h2M14.5 17.5h5"/><circle class="a" cx="19.5" cy="22.5" r="2.3"/>`),
+  certificate: sheet(`<path class="g2" d="M11 10.5h10M11 13.5h8"/><circle class="a" cx="16" cy="19" r="2.8"/><path class="a" d="M14.6 21.4l-1 3.6 2.4-1.4 2.4 1.4-1-3.6"/>`),
+  notarial: sheet(`<path class="g2" d="M11 10.5h10M11 13.5h10"/><rect class="a" x="12" y="17" width="8.5" height="6.5" rx=".8" transform="rotate(-6 16 20)"/>`),
+  console: `<rect class="g" x="2" y="5" width="26" height="20" rx="1.5"/><path class="g" d="M9.5 5v20"/><path class="g2" d="M4.5 9.5h2.5M4.5 12.5h2.5"/><path class="a" d="M12.5 21l3.5-3.5 2.7 2 3.3-4.7 3.5 2.7"/>`
 };
 
-const shelvesEl = document.getElementById('shelves'), filtersEl = document.getElementById('filters'), q = document.getElementById('q'), emptyEl = document.getElementById('empty');
-document.getElementById('edition').textContent = `Edition of ${longDate(D.edition)}`;
-document.getElementById('colEd').innerHTML = `GSSC Integrated Corporation<br>Internal Library · ${esc(longDate(D.edition))}`;
-document.getElementById('tally').innerHTML = [[D.works.length, D.works.length === 1 ? 'Work' : 'Works'], [D.shelves.length, 'Shelves'],
-  [shortDate(D.works.map(w => w.updated).sort().pop()), 'Last updated']].map(([v, k]) => `<div><b>${esc(v)}</b><span>${k}</span></div>`).join('');
+/* ---- the page: dateline, tally, the sidebar's shelves and recents, the contents */
+const now = new Date(), ed = D.edition;
+document.getElementById('dateline').textContent = `${DAYS[now.getDay()]} · ${now.getDate()} ${MONTHS[now.getMonth()]} ${now.getFullYear()}`;
+const last = D.works.map(w => w.updated).sort().pop();
+document.getElementById('readyT').textContent = `${D.works.length} works on ${D.shelves.length} shelves · updated ${shortDate(last)}`;
+document.getElementById('sigT').textContent = `Current · ${shortDate(ed)}`;
+document.getElementById('colEd').textContent = `EXPIRA · GSSC Library · Edition of ${longDate(ed)}`;
+document.getElementById('setNote').textContent = `Edition of ${longDate(ed)}. Appearance is kept in this browser.`;
 
-filtersEl.innerHTML = `<button type="button" data-shelf="" aria-pressed="true">All</button>` +
-  D.shelves.map(s => `<button type="button" data-shelf="${esc(s.key)}" aria-pressed="false"><i>${esc(s.no)}</i>${esc(s.name)}</button>`).join('');
+const nav = document.getElementById('nav');
+nav.innerHTML = `<button class="navb on" type="button" data-shelf=""><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.1"><path d="M2.5 3.5h11M2.5 8h11M2.5 12.5h11"/></svg>All works<span class="ct num">${D.works.length}</span></button>` +
+  D.shelves.map(s => `<button class="navb" type="button" data-shelf="${esc(s.key)}"><span class="n">${esc(s.no)}</span>${esc(s.name)}<span class="ct num">${D.works.filter(w => w.shelf === s.key).length}</span></button>`).join('');
+document.getElementById('recent').innerHTML = [...D.works].sort((a, b) => b.updated.localeCompare(a.updated)).slice(0, 5)
+  .map(w => `<a class="item" href="${esc(w.url)}" target="_blank" rel="noopener"><span class="it-t">${esc(w.name)}</span><span class="it-m">${esc(shortDate(w.updated))} · ${esc(w.status)}</span></a>`).join('');
 
-shelvesEl.innerHTML = D.shelves.map(s => {
+let d = 5;
+document.getElementById('shelves').innerHTML = D.shelves.map(s => {
   const works = D.works.filter(w => w.shelf === s.key);
   return `<section class="shelf" data-shelf="${esc(s.key)}">
-    <div class="shelf-head"><div class="chs"><span class="num">${esc(s.no)}</span><i class="dash"></i><span class="cat">${esc(s.name)}</span></div><p>${esc(s.note)} · ${works.length} ${works.length === 1 ? 'work' : 'works'}</p></div>
-    <div class="grid" data-n="${Math.min(works.length, 3)}">${works.map(w => `<article class="work" data-id="${esc(w.id)}" data-find="${esc([w.name, w.formal, w.purpose, w.status, s.name].join(' ').toLowerCase())}">
-      <div class="top"><div class="mark"><svg viewBox="0 0 46 46" aria-hidden="true">${GLYPH[w.glyph] || GLYPH.profile}</svg></div>
-        <div class="id"><div class="kind"><span>${esc(s.name)}</span><span class="st">${esc(w.status)}</span></div><h3>${esc(w.name)}</h3></div></div>
-      <p class="formal">${esc(w.formal)}</p>
-      <p class="purpose">${esc(w.purpose)}</p>
-      <div class="foot"><span class="date">${esc(shortDate(w.updated))}</span>
-        <button class="btn copy" type="button" data-url="${esc(w.url)}" aria-label="Copy the link to ${esc(w.name)}"><svg viewBox="0 0 12 12" aria-hidden="true"><rect x="3.5" y="3.5" width="7" height="7" rx="1"/><path d="M1.5 8V2.5a1 1 0 0 1 1-1H8"/></svg><span>Copy link</span></button>
-        <a class="btn open-it" href="${esc(w.url)}" target="_blank" rel="noopener">Open<svg viewBox="0 0 12 12" aria-hidden="true"><path d="M4 2h6v6M10 2L3 9"/></svg></a></div>
+    <div class="shelf-h bi" style="--d:${d++}"><span class="n">${esc(s.no)}</span><h2>${esc(s.name)}</h2><span class="lead"></span><span class="note">${esc(s.note)}</span></div>
+    <div class="panel bi" style="--d:${d++}">${works.map(w => `<article class="work" data-find="${esc([w.name, w.formal, w.purpose, w.status, s.name].join(' ').toLowerCase())}">
+      <div class="glyph"><svg viewBox="0 0 30 30" aria-hidden="true">${GLYPH[w.glyph] || GLYPH.profile}</svg></div>
+      <div><div class="w-t"><h3>${esc(w.name)}</h3><span class="st">${esc(w.status)}</span></div>
+        <p class="formal">${esc(w.formal)}</p><p class="purpose">${esc(w.purpose)}</p></div>
+      <div class="w-r"><span class="date num">${esc(shortDate(w.updated))}</span>
+        <div class="acts"><button class="ib copy" type="button" data-url="${esc(w.url)}" aria-label="Copy the link to ${esc(w.name)}" title="Copy link"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.1"><rect x="5" y="5" width="8.5" height="8.5" rx="1.2"/><path d="M3 10.5V3.8A1.3 1.3 0 0 1 4.3 2.5H10.5"/></svg></button>
+          <a class="open-it" href="${esc(w.url)}" target="_blank" rel="noopener">Open<svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.2" aria-hidden="true"><path d="M4 2h6v6M10 2L3 9"/></svg></a></div></div>
       <p class="url">${esc(w.url)}</p>
     </article>`).join('')}</div></section>`;
 }).join('');
 
-/* find: the search narrows every shelf; a shelf filter shows one shelf */
+/* ---- find and filter */
+const q = document.getElementById('q'), ttl = document.getElementById('ttl'), empty = document.getElementById('empty');
 let shelf = '';
 function apply(){
   const terms = q.value.trim().toLowerCase().split(/\s+/).filter(Boolean); let shown = 0;
-  shelvesEl.querySelectorAll('.shelf').forEach(sec => {
-    let n = 0;
+  document.querySelectorAll('.shelf').forEach(sec => { let n = 0;
     sec.querySelectorAll('.work').forEach(w => { const ok = (!shelf || sec.dataset.shelf === shelf) && terms.every(t => w.dataset.find.includes(t)); w.hidden = !ok; n += ok; });
-    sec.hidden = n === 0; shown += n;
-  });
-  emptyEl.hidden = shown > 0;
+    sec.hidden = !n; shown += n; });
+  empty.hidden = shown > 0;
+  ttl.textContent = shelf ? shelfOf(shelf).name : 'All works';
 }
 q.addEventListener('input', apply);
-filtersEl.addEventListener('click', e => { const b = e.target.closest('button'); if (!b) return; shelf = b.dataset.shelf;
-  filtersEl.querySelectorAll('button').forEach(x => x.setAttribute('aria-pressed', String(x === b))); apply(); });
-addEventListener('keydown', e => {
-  if (e.key === '/' && document.activeElement !== q) { e.preventDefault(); q.focus(); }
-  else if (e.key === 'Escape' && document.activeElement === q) { q.value = ''; apply(); q.blur(); }
-  else if (e.key === 'Enter' && document.activeElement === q) { const first = shelvesEl.querySelector('.work:not([hidden]) .open-it'); if (first) first.click(); }
-});
+nav.addEventListener('click', e => { const b = e.target.closest('.navb'); if (!b) return; shelf = b.dataset.shelf;
+  nav.querySelectorAll('.navb').forEach(x => x.classList.toggle('on', x === b)); apply(); app.classList.remove('drawer');
+  document.getElementById('scroll').scrollTo({top: 0, behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth'}); });
 
-/* copy a link; where the clipboard is refused, show the link as text to select */
-shelvesEl.addEventListener('click', e => {
-  const b = e.target.closest('.copy'); if (!b) return;
-  const label = b.querySelector('span'), card = b.closest('.work');
-  const done = ok => { b.classList.toggle('done', ok); label.textContent = ok ? 'Copied' : 'Select below'; if (!ok) card.classList.add('show-url');
-    clearTimeout(b.__t); b.__t = setTimeout(() => { b.classList.remove('done'); label.textContent = 'Copy link'; }, 1800); };
-  try { navigator.clipboard.writeText(b.dataset.url).then(() => done(true), () => done(false)); } catch (err) { done(false); }
+/* ---- copying: a quiet toast; where the clipboard is refused, the link is shown to select */
+const toast = document.getElementById('toast');
+function say(msg){ toast.textContent = msg; toast.classList.add('on'); clearTimeout(say.t); say.t = setTimeout(() => toast.classList.remove('on'), 1800); }
+function copy(url, onFail){ try { navigator.clipboard.writeText(url).then(() => say('Link copied'), onFail); } catch (e) { onFail(); } }
+document.getElementById('shelves').addEventListener('click', e => { const b = e.target.closest('.copy'); if (!b) return;
+  const card = b.closest('.work'); copy(b.dataset.url, () => { card.classList.add('show-url'); say('Select the link below to copy it'); }); });
+
+/* ---- settings */
+const menu = document.getElementById('settings'), setBtn = document.getElementById('setBtn');
+function openMenu(on){ menu.classList.toggle('open', on); setBtn.setAttribute('aria-expanded', String(on));
+  if (on) { const r = setBtn.getBoundingClientRect(); menu.style.left = Math.max(8, Math.min(r.left - 8, innerWidth - 276)) + 'px'; menu.style.top = Math.max(8, r.top - menu.offsetHeight - 8) + 'px'; } }
+setBtn.addEventListener('click', e => { e.stopPropagation(); openMenu(!menu.classList.contains('open')); });
+menu.addEventListener('click', e => { e.stopPropagation();
+  const t = e.target.closest('[data-theme-set]'); if (t) { store.set(t.dataset.themeSet); applyTheme(t.dataset.themeSet, true); }
+  if (e.target.closest('#copyLib')) { const u = location.href.split('#')[0]; copy(u, () => say('Copy the address from the browser')); openMenu(false); } });
+document.addEventListener('click', () => openMenu(false));
+
+/* ---- keys, the drawer on a phone, and the top bar's rule */
+addEventListener('keydown', e => {
+  if (e.key === '/' && document.activeElement !== q) { e.preventDefault(); if (innerWidth <= 860) app.classList.add('drawer'); q.focus(); }
+  else if (e.key === 'Escape') { if (menu.classList.contains('open')) openMenu(false); else if (document.activeElement === q) { q.value = ''; apply(); q.blur(); } app.classList.remove('drawer'); }
+  else if (e.key === 'Enter' && document.activeElement === q) { const a = document.querySelector('.work:not([hidden]) .open-it'); if (a) a.click(); }
 });
+document.getElementById('menuBtn').addEventListener('click', () => app.classList.toggle('drawer'));
+document.getElementById('scrim').addEventListener('click', () => app.classList.remove('drawer'));
+const scroll = document.getElementById('scroll'), main = document.getElementById('main');
+scroll.addEventListener('scroll', () => main.classList.toggle('scrolled', scroll.scrollTop > 4), {passive: true});
 })();
 </script>
