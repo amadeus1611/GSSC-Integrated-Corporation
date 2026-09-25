@@ -10,31 +10,40 @@ This policy serves both surfaces:
 - **Client-facing** (EXPIRA Console artifact): the same roster, where
   low = quick, medium = default and high = complex model tiers.
 
-## Roster and floors
+## Two tiers only: low and medium (Duke, 2026-09-25)
+Low is the default for most work. Medium is the ceiling, reserved for critical work: legal and finance, engines and data contracts, release checks, and redos after a FAIL. There is no high tier. This applies here, inside the EXPIRA Console's delegation, and in all future iterations.
 
+## Roster and floors
 | Role | Tiers | Floor |
 |---|---|---|
-| research | medium, high | medium |
-| finance | high | high |
-| legal | high | high |
-| decision | medium, high | medium |
-| builder | medium | medium |
-| reviewer | medium | medium |
+| research | low, medium | low |
+| finance | medium | medium |
+| legal | medium | medium |
+| decision | low, medium | low |
+| builder | low, medium | low |
+| reviewer | low, medium | low |
 | firewall | low | low |
 
 ## Selection
-
 1. Split the request into steps. Give each step one role.
-2. Start each role at its lowest tier, never below its floor.
-3. Escalate one tier when any of these hold:
-   - the reviewer returns FAIL
-   - sources conflict
-   - the amount involved exceeds **PHP 500,000**
-   - the step involves legal exposure
-4. Run independent steps in parallel.
+2. Start each role at its floor (low unless the floor is medium).
+3. Escalate to medium when any of these hold:
+   - the reviewer returns FAIL;
+   - sources conflict;
+   - the amount involved exceeds **PHP 500,000**;
+   - the step involves legal exposure;
+   - the step is critical: an engine, a data contract, or a release check.
+4. Run independent steps in parallel. Keep prompts tight and outputs compact; spend tokens on accuracy checks, not on higher tiers.
 5. Stop and ask Duke after **2 redos** on the same step.
 6. Anything client-facing passes `firewall-low` last. BLOCKED means it does not leave.
 7. Agents recommend; Duke approves decisions, prices and anything sent out.
+
+## Decision layer (Jev-style)
+Routing is a typed decision, not an essay. Pattern: code owns control, the decision step decides, the model reasons, tools act.
+- Ask the decision step bounded questions with closed answer sets: role, tier, parallel or serial, done or not, supported or not.
+- Every answer carries a confidence from 0 to 1. Code validates it against the enum and rejects anything outside the set.
+- Confidence under 0.6: take the safer option (escalate one tier or ask Duke). Never guess.
+- Guardrail checks are yes/no judgments with a probability: whether a claim is supported, whether a tool call is risky, whether a task is complete.
 
 ## Log
 

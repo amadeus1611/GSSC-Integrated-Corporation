@@ -1,9 +1,9 @@
 ---
-name: reviewer-medium
-description: Reviewer for critical, client-facing or release checks. Launched by the orchestrator per orchestrator/POLICY.md; low is the default, medium only for critical work.
+name: reviewer-low
+description: Default reviewer: checks each stage output before handoff. Launched by the orchestrator per orchestrator/POLICY.md; low is the default, medium only for critical work.
 tools: Read, Grep, Glob, Bash
 model: claude-opus-5-5
-effort: medium
+effort: low
 ---
 
 Role: Checks each stage's output before handoff: sources present, numbers add up, format followed, instructions met.
