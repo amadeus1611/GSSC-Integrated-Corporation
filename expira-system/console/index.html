@@ -1576,6 +1576,8 @@ html.theming,html.theming *,html.theming *::before,html.theming *::after{transit
 .field .fn.bud{pointer-events:none}
 .field .neck{fill:var(--c,var(--gold));pointer-events:none}
 /* v38 · polish */
+#dsp svg text,#mfs svg text{paint-order:stroke;stroke:var(--sheet);stroke-width:3px;stroke-linejoin:round}
+.app .main,.app.dsp-open .main{transition:margin-right var(--sp-soft-d) var(--sp-soft)!important}
 .brand .mark,.hero .mark,svg.mark{overflow:visible}
 .run .rv{z-index:3}
 .run-h .lbl{pointer-events:none}
@@ -1592,14 +1594,45 @@ html.theming,html.theming *,html.theming *::before,html.theming *::after{transit
 .mini .tm .ax text,.mini .tm .lab .sq,.mini .tm .lab .mt,.mini .tm .ph text{font-size:9.5px}
 .mini .tm .lab{opacity:1;transform:none;animation:labIn .5s var(--soft-close) both}
 @keyframes labIn{from{opacity:0;transform:translateX(-3px)}}
-/* the thinking thread: a mercury bead that stretches as it runs and pools at the ends */
-.sheen{height:3px;background:none;overflow:visible;margin-bottom:0}
-.sheen::after{top:1px;height:var(--rule-hair);inset:auto 0 auto 0;background:var(--line-2);transform:none}
-.run.settled .sheen::after,.think.settled .sheen::after{background:linear-gradient(90deg,var(--line-2),color-mix(in srgb,var(--gold) 55%,var(--line-2)) 50%,var(--line-2))}
-.run.running .sheen::before,.think.running .sheen::before{display:block;top:0;height:3px;width:44px;border-radius:3px;opacity:1;background:radial-gradient(closest-side,var(--gold),color-mix(in srgb,var(--gold) 40%,transparent) 60%,transparent);filter:none;transform-origin:50% 50%;animation:merc 2.6s cubic-bezier(.62,0,.38,1) infinite}
-@keyframes merc{0%{transform:translateX(-50px) scaleX(.3);opacity:0}14%{opacity:1}50%{transform:translateX(calc(50cqw - 22px)) scaleX(1.9)}86%{opacity:1}100%{transform:translateX(calc(100cqw + 8px)) scaleX(.3);opacity:0}}
-.sheen{container-type:inline-size}
-@media (prefers-reduced-motion:reduce){.run.running .sheen::before{animation:none;opacity:.6;transform:none;width:100%;height:1px;top:1px}}
+/* loading: no bar at all; a liquid trio rides right beside the EXPIRA glyph while it thinks */
+.run.running .sheen::before,.think.running .sheen::before{display:none!important}
+.run .sheen,.think .sheen{background:none}
+.run .sheen::after,.think .sheen::after{display:none}
+.run-h .lbl::before{content:"";display:inline-block;vertical-align:middle;width:0;height:4px;margin-right:0;opacity:0;background:radial-gradient(circle,var(--gold) 55%,transparent 62%) 0 50%/4px 4px no-repeat,radial-gradient(circle,var(--gold) 55%,transparent 62%) 6px 50%/4px 4px no-repeat,radial-gradient(circle,var(--gold) 55%,transparent 62%) 12px 50%/4px 4px no-repeat;transition:width .5s var(--sp-soft),margin .5s var(--sp-soft),opacity .4s ease}
+.run.running .run-h .lbl::before{width:16px;margin-right:9px;opacity:1;animation:trio 1.4s cubic-bezier(.45,0,.55,1) infinite}
+@keyframes trio{0%,100%{background-size:4px 4px,4px 4px,4px 4px;background-position:0 50%,6px 50%,12px 50%}20%{background-size:4px 2.2px,4px 4px,4px 4px;background-position:0 30%,6px 50%,12px 50%}40%{background-size:4px 4px,4px 2.2px,4px 4px;background-position:0 50%,6px 30%,12px 50%}60%{background-size:4px 4px,4px 4px,4px 2.2px;background-position:0 50%,6px 50%,12px 30%}}
+/* logs lead the eye: the newest line inks in under a gold sweep, its dot rings once, older lines recede */
+.strm li .se{transition:opacity .9s var(--soft-close),color .9s var(--soft-close)}
+.strm li:not(:nth-last-child(-n+3)) .se{opacity:.58}
+.strm li.new .se .sx{background:linear-gradient(90deg,transparent 0,color-mix(in srgb,var(--gold) 22%,transparent) 45%,transparent 60%) no-repeat -120% 100%/60% 1px;animation:sweep 1.1s var(--soft-close) .08s both}
+@keyframes sweep{to{background-position:220% 100%}}
+.strm li.new .se::before{animation:ring .9s var(--sp-jelly)}
+@keyframes ring{0%{box-shadow:0 0 0 0 color-mix(in srgb,var(--gold) 45%,transparent)}100%{box-shadow:0 0 0 6px transparent}}
+#olog li{transition:opacity .9s var(--soft-close)}
+#olog li:not(:nth-last-child(-n+4)){opacity:.55}
+#olog li:last-child .tx{background:linear-gradient(90deg,transparent,color-mix(in srgb,var(--gold) 20%,transparent) 45%,transparent 60%) no-repeat -120% 100%/60% 1px;animation:sweep 1.2s var(--soft-close) both}
+#olog li:last-child .ts{color:var(--gold);transition:color 1.2s}
+@media (prefers-reduced-motion:reduce){.run.running .run-h .lbl::before{animation:none}.strm li.new .se .sx,#olog li:last-child .tx{animation:none}}
+/* v38 · focus lens */
+.lens{position:absolute;left:0;top:0;z-index:4;width:228px;padding:8px 10px 7px;background:var(--panel);border:var(--rule-hair) solid var(--line-3);border-radius:6px;box-shadow:var(--shadow);pointer-events:none;opacity:0;scale:.6 .3;transform-origin:var(--ax,50%) 100%;transition:opacity .35s var(--soft-close),scale .6s var(--sp-jelly),border-radius .6s var(--sp-soft)}
+.lens.below{transform-origin:var(--ax,50%) 0}
+.lens.on{opacity:1;scale:1;border-radius:6px}
+.lens:not(.on){border-radius:40% 45% 42% 48%/55% 50% 58% 46%}
+.lens.hop{animation:lensHop .7s var(--sp-jelly)}
+@keyframes lensHop{0%{border-radius:38% 46% 40% 50%/52% 48% 56% 44%;scale:.92 .82}100%{border-radius:6px;scale:1}}
+.lens::after{content:"";position:absolute;left:calc(var(--ax,50%) - 3px);bottom:-4px;width:6px;height:6px;background:var(--panel);border-right:var(--rule-hair) solid var(--line-3);border-bottom:var(--rule-hair) solid var(--line-3);rotate:45deg}
+.lens.below::after{bottom:auto;top:-4px;rotate:225deg}
+.lens .lh{display:flex;align-items:center;gap:6px;font-size:9.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--mute);white-space:nowrap;overflow:hidden}
+.lens .lh i{width:5px;height:5px;border-radius:50%;background:var(--c);flex:none;animation:breathe 2.4s var(--release) infinite}
+.lens .lh b{font-weight:500;color:var(--soft)}
+.lens .lh span{margin-left:auto;color:var(--c);letter-spacing:.06em}
+.lens p{margin:5px 0 0;font-size:11px;line-height:1.45;color:var(--text);display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden;min-height:0}
+.lens p.serif{font:italic 400 12px/1.45 var(--f-display)}
+.lens p.mono{font-size:10.5px;color:var(--soft)}
+.lens p:empty{display:none}
+.lens em{display:block;margin-top:4px;font-style:normal;font-size:9.5px;color:var(--mute)}
+.lens em:empty{display:none}
+@media (prefers-reduced-motion:reduce){.lens{transition:none}.lens.hop{animation:none}}
 </style>
 
 <div class="app has-chat" id="app">
@@ -2410,9 +2443,9 @@ function countUp(root){if(reduce)return;root.querySelectorAll("[data-count]").fo
 const SVGN="http://www.w3.org/2000/svg";
 const sv=(t,a={})=>{const e=document.createElementNS(SVGN,t);for(const k in a)e.setAttribute(k,a[k]);return e};
 const hostOf=u=>{try{return new URL(u).hostname.replace(/^www\./,"")}catch(e){return ""}};
-const FM=new Set();window.__FM=FM;
+const FM=new Set();function MFS_ON(){const f=document.getElementById("mfs");return !!(f&&f.classList.contains("open"))}window.__FM=FM;
 /* a map only works while someone can see it: on screen, tab visible, and its panel open */
-const seen=m=>m.vis&&!document.hidden&&!m.host.closest(".dsp:not(.open),.stg:not(.open),.mfs:not(.open),.run .mapw");
+const seen=m=>m.vis&&!document.hidden&&(!MFS_ON()||m.host.closest("#mfs"))&&!m.host.closest(".dsp:not(.open),.stg:not(.open),.mfs:not(.open),.run .mapw");
 const SPEC={0:{w:100,h:40,g:12},1:{w:112,h:40,g:0},2:{w:162,h:34,g:8},3:{w:126,h:36,g:0},4:{w:120,h:22,g:6}},COLN=["ORCHESTRATOR","DECISION","DESKS","CONNECTOR","SOURCES"],SITES=9;
 function hostsOf(P){const hs=[];(P||[]).forEach(p=>{const h=hostOf(p.url);if(!h)return;let o=hs.find(x=>x.h===h);if(!o)hs.push(o={h,n:0,t:0});o.n++;o.t+=tok(p.ex)});return hs}
 /* m3a_trace core: hoisted, pure helpers (declared at IIFE top level so send(), graphOf and the example data can call them).
@@ -3291,7 +3324,7 @@ const E_cancel=el=>{const r=el._E;if(!r)return;r.gen=(r.gen||0)+1;if(r.a){try{r.
 const E_conv=(s,L,c,L2,c2)=>({tx:s.tx+(c.x-c2.x)+s.sx*((c2.x-L2.x)-(c.x-L.x)),ty:s.ty+(c.y-c2.y)+s.sy*((c2.y-L2.y)-(c.y-L.y))});
 const E_tf=(b,v)=>`${b?b+" ":""}translate(${v.tx.toFixed(2)}px,${v.ty.toFixed(2)}px) scale(${v.sx.toFixed(4)},${v.sy.toFixed(4)})`;
 const E_bake=(el,rec,f,T,mode,fill)=>{T=Math.max(17,Math.round(T));const n=Math.max(2,Math.min(120,Math.ceil(T/16.67)+1)),kf=[];
- for(let i=0;i<n;i++){const t=T*i/(n-1);let v=f(t);if(i===n-1&&mode!=="close")v=E_REST;const _k={offset:i/(n-1),transform:E_tf(rec.b,v),opacity:Math.max(0,Math.min(1,v.op)).toFixed(4)};if(!reduce&&mode!=="move"&&rec.W){if(rec.br==null){const cs=getComputedStyle(el);rec.br=parseFloat(cs.borderTopLeftRadius)||6;rec.bamp=rec.W*rec.H>200000?.35:1}const q=Math.max(0,Math.min(1,1-Math.min(v.sx,v.sy))),m=Math.min(1,Math.max(q*1.6,Math.pow(Math.max(0,1-t/(T*.72)),1.6)))*rec.bamp,ph=t/1000*9;if(i===n-1&&mode!=="close")_k.borderRadius=rec.br+"px";else{const c=j=>rec.br+m*Math.min(rec.W,rec.H)*(.42+.12*Math.sin(ph+j*1.9)),d=j=>rec.br+m*Math.min(rec.W,rec.H)*(.46+.12*Math.cos(ph*1.1+j*2.3));_k.borderRadius=`${c(0).toFixed(1)}px ${c(1).toFixed(1)}px ${c(2).toFixed(1)}px ${c(3).toFixed(1)}px / ${d(0).toFixed(1)}px ${d(1).toFixed(1)}px ${d(2).toFixed(1)}px ${d(3).toFixed(1)}px`}}kf.push(_k)}
+ for(let i=0;i<n;i++){const t=T*i/(n-1);let v=f(t);if(i===n-1&&mode!=="close")v=E_REST;if(i===0){const v0=f(0);rec._fr=Math.min(v0.sx,v0.sy)<.5}const _k={offset:i/(n-1),transform:E_tf(rec.b,v),opacity:Math.max(0,Math.min(1,v.op)).toFixed(4)};if(!reduce&&mode!=="move"&&rec.W){if(rec.br==null){const cs=getComputedStyle(el);rec.br=parseFloat(cs.borderTopLeftRadius)||6;rec.bamp=rec.W*rec.H>200000?.35:1}const q=Math.max(0,Math.min(1,1-Math.min(v.sx,v.sy))),m=Math.min(1,Math.max(q*1.6,(mode==="open"&&rec._fr)?Math.pow(Math.max(0,1-t/(T*.72)),1.6):0))*rec.bamp,ph=t/1000*9;if(i===n-1&&mode!=="close")_k.borderRadius=rec.br+"px";else{const c=j=>rec.br+m*Math.min(rec.W,rec.H)*(.42+.12*Math.sin(ph+j*1.9)),d=j=>rec.br+m*Math.min(rec.W,rec.H)*(.46+.12*Math.cos(ph*1.1+j*2.3));_k.borderRadius=`${c(0).toFixed(1)}px ${c(1).toFixed(1)}px ${c(2).toFixed(1)}px ${c(3).toFixed(1)}px / ${d(0).toFixed(1)}px ${d(1).toFixed(1)}px ${d(2).toFixed(1)}px ${d(3).toFixed(1)}px`}}kf.push(_k)}
  const a=el.animate(kf,{duration:T,easing:"linear",fill:fill||"none"});rec.a=a;rec.f=f;rec.T=T;rec.mode=mode;rec.done=false;
  const g=rec.gen;a.finished.then(()=>{if(el._E!==rec||rec.gen!==g||rec.a!==a)return;if(mode==="close"){el.classList.remove("e-out");rec.done=true;try{a.cancel()}catch(e){}rec.a=null;(rec.kids||[]).forEach(k=>{try{k.cancel()}catch(e){}});rec.kids=[]}},()=>{});return a};
 
@@ -3550,7 +3583,7 @@ const S_app=document.querySelector(".app"),S_main=document.querySelector("#main"
 const S_marg=()=>S_main?parseFloat(getComputedStyle(S_main).marginRight)||0:0;
 let S_dspOn=!!(S_app&&S_app.classList.contains("dsp-open")),S_mr=S_marg();
 const S_OPENQ=".menu.open,#sheet.open,#cpop:not([hidden]),#chov:not([hidden]),.defc.open";
-const S_glide=()=>{const prev=S_mr,cur=S_marg();S_mr=cur;if(!S_main||Math.abs(prev-cur)<1)return;
+const S_glide=()=>{S_mr=S_marg();return;const prev=S_mr,cur=S_marg();S_mr=cur;if(!S_main||Math.abs(prev-cur)<1)return;
   if(reduce){for(const el of S_G.keys())el.style.translate="";S_G.clear();return}
   const vw=innerWidth,vh=innerHeight,inV=r=>r.bottom>0&&r.top<vh&&r.right>0&&r.left<vw&&r.width>0&&r.height>0;
   /* READ 1: the old layout (margin forced back inline for one layout; .main has no margin transition) */
@@ -4022,7 +4055,7 @@ class W_TraceMap{
   const obs={};M.E.forEach(e=>{const a=M.by[e.a],b=M.by[e.b];if(!a||!b)return;const g=this.egeo(e,a,b,true);if(g.xv==null)return;const la=M.LI[a.lane],lb=M.LI[b.lane];for(let k=Math.min(la,lb)+1;k<=Math.max(la,lb);k++)(obs[M.lanes[k].id]=obs[M.lanes[k].id]||[]).push(g.xv)});
   const fam=this.fam||(this.fam=getComputedStyle(this.host).fontFamily||"sans-serif"),fN=`400 ${P.nsz}px ${fam}`,fS=`300 ${P.ssz}px ${fam}`,fG=`400 ${P.ssz}px ${fam}`,gap=4,R0=px1+(P.mini?P.padR-2:6);
   const minW=s=>W_mw(fS,String(s.seq))+(s.gl?gap+W_mw(fG,s.gl):0);
-  for(const k in byLane){const L=byLane[k],O=(obs[k]||[]).slice().sort((a,b)=>a-b);
+  for(const k in byLane){const L=byLane[k],O=[];
    /* free label space in this lane: the plot minus a 3px keep-out around each vertical edge */
    let free=[[this.px0-2,R0]];O.forEach(x=>{const nf=[];free.forEach(([a,b])=>{if(x+3<=a||x-3>=b){nf.push([a,b]);return}if(x-3>a)nf.push([a,x-3]);if(x+3<b)nf.push([x+3,b])});free=nf});
    /* reserve room, packed from the right, for the smallest label of every later segment */
@@ -4364,5 +4397,33 @@ FieldMap.prototype.go=function(){if(this.raf||!seen(this))return;this.lt=0;
  this.raf=requestAnimationFrame(step)};
 window.__v38=window.__v38||{};window.__v38.bud={T:B_T,REP:B_REP,mb:B_mb,pre:[]};
 }
+{/* the focus lens: one small card that attaches to the step doing the work, follows execution from node to node, and shows that step's own kind of thinking */
+const L_tail=(t,n)=>{t=String(t||"").replace(/\s+/g," ").trim();return t.length>n?"…"+t.slice(-n+1):t};
+const L_what=(w,id)=>{const S=w.steps||[],M=w.map||{},C=M.calls||[];
+ if(id==="o")return{k:"Orchestrator",v:"Deliberating",body:L_tail((M.thinking||[]).slice(-1)[0],130),f:"serif"};
+ if(id==="v"){if(w._va){const L=w.ledger,cl=(L&&L.claims)||[];return{k:"Decision agent",v:"Weighing the claims",body:cl.length?`${cl.length} claims read · ${cl.filter(c=>c.v==="supported"||c.v==="derived").length} grounded`:"Reading every desk's notes",f:"num"}}return{k:"Decision agent",v:"Staffing",body:`${S.length} desk${S.length===1?"":"s"} staffed`,f:"num"}}
+ if(id==="c"){const c=C[C.length-1];return{k:"Parallel Search",v:c&&c.fetch?"Reading":"Searching",body:c?L_tail((c.q||[]).join(" · "),110):"",f:"mono"}}
+ if(id==="ans")return{k:"Answer",v:w._au?"Auditing":"Writing",body:L_tail(w._atext,140),f:"serif",n:w._atext?(String(w._atext).match(/\S+/g)||[]).length+" words":""};
+ if(id==="doc")return{k:"Document",v:"Building from the kernel",body:"",f:"num"};
+ if(id[0]==="a"){const s=S[+id.slice(1)];if(!s)return null;return{k:`Desk ${ROMAN[+id.slice(1)]} · ${ROLE[s.role]||s.role}`,v:s._web&&performance.now()-s._web<2500?"Searching":ROSTER[s.role]?ROSTER[s.role].verb:"Working",body:L_tail(s.out||s.task,150),f:"serif",n:`${ft(tok(s.out))} tokens${s.searches?` · ${s.searches} search${s.searches>1?"es":""}`:""}`,c:RC[s.role]}}
+ return null};
+const L_lens=new Map();
+const L_mk=host=>{const d=document.createElement("div");d.className="lens";d.setAttribute("aria-hidden","true");d.innerHTML=`<div class="lh"><i></i><b></b><span></span></div><p></p><em class="num"></em>`;host.style.position=host.style.position||"relative";host.append(d);return d};
+const L_tick=()=>{for(const m of FM){const host=m.host;if(!host||!host.isConnected||!host.closest("#dsp,#mfs"))continue;let d=L_lens.get(m);const w=m.get&&m.get();
+  let id=null;if(w&&!reduce&&seen(m)){const {N}=graphOf(w);const RK=x=>x[0]==="a"?5:x==="ans"?4:x==="doc"?4:x==="v"?3:x==="c"?2:1;const on=N.filter(n=>n.st==="on");const cur=L_lens.get(m);if(cur&&cur._id&&on.some(n=>n.id===cur._id)&&!on.some(n=>RK(n.id)>RK(cur._id)))id=cur._id;else{on.sort((a,b)=>RK(b.id)-RK(a.id)||(b.seq||0)-(a.seq||0));id=on.length?on[0].id:null}}
+  const el=id&&host.querySelector(`[data-node="${CSS.escape(id)}"]`);const info=el&&L_what(w,id);
+  if(!info){if(d&&d.classList.contains("on")){d.classList.remove("on");d._id=null}continue}
+  if(!d){d=L_mk(host);L_lens.set(m,d)}
+  if(d._id!==id){d._id=id;d.style.setProperty("--c",info.c||"var(--gold)");d.querySelector("b").textContent=info.k;{const sp=d.querySelector("span");sp.classList.remove("swap");sp.textContent=info.v}d.classList.remove("hop");void d.offsetWidth;d.classList.add("hop")}
+  else if(d.querySelector("span").textContent!==info.v&&!d.querySelector("span").classList.contains("swap"))swap(d.querySelector("span"),info.v);
+  const p=d.querySelector("p");p.className=info.f;if(p.textContent!==info.body)p.textContent=info.body;const em=d.querySelector("em");if(em.textContent!==(info.n||""))em.textContent=info.n||"";
+  d._el=el;d.classList.add("on");L_go()}};
+let L_run=0;const L_go=()=>{if(!L_run){L_run=1;requestAnimationFrame(L_pos)}};
+const L_pos=()=>{let any=false;L_lens.forEach((d,m)=>{if(!d.isConnected){L_lens.delete(m);return}if(!d.classList.contains("on")||!d._el||!d._el.isConnected)return;any=true;const h=m.host.getBoundingClientRect(),r=d._el.getBoundingClientRect(),W=d.offsetWidth,H=d.offsetHeight;
+  let x=r.left-h.left+r.width/2-W/2,y=r.top-h.top-H-12,below=false;if(y<4){y=r.bottom-h.top+12;below=true}x=Math.max(6,Math.min(h.width-W-6,x));
+  const ax=Math.max(10,Math.min(W-10,r.left-h.left+r.width/2-x));d.style.setProperty("--ax",ax.toFixed(1)+"px");d.classList.toggle("below",below);
+  const k=d._p?(d.classList.contains("hop")?.16:.35):1;d._p=d._p||{x,y};d._p.x+=(x-d._p.x)*k;d._p.y+=(y-d._p.y)*k;d.style.transform=`translate(${d._p.x.toFixed(1)}px,${d._p.y.toFixed(1)}px)`});
+ if(any)requestAnimationFrame(L_pos);else L_run=0};
+setInterval(L_tick,240);}
 })();
 </script>

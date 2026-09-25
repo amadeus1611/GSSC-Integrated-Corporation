@@ -83,6 +83,13 @@ Motion is the heart of the UX: fidelity in the engine comes first.
   - Anything the reader sees is professional, sleek and wise.
 
 ## 6. Change log
+- **v38.2:**
+  - a focus lens that follows the working step, with content suited to each step's purpose (thinking, notes, queries, claims);
+  - the liquid-trio loader beside the glyph;
+  - intent-led log motion;
+  - the full screen runs only its own map;
+  - Flow labels shown in full, with halos;
+  - a continuous liquid close.
 
 - **v38:**
   - liquid emergence from the click point, with shadows never clipped;
