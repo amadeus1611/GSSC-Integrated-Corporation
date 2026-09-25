@@ -1,49 +1,80 @@
-# Orchestrator policy: model, effort tiers and escalation
+# Orchestrator policy: effort, delegation and escalation
 
-The orchestrator is the main session. Sub-agents
-cannot launch sub-agents, so every delegation starts here. Effort is fixed
-per agent file, so each tier is its own agent: choosing a tier means
-choosing which agent to launch.
+The orchestrator is the main Claude Code session. Sub-agents cannot launch
+sub-agents, so every delegation starts here. Effort is fixed per agent
+file, so each tier is its own agent: choosing a tier means choosing which
+agent to launch.
 
-This policy serves both surfaces:
-- **Internal** (Claude Code): the agents in `.claude/agents/`.
-- **Client-facing** (EXPIRA Console artifact): the same roster, where
-  low = quick, medium = default and high = complex model tiers.
+This policy governs internal work (Claude Code and the agents in
+`.claude/agents/`). The EXPIRA Console artifact routes its own desks in
+code and is documented in the console itself.
 
-## Roster and floors
+## Orchestrator effort
 
-| Role | Tiers | Floor |
+- **High by default.** The orchestrator plans, routes, checks and reports.
+  A bad plan costs a whole iteration (v38 was reverted); high thinking costs
+  far less than that.
+- **Medium** only when Duke has already written an exact change list, or for
+  a single-file tweak or a copy edit.
+- **Never low** for orchestration.
+
+## Roster
+
+High is the default for every role. Medium exists only for mechanical,
+low-level work.
+
+| Role | Default | Medium, only for |
 |---|---|---|
-| research | medium, high | medium |
-| finance | high | high |
-| legal | high | high |
-| decision | medium, high | medium |
-| builder | medium | medium |
-| reviewer | medium | medium |
-| firewall | low | low |
+| research | research-high | research-medium: a single fact lookup, or re-checking a named source |
+| finance | finance-high | none |
+| legal | legal-high | none |
+| decision | decision-high | none; the orchestrator makes routine calls itself |
+| builder | builder-high | builder-medium: build_derivative.py runs, asset regeneration, a fully specified patch |
+| reviewer | reviewer-high | reviewer-medium: checklist-only checks (format, required sections, verification ran) |
+| firewall | firewall-medium | this is the only tier |
 
-## Selection
+## Inline or delegate
 
-1. Split the request into steps. Give each step one role.
-2. Start each role at its lowest tier, never below its floor.
-3. Escalate one tier when any of these hold:
-   - the reviewer returns FAIL
-   - sources conflict
-   - the amount involved exceeds **PHP 500,000**
-   - the step involves legal exposure
-4. Run independent steps in parallel.
-5. Stop and ask Duke after **2 redos** on the same step.
-6. Anything client-facing passes `firewall-low` last. BLOCKED means it does not leave.
-7. Agents recommend; Duke approves decisions, prices and anything sent out.
+Work inline by default. Launch a sub-agent only when one of these holds:
+1. **Parallel, independent work**, such as several research threads.
+2. **A specialist domain:** finance and legal always go to their agents.
+3. **Context isolation:** a large read whose result is needed only as a summary.
+4. **Independent review:** the reviewer is never the author.
+
+Build one surface (such as the console) in one place. Do not split a single
+surface across several builders; the seams are where v38 broke.
+
+## Hand-off
+
+Every sub-agent prompt must be self-contained and state:
+- the goal, and the test for done;
+- exact files and anchors;
+- constraints, by named section of CLAUDE.md or DESIGN_ENGINE.md;
+- what is already decided, so it is not re-derived;
+- the output format and where to write it.
+
+## Escalation
+
+1. A medium agent that finds its task needs judgement returns FAIL; relaunch
+   it at high.
+2. On a reviewer FAIL, conflicting sources, an amount over **PHP 500,000**
+   or legal exposure: the orchestrator revises the plan or the hand-off
+   first, then relaunches.
+3. Stop and ask Duke after **2 redos** on the same step.
+4. Anything client-facing passes `firewall-medium` last. BLOCKED means it
+   does not leave.
+5. Agents recommend; Duke approves decisions, prices and anything sent out.
 
 ## Log
 
-Append one row per agent launch to `orchestrator/tier_log.csv`:
+Append one row per agent launch to `orchestrator/tier_log.csv`, and one
+`request` row per request with its overall outcome, so a rejected
+iteration is recorded as a redo:
 `date, request_id, step, agent, tier, reason_for_tier, result, redo_count, notes`.
-Review monthly: a role that rarely needs escalation can stay low; one that
-often redoes needs a better skill or a higher starting tier.
+Review monthly: a medium role that often fails up to high should become
+high-only.
 
-## Defaults set on 2026-09-23 (Duke: "whatever you want")
+## Standing defaults
 
 - Escalation threshold: PHP 500,000.
 - Maximum redos before asking: 2.
