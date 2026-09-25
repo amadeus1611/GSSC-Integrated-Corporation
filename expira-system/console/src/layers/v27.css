@@ -1,7 +1,0 @@
-/* v27 · mercury segments and poured menus */
-.seg2,.menu .seg{position:relative}
-.seg2>button,.menu .seg>button{position:relative;z-index:1}
-.merc{position:absolute;z-index:0;border-radius:3px;background:var(--panel);box-shadow:0 1px 2px rgba(0,0,0,.1);pointer-events:none;opacity:0}
-.moving>.merc{opacity:1}
-.moving>button[aria-checked="true"]{background:transparent!important;box-shadow:none!important}
-.menu .seg .merc{border-radius:4px}

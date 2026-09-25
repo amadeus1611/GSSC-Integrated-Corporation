@@ -1,13 +1,11 @@
-/* exhibits under an answer */
-.exh{margin-top:18px}
 .exh-h{display:flex;align-items:center;gap:10px;margin-bottom:10px;width:100%;border:0;background:none;padding:0;cursor:pointer;text-align:left}
 .exh-h .cnt{font-size:10.5px;color:var(--mute)}
 .exh-h .ln{flex:1;height:var(--rule-hair);background:var(--line-3)}
 .exh-h .chev{transform:rotate(90deg);transition:transform var(--out) var(--soft-close)}
 .exh.folded .exh-h .chev{transform:none}
-.exb{display:grid;grid-template-rows:1fr;transition:grid-template-rows .8s var(--soft-close)}.exb>div{overflow:hidden}
+.exb{display:grid;grid-template-rows:1fr;transition:grid-template-rows .8s var(--soft-close)}
+.exb>div{overflow:hidden}
 .exh.folded .exb{grid-template-rows:0fr}
-.exh{margin-top:16px;padding-top:2px}
 .exi{animation:blurIn .9s var(--soft-close) both}
 .facts{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));margin:0 0 16px;border-top:var(--rule-medium) solid var(--ink)}
 .fact{padding:10px 12px 10px 0;display:flex;flex-direction:column;gap:2px}
@@ -20,10 +18,16 @@
 .exh td{border-bottom:var(--rule-hair) solid var(--line-2);padding:7px 14px 7px 0;color:var(--text)}
 .exh .tw{overflow-x:auto;margin:0}
 .mx td.rh{color:var(--ink)}
-.rate{display:inline-flex;gap:3px}.rate i{width:5px;height:5px;border-radius:50%;background:var(--line-3)}.rate i.on{background:var(--gold)}
-.srcs{margin:4px 0 6px}.srcs ol{margin:6px 0 0;padding-left:18px;font-size:12px;color:var(--soft)}.srcs li{margin:3px 0}
-.srcs li::marker{font:400 11px var(--f-display);color:var(--gold)}.srcs .nt{font:italic 400 11px var(--f-display);color:var(--mute)}
-.fig{margin:4px 0 16px}.fig-h .tt{font-size:13px}.fig-h .no{font-size:11.5px}
+.rate{display:inline-flex;gap:3px}
+.rate i{width:5px;height:5px;border-radius:50%;background:var(--line-3)}
+.rate i.on{background:var(--gold)}
+.srcs{margin:4px 0 6px}
+.srcs ol{margin:6px 0 0;padding-left:18px;font-size:12px;color:var(--soft)}
+.srcs li{margin:3px 0}
+.srcs li::marker{font:400 11px var(--f-display);color:var(--gold)}
+.srcs .nt{font:italic 400 11px var(--f-display);color:var(--mute)}
 .colophon{font-size:10.5px;color:var(--mute);line-height:1.6;border-top:var(--rule-hair) solid var(--line-2);padding-top:12px}
-.empty{font:italic 400 14px var(--f-display);color:var(--soft)}
-
+.srcs .dm{font-size:10.5px;color:var(--mute);margin-left:4px}
+.srcs a{color:var(--ink);text-decoration:underline;text-decoration-color:var(--gold);text-underline-offset:3px}
+/* exhibits under an answer */
+.exh{margin-top:16px;padding-top:2px;-webkit-user-select:text;user-select:text}

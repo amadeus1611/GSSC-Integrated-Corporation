@@ -1,0 +1,173 @@
+.by .who{font-size:9.5px;letter-spacing:var(--tracked);text-transform:uppercase;color:var(--ink)}
+.by{justify-content:flex-start;display:flex;align-items:center;gap:10px}
+.by .mark{width:26px}
+.by time{margin-left:auto;font-size:10px;letter-spacing:var(--tracked-tight);color:var(--mute)}
+.mapw{margin:12px 0 0;overflow-x:auto;overflow-y:hidden;scrollbar-width:thin}
+.mapw:empty{display:none}
+.map .ch{font:400 8px var(--f-body);letter-spacing:.16em;fill:var(--mute)}
+.map .nd{cursor:pointer;animation:ndIn .9s var(--soft-close) both}
+.map .nd:focus{outline:none}
+@keyframes ndIn{from{opacity:0;filter:blur(3px)}to{opacity:1;filter:none}}
+.map .nd:hover .bx,.map .nd:focus-visible .bx{stroke:var(--ink)}
+.map .nd.st-on .bx{stroke:var(--gold)}
+.map .nd.sel .bx{stroke:var(--gold);fill:var(--gold-wash)}
+.map text{font:300 10.5px var(--f-body);fill:var(--text)}
+.map .t1{fill:var(--ink)}
+.map .sf{font:400 11px var(--f-display);fill:var(--ink)}
+.map .it{font:italic 400 11px var(--f-display);fill:var(--text)}
+.map .cp{font-size:7.5px;letter-spacing:.15em;fill:var(--mute)}
+.map .rn{font:400 11px var(--f-display);fill:var(--gold)}
+.map .nm{font-size:9.5px;fill:var(--mute)}
+.map .sm{font-size:10px}
+.map .dt{fill:none;stroke:var(--line-3);stroke-width:1}
+.map .st-on .dt{fill:var(--gold);stroke:var(--gold);animation:breathe 2s var(--release) infinite}
+.map .st-ok .dt{fill:var(--ok);stroke:var(--ok)}
+.map .st-bad .dt{fill:var(--bad);stroke:var(--bad)}
+.map .st-filed .dt,.map .st-done .dt{fill:var(--soft);stroke:var(--soft)}
+.map .eg{fill:none;stroke:var(--line-3);stroke-width:.75;stroke-dasharray:1;stroke-dashoffset:1;transition:stroke-dashoffset 1.1s var(--soft-close)}
+.map .eg.drawn{stroke-dashoffset:0}
+.map .eg.dep{stroke:var(--gold);stroke-dasharray:2 3;stroke-dashoffset:0;opacity:0;transition:opacity .9s var(--soft-close)}
+.map .eg.dep.drawn{opacity:.55}
+.map .fl{fill:none;stroke:var(--gold);stroke-width:1;stroke-dasharray:3 6;opacity:0;transition:opacity .5s ease;animation:flow .9s linear infinite}
+.map .fl.on{opacity:.9}
+.map .pl{fill:var(--gold)}
+.dmap .map{margin:0 auto}
+/* the map's two views, and performance */
+.mvb{position:sticky;left:0;display:flex;align-items:center;gap:10px;margin:0 0 6px;min-height:22px}
+.mvr{flex:1;min-width:0;font:italic 400 11px var(--f-display);color:var(--mute);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.mvk{display:flex;gap:9px;flex:none;font-size:9.5px;color:var(--mute)}
+.mvk span{display:inline-flex;align-items:center;gap:4px}
+.mvk i{width:6px;height:6px;border-radius:50%}
+@media (max-width:760px){
+.mvk{display:none}
+}
+.dmap .mvb{padding:6px 8px 0;margin:0}
+.dmap .seg3{background:var(--sheet)}
+.map.field{display:block;width:100%;touch-action:pan-y;overflow:visible}
+.field.dragging,.field.dragging .fn{cursor:grabbing}
+.field .fn:focus{outline:none}
+.field .st-bad .core{stroke:var(--bad);stroke-width:1.6}
+.field .fn:hover .core,.field .fn:focus-visible .core,.field .fn.sel .core{stroke:var(--gold);stroke-width:1.6}
+.field .ring{fill:none;stroke:var(--gold);stroke-width:1;opacity:0;transform-box:fill-box;transform-origin:center}
+.field .st-on .ring{animation:ring 1.9s var(--release) infinite}
+@keyframes ring{0%{opacity:.85;transform:scale(1)}100%{opacity:0;transform:scale(2.4)}}
+.field .k-agent .lb{fill:var(--text)}
+.field .k-orch .lb{font:400 11px var(--f-display);fill:var(--ink)}
+.field .k-conn .lb{font:400 10.5px var(--f-display);fill:var(--ink)}
+.field .ln{stroke:var(--line-3);stroke-linecap:round;transition:opacity .35s ease,stroke .35s ease}
+.field .ln.dep{stroke:var(--gold);stroke-dasharray:2 3;opacity:.55}
+.field .lf{stroke:var(--gold);stroke-linecap:round;stroke-dasharray:3 6;opacity:0;transition:opacity .5s ease;animation:flow .9s linear infinite}
+.field .lf.on{opacity:.9}
+.field.hl .fn:not(.nb){opacity:.16}
+.field.hl .ln:not(.nb),.field.hl .lf:not(.nb){opacity:.05}
+.field.hl .ln.nb{stroke:var(--gold)}
+.field .pl{fill:var(--gold)}
+.field .hit{fill:transparent}
+.mapw:has(> .field){overflow:visible}
+/* the map */
+/* long threads: cards out of view are not painted until they come back */
+.map{display:block;overflow:visible;contain:layout paint}
+.map .fl.on,.field .lf.on{animation:flow .9s linear infinite}
+/* the liquid: a membrane drawn between parent and child as it pulls away */
+.field .neck{fill:var(--c,var(--gold));pointer-events:none}
+.field .neck.k-site,.field .neck.k-more,.field .neck.k-conn{fill:var(--gold);opacity:.4}
+.field .fn{cursor:grab;animation:none;transition:opacity .25s ease}
+.field .fn.unborn{opacity:0;pointer-events:none}
+.field .lb{font:300 10px var(--f-body);fill:var(--soft);paint-order:stroke;stroke:var(--sheet);stroke-width:3px;stroke-linejoin:round;pointer-events:none;transition:opacity .6s var(--soft-close)}
+.field .fn.young .lb{opacity:0}
+.field.hl .fn.unborn{opacity:0}
+.dmap{border:var(--rule-hair) solid var(--line-2);border-radius:3px;background:var(--well);margin:0;--n-sep:var(--well)}
+.field .core{transition:fill .5s ease,stroke .3s ease;fill:var(--c,var(--n-hollow));stroke:var(--n-sep);stroke-width:1.5}
+.field .k-orch .core{fill:var(--ink)}
+.field .k-site .core,.field .k-more .core{fill:var(--n-hollow);stroke:var(--n-rim);stroke-width:1.1}
+.field .k-agent.st-wait .core{fill:var(--n-hollow);stroke:var(--c);stroke-width:1.4}
+.field .k-site .lb,.field .k-more .lb{font-size:9.5px;fill:var(--n-lab)}
+.dmap .field .lb{stroke:var(--well)}
+.map .bx{fill:var(--panel);stroke-width:.6;transition:stroke .5s var(--soft-close),fill .5s var(--soft-close);stroke:var(--n-rim)}
+.dmap .bx{fill:var(--n-hollow)}
+.field .k-conn .core{stroke:var(--gold);stroke-width:1.5;fill:color-mix(in srgb,var(--gold) 16%,var(--n-hollow))}
+.map .eg.back{stroke:var(--gold);opacity:.55}
+.field .ln.back{stroke:var(--gold);opacity:.45;stroke-dasharray:3 3}
+.field .k-arb .core{fill:var(--gold)}
+.field .k-ans .core{fill:var(--n-hollow);stroke:var(--ok);stroke-width:1.8}
+.map .k-arb .bx{stroke:var(--gold)}
+.map .k-ans .bx{stroke:var(--ok)}
+.mfs{position:fixed;inset:20px;z-index:73;display:flex;flex-direction:column;background:var(--sheet);border:var(--rule-hair) solid var(--line-3);border-radius:10px;box-shadow:0 40px 90px -40px rgba(0,0,0,.55),var(--shadow);overflow:hidden;opacity:0;visibility:hidden;transform:scale(.985);filter:blur(4px);transition:opacity .45s var(--soft-close),transform .9s var(--soft-close),filter .6s var(--soft-close),visibility 0s linear .45s}
+.mfs.open{opacity:1;visibility:visible;transform:none;filter:none;transition-delay:0s}
+.mfs-h{display:flex;align-items:center;gap:12px;padding:12px 14px 10px 20px;border-bottom:var(--rule-hair) solid var(--line-2)}
+.mfs-h .cap{color:var(--ink)}
+.mfs-h .mt{font:italic 400 12.5px var(--f-display);color:var(--soft);flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.mfs-b{flex:1;min-height:0;display:grid;grid-template-columns:minmax(0,1fr) 340px}
+.fsmap{margin:0;padding:0;overflow:auto;min-height:0}
+.fsmap .mvb{padding:12px 16px 4px;margin:0}
+.mfs-l{border-left:var(--rule-hair) solid var(--line-2);overflow:auto;padding:16px 18px;min-height:0}
+.mfs:not(.open) *{animation-play-state:paused!important}
+@media (max-width:860px){
+.mfs{inset:8px}
+.mfs-b{grid-template-columns:1fr;grid-template-rows:minmax(0,1fr) auto}
+.mfs-l{border-left:0;border-top:var(--rule-hair) solid var(--line-2);max-height:38vh}
+}
+.field .k-doc .core{fill:var(--n-hollow);stroke:var(--gold);stroke-width:1.8}
+.map .k-doc .bx{stroke:var(--gold)}
+.mvx{flex:none;width:24px;height:24px;border-radius:5px;margin-left:4px}
+.mvx svg{width:12px!important;height:12px!important;display:block}
+.mapt{display:inline-flex;gap:6px;align-items:center;border:0;background:none;padding:0;cursor:pointer;font-size:9.5px;letter-spacing:.16em;text-transform:uppercase;color:var(--soft);transition:color .3s}
+.mapt:hover,.mapt[aria-expanded="true"]{color:var(--ink)}
+.mapt[aria-expanded="true"] svg{color:var(--gold)}
+.run .mapw{display:none;border-top:0;padding-top:8px}
+/* nothing invisible keeps animating: the flowing dash runs only on a live link */
+.map .fl,.field .lf{animation:none;stroke-dasharray:.1 8;stroke-linecap:round;stroke-width:2.2}
+@keyframes flow{to{stroke-dashoffset:-8.1}}
+.mini svg{display:block;width:100%;max-width:700px;overflow:visible}
+.mini .me{fill:none;stroke:var(--line-3);stroke-width:1;opacity:.55;transition:opacity .4s,stroke .4s}
+.mini .me.on{stroke:var(--gold);opacity:.8}
+.mini .me.dep{stroke-dasharray:2 3;opacity:.35}
+.mini .me.bk{stroke:var(--gold);opacity:.22}
+.mini .me.bk.on{opacity:.6}
+.mini .bd{fill:var(--gold)}
+.mini .md{stroke:none;fill:var(--soft)}
+.mini .md.k-orch{fill:var(--ink)}
+.mini .md.k-arb{fill:var(--gold)}
+.mini .md.k-conn{fill:var(--sheet);stroke:var(--gold);stroke-width:1.2}
+.mini .md.k-ans,.mini .md.k-doc{fill:var(--ink)}
+.mini .md.r-research{fill:var(--s1)}
+.mini .md.r-finance{fill:var(--s2)}
+.mini .md.r-legal{fill:var(--s4)}
+.mini .md.r-decision{fill:var(--s5)}
+.mini .md.s-bad{fill:var(--bad)}
+.mini .md.k-site,.mini .md.k-more{fill:var(--sheet);stroke:var(--line-3);stroke-width:1}
+.mini .md,.mini .halo{transform-box:fill-box;transform-origin:center}
+.mini .md.nb{animation:mnb var(--sp-jelly-d) var(--sp-jelly) both}
+@keyframes mnb{from{transform:scale(.1)}to{transform:scale(1)}}
+.mini .halo{fill:none;stroke:var(--gold);stroke-width:1;opacity:.5;animation:halo 1.2s ease-in-out infinite}
+@keyframes halo{0%,100%{transform:scale(.8);opacity:.55}50%{transform:scale(1.25);opacity:.12}}
+.mini .hit{fill:transparent}
+.mini text{font:400 10.5px var(--f-body);fill:var(--soft);letter-spacing:.01em;paint-order:stroke;stroke:var(--sheet);stroke-width:3.5px;stroke-linejoin:round}
+.mini text .nm{fill:var(--mute);font-size:9.5px}
+.mini .mn{cursor:pointer;outline:none;transition:opacity .15s}
+.mini .mn.on text{fill:var(--ink)}
+.mini .mn.nb text{animation:ink .6s .12s var(--soft-close) both}
+.mini svg:has(.mn:hover) .mn:not(:hover){opacity:.4}
+.mini .mn:hover text,.mini .mn:focus-visible text{fill:var(--ink)}
+@media (max-width:560px){
+.mini text{font-size:12px}
+}
+@media (prefers-reduced-motion:reduce){
+.mini .halo{display:none}
+}
+@media (max-width:560px){
+.mini .mn text{font-size:11px}
+}
+.mini .md.s-wait{opacity:.6}
+.field .fn text{transition:opacity .3s ease .3s}
+.field .fn.unborn text,.field .fn.young text{opacity:0;transition:none}
+.map .eg:not(.drawn)~.fl{opacity:0!important}
+.field .ln,.field .lf{transition:opacity .35s ease}
+.field .ln.hid,.field .lf.hid{opacity:0!important}
+.mini .me.ne{stroke-dasharray:1;stroke-dashoffset:1;animation:fgDraw .5s cubic-bezier(.3,.6,.2,1) .34s forwards}
+.mini .me.dep.ne{stroke-dasharray:none;stroke-dashoffset:0;opacity:0;animation:ink .4s .5s forwards}
+.mini .mn.nb .halo{animation:mnb var(--sp-jelly-d) var(--sp-jelly) both,halo 1.2s ease-in-out .6s infinite}
+.mfs,.mfs.open{filter:none!important}
+#mfs.open{transition-duration:.18s!important;transition-delay:0s!important}
+.mnsc{position:absolute;left:0;right:0;top:0;height:34px;pointer-events:none;z-index:3;background:linear-gradient(180deg,transparent,color-mix(in srgb,var(--gold) 16%,transparent) 55%,transparent);border-radius:inherit}
+.mnsc.up{background:linear-gradient(0deg,transparent,color-mix(in srgb,var(--gold) 16%,transparent) 55%,transparent)}

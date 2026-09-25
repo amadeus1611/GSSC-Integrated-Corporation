@@ -13,8 +13,7 @@ The build is deterministic (no timestamps, no environment input) and fails when:
   - an include is missing, or a file is included twice;
   - a .css/.js/.html file under src/ is never included (an orphan);
   - an id is declared twice in the static markup (shell plus .html partials);
-  - a CSS selector (in the same @media/@supports context) is defined in more than one unit,
-    except in the legacy version layers (src/layers/), which Phase 2.2 dissolves.
+  - a CSS selector (in the same @media/@supports context) is defined in more than one unit.
 """
 import hashlib, os, re, sys
 from collections import defaultdict
@@ -23,10 +22,7 @@ HERE = os.path.dirname(os.path.abspath(__file__))
 SRC = os.path.join(HERE, 'src')
 OUT = os.path.join(HERE, 'index.html')
 INC = re.compile(r'^<!--@include ([\w./-]+)-->$')
-LEGACY = 'layers/'
-# Selectors that v39 already defined in two base sections. Merging them would reorder the cascade,
-# which a pure restructure must not do; Phase 2.2 folds each into one unit and empties this list.
-KNOWN_DUPES = {'.dock', '.fig', '.fig-h .no', '.fig-h .tt', '.filed', '.toast', '.ttl'}
+LEGACY = 'layers/'  # none remain since Phase 2.2; kept so a stray layer is reported, not merged
 
 
 def fail(msgs):
@@ -151,7 +147,7 @@ def dup_selectors(used):
             for key in css_rules(read(os.path.join(SRC, u))):
                 where[key].add(u)
     return sorted(f'selector "{s}"{" in " + c if c else ""} is defined in {", ".join(sorted(fs))}'
-                  for (c, s), fs in where.items() if len(fs) > 1 and not (not c and s in KNOWN_DUPES))
+                  for (c, s), fs in where.items() if len(fs) > 1)
 
 
 def main():

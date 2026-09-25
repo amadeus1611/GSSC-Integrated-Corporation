@@ -268,6 +268,11 @@ For each unit: rebuild it in `src/units/<unit>/`, run the smoke test, take scree
   - [x] Gate A decided 2026-09-25 (`GATE_A.md` §Decisions), written into DESIGN_ENGINE §2, §3 and the change log
 - [x] Phase 2.1: pure restructure into `src/` plus `build.py`, parity smoke passes (2026-09-25, session 3: 80 files; the rebuilt `index.html` is byte-identical to v39, sha256 `a697549cd1499e54…`; `qa/diff.js` reports identical DOM and pixels in both themes; the 7 cross-unit selectors v39 already doubled are listed in `build.py` `KNOWN_DUPES` for 2.2)
 - [ ] Phase 2.2: tokens landed; version layers, dead rules and `!important` removed
+  - [x] Version layers folded: the 22 layers (953 rules) now live in 17 units under `src/units/`, 131 repeated selectors merged; computed styles identical to v39 in 20 UI states × 2 themes (`qa/styles.js`), pixels identical (`qa/diff.js`), smoke 0 errors
+  - [ ] `!important`, dead rules and superseded keyframes removed
+  - [ ] Tokens: `tokens.css` from the lab, snapped to the brand stack; literals replaced
+  - [ ] Motion: overshooting curves and springs replaced with the Gate A vocabulary
+  - [ ] Gate A defaults: Arbiter label, real orchestrator effort, GOO removed, still grain, settings version label
 - [ ] Phase 3.1: shell and travelling sidebar button
 - [ ] Phase 3.2: composer
 - [ ] Phase 3.3: pour across all menus, sheets and cards
