@@ -94,7 +94,8 @@ Motion is the heart of the UX: fidelity in the engine comes first.
   - one requestAnimationFrame loop per map, asleep when idle;
   - DOM updates by diff;
   - no layout reads inside animation loops.
-- **Build workflow:** patch modules on top of a base build, with anchored replacements and a smoke test before shipping.
+- **Build workflow (v41):** edit `console/src/`, never `index.html`; `build.py` assembles the page and refuses duplicate ids or a selector defined in two units. Prove refactors with `qa/styles.js` (computed styles) and `qa/diff.js` (pixels) against a baseline, and ship only on a 0-error smoke test.
+- **Tokens (v41):** every value comes from `src/tokens.css`. Spacing is a 4px scale with half steps (`--sp-half`, `--sp-1h` … `--sp-4h`) below 20px for dense chrome; a 1px nudge is optical and stays literal. Layers are named (`--z-side`, `--z-menu`, `--z-tip` …) in one stacking order. Dark tokens are written once in `@dark{}`.
 
 ## 5. Change log
 - **v41 Gate A** (2026-09-25; decisions only, the build follows):

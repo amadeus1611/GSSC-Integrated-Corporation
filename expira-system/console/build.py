@@ -14,6 +14,8 @@ The build is deterministic (no timestamps, no environment input) and fails when:
   - a .css/.js/.html file under src/ is never included (an orphan);
   - an id is declared twice in the static markup (shell plus .html partials);
   - a CSS selector (in the same @media/@supports context) is defined in more than one unit.
+In CSS files, an @dark{…} block (the dark tokens, written once) expands to the system-dark media query
+and to :root[data-theme="dark"].
 """
 import hashlib, os, re, sys
 from collections import defaultdict
@@ -36,6 +38,18 @@ def read(p):
         return f.read()
 
 
+DARK = re.compile(r'^@dark\{\n(.*?)\n\}$', re.S | re.M)
+
+
+def expand_dark(css):
+    """@dark{…} holds the dark tokens once; it becomes the system-dark media query and [data-theme="dark"]."""
+    def one(m):
+        body = m.group(1)
+        return ('@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){\n' + body + '\n}}\n'
+                ':root[data-theme="dark"]{\n' + body + '\n}')
+    return DARK.sub(one, css)
+
+
 def expand():
     shell = read(os.path.join(SRC, 'shell.html'))
     out, used, errs = [], [], []
@@ -53,6 +67,8 @@ def expand():
             errs.append(f'included twice: {rel}')
         used.append(rel)
         body = read(p)
+        if rel.endswith('.css'):
+            body = expand_dark(body)
         if not body.endswith('\n'):
             errs.append(f'{rel} must end with a newline')
         out.append(body[:-1] if body.endswith('\n') else body)

@@ -2,17 +2,17 @@
 .pw:focus-within .phx{opacity:0;transition-duration:.12s}
 .pw:not(:focus-within) #prompt::placeholder{color:transparent}
 .pw #prompt{width:100%}
-.fig-h{display:flex;align-items:baseline;gap:10px;flex-wrap:wrap;margin-bottom:8px}
-.fig-h .tb{margin-left:auto;border:0;background:none;cursor:pointer;font-size:10px;letter-spacing:var(--tracked-tight);text-transform:uppercase;color:var(--mute);padding:2px 0}
+.fig-h{display:flex;align-items:baseline;gap:var(--sp-2h);flex-wrap:wrap;margin-bottom:var(--sp-2)}
+.fig-h .tb{margin-left:auto;border:0;background:none;cursor:pointer;font-size:var(--fs-micro);letter-spacing:var(--tracked-tight);text-transform:uppercase;color:var(--mute);padding:var(--sp-half) 0}
 .fig-h .tb:hover{color:var(--ink)}
-.lg{display:flex;flex-wrap:wrap;gap:4px 14px;margin:0 0 6px;font-size:11.5px;color:var(--soft)}
-.lg span{display:inline-flex;align-items:center;gap:6px}
-.lg i{width:8px;height:8px;border-radius:2px}
+.lg{display:flex;flex-wrap:wrap;gap:var(--sp-1) var(--sp-3h);margin:0 0 var(--sp-1h);font-size:var(--fs-chrome-2);color:var(--soft)}
+.lg span{display:inline-flex;align-items:center;gap:var(--sp-1h)}
+.lg i{width:8px;height:8px;border-radius:var(--r-1)}
 .fig svg.ch{display:block;width:100%;height:auto;overflow:visible}
 .ch .gl{stroke:var(--line-2);stroke-width:.5}
 .ch .ax{stroke:var(--line-3);stroke-width:.75}
-.ch text{font:300 10px var(--f-body);fill:var(--mute)}
-.ch text.dl{fill:var(--text);font-size:10.5px}
+.ch text{font:300 var(--fs-micro) var(--f-body);fill:var(--mute)}
+.ch text.dl{fill:var(--text);font-size:var(--fs-chrome)}
 .ch .bar{transition:opacity .3s ease}
 .ch.hov .bar{opacity:.45}
 .ch.hov .bar.on{opacity:1}
@@ -20,24 +20,24 @@
 .ch.hov .xh{opacity:1}
 .ch .dot{opacity:0;stroke:var(--sheet);stroke-width:2}
 .ch.hov .dot.on{opacity:1}
-.fig .note{font:italic 400 11.5px var(--f-display);color:var(--soft);margin-top:6px}
-.fig table{margin-top:8px}
+.fig .note{font:italic 400 var(--fs-chrome-2) var(--f-display);color:var(--soft);margin-top:var(--sp-1h)}
+.fig table{margin-top:var(--sp-2)}
 .fig .tv[hidden]{display:none}
-.stat-fig{display:flex;align-items:baseline;gap:14px;flex-wrap:wrap}
-.stat-fig .big{font:400 40px/1.1 var(--f-display);color:var(--ink);font-variant-numeric:tabular-nums}
-.stat-fig .sub{font-size:12.5px;color:var(--soft)}
-.setting{font:italic 400 12.5px var(--f-display);color:var(--mute);margin:0 0 14px}
+.stat-fig{display:flex;align-items:baseline;gap:var(--sp-3h);flex-wrap:wrap}
+.stat-fig .big{font:400 var(--fs-hero)/1.1 var(--f-display);color:var(--ink);font-variant-numeric:tabular-nums}
+.stat-fig .sub{font-size:var(--fs-ui);color:var(--soft)}
+.setting{font:italic 400 var(--fs-ui) var(--f-display);color:var(--mute);margin:0 0 var(--sp-3h)}
 @keyframes blink{50%{opacity:0}}
-.fig-h .tt{font:400 14px var(--f-display);color:var(--ink);font-size:13px}
-.fig-h .no{font:italic 400 12px var(--f-display);color:var(--gold);font-size:11.5px}
+.fig-h .tt{font:400 var(--fs-body) var(--f-display);color:var(--ink);font-size:var(--fs-body)}
+.fig-h .no{font:italic 400 var(--fs-ui) var(--f-display);color:var(--gold);font-size:var(--fs-chrome-2)}
 @keyframes ink{from{opacity:0;filter:blur(3px);transform:translateY(-2px)}to{opacity:1;filter:none;transform:none}}
 /* dots on the stem, one-step theme change, charts that pour in */
-.fig-h .tb+.tb{margin-left:14px}
-.ch text.lbl{fill:var(--text);font-size:10.5px}
-.ch text.vl{fill:var(--soft);font-size:10px}
+.fig-h .tb+.tb{margin-left:var(--sp-3h)}
+.ch text.lbl{fill:var(--text);font-size:var(--fs-chrome)}
+.ch text.vl{fill:var(--soft);font-size:var(--fs-micro)}
 .ch text.tl{fill:var(--ink);font-weight:500}
-.ch .dt{font:400 17px var(--f-display);fill:var(--ink)}
-.ch .ds{fill:var(--mute);font-size:8.5px;letter-spacing:.16em;text-transform:uppercase}
+.ch .dt{font:400 var(--fs-h3) var(--f-display);fill:var(--ink)}
+.ch .ds{fill:var(--mute);font-size:var(--fs-micro);letter-spacing:.16em;text-transform:uppercase}
 .ch .rl{stroke:var(--s1);stroke-width:3;stroke-linecap:round}
 .ch .re{fill:var(--sheet);stroke:var(--s1);stroke-width:2}
 .ch .rm{stroke:var(--ink);stroke-width:1.5}
@@ -103,4 +103,4 @@
 .fig svg.ch{width:560px;max-width:none}
 }
 /* figures: charts set like a journal plate */
-.fig{padding:14px 0 0;border-top:var(--rule-medium) solid var(--ink);margin:4px 0 16px;-webkit-mask-image:none;mask-image:none}
+.fig{padding:var(--sp-3h) 0 0;border-top:var(--rule) solid var(--ink);margin:var(--sp-1) 0 var(--sp-4);-webkit-mask-image:none;mask-image:none}

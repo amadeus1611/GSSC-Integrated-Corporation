@@ -1,12 +1,12 @@
-.sh{display:flex;align-items:center;gap:6px;padding:12px 8px 4px}
+.sh{display:flex;align-items:center;gap:var(--sp-1h);padding:var(--sp-3) var(--sp-2) var(--sp-1)}
 .sh .cap{flex:1}
 .sh .ib.sm{opacity:0;transition:opacity .4s ease}
 .sh .ib.sm:focus-visible{opacity:1}
-.sheet .sx{position:absolute;right:8px;top:8px;z-index:1;width:26px;height:26px}
+.sheet .sx{position:absolute;right:8px;top:8px;z-index:var(--z-1);width:26px;height:26px}
 .speek{display:flex;flex-direction:column;flex:none}
 .speek:empty{display:none}
-.sheet.deep #sheetB{border-top:var(--rule-hair) solid var(--line-2);border-radius:6px 6px 0 0;margin:0 4px}
+.sheet.deep #sheetB{border-top:var(--rule-hair) solid var(--line-2);border-radius:var(--r-4) var(--r-4) 0 0;margin:0 var(--sp-1)}
 /* the sheet: spreads open from whatever was selected */
 /* side card reveal (own rules) */
-.sheet{position:fixed;z-index:88;left:0;top:0;width:min(380px,calc(100vw - 24px));max-height:min(72vh,560px);display:flex;flex-direction:column;background:var(--panel);border:var(--rule-hair) solid var(--line-3);border-radius:8px;box-shadow:var(--shadow);visibility:hidden;--ox:0px;--oy:0px;clip-path:circle(0px at var(--ox) var(--oy));transition:clip-path .38s cubic-bezier(.55,0,.75,.25),visibility 0s linear .38s}
+.sheet{position:fixed;z-index:var(--z-pop);left:0;top:0;width:min(380px,calc(100vw - 24px));max-height:min(72vh,560px);display:flex;flex-direction:column;background:var(--panel);border:var(--rule-hair) solid var(--line-3);border-radius:var(--r-5);box-shadow:var(--e2);visibility:hidden;--ox:0px;--oy:0px;clip-path:circle(0px at var(--ox) var(--oy));transition:clip-path .38s cubic-bezier(.55,0,.75,.25),visibility 0s linear .38s}
 .sheet.open{visibility:visible;clip-path:circle(calc(150% + 80px) at var(--ox) var(--oy));transition:clip-path .9s cubic-bezier(.22,1,.36,1),visibility 0s}

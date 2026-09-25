@@ -1,24 +1,24 @@
-.by .who{font-size:9.5px;letter-spacing:var(--tracked);text-transform:uppercase;color:var(--ink)}
-.by{justify-content:flex-start;display:flex;align-items:center;gap:10px}
+.by .who{font-size:var(--fs-micro);letter-spacing:var(--tracked);text-transform:uppercase;color:var(--ink)}
+.by{justify-content:flex-start;display:flex;align-items:center;gap:var(--sp-2h)}
 .by .mark{width:26px}
-.by time{margin-left:auto;font-size:10px;letter-spacing:var(--tracked-tight);color:var(--mute)}
-.mapw{margin:12px 0 0;overflow-x:auto;overflow-y:hidden;scrollbar-width:thin}
+.by time{margin-left:auto;font-size:var(--fs-micro);letter-spacing:var(--tracked-tight);color:var(--mute)}
+.mapw{margin:var(--sp-3) 0 0;overflow-x:auto;overflow-y:hidden;scrollbar-width:thin}
 .mapw:empty{display:none}
-.map .ch{font:400 8px var(--f-body);letter-spacing:.16em;fill:var(--mute)}
+.map .ch{font:400 var(--fs-micro) var(--f-body);letter-spacing:.16em;fill:var(--mute)}
 .map .nd{cursor:pointer;animation:ndIn .9s var(--soft-close) both}
 .map .nd:focus{outline:none}
 @keyframes ndIn{from{opacity:0;filter:blur(3px)}to{opacity:1;filter:none}}
 .map .nd:hover .bx,.map .nd:focus-visible .bx{stroke:var(--ink)}
 .map .nd.st-on .bx{stroke:var(--gold)}
 .map .nd.sel .bx{stroke:var(--gold);fill:var(--gold-wash)}
-.map text{font:300 10.5px var(--f-body);fill:var(--text)}
+.map text{font:300 var(--fs-chrome) var(--f-body);fill:var(--text)}
 .map .t1{fill:var(--ink)}
-.map .sf{font:400 11px var(--f-display);fill:var(--ink)}
-.map .it{font:italic 400 11px var(--f-display);fill:var(--text)}
-.map .cp{font-size:7.5px;letter-spacing:.15em;fill:var(--mute)}
-.map .rn{font:400 11px var(--f-display);fill:var(--gold)}
-.map .nm{font-size:9.5px;fill:var(--mute)}
-.map .sm{font-size:10px}
+.map .sf{font:400 var(--fs-chrome-2) var(--f-display);fill:var(--ink)}
+.map .it{font:italic 400 var(--fs-chrome-2) var(--f-display);fill:var(--text)}
+.map .cp{font-size:var(--fs-micro);letter-spacing:.15em;fill:var(--mute)}
+.map .rn{font:400 var(--fs-chrome-2) var(--f-display);fill:var(--gold)}
+.map .nm{font-size:var(--fs-micro);fill:var(--mute)}
+.map .sm{font-size:var(--fs-micro)}
 .map .dt{fill:none;stroke:var(--line-3);stroke-width:1}
 .map .st-on .dt{fill:var(--gold);stroke:var(--gold);animation:breathe 2s var(--release) infinite}
 .map .st-ok .dt{fill:var(--ok);stroke:var(--ok)}
@@ -33,15 +33,15 @@
 .map .pl{fill:var(--gold)}
 .dmap .map{margin:0 auto}
 /* the map's two views, and performance */
-.mvb{position:sticky;left:0;display:flex;align-items:center;gap:10px;margin:0 0 6px;min-height:22px}
-.mvr{flex:1;min-width:0;font:italic 400 11px var(--f-display);color:var(--mute);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.mvk{display:flex;gap:9px;flex:none;font-size:9.5px;color:var(--mute)}
-.mvk span{display:inline-flex;align-items:center;gap:4px}
-.mvk i{width:6px;height:6px;border-radius:50%}
+.mvb{position:sticky;left:0;display:flex;align-items:center;gap:var(--sp-2h);margin:0 0 var(--sp-1h);min-height:22px}
+.mvr{flex:1;min-width:0;font:italic 400 var(--fs-chrome-2) var(--f-display);color:var(--mute);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.mvk{display:flex;gap:var(--sp-2);flex:none;font-size:var(--fs-micro);color:var(--mute)}
+.mvk span{display:inline-flex;align-items:center;gap:var(--sp-1)}
+.mvk i{width:6px;height:6px;border-radius:var(--r-round)}
 @media (max-width:760px){
 .mvk{display:none}
 }
-.dmap .mvb{padding:6px 8px 0;margin:0}
+.dmap .mvb{padding:var(--sp-1h) var(--sp-2) 0;margin:0}
 .dmap .seg3{background:var(--sheet)}
 .map.field{display:block;width:100%;touch-action:pan-y;overflow:visible}
 .field.dragging,.field.dragging .fn{cursor:grabbing}
@@ -52,8 +52,8 @@
 .field .st-on .ring{animation:ring 1.9s var(--release) infinite}
 @keyframes ring{0%{opacity:.85;transform:scale(1)}100%{opacity:0;transform:scale(2.4)}}
 .field .k-agent .lb{fill:var(--text)}
-.field .k-orch .lb{font:400 11px var(--f-display);fill:var(--ink)}
-.field .k-conn .lb{font:400 10.5px var(--f-display);fill:var(--ink)}
+.field .k-orch .lb{font:400 var(--fs-chrome-2) var(--f-display);fill:var(--ink)}
+.field .k-conn .lb{font:400 var(--fs-chrome) var(--f-display);fill:var(--ink)}
 .field .ln{stroke:var(--line-3);stroke-linecap:round;transition:opacity .35s ease,stroke .35s ease}
 .field .ln.dep{stroke:var(--gold);stroke-dasharray:2 3;opacity:.55}
 .field .lf{stroke:var(--gold);stroke-linecap:round;stroke-dasharray:3 6;opacity:0;transition:opacity .5s ease;animation:flow .9s linear infinite}
@@ -73,15 +73,15 @@
 .field .neck.k-site,.field .neck.k-more,.field .neck.k-conn{fill:var(--gold);opacity:.4}
 .field .fn{cursor:grab;animation:none;transition:opacity .25s ease}
 .field .fn.unborn{opacity:0;pointer-events:none}
-.field .lb{font:300 10px var(--f-body);fill:var(--soft);paint-order:stroke;stroke:var(--sheet);stroke-width:3px;stroke-linejoin:round;pointer-events:none;transition:opacity .6s var(--soft-close)}
+.field .lb{font:300 var(--fs-micro) var(--f-body);fill:var(--soft);paint-order:stroke;stroke:var(--sheet);stroke-width:3px;stroke-linejoin:round;pointer-events:none;transition:opacity .6s var(--soft-close)}
 .field .fn.young .lb{opacity:0}
 .field.hl .fn.unborn{opacity:0}
-.dmap{border:var(--rule-hair) solid var(--line-2);border-radius:3px;background:var(--well);margin:0;--n-sep:var(--well)}
+.dmap{border:var(--rule-hair) solid var(--line-2);border-radius:var(--r-1);background:var(--well);margin:0;--n-sep:var(--well)}
 .field .core{transition:fill .5s ease,stroke .3s ease;fill:var(--c,var(--n-hollow));stroke:var(--n-sep);stroke-width:1.5}
 .field .k-orch .core{fill:var(--ink)}
 .field .k-site .core,.field .k-more .core{fill:var(--n-hollow);stroke:var(--n-rim);stroke-width:1.1}
 .field .k-agent.st-wait .core{fill:var(--n-hollow);stroke:var(--c);stroke-width:1.4}
-.field .k-site .lb,.field .k-more .lb{font-size:9.5px;fill:var(--n-lab)}
+.field .k-site .lb,.field .k-more .lb{font-size:var(--fs-micro);fill:var(--n-lab)}
 .dmap .field .lb{stroke:var(--well)}
 .map .bx{fill:var(--panel);stroke-width:.6;transition:stroke .5s var(--soft-close),fill .5s var(--soft-close);stroke:var(--n-rim)}
 .dmap .bx{fill:var(--n-hollow)}
@@ -92,15 +92,15 @@
 .field .k-ans .core{fill:var(--n-hollow);stroke:var(--ok);stroke-width:1.8}
 .map .k-arb .bx{stroke:var(--gold)}
 .map .k-ans .bx{stroke:var(--ok)}
-.mfs{position:fixed;inset:20px;z-index:73;display:flex;flex-direction:column;background:var(--sheet);border:var(--rule-hair) solid var(--line-3);border-radius:10px;box-shadow:0 40px 90px -40px rgba(0,0,0,.55),var(--shadow);overflow:hidden;opacity:0;visibility:hidden;transform:scale(.985);filter:blur(4px);transition:opacity .45s var(--soft-close),transform .9s var(--soft-close),filter .6s var(--soft-close),visibility 0s linear .45s}
+.mfs{position:fixed;inset:20px;z-index:var(--z-map);display:flex;flex-direction:column;background:var(--sheet);border:var(--rule-hair) solid var(--line-3);border-radius:var(--r-5);box-shadow:var(--e3);overflow:hidden;opacity:0;visibility:hidden;transform:scale(.985);filter:blur(4px);transition:opacity .45s var(--soft-close),transform .9s var(--soft-close),filter .6s var(--soft-close),visibility 0s linear .45s}
 .mfs.open{opacity:1;visibility:visible;transform:none;filter:none;transition-delay:0s}
-.mfs-h{display:flex;align-items:center;gap:12px;padding:12px 14px 10px 20px;border-bottom:var(--rule-hair) solid var(--line-2)}
+.mfs-h{display:flex;align-items:center;gap:var(--sp-3);padding:var(--sp-3) var(--sp-3h) var(--sp-2h) var(--sp-5);border-bottom:var(--rule-hair) solid var(--line-2)}
 .mfs-h .cap{color:var(--ink)}
-.mfs-h .mt{font:italic 400 12.5px var(--f-display);color:var(--soft);flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.mfs-h .mt{font:italic 400 var(--fs-ui) var(--f-display);color:var(--soft);flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .mfs-b{flex:1;min-height:0;display:grid;grid-template-columns:minmax(0,1fr) 340px}
 .fsmap{margin:0;padding:0;overflow:auto;min-height:0}
-.fsmap .mvb{padding:12px 16px 4px;margin:0}
-.mfs-l{border-left:var(--rule-hair) solid var(--line-2);overflow:auto;padding:16px 18px;min-height:0}
+.fsmap .mvb{padding:var(--sp-3) var(--sp-4) var(--sp-1);margin:0}
+.mfs-l{border-left:var(--rule-hair) solid var(--line-2);overflow:auto;padding:var(--sp-4) var(--sp-4h);min-height:0}
 /* !important: a closed or off-screen surface rests; beats each unit's animation shorthand */
 .mfs:not(.open) *{animation-play-state:paused!important}
 @media (max-width:860px){
@@ -110,12 +110,12 @@
 }
 .field .k-doc .core{fill:var(--n-hollow);stroke:var(--gold);stroke-width:1.8}
 .map .k-doc .bx{stroke:var(--gold)}
-.mvx{flex:none;width:24px;height:24px;border-radius:5px;margin-left:4px}
+.mvx{flex:none;width:24px;height:24px;border-radius:var(--r-3);margin-left:var(--sp-1)}
 .ib.mvx svg{width:12px;height:12px;display:block}
-.mapt{display:inline-flex;gap:6px;align-items:center;border:0;background:none;padding:0;cursor:pointer;font-size:9.5px;letter-spacing:.16em;text-transform:uppercase;color:var(--soft);transition:color .3s}
+.mapt{display:inline-flex;gap:var(--sp-1h);align-items:center;border:0;background:none;padding:0;cursor:pointer;font-size:var(--fs-micro);letter-spacing:.16em;text-transform:uppercase;color:var(--soft);transition:color .3s}
 .mapt:hover,.mapt[aria-expanded="true"]{color:var(--ink)}
 .mapt[aria-expanded="true"] svg{color:var(--gold)}
-.run .mapw{display:none;border-top:0;padding-top:8px}
+.run .mapw{display:none;border-top:0;padding-top:var(--sp-2)}
 /* nothing invisible keeps animating: the flowing dash runs only on a live link */
 .map .fl,.field .lf{animation:none;stroke-dasharray:.1 8;stroke-linecap:round;stroke-width:2.2}
 @keyframes flow{to{stroke-dashoffset:-8.1}}
@@ -143,21 +143,21 @@
 .mini .halo{fill:none;stroke:var(--gold);stroke-width:1;opacity:.5;animation:halo 1.2s ease-in-out infinite}
 @keyframes halo{0%,100%{transform:scale(.8);opacity:.55}50%{transform:scale(1.25);opacity:.12}}
 .mini .hit{fill:transparent}
-.mini text{font:400 10.5px var(--f-body);fill:var(--soft);letter-spacing:.01em;paint-order:stroke;stroke:var(--sheet);stroke-width:3.5px;stroke-linejoin:round}
-.mini text .nm{fill:var(--mute);font-size:9.5px}
+.mini text{font:400 var(--fs-chrome) var(--f-body);fill:var(--soft);letter-spacing:.01em;paint-order:stroke;stroke:var(--sheet);stroke-width:3.5px;stroke-linejoin:round}
+.mini text .nm{fill:var(--mute);font-size:var(--fs-micro)}
 .mini .mn{cursor:pointer;outline:none;transition:opacity .15s}
 .mini .mn.on text{fill:var(--ink)}
 .mini .mn.nb text{animation:ink .6s .12s var(--soft-close) both}
 .mini svg:has(.mn:hover) .mn:not(:hover){opacity:.4}
 .mini .mn:hover text,.mini .mn:focus-visible text{fill:var(--ink)}
 @media (max-width:560px){
-.mini text{font-size:12px}
+.mini text{font-size:var(--fs-ui)}
 }
 @media (prefers-reduced-motion:reduce){
 .mini .halo{display:none}
 }
 @media (max-width:560px){
-.mini .mn text{font-size:11px}
+.mini .mn text{font-size:var(--fs-chrome-2)}
 }
 .mini .md.s-wait{opacity:.6}
 .field .fn text{transition:opacity .3s ease .3s}
@@ -174,5 +174,5 @@
 .mfs,.mfs.open{filter:none!important}
 /* !important: holds the v39 CSS entrance off while the JS pour runs (replaced in Phase 3.3) */
 #mfs.open{transition-duration:.18s!important;transition-delay:0s!important}
-.mnsc{position:absolute;left:0;right:0;top:0;height:34px;pointer-events:none;z-index:3;background:linear-gradient(180deg,transparent,color-mix(in srgb,var(--gold) 16%,transparent) 55%,transparent);border-radius:inherit}
+.mnsc{position:absolute;left:0;right:0;top:0;height:34px;pointer-events:none;z-index:var(--z-3);background:linear-gradient(180deg,transparent,color-mix(in srgb,var(--gold) 16%,transparent) 55%,transparent);border-radius:inherit}
 .mnsc.up{background:linear-gradient(0deg,transparent,color-mix(in srgb,var(--gold) 16%,transparent) 55%,transparent)}

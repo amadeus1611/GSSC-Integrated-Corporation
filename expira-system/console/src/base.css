@@ -1,3 +1,12 @@
+html,body{height:100%}
+body{margin:0;background:var(--bg);color:var(--text);font:300 var(--fs-body)/1.6 var(--f-body);-webkit-font-smoothing:antialiased;overflow:hidden}
+button,input,textarea{font:inherit;color:inherit}
+:focus-visible{outline:var(--rule) solid var(--gold);outline-offset:2px;border-radius:var(--r-1)}
+.sr{position:absolute;left:-9999px}
+.num{font-variant-numeric:tabular-nums;letter-spacing:var(--tracked-num)}
+.cap{font-size:var(--fs-micro);font-weight:400;letter-spacing:var(--tracked);text-transform:uppercase;color:var(--mute)}
+.capt{font-size:var(--fs-micro);font-weight:400;letter-spacing:var(--tracked-tight);text-transform:uppercase;color:var(--mute)}
+.serif{font-family:var(--f-display);font-weight:400}
 /* the shared entrance: fade with a soft blur, soft close */
 @keyframes blurIn{from{opacity:.001;filter:blur(5px);transform:translateY(6px)}to{opacity:1;filter:none;transform:none}}
 .bi{animation:blurIn .9s var(--soft-close) both}
@@ -9,7 +18,7 @@
 /* !important: the motion kill switch must beat every unit's own motion */
 html.calm *,html.calm *::before,html.calm *::after{animation:none!important;transition:none!important}
 ::selection{background:var(--sel);color:inherit}
-.ib{width:30px;height:30px;display:grid;place-items:center;border:0;background:transparent;border-radius:5px;cursor:pointer;color:var(--soft);transition:background var(--out) var(--soft-close),color var(--out) var(--soft-close);padding:0}
+.ib{width:30px;height:30px;display:grid;place-items:center;border:0;background:transparent;border-radius:var(--r-3);cursor:pointer;color:var(--soft);transition:background var(--out) var(--soft-close),color var(--out) var(--soft-close);padding:0}
 /* ink, steer, costs, beads, the liquid field */
 .w{animation:inkw .56s var(--soft-close) both}
 @keyframes inkw{from{opacity:0;filter:blur(3px);transform:translateY(1.5px)}60%{opacity:.85;filter:blur(.4px)}to{opacity:1;filter:none;transform:none}}
