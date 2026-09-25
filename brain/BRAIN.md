@@ -38,7 +38,8 @@ Internal register: dense and lossless. Duke gives the values, vision and directi
 
 ## Short-term memory (current iteration)
 - v38.2 shipped: the focus lens, the trio loader beside the glyph, intent-led logs, the full-screen pause, readable Flow labels, and the liquid close fix.
-- Next candidates: the Out-lane crowding at the right edge of the Flow map; the Field map in full screen using the full height; the lens inside the mini map.
+- v38.3 shipped: Flow end steps get label room (min interval 26/32px, wider right pad); the full-screen Field spreads over the whole stage (weaker centre pull, stronger repel).
+- Next candidates: the lens inside the mini map (host clipping to solve first); the first site labels in the full-screen Field appear late during replay.
 
 ## Open threads
 - The Dispatch Flow map has only had a smoke test. Its label readability should get the same treatment as the mini map.
