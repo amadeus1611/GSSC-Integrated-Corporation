@@ -39,6 +39,6 @@ Owner: Duke Y. Demayo. Working branch: `claude/wizardly-ptolemy-6q4ter`, PR amad
 - **Client-facing GSSC output** must pass the kernel module 04 firewall: no suppliers, costs, margins or bank details.
 
 ## Working efficiently
-- Read only the part of a large file you need; `index.html` is several MB of inline data. Use grep to find the anchor, then read around it.
+- Read only the part of a large file you need; `index.html` is ~500 KB of dense inline code and data. Use grep to find the anchor, then read around it.
 - Don't launch sub-agents for small or sequential work. Use them only for large, separable tasks such as broad research or parallel reviews.
 - Batch related edits and verify once, rather than publishing and screenshotting after every tweak.
