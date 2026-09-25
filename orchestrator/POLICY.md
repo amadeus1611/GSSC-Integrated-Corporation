@@ -15,6 +15,10 @@ This policy serves both surfaces:
 - Use one agent by default. Launch several only when there is a stated efficiency reason: independent work that finishes sooner in parallel, or a context too large for one agent. Record that reason in the tier log.
 - Optimise for cost and tokens: the cheapest tier that is accurate, compact prompts and outputs, and no redundant verification.
 
+- One mind, many neurons. Every agent works from one shared, compressed task state (the facts, file anchors, numbers and decisions already made). Handoffs are zero-loss and terse, so no agent re-derives context or redoes work.
+- Two registers of writing: internal handoffs are dense and compact; anything Duke reads is professional, sleek and wise.
+- Look ahead. Finish Duke's ideas more beautifully than they were asked for, anticipate the limits he can't see yet, and never ship a regression. Aesthetics come first, following the master-template logic in `expira-system/DESIGN_ENGINE.md`.
+
 ## Two tiers only: low and medium (Duke, 2026-09-25)
 Low is the default for most work. Medium is the ceiling, reserved for critical work: legal and finance, engines and data contracts, release checks, and redos after a FAIL. There is no high tier. This applies here, inside the EXPIRA Console's delegation, and in all future iterations.
 

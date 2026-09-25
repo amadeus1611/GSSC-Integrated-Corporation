@@ -1575,6 +1575,31 @@ html.theming,html.theming *,html.theming *::before,html.theming *::after{transit
 .field .fn.unborn{opacity:0;pointer-events:none;transition:none}
 .field .fn.bud{pointer-events:none}
 .field .neck{fill:var(--c,var(--gold));pointer-events:none}
+/* v38 · polish */
+.brand .mark,.hero .mark,svg.mark{overflow:visible}
+.run .rv{z-index:3}
+.run-h .lbl{pointer-events:none}
+.brand,.side-h,.side .top{overflow:visible}
+#prompt{font-size:13px}
+#prompt::placeholder{font-size:13px}
+.cbar,.cbar .optb,.cbar .cr,.cbar .mdl{font-size:10.5px}
+.cbar .mode{font-size:9px}
+.inthis button{font-size:10.5px;padding:1px 7px}
+.inthis button b{font-size:10px}
+.fu{height:26px;font-size:11px;gap:8px}
+.fu b{font-size:9.5px}
+.mini .tm text{font-size:10.5px}
+.mini .tm .ax text,.mini .tm .lab .sq,.mini .tm .lab .mt,.mini .tm .ph text{font-size:9.5px}
+.mini .tm .lab{opacity:1;transform:none;animation:labIn .5s var(--soft-close) both}
+@keyframes labIn{from{opacity:0;transform:translateX(-3px)}}
+/* the thinking thread: a mercury bead that stretches as it runs and pools at the ends */
+.sheen{height:3px;background:none;overflow:visible;margin-bottom:0}
+.sheen::after{top:1px;height:var(--rule-hair);inset:auto 0 auto 0;background:var(--line-2);transform:none}
+.run.settled .sheen::after,.think.settled .sheen::after{background:linear-gradient(90deg,var(--line-2),color-mix(in srgb,var(--gold) 55%,var(--line-2)) 50%,var(--line-2))}
+.run.running .sheen::before,.think.running .sheen::before{display:block;top:0;height:3px;width:44px;border-radius:3px;opacity:1;background:radial-gradient(closest-side,var(--gold),color-mix(in srgb,var(--gold) 40%,transparent) 60%,transparent);filter:none;transform-origin:50% 50%;animation:merc 2.6s cubic-bezier(.62,0,.38,1) infinite}
+@keyframes merc{0%{transform:translateX(-50px) scaleX(.3);opacity:0}14%{opacity:1}50%{transform:translateX(calc(50cqw - 22px)) scaleX(1.9)}86%{opacity:1}100%{transform:translateX(calc(100cqw + 8px)) scaleX(.3);opacity:0}}
+.sheen{container-type:inline-size}
+@media (prefers-reduced-motion:reduce){.run.running .sheen::before{animation:none;opacity:.6;transform:none;width:100%;height:1px;top:1px}}
 </style>
 
 <div class="app has-chat" id="app">
@@ -3266,7 +3291,7 @@ const E_cancel=el=>{const r=el._E;if(!r)return;r.gen=(r.gen||0)+1;if(r.a){try{r.
 const E_conv=(s,L,c,L2,c2)=>({tx:s.tx+(c.x-c2.x)+s.sx*((c2.x-L2.x)-(c.x-L.x)),ty:s.ty+(c.y-c2.y)+s.sy*((c2.y-L2.y)-(c.y-L.y))});
 const E_tf=(b,v)=>`${b?b+" ":""}translate(${v.tx.toFixed(2)}px,${v.ty.toFixed(2)}px) scale(${v.sx.toFixed(4)},${v.sy.toFixed(4)})`;
 const E_bake=(el,rec,f,T,mode,fill)=>{T=Math.max(17,Math.round(T));const n=Math.max(2,Math.min(120,Math.ceil(T/16.67)+1)),kf=[];
- for(let i=0;i<n;i++){const t=T*i/(n-1);let v=f(t);if(i===n-1&&mode!=="close")v=E_REST;kf.push({offset:i/(n-1),transform:E_tf(rec.b,v),opacity:Math.max(0,Math.min(1,v.op)).toFixed(4)})}
+ for(let i=0;i<n;i++){const t=T*i/(n-1);let v=f(t);if(i===n-1&&mode!=="close")v=E_REST;const _k={offset:i/(n-1),transform:E_tf(rec.b,v),opacity:Math.max(0,Math.min(1,v.op)).toFixed(4)};if(!reduce&&mode!=="move"&&rec.W){if(rec.br==null){const cs=getComputedStyle(el);rec.br=parseFloat(cs.borderTopLeftRadius)||6;rec.bamp=rec.W*rec.H>200000?.35:1}const q=Math.max(0,Math.min(1,1-Math.min(v.sx,v.sy))),m=Math.min(1,Math.max(q*1.6,Math.pow(Math.max(0,1-t/(T*.72)),1.6)))*rec.bamp,ph=t/1000*9;if(i===n-1&&mode!=="close")_k.borderRadius=rec.br+"px";else{const c=j=>rec.br+m*Math.min(rec.W,rec.H)*(.42+.12*Math.sin(ph+j*1.9)),d=j=>rec.br+m*Math.min(rec.W,rec.H)*(.46+.12*Math.cos(ph*1.1+j*2.3));_k.borderRadius=`${c(0).toFixed(1)}px ${c(1).toFixed(1)}px ${c(2).toFixed(1)}px ${c(3).toFixed(1)}px / ${d(0).toFixed(1)}px ${d(1).toFixed(1)}px ${d(2).toFixed(1)}px ${d(3).toFixed(1)}px`}}kf.push(_k)}
  const a=el.animate(kf,{duration:T,easing:"linear",fill:fill||"none"});rec.a=a;rec.f=f;rec.T=T;rec.mode=mode;rec.done=false;
  const g=rec.gen;a.finished.then(()=>{if(el._E!==rec||rec.gen!==g||rec.a!==a)return;if(mode==="close"){el.classList.remove("e-out");rec.done=true;try{a.cancel()}catch(e){}rec.a=null;(rec.kids||[]).forEach(k=>{try{k.cancel()}catch(e){}});rec.kids=[]}},()=>{});return a};
 
@@ -4187,7 +4212,7 @@ barHTML=function(v,w,o){let h=W_bar0(v,w,o);if(v==="flow"&&!(o&&o.pv))h=h.replac
 const B_KO={orch:0,arb:1,agent:2,conn:3,site:4,more:5,ans:6,doc:7};
 const B_ss=(a,b,x)=>{const t=Math.max(0,Math.min(1,(x-a)/(b-a)));return t*t*(3-2*t)};
 /* timings in ms (live); replays scale them by B_REP and use a shorter stagger */
-const B_T={gap:150,sw:200,nk:800,w0:10,gl:520,rl:600,die:440,gapR:120},B_REP=.5;
+const B_T={gap:110,sw:90,nk:560,w0:13,gl:380,rl:520,die:440,gapR:90},B_REP=.5;
 const B_hash=s=>{let h=2166136261;for(let i=0;i<s.length;i++){h^=s.charCodeAt(i);h=Math.imul(h,16777619)}return ((h>>>0)%10000)/10000-.5};
 const B_nid=(a,b)=>a.localeCompare(b,undefined,{numeric:true});
 /* the membrane between parent and bud: Sato's metaball, without the max-distance cut (the pinch is driven by v→0, so it never snaps) */
@@ -4200,6 +4225,7 @@ const B_mb=(r1,r2,c1,c2,hs,v)=>{const HP=Math.PI/2,d=Math.hypot(c2[0]-c1[0],c2[1
  return `M${f(p1)}C${f(h1)} ${f(h3)} ${f(p3)}A${r2.toFixed(1)},${r2.toFixed(1)} 0 ${d>r1?1:0} 0 ${f(p4)}C${f(h4)} ${f(h2)} ${f(p2)}Z`};
 const B_inBud=o=>!!(o.b&&!o.b.die);
 /* one record shape for every force step (keeps the hot loop monomorphic) */
+const B_tx=(m,o)=>{const c=m.cx[o.col]??m.W/2,sq=o.n&&o.n.seq;if(!sq)return c;let mx=1;for(const x of m.nodes.values())if(x.n&&x.n.seq>mx)mx=x.n.seq;if(mx<2)return c;const p=Math.min(56,m.W*.08);return (p+(sq-1)/(mx-1)*(m.W-2*p))*.7+c*.3};
 const B_rec=(o,x,y,vx,vy,s,kin,lk,rc,pin,la,cap)=>({o,x,y,vx,vy,s,kin,lk,m:o.m,R:o.R,lw:o.lw||0,col:o.col,rc,pin,la,cap,bp:null});
 /* one force step over records {x,y,vx,vy,s,kin,lk,m,R,lw,col,rc,pin,cap,la,bp}; shared by the live tick and the offline pre-settle */
 const B_step=(m,P,LK,A,F=1)=>{const H=m.Hc,n=P.length;
@@ -4211,7 +4237,7 @@ const B_step=(m,P,LK,A,F=1)=>{const H=m.Hc,n=P.length;
    const d=Math.sqrt(d2),min=a.R+b.R;if(d<min){const p=(min-d)/d*.35*w;ax-=dx*p;ay-=dy*p;bx+=dx*p;by+=dy*p}
    if(Math.abs(dy)<20&&Math.abs(dx)<(a.lw+b.lw)/2+8){const p=(20-Math.abs(dy))*.09*(dy<0?-1:1)*w;ay-=p;by+=p}
    if(!a.kin){a.vx+=ax;a.vy+=ay}if(!b.kin){b.vx+=bx;b.vy+=by}}}
- for(const o of P){if(o.kin)continue;o.vx+=((m.cx[o.col]??m.W/2)-o.x)*.1*A*FORCES.center*o.s;o.vy+=(H/2-o.y)*.018*A*FORCES.center*o.s}
+ for(const o of P){if(o.kin)continue;o.vx+=(B_tx(m,o)-o.x)*.1*A*FORCES.center*o.s;o.vy+=(H/2-o.y)*.018*A*FORCES.center*o.s}
  for(const o of P){if(o.kin)continue;o.vx*=.6;o.vy*=.6;if(o.pin){o.vx=o.vy=0}const sp=Math.hypot(o.vx,o.vy);if(o.cap&&sp>o.cap){o.vx*=o.cap/sp;o.vy*=o.cap/sp}
   o.x+=o.vx*F;o.y+=o.vy*F;const px=Math.max(o.rc+2,o.lw/2+4);o.x=Math.min(m.W-px,Math.max(px,o.x));o.y=Math.min(H-o.rc-17,Math.max(o.rc+8,o.y));o.la*=.97}};
 /* the final layout, computed off-screen (fresh maps): every bud then grows straight toward where it will rest */
