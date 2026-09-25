@@ -1,0 +1,38 @@
+/* ---------- v17: selection, quotes, message actions ---------- */
+:root{--sel:rgba(168,134,47,.26)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--sel:rgba(200,164,90,.34)}}
+:root[data-theme="dark"]{--sel:rgba(200,164,90,.34)}
+::selection{background:var(--sel);color:inherit}
+.ans,.you,.sb,.notes,.olog,.delib,.exh,.dsp h2{-webkit-user-select:text;user-select:text}
+.selbar{position:fixed;left:0;top:0;z-index:96;display:flex;align-items:center;gap:1px;padding:3px;border-radius:7px;background:var(--ink);color:var(--bg);box-shadow:0 10px 30px -10px rgba(0,0,0,.45);opacity:0;visibility:hidden;transform:translateY(4px) scale(.98);filter:blur(2px);transition:opacity .2s ease,transform .45s var(--soft-close),filter .3s ease,visibility 0s linear .2s;pointer-events:none}
+.selbar.open{opacity:1;visibility:visible;transform:none;filter:none;pointer-events:auto;transition-delay:0s}
+.selbar::after{content:"";position:absolute;left:var(--cx,50%);top:100%;width:8px;height:8px;margin:-4px 0 0 -4px;background:var(--ink);transform:rotate(45deg);border-radius:1px}
+.selbar.below::after{top:0}
+.selbar button{display:flex;align-items:center;gap:6px;border:0;background:none;color:inherit;font:400 11.5px var(--f-body);padding:5px 9px;border-radius:5px;cursor:pointer;white-space:nowrap;opacity:.86;transition:background .2s ease,opacity .2s ease}
+.selbar button:hover,.selbar button:focus-visible{background:color-mix(in srgb,var(--bg) 14%,transparent);opacity:1;outline:none}
+.selbar svg{width:13px;height:13px;flex:none}
+.selbar .sep{width:1px;height:14px;background:color-mix(in srgb,var(--bg) 22%,transparent);margin:0 3px}
+.defc{position:fixed;left:0;top:0;z-index:95;width:min(320px,calc(100vw - 24px));padding:12px 14px 10px;border-radius:8px;background:var(--panel);border:var(--rule-hair) solid var(--line-3);box-shadow:var(--shadow);opacity:0;visibility:hidden;transform:translateY(-4px);transition:opacity .25s ease,transform .5s var(--soft-close),visibility 0s linear .25s}
+.defc.open{opacity:1;visibility:visible;transform:none;transition-delay:0s}
+.defc .dk{color:var(--gold)}.defc .dt{font:400 15px/1.3 var(--f-display);color:var(--ink);margin:4px 0 6px;overflow:hidden;text-overflow:ellipsis;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical}
+.defc .dd{margin:0;font-size:12.5px;line-height:1.6;color:var(--text);min-height:20px}
+.defc .dd.wait{color:var(--mute);font:italic 400 12px var(--f-display)}
+.defc .da{display:flex;justify-content:flex-end;gap:4px;margin-top:8px;padding-top:6px;border-top:var(--rule-hair) solid var(--line)}
+.qbar{max-width:720px;margin:0 auto 5px;display:flex;align-items:center;gap:8px;padding:6px 6px 6px 10px;border:var(--rule-hair) solid var(--line-2);border-left:var(--rule-medium) solid var(--gold);border-radius:5px;background:var(--well);animation:blurIn .45s var(--soft-close) both}
+.qbar[hidden]{display:none}
+.qbar>svg{width:11px;height:11px;color:var(--gold);flex:none}
+.qbar .qk{font-size:9.5px;letter-spacing:var(--tracked-tight);text-transform:uppercase;color:var(--mute);flex:none}
+.qbar .qt{flex:1;min-width:0;font:italic 400 12.5px/1.4 var(--f-display);color:var(--text);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.app:not(.has-chat) .qbar{width:100%}
+/* your messages: a quote block, and Copy / Edit on hover */
+.yw{position:relative;align-self:flex-end;display:flex;flex-direction:column;align-items:flex-end;max-width:min(82%,560px);margin-bottom:-14px}
+.yw .you{align-self:auto;max-width:100%;margin:0}
+.you .yq{display:block;margin:0 0 6px;padding-left:10px;border-left:var(--rule-medium) solid var(--gold);font:italic 400 12.5px/1.5 var(--f-display);color:var(--soft);white-space:pre-wrap}
+.yacts{position:absolute;right:calc(100% + 6px);bottom:2px;display:flex;gap:1px;opacity:0;transform:translateX(4px);transition:opacity .3s ease,transform .5s var(--soft-close)}
+.yw:hover .yacts,.yw:focus-within .yacts{opacity:1;transform:none}
+.yacts[hidden]{display:none}
+.yedit{width:min(560px,70vw);display:flex;flex-direction:column;gap:6px;padding:8px;border:var(--rule-hair) solid var(--gold);border-radius:6px;background:var(--panel)}
+.yedit textarea{width:100%;min-height:60px;max-height:260px;border:0;background:transparent;resize:none;outline:none;font:300 14px/1.6 var(--f-body);color:var(--ink)}
+.yedit .ya{display:flex;justify-content:flex-end;gap:6px}
+.acts{opacity:.55}.bot:hover .acts,.bot:focus-within .acts{opacity:1}
+

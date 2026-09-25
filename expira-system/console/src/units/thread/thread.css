@@ -1,0 +1,38 @@
+/* ---------- messages ---------- */
+.you{align-self:flex-end;margin-bottom:-14px;max-width:min(82%,560px);background:var(--well);border:var(--rule-hair) solid var(--line);border-radius:6px;padding:9px 13px;font-size:14px;line-height:1.6;color:var(--ink);white-space:pre-wrap;word-wrap:break-word}
+.bot{display:flex;flex-direction:column;gap:10px;background:var(--panel);border:var(--rule-hair) solid var(--line-2);border-radius:8px;padding:14px 18px 10px;transition:border-color var(--out) var(--soft-close),box-shadow var(--out) var(--soft-close)}
+.bot:hover{border-color:var(--line-3);transition-duration:var(--in)}
+.by{justify-content:flex-start}.by .who{font-size:9.5px;letter-spacing:var(--tracked);text-transform:uppercase;color:var(--ink)}.by time{margin-left:auto}
+.ans{counter-reset:sec}
+.ans h3{counter-increment:sec;display:flex;align-items:baseline;gap:8px;scroll-margin-top:16px}
+.ans h3::before{content:"§" counter(sec);font:400 10.5px var(--f-display);color:var(--gold);flex:none}
+.ans blockquote{position:relative;margin:4px 0 14px;padding:10px 14px 10px 14px;background:var(--gold-wash);border:0;border-left:var(--rule-medium) solid var(--gold);border-radius:0 5px 5px 0}
+.ans blockquote::before{content:"Takeaway";display:block;font:400 9px var(--f-body);letter-spacing:var(--tracked);text-transform:uppercase;color:var(--gold);margin-bottom:3px;font-style:normal}
+.inthis{display:flex;flex-wrap:wrap;align-items:center;gap:4px 6px;padding:0 0 10px;border-bottom:var(--rule-hair) solid var(--line)}
+.inthis .cap{margin-right:4px}
+.inthis button{border:var(--rule-hair) solid var(--line-2);background:transparent;border-radius:4px;padding:2px 8px;cursor:pointer;font-size:11.5px;color:var(--soft);transition:border-color var(--out) var(--soft-close),color var(--out) var(--soft-close);animation:blurIn .7s var(--soft-close) both}
+.inthis button:hover{border-color:var(--gold);color:var(--ink);transition-duration:var(--in)}
+.inthis button b{font:400 10px var(--f-display);color:var(--gold);margin-right:4px}
+.filed{margin:4px -18px -10px;padding:8px 18px;border-top:var(--rule-hair) solid var(--line);border-radius:0 0 8px 8px}
+.by{display:flex;align-items:center;gap:10px}
+.by .mark{width:26px}
+.by time{font-size:10px;letter-spacing:var(--tracked-tight);color:var(--mute)}
+.ans{font-size:14px;line-height:1.72;color:var(--text)}
+.ans p{margin:0 0 12px}.ans>:last-child{margin-bottom:0}
+.ans h3{font:400 15px/1.4 var(--f-display);color:var(--ink);margin:18px 0 4px}
+.ans>h3:first-child{margin-top:2px}
+.ans strong{font-weight:500;color:var(--ink)}
+.ans ul,.ans ol{margin:0 0 14px;padding-left:20px}.ans li{margin:5px 0;padding-left:2px}
+.ans ul li::marker{color:var(--gold)}.ans ol li::marker{color:var(--gold);font-family:var(--f-display);font-size:12.5px}
+.ans code{font-size:13px;background:var(--well);border:var(--rule-hair) solid var(--line-2);border-radius:3px;padding:1px 5px}
+.ans pre{background:var(--well);border:var(--rule-hair) solid var(--line-2);border-radius:5px;padding:12px 14px;overflow-x:auto;font-size:13px}
+.ans pre code{border:0;background:none;padding:0}
+.code{margin:0 0 14px;border:var(--rule-hair) solid var(--line-2);border-radius:5px;overflow:hidden;background:var(--well)}
+.code .hd{display:flex;align-items:center;justify-content:space-between;padding:5px 8px 5px 12px;border-bottom:var(--rule-hair) solid var(--line-2)}
+.code pre{margin:0;border:0;border-radius:0;background:transparent;font-size:12.5px;line-height:1.6}
+.code .cp{border:0;background:none;cursor:pointer;color:var(--mute);font-size:11px;padding:2px 6px;border-radius:3px;transition:color var(--out) var(--soft-close),background var(--out) var(--soft-close)}
+.code .cp:hover{color:var(--ink);background:var(--line);transition-duration:var(--in)}
+.ans blockquote{margin:0 0 14px;padding:2px 0 2px 14px;border-left:var(--rule-medium) solid var(--gold);font:italic 400 14.5px/1.6 var(--f-display);color:var(--ink)}
+.ans hr{border:0;height:var(--rule-hair);background:var(--line-3);margin:18px 0}
+.ans a{color:var(--ink);text-decoration:underline;text-decoration-color:var(--gold);text-underline-offset:3px}
+.ans em{font-family:var(--f-display);font-style:italic}

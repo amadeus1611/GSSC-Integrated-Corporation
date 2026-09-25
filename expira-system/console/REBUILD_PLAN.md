@@ -266,7 +266,7 @@ For each unit: rebuild it in `src/units/<unit>/`, run the smoke test, take scree
   - [x] R1 (pour), R2 (maps) and R3 (spectrogram) written to `research/` (2026-09-25)
   - [x] Lab built: `qa/lab/index.html` (3 pours × 2 themes, motion token sheet, palette sheet with live validator); `qa/lab/cast.js` + `strips.py` capture exact frames; 0 errors both themes
   - [x] Gate A decided 2026-09-25 (`GATE_A.md` §Decisions), written into DESIGN_ENGINE §2, §3 and the change log
-- [ ] Phase 2.1: pure restructure into `src/` plus `build.py`, parity smoke passes
+- [x] Phase 2.1: pure restructure into `src/` plus `build.py`, parity smoke passes (2026-09-25, session 3: 80 files; the rebuilt `index.html` is byte-identical to v39, sha256 `a697549cd1499e54…`; `qa/diff.js` reports identical DOM and pixels in both themes; the 7 cross-unit selectors v39 already doubled are listed in `build.py` `KNOWN_DUPES` for 2.2)
 - [ ] Phase 2.2: tokens landed; version layers, dead rules and `!important` removed
 - [ ] Phase 3.1: shell and travelling sidebar button
 - [ ] Phase 3.2: composer

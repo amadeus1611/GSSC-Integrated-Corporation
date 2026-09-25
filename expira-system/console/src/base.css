@@ -1,0 +1,10 @@
+/* the shared entrance: fade with a soft blur, soft close */
+@keyframes blurIn{from{opacity:.001;filter:blur(5px);transform:translateY(6px)}to{opacity:1;filter:none;transform:none}}
+.bi{animation:blurIn .9s var(--soft-close) both}
+.w{animation:word .32s ease-out both}
+@keyframes word{from{opacity:0}to{opacity:1}}
+.grain{position:relative;isolation:isolate}
+.grain::after{content:"";position:absolute;inset:0;pointer-events:none;background-image:var(--grain);background-size:150px;mix-blend-mode:soft-light;opacity:.6;-webkit-mask:var(--gmask) center/contain no-repeat;mask:var(--gmask) center/contain no-repeat}
+
+.app{display:flex;height:100%}
+

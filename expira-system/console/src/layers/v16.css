@@ -1,0 +1,30 @@
+/* ---------- v16 ---------- */
+/* node tokens: hollow nodes and rims read on either palette */
+:root{--n-hollow:#FFFFFF;--n-rim:rgba(11,26,63,.36);--n-sep:var(--sheet);--n-lab:var(--mute)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--n-hollow:#1F2A40;--n-rim:rgba(237,231,217,.58);--n-lab:#9AA1AE}}
+:root[data-theme="dark"]{--n-hollow:#1F2A40;--n-rim:rgba(237,231,217,.58);--n-lab:#9AA1AE}
+.dmap{--n-sep:var(--well)}.pvmap{--n-sep:var(--sheet)}
+.field .core{fill:var(--c,var(--n-hollow));stroke:var(--n-sep);stroke-width:1.5}
+.field .k-orch .core{fill:var(--ink)}
+.field .k-conn .core{fill:var(--n-hollow);stroke:var(--gold);stroke-width:1.5}
+.field .k-site .core,.field .k-more .core{fill:var(--n-hollow);stroke:var(--n-rim);stroke-width:1.1}
+.field .k-agent.st-wait .core{fill:var(--n-hollow);stroke:var(--c);stroke-width:1.4}
+.field .k-site .lb,.field .k-more .lb{fill:var(--n-lab)}
+.dmap .field .lb{stroke:var(--well)}
+.map .bx{stroke:var(--n-rim)}
+.dmap .bx{fill:var(--n-hollow)}
+/* the name row says it opens a menu */
+.me .mech{width:10px;height:10px;margin-left:auto;flex:none;color:var(--mute);transition:color .3s ease,transform .6s var(--soft-close)}
+.me:hover .mech,.me[aria-expanded="true"] .mech{color:var(--ink)}
+.me[aria-expanded="true"] .mech{transform:rotate(180deg)}
+.menu.acct{width:248px;transform-origin:0 100%}
+.acct-h{display:flex;align-items:center;gap:10px;padding:8px 8px 10px}
+.acct-h b{display:block;font-weight:400;font-size:12.5px;color:var(--ink)}.acct-h small{display:block;font-size:11px;color:var(--mute)}
+.acct-h .av{width:26px;height:26px;font-size:10px}
+.menu.acct .seg{margin:2px 2px 4px}
+.seg2.s3{grid-template-columns:repeat(3,1fr)}
+.sb .age{color:var(--mute)}.sb .age.old{color:var(--warn)}
+.field .k-conn .core{fill:color-mix(in srgb,var(--gold) 16%,var(--n-hollow))}
+.menu .seg button[aria-checked="true"]{box-shadow:inset 0 0 0 var(--rule-hair) var(--gold),0 1px 2px rgba(0,0,0,.12);color:var(--ink)}
+.menu .seg button[aria-checked="true"] svg{color:var(--gold)}
+

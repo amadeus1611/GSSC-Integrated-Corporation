@@ -1,0 +1,29 @@
+/* ---------- start ---------- */
+.hero{flex:1;display:none;flex-direction:column;align-items:center;justify-content:center;padding:0 20px 5vh;overflow:auto}
+.app:not(.has-chat) .hero{display:flex}
+.dateline{display:flex;align-items:center;gap:14px;margin-bottom:26px}
+.dateline::before,.dateline::after{content:"";width:40px;height:var(--rule-hair);background:var(--line-3)}
+.hero .mark-w{width:132px;margin-bottom:20px}
+.hero .mark{width:100%;display:block;transition:transform 1.6s var(--soft-close)}
+.greet{font:400 clamp(22px,2.8vw,30px)/1.25 var(--f-display);color:var(--ink);margin:0 0 30px;text-align:center;text-wrap:balance}
+.greet em{font-style:italic;color:var(--gold);background:linear-gradient(100deg,var(--gold) 0 40%,var(--head) 50%,var(--gold) 60% 100%);background-size:300% 100%;background-position:100% 0;-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;animation:breath 9s var(--release) 2.4s infinite}
+@keyframes breath{0%,72%{background-position:100% 0}100%{background-position:-50% 0}}
+.greet .ch{display:inline-block;white-space:pre;animation:settle .9s var(--soft-close) both}
+@keyframes settle{from{opacity:0;filter:blur(6px);transform:translateY(6px)}to{opacity:1;filter:none;transform:none}}
+.greet{margin-bottom:10px}
+.ready{display:flex;align-items:center;gap:8px;margin:0 0 26px;animation:blurIn .9s var(--soft-close) .9s both}
+.ready i{width:5px;height:5px;border-radius:50%;background:var(--ok);animation:breathe 3.2s var(--release) infinite}
+.hero .mark-w{animation:float 7s ease-in-out infinite}
+@keyframes float{50%{transform:translateY(-3px)}}
+.colon{animation:colon 2s steps(1) infinite}@keyframes colon{50%{opacity:.25}}
+.contents{width:100%;max-width:720px;margin-top:30px}
+.contents h2{margin:0 0 6px}
+.toc{list-style:none;margin:0;padding:0}
+.toc button{display:flex;align-items:baseline;gap:10px;width:100%;border:0;background:transparent;padding:9px 0;cursor:pointer;text-align:left;color:var(--text);font-size:14px}
+.toc .n{font:400 12px var(--f-display);color:var(--gold);width:18px}
+.toc .lead{flex:1;border-bottom:var(--rule-hair) dotted var(--line-3);transform:translateY(-4px);transition:border-color var(--out) var(--soft-close)}
+.toc .sec{font:italic 400 12.5px var(--f-display);color:var(--soft)}
+.toc .t{transition:color var(--out) var(--soft-close),transform var(--out) var(--soft-close)}
+.toc button:hover .t{color:var(--ink);transform:translateX(3px);transition-duration:var(--in)}
+.toc button:hover .lead{border-color:var(--gold)}
+

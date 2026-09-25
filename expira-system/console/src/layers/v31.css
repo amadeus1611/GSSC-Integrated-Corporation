@@ -1,0 +1,52 @@
+/* v31 · dots on the stem, one-step theme change, charts that pour in */
+.fig-h .tb+.tb{margin-left:14px}
+.strm .se::before{left:-9px}
+.strm .se.k-web::before{border-style:solid}
+.strm .se.new::after{left:-7.75px}
+.strm .sb.new::after{left:-13.75px}
+.strm .sb::before{left:-12px;width:5px}
+html.tnone *,html.tnone *::before,html.tnone *::after{transition:none!important}
+html.theming,html.theming *,html.theming *::before,html.theming *::after{transition:none!important}
+::view-transition-old(root),::view-transition-new(root){animation-duration:.42s;animation-timing-function:cubic-bezier(.4,0,.2,1)}
+.ch text.lbl{fill:var(--text);font-size:10.5px}
+.ch text.vl{fill:var(--soft);font-size:10px}
+.ch text.tl{fill:var(--ink);font-weight:500}
+.ch .dt{font:400 17px var(--f-display);fill:var(--ink)}
+.ch .ds{fill:var(--mute);font-size:8.5px;letter-spacing:.16em;text-transform:uppercase}
+.ch .rl{stroke:var(--s1);stroke-width:3;stroke-linecap:round}
+.ch .re{fill:var(--sheet);stroke:var(--s1);stroke-width:2}
+.ch .rm{stroke:var(--ink);stroke-width:1.5}
+.ch .wc{stroke:var(--line-3);stroke-width:1;stroke-dasharray:2 3}
+.ch .mk{transition:opacity .2s}
+.ch.hov:has(.mk.on) .mk:not(.on){opacity:.45}
+.ch .mk.on .lbl,.ch .mk.on .vl{fill:var(--ink)}
+.ch .dn{transition:stroke-width .25s var(--soft-close)}
+.ch .dn.on{stroke-width:22}
+.fig .bar,.fig .sg,.fig .wb,.fig .ar{transform-box:fill-box;transform-origin:50% 100%}
+.fig .hb,.fig .tb2{transform-box:fill-box;transform-origin:0 50%}
+.fig .rl{transform-box:fill-box;transform-origin:50% 50%}
+.fig .re{transform-box:fill-box;transform-origin:50% 50%}
+.fig.pre .bar,.fig.pre .sg,.fig.pre .ar{transform:scaleY(0)}
+.fig.pre .hb,.fig.pre .tb2,.fig.pre .rl{transform:scaleX(0)}
+.fig.pre .wb,.fig.pre .re,.fig.pre .vl,.fig.pre .wc,.fig.pre .mk .lbl,.fig.pre .dt,.fig.pre .ds{opacity:0}
+.fig.pre .ln{stroke-dasharray:1;stroke-dashoffset:1}
+.fig.pre .dn{stroke-dasharray:0 100}
+.fig.in .bar{animation:fgY var(--sp-jelly-d) var(--sp-jelly) calc(var(--i)*55ms) both}
+.fig.in .sg{animation:fgY var(--sp-soft-d) var(--sp-soft) calc(var(--i)*70ms + var(--j)*110ms) both}
+.fig.in .ar{animation:fgY .9s var(--sp-soft) .25s both}
+.fig.in .hb{animation:fgX var(--sp-jelly-d) var(--sp-jelly) calc(var(--i)*60ms) both}
+.fig.in .tb2{animation:fgX var(--sp-jelly-d) var(--sp-jelly) calc(var(--i)*90ms) both}
+.fig.in .rl{animation:fgX .7s var(--sp-soft) calc(var(--i)*70ms) both}
+.fig.in .re{animation:fgJ var(--sp-jelly-d) var(--sp-jelly) calc(var(--i)*70ms + .3s) both}
+.fig.in .wb{animation:fgDrop var(--sp-jelly-d) var(--sp-jelly) calc(var(--i)*110ms) both}
+.fig.in .wc{animation:ink .4s calc(var(--i)*110ms + .3s) both}
+.fig.in .ln{stroke-dasharray:1;animation:fgDraw 1.1s cubic-bezier(.3,.6,.2,1) calc(var(--i)*150ms) both}
+.fig.in .dn{animation:fgSweep .95s var(--sp-soft) calc(var(--i)*110ms) both}
+.fig.in .vl,.fig.in .mk .lbl,.fig.in .dt,.fig.in .ds{animation:ink .5s calc(var(--i,0)*60ms + .3s) both}
+@keyframes fgY{from{transform:scaleY(0)}}
+@keyframes fgX{from{transform:scaleX(0)}}
+@keyframes fgJ{from{transform:scale(0)}}
+@keyframes fgDrop{from{transform:translateY(-16px) scaleY(.3);opacity:0}}
+@keyframes fgDraw{from{stroke-dashoffset:1}to{stroke-dashoffset:0}}
+@keyframes fgSweep{from{stroke-dasharray:0 100}}
+@media (prefers-reduced-motion:reduce){.fig.pre *{transform:none!important;opacity:1!important;stroke-dasharray:none!important}}

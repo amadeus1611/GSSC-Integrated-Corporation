@@ -1,0 +1,41 @@
+/* Type, tracking, rules and rhythm: the GSSC master template's tokens. Palette: EXPIRA. */
+:root{
+  --bg:#FAF8F3;--side:#F3EFE4;--panel:#FFFFFF;--well:#F4F1E8;--sheet:#FFFEFB;
+  --ink:#0B1A3F;--text:#2B303B;--soft:#5E6573;--mute:#8C919B;
+  --line:rgba(11,26,63,.09);--line-2:rgba(11,26,63,.16);--line-3:rgba(11,26,63,.26);
+  --gold:#A8862F;--gold-2:#C8A45A;--gold-wash:rgba(168,134,47,.08);--head:#C8A45A;--head-glow:rgba(200,164,90,.55);
+  --ok:#2F6B4F;--bad:#8C3A31;--warn:#8A6214;
+  --shadow:0 1px 1px rgba(11,26,63,.04),0 10px 30px -18px rgba(11,26,63,.28);
+  --mark-a:#2C3549;--mark-b:#09101E;
+  --f-display:"Libre Baskerville","Hoefler Text",Georgia,"Times New Roman",serif;
+  --f-body:"Inter",-apple-system,BlinkMacSystemFont,"Segoe UI","Helvetica Neue",Arial,sans-serif;
+  --tracked:.18em;--tracked-cap:.14em;--tracked-tight:.12em;--tracked-num:-.012em;
+  --rule-hair:.5px;--rule-medium:1px;--u:4px;
+  --soft-close:cubic-bezier(0.16,1,0.3,1);--release:cubic-bezier(0.65,0,0.35,1);
+  --s1:#4a6fd0;--s2:#b88a2c;--s3:#1f9a86;--s4:#c9644e;--s5:#9a66b8;
+  --in:180ms;--out:600ms;--reveal:1100ms;--grain:none;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){color-scheme:dark;
+  --s1:#5f82dc;--s2:#b38a3c;--s3:#2a9e8a;--s4:#cf6f59;--s5:#a070c2;
+  --bg:#0E1320;--side:#0A0F1A;--panel:#151C2C;--well:#121928;--sheet:#111827;
+  --ink:#EDE7D9;--text:#D9D3C5;--soft:#A3A8B3;--mute:#737A88;
+  --line:rgba(237,231,217,.07);--line-2:rgba(237,231,217,.13);--line-3:rgba(237,231,217,.22);
+  --gold:#C8A45A;--gold-2:#D9B873;--gold-wash:rgba(200,164,90,.09);--head:#E3C27E;--head-glow:rgba(227,194,126,.55);
+  --ok:#8FC3A6;--bad:#E59A8F;--warn:#E0B765;--shadow:0 1px 1px rgba(0,0,0,.3),0 14px 40px -18px rgba(0,0,0,.7);--mark-a:#C9C2B2;--mark-b:#8F98A8}}
+:root[data-theme="dark"]{color-scheme:dark;
+  --s1:#5f82dc;--s2:#b38a3c;--s3:#2a9e8a;--s4:#cf6f59;--s5:#a070c2;
+  --bg:#0E1320;--side:#0A0F1A;--panel:#151C2C;--well:#121928;--sheet:#111827;
+  --ink:#EDE7D9;--text:#D9D3C5;--soft:#A3A8B3;--mute:#737A88;
+  --line:rgba(237,231,217,.07);--line-2:rgba(237,231,217,.13);--line-3:rgba(237,231,217,.22);
+  --gold:#C8A45A;--gold-2:#D9B873;--gold-wash:rgba(200,164,90,.09);--head:#E3C27E;--head-glow:rgba(227,194,126,.55);
+  --ok:#8FC3A6;--bad:#E59A8F;--warn:#E0B765;--shadow:0 1px 1px rgba(0,0,0,.3),0 14px 40px -18px rgba(0,0,0,.7);--mark-a:#C9C2B2;--mark-b:#8F98A8}
+html,body{height:100%}
+body{margin:0;background:var(--bg);color:var(--text);font:300 14.5px/1.6 var(--f-body);-webkit-font-smoothing:antialiased;overflow:hidden}
+*{box-sizing:border-box}button,input,textarea{font:inherit;color:inherit}
+::selection{background:var(--gold-wash);color:var(--ink)}
+:focus-visible{outline:var(--rule-medium) solid var(--gold);outline-offset:2px;border-radius:3px}
+.sr{position:absolute;left:-9999px}
+.num{font-variant-numeric:tabular-nums;letter-spacing:var(--tracked-num)}
+.cap{font-size:10px;font-weight:400;letter-spacing:var(--tracked);text-transform:uppercase;color:var(--mute)}
+.capt{font-size:10px;font-weight:400;letter-spacing:var(--tracked-tight);text-transform:uppercase;color:var(--mute)}
+.serif{font-family:var(--f-display);font-weight:400}

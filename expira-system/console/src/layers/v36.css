@@ -1,0 +1,5 @@
+/* v36 · QA round 7 */
+.ans :where(p,ul,ol):not(.fig *):not(.exh *){max-width:72ch}
+.menu.opt{transform-origin:0 100%}
+.credit.legal{margin-top:14px;padding-top:10px;border-top:var(--rule-hair) solid var(--line-2)}
+@media (max-width:560px){.fig{-webkit-mask-image:linear-gradient(90deg,#000 calc(100% - 28px),rgba(0,0,0,.25));mask-image:linear-gradient(90deg,#000 calc(100% - 28px),rgba(0,0,0,.25))}.fig:hover,.fig:focus-within{-webkit-mask-image:none;mask-image:none}}

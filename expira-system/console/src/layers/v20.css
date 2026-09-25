@@ -1,0 +1,20 @@
+/* ---------- v20: documents on request, and a place to collect them ---------- */
+.optb svg{width:12px;height:12px}#docBtn[data-on="1"]{border-color:var(--gold);color:var(--ink)}#docBtn[data-on="1"] svg{color:var(--gold)}
+.dbar>svg{width:12px;height:12px;color:var(--gold);flex:none}
+.docc .ac .btn2{font-size:11.5px}
+.flist{list-style:none;margin:0;padding:0}.flist li{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:4px 12px;align-items:center;padding:10px 0;border-top:var(--rule-hair) solid var(--line)}
+.flist b{display:block;font-weight:400;font-size:13px;color:var(--ink)}.flist small{display:block;font-size:10.5px;color:var(--mute)}
+.flist .fa{display:flex;gap:6px}
+@media (max-width:560px){#docSum{display:none}}
+.tip::after{content:"";position:absolute;left:var(--ax,50%);top:100%;width:6px;height:6px;margin:-3px 0 0 -3px;background:var(--ink);transform:rotate(45deg);border-radius:1px}
+.tip.below::after{top:0}
+.ib{padding:0}.mvx{width:24px;height:24px;border-radius:5px;margin-left:4px}.mvx svg{width:12px!important;height:12px!important;display:block}
+.menu.opt#optMenu{width:232px}.menu .seg2 button{white-space:nowrap;padding:4px 4px}
+/* the document button: no flip; the page lifts and its lines write in */
+#docBtn svg,#docBtn[aria-expanded="true"] svg{transform:none}
+#docBtn svg{transition:transform .5s var(--soft-close)}
+#docBtn:hover svg,#docBtn[aria-expanded="true"] svg{transform:translateY(-1px)}
+#docBtn svg path:last-child{stroke-dasharray:6;stroke-dashoffset:0}
+#docBtn[aria-expanded="true"] svg path:last-child,#docBtn[data-on="1"] svg path:last-child{animation:docwrite .9s var(--soft-close) both}
+@keyframes docwrite{from{stroke-dashoffset:6}to{stroke-dashoffset:0}}
+#docBtn[aria-expanded="true"] svg,#docBtn[data-on="1"] svg{color:var(--gold)}
