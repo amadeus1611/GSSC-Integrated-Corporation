@@ -232,7 +232,7 @@ For each unit: rebuild it in `src/units/<unit>/`, run the smoke test, take scree
 
 ## 7. Progress
 
-- [ ] Phase 0: AUDIT.md written
+- [x] Phase 0: AUDIT.md written (2026-09-25, session 2). Open question for Duke: chats live in `localStorage`, not `db` (AUDIT §1).
 - [ ] Phase 1: research R1–R3 written; lab built; **Gate A passed** (Duke picked the pour: ______)
 - [ ] Phase 2.1: pure restructure into `src/` plus `build.py`, parity smoke passes
 - [ ] Phase 2.2: tokens landed; version layers, dead rules and `!important` removed
