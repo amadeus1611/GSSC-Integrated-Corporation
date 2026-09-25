@@ -9,7 +9,7 @@ const { chromium } = require('playwright');
 const fs = require('fs'), path = require('path'), http = require('http');
 const { MOCK, WRAP } = require('./mocks');
 const ROOT = path.join(__dirname, '..');
-const TYPES = { '.html': 'text/html; charset=utf-8', '.js': 'text/javascript', '.json': 'application/json', '.css': 'text/css', '.png': 'image/png', '.svg': 'image/svg+xml' };
+const TYPES = { '.html': 'text/html; charset=utf-8', '.js': 'text/javascript', '.mjs': 'text/javascript', '.json': 'application/json', '.css': 'text/css', '.png': 'image/png', '.svg': 'image/svg+xml' };
 function serve() {
   return new Promise(res => {
     const s = http.createServer((q, r) => {

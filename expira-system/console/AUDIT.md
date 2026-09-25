@@ -165,7 +165,7 @@ Screenshots are in `qa/audit/` (committed JPEGs; the full PNGs regenerate into `
 | Area | What is in use | Problems |
 |---|---|---|
 | Colour | Surfaces `--bg --side --panel --well --sheet`; ink `--ink --text --soft --mute`; lines `--line --line-2 --line-3`; gold `--gold --gold-2 --gold-wash --head --head-glow`; states `--ok --bad --warn`; series `--s1…--s5`; mark `--mark-a --mark-b` | 33 hex and 24 rgba literals **outside** the token blocks (17 and 17 distinct), e.g. `#000` ×12, `#fff`, `#1f2a40`, `#9aa1ae`, `#2f6b4f`, and the raw palette repeated in the settings previews. 10 `color-mix()` calls derive ad-hoc tints. The spectrogram and GOO read tokens at run time but convert them with a hex-only parser (falls back to grey on any non-hex token). |
-| Series / chart | `--s1 #4a6fd0` (blue), `--s2 #b88a2c`, `--s3 #1f9a86`, `--s4 #c9644e`, `--s5 #9a66b8`; dark is nearly identical | Not validated with the dataviz validator. The primary bar colour is a saturated blue that isn't in the brand (navy #0B2368 / gold). The dark series are near-copies, not designed for dark. |
+| Series / chart | `--s1 #4a6fd0` (blue), `--s2 #b88a2c`, `--s3 #1f9a86`, `--s4 #c9644e`, `--s5 #9a66b8`; dark is nearly identical | Never run through the validator before; run in Phase 1 it **passes** in both modes, but with a worst CVD ΔE of 8.9 (light) and 8.6 (dark), just above the floor. The primary bar colour is a saturated blue that isn't in the brand (navy #0B2368 / gold). The dark series are near-copies, not designed for dark. |
 | Contrast (AA 4.5:1 for text) | Probe in `qa/out/audit/probe.json` | **Light:** `--mute` is 2.75–3.16 on every surface (used for captions, ticks and micro labels); `--gold` as text is 2.99–3.43 (e.g. "Fig. 1", "FILED FROM ILOILO", `c2` markers); `--gold-2` 2.05–2.36. **Dark:** `--mute` is 3.94–4.44 (fails at small sizes). Everything else passes (ink 13.8–15.5, soft 7.1–8.0 light). |
 | Type | Families: `--f-display` (Libre Baskerville), `--f-body` (Inter), loaded from Google Fonts | Body is **14.5px** (canon 13px). 17 distinct sizes: 7.5, 8.5, 9, 9.5, 10, 10.5, 11, 11.5, 12, 12.5, 13, 13.5, 14, 14.5, 15, 15.5, 16.5. **Below the 9.5px floor:** 7.5px ×1, 8.5px ×4, 9px ×3, and canvas tick labels at 8.5px. |
 | Spacing | `--u:4px` is defined and **never used** (0 uses) | 237 distinct padding, margin and gap values; no scale. |
@@ -218,6 +218,12 @@ Screenshots are in `qa/audit/` (committed JPEGs; the full PNGs regenerate into `
 - **D-T1** The contrast failures listed in §3 (light `--mute` and gold text; dark `--mute`).
 - **D-T2** Chart bars use `--s1` saturated blue in both themes (see `06_run_dark`, `02_example_light`), off-brand, and colour alone separates series in the map legend (the dots only).
 - **D-T3** The dark theme set is duplicated verbatim.
+
+**Maps (confirmed from research R2 §6).**
+- **D-M1** `graphOf(w)` builds nodes and edges with no timestamps, so replay orders births by layout column (`col*.24+.08`), not by execution time. This is the root cause of D-O2.
+- **D-M2** The FieldMap radius update `rv = rv*.72 + (want-rc)*.16` is an underdamped discrete spring (complex eigenvalues), so node radii overshoot: a bounce.
+- **D-M3** `pulse()` uses a fixed trip time (`dur` ≈ 950 ms) whatever the edge length, so particle speed varies from edge to edge.
+- **D-M4** The orchestrator node is labelled `OPUS 5.5 · LOW`, contradicting v40's high-effort orchestrator. The arbiter node and its tooltip still say "Decision agent".
 
 **Dead, stale or overlapping code.**
 - **D-X2b** `#sig` is `display:none!important` (v37) but still updated by the runtime.

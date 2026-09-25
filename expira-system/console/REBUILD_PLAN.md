@@ -234,6 +234,9 @@ For each unit: rebuild it in `src/units/<unit>/`, run the smoke test, take scree
 
 - [x] Phase 0: AUDIT.md written (2026-09-25, session 2). Open question for Duke: chats live in `localStorage`, not `db` (AUDIT §1).
 - [ ] Phase 1: research R1–R3 written; lab built; **Gate A passed** (Duke picked the pour: ______)
+  - [x] R1 (pour), R2 (maps) and R3 (spectrogram) written to `research/` (2026-09-25)
+  - [x] Lab built: `qa/lab/index.html` (3 pours × 2 themes, motion token sheet, palette sheet with live validator); `qa/lab/cast.js` + `strips.py` capture exact frames; 0 errors both themes
+  - [ ] Gate A: Duke's decisions (see `GATE_A.md`), then write them into DESIGN_ENGINE
 - [ ] Phase 2.1: pure restructure into `src/` plus `build.py`, parity smoke passes
 - [ ] Phase 2.2: tokens landed; version layers, dead rules and `!important` removed
 - [ ] Phase 3.1: shell and travelling sidebar button
@@ -246,3 +249,22 @@ For each unit: rebuild it in `src/units/<unit>/`, run the smoke test, take scree
 - [ ] Phase 3.8: everything else, with hovers everywhere
 - [ ] Phase 4: review PASS, performance, accessibility
 - [ ] Phase 5: shipped as v41; **Gate B passed**
+
+### Resume here
+
+- **State (2026-09-25, session 2):** Phase 0 is done and pushed. Phase 1's research and lab are done. **Stopped at Gate A**, waiting on Duke.
+- **Duke decides** (all listed in `GATE_A.md`):
+  1. the pour: A droplet (recommended), B inset bloom or C seven-slice;
+  2. the gold meniscus rim: on or off;
+  3. approve the motion tokens and the colour tokens in `qa/lab/tokens.proposed.css`;
+  4. accept the token raster in place of the FFT spectrogram (a change to plan 3.6);
+  5. chats stay in `localStorage` or move to `db`;
+  6. the small defaults in `GATE_A.md` §5.
+- **Next steps after Gate A:**
+  1. Record the choices in DESIGN_ENGINE §3 and the change log. Update `tokens.proposed.css` if Duke changes anything.
+  2. Tick Gate A, then start Phase 2.1: the pure restructure into `src/` plus `build.py`, with no design change. The smoke test must pass.
+  3. Phase 2.2 moves `qa/lab/tokens.proposed.css` into `src/tokens.css`.
+- **Tools:**
+  - The lab: `NODE_PATH=/opt/node22/lib/node_modules node expira-system/console/qa/lab/cast.js`, then `python3 expira-system/console/qa/lab/strips.py` (needs Pillow: `pip install pillow`).
+  - The audit probes: `qa/audit_probe.js` and `qa/audit_probe2.js`.
+
