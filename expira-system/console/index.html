@@ -1665,9 +1665,9 @@ html.theming,html.theming *,html.theming *::before,html.theming *::after{transit
 .phx{font-size:13px;font-weight:300}
 #prompt,#prompt::placeholder{font-size:13px;font-weight:300;line-height:21px}
 .run.running .run-h .lbl::before{display:none!important}
-.e-rim{position:absolute;inset:0;border-radius:inherit;pointer-events:none;padding:1px;opacity:0;background:linear-gradient(105deg,transparent 35%,color-mix(in srgb,var(--gold) 55%,transparent) 50%,transparent 65%) no-repeat 140% 0/260% 100%;-webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);-webkit-mask-composite:xor;mask:linear-gradient(#000 0 0) content-box exclude,linear-gradient(#000 0 0)}
+.e-rim{position:absolute;inset:0;border-radius:inherit;pointer-events:none;padding:1px;opacity:0;background:linear-gradient(105deg,transparent 35%,color-mix(in srgb,var(--gold) 85%,transparent) 50%,transparent 65%) no-repeat 140% 0/260% 100%;-webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);-webkit-mask-composite:xor;mask:linear-gradient(#000 0 0) content-box exclude,linear-gradient(#000 0 0)}
 .e-rim.go{animation:rim 1.1s cubic-bezier(.23,1,.32,1) .12s both}
-@keyframes rim{0%{opacity:0;background-position:140% 0}25%{opacity:1}100%{opacity:0;background-position:-40% 0}}
+@keyframes rim{0%{opacity:0;background-position:140% 0}20%{opacity:1}100%{opacity:0;background-position:-40% 0}}
 @keyframes acIn{0%{opacity:0;transform:translateY(8px) scale(.7,.55);border-radius:18px}100%{opacity:1;transform:none;border-radius:6px}}
 @keyframes fuIn{0%{opacity:0;transform:translateY(-4px) scale(.8,.85);border-radius:14px}100%{opacity:1;transform:none;border-radius:4px}}
 @keyframes docIn{0%{opacity:0;transform:translateY(-6px) scale(.8,.8);border-radius:18px}100%{opacity:1;transform:none}}
@@ -4484,7 +4484,7 @@ const L_tick=()=>{for(const m of FM){const host=m.host;if(!host||!host.isConnect
 setInterval(L_tick,240);
 document.addEventListener("click",e=>{const i=e.target.closest(".nc-s i[data-id]");if(!i)return;const d=i.closest(".nowc");if(!d||!d._m)return;e.stopPropagation();openSheet(d._m.get(),i.dataset.id,i)},true);}
 {const G_rim=el=>{if(reduce||!el||!el.isConnected)return;let r=el.querySelector(":scope>.e-rim");if(!r){r=document.createElement("i");r.className="e-rim";r.setAttribute("aria-hidden","true");el.append(r)}r.classList.remove("go");void r.offsetWidth;r.classList.add("go")};
-document.addEventListener("v38:surface",e=>{const d=e.detail||{};if(d.phase==="open"&&d.el)requestAnimationFrame(()=>G_rim(d.el))});}
+document.addEventListener("v38:surface",e=>{const d=e.detail||{};if(d.phase==="open"&&d.el){requestAnimationFrame(()=>G_rim(d.el));if(!reduce){const ks=[...d.el.children].filter(k=>!k.classList.contains("e-rim")&&k.getClientRects().length).slice(0,10);ks.forEach((k,i)=>k.animate([{clipPath:"inset(0 100% 0 0)",opacity:0,transform:"translateY(3px)"},{clipPath:"inset(0 0% 0 0)",opacity:1,transform:"none"}],{duration:420,delay:110+i*32,easing:"cubic-bezier(.23,1,.32,1)",fill:"backwards"}))}}});}
 {let X_n=0;const X_ns="http://www.w3.org/2000/svg",X_el=(n,a)=>{const e=document.createElementNS(X_ns,n);for(const k in a)e.setAttribute(k,a[k]);return e};
 const X_tex=root=>{(root||document).querySelectorAll(".fig svg.ch:not([data-tex])").forEach(v=>{v.setAttribute("data-tex","1");const vb=(v.getAttribute("viewBox")||"").split(/[ ,]+/).map(Number);if(vb.length<4)return;const id="tx"+(++X_n);
  const df=X_el("defs",{});const pd=X_el("pattern",{id:id+"d",width:"7",height:"7",patternUnits:"userSpaceOnUse"});pd.append(X_el("circle",{cx:"1",cy:"1",r:".55",class:"txd"}));
