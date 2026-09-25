@@ -12,6 +12,8 @@ Internal register: dense and lossless. Duke gives the values, vision and directi
 - He dislikes: loaders that break out of their container, glyph clutter, pill chips, big default text, visible pauses in motion, and anything that looks templated.
 
 ## Good habits (reinforced)
+- **Research is the default, always,** before any design or engineering change. Web search goes through Exa (`web_search_exa`, `web_fetch_exa`), both here and in the console; Parallel Search is retired.
+- **No centralised rules.** Each unit (menus, claim card, side card, settings, Dispatch, charts) owns its own timing and motion, written where it is defined. Similar feel means similar numbers, never a shared variable. v38's global overrides made the console fragile.
 - **Research is built in.** Every iteration starts with a quick search for the best current practice; don't wait to be asked. Current references: Emil Kowalski's animation standards (ease-out `cubic-bezier(.23,1,.32,1)`, UI motion ≤300ms, start at .9–.97 from the trigger, interruptible), and agentic UX (a docked live-progress panel beats hidden progress).
 - **No bounce, ever.** Every spring is critically damped; soft ease-out closes. Bounce reads as cheap.
 - **Ship only finished work I'm satisfied with.** Duke reviews complete work, never halfway states. Verify by eye (screenshots) and by numbers before reporting.
@@ -44,6 +46,7 @@ Internal register: dense and lossless. Duke gives the values, vision and directi
 - **Launching eight agents at once.** It burned the usage limits and left partial work. Parallelise only what is truly independent and large.
 
 ## Short-term memory (current iteration)
+- v39: the console was reverted to v37 (Duke's call after v38 grew fragile). Then: the pour reveal kept and refined per unit (it spreads sideways, then rises, ~0.8s; clips end past the shadow so it never snaps). Web research switched to Exa (the viewer's connector; the text-block parser was verified on real output).
 - v38.10: the liquid container morph (researched: Material container transform plus the Dynamic Island morph plus an SVG goo metaball trail). The trigger's shape pours into the card (width leads, height follows, radius pill→card), droplets trail and melt in, and the card resolves at 66% with its lines inking in. `pow` of a negative base gives NaN: clamp every eased input.
 - v38.9: runs always open on the thinking log (a stored 'map' pref no longer leaks in); a cancelled planner no longer prints its JSON; the run card expands in .45s; the full-screen Flow fills its height (lanes up to 68px), with 6px bars, edges weighted by throughput and live edges flowing. Duke confirmed that sending works again after v38.8.
 - v38.8: the console opens on a new chat (the greeting). Resilience: a capture-phase guard means the form can never reload the page; every module block is wrapped in try/catch; any error shows a slim error bar. The white flash on Enter is unconfirmed as fixed: it can't be reproduced locally (mock storage, fresh or v37-saved). If it recurs, ask Duke for a screenshot of the error bar.

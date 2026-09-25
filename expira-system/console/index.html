@@ -1413,7 +1413,7 @@ html.theming,html.theming *,html.theming *::before,html.theming *::after{transit
   <div class="seg2 s3" role="radiogroup" aria-label="Freshness"><button role="menuitemradio" data-opt="fresh" data-v="3" data-hint="Prefer sources from the last 90 days.">90 days</button><button role="menuitemradio" data-opt="fresh" data-v="12" data-hint="Prefer sources from the last 12 months.">12 mo</button><button role="menuitemradio" data-opt="fresh" data-v="any" data-hint="No preference for recent sources.">Any</button></div>
   <div class="sep"></div>
   <button role="menuitemcheckbox" data-opt="safe" data-hint="Firewall-check every answer and exhibit.">Client-safe<i class="sw"></i></button>
-  <button role="menuitemcheckbox" data-opt="web" aria-disabled="true" id="webOpt" data-hint="Checking Parallel Search…">Web research<i class="sw"></i></button>
+  <button role="menuitemcheckbox" data-opt="web" aria-disabled="true" id="webOpt" data-hint="Checking Exa…">Web research<i class="sw"></i></button>
   <p class="hint" id="optHint"></p>
 </div>
 <div class="stg" id="setMenu" role="dialog" aria-modal="true" aria-labelledby="stgT">
@@ -1883,7 +1883,7 @@ function paneHTML(t){
   <div class="grp"><div class="gh"><span><b>Freshness</b><small>How recent web sources should be. Results always come newest first, with today's date in every brief.</small></span></div><div class="cards">
    ${[["3","90 days",.2],["12","12 months",.55],["any","Any date",1]].map(([v,n,f])=>cardHTML(`data-so="fresh" data-v="${v}"`,`<svg viewBox="0 0 150 82"><line x1="14" y1="50" x2="136" y2="50" stroke="var(--line-3)" stroke-width=".8"/><rect x="${136-122*f}" y="44" width="${122*f}" height="12" rx="2" fill="var(--gold-wash)" stroke="var(--gold)" stroke-width=".7"/>${[0,1,2,3,4,5,6].map(k=>`<circle cx="${20+k*18}" cy="${34-((k*37)%11)}" r="2.4" fill="${20+k*18>=136-122*f?"var(--gold)":"var(--n-rim)"}"/>`).join("")}<text x="136" y="72" text-anchor="end" font-size="8" fill="var(--mute)" font-family="Inter,system-ui">today</text></svg>`,n)).join("")}</div></div>
   ${swRow("safe","Client-safe","Firewall-check every answer and exhibit before it is filed.")}
-  ${swRow("web","Web research",WEB.ok?"Research, legal and decision desks can search with Parallel Search.":"Connect Parallel Search in claude.ai to enable.")}`;
+  ${swRow("web","Web research",WEB.ok?"Research, legal and decision desks can search with Exa.":"Connect Exa in claude.ai to enable.")}`;
  if(t==="map")return `<h3>The map</h3><p class="lede">How each run is drawn: a plate in columns, or a field under gravity.</p>
   <div class="grp"><div class="gh"><span><b>Default view</b><small>Either can be switched on any map.</small></span></div><div class="cards two">
    ${cardHTML('data-mvd="flow"',THUMB.flow,"Flow","","Columns: orchestrator, desks, connector, sources")}${cardHTML('data-mvd="field"',THUMB.field,"Field","","Gravity: size is tokens, weight is traffic")}</div></div>
@@ -1905,7 +1905,7 @@ function paneHTML(t){
   <div class="srow" style="cursor:default"><span class="l"><b>Clear the library</b><small>Deletes every chat and folder in this browser. This cannot be undone.</small></span><button class="btn2 danger" data-clear>Clear</button></div>`}
  return `<h3>About</h3><p class="lede">EXPIRA Console, version 20. Built on Claude for EXPIRA AI Systems and GSSC Integrated Corporation.</p>
   <dl class="about"><dt>Orchestrator</dt><dd>Opus 5.5 at low effort; plans at the quick tier</dd><dt>Desks</dt><dd>Light effort at the quick tier, considered at the default tier, deep at the complex tier</dd>
-  <dt>Claude</dt><dd class="${sample?"ok":"no"}">${sample?"Linked":"Not linked. Open this page in Claude to brief EXPIRA."}</dd><dt>Parallel Search</dt><dd class="${WEB.ok?"ok":"no"}">${WEB.ok?"Connected":"Not connected"}</dd>
+  <dt>Claude</dt><dd class="${sample?"ok":"no"}">${sample?"Linked":"Not linked. Open this page in Claude to brief EXPIRA."}</dd><dt>Exa</dt><dd class="${WEB.ok?"ok":"no"}">${WEB.ok?"Connected":"Not connected"}</dd>
   <dt>Truth</dt><dd>The decision agent staffs the desks, then weighs every claim they file against the pages read; the answer cites the ledger; an auditor checks each factual line before filing</dd><dt>Kernel</dt><dd>The GSSC kernel ships inside the console; desks read the doctrine that governs them, and documents are built by a port of the kernel's own builder, checked byte for byte against it</dd><dt>Freshness</dt><dd>Every prompt carries today's date; web results are sorted newest first and anything older than the window is flagged</dd><dt>Policy</dt><dd>Escalates above PHP 500,000; at most two redos; a firewall on client-facing answers</dd><dt>Storage</dt><dd>Chats in this browser; run summaries in the runs log</dd></dl>
   <p class="credit legal">Claude and Anthropic are trademarks of Anthropic, PBC. EXPIRA Console runs on Claude through the Claude app; it is built by EXPIRA AI Systems and is not affiliated with or endorsed by Anthropic.</p>
   <p class="credit">The field view follows Obsidian's graph forces on a d3-force style integrator. Nodes are born as liquid after Hiroyuki Sato's metaball, as Varun Vachhar explains it.</p>`}
@@ -2132,7 +2132,7 @@ function nodeInfo(w,id){if(!w)return "";const S=w.steps||[],M=w.map||{},P=M.page
  if(id==="doc"){const d=w.doc;return d?(d.error?`Document held · ${d.error}`:`${DOCT[d.type]} · ${d.pages} pages · verified by the kernel builder`):"Document"}
  if(id==="ans"){const au=w.ledger&&w.ledger.audit;return `Answer · ${ft(w.atok||0)} tokens${au?` · ${au.flags?`${au.flags} line${au.flags>1?"s":""} revised by the audit`:"audit clear"}`:""}`}
  if(id==="o")return `Orchestrator · staffed ${words(S.length).toLowerCase()} desk${S.length===1?"":"s"}`;
- if(id==="c"){const n=hostsOf(P).length;return `Parallel Search · ${C.length} call${C.length===1?"":"s"} · ${n} site${n===1?"":"s"}`}
+ if(id==="c"){const n=hostsOf(P).length;return `Exa · ${C.length} call${C.length===1?"":"s"} · ${n} site${n===1?"":"s"}`}
  if(id==="more")return "More sites · select to list them";
  if(id.startsWith("s:")){const hh=id.slice(2),L=P.filter(p=>hostOf(p.url)===hh);return `${hh} · ${L.length} page${L.length===1?"":"s"} · ${ft(L.reduce((a,p)=>a+tok(p.ex),0))} tokens pulled`}
  const i=+id.slice(1),s=S[i];if(!s)return "";return `Desk ${ROMAN[i]} · ${ROLE[s.role]}${s.focus?" · "+s.focus:""} · ${ft(tok(s.out))} tokens${s.searches?` · ${s.searches} search${s.searches>1?"es":""}`:""}`}
@@ -2166,14 +2166,14 @@ class FlowMap{
   cols.forEach((c,j)=>{const L=N.filter(n=>n.col===c);colH[c]=L.length*SPEC[c].h+SPEC[c].g*(L.length-1);cx[c]=x;H=Math.max(H,colH[c]);x+=ws[j]+gap});
   H+=top+pad;cols.forEach((c,j)=>{let y=top+(H-top-pad-colH[c])/2;N.filter(n=>n.col===c).forEach(n=>{pos[n.id]={x:cx[c],y,w:ws[j],h:SPEC[c].h};y+=SPEC[c].h+SPEC[c].g})});
   return {H:Math.max(H,72),pos,cx,cols}}
- mk(n,p){const g=sv("g",{class:`nd k-${n.kind} st-${n.st}`,"data-node":n.id,tabindex:"0",role:"button","aria-label":[n.kind==="orch"?"Orchestrator":n.kind==="conn"?"Parallel Search":n.t1,n.t2].filter(Boolean).join(", ")});
+ mk(n,p){const g=sv("g",{class:`nd k-${n.kind} st-${n.st}`,"data-node":n.id,tabindex:"0",role:"button","aria-label":[n.kind==="orch"?"Orchestrator":n.kind==="conn"?"Exa":n.t1,n.t2].filter(Boolean).join(", ")});
   g.append(sv("rect",{class:"bx",width:p.w,height:p.h,rx:3}));
   const T=(c,x,y,t,an)=>{const e=sv("text",{class:c,x,y,...(an?{"text-anchor":an}:{})});e.textContent=t;g.append(e)};
   const fit=(t,px,cw)=>{t=String(t||"");const m=Math.max(3,Math.floor(px/cw));return t.length>m?t.slice(0,m-1).trimEnd()+"…":t};
   const dot=(y)=>g.append(sv("circle",{class:"dt",cx:p.w-10,cy:y,r:2.5}));
   if(n.kind==="orch"||n.kind==="arb"||n.kind==="ans"||n.kind==="doc"){T("sf",10,17,{orch:"Orchestrator",arb:"Decision agent",ans:"Answer",doc:"Document"}[n.kind]);T("cp",10,30,fitS(n.t2,Math.floor((p.w-26)/6)));dot(13)}
   else if(n.kind==="agent"){T("rn",9,21.5,n.rn+".");T("cp",30,14,fit(n.t1,p.w-46,6.2));T("it",30,26.5,fit(n.t2,p.w-46,5.3));dot(p.h/2)}
-  else if(n.kind==="conn"){T("t1",10,16,"Parallel Search");T("cp",10,28.5,fit(n.t2,p.w-20,6.2));dot(13)}
+  else if(n.kind==="conn"){T("t1",10,16,"Exa");T("cp",10,28.5,fit(n.t2,p.w-20,6.2));dot(13)}
   else if(n.kind==="site"){T("t1 sm",9,14.5,fit(n.t1,p.w-30,5.4));T("nm",p.w-8,14.5,String(n.num),"end")}
   else T("it",9,14.5,fit(n.t1,p.w-16,5.3));
   return g}
@@ -2221,7 +2221,7 @@ function metaball(r1,r2,c1,c2,hs=2.4,v=.5){const HP=Math.PI/2,d=Math.hypot(c2[0]
  return `M${f(p1)}C${f(h1)} ${f(h3)} ${f(p3)}A${r2.toFixed(1)},${r2.toFixed(1)} 0 ${d>r1?1:0} 0 ${f(p4)}C${f(h4)} ${f(h2)} ${f(p2)}Z`}
 const rad=(t,k)=>k==="site"?Math.min(11,3.5+Math.sqrt(Math.max(0,t))*.3):Math.min(20,5+Math.sqrt(Math.max(0,t))*.5);
 const fitS=(t,n)=>{t=String(t||"");return t.length>n?t.slice(0,n-1).trimEnd()+"…":t};
-const flabel=n=>n.kind==="doc"?"Document":n.kind==="arb"?"Decision agent":n.kind==="ans"?"Answer":n.kind==="orch"?"Orchestrator":n.kind==="conn"?"Parallel Search":n.kind==="agent"?`${n.rn} · ${fitS(n.t2,20)}`:fitS(n.t1,20);
+const flabel=n=>n.kind==="doc"?"Document":n.kind==="arb"?"Decision agent":n.kind==="ans"?"Answer":n.kind==="orch"?"Orchestrator":n.kind==="conn"?"Exa":n.kind==="agent"?`${n.rn} · ${fitS(n.t2,20)}`:fitS(n.t1,20);
 class FieldMap{
  constructor(host,get,opt={}){Object.assign(this,{host,get,opt,nodes:new Map(),links:new Map(),W:0,H:0,Hc:0,alpha:1,raf:0,pl:[],fresh:true,vis:true,hovId:null,hovN:null,drag:null,cx:{},rep:40});
   host.innerHTML=barHTML("field",get(),opt);this.mvr=host.querySelector(".mvr");
@@ -2324,10 +2324,10 @@ function exList(t){const p=String(t||"").split(/\s*…\s*/).map(x=>x.trim()).fil
 function sheetHTML(w,id){const S=w.steps||[],M=w.map||{},P=M.pages||[],C=M.calls||[],si=x=>`<div class="si">${x}</div>`;
  const dn=i=>S[i]?`Desk ${ROMAN[i]} · ${ROLE[S[i].role]}${S[i].focus?` · ${esc(S[i].focus)}`:""}`:"";
  const page=p=>`<div class="pg si"><h5>${esc(p.title||hostOf(p.url))}</h5><div class="mt">${p.date?`<span class="num">${esc(p.date)}</span>`:""}<span class="age${(ageOf(p.date)??0)>(freshDays()||1e9)?" old":""}">${ageText(ageOf(p.date))}</span>${S[p.i]?`<span>${dn(p.i)}</span>`:p.i===-1?"<span>Decision agent’s check</span>":""}${p.q?`<span>“${esc(p.q)}”</span>`:""}</div>${exList(p.ex)}<a class="go" href="${esc(p.url)}" target="_blank" rel="noopener">Open the page ↗</a></div>`;
- if(id.startsWith("s:")){const hh=id.slice(2),L=P.filter(p=>hostOf(p.url)===hh);if(!L.length)return "";return si(`<span class="k cap">Source</span><h4>${esc(hh)}</h4><div class="mt"><span>${L.length} page${L.length>1?"s":""} pulled</span><span>via Parallel Search</span></div>`)+L.map(page).join("")}
+ if(id.startsWith("s:")){const hh=id.slice(2),L=P.filter(p=>hostOf(p.url)===hh);if(!L.length)return "";return si(`<span class="k cap">Source</span><h4>${esc(hh)}</h4><div class="mt"><span>${L.length} page${L.length>1?"s":""} pulled</span><span>via Exa</span></div>`)+L.map(page).join("")}
  if(id.startsWith("u:")){const p=P.find(x=>x.url===id.slice(2));if(!p)return "";return si(`<span class="k cap">Source · ${esc(hostOf(p.url))}</span>`)+page(p).replace('class="pg si"','class="si" style="margin-top:6px"')}
  if(id==="more"){const rest=hostsOf(P).slice(SITES);return si(`<span class="k cap">Sources</span><h4>${rest.length} more site${rest.length>1?"s":""}</h4>`)+si(`<ul class="ql">${rest.map(o=>`<li><span class="num">${o.n}</span><button class="lnk" data-sheet="s:${esc(o.h)}">${esc(o.h)}</button></li>`).join("")}</ul>`)}
- if(id==="c"){const hs=hostsOf(P);return si(`<span class="k cap">Connector</span><h4>Parallel Search</h4><div class="mt"><span>web_search · web_fetch</span><span>${C.length} call${C.length>1?"s":""}</span><span>${hs.length} site${hs.length>1?"s":""}</span></div>`)+si(`<span class="k2 cap">Calls</span><ul class="ql">${C.map(c=>`<li><span class="num">${mmss(c.t)}</span><span><b class="dk">${ROMAN[c.i]||""}.</b> ${c.fetch?"Read ":""}${c.q.map(x=>c.fetch?esc(x):`“${esc(x)}”`).join(", ")}</span></li>`).join("")}</ul>`)+(hs.length?si(`<span class="k2 cap">Sites</span><ul class="ql">${hs.map(o=>`<li><span class="num">${o.n}</span><button class="lnk" data-sheet="s:${esc(o.h)}">${esc(o.h)}</button></li>`).join("")}</ul>`):"")}
+ if(id==="c"){const hs=hostsOf(P);return si(`<span class="k cap">Connector</span><h4>Exa</h4><div class="mt"><span>web_search_exa · web_fetch_exa</span><span>${C.length} call${C.length>1?"s":""}</span><span>${hs.length} site${hs.length>1?"s":""}</span></div>`)+si(`<span class="k2 cap">Calls</span><ul class="ql">${C.map(c=>`<li><span class="num">${mmss(c.t)}</span><span><b class="dk">${ROMAN[c.i]||""}.</b> ${c.fetch?"Read ":""}${c.q.map(x=>c.fetch?esc(x):`“${esc(x)}”`).join(", ")}</span></li>`).join("")}</ul>`)+(hs.length?si(`<span class="k2 cap">Sites</span><ul class="ql">${hs.map(o=>`<li><span class="num">${o.n}</span><button class="lnk" data-sheet="s:${esc(o.h)}">${esc(o.h)}</button></li>`).join("")}</ul>`):"")}
  if(id==="o"){const th=M.thinking||[];return si(`<span class="k cap">Orchestrator · Opus 5.5, low effort</span><h4>${esc(M.kind?cap1(M.kind):"Deliberation")}</h4>`)+(th.length?si(`<span class="k2 cap">Deliberation</span><div class="dl2">${th.map(t=>`<p>${esc(t)}</p>`).join("")}</div>`):"")+(M.rationale?si(`<p class="tk">${esc(M.rationale)}</p>`):"")+(S.length?si(`<span class="k2 cap">Staffing</span><ul class="ql">${S.map((s,i)=>`<li><span class="num">${ROMAN[i]}.</span><button class="lnk" data-sheet="a${i}">${ROLE[s.role]}${s.focus?" · "+esc(s.focus):""}</button></li>`).join("")}</ul>`):"")}
  if(id==="v"){const t=ledgerStats(w.ledger);return si(`<span class="k cap">Decision agent</span><h4>Staffing, then truth</h4><p class="tk">It took the orchestrator's deliberation and staffed ${words(S.length).toLowerCase()} desk${S.length===1?"":"s"} at the effort each needed. When the desks filed, it weighed every claim against the pages they read${(C.some(c=>c.i===-1))?" and ran its own checks on the web":""}.</p>${t.n?`<div class="mt"><span>${t.g} grounded</span>${t.q?`<span>${t.q} qualified</span>`:""}${t.u?`<span>${t.u} open</span>`:""}</div>`:""}`)+(t.n?si(ledgerHTML(w,true)):si(`<p class="empty2">This run predates the claims ledger.</p>`))}
  if(id==="doc"){const d=w.doc;if(!d)return "";if(d.error)return si(`<span class="k cap">Document held</span><h4>${esc(DOCT[d.type]||"Document")}</h4><p class="tk">${esc(d.error)}</p>`);return si(`<span class="k cap">Document · kernel ${esc(d.kernel||"")}</span><h4>${esc(d.title)}</h4><div class="mt"><span>${d.pages} pages</span><span>Verified by the kernel builder</span></div><ul class="ql">${(d.checks||[]).map(c=>`<li><span class="num">✓</span><span>${esc(c[0])}</span></li>`).join("")}</ul>`)+si(`<button class="btn2" data-docopen-sheet>Open the document</button>`)}
@@ -2367,12 +2367,12 @@ function peekPlan(t){const r={thinking:[],partial:false,steps:[]};let m=t.indexO
   if(j>=t.length)break;try{r.steps.push(JSON.parse(t.slice(i,j+1)))}catch(e){break}i=j+1}}}
  return r}
 
-/* ---------- the web: Parallel Search, called through the viewer's connector ---------- */
-const WEB={ok:false,mcp:null,sid:[...crypto.getRandomValues(new Uint8Array(16))].map(b=>b.toString(16).padStart(2,"0")).join(""),server:"Parallel Search"};
+/* ---------- the web: Exa, called through the viewer's connector ---------- */
+const WEB={ok:false,mcp:null,sid:[...crypto.getRandomValues(new Uint8Array(16))].map(b=>b.toString(16).padStart(2,"0")).join(""),server:"Exa"};
 const WEB_ROLES=new Set(["research","legal","decision"]);
-const MCP_COPY={server_not_connected:"Parallel Search isn't connected. Add it in claude.ai Settings → Connectors.",needs_reauth:"Reconnect Parallel Search in claude.ai Settings → Connectors.",not_in_manifest:"Web research isn't allowed for this page. Allow Parallel Search when asked.",selection_required:"Choose which Parallel Search connector to use when Claude asks.",blocked_by_policy:"Your organisation blocks web research here."};
-async function webInit(){try{WEB.mcp=await window.claude?.use?.("mcp")??null;if(!WEB.mcp)throw 0;const l=await WEB.mcp.listTools(WEB.server);const sv=(l.servers||[]).find(x=>x.server===WEB.server);WEB.ok=!!(sv&&(sv.tools||[]).some(t=>t.name==="web_search"))}catch(e){WEB.ok=false}
- const b=$("#webOpt");if(b){b.setAttribute("aria-disabled",String(!WEB.ok));b.dataset.hint=WEB.ok?"Research, legal and decision desks can search with Parallel Search.":"Connect Parallel Search in claude.ai to enable web research."}drawOpt()}
+const MCP_COPY={server_not_connected:"Exa isn't connected. Add it in claude.ai Settings → Connectors.",needs_reauth:"Reconnect Exa in claude.ai Settings → Connectors.",not_in_manifest:"Web research isn't allowed for this page. Allow Exa when asked.",selection_required:"Choose which Exa connector to use when Claude asks.",blocked_by_policy:"Your organisation blocks web research here."};
+async function webInit(){try{WEB.mcp=await window.claude?.use?.("mcp")??null;if(!WEB.mcp)throw 0;const l=await WEB.mcp.listTools(WEB.server);const sv=(l.servers||[]).find(x=>x.server===WEB.server);WEB.ok=!!(sv&&(sv.tools||[]).some(t=>t.name==="web_search_exa"))}catch(e){WEB.ok=false}
+ const b=$("#webOpt");if(b){b.setAttribute("aria-disabled",String(!WEB.ok));b.dataset.hint=WEB.ok?"Research, legal and decision desks can search with Exa.":"Connect Exa in claude.ai to enable web research."}drawOpt()}
 const freshDays=()=>({"3":92,"12":366}[OPT.fresh]||0);
 const todayISO=()=>{const d=new Date();return `${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())}`};
 const todayLine=()=>`Today is ${new Date().toLocaleDateString("en-PH",{weekday:"long",day:"numeric",month:"long",year:"numeric"})} (${todayISO()}), Asia/Manila.`;
@@ -2380,17 +2380,19 @@ const ageOf=d=>{const t=Date.parse(d||"");if(isNaN(t))return null;return Math.ma
 const ageText=a=>a==null?"undated":a<2?"today":a<45?`${a} days old`:a<600?`${Math.round(a/30.4)} months old`:`${(a/365).toFixed(1)} years old`;
 const clip=(t,n)=>{t=String(t||"").replace(/\s+/g," ").trim();return t.length>n?t.slice(0,n)+"…":t};
 function webTools(ctx){/* ctx: {onSearch(queries), onSources(list), onError(code)} */
- const call=async(tool,input,signal)=>{try{const r=await WEB.mcp.callTool(WEB.server,tool,input,{signal,cache:false});return r.payload??r}catch(e){ctx.onError(e&&e.code);throw new Error(MCP_COPY[e&&e.code]||("web "+tool+" failed: "+(e&&e.code||"error")))}};
+ const exaTxt=p=>typeof p==="string"?p:p&&Array.isArray(p.content)?p.content.map(c=>c.text||"").join("\n"):p&&typeof p.text==="string"?p.text:JSON.stringify(p||"");
+ const exaParse=p=>{if(p&&Array.isArray(p.results))return p;const t=exaTxt(p);return {results:t.split(/\n-{3,}\n/).map(b=>{const g=k=>(b.match(new RegExp("^"+k+":\\s*(.*)$","m"))||[])[1]||"";const url=g("URL")||(b.match(/https?:\/\/\S+/)||[""])[0];const title=g("Title")||(b.match(/^#\s*(.+)$/m)||[])[1]||url;const pub=g("Published");const body=b.split(/Highlights:|\n\n/).slice(1).join(" ").replace(/\n\.\.\.\n/g," … ").replace(/\s+/g," ").trim()||b;return {url,title,publish_date:pub&&pub!=="N/A"?pub:null,excerpts:[body]}}).filter(r=>r.url)}};
+ const call=async(tool,input,signal)=>{try{const r=await WEB.mcp.callTool(WEB.server,tool,input,{signal,cache:false});return exaParse(r.payload??r)}catch(e){ctx.onError(e&&e.code);throw new Error(MCP_COPY[e&&e.code]||("web "+tool+" failed: "+(e&&e.code||"error")))}};
  const trim=p=>{const rs=(p&&p.results)||[],win=freshDays();const out=rs.slice(0,8).map(r=>{const a=ageOf(r.publish_date);return {url:r.url,title:clip(r.title,120),published:r.publish_date||null,age_days:a,stale:!!(win&&a!=null&&a>win),excerpt:clip((r.excerpts||[]).join(" … "),900)}})
    /* newest first; undated after dated; anything outside the window goes last */
    .sort((x,y)=>(x.stale-y.stale)||((x.age_days??1e6)-(y.age_days??1e6))).slice(0,7);ctx.onSources(out);return {today:todayISO(),order:"newest first",rule:win?`Prefer results with stale:false. stale:true means older than ${OPT.fresh} months; use it only as background and say how old it is.`:"Prefer the newest result when figures differ.",results:out}};
  return [
   {name:"web_search",description:"Search the web for current facts. Returns up to 6 results with url, title, published date and excerpts that usually answer directly. Give one precise objective and 2-3 short keyword queries. Cite the url of any figure you use.",
    inputSchema:{type:"object",properties:{objective:{type:"string",description:"What you are trying to find, specific and atomic"},search_queries:{type:"array",items:{type:"string"},description:"2-3 keyword queries, 3-6 words each"}},required:["objective","search_queries"]},
-   execute:async(inp,{signal})=>{const q=(Array.isArray(inp.search_queries)?inp.search_queries:[inp.search_queries]).map(String).filter(Boolean).slice(0,4);ctx.onSearch(q);return trim(await call("web_search",{objective:(String(inp.objective||q.join("; ")).slice(0,360)+(freshDays()?` Prefer sources published in the last ${OPT.fresh} months; today is ${todayISO()}.`:` Today is ${todayISO()}.`)),search_queries:q,session_id:WEB.sid},signal))}},
+   execute:async(inp,{signal})=>{const q=(Array.isArray(inp.search_queries)?inp.search_queries:[inp.search_queries]).map(String).filter(Boolean).slice(0,4);ctx.onSearch(q);return trim(await call("web_search_exa",{query:q.join("; ").slice(0,400),objective:(String(inp.objective||q.join("; ")).slice(0,360)+(freshDays()?` Prefer sources published in the last ${OPT.fresh} months; today is ${todayISO()}.`:` Today is ${todayISO()}.`)),numResults:6},signal))}},
   {name:"web_fetch",description:"Read specific pages when search excerpts are not enough (exact wording, full tables). Pass up to 3 urls and an objective. Returns focused excerpts per page.",
    inputSchema:{type:"object",properties:{urls:{type:"array",items:{type:"string"}},objective:{type:"string"}},required:["urls","objective"]},
-   execute:async(inp,{signal})=>{const u=(Array.isArray(inp.urls)?inp.urls:[inp.urls]).map(String).filter(x=>/^https?:\/\//.test(x)).slice(0,3);if(!u.length)throw new Error("Give at least one http(s) url.");ctx.onSearch(u.map(x=>(x.match(/^https?:\/\/([^/]+)/)||[])[1]||x),true);return trim(await call("web_fetch",{urls:u,objective:String(inp.objective||"").slice(0,200),session_id:WEB.sid},signal))}}]}
+   execute:async(inp,{signal})=>{const u=(Array.isArray(inp.urls)?inp.urls:[inp.urls]).map(String).filter(x=>/^https?:\/\//.test(x)).slice(0,3);if(!u.length)throw new Error("Give at least one http(s) url.");ctx.onSearch(u.map(x=>(x.match(/^https?:\/\/([^/]+)/)||[])[1]||x),true);return trim(await call("web_fetch_exa",{urls:u,maxCharacters:3000},signal))}}]}
 /* ---------- the kernel builder: runtime/build_derivative.py (Mode B), ported line for line ----------
    A derivative is the quotation master's <head> carried verbatim, at most one appended derivative style,
    and a new <body> written in the master's component vocabulary; brand assets hydrate from the package,
@@ -2701,7 +2703,7 @@ ${KL?`The GSSC kernel ${KL.kernel_version} is loaded, with templates for: quotat
 ${todayLine()} When the brief depends on current facts (prices, rates, rules, news), plan for the newest figures.
 Staffing is your decision, not a fixed roster. Commission as many desks as the work truly needs, from 0 to 8, in any mix of roles, and several desks of one role when the work splits cleanly: for example two research desks on different sub-questions, or two legal desks on different documents. Never give two desks the same work. ${thorough?"The user wants specialists: staff at least two desks and split the work generously.":"Small talk, simple facts or quick edits need no desk."} If the user asks for a particular staffing, follow it within these limits.
 Roles and effort: research (medium or high; floor medium), finance (high), legal (high), decision (medium or high; floor medium), builder (medium). Start each desk at its floor; use high for research or decision only when the amount exceeds PHP 500,000, sources may conflict, or there is legal exposure.
-${webOn?"Research, legal and decision desks can search the web through Parallel Search; set web true where current, local or checkable facts matter.":"There is no web access in this run; set web false."}
+${webOn?"Research, legal and decision desks can search the web through Exa; set web true where current, local or checkable facts matter.":"There is no web access in this run; set web false."}
 Reply with only JSON, keys in this order:
 {"thinking": [3 to 5 short sentences in the first person, present tense: what you notice in the brief and how you will split the work],
  "title": string (3-6 words), "kind": string (what sort of brief, under 8 words), "rationale": string (one sentence),
