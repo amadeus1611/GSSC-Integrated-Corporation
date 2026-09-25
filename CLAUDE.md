@@ -37,6 +37,10 @@ Owner: Duke Y. Demayo. Working branch: `claude/wizardly-ptolemy-6q4ter`, PR amad
 - Keep each iteration's change focused; don't rewrite working systems wholesale.
 - **Client-facing GSSC output** must pass the kernel module 04 firewall: no suppliers, costs, margins or bank details.
 
+## Effort and delegation
+- Run the main session at high by default; drop to medium only for an exact change list, a single-file tweak or a copy edit.
+- Work inline by default. Sub-agents run at high, with medium only for mechanical tasks. The full rules are in `orchestrator/POLICY.md`.
+
 ## Working efficiently
 - Read only the part of a large file you need; `index.html` is ~500 KB of dense inline code and data. Use grep to find the anchor, then read around it.
 - Don't launch sub-agents for small or sequential work. Use them only for large, separable tasks such as broad research or parallel reviews.
