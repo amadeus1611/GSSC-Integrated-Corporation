@@ -1,6 +1,6 @@
 ---
 name: legal-high
-description: Clause and risk review against kernel module 09_legal_doctrine. Launched by the orchestrator per orchestrator/POLICY.md; choose the lowest tier that meets the role's floor.
+description: Clause and risk review against kernel module 09_legal_doctrine. Launched by the orchestrator per orchestrator/POLICY.md.
 tools: Read, Grep, Glob, Write
 model: claude-opus-5-5
 effort: high
