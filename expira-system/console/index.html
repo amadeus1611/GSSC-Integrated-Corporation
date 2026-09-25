@@ -1803,6 +1803,9 @@ button{transition-property:color,background,border-color,opacity,scale;}
 <div class="sheet" id="sheet" role="dialog" aria-label="Details"><button class="ib sx" id="sheetX" aria-label="Close"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.1"><path d="M4 4l8 8M12 4l-8 8"/></svg></button><div class="speek" id="sheetP"></div><div class="sb" id="sheetB"></div></div>
 
 <script>
+document.addEventListener("submit",e=>{if(e.target&&e.target.id==="form")e.preventDefault()},true);
+window.__xerr=e=>{try{const m=String((e&&(e.message||e.reason&&e.reason.message))||e);if(/ResizeObserver loop/.test(m))return;let d=document.getElementById("xerr");if(!d){d=document.createElement("div");d.id="xerr";d.style.cssText="position:fixed;left:50%;bottom:12px;translate:-50% 0;z-index:999;max-width:min(640px,calc(100vw - 32px));padding:6px 12px;border-radius:5px;background:#3b1d1d;color:#f6dada;font:12px/1.4 system-ui;box-shadow:0 8px 24px -12px rgba(0,0,0,.5)";document.body&&document.body.append(d)}d.textContent="EXPIRA hit an error: "+m.slice(0,220)}catch(_){}};
+window.addEventListener("error",e=>window.__xerr(e.error||e));window.addEventListener("unhandledrejection",e=>{const r=e.reason;if(r&&(r.code==="cancelled"||r.name==="AbortError"))return;window.__xerr(r)});
 (() => {
 const $=s=>document.querySelector(s),app=$("#app"),root=document.documentElement;
 const esc=s=>String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
@@ -2977,7 +2980,7 @@ document.addEventListener("click",async e=>{const o=e.target.closest("[data-doco
 let sample=null,db=null,ctl=null,busy=false;
 (async()=>{sample=await window.claude?.use?.("sample")??null;$("#sig").className="sig capt"+(sample?" live":"");swap($("#sigT"),sample?"Linked":"Preview");
  if(!sample)$("#phx").textContent="Open this page in Claude to brief EXPIRA";grow();attInit();db=await window.claude?.use?.("db")??null;webInit()})();
-open(chats.find(c=>!c.example)||chats[0]);
+try{newChat()}catch(_e){open(chats.find(c=>!c.example)||chats[0])}
 
 function E_live(){return !!E_live.f}function E_pre(P){const f=E_live.f;if(f&&f.pre)f.pre(P)}function E_shPre(sh,a){const f=E_live.f;if(f&&f.shPre)return f.shPre(sh,a);sh.style.transition="none";sh.classList.remove("open");return null}function E_shPost(sh,was,a){const f=E_live.f;if(f&&f.shPost)return f.shPost(sh,was,a);void sh.offsetWidth;sh.style.transition="";requestAnimationFrame(()=>sh.classList.add("open"))}
 /* liquid menus: every popover pours out of the control that opened it and drains back into it */
@@ -3334,7 +3337,7 @@ ${PG.length?`Web sources the desks consulted, newest first (use these urls in "s
   if(code==="not_granted"||code==="sampling_disabled")sample=null;save();
  }finally{STEERF=null;ans.classList.remove("live");clearInterval(tick);clearInterval(sigIv);for(const k in think)think[k]=0;work._o=false;work.steps.forEach(s=>s._live=false);work._va=work._aw=work._au=work._vs=0;mapSync();setTimeout(()=>{stopPlates();const l=document.querySelector(".plate .lv");if(l){l.classList.remove("on");$("#lvT").textContent="Recorded"}},1400);setBusy(false)}
 }
-/* m1a_emerge: every click-opened surface pours out of the click point on two springs (width first, height after),
+try{/* m1a_emerge: every click-opened surface pours out of the click point on two springs (width first, height after),
    drains back into it on close, and never clips its own shadow. WAAPI on transform + opacity only (M1b owns `translate`). */
 {
 const E_now=()=>performance.now();
@@ -3505,8 +3508,8 @@ E_live.f={
    im.animate(kf,{duration:T,easing:"linear"})})}).observe(L,{attributes:true,attributeFilter:["hidden"]})}}
 
 window.__v38=window.__v38||{};window.__v38.emerge={open:E_open,close:E_close,move:E_move,take:E_take,log:E_LOG,surfaces:E_SURF,kinds:E_KIND};
-}
-/* m1b_space: rigid-body displacement of floating surfaces + the main-column glide.
+}}catch(_e){try{window.__xerr&&window.__xerr(_e)}catch(_){}}
+try{/* m1b_space: rigid-body displacement of floating surfaces + the main-column glide.
    Writes ONLY the CSS individual `translate` property (M1a owns transform/opacity). Patches no functions.
    Inputs: `v38:surface` events {el,phase,origin,avoid,prio} (M1a) and, as a fallback, class/hidden observers. */
 {
@@ -3664,9 +3667,9 @@ window.__v38.spaces={
   awake:()=>[...S_B.values()].filter(b=>b.awake).length+S_G.size,
   glides:()=>[...S_G.keys()],
   stats:()=>S_stats};
-}
-{(window.__v38=window.__v38||{}).footer={foot:F_foot,st:F_st};}
-{
+}}catch(_e){try{window.__xerr&&window.__xerr(_e)}catch(_){}}
+try{{(window.__v38=window.__v38||{}).footer={foot:F_foot,st:F_st};}}catch(_e){try{window.__xerr&&window.__xerr(_e)}catch(_){}}
+try{{
 /* m3a_trace: the run card's mini map as a time-aware swimlane flow.
    x = execution time (piecewise-linear, water-filled so short phases stay visible), lanes = actors.
    One keyed DOM per host (no innerHTML rebuilds), one rAF per visible host, nothing runs once a settled replay is done. */
@@ -3872,8 +3875,8 @@ document.addEventListener("visibilitychange",()=>{if(!document.hidden)T_ALL.forE
 window.__v38=window.__v38||{};window.__v38.trace={order:w=>T_order(w),line:w=>T_line(w),tr:w=>T_tr(w),hosts:()=>T_ALL.size,live:()=>[...T_ALL].filter(T=>T.raf).length,replays:m=>m&&m._T?m._T.rp:0,state:m=>{const T=m&&m._T;return T?{live:T.live,shown:T.shown,raf:!!T.raf,ph:!!T.gPh,q:T.q.length,born:T.born.size,ents:(T.ents||[]).length,H:T.H,W:T.W,dead:!!T.dead}:null}};
 /* cards already on screen in Map view (rendered before this module ran) */
 document.querySelectorAll("#thread .run.open[data-view=map]").forEach(r=>{try{runView(r,"map")}catch(e){}});
-}
-/* m3b_flow: the Dispatch Flow view as an execution trace (swimlanes over compressed time), after research/trace.md.
+}}catch(_e){try{window.__xerr&&window.__xerr(_e)}catch(_){}}
+try{/* m3b_flow: the Dispatch Flow view as an execution trace (swimlanes over compressed time), after research/trace.md.
    One engine, W_TraceMap, with presets full (Dispatch panel), fs (full screen) and mini (mountable anywhere).
    Replay and live births are strictly parent-first; a settled map runs no rAF and no CSS animation. */
 function W_mountTrace(host,get,opt){const T=window.__v38&&window.__v38.TraceMap;return T?new T(host,get,Object.assign({preset:"mini"},opt||{})):null}
@@ -4290,8 +4293,8 @@ FlowMap=W_TraceMap;W_V.TraceMap=W_TraceMap;W_V.mountTrace=W_mountTrace;W_V.trace
 HINT.flow="Hover a step to read it · select to open it";
 const W_bar0=barHTML;
 barHTML=function(v,w,o){let h=W_bar0(v,w,o);if(v==="flow"&&!(o&&o.pv))h=h.replace('<span class="mvr">','<button type="button" class="wrp" data-wreplay aria-label="Replay the run in order of execution" data-tip="Replay in order"><svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.1" aria-hidden="true"><path d="M2.2 6.4a3.9 3.9 0 1 0 1.2-3.1"/><path d="M3.3 1.2v2.3h2.3"/></svg>Replay</button><span class="mvr">');return h};
-}
-{ /* ===== v38 · M4 Bud: Field births are queued and bud off their parent (swell → neck → pinch → release), with no global reheat ===== */
+}}catch(_e){try{window.__xerr&&window.__xerr(_e)}catch(_){}}
+try{{ /* ===== v38 · M4 Bud: Field births are queued and bud off their parent (swell → neck → pinch → release), with no global reheat ===== */
 const B_KO={orch:0,arb:1,agent:2,conn:3,site:4,more:5,ans:6,doc:7};
 const B_ss=(a,b,x)=>{const t=Math.max(0,Math.min(1,(x-a)/(b-a)));return t*t*(3-2*t)};
 /* timings in ms (live); replays scale them by B_REP and use a shorter stagger */
@@ -4446,8 +4449,8 @@ FieldMap.prototype.go=function(){if(this.raf||!seen(this))return;this.lt=0;
   if(mv||this.pl.length)this.raf=requestAnimationFrame(step)};
  this.raf=requestAnimationFrame(step)};
 window.__v38=window.__v38||{};window.__v38.bud={T:B_T,REP:B_REP,mb:B_mb,pre:[]};
-}
-{/* the now card: docked under the Dispatch map, and at the foot of the full-screen map. It follows the step doing the work, shows that step's own kind of thinking, and keeps the whole run in view as a strip of steps in execution order. */
+}}catch(_e){try{window.__xerr&&window.__xerr(_e)}catch(_){}}
+try{{/* the now card: docked under the Dispatch map, and at the foot of the full-screen map. It follows the step doing the work, shows that step's own kind of thinking, and keeps the whole run in view as a strip of steps in execution order. */
 const L_tail=(t,n)=>{t=String(t||"").replace(/\s+/g," ").trim();return t.length>n?"…"+t.slice(-n+1):t};
 const L_RK=x=>x[0]==="a"?5:x==="ans"||x==="doc"?4:x==="v"?3:x==="c"?2:1;
 const L_what=(w,id)=>{const S=w.steps||[],M=w.map||{},C=M.calls||[];
@@ -4483,23 +4486,23 @@ const L_tick=()=>{for(const m of FM){const host=m.host;if(!host||!host.isConnect
    if(K&&K._k!==kk){K._k=kk;K.innerHTML=`<div><dt>Desks</dt><dd class="num">${S.length}</dd></div><div><dt>Grounded</dt><dd class="num">${lt.n?lt.g+"/"+lt.n:"—"}</dd></div><div><dt>Sources</dt><dd class="num">${P.length}</dd></div><div><dt>Tokens</dt><dd class="num">${tt?ft(tt):"—"}</dd></div>`}
    const h=Math.round(d.offsetHeight+14);if(host._nowH!==h){host._nowH=h;host.style.paddingBottom=h+"px";if(m.sync)m.sync()}}}};
 setInterval(L_tick,240);
-document.addEventListener("click",e=>{const i=e.target.closest(".nc-s i[data-id]");if(!i)return;const d=i.closest(".nowc");if(!d||!d._m)return;e.stopPropagation();openSheet(d._m.get(),i.dataset.id,i)},true);}
-{const G_rim=el=>{if(reduce||!el||!el.isConnected)return;let r=el.querySelector(":scope>.e-rim");if(!r){r=document.createElement("i");r.className="e-rim";r.setAttribute("aria-hidden","true");el.append(r)}r.classList.remove("go");void r.offsetWidth;r.classList.add("go")};
-document.addEventListener("v38:surface",e=>{const d=e.detail||{};if(d.phase==="open"&&d.el){requestAnimationFrame(()=>G_rim(d.el));if(!reduce){const ks=[...d.el.children].filter(k=>!k.classList.contains("e-rim")&&k.getClientRects().length).slice(0,10);ks.forEach((k,i)=>k.animate([{clipPath:"inset(0 100% 0 0)",opacity:0,transform:"translateY(3px)"},{clipPath:"inset(0 0% 0 0)",opacity:1,transform:"none"}],{duration:420,delay:110+i*32,easing:"cubic-bezier(.23,1,.32,1)",fill:"backwards"}))}}});}
-{let X_n=0;const X_ns="http://www.w3.org/2000/svg",X_el=(n,a)=>{const e=document.createElementNS(X_ns,n);for(const k in a)e.setAttribute(k,a[k]);return e};
+document.addEventListener("click",e=>{const i=e.target.closest(".nc-s i[data-id]");if(!i)return;const d=i.closest(".nowc");if(!d||!d._m)return;e.stopPropagation();openSheet(d._m.get(),i.dataset.id,i)},true);}}catch(_e){try{window.__xerr&&window.__xerr(_e)}catch(_){}}
+try{{const G_rim=el=>{if(reduce||!el||!el.isConnected)return;let r=el.querySelector(":scope>.e-rim");if(!r){r=document.createElement("i");r.className="e-rim";r.setAttribute("aria-hidden","true");el.append(r)}r.classList.remove("go");void r.offsetWidth;r.classList.add("go")};
+document.addEventListener("v38:surface",e=>{const d=e.detail||{};if(d.phase==="open"&&d.el){requestAnimationFrame(()=>G_rim(d.el));if(!reduce){const ks=[...d.el.children].filter(k=>!k.classList.contains("e-rim")&&k.getClientRects().length).slice(0,10);ks.forEach((k,i)=>k.animate([{clipPath:"inset(0 100% 0 0)",opacity:0,transform:"translateY(3px)"},{clipPath:"inset(0 0% 0 0)",opacity:1,transform:"none"}],{duration:420,delay:110+i*32,easing:"cubic-bezier(.23,1,.32,1)",fill:"backwards"}))}}});}}catch(_e){try{window.__xerr&&window.__xerr(_e)}catch(_){}}
+try{{let X_n=0;const X_ns="http://www.w3.org/2000/svg",X_el=(n,a)=>{const e=document.createElementNS(X_ns,n);for(const k in a)e.setAttribute(k,a[k]);return e};
 const X_tex=root=>{(root||document).querySelectorAll(".fig svg.ch:not([data-tex])").forEach(v=>{v.setAttribute("data-tex","1");const vb=(v.getAttribute("viewBox")||"").split(/[ ,]+/).map(Number);if(vb.length<4)return;const id="tx"+(++X_n);
  const df=X_el("defs",{});const pd=X_el("pattern",{id:id+"d",width:"7",height:"7",patternUnits:"userSpaceOnUse"});pd.append(X_el("circle",{cx:"1",cy:"1",r:".55",class:"txd"}));
  const ph=X_el("pattern",{id:id+"h",width:"4",height:"4",patternUnits:"userSpaceOnUse",patternTransform:"rotate(45)"});ph.append(X_el("line",{x1:"0",y1:"0",x2:"0",y2:"4",class:"txh"}));const lg=X_el("linearGradient",{id:id+"g",x1:"0",y1:"0",x2:"0",y2:"1"});lg.append(X_el("stop",{offset:"0",class:"txg0"}),X_el("stop",{offset:".35",class:"txg1"}));df.append(pd,ph,lg);
  const bg=X_el("rect",{x:vb[0],y:vb[1],width:vb[2],height:vb[3],fill:"url(#"+id+"d)",class:"txbg"});v.prepend(df);df.after(bg);
  v.querySelectorAll(".bar,.sg").forEach(r=>{if(r.classList.contains("txo"))return;const mk=f=>{const c=r.cloneNode(false);c.removeAttribute("data-ro");c.removeAttribute("data-i");c.setAttribute("fill",f);c.classList.add("txo");c.style.pointerEvents="none";return c};const g=mk("url(#"+id+"g)"),hh=mk("url(#"+id+"h)");r.after(hh);hh.after(g)})})};
-const X_old=armFigs;armFigs=function(root){X_tex(root);return X_old.apply(this,arguments)};X_tex(document);}
-{/* one easing table: every timing curve in the sheet is normalised to the house curves; no ease-in, no overshoot, no weak built-ins */
+const X_old=armFigs;armFigs=function(root){X_tex(root);return X_old.apply(this,arguments)};X_tex(document);}}catch(_e){try{window.__xerr&&window.__xerr(_e)}catch(_){}}
+try{{/* one easing table: every timing curve in the sheet is normalised to the house curves; no ease-in, no overshoot, no weak built-ins */
 const Z_OUT="cubic-bezier(.23,1,.32,1)",Z_IO="cubic-bezier(.77,0,.175,1)";
 const Z_fix=v=>v.split(/,(?![^(]*\))/).map(x=>{const t=x.trim();if(/^(linear|steps|step-)/.test(t)||/var\(/.test(t)||t.startsWith("linear("))return t;
  if(t==="ease-in-out")return Z_IO;if(t==="ease"||t==="ease-in"||t==="ease-out")return Z_OUT;
  const m=t.match(/cubic-bezier\(([^)]*)\)/);if(m){const [a,b,c,d]=m[1].split(",").map(Number);if(b<0||b>1||d<0||d>1||(a>.3&&b<.2))return Z_OUT}return t}).join(", ");
 const Z_run=()=>{for(const sh of document.styleSheets){let rs;try{rs=sh.cssRules}catch(e){continue}const walk=L=>{for(const r of L){if(r.cssRules)walk(r.cssRules);const st=r.style;if(!st)continue;
   for(const k of ["transition-timing-function","animation-timing-function"]){const v=st.getPropertyValue(k);if(v){const n=Z_fix(v);if(n!==v)st.setProperty(k,n,st.getPropertyPriority(k))}}}};walk(rs)}};
-Z_run();}
+Z_run();}}catch(_e){try{window.__xerr&&window.__xerr(_e)}catch(_){}}
 })();
 </script>
