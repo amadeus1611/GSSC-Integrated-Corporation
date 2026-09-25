@@ -46,7 +46,7 @@ function droplet(root) {
     { el: shell, frame: p => ({ transform: scale(p), opacity: smooth(0, .12, p) }) },
     { el: shadow, frame: p => ({ transform: scale(p), opacity: smooth(.05, .7, p) }) },
     { el: bead, frame: p => ({ transform: `translate(${g.ox}px,${g.oy}px) scale(${lerp(.7, 1.3, smooth(0, .2, p))})`, opacity: smooth(0, .03, p) * (1 - smooth(.08, .2, p)) }) },
-    { el: content, frame: p => ({ opacity: smooth(.86, 1, p) }) },
+    { el: content, frame: p => ({ opacity: smooth(.86, 1, p), filter: `blur(${(4 * (1 - smooth(.86, 1, p))).toFixed(2)}px)` }) }, // Gate A: the content un-blurs as it surfaces
   ], { onSettled: o => root.dataset.state = o ? 'open' : 'closed' });
   return { pour, open(x, y) { root.dataset.state = 'moving'; if (!pour.moving) { const r = root.getBoundingClientRect(); g = { ox: x - r.left, oy: y - r.top, sx0: BEAD / r.width, sy0: BEAD / r.height }; for (const el of [shell, shadow]) el.style.transformOrigin = `${g.ox}px ${g.oy}px` } pour.open() }, close() { root.dataset.state = 'moving'; pour.close() } };
 }

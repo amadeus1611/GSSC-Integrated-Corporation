@@ -1,6 +1,6 @@
 # Gate A: the pour, the motion tokens and the colour tokens
 
-**For:** Duke. **Status:** waiting on your decisions. Nothing in `index.html` has changed yet.
+**For:** Duke. **Status:** **decided 2026-09-25** (see Decisions below). Nothing in `index.html` has changed yet.
 
 **Evidence:**
 - The lab is `qa/lab/index.html`; serve it with `qa/harness.js`, or run `qa/lab/cast.js`.
@@ -84,3 +84,25 @@ These replace **15 curves and 63 durations**. They also replace the three v39 sp
 - The example chat and the map still say "Decision agent". Default: relabel it **Arbiter** to match v40.
 - The orchestrator node says `OPUS 5.5 · LOW`. Default: show its real effort (high).
 - Start page: the hidden WebGL metaball loop and the 24 fps grain loop run forever. Default: delete the WebGL loop, and render the grain once as a still texture.
+
+## Decisions (Duke, 2026-09-25)
+
+1. **The pour: A, the surface-tension droplet.**
+2. **The gold meniscus rim:** left off.
+3. **Motion:** "whatever is most premium: luxury car soft close, blur transition". Applied in `qa/lab/tokens.proposed.css` and the lab:
+   - exits use `--ease-soft-close` `cubic-bezier(.4,0,.1,1)` over 380 ms, so they travel and are pulled gently shut rather than accelerating out;
+   - a light blur (`--blur-enter` 4px, `--blur-exit` 3px) goes on small surfaces only, and is `filter:none` at rest;
+   - the droplet's content un-blurs as it surfaces.
+
+   Recorded as the one exception to "transform and opacity only" in DESIGN_ENGINE §3.
+4. **Colour:** "whatever is connected to our colour stack, with good colour theory". The proposed tokens are approved as the base.
+   - Phase 2.2 cross-checks them against the brand stack in `brand_assets/manifest.json` and `source/`: navy `#0B1A3F`, slate `#2C3549`, gold `#AE8A47`/`#C9A35C`.
+   - Where the validator and AA allow, the tokens snap to those values.
+5. **The token raster** replaces the FFT spectrogram, and plan item 3.6 is amended.
+6. **Storage:** "someone else will be using my repo on their Claude usage, so find the most optimal storage method". This becomes a runtime-selected storage adapter:
+   - `db`, namespaced per viewer, if the capability keeps viewers private; otherwise `localStorage`;
+   - `localStorage` is always the write-through cache;
+   - migration from `expira.v6`, JSON export and import, and no hard-coded personal data.
+
+   See REBUILD_PLAN §3.4. The db access model gets verified first.
+7. **The §5 defaults** are accepted: relabel as Arbiter, show the orchestrator's real effort, remove the hidden WebGL loop, render the grain once.

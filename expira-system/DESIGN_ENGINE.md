@@ -39,6 +39,10 @@ A new derivative, whether a screen, a document or a chart, follows the master te
   - tracked small caps for labels;
   - colour never carries meaning on its own; pair it with a glyph or a word.
 - **Themes:** every colour comes from a token, and dark and light are designed separately rather than one being an inverted copy of the other.
+- **Colour stack (Gate A, v41):** derived from the EXPIRA brand stack: navy `#0B1A3F`, slate `#2C3549`, gold `#AE8A47`/`#C9A35C`, ink `#09101E`. Harmony follows good colour theory: a navy-and-gold complementary core, with teal, rust and plum as the accents.
+  - **Text.** All text tokens pass AA on every surface in both themes. Gold used as text has its own token, `--gold-ink`; `--gold` is for rules, lead-ins and focus rings only.
+  - **Charts.** Fixed order: research navy blue, finance deep gold, builder teal, legal rust, arbiter plum. The palette is validated with the dataviz validator in both modes.
+  - **Token raster.** Navy in light and gold in dark, darker or brighter meaning more; validated as an ordinal ramp.
 - **No regressions:** each iteration must look at least as well thought out as the last one.
 
 ## 3. Motion principles
@@ -59,6 +63,28 @@ Motion is the heart of the UX: fidelity in the engine comes first.
 - **Loading is a mercury bead** on a hairline: it stretches with its speed and pools at the ends. It is not a stock progress bar.
 - **Stillness when settled:** a finished run animates nothing, and anything off-screen pauses.
 - **Reduced motion:** state changes only.
+- **The pour (Gate A, v41): the surface-tension droplet.**
+  - A small bead leaves the exact point clicked and spreads into the card, with width leading and height following.
+  - One critically damped spring drives every layer (shell, shadow plate, bead, content) on one clock. Open settles in about 220 ms and close in about 360 ms.
+  - Only transform and opacity move. The shadow is its own plate, so nothing is ever clipped.
+  - A click mid-flight reverses it, carrying position and speed.
+  - The content surfaces after the shell has formed, un-blurring as it arrives.
+  - There is no gold meniscus rim.
+  - Reference implementation: `console/qa/lab/pours.js`, candidate A.
+- **Soft close (Gate A):** exits behave like a luxury car door. They travel, then are pulled gently shut, decelerating into rest; they never accelerate out.
+  - Tokens: `--ease-soft-close` `cubic-bezier(.4,0,.1,1)` over `--t-exit` 380 ms. Entry stays fast (`--t-enter` 200 ms, `--ease-out`).
+- **Blur transition (Gate A, Duke):** a light blur accompanies entry (`--blur-enter` 4px) and exit (`--blur-exit` 3px). It is the one sanctioned exception to "transform and opacity only", and it has limits:
+  - small surfaces only (menus, cards, toasts, tips, the pour's content);
+  - enter and exit only, on the moving layer;
+  - `filter:none` at rest, and never in loops;
+  - never on the docs viewer, the full-screen map, large sheets or streamed words.
+- **The vocabulary (Gate A):**
+  - durations: `--t-instant` 90, `--t-enter` 200, `--t-exit` 380, `--t-move` 380, `--t-draw` 420 ms × length;
+  - curves: `--ease-out`, `--ease-soft-close` and `--ease-inout`;
+  - one critically damped `--spring`;
+  - `--stagger` 40 ms.
+
+  Nothing overshoots anywhere. The source is `console/qa/lab/tokens.proposed.css`, which becomes `src/tokens.css`.
 
 ## 4. Build habits
 
@@ -71,6 +97,15 @@ Motion is the heart of the UX: fidelity in the engine comes first.
 - **Build workflow:** patch modules on top of a base build, with anchored replacements and a smoke test before shipping.
 
 ## 5. Change log
+- **v41 Gate A** (2026-09-25; decisions only, the build follows):
+  - the pour is the surface-tension droplet, with no meniscus rim;
+  - exits are a luxury soft close with a light blur transition;
+  - the motion vocabulary is five durations, three curves and one critically damped spring;
+  - the colour tokens are tied to the brand stack, with AA text in both themes and a validated chart palette;
+  - the spectrogram becomes a token raster;
+  - chats get per-viewer storage (see REBUILD_PLAN);
+  - "Decision agent" is relabelled Arbiter, and the orchestrator shows its real effort;
+  - the start page's hidden WebGL loop is removed and the grain is rendered once.
 - **v40:**
   - the console's orchestrator plans, staffs and decides at high effort; desks run high by default and medium only for low-level work;
   - the decision desk is folded into the orchestrator.

@@ -36,7 +36,8 @@ Read it fully before starting, then work down **Progress** at the bottom. Tick i
 4. **Motion** (DESIGN_ENGINE §3):
    - premium and liquid, with no bounce and no overshoot;
    - **fast entry, soft close**;
-   - animate transform and opacity only;
+   - animate transform and opacity only, with one sanctioned exception: the light enter and exit blur on small surfaces (Gate A, DESIGN_ENGINE §3);
+   - exits are a luxury soft close (`--ease-soft-close`, `--t-exit` 380 ms);
    - never clip a shadow;
    - stillness once settled, and anything off-screen pauses;
    - reduced motion means state changes only.
@@ -71,16 +72,21 @@ expira-system/console/
 
 ### 3.2 Motion tokens (the whole vocabulary)
 
-| Token | Use |
-|---|---|
-| `--t-instant` ≈ 90ms | hover colour and opacity |
-| `--t-enter` ≈ 180–240ms | fast entry of menus, cards and toasts |
-| `--t-exit` ≈ 300–380ms | soft close, slower than entry, with a gentle ease-in fade |
-| `--t-move` ≈ 320–420ms | layout moves, FLIP, the sidebar |
-| `--t-draw` | edge drawing and chart pours, scaled by length |
-| `--ease-out` | entry deceleration (one curve) |
-| `--ease-in-soft` | soft exit (one curve) |
-| `--spring-chrome` | critically damped spring rendered as CSS `linear()` |
+Approved at Gate A. The source is `qa/lab/tokens.proposed.css`.
+
+| Token | Value | Use |
+|---|---|---|
+| `--t-instant` | 90ms | hover colour and opacity |
+| `--t-enter` | 200ms | fast entry of menus, cards and toasts |
+| `--t-exit` | 380ms | the luxury soft close, slower than entry |
+| `--t-move` | 380ms | layout moves, FLIP, the sidebar |
+| `--t-draw` | 420ms × length (1–2.5) | edge drawing and chart pours |
+| `--ease-out` | `cubic-bezier(.16,1,.3,1)` | entry deceleration |
+| `--ease-soft-close` | `cubic-bezier(.4,0,.1,1)` | exit: travels, then decelerates into rest |
+| `--ease-inout` | `cubic-bezier(.65,0,.35,1)` | travel between two held states |
+| `--spring` | critically damped `linear()` (ζ = 1) | chrome, FLIP, the sidebar button, the pour |
+| `--blur-enter` / `--blur-exit` | 4px / 3px | the light blur on small surfaces only (DESIGN_ENGINE §3) |
+| `--stagger` | 40ms | siblings queued by the order helper |
 
 - **At most three curves** plus the spring. Tune the exact values in the lab (§4, Phase 1) and write them into DESIGN_ENGINE.
 - **Stagger and order helper.** Provide one small helper that queues appearances in dependency order (parent before child, edge after both ends, glow after its edge). Units call it; it never animates anything itself.
@@ -90,6 +96,25 @@ expira-system/console/
 - A node, its halo ring, its glow and its label form one group that moves with one transform.
 - An edge's particles belong to that edge, and a light belongs to the thing it lights.
 - Nothing linked may drift, lag or pop independently.
+
+### 3.4 Storage and portability (Gate A)
+
+Duke's brief: other people will run this repo and publish the console on their own Claude accounts, so storage must be the most robust option for any owner, not tied to Duke.
+
+- **One adapter:** `src/core/store.js` exposes `list / get / put / remove / subscribe`. Units never touch `localStorage` or `db` directly.
+- **Backend chosen at run time:**
+  1. The artifact `db` capability, namespaced per viewer. This is used only if the capability can keep one viewer's chats private from other viewers of the same artifact.
+  2. Otherwise `localStorage`, which is per browser and private.
+  - **Before building, load the `artifact-capabilities` skill and confirm the db's access model** (shared or per-viewer, identity, limits). Record the finding here.
+  - `localStorage` is always a write-through cache, so the console works offline and when `db` is absent.
+- **Migration:** on first load, import `expira.v6` (and `v5`) chats, prefs, folders and options into the adapter. Never delete the old keys in the same release.
+- **Export and import:** the whole library as one JSON file, through `downloads`, for moving devices or owners.
+- **Portability:**
+  - no personal data hard-coded: the name, initials and org in the account row and greeting come from prefs or viewer identity, with neutral defaults;
+  - the run log stays in `db` `runs`;
+  - the capabilities list is unchanged.
+
+---
 
 ## 4. Phases and gates
 
@@ -169,11 +194,15 @@ For each unit: rebuild it in `src/units/<unit>/`, run the smoke test, take scree
    - Roman-numeral sections, the claims ledger, desks, the map, and the colophon.
    - It fills in as the work unfolds, in execution order.
    - Same data, designed as one piece.
-6. **The spectrogram** (`Spectro`, `#spec`): implement what R3 recommends.
-   - A correct FFT with windowing over the per-desk token signals;
-   - a perceptual colour map validated in both themes;
-   - a legend and a hover readout;
-   - one band per desk, calm decay, still when settled.
+6. **The token raster** (replaces `Spectro`, `#spec`; changed at Gate A per `research/R3_spectrogram.md`):
+   - one row per desk (plus O and A), time left to right, each ¼ s cell shaded by that desk's chunk count in five fixed classes (empty · 1 · 2 · 3–4 · 5+);
+   - thinking is drawn as dotted cells, so colour never carries it alone;
+   - the ramps are `--seq-1…4` (navy in light, gold in dark), validated;
+   - it is deterministic: the same run always paints the same image;
+   - a legend, a hover readout and a cross-band time cursor;
+   - it paints only when a frame arrives, and is still when settled;
+   - the optional one-desk "Rhythm" FFT diagnostic (R3 §c) is off by default;
+   - the mini strips per desk use the same code.
 7. **Thread and messages:**
    - the bot message fill-in and the thinking line;
    - claim cards and open threads;
@@ -228,15 +257,15 @@ For each unit: rebuild it in `src/units/<unit>/`, run the smoke test, take scree
 - [ ] Selection bar: ask, explain, define (`#defc`), quote
 - [ ] Message actions: copy, edit and resend, retry, open threads
 - [ ] Palette and keyboard shortcuts, toasts, tips, jump, settings sheet, themes (system, light, dark), reduced motion
-- [ ] Persistence through `db`, and the example chat
+- [ ] Persistence through the storage adapter (§3.4), migration from `expira.v6`, library export and import, and the example chat
 
 ## 7. Progress
 
 - [x] Phase 0: AUDIT.md written (2026-09-25, session 2). Open question for Duke: chats live in `localStorage`, not `db` (AUDIT §1).
-- [ ] Phase 1: research R1–R3 written; lab built; **Gate A passed** (Duke picked the pour: ______)
+- [x] Phase 1: research R1–R3 written; lab built; **Gate A passed** (Duke picked the pour: **A, surface-tension droplet**, no meniscus rim)
   - [x] R1 (pour), R2 (maps) and R3 (spectrogram) written to `research/` (2026-09-25)
   - [x] Lab built: `qa/lab/index.html` (3 pours × 2 themes, motion token sheet, palette sheet with live validator); `qa/lab/cast.js` + `strips.py` capture exact frames; 0 errors both themes
-  - [ ] Gate A: Duke's decisions (see `GATE_A.md`), then write them into DESIGN_ENGINE
+  - [x] Gate A decided 2026-09-25 (`GATE_A.md` §Decisions), written into DESIGN_ENGINE §2, §3 and the change log
 - [ ] Phase 2.1: pure restructure into `src/` plus `build.py`, parity smoke passes
 - [ ] Phase 2.2: tokens landed; version layers, dead rules and `!important` removed
 - [ ] Phase 3.1: shell and travelling sidebar button
@@ -252,19 +281,19 @@ For each unit: rebuild it in `src/units/<unit>/`, run the smoke test, take scree
 
 ### Resume here
 
-- **State (2026-09-25, session 2):** Phase 0 is done and pushed. Phase 1's research and lab are done. **Stopped at Gate A**, waiting on Duke.
-- **Duke decides** (all listed in `GATE_A.md`):
-  1. the pour: A droplet (recommended), B inset bloom or C seven-slice;
-  2. the gold meniscus rim: on or off;
-  3. approve the motion tokens and the colour tokens in `qa/lab/tokens.proposed.css`;
-  4. accept the token raster in place of the FFT spectrogram (a change to plan 3.6);
-  5. chats stay in `localStorage` or move to `db`;
-  6. the small defaults in `GATE_A.md` §5.
-- **Next steps after Gate A:**
-  1. Record the choices in DESIGN_ENGINE §3 and the change log. Update `tokens.proposed.css` if Duke changes anything.
-  2. Tick Gate A, then start Phase 2.1: the pure restructure into `src/` plus `build.py`, with no design change. The smoke test must pass.
-  3. Phase 2.2 moves `qa/lab/tokens.proposed.css` into `src/tokens.css`.
+- **State (2026-09-25, end of session 2):** Phases 0 and 1 are done and Gate A is passed. The decisions are in `GATE_A.md` §Decisions and DESIGN_ENGINE. Nothing in `index.html` has changed yet.
+- **Next: Phase 2.1**, a pure restructure. Split `index.html` into `src/` (tokens placeholder, base, `units/<unit>/`, `core/`, `shell.html`) plus a deterministic `build.py`.
+  - The output must behave identically, and `qa/smoke.js` must report 0 errors in light and dark.
+  - Add a byte- or behaviour-diff check: rebuilt vs original.
+  - Commit.
+- **Then Phase 2.2:**
+  - move `qa/lab/tokens.proposed.css` into `src/tokens.css`;
+  - replace every literal with a token;
+  - delete version layers, dead rules and `!important`;
+  - replace all overshooting springs and curves with the Gate A vocabulary;
+  - apply the §5 defaults of `GATE_A.md` (Arbiter label, real orchestrator effort, remove GOO, still grain);
+  - commit, then push at the end of Phase 2.
 - **Tools:**
-  - The lab: `NODE_PATH=/opt/node22/lib/node_modules node expira-system/console/qa/lab/cast.js`, then `python3 expira-system/console/qa/lab/strips.py` (needs Pillow: `pip install pillow`).
-  - The audit probes: `qa/audit_probe.js` and `qa/audit_probe2.js`.
-
+  - the lab: `qa/lab/cast.js`, then `qa/lab/strips.py` (needs `pip install pillow`);
+  - the audit probes: `qa/audit_probe.js` and `qa/audit_probe2.js`;
+  - the session prompt: `SESSION_3_PROMPT.md`.

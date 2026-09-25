@@ -56,11 +56,14 @@
   /* motion: the whole vocabulary. Nothing overshoots. */
   --t-instant:90ms;      /* hover colour and opacity */
   --t-enter:200ms;       /* menus, cards, toasts arrive fast */
-  --t-exit:340ms;        /* soft close, slower than entry */
+  --t-exit:380ms;        /* luxury soft close (Gate A): slower than entry, pulled gently shut at the end */
   --t-move:380ms;        /* layout moves, FLIP, the sidebar */
   --t-draw:420ms;        /* base for edges and chart pours; units scale it by length (×1 to ×2.5) */
   --ease-out:cubic-bezier(.16,1,.3,1);        /* entry: fast start, long settle */
-  --ease-in-soft:cubic-bezier(.4,0,.8,.3);    /* exit: gentle start, releases at the end */
+  --ease-soft-close:cubic-bezier(.4,0,.1,1);  /* exit (Gate A): travels, then decelerates into rest like a soft-close door; never accelerates out */
+  /* blur transition (Gate A, Duke): the one sanctioned filter. Small surfaces only (menus, cards, toasts, tips), enter and exit only,
+     on the moving layer, filter:none at rest, never in loops, never on the docs viewer, full-screen map or streamed words */
+  --blur-enter:4px;--blur-exit:3px;
   --ease-inout:cubic-bezier(.65,0,.35,1);     /* continuous travel between two held states */
   /* critically damped spring (ζ = 1, x = 1 − e^(−ωt)·(1 + ωt)), normalised: its duration comes from the t-token it is paired with */
   --spring:linear(0, 0.029, 0.0979, 0.1867, 0.2826, 0.3776, 0.467, 0.5482, 0.6204, 0.6833, 0.7374, 0.7834, 0.8222, 0.8546, 0.8815, 0.9037, 0.922, 0.937, 0.9492, 0.9591, 0.9672, 0.9737, 0.979, 0.9832, 0.9866, 0.9893, 0.9915, 0.9932, 0.9946, 0.9957, 0.9966, 0.9973, 1);
@@ -97,4 +100,4 @@
   --e3:0 1px 0 rgba(237,231,217,.06) inset,0 1px 2px rgba(0,0,0,.35),0 26px 56px -20px rgba(0,0,0,.78);
   --mark-a:#C9C2B2;--mark-b:#8F98A8}
 
-@media (prefers-reduced-motion:reduce){:root{--t-enter:1ms;--t-exit:1ms;--t-move:1ms;--t-draw:1ms;--stagger:0ms}}
+@media (prefers-reduced-motion:reduce){:root{--t-enter:1ms;--t-exit:1ms;--blur-enter:0px;--blur-exit:0px;--t-move:1ms;--t-draw:1ms;--stagger:0ms}}

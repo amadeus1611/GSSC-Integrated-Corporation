@@ -29,7 +29,7 @@ Owner: Duke Y. Demayo. Working branch: `claude/wizardly-ptolemy-6q4ter`, PR amad
   - premium and liquid, with no bounce;
   - each unit owns its animation rules, and nothing is centralised;
   - never clip a shadow;
-  - animate only transform and opacity.
+  - animate only transform and opacity; the one exception is the light enter/exit blur on small surfaces (DESIGN_ENGINE §3, Gate A).
 - **Aesthetic:** calm, dense and sharp; small type and hairlines. Never regress on polish.
 - For a large or risky change, propose a short plan first. v38 became fragile and was reverted to v37.
 - Keep each iteration's change focused; don't rewrite working systems wholesale.

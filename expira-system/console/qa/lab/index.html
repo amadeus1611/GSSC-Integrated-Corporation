@@ -114,7 +114,7 @@ footer{margin-top:var(--sp-12);padding-top:var(--sp-3);border-top:var(--rule-hai
       <figure><svg class="curve" id="cmpOld" viewBox="0 0 120 64" style="width:100%;height:120px" aria-label="v39 springs"></svg>
         <figcaption><b>Today (v39).</b> The three springs <code>jelly</code>, <code>soft</code> and <code>snap</code>, and their fallbacks, all overshoot (ζ 0.61–0.83, up to 9%). The pour takes 820 ms to enter and 200 ms to leave.</figcaption></figure>
       <figure><svg class="curve" id="cmpNew" viewBox="0 0 120 64" style="width:100%;height:120px" aria-label="v41 spring and curves"></svg>
-        <figcaption><b>Proposed (v41).</b> One critically damped spring (ζ = 1) and three curves. Entry takes 200 ms and exit 340 ms.</figcaption></figure>
+        <figcaption><b>Proposed (v41).</b> One critically damped spring (ζ = 1) and three curves. Entry takes 200 ms; the soft close takes 380 ms and eases into rest, with a light blur on both.</figcaption></figure>
     </div>
   </section>
 
@@ -159,11 +159,11 @@ const plot = (svg, fns) => { const W = 120, H = 64, pad = 8, y = v => H - pad - 
 const ROWS = [
   ['--t-instant', 'Hover colour and opacity', 'fade', '--ease-out'],
   ['--t-enter', 'Menus, cards and toasts arrive', 'enter', '--ease-out'],
-  ['--t-exit', 'The soft close, slower than entry', 'exit', '--ease-in-soft'],
+  ['--t-exit', 'The luxury soft close: slower than entry, pulled gently shut', 'exit', '--ease-soft-close'],
   ['--t-move', 'Layout moves, FLIP, the sidebar', 'move', '--spring'],
   ['--t-draw', 'Edges and chart pours, scaled by length', 'draw', '--ease-out'],
   ['--ease-out', 'Entry deceleration', null],
-  ['--ease-in-soft', 'Soft exit', null],
+  ['--ease-soft-close', 'Soft close: decelerates into rest', null],
   ['--ease-inout', 'Travel between two held states', null],
   ['--spring', 'Critically damped: chrome, FLIP, the sidebar button', null]];
 const tb = $('#tokT tbody');
@@ -174,15 +174,15 @@ ROWS.forEach(([n, use, demo, ez]) => {
   if (demo) { const el = $('.track>div', tr), ms = parseFloat(v), E = tok(ez);
     $('button', tr).onclick = () => { if (reduce) return;
       if (demo === 'fade') el.animate([{ opacity: 1 }, { opacity: .35 }, { opacity: 1 }], { duration: ms * 4, easing: E });
-      if (demo === 'enter') el.animate([{ opacity: 0, transform: 'translateY(6px) scale(.98)' }, { opacity: 1, transform: 'none' }], { duration: ms, easing: E });
-      if (demo === 'exit') el.animate([{ opacity: 1, transform: 'none' }, { opacity: 0, transform: 'translateY(4px) scale(.985)' }], { duration: ms, easing: E, fill: 'forwards' }).onfinish = a => setTimeout(() => a.target.cancel(), 400);
+      if (demo === 'enter') el.animate([{ opacity: 0, transform: 'translateY(6px) scale(.98)', filter: `blur(${tok('--blur-enter')})` }, { opacity: 1, transform: 'none', filter: 'blur(0px)' }], { duration: ms, easing: E });
+      if (demo === 'exit') el.animate([{ opacity: 1, transform: 'none', filter: 'blur(0px)' }, { opacity: 0, transform: 'translateY(4px) scale(.985)', filter: `blur(${tok('--blur-exit')})` }], { duration: ms, easing: E, fill: 'forwards' }).onfinish = a => setTimeout(() => a.target.cancel(), 400);
       if (demo === 'move') { const on = el.dataset.on === '1'; el.dataset.on = on ? '' : '1'; el.animate([{ transform: `translateX(${on ? 220 : 0}px)` }, { transform: `translateX(${on ? 0 : 220}px)` }], { duration: ms, easing: E, fill: 'forwards' }) }
       if (demo === 'draw') el.animate([{ transform: 'translateX(0)' }, { transform: 'translateX(220px)' }], { duration: ms * 2, easing: E }) } }
 });
 const OLD = { jelly: [420, 25], soft: [210, 24], snap: [520, 34] };
 const spr = (k, c) => { const w0 = Math.sqrt(k), z = c / (2 * w0), wd = w0 * Math.sqrt(Math.max(1e-6, 1 - z * z)); return t => { t *= 1.1; return z < 1 ? 1 - Math.exp(-z * w0 * t) * (Math.cos(wd * t) + z * w0 / wd * Math.sin(wd * t)) : 1 - Math.exp(-w0 * t) * (1 + w0 * t) } };
 plot($('#cmpOld'), [...Object.values(OLD).map(([k, c]) => [spr(k, c), 'bad']), [bez(.3, 1.5, .4, 1), 'bad']]);
-plot($('#cmpNew'), [[fnOf(tok('--spring'))], [fnOf(tok('--ease-out'))], [fnOf(tok('--ease-in-soft'))], [fnOf(tok('--ease-inout'))]]);
+plot($('#cmpNew'), [[fnOf(tok('--spring'))], [fnOf(tok('--ease-out'))], [fnOf(tok('--ease-soft-close'))], [fnOf(tok('--ease-inout'))]]);
 
 /* ---------- III · colour ---------- */
 const rep = r => r.report.map(([k, ok, msg]) => `${ok === true || ok === 'pass' ? 'PASS' : ok === 'relief' ? 'WARN' : 'FAIL'}  ${k}: ${msg}`).join('\n') + `\n→ ${r.ok ? 'ALL CHECKS PASS' : 'FAILED'}`;
