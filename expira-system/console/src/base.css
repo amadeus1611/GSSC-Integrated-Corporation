@@ -9,7 +9,7 @@ button,input,textarea{font:inherit;color:inherit}
 .serif{font-family:var(--f-display);font-weight:400}
 /* the shared entrance: fade with a soft blur, soft close */
 @keyframes blurIn{from{opacity:.001;filter:blur(5px);transform:translateY(6px)}to{opacity:1;filter:none;transform:none}}
-.bi{animation:blurIn .9s var(--soft-close) both}
+.bi{animation:blurIn var(--t-enter) var(--ease-out) both}
 .grain{position:relative;isolation:isolate}
 .grain::after{content:"";position:absolute;inset:0;pointer-events:none;background-image:var(--grain);background-size:150px;mix-blend-mode:soft-light;opacity:.6;-webkit-mask:var(--gmask) center/contain no-repeat;mask:var(--gmask) center/contain no-repeat}
 .app{display:flex;height:100%}
@@ -18,10 +18,10 @@ button,input,textarea{font:inherit;color:inherit}
 /* !important: the motion kill switch must beat every unit's own motion */
 html.calm *,html.calm *::before,html.calm *::after{animation:none!important;transition:none!important}
 ::selection{background:var(--sel);color:inherit}
-.ib{width:30px;height:30px;display:grid;place-items:center;border:0;background:transparent;border-radius:var(--r-3);cursor:pointer;color:var(--soft);transition:background var(--out) var(--soft-close),color var(--out) var(--soft-close);padding:0}
+.ib{width:30px;height:30px;display:grid;place-items:center;border:0;background:transparent;border-radius:var(--r-3);cursor:pointer;color:var(--soft);transition:background var(--t-exit) var(--ease-soft-close),color var(--t-exit) var(--ease-soft-close);padding:0}
 /* ink, steer, costs, beads, the liquid field */
-.w{animation:inkw .56s var(--soft-close) both}
+.w{animation:inkw var(--t-enter) var(--ease-out) both}
 @keyframes inkw{from{opacity:0;filter:blur(3px);transform:translateY(1.5px)}60%{opacity:.85;filter:blur(.4px)}to{opacity:1;filter:none;transform:none}}
-::view-transition-old(root),::view-transition-new(root){animation-duration:.42s;animation-timing-function:cubic-bezier(.4,0,.2,1)}
+::view-transition-old(root),::view-transition-new(root){animation-duration:var(--t-move);animation-timing-function:var(--ease-inout)}
 @property --fs{syntax:"<length>";inherits:false;initial-value:0px}
 @property --fe{syntax:"<length>";inherits:false;initial-value:0px}

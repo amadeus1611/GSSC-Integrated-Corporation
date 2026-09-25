@@ -1,15 +1,15 @@
 /* main */
-.main{flex:1;min-width:0;display:flex;flex-direction:column;position:relative;transition:margin-right .9s var(--soft-close)}
+.main{flex:1;min-width:0;display:flex;flex-direction:column;position:relative;transition:margin-right var(--t-move) var(--ease-soft-close)}
 @media (min-width:1100px){
 .app.dsp-open .main{margin-right:min(420px,100vw)}
 }
 #unfold{display:none}
 .app.folded #unfold{display:grid}
-.dsp-btn:hover{border-color:var(--line-3);color:var(--ink);transition-duration:var(--in)}
-.app.busy .dsp-btn i{background:var(--gold);animation:breathe 2.4s var(--release) infinite}
+.dsp-btn:hover{border-color:var(--line-3);color:var(--ink);transition-duration:var(--t-instant);transition-timing-function:var(--ease-out)}
+.app.busy .dsp-btn i{background:var(--gold);animation:breathe var(--t-loop) var(--ease-inout) infinite}
 @keyframes breathe{50%{opacity:.25}}
 .runpill[hidden]{display:none}
-.runpill i{width:5px;height:5px;border-radius:var(--r-round);background:var(--gold);animation:breathe 2s var(--release) infinite}
+.runpill i{width:5px;height:5px;border-radius:var(--r-round);background:var(--gold);animation:breathe var(--t-loop) var(--ease-inout) infinite}
 .runpill .num{color:var(--soft);font-size:var(--fs-chrome-2)}
 .scroll{flex:1;overflow-y:auto;padding:0 var(--sp-5)}
 .app:not(.has-chat) .scroll,.app:not(.has-chat) .dsp-btn{display:none}
@@ -17,15 +17,15 @@
 .scroll{padding-inline:var(--sp-4)}
 }
 /* quiet header, feathered edges */
-.dsp-btn{display:flex;align-items:center;cursor:pointer;gap:var(--sp-1h);height:24px;padding:0 var(--sp-2) 0 var(--sp-2);border:var(--rule-hair) solid var(--line-2);border-radius:var(--r-2);background:none;font-size:var(--fs-chrome-2);letter-spacing:.02em;color:var(--soft);transition:border-color .45s var(--soft-close),color .45s var(--soft-close),background .45s var(--soft-close)}
+.dsp-btn{display:flex;align-items:center;cursor:pointer;gap:var(--sp-1h);height:24px;padding:0 var(--sp-2) 0 var(--sp-2);border:var(--rule-hair) solid var(--line-2);border-radius:var(--r-2);background:none;font-size:var(--fs-chrome-2);letter-spacing:.02em;color:var(--soft);transition:border-color var(--t-exit) var(--ease-soft-close),color var(--t-exit) var(--ease-soft-close),background var(--t-exit) var(--ease-soft-close)}
 .dsp-btn:hover,.dsp-btn[aria-expanded="true"],.dsp-open .dsp-btn{border-color:var(--line-3);color:var(--ink);background:var(--well)}
 .dsp-btn svg{width:12px;height:12px;flex:none}
-.dsp-btn svg .pn{transition:transform .6s var(--sp-soft)}
+.dsp-btn svg .pn{transition:transform var(--t-move) var(--spring)}
 .dsp-btn:hover svg .pn,.dsp-open .dsp-btn svg .pn{transform:translateX(-2.5px)}
-.dsp-btn i{width:0;height:4px;margin-right:calc(var(--sp-1h) * -1);border-radius:var(--r-round);background:var(--gold);opacity:0;animation:none;transition:width .45s var(--sp-soft),margin .45s var(--sp-soft),opacity .3s ease}
-.busy .dsp-btn i{width:4px;margin-right:0;opacity:1;animation:breathe 2.4s var(--release) infinite}
-.runpill{display:flex;align-items:center;gap:var(--sp-2);color:var(--ink);cursor:pointer;animation:blurIn .6s var(--soft-close) both;height:24px;padding:0 var(--sp-2);border:var(--rule-hair) solid var(--line-2);border-radius:var(--r-2);background:none;font-size:var(--fs-chrome-2)}
-.fz,.fzx{--fs:0px;--fe:0px;transition:--fs .35s ease,--fe .35s ease}
+.dsp-btn i{width:0;height:4px;margin-right:calc(var(--sp-1h) * -1);border-radius:var(--r-round);background:var(--gold);opacity:0;animation:none;transition:width var(--t-move) var(--spring),margin var(--t-move) var(--spring),opacity var(--t-exit) var(--ease-soft-close)}
+.busy .dsp-btn i{width:4px;margin-right:0;opacity:1;animation:breathe var(--t-loop) var(--ease-inout) infinite}
+.runpill{display:flex;align-items:center;gap:var(--sp-2);color:var(--ink);cursor:pointer;animation:blurIn var(--t-enter) var(--ease-out) both;height:24px;padding:0 var(--sp-2);border:var(--rule-hair) solid var(--line-2);border-radius:var(--r-2);background:none;font-size:var(--fs-chrome-2)}
+.fz,.fzx{--fs:0px;--fe:0px;transition:--fs var(--t-exit) var(--ease-soft-close),--fe var(--t-exit) var(--ease-soft-close)}
 .fz{-webkit-mask-image:linear-gradient(to bottom,transparent 0,#000 var(--fs),#000 calc(100% - var(--fe)),transparent 100%);mask-image:linear-gradient(to bottom,transparent 0,#000 var(--fs),#000 calc(100% - var(--fe)),transparent 100%)}
 .fzx{-webkit-mask-image:linear-gradient(to right,transparent 0,#000 var(--fs),#000 calc(100% - var(--fe)),transparent 100%);mask-image:linear-gradient(to right,transparent 0,#000 var(--fs),#000 calc(100% - var(--fe)),transparent 100%)}
 .fz.f-s{--fs:22px}

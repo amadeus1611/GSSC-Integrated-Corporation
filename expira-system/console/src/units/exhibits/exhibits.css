@@ -1,12 +1,12 @@
 .exh-h{display:flex;align-items:center;gap:var(--sp-2h);margin-bottom:var(--sp-2h);width:100%;border:0;background:none;padding:0;cursor:pointer;text-align:left}
 .exh-h .cnt{font-size:var(--fs-chrome);color:var(--mute)}
 .exh-h .ln{flex:1;height:var(--rule-hair);background:var(--line-3)}
-.exh-h .chev{transform:rotate(90deg);transition:transform var(--out) var(--soft-close)}
+.exh-h .chev{transform:rotate(90deg);transition:transform var(--t-move) var(--ease-soft-close)}
 .exh.folded .exh-h .chev{transform:none}
-.exb{display:grid;grid-template-rows:1fr;transition:grid-template-rows .8s var(--soft-close)}
+.exb{display:grid;grid-template-rows:1fr;transition:grid-template-rows var(--t-move) var(--ease-soft-close)}
 .exb>div{overflow:hidden}
 .exh.folded .exb{grid-template-rows:0fr}
-.exi{animation:blurIn .9s var(--soft-close) both}
+.exi{animation:blurIn var(--t-enter) var(--ease-out) both}
 .facts{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));margin:0 0 var(--sp-4);border-top:var(--rule) solid var(--ink)}
 .fact{padding:var(--sp-2h) var(--sp-3) var(--sp-2h) 0;display:flex;flex-direction:column;gap:var(--sp-half)}
 .fact+.fact{padding-left:var(--sp-3);border-left:var(--rule-hair) solid var(--line-2)}

@@ -1,5 +1,5 @@
 /* The Dispatch: the log, set like a magazine */
-.dsp{position:fixed;top:0;right:0;bottom:0;z-index:var(--z-dispatch);width:min(420px,100vw);background:var(--sheet);border-left:var(--rule-hair) solid var(--line-2);box-shadow:var(--e-side);display:flex;flex-direction:column;transform:translateX(24px);opacity:0;filter:blur(6px);pointer-events:none;transition:transform .9s var(--soft-close),opacity .6s var(--soft-close),filter .9s var(--soft-close)}
+.dsp{position:fixed;top:0;right:0;bottom:0;z-index:var(--z-dispatch);width:min(420px,100vw);background:var(--sheet);border-left:var(--rule-hair) solid var(--line-2);box-shadow:var(--e-side);display:flex;flex-direction:column;transform:translateX(24px);opacity:0;filter:blur(6px);pointer-events:none;transition:transform var(--t-move) var(--ease-soft-close),opacity var(--t-exit) var(--ease-soft-close),filter var(--t-exit) var(--ease-soft-close)}
 .dsp.open{transform:none;opacity:1;filter:none;pointer-events:auto}
 .dsp-h{display:flex;align-items:center;gap:var(--sp-2h);padding:var(--sp-3h) var(--sp-4) var(--sp-3) var(--sp-6);border-bottom:var(--rule-hair) solid var(--line-2)}
 .dsp-h .cap:first-child{color:var(--ink)}
@@ -15,7 +15,7 @@
 .stat .v{font:400 var(--fs-h3)/1.2 var(--f-display);color:var(--ink);display:block;margin-bottom:var(--sp-half);font-variant-numeric:tabular-nums}
 .dsp h3{margin:0 0 var(--sp-3);display:flex;align-items:center;gap:var(--sp-2h)}
 .dsp h3::after{content:"";flex:1;height:var(--rule-hair);background:var(--line-2)}
-.desk{display:grid;grid-template-columns:24px 1fr;gap:0 var(--sp-2);padding:0 0 var(--sp-3);margin-bottom:var(--sp-3);border-bottom:var(--rule-hair) solid var(--line);animation:open .9s var(--soft-close) both}
+.desk{display:grid;grid-template-columns:24px 1fr;gap:0 var(--sp-2);padding:0 0 var(--sp-3);margin-bottom:var(--sp-3);border-bottom:var(--rule-hair) solid var(--line);animation:open var(--t-enter) var(--ease-out) both}
 @keyframes open{from{clip-path:inset(0 0 100% 0);opacity:0;transform:translateY(-4px)}to{clip-path:inset(0 0 -2px 0);opacity:1;transform:none}}
 .desk .mini{grid-column:2;display:block;width:100%;height:26px;border-radius:var(--r-1);background:var(--well);border:var(--rule-hair) solid var(--line)}
 .desk:last-child{border-bottom:0;margin-bottom:var(--sp-1h)}
@@ -29,25 +29,25 @@
 .desk .st{margin-left:auto;font-size:var(--fs-micro);letter-spacing:var(--tracked-tight);text-transform:uppercase;color:var(--mute)}
 .desk .st.pass{color:var(--ok)}
 .desk .st.fail{color:var(--bad)}
-.desk .st.live{background:linear-gradient(90deg,var(--mute) 0 35%,var(--gold) 50%,var(--mute) 65% 100%);background-size:250% 100%;-webkit-background-clip:text;background-clip:text;animation:shim 2.6s linear infinite;color:var(--gold)}
+.desk .st.live{background:linear-gradient(90deg,var(--mute) 0 35%,var(--gold) 50%,var(--mute) 65% 100%);background-size:250% 100%;-webkit-background-clip:text;background-clip:text;animation:shim var(--t-loop) linear infinite;color:var(--gold)}
 .desk .st.esc{color:var(--warn)}
 .desk .task{grid-column:2;font:italic 400 var(--fs-ui)/1.5 var(--f-display);color:var(--text);margin:var(--sp-1) 0 var(--sp-2)}
 .desk .mt{grid-column:2;display:flex;gap:var(--sp-3);align-items:center;margin-top:var(--sp-1h);font-size:var(--fs-chrome-2);color:var(--mute)}
 .desk .mt .rd{margin-left:auto;border:0;background:none;padding:0;cursor:pointer;font:italic 400 var(--fs-ui) var(--f-display);color:var(--gold)}
-.notes{grid-column:2;margin:var(--sp-2h) 0 0;padding:0 0 0 var(--sp-3);border-left:var(--rule-hair) solid var(--gold);font-size:var(--fs-ui);line-height:1.65;color:var(--soft);white-space:pre-wrap;word-break:break-word;max-height:0;overflow:hidden;opacity:0;transition:max-height .9s var(--soft-close),opacity .6s var(--soft-close)}
+.notes{grid-column:2;margin:var(--sp-2h) 0 0;padding:0 0 0 var(--sp-3);border-left:var(--rule-hair) solid var(--gold);font-size:var(--fs-ui);line-height:1.65;color:var(--soft);white-space:pre-wrap;word-break:break-word;max-height:0;overflow:hidden;opacity:0;transition:max-height var(--t-move) var(--ease-soft-close),opacity var(--t-exit) var(--ease-soft-close)}
 .desk.show .notes{max-height:260px;overflow:auto;opacity:1}
 .pull{margin:var(--sp-1) 0 var(--sp-5);padding:var(--sp-3) 0;border-top:var(--rule) solid var(--ink);border-bottom:var(--rule-hair) solid var(--line-2);font:italic 400 var(--fs-lead)/1.5 var(--f-display);color:var(--ink);text-wrap:balance}
-.late{animation:evIn .7s var(--soft-close) both}
+.late{animation:evIn var(--t-enter) var(--ease-out) both}
 .plate-h{display:flex;align-items:center;gap:var(--sp-3);margin-bottom:var(--sp-1h);font-size:var(--fs-micro);letter-spacing:var(--tracked-tight);text-transform:uppercase;color:var(--mute)}
 .lv{display:inline-flex;align-items:center;gap:var(--sp-1h);color:var(--soft)}
 .lv i{width:5px;height:5px;border-radius:var(--r-round);background:var(--mute)}
 .lv.on{color:var(--ink)}
-.lv.on i{background:var(--gold);animation:breathe 2s var(--release) infinite}
+.lv.on i{background:var(--gold);animation:breathe var(--t-loop) var(--ease-inout) infinite}
 .lvN{margin-left:auto}
 .dsec{margin-bottom:var(--sp-4h)}
-.olog li{display:grid;grid-template-columns:40px 1fr;gap:var(--sp-2h);padding:var(--sp-1) 0;font-size:var(--fs-ui);line-height:1.55;color:var(--text);animation:evIn .5s var(--soft-close) both}
+.olog li{display:grid;grid-template-columns:40px 1fr;gap:var(--sp-2h);padding:var(--sp-1) 0;font-size:var(--fs-ui);line-height:1.55;color:var(--text);animation:evIn var(--t-enter) var(--ease-out) both}
 .olog .ts{font-size:var(--fs-micro);color:var(--mute);padding-top:var(--sp-half)}
-.olog .tx{animation:reveal 1s var(--soft-close) both}
+.olog .tx{animation:reveal var(--t-draw) var(--ease-out) both}
 .olog em{font-family:var(--f-display);color:var(--gold)}
 @keyframes reveal{from{clip-path:inset(0 100% 0 0);opacity:.3}to{clip-path:inset(0 0 0 0);opacity:1}}
 @media (max-width:760px){

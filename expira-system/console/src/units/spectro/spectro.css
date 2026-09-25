@@ -1,19 +1,19 @@
 .sec{margin-top:var(--sp-1h)}
 .ev{list-style:none;margin:var(--sp-2h) 0 var(--sp-1);padding:0 0 0 var(--sp-3h);border-left:var(--rule-hair) solid var(--line-2);display:flex;flex-direction:column;gap:var(--sp-1)}
-.ev li{display:grid;grid-template-columns:1fr auto;gap:var(--sp-3);font-size:var(--fs-ui);line-height:1.5;color:var(--soft);animation:evIn .5s var(--soft-close) both}
+.ev li{display:grid;grid-template-columns:1fr auto;gap:var(--sp-3);font-size:var(--fs-ui);line-height:1.5;color:var(--soft);animation:evIn var(--t-enter) var(--ease-out) both}
 .ev li .x{font-size:var(--fs-chrome);color:var(--mute)}
 .ev li em{font-family:var(--f-display);color:var(--text)}
 .plate{margin:0 0 var(--sp-5)}
 .plate .frame{position:relative;border-radius:var(--r-1);overflow:hidden;background:var(--well);border:var(--rule-hair) solid var(--line-2)}
 .plate canvas.ovl{position:absolute;inset:0;height:100%}
 .plate .gut{position:absolute;left:0;top:0;bottom:0;width:20px;display:flex;flex-direction:column;pointer-events:none;border-right:var(--rule-hair) solid var(--line-2);background:color-mix(in srgb,var(--well) 72%,transparent)}
-.plate .gut span{flex:1;display:grid;place-items:center;font:400 var(--fs-micro) var(--f-display);color:var(--mute);border-bottom:var(--rule-hair) solid var(--line);transition:color .6s var(--soft-close);animation:evIn .6s var(--soft-close) both;min-height:0;overflow:hidden}
+.plate .gut span{flex:1;display:grid;place-items:center;font:400 var(--fs-micro) var(--f-display);color:var(--mute);border-bottom:var(--rule-hair) solid var(--line);transition:color var(--t-exit) var(--ease-soft-close);animation:evIn var(--t-enter) var(--ease-out) both;min-height:0;overflow:hidden}
 .plate .gut span:last-child{border-bottom:0}
 .plate .gut span.on{color:var(--gold)}
 .plate figcaption{display:flex;gap:var(--sp-2);margin-top:var(--sp-1h);font:italic 400 var(--fs-chrome-2)/1.5 var(--f-display);color:var(--soft)}
 .plate figcaption b{font-style:normal;font-weight:400;color:var(--gold);white-space:nowrap}
 .plate canvas{display:block;width:100%;height:132px;contain:layout paint}
-.sp{animation:blurIn .65s var(--soft-close) both}
+.sp{animation:blurIn var(--t-enter) var(--ease-out) both}
 .sp .lede{font:italic 400 var(--fs-ui)/1.55 var(--f-display);color:var(--soft);margin:0 0 var(--sp-4h);max-width:52ch}
 .sp .grp{padding:var(--sp-4h) 0;border-top:var(--rule-hair) solid var(--line-2)}
 .sp .gh{display:flex;align-items:baseline;justify-content:space-between;gap:var(--sp-4);margin-bottom:var(--sp-3)}
