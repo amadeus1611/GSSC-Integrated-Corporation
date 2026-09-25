@@ -70,19 +70,7 @@ Motion is the heart of the UX: fidelity in the engine comes first.
   - no layout reads inside animation loops.
 - **Build workflow:** patch modules on top of a base build, with anchored replacements and a smoke test before shipping.
 
-## 5. Intelligence and cost (applies to the Console and to our own work)
-
-- **Two tiers only.** Low is the default; medium is the ceiling, kept for legal, finance, critical engines and redos.
-- **Routing is Jev-style.** Code controls the flow and a typed decision decides:
-  - closed answer sets;
-  - a confidence on every answer;
-  - below 0.6 confidence, take the safer option.
-- **One mind, many neurons.** Agents share one compressed, lossless task state and hand it off without re-deriving context. Launch several agents only for a stated efficiency reason.
-- **Two registers of writing.**
-  - Internal handoffs are terse and dense: facts, anchors, numbers.
-  - Anything the reader sees is professional, sleek and wise.
-
-## 6. Change log
+## 5. Change log
 - **v38.2:**
   - a focus lens that follows the working step, with content suited to each step's purpose (thinking, notes, queries, claims);
   - the liquid-trio loader beside the glyph;
@@ -99,5 +87,4 @@ Motion is the heart of the UX: fidelity in the engine comes first.
   - Field births ordered and continuous;
   - the unclipped logo split;
   - a smaller composer;
-  - the mercury loading thread;
-  - two thinking tiers with typed routing.
+  - the mercury loading thread.
