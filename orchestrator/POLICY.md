@@ -1,6 +1,6 @@
 # Orchestrator policy: model, effort tiers and escalation
 
-The orchestrator is the main session (Opus 5.5, low effort). Sub-agents
+The orchestrator is the main session. Sub-agents
 cannot launch sub-agents, so every delegation starts here. Effort is fixed
 per agent file, so each tier is its own agent: choosing a tier means
 choosing which agent to launch.

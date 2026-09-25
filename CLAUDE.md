@@ -11,11 +11,10 @@ Owner: Duke Y. Demayo. Working branch: `claude/wizardly-ptolemy-6q4ter`, PR amad
 - `expira-system/DESIGN_ENGINE.md` holds the design and motion canon. **Read it before any design or motion work**, and add to its change log after each iteration.
 - `expira-system/brand_assets/`, `logo_pack/` and `source/` hold the EXPIRA mark, the wordmark and the brand tokens.
 - `orchestrator/POLICY.md` and `.claude/agents/` define the sub-agent roster and when to escalate. `orchestrator/tier_log.csv` is the run log.
-- `expira-system/console/NEXT_PLAN.md` is a v37-era hand-off note and is partly stale. Where it conflicts with this file, this file wins.
 
 ## Console: how to change it
 - The page is one inline `<style>` and one inline `<script>`. Later CSS rules override earlier ones, so append a labelled block (`/* v40 · … */`) instead of rewriting old rules.
-- The patch-module build (`build38.py` plus `mods/`) lived in a session scratchpad and may be gone. If so, edit `index.html` directly with anchored, minimal replacements.
+- Edit `index.html` directly with anchored, minimal replacements.
 - **Test before shipping:**
   1. Serve the page with `cd expira-system/console && python3 -m http.server 8765`. It sends no charset, so mojibake seen locally is not a bug.
   2. Run a Playwright smoke test with `NODE_PATH=/opt/node22/lib/node_modules` and Chromium at `/opt/pw-browsers`. It must report 0 console errors.
