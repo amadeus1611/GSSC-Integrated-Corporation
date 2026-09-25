@@ -8,6 +8,7 @@ Owner: Duke Y. Demayo. Working branch: `claude/wizardly-ptolemy-6q4ter`, PR amad
   - `lib/gssc-kernel.json` is the GSSC kernel. It is published beside the page and read at run time.
   - `kernel_builder.js` is the JavaScript port of `build_derivative.py`.
   - See `console/README.md` for more.
+- `expira-system/console/REBUILD_PLAN.md` is the active plan for the v41 clean rebuild. Its Progress section says where to resume.
 - `expira-system/DESIGN_ENGINE.md` holds the design and motion canon. **Read it before any design or motion work**, and add to its change log after each iteration.
 - `expira-system/brand_assets/`, `logo_pack/` and `source/` hold the EXPIRA mark, the wordmark and the brand tokens.
 - `orchestrator/POLICY.md` and `.claude/agents/` define the sub-agent roster and when to escalate. `orchestrator/tier_log.csv` is the run log.
@@ -15,10 +16,7 @@ Owner: Duke Y. Demayo. Working branch: `claude/wizardly-ptolemy-6q4ter`, PR amad
 ## Console: how to change it
 - The page is one inline `<style>` and one inline `<script>`. Later CSS rules override earlier ones, so append a labelled block (`/* v40 · … */`) instead of rewriting old rules.
 - Edit `index.html` directly with anchored, minimal replacements.
-- **Test before shipping:**
-  1. Serve the page with `cd expira-system/console && python3 -m http.server 8765`. It sends no charset, so mojibake seen locally is not a bug.
-  2. Run a Playwright smoke test with `NODE_PATH=/opt/node22/lib/node_modules` and Chromium at `/opt/pw-browsers`. It must report 0 console errors.
-  3. Take screenshots of the changed surfaces in both themes.
+- **Test before shipping:** `NODE_PATH=/opt/node22/lib/node_modules node expira-system/console/qa/smoke.js`. It serves the console itself, runs the example chat and a mock brief in light and dark, and must report 0 errors. Screenshots go to `qa/out/` (git-ignored). Use `qa/harness.js` (`serve`, `open`, `brief`, `example`, `cast`) for custom checks.
 - **Test hooks:** `window.__FM` for the map instances and `window.__ex(ex)` for the exhibits HTML.
 - **Republishing:**
   - Use the Artifact tool with the `url` above, and read the live artifact first.
