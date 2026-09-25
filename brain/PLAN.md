@@ -2,6 +2,8 @@
 
 Internal register. Each phase ships only when it is finished and verified: screenshots, per-frame numbers, and two clean smoke runs. Research is built into every item; it is never skipped or deferred until asked.
 
+Done in v38.5: D1 (inputs unified), A2 (press feedback), part of A1 (blurIn without blur), B3 (strip click-through).
+
 ## Phase A · Motion system unification (next)
 1. **One easing table** for the whole console, following Emil Kowalski's standards:
    - ease-out `cubic-bezier(.23,1,.32,1)` for enter and exit;

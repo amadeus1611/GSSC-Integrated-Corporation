@@ -43,6 +43,7 @@ Internal register: dense and lossless. Duke gives the values, vision and directi
 - **Launching eight agents at once.** It burned the usage limits and left partial work. Parallelise only what is truly independent and large.
 
 ## Short-term memory (current iteration)
+- v38.5: every text input unified at 13px/300 (idle equals focus); .97 press feedback on buttons; blurIn without blur; the now card's step strip is clickable (it opens that step's sheet).
 - v38.4: no bounce anywhere; a liquid pour starting at 64%/30% with a rim glint; the now card; matched composer text; master-template chart texture; a dot field behind the maps. Full plan: `brain/PLAN.md`.
 - v38.2 shipped: the focus lens, the trio loader beside the glyph, intent-led logs, the full-screen pause, readable Flow labels, and the liquid close fix.
 - v38.3 shipped: Flow end steps get label room (min interval 26/32px, wider right pad); the full-screen Field spreads over the whole stage (weaker centre pull, stronger repel).

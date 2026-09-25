@@ -1672,6 +1672,16 @@ html.theming,html.theming *,html.theming *::before,html.theming *::after{transit
 @keyframes fuIn{0%{opacity:0;transform:translateY(-4px) scale(.8,.85);border-radius:14px}100%{opacity:1;transform:none;border-radius:4px}}
 @keyframes docIn{0%{opacity:0;transform:translateY(-6px) scale(.8,.8);border-radius:18px}100%{opacity:1;transform:none}}
 @media (prefers-reduced-motion:reduce){.e-rim{display:none}}
+/* v38 · complete */
+.search input,.pal input,.stg input[type=text],.stg textarea,.inl input,input.ren{font-size:13px;font-weight:300}
+.search input::placeholder,.pal input::placeholder{font-size:13px;font-weight:300}
+@media (hover:hover){button:active:not(:disabled){scale:.97;transition:scale .12s cubic-bezier(.23,1,.32,1)}}
+button{transition-property:color,background,border-color,opacity,scale;}
+@keyframes blurIn{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:none}}
+.nc-s i{cursor:pointer;transition:background .6s ease,opacity .6s ease,scale .2s cubic-bezier(.23,1,.32,1);transform-origin:50% 50%}
+.nc-s{height:6px;align-items:center}
+.nc-s i{height:3px}
+.nc-s i:hover{scale:1 2;opacity:1}
 </style>
 
 <div class="app has-chat" id="app">
@@ -4453,7 +4463,7 @@ const L_mk=(m,fs)=>{const d=document.createElement("div");d.className="nowc"+(fs
  if(fs){m.host.append(d)}else m.host.after(d);return d};
 const L_tick=()=>{for(const m of FM){const host=m.host;if(!host||!host.isConnected)continue;const fs=!!host.closest("#mfs");if(!fs&&!host.closest("#dsp"))continue;
   let d=L_cards.get(m);const w=m.get&&m.get();if(!w)continue;if(!seen(m)&&d)continue;
-  if(!d||!d.isConnected){d=L_mk(m,fs);L_cards.set(m,d)}
+  if(!d||!d.isConnected){d=L_mk(m,fs);L_cards.set(m,d)}d._m=m;
   const {N}=graphOf(w),live=!!host.closest("#dsp,#mfs")&&N.some(n=>n.st==="on");
   let id=null;if(live){const on=N.filter(n=>n.st==="on");if(d._id&&on.some(n=>n.id===d._id)&&!on.some(n=>L_RK(n.id)>L_RK(d._id)))id=d._id;else{on.sort((a,b)=>L_RK(b.id)-L_RK(a.id)||(b.seq||0)-(a.seq||0));id=on[0].id}}
   const info=id?L_what(w,id):null;
@@ -4465,13 +4475,14 @@ const L_tick=()=>{for(const m of FM){const host=m.host;if(!host||!host.isConnect
   if(!w.ms&&live){if(d._st==null){const F=w.feed||[];d._st=performance.now()-(F.length?F[F.length-1][0]:0)}}else d._st=null;set(".t",mmss(w.ms||(d._st!=null?performance.now()-d._st:0))||"");
   /* the strip: every step in execution order; done, working, or waiting */
   const steps=N.filter(n=>n.kind!=="site"&&n.kind!=="more").sort((a,b)=>(a.seq||99)-(b.seq||99)),key=steps.map(n=>n.id+n.st).join();
-  if(d._sk!==key){d._sk=key;const S=d.querySelector(".nc-s");S.innerHTML=steps.map(n=>`<i class="${n.st==="on"?"on":n.st==="wait"?"wt":"dn"}${n.st==="bad"?" bad":""}" style="--c:${n.role?RC[n.role]:"var(--line-3)"}" title="${esc((n.seq?n.seq+" · ":"")+L_NAME(n))}"></i>`).join("");
+  if(d._sk!==key){d._sk=key;const S=d.querySelector(".nc-s");S.innerHTML=steps.map(n=>`<i data-id="${esc(n.id)}" class="${n.st==="on"?"on":n.st==="wait"?"wt":"dn"}${n.st==="bad"?" bad":""}" style="--c:${n.role?RC[n.role]:"var(--line-3)"}" title="${esc((n.seq?n.seq+" · ":"")+L_NAME(n))}"></i>`).join("");
    const done=steps.filter(n=>n.st!=="on"&&n.st!=="wait").length;set(".nc-f span",`${done} of ${steps.length} steps`)}
   if(fs){const q=steps.filter(n=>n.st==="wait").slice(0,3),Q=d.querySelector(".nc-q"),qk=q.map(n=>n.id).join();if(Q&&Q._k!==qk){Q._k=qk;Q.innerHTML=q.length?q.map(n=>`<li><b class="num">${n.seq||""}</b>${esc(L_NAME(n))}${n.t2?`<span>${esc(String(n.t2).toLowerCase())}</span>`:""}</li>`).join(""):`<li class="none">Nothing waiting</li>`}
    const K=d.querySelector(".nc-k"),lt=ledgerStats(w.ledger),S=w.steps||[],P=(w.map&&w.map.pages)||[],tt=S.reduce((a,s)=>a+tok(s.out),0)+(w.atok||0),kk=[S.length,lt.g,lt.n,P.length,tt].join();
    if(K&&K._k!==kk){K._k=kk;K.innerHTML=`<div><dt>Desks</dt><dd class="num">${S.length}</dd></div><div><dt>Grounded</dt><dd class="num">${lt.n?lt.g+"/"+lt.n:"—"}</dd></div><div><dt>Sources</dt><dd class="num">${P.length}</dd></div><div><dt>Tokens</dt><dd class="num">${tt?ft(tt):"—"}</dd></div>`}
    const h=Math.round(d.offsetHeight+14);if(host._nowH!==h){host._nowH=h;host.style.paddingBottom=h+"px";if(m.sync)m.sync()}}}};
-setInterval(L_tick,240);}
+setInterval(L_tick,240);
+document.addEventListener("click",e=>{const i=e.target.closest(".nc-s i[data-id]");if(!i)return;const d=i.closest(".nowc");if(!d||!d._m)return;e.stopPropagation();openSheet(d._m.get(),i.dataset.id,i)},true);}
 {const G_rim=el=>{if(reduce||!el||!el.isConnected)return;let r=el.querySelector(":scope>.e-rim");if(!r){r=document.createElement("i");r.className="e-rim";r.setAttribute("aria-hidden","true");el.append(r)}r.classList.remove("go");void r.offsetWidth;r.classList.add("go")};
 document.addEventListener("v38:surface",e=>{const d=e.detail||{};if(d.phase==="open"&&d.el)requestAnimationFrame(()=>G_rim(d.el))});}
 {let X_n=0;const X_ns="http://www.w3.org/2000/svg",X_el=(n,a)=>{const e=document.createElementNS(X_ns,n);for(const k in a)e.setAttribute(k,a[k]);return e};
