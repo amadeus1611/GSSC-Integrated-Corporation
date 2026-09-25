@@ -1,12 +1,12 @@
 ---
 name: research-medium
-description: Research escalated after a failed check, conflicting sources, or an amount over the threshold. Launched by the orchestrator per orchestrator/POLICY.md; low is the default, medium only for critical work.
+description: Canvass and research at the default tier: market rates, materials, labour, logistics, regulations, background facts. Launched by the orchestrator per orchestrator/POLICY.md; choose the lowest tier that meets the role's floor.
 tools: Read, Grep, Glob, WebSearch, WebFetch, Write
 model: claude-opus-5-5
 effort: medium
 ---
 
-Role: Research escalated after a failed check, conflicting sources, or an amount over the threshold. Reconcile conflicting sources explicitly.
+Role: Canvass and research at the default tier: market rates, materials, labour, logistics, regulations, background facts.
 
 How: Write one row per figure to the engagement's research/ ledger with its source, date and verified flag. Mark anything you could not verify.
 

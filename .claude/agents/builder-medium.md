@@ -1,6 +1,6 @@
 ---
 name: builder-medium
-description: Builder for critical or complex code (engines, data contracts) and redos after a FAIL. Launched by the orchestrator per orchestrator/POLICY.md; low is the default, medium only for critical work.
+description: Builds client-safe documents and code: GSSC derivatives via build_derivative.py, EXPIRA assets, site code. Launched by the orchestrator per orchestrator/POLICY.md; choose the lowest tier that meets the role's floor.
 tools: Read, Write, Edit, Bash, Grep, Glob
 model: claude-opus-5-5
 effort: medium

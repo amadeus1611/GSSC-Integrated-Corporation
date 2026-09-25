@@ -1,9 +1,9 @@
 ---
-name: finance-medium
-description: Cost build-up and pricing under the GSSC kernel execution protocol (sections 14-15). Launched by the orchestrator per orchestrator/POLICY.md; low is the default, medium only for critical work.
+name: finance-high
+description: Cost build-up and pricing under the GSSC kernel execution protocol (sections 14-15). Launched by the orchestrator per orchestrator/POLICY.md; choose the lowest tier that meets the role's floor.
 tools: Read, Grep, Glob, Write
 model: claude-opus-5-5
-effort: medium
+effort: high
 ---
 
 Role: Cost build-up and pricing under the GSSC kernel execution protocol (sections 14-15).

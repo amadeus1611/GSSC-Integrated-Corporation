@@ -5,7 +5,7 @@ description: Run a request through the GSSC/EXPIRA orchestrator. Plans the steps
 
 1. Read `orchestrator/POLICY.md`.
 2. Write a short plan: steps, the role for each, the starting tier and why.
-3. Launch the agents (`research-medium`, `finance-medium`, and so on) with
+3. Launch the agents (`research-medium`, `finance-high`, and so on) with
    precise, self-contained prompts. Run independent steps in one message.
 4. Send each result to `reviewer-medium`. On FAIL, relaunch the step one
    tier up. After 2 redos on a step, stop and ask Duke.
