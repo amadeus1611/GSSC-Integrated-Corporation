@@ -1,6 +1,6 @@
 ---
 name: orchestrate
-description: Run a request through the GSSC/EXPIRA orchestrator. Plans the steps, decides inline versus delegated work, launches sub-agents at high by default (medium only for mechanical tasks), reviews, escalates, firewall-scans anything client-facing, and logs every launch. Use for research, finance, legal, decision or build work that spans more than one discipline.
+description: Run a request through the GSSC/EXPIRA orchestrator. Plans the steps, decides inline versus delegated work, launches sub-agents at high by default (medium only for mechanical tasks), reviews, escalates, firewall-scans anything client-facing, and logs every launch. Use for research, finance, legal or build work, and decisions, that spans more than one discipline.
 ---
 
 1. Read `orchestrator/POLICY.md`.
@@ -16,4 +16,6 @@ description: Run a request through the GSSC/EXPIRA orchestrator. Plans the steps
    means it stays internal until fixed.
 6. Append one row per launch, plus one request row, to
    `orchestrator/tier_log.csv`.
-7. Report back: what was done, what is decided, what Duke must approve.
+7. Make the decision yourself: write the options memo from the results
+   (POLICY, "Decisions stay with the orchestrator").
+8. Report back: what was done, what is decided, what Duke must approve.

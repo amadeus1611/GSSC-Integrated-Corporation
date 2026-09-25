@@ -11,7 +11,7 @@ code and is documented in the console itself.
 
 ## Orchestrator effort
 
-- **High by default.** The orchestrator plans, routes, checks and reports.
+- **High by default.** The orchestrator plans, assigns, synthesises across roles, makes the decision and reports.
   A bad plan costs a whole iteration (v38 was reverted); high thinking costs
   far less than that.
 - **Medium** only when Duke has already written an exact change list, or for
@@ -28,10 +28,17 @@ low-level work.
 | research | research-high | research-medium: a single fact lookup, or re-checking a named source |
 | finance | finance-high | none |
 | legal | legal-high | none |
-| decision | decision-high | none; the orchestrator makes routine calls itself |
 | builder | builder-high | builder-medium: build_derivative.py runs, asset regeneration, a fully specified patch |
 | reviewer | reviewer-high | reviewer-medium: checklist-only checks (format, required sections, verification ran) |
 | firewall | firewall-medium | this is the only tier |
+
+## Decisions stay with the orchestrator
+
+There is no decision agent. The orchestrator already holds the brief and every
+result, so it writes the options memo itself (decisions/<topic>.md:
+recommendation, two or three options, trade-offs, risks, what Duke must
+decide). A separate agent would start cold and re-read everything. For an
+independent challenge, send the memo to reviewer-high.
 
 ## Inline or delegate
 
