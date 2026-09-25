@@ -40,9 +40,11 @@ Internal register: dense and lossless. Duke gives the values, vision and directi
 - **An always-on rAF loop for an overlay.** It burned idle CPU. Start the loop on demand and stop it when still.
 - **Flicker between two equally active targets.** It confused the focus. Use a priority rank plus hysteresis.
 - **Truncating labels at thin edge obstacles.** The information was lost. Let labels cross edges, with a halo.
+- **Unbounded `while` growth loops** (`D*=1.5` with D possibly 0). They froze the tab. Every loop needs a finite guard and an iteration cap.
 - **Launching eight agents at once.** It burned the usage limits and left partial work. Parallelise only what is truly independent and large.
 
 ## Short-term memory (current iteration)
+- v38.7: freeze guards on the range-growth loops (a zero range spun forever, the likely white screen on Enter in real runs); one easing table (a startup normaliser maps all 120 timed rules to ease-out `(.23,1,.32,1)` or ease-in-out `(.77,0,.175,1)`).
 - v38.6: openings layered: liquid shell, gold rim trace, then a staggered left-to-right ink wipe of each line (clip on the children only, never the shadowed shell).
 - v38.5: every text input unified at 13px/300 (idle equals focus); .97 press feedback on buttons; blurIn without blur; the now card's step strip is clickable (it opens that step's sheet).
 - v38.4: no bounce anywhere; a liquid pour starting at 64%/30% with a rim glint; the now card; matched composer text; master-template chart texture; a dot field behind the maps. Full plan: `brain/PLAN.md`.

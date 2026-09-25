@@ -1682,6 +1682,7 @@ button{transition-property:color,background,border-color,opacity,scale;}
 .nc-s{height:6px;align-items:center}
 .nc-s i{height:3px}
 .nc-s i:hover{scale:1 2;opacity:1}
+:root{--ease-out:cubic-bezier(.23,1,.32,1);--ease-io:cubic-bezier(.77,0,.175,1);--soft-close:cubic-bezier(.23,1,.32,1);--release:cubic-bezier(.23,1,.32,1)}
 </style>
 
 <div class="app has-chat" id="app">
@@ -3746,7 +3747,7 @@ const T_scene=T=>{const w=T.w;if(!w)return;const G=graphOf(w),O=G.T;if(!O)return
  if(IT.doc){const a=IT.ans;ed(a?"ans>doc":"v>doc",a?R.ans.t1:R.v&&R.v.t1,a?OL:"v",R.doc.t0,OL,a?"ans":"v","doc","hand",on("v>doc"))}
  {const k=IT.o.segs.findIndex(x=>x.k==="exh");const src=IT.doc?"doc":IT.ans?"ans":null;if(k>0&&src)ed("out>o",R[src].t1,OL,IT.o.segs[k].s,"o",src,"o:"+k,"back",false)}
  /* the time domain; live runs grow it in calm steps */
- let D=L.D;if(T.live){T.Dl=T.Dl||20000;while((nowT||0)>.85*T.Dl)T.Dl*=1.5;D=Math.max(D,T.Dl)}else T.Dl=0;
+ let D=L.D;if(T.live){T.Dl=T.Dl||20000;let _g=0;if(!(T.Dl>0)||!isFinite(T.Dl))T.Dl=20000;while(isFinite(nowT||0)&&(nowT||0)>.85*T.Dl&&_g++<60)T.Dl*=1.5;D=Math.max(D,T.Dl)}else T.Dl=0;
  const bt=[];items.forEach(it=>it.segs.forEach(s=>{bt.push(s.s);if(s.e!=null)bt.push(s.e)}));ents.forEach(e=>{if(e.wait)bt.push(e.wait.s)});E.forEach(e=>{bt.push(e.ta,e.tb)});if(nowT!=null)bt.push(nowT);
  const sc=T_scale(bt,D,pl,W-pl-pr,W<640?8:10);
  /* labels: ride the bar, never collide inside a lane; drop tokens, then the focus, then truncate */
@@ -4074,7 +4075,7 @@ class W_TraceMap{
   this.px0=P.gut;this.pw=Math.max(40,this.W-P.gut-P.padR);
   /* the scale: final for settled runs, stepped (x1.5) for live ones */
   let reScale=!this.sc;
-  if(live){while(now>.85*this.D){this.D*=1.5;reScale=true}}
+  if(live){if(!(this.D>0)||!isFinite(this.D))this.D=20000;let _g=0;while(isFinite(now)&&now>.85*this.D&&_g++<60){this.D*=1.5;reScale=true}}
   else if(this.wasLive){this.wasLive=false;reScale=true}
   if(live)this.wasLive=true;
   if(reScale){const B=[0];M.segs.forEach(s=>{B.push(s.t0);if(s.t1!=null)B.push(s.t1);if(s.ready!=null)B.push(s.ready);if(s.hand!=null)B.push(s.hand);if(P.fs&&s.calls)s.calls.forEach(c=>B.push(c.t))});
@@ -4492,5 +4493,13 @@ const X_tex=root=>{(root||document).querySelectorAll(".fig svg.ch:not([data-tex]
  const bg=X_el("rect",{x:vb[0],y:vb[1],width:vb[2],height:vb[3],fill:"url(#"+id+"d)",class:"txbg"});v.prepend(df);df.after(bg);
  v.querySelectorAll(".bar,.sg").forEach(r=>{if(r.classList.contains("txo"))return;const mk=f=>{const c=r.cloneNode(false);c.removeAttribute("data-ro");c.removeAttribute("data-i");c.setAttribute("fill",f);c.classList.add("txo");c.style.pointerEvents="none";return c};const g=mk("url(#"+id+"g)"),hh=mk("url(#"+id+"h)");r.after(hh);hh.after(g)})})};
 const X_old=armFigs;armFigs=function(root){X_tex(root);return X_old.apply(this,arguments)};X_tex(document);}
+{/* one easing table: every timing curve in the sheet is normalised to the house curves; no ease-in, no overshoot, no weak built-ins */
+const Z_OUT="cubic-bezier(.23,1,.32,1)",Z_IO="cubic-bezier(.77,0,.175,1)";
+const Z_fix=v=>v.split(/,(?![^(]*\))/).map(x=>{const t=x.trim();if(/^(linear|steps|step-)/.test(t)||/var\(/.test(t)||t.startsWith("linear("))return t;
+ if(t==="ease-in-out")return Z_IO;if(t==="ease"||t==="ease-in"||t==="ease-out")return Z_OUT;
+ const m=t.match(/cubic-bezier\(([^)]*)\)/);if(m){const [a,b,c,d]=m[1].split(",").map(Number);if(b<0||b>1||d<0||d>1||(a>.3&&b<.2))return Z_OUT}return t}).join(", ");
+const Z_run=()=>{for(const sh of document.styleSheets){let rs;try{rs=sh.cssRules}catch(e){continue}const walk=L=>{for(const r of L){if(r.cssRules)walk(r.cssRules);const st=r.style;if(!st)continue;
+  for(const k of ["transition-timing-function","animation-timing-function"]){const v=st.getPropertyValue(k);if(v){const n=Z_fix(v);if(n!==v)st.setProperty(k,n,st.getPropertyPriority(k))}}}};walk(rs)}};
+Z_run();}
 })();
 </script>

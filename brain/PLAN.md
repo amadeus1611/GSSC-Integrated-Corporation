@@ -2,6 +2,7 @@
 
 Internal register. Each phase ships only when it is finished and verified: screenshots, per-frame numbers, and two clean smoke runs. Research is built into every item; it is never skipped or deferred until asked.
 
+Done in v38.7: A1 (one easing table).
 Done in v38.5: D1 (inputs unified), A2 (press feedback), part of A1 (blurIn without blur), B3 (strip click-through).
 
 ## Phase A · Motion system unification (next)
