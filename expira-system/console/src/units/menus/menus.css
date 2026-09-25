@@ -8,7 +8,6 @@
 .seg{display:grid;grid-template-columns:repeat(3,1fr);gap:2px;margin:2px 4px 4px;padding:2px;border-radius:6px;background:var(--well);border:var(--rule-hair) solid var(--line-2)}
 .menu .seg button{flex-direction:column;justify-content:center;gap:4px;padding:8px 4px;font-size:11px;color:var(--soft);border-radius:4px;text-align:center}
 .menu .seg button svg{width:15px;height:15px}
-.menu.up-left{transform-origin:0 100%}
 .top{height:50px;flex:none;display:flex;align-items:center;gap:10px;padding:0 16px}
 .top .r{margin-left:auto;display:flex;align-items:center;gap:6px}
 .menu.open{opacity:1;visibility:visible;transform:none;filter:none;pointer-events:auto;transition-delay:0s}
@@ -53,7 +52,7 @@
 .seg2>button,.menu .seg>button{position:relative;z-index:1}
 .merc{position:absolute;z-index:0;border-radius:3px;background:var(--panel);box-shadow:0 1px 2px rgba(0,0,0,.1);pointer-events:none;opacity:0}
 .moving>.merc{opacity:1}
-.moving>button[aria-checked="true"]{background:transparent!important;box-shadow:none!important}
+.moving>button[aria-checked="true"]{background:transparent;box-shadow:none}
 .menu .seg .merc{border-radius:4px}
 /* claim cards, open threads, documents that drip in */
 .cpop{position:fixed;z-index:88;width:300px;padding:9px 11px 8px;background:var(--panel);border:var(--rule-hair) solid var(--line-3);border-radius:6px;box-shadow:var(--shadow);pointer-events:auto}
@@ -74,8 +73,10 @@
 .cpop .cs span{font-size:10.5px;color:var(--soft);border:var(--rule-hair) solid var(--line-2);border-radius:3px;padding:0 5px}
 .cpop .cs em{font:italic 400 11.5px/1.45 var(--f-display);color:var(--soft)}
 .cpop .cx{display:block;font:italic 400 11px var(--f-display);color:var(--gold)}
-.moving>[aria-selected="true"]{background:transparent!important}
+.moving>[aria-selected="true"]{background:transparent}
+/* !important: holds the v39 CSS entrance off while the JS pour runs (replaced in Phase 3.3) */
 .menu,.menu.open{filter:none!important}
+/* !important: holds the v39 CSS entrance off while the JS pour runs (replaced in Phase 3.3) */
 .menu{position:fixed;left:0;top:0;z-index:85;width:268px;background:var(--panel);border:var(--rule-hair) solid var(--line-3);border-radius:8px;box-shadow:var(--shadow);padding:6px;opacity:0;visibility:hidden;transform:translateY(6px) scale(.985);filter:blur(4px);pointer-events:none;transform-origin:100% 100%;transition:opacity .35s var(--soft-close),transform .7s var(--soft-close),filter .5s var(--soft-close),visibility 0s .7s;transition-property:opacity,transform,visibility,box-shadow!important}
 .chov{width:280px;opacity:0;transform:translateX(-4px);transition:opacity .22s ease,transform .45s var(--sp-soft);pointer-events:none}
 .chov.in{opacity:1;transform:none}
@@ -84,4 +85,5 @@
 .chov::after{display:none}
 .menu.opt{transform-origin:0 100%}
 /* menus pour: meniscus light (own rules) */
+/* !important: holds the v39 CSS entrance off while the JS pour runs (replaced in Phase 3.3) */
 .menu.open{transition-duration:.18s!important;transition-delay:0s!important}

@@ -269,7 +269,7 @@ For each unit: rebuild it in `src/units/<unit>/`, run the smoke test, take scree
 - [x] Phase 2.1: pure restructure into `src/` plus `build.py`, parity smoke passes (2026-09-25, session 3: 80 files; the rebuilt `index.html` is byte-identical to v39, sha256 `a697549cd1499e54…`; `qa/diff.js` reports identical DOM and pixels in both themes; the 7 cross-unit selectors v39 already doubled are listed in `build.py` `KNOWN_DUPES` for 2.2)
 - [ ] Phase 2.2: tokens landed; version layers, dead rules and `!important` removed
   - [x] Version layers folded: the 22 layers (953 rules) now live in 17 units under `src/units/`, 131 repeated selectors merged; computed styles identical to v39 in 20 UI states × 2 themes (`qa/styles.js`), pixels identical (`qa/diff.js`), smoke 0 errors
-  - [ ] `!important`, dead rules and superseded keyframes removed
+  - [x] `!important` 43 → 20, each remaining one commented (motion kill switches, paused off-screen surfaces, figures at rest, hidden edges, and the v39 pour holds that Phase 3.3 removes); 41 dead rules (`.tg`, `.spark`, `.chron`, `.think*`, `.mrow`, `.progress`, `.tx-s/.tx-l`, `html.theming`…), 3 superseded keyframes (`word`, `acIn`, `fuIn`), the hidden `#sig` and the dead JS (`mountMaps`, `archivedMenu`, `staffHTML`, `youHTML_old`) removed; computed styles otherwise identical
   - [ ] Tokens: `tokens.css` from the lab, snapped to the brand stack; literals replaced
   - [ ] Motion: overshooting curves and springs replaced with the Gate A vocabulary
   - [ ] Gate A defaults: Arbiter label, real orchestrator effort, GOO removed, still grain, settings version label

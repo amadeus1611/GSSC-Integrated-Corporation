@@ -36,9 +36,9 @@
 @media (max-width:760px){
 .side{position:fixed;inset:0 auto 0 0;z-index:60;box-shadow:var(--shadow)}
 .app.folded .side{margin-left:0;transform:translateX(-102%)}
-.hide-sm{display:none}
 }
 @media (prefers-reduced-motion:reduce){
+/* !important: the motion kill switch must beat every unit's own motion */
 *,*::before,*::after{animation:none!important;transition:none!important}
 }
 /* toasts only answer the viewer's own library actions, and sit with the library, never over the chat */
@@ -49,5 +49,7 @@
 .lbx[hidden]{display:none}
 .lbx img{min-width:120px;max-width:min(92vw,1100px);max-height:80vh;border-radius:4px;box-shadow:var(--shadow);transform-origin:center}
 .lbx p{margin:0;font-size:10.5px;letter-spacing:.04em;color:var(--soft)}
+/* !important: holds the v39 CSS entrance off while the JS pour runs (replaced in Phase 3.3) */
 .pal,.pal.open{filter:none!important}
+/* !important: holds the v39 CSS entrance off while the JS pour runs (replaced in Phase 3.3) */
 .pal{position:fixed;left:50%;top:16vh;z-index:71;width:min(540px,calc(100vw - 32px));background:var(--panel);border:var(--rule-hair) solid var(--line-3);border-radius:8px;box-shadow:var(--shadow);transform:translate(-50%,-6px) scale(.985);opacity:0;filter:blur(5px);pointer-events:none;transition:transform .9s var(--soft-close),opacity .5s var(--soft-close),filter .9s var(--soft-close);transition-property:opacity,transform,visibility,box-shadow!important}

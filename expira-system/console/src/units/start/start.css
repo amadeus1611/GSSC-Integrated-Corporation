@@ -29,7 +29,7 @@
 @media (prefers-reduced-motion:reduce){
 #goo{display:none}
 }
-#ready{display:none!important}
+#ready{display:none}
 .hero .greet{margin-bottom:26px}
 #goo.gl{filter:none}
 .hero .mark-w{width:132px;margin-bottom:20px;animation:float 7s ease-in-out infinite;transition:transform 1.2s var(--sp-soft)}

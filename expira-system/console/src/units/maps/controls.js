@@ -1,6 +1,6 @@
 document.addEventListener("click",e=>{const b=e.target.closest("[data-mfs]");if(b)mapFS(b)});
 document.addEventListener("click",e=>{const f=e.target.closest(".fbtn");if(f){const ol=f.closest(".strm");ol.classList.add("all");ol.querySelectorAll(".old").forEach(x=>x.classList.remove("old"));f.parentElement.remove();return}
- const m=e.target.closest(".mapt");if(m){const r=m.closest(".run"),hs=r.querySelector(".mapw"),on=!hs.classList.contains("show");hs.classList.toggle("show",on);m.setAttribute("aria-expanded",on);if(on){if(!hs.children.length)mountMaps();requestAnimationFrame(()=>FM.forEach(x=>x.host===hs&&x.sync&&x.sync()))}}});
+ const m=e.target.closest(".mapt");if(m){const r=m.closest(".run"),hs=r.querySelector(".mapw"),on=!hs.classList.contains("show");hs.classList.toggle("show",on);m.setAttribute("aria-expanded",on);if(on){requestAnimationFrame(()=>FM.forEach(x=>x.host===hs&&x.sync&&x.sync()))}}});
 document.addEventListener("click",e=>{const vb=e.target.closest(".vs [data-view]");if(vb){e.stopPropagation();const r=vb.closest(".run");if(!r.classList.contains("open")){r.classList.add("open","pinned");r.querySelector(".run-h").setAttribute("aria-expanded","true")}runView(r,vb.dataset.view,true);return}
  const mn=e.target.closest(".mini .mn");if(mn){const b=mn.closest(".bot"),w=b&&(b._work||cur?.turns[+b.dataset.k]?.work);e.stopPropagation();if(w)openSheet(w,mn.dataset.sheet,mn);return}},true);
 document.addEventListener("keydown",e=>{if((e.key==="Enter"||e.key===" ")&&e.target.closest?.(".mini .mn")){e.preventDefault();e.target.click()}});
@@ -9,6 +9,5 @@ function wakeMaps(){const f=()=>FM.forEach(m=>{if(!m.host.isConnected)return;if(
 /* cards off-screen rest: their loops pause, their SMIL beads stop */
 const RUNIO=new IntersectionObserver(es=>es.forEach(en=>{const r=en.target;r.toggleAttribute("data-off",!en.isIntersecting);r.querySelectorAll(".mini svg").forEach(v=>{try{en.isIntersecting?v.unpauseAnimations():v.pauseAnimations()}catch(e){}})}),{rootMargin:"200px"});
 new MutationObserver(()=>document.querySelectorAll("#thread .run:not([data-io])").forEach(r=>{r.dataset.io=1;RUNIO.observe(r)})).observe(document.getElementById("thread"),{childList:true,subtree:true});
-function mountMaps(){return;document.querySelectorAll("#thread .run.open .mapw:empty").forEach(hst=>{const b=hst.closest(".bot"),w=b&&(b._work||cur?.turns[+b.dataset.k]?.work);if(w&&(w.steps||[]).length)mkMap(hst,()=>w,{replay:true})})}
 const workOf=el=>{const b=el.closest(".bot");return b&&(b._work||cur?.turns[+b.dataset.k]?.work)};
 

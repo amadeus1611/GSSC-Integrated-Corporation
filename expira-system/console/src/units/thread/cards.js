@@ -10,7 +10,6 @@ function summary_(w){const n=(w.steps||[]).length,p=(w.map&&w.map.pages||[]).len
 function summary(w){const t=ledgerStats(w.ledger);return (w.ms?"Worked for "+fmt(w.ms)+" · ":"")+summary_(w)+(t.n?` · ${t.g}/${t.n} grounded`:"")}
 const tokLine=w=>{const t=w.tok||(w.steps||[]).reduce((a,s)=>a+tok(s.out),0);return t?ft(t)+" tokens":""};
 const chipHTML=(r,n)=>`<span class="chip" data-r="${r}">${ROLE[r]||r}<b>${n>1?"×"+n:""}</b></span>`;
-function staffHTML(S){const g={};(S||[]).forEach(s=>g[s.role]=(g[s.role]||0)+1);return Object.entries(g).map(([r,n])=>chipHTML(r,n)).join("")}
 const PHN={plan:"Deliberate",desks:"Desks",review:"Verify",answer:"Answer",audit:"Audit",doc:"Document",exhibits:"Exhibits",firewall:"Firewall"};
 function railHTML(w,live,o={}){let keys,st={};
  if(live)keys=(o.direct?["answer",...(o.doc?["doc"]:[]),"exhibits"]:["plan","desks","review","answer","audit","doc","exhibits"]).concat(o.safe?["firewall"]:[]);

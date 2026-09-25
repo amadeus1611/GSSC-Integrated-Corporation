@@ -56,5 +56,7 @@
 .dpn span{letter-spacing:.14em;text-transform:uppercase;color:var(--mute);margin-left:4px;transition:color .3s;font-size:8.5px}
 /* cards in cards, a quieter composer, reversible hovers, smooth shadows */
 .docc .ac{display:flex;flex-wrap:wrap;gap:6px;width:auto;height:auto;padding:0;margin:0;border:0;background:none;box-shadow:none;animation:none;transform:none}
+/* !important: holds the v39 CSS entrance off while the JS pour runs (replaced in Phase 3.3) */
 .docv,.docv.open{filter:none!important}
+/* !important: holds the v39 CSS entrance off while the JS pour runs (replaced in Phase 3.3) */
 #docv.open{transition-duration:.18s!important;transition-delay:0s!important}

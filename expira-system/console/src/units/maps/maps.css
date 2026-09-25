@@ -101,6 +101,7 @@
 .fsmap{margin:0;padding:0;overflow:auto;min-height:0}
 .fsmap .mvb{padding:12px 16px 4px;margin:0}
 .mfs-l{border-left:var(--rule-hair) solid var(--line-2);overflow:auto;padding:16px 18px;min-height:0}
+/* !important: a closed or off-screen surface rests; beats each unit's animation shorthand */
 .mfs:not(.open) *{animation-play-state:paused!important}
 @media (max-width:860px){
 .mfs{inset:8px}
@@ -110,7 +111,7 @@
 .field .k-doc .core{fill:var(--n-hollow);stroke:var(--gold);stroke-width:1.8}
 .map .k-doc .bx{stroke:var(--gold)}
 .mvx{flex:none;width:24px;height:24px;border-radius:5px;margin-left:4px}
-.mvx svg{width:12px!important;height:12px!important;display:block}
+.ib.mvx svg{width:12px;height:12px;display:block}
 .mapt{display:inline-flex;gap:6px;align-items:center;border:0;background:none;padding:0;cursor:pointer;font-size:9.5px;letter-spacing:.16em;text-transform:uppercase;color:var(--soft);transition:color .3s}
 .mapt:hover,.mapt[aria-expanded="true"]{color:var(--ink)}
 .mapt[aria-expanded="true"] svg{color:var(--gold)}
@@ -161,13 +162,17 @@
 .mini .md.s-wait{opacity:.6}
 .field .fn text{transition:opacity .3s ease .3s}
 .field .fn.unborn text,.field .fn.young text{opacity:0;transition:none}
+/* !important: order is truth; a hidden edge stays hidden while its flow loop runs */
 .map .eg:not(.drawn)~.fl{opacity:0!important}
 .field .ln,.field .lf{transition:opacity .35s ease}
+/* !important: order is truth; a hidden edge stays hidden while its flow loop runs */
 .field .ln.hid,.field .lf.hid{opacity:0!important}
 .mini .me.ne{stroke-dasharray:1;stroke-dashoffset:1;animation:fgDraw .5s cubic-bezier(.3,.6,.2,1) .34s forwards}
 .mini .me.dep.ne{stroke-dasharray:none;stroke-dashoffset:0;opacity:0;animation:ink .4s .5s forwards}
 .mini .mn.nb .halo{animation:mnb var(--sp-jelly-d) var(--sp-jelly) both,halo 1.2s ease-in-out .6s infinite}
+/* !important: holds the v39 CSS entrance off while the JS pour runs (replaced in Phase 3.3) */
 .mfs,.mfs.open{filter:none!important}
+/* !important: holds the v39 CSS entrance off while the JS pour runs (replaced in Phase 3.3) */
 #mfs.open{transition-duration:.18s!important;transition-delay:0s!important}
 .mnsc{position:absolute;left:0;right:0;top:0;height:34px;pointer-events:none;z-index:3;background:linear-gradient(180deg,transparent,color-mix(in srgb,var(--gold) 16%,transparent) 55%,transparent);border-radius:inherit}
 .mnsc.up{background:linear-gradient(0deg,transparent,color-mix(in srgb,var(--gold) 16%,transparent) 55%,transparent)}

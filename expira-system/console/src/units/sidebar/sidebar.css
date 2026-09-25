@@ -16,7 +16,7 @@
 .row:hover{background:var(--line);transition-duration:var(--in)}
 .row.on{background:var(--line-2)}
 .row.dragging{opacity:.4}
-.row .item{flex:1;min-width:0;background:transparent!important}
+.row .item{flex:1;min-width:0;background:transparent}
 .row .dots{position:absolute;right:4px;top:50%;transform:translateY(-50%);width:22px;height:22px;border:0;border-radius:4px;background:transparent;color:var(--mute);cursor:pointer;display:grid;place-items:center;opacity:0;transition:opacity .3s ease,background .3s ease,color .3s ease}
 .row:hover .dots,.row.on .dots,.row .dots:focus-visible,.row .dots[aria-expanded="true"]{opacity:1}
 .row .dots:hover,.row .dots[aria-expanded="true"]{background:var(--line-2);color:var(--ink)}

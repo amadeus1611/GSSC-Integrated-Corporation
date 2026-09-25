@@ -2,6 +2,7 @@
 /* the settings window */
 .stg{position:fixed;left:50%;top:50%;z-index:72;width:min(840px,calc(100vw - 32px));height:min(620px,calc(100vh - 48px));display:grid;grid-template-columns:200px minmax(0,1fr);background:var(--panel);border:var(--rule-hair) solid var(--line-3);border-radius:10px;box-shadow:0 40px 90px -40px rgba(0,0,0,.5),var(--shadow);overflow:hidden;opacity:0;visibility:hidden;transform:translate(-50%,-48.5%) scale(.985);filter:blur(4px);transition:opacity .45s var(--soft-close),transform .9s var(--soft-close),filter .6s var(--soft-close),visibility 0s linear .45s}
 .stg.open{opacity:1;visibility:visible;transform:translate(-50%,-50%);filter:none;transition-delay:0s}
+/* !important: a closed or off-screen surface rests; beats each unit's animation shorthand */
 .stg:not(.open) *{animation-play-state:paused!important}
 .stg-n{background:var(--side);border-right:var(--rule-hair) solid var(--line-2);padding:22px 10px 16px;display:flex;flex-direction:column;min-height:0}
 .stg-n h2{font:400 18px var(--f-display);color:var(--ink);margin:0 8px 18px}
@@ -122,15 +123,18 @@
 .rdx{width:20px;height:20px;display:grid;place-items:center;border:var(--rule-hair) solid var(--line-2);border-radius:4px;background:none;color:var(--mute);cursor:pointer;padding:0;transition:color .3s,border-color .3s}
 .rdx:hover{color:var(--gold);border-color:var(--line-3)}
 .rdx svg{width:10px;height:10px}
+/* !important: the motion kill switch must beat every unit's own motion */
 html.tnone *,html.tnone *::before,html.tnone *::after{transition:none!important}
-html.theming,html.theming *,html.theming *::before,html.theming *::after{transition:none!important}
+/* !important: holds the v39 CSS entrance off while the JS pour runs (replaced in Phase 3.3) */
 .stg,.stg.open,#setMenu,#setMenu.open{filter:none!important}
+/* !important: holds the v39 CSS entrance off while the JS pour runs (replaced in Phase 3.3) */
 .stg,#setMenu{transition-property:opacity,transform,visibility,box-shadow!important}
 @media (max-width:560px){
 .chs{overflow-x:auto;scrollbar-width:none}
 .chs::-webkit-scrollbar{display:none}
 }
 .chs{position:relative}
+/* !important: holds the v39 CSS entrance off while the JS pour runs (replaced in Phase 3.3) */
 #setMenu.open{transition-duration:.18s!important;transition-delay:0s!important}
 /* settings nav indicator (own rules) */
 .stg-n nav{position:relative}

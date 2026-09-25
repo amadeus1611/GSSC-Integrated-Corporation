@@ -8,7 +8,6 @@ function runHTML(w,k,live,o={}){const M=w.map||{},th=M.thinking||[],n=(w.feed||[
  </div></div><p class="rnote" hidden></p></div>`}
 function splitQuote(c){const m=String(c).match(/^((?:> ?.*(?:\n|$))+)\n*([\s\S]*)$/);return m?[m[1].replace(/^> ?/gm,"").trim(),m[2]]:["",String(c)]}
 function youHTML(t,k){const [qt,body]=splitQuote(t.content);return `<div class="yw bi" data-k="${k}"><div class="you">${(t.imgs||[]).length?`<span class="yim">${t.imgs.map((m,i)=>`<button type="button" class="yi" data-lbx="${i}" aria-label="Open ${esc(m.name)}"><img alt="" src="${m.thumb}"></button>`).join("")}</span>`:""}${qt?`<span class="yq">${esc(qt)}</span>`:""}${esc(body)}</div><span class="yacts"><button class="ab" data-ycopy>Copy</button><button class="ab" data-yedit>Edit</button></span></div>`}
-function youHTML_old(t){return `<div class="you bi">${esc(t.content)}</div>`}
 const acts=k=>`<span class="acts"><button class="ab" data-copy>Copy</button><button class="ab" data-regen>Retry</button><button class="ab" data-read="${k}">Dispatch</button></span>`;
 const BYLINE=`${MARK}<span class="who">EXPIRA</span>`;
 function inThis(html){const d=document.createElement("div");d.innerHTML=html;const hs=[...d.querySelectorAll("h3")];if(hs.length<3)return "";return `<nav class="inthis"><span class="cap">In this answer</span>${hs.map((x,i)=>`<button data-sec="${i}" style="animation-delay:${i*.05}s"><b>${ROMAN[i]||i+1}</b>${esc(x.textContent)}</button>`).join("")}</nav>`}

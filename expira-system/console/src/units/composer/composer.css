@@ -1,19 +1,14 @@
 /* composer: one thin line that grows to seven */
 .dock{flex:none;padding:4px 20px calc(8px + env(safe-area-inset-bottom,0px))}
-.app:not(.has-chat) .dock{padding:0;width:100%;max-width:720px}
+.app:not(.has-chat) .dock{padding:0}
 .comp{max-width:720px;margin:0 auto;display:flex;align-items:flex-end;gap:4px;padding:4px 4px 4px 2px;background:var(--panel);border:var(--rule-hair) solid var(--line-3);border-radius:6px;box-shadow:var(--shadow);transition:border-color var(--out) var(--soft-close)}
 .comp:focus-within{border-color:color-mix(in srgb,var(--ink) 40%,transparent);transition-duration:var(--in)}
 #prompt{flex:1;min-width:0;display:block;border:0;background:transparent;resize:none;outline:none;padding:6px 10px;height:33px;min-height:33px;max-height:calc(21px * 7 + 12px);overflow-y:auto;font-size:14.5px;line-height:21px;font-weight:300}
 #prompt::placeholder{color:var(--mute)}
 .phx{position:absolute;left:10px;top:6px;right:8px;pointer-events:none;color:var(--mute);font-size:14.5px;line-height:21px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;transition:opacity .5s ease,transform .7s var(--soft-close),filter .5s ease}
 .phx.out{opacity:0;transform:translateY(-3px);filter:blur(2px)}
-.phx.gone{opacity:0!important;transition-duration:.12s}
+.phx.gone{opacity:0;transition-duration:.12s}
 .ctl{display:flex;align-items:center;gap:0;flex:none}
-.tg{display:flex;align-items:center;gap:6px;border:0;background:transparent;height:30px;padding:0 8px;border-radius:4px;cursor:pointer;font-size:11.5px;color:var(--mute);transition:background var(--out) var(--soft-close),color var(--out) var(--soft-close)}
-.tg:hover{background:var(--line);color:var(--ink);transition-duration:var(--in)}
-.tg i{width:5px;height:5px;border-radius:50%;border:var(--rule-medium) solid var(--mute);transition:background .3s ease,border-color .3s ease,transform .5s var(--soft-close)}
-.tg[aria-pressed="true"]{color:var(--text)}
-.tg[aria-pressed="true"] i{background:var(--gold);border-color:var(--gold);transform:scale(1.15)}
 .optb{display:flex;align-items:center;gap:7px;height:28px;border:var(--rule-hair) solid var(--line-2);background:transparent;border-radius:4px;padding:0 8px;margin-right:4px;cursor:pointer;font-size:11.5px;color:var(--soft);white-space:nowrap;transition:border-color var(--out) var(--soft-close),color var(--out) var(--soft-close),background var(--out) var(--soft-close)}
 .optb:hover,.optb[aria-expanded="true"]{border-color:var(--line-3);color:var(--ink);background:var(--line);transition-duration:var(--in)}
 .optb[aria-expanded="true"] svg{transform:rotate(180deg)}
@@ -28,7 +23,6 @@
 .send:disabled{opacity:.22;cursor:not-allowed;transform:none}
 .send svg{width:13px;height:13px}
 @media (max-width:560px){
-.tg span{display:none}
 .count{display:none}
 }
 .dock{position:relative}
@@ -74,7 +68,6 @@
 .ac .ax{opacity:1}
 }
 .ac.out{animation:acOut .32s var(--soft-close) both}
-@keyframes acIn{0%{opacity:0;transform:translateY(12px) scale(.16,.5);border-radius:18px}42%{opacity:1;transform:translateY(-1px) scale(1.03,.93);border-radius:10px}68%{transform:scale(.99,1.02)}100%{transform:none;border-radius:6px}}
 @keyframes acOut{to{opacity:0;transform:scale(.3,.7);filter:blur(2px)}}
 @keyframes fillup{from{clip-path:inset(100% 0 0 0 round 50% 50% 0 0)}60%{clip-path:inset(0 0 0 0 round 40% 40% 0 0/14% 14% 0 0)}to{clip-path:inset(0 0 0 0 round 0)}}
 @media (max-width:560px){
@@ -110,16 +103,13 @@
 .busy .cbar .spn{opacity:1;animation-play-state:running}
 @keyframes spin{to{transform:rotate(360deg)}}
 .dock,.comp,.cbar,.att,.qbar,.dbar{max-width:min(880px,100%)}
-.dock{margin-inline:auto;width:min(880px,calc(100% - 32px))!important;max-width:none!important;align-self:center}
+.dock{margin-inline:auto;width:min(880px,calc(100% - 32px));max-width:none;align-self:center}
 .spk{display:flex;align-items:center;gap:6px;height:24px;margin:0 10px;padding:0 8px;border:var(--rule-hair) solid var(--line-2);border-bottom:0;border-radius:6px 6px 0 0;background:var(--well);font-size:10.5px;color:var(--soft);cursor:pointer;transform-origin:50% 100%;transform:scaleX(calc(1 - var(--d)*.035));transition:color .25s,background .25s;animation:spkIn var(--sp-soft-d) var(--sp-soft) both;margin-right:44px}
 .comp,.cbar{width:100%}
 /* the send button sits on the text's centre line; model branding */
 .comp{align-items:flex-end}
 .comp .ctl{gap:0;height:33px;display:flex;align-items:center}
 .cbar .cst{white-space:nowrap;display:inline-flex;align-items:center;gap:7px;color:var(--soft)}
-.cbar .spark{width:11px;height:11px;margin-top:-2px;fill:var(--gold);transition:transform 1.2s var(--sp-soft)}
-.cbar .cst:hover .spark{transform:rotate(45deg) scale(1.08)}
-.busy .cbar .spark{animation:sparkP 2.4s ease-in-out infinite}
 @keyframes sparkP{0%,100%{opacity:1}50%{opacity:.45}}
 .cbar .mdl{font-size:11px;letter-spacing:.01em}
 .cbar .mdl b{font-weight:500;color:var(--ink)}

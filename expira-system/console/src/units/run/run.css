@@ -1,28 +1,14 @@
 /* working block: Claude's thinking row, set in EXPIRA type */
-.think{display:flex;flex-direction:column;max-width:520px}
-.think-h{display:flex;align-items:center;gap:10px;border:0;background:none;padding:2px 0 8px;cursor:pointer;text-align:left;font-size:12.5px;color:var(--soft)}
-.think-h .lbl{color:var(--text);transition:opacity .18s ease}
-.think-h .lbl.swap{opacity:0}
-.think.running .think-h .lbl{background:linear-gradient(90deg,var(--soft) 0 35%,var(--ink) 50%,var(--soft) 65% 100%);background-size:250% 100%;-webkit-background-clip:text;background-clip:text;color:transparent;animation:shim 2.6s linear infinite}
 @keyframes shim{from{background-position:120% 0}to{background-position:-120% 0}}
-.think-h .t{font-size:11px;color:var(--mute)}
 .chev{width:12px;height:12px;color:var(--mute);transition:transform var(--out) var(--soft-close)}
-.think.open .chev{transform:rotate(90deg)}
 /* the sheen: one hairline, one continuous glide, then it settles */
 .sheen{height:var(--rule-hair);background:var(--line-2);position:relative;overflow:hidden;margin-bottom:2px}
 .sheen::before{content:"";position:absolute;top:0;bottom:0;left:0;width:34%;background:linear-gradient(90deg,transparent,var(--head),transparent);transform:translateX(-100%);animation:sheen 2.4s cubic-bezier(.45,0,.55,1) infinite;opacity:1;transition:opacity .6s ease}
 @keyframes sheen{to{transform:translateX(300%)}}
 .sheen::after{content:"";position:absolute;inset:0;background:linear-gradient(90deg,transparent,color-mix(in srgb,var(--gold) 70%,transparent));transform:scaleX(0);transform-origin:left;transition:transform 1.4s var(--soft-close)}
-.think:not(.running) .sheen::before{opacity:0;animation-play-state:paused}
-.think.settled .sheen::after{transform:scaleX(1)}
-.think-b{display:grid;grid-template-rows:0fr;transition:grid-template-rows .8s var(--soft-close)}
-.think.open .think-b{grid-template-rows:1fr}
-.think-b>div{overflow:hidden}
 @keyframes evIn{from{opacity:0;transform:translateY(3px)}to{opacity:1;transform:none}}
-.think-b .rd{margin:6px 0 2px 14px;border:0;background:none;padding:0;cursor:pointer;font:italic 400 12px var(--f-display);color:var(--gold)}
 .glyph{width:17px;height:6px;flex:none}
 .glyph polygon{fill:var(--gold);opacity:.25}
-.think:not(.running) .glyph polygon{opacity:.85}
 @keyframes fct{0%,100%{opacity:.2}35%{opacity:1}}
 @media (prefers-reduced-motion:reduce){
 .sheen::before{display:none}
@@ -105,7 +91,7 @@
 .sb .vchip{display:inline-flex;align-items:center;gap:5px}
 .sb .vchip i{width:6px;height:6px;border-radius:50%}
 /* the thinking line: one live sentence, a stream beneath it that drips in, moments that swell and settle */
-.run .rail,.run .staff,.run .logw{display:none!important}
+.run .rail,.run .staff,.run .logw{display:none}
 .run-h{display:flex;align-items:center;gap:10px;border:0;background:none;cursor:pointer;text-align:left;color:var(--soft);width:100%;padding:1px 0 5px;font-size:12.5px}
 .run-h .lbl{flex:1;min-width:0;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;letter-spacing:.005em;transition:opacity .28s var(--soft-close),filter .28s var(--soft-close)}
 .run-h .lbl.swap{opacity:0;filter:blur(3px)}
@@ -135,7 +121,6 @@
 @keyframes drip{0%{transform:translateY(-8px) scaleY(1.7);opacity:0}25%{opacity:.9}82%{transform:translateY(13px) scaleY(1.25);opacity:.9}100%{transform:translateY(15px) scale(2.2,.35);opacity:0}}
 @keyframes jelly{0%{transform:scale(.15)}38%{transform:scale(1.4,.72)}58%{transform:scale(.88,1.14)}78%{transform:scale(1.06,.96)}100%{transform:scale(1)}}
 @keyframes swell{0%{background:transparent;box-shadow:inset 0 0 0 0 transparent}30%{background:var(--gold-wash);box-shadow:inset 1px 0 0 0 var(--gold)}70%{background:var(--gold-wash)}100%{background:transparent;box-shadow:inset 0 0 0 0 transparent}}
-.run .mrow .rd{margin:0 0 0 auto;font-size:11.5px}
 .run .mapw.show{display:block;animation:pour .75s var(--soft-close) both}
 @media (prefers-reduced-motion:reduce){
 .strm li.new::after{display:none}
@@ -164,11 +149,11 @@
 .vs button[aria-pressed="true"]{color:var(--ink);background:var(--panel);box-shadow:0 0 0 var(--rule-hair) var(--line-2)}
 .vs button:hover{color:var(--ink)}
 /* the map sits behind a toggle and pours open from it */
-.run .mrow{align-items:center;gap:14px;margin-top:8px;padding-top:7px;border-top:var(--rule-hair) solid var(--line);display:none!important}
 .run[data-view="log"] .mini{display:none}
 .run[data-view="map"] .flow,.run[data-view="map"] .cost,.run[data-view="map"] .ledw{display:none}
 .run .mini{margin:6px 0 2px;min-height:96px;animation:ink .5s var(--soft-close) both}
 .run .mini:empty::before{content:"The map fills in as desks are staffed.";display:block;padding:34px 0;text-align:center;font:italic 400 12px var(--f-display);color:var(--mute)}
+/* !important: a closed or off-screen surface rests; beats each unit's animation shorthand */
 .run[data-off] *,.run[data-off] *::before,.run[data-off] *::after{animation-play-state:paused!important}
 /* a denser, quieter log */
 .run .flow{position:relative;margin:6px 0 0;padding-left:16px}
@@ -189,7 +174,7 @@
 @media (max-width:560px){
 .run .rv{right:44px}
 .run.open .rv{position:static;margin:2px 0 6px 26px}
-.run.open .run-h .lbl{padding-right:0!important;white-space:normal}
+.run.open .run-h .lbl{padding-right:0;white-space:normal}
 }
 .strm .se::before{left:-9px}
 .strm .se.k-web::before{border-style:solid}
@@ -197,7 +182,7 @@
 .strm .sb.new::after{top:0;left:-13.75px}
 .strm .sb::before{content:"";position:absolute;top:50%;margin-top:3px;height:1px;background:var(--line-3);left:-12px;width:5px}
 /* nothing arrives before its parent */
-.strm .se.new::before{animation:mnb var(--sp-jelly-d) var(--sp-jelly) both .12s;animation-delay:.32s!important}
-.strm li.new>span,.strm li.new .sx{animation:ink .6s .12s var(--soft-close) both;animation-delay:.36s!important}
+.strm .se.new::before{animation:mnb var(--sp-jelly-d) var(--sp-jelly) both .12s;animation-delay:.32s}
+.strm li.new>span,.strm li.new .sx{animation:ink .6s .12s var(--soft-close) both;animation-delay:.36s}
 .run .rk{transition:opacity .3s ease}
 .run:hover .rk,.run.open .rk{opacity:0}

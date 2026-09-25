@@ -1,12 +1,12 @@
 /* the shared entrance: fade with a soft blur, soft close */
 @keyframes blurIn{from{opacity:.001;filter:blur(5px);transform:translateY(6px)}to{opacity:1;filter:none;transform:none}}
 .bi{animation:blurIn .9s var(--soft-close) both}
-@keyframes word{from{opacity:0}to{opacity:1}}
 .grain{position:relative;isolation:isolate}
 .grain::after{content:"";position:absolute;inset:0;pointer-events:none;background-image:var(--grain);background-size:150px;mix-blend-mode:soft-light;opacity:.6;-webkit-mask:var(--gmask) center/contain no-repeat;mask:var(--gmask) center/contain no-repeat}
 .app{display:flex;height:100%}
 /* scrollbars: thin, quiet, and never against the text */
 *{box-sizing:border-box;scrollbar-width:thin;scrollbar-color:var(--line-3) transparent}
+/* !important: the motion kill switch must beat every unit's own motion */
 html.calm *,html.calm *::before,html.calm *::after{animation:none!important;transition:none!important}
 ::selection{background:var(--sel);color:inherit}
 .ib{width:30px;height:30px;display:grid;place-items:center;border:0;background:transparent;border-radius:5px;cursor:pointer;color:var(--soft);transition:background var(--out) var(--soft-close),color var(--out) var(--soft-close);padding:0}

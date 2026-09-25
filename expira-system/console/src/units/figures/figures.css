@@ -1,5 +1,5 @@
 .pw{flex:1;min-width:0;position:relative}
-.pw:focus-within .phx{opacity:0!important;transition-duration:.12s}
+.pw:focus-within .phx{opacity:0;transition-duration:.12s}
 .pw:not(:focus-within) #prompt::placeholder{color:transparent}
 .pw #prompt{width:100%}
 .fig-h{display:flex;align-items:baseline;gap:10px;flex-wrap:wrap;margin-bottom:8px}
@@ -70,6 +70,7 @@
 @keyframes fgDraw{from{stroke-dashoffset:1}to{stroke-dashoffset:0}}
 @keyframes fgSweep{from{stroke-dasharray:0 100}}
 @media (prefers-reduced-motion:reduce){
+/* !important: a figure not yet poured is drawn at rest, above its entrance animations */
 .fig.pre *{transform:none!important;opacity:1!important;stroke-dasharray:none!important}
 }
 .fig .stk{transform-box:view-box}
@@ -98,8 +99,8 @@
 .fig svg.ch{max-width:820px}
 @media (max-width:560px){
 .fig:hover,.fig:focus-within{-webkit-mask-image:none;mask-image:none}
-.fig{overflow-x:auto;-webkit-mask-image:linear-gradient(90deg,#000 calc(100% - 28px),rgba(0,0,0,.25));mask-image:linear-gradient(90deg,#000 calc(100% - 28px),rgba(0,0,0,.25));overflow:visible!important}
+.fig{overflow-x:auto;-webkit-mask-image:linear-gradient(90deg,#000 calc(100% - 28px),rgba(0,0,0,.25));mask-image:linear-gradient(90deg,#000 calc(100% - 28px),rgba(0,0,0,.25));overflow:visible}
 .fig svg.ch{width:560px;max-width:none}
 }
 /* figures: charts set like a journal plate */
-.fig{padding:14px 0 0;border-top:var(--rule-medium) solid var(--ink);margin:4px 0 16px;-webkit-mask-image:none!important;mask-image:none!important}
+.fig{padding:14px 0 0;border-top:var(--rule-medium) solid var(--ink);margin:4px 0 16px;-webkit-mask-image:none;mask-image:none}

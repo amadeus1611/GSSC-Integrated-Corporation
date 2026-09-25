@@ -103,7 +103,6 @@
 .fu span{flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .fu svg{width:11px;height:11px;flex:none;color:var(--mute);transition:transform .35s var(--soft-close),color .3s}
 .fu:hover svg{transform:translate(1px,-1px);color:var(--ink)}
-@keyframes fuIn{0%{opacity:0;transform:translateY(-6px) scale(.6,.8);transform-origin:0 0;border-radius:14px}55%{opacity:1;transform:scale(1.015,.97);border-radius:6px}100%{opacity:1;transform:none;border-radius:4px}}
 .bot.bi .docc{animation:docIn .8s var(--soft-close) both;transform-origin:0 0}
 @keyframes docIn{0%{opacity:0;transform:translateY(-8px) scale(.4,.6);border-radius:18px}50%{opacity:1;transform:scale(1.01,.98);border-radius:9px}100%{transform:none}}
 .caret{display:inline-block;background:var(--gold);width:5px;height:5px;border-radius:50%;margin-left:4px;vertical-align:.12em;animation:caretJ 1.1s var(--soft-close) infinite}

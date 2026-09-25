@@ -25,12 +25,12 @@ button,input,textarea{font:inherit;color:inherit}
 /* the shared entrance: fade with a soft blur, soft close */
 @keyframes blurIn{from{opacity:.001;filter:blur(5px);transform:translateY(6px)}to{opacity:1;filter:none;transform:none}}
 .bi{animation:blurIn .9s var(--soft-close) both}
-@keyframes word{from{opacity:0}to{opacity:1}}
 .grain{position:relative;isolation:isolate}
 .grain::after{content:"";position:absolute;inset:0;pointer-events:none;background-image:var(--grain);background-size:150px;mix-blend-mode:soft-light;opacity:.6;-webkit-mask:var(--gmask) center/contain no-repeat;mask:var(--gmask) center/contain no-repeat}
 .app{display:flex;height:100%}
 /* scrollbars: thin, quiet, and never against the text */
 *{box-sizing:border-box;scrollbar-width:thin;scrollbar-color:var(--line-3) transparent}
+/* !important: the motion kill switch must beat every unit's own motion */
 html.calm *,html.calm *::before,html.calm *::after{animation:none!important;transition:none!important}
 ::selection{background:var(--sel);color:inherit}
 .ib{width:30px;height:30px;display:grid;place-items:center;border:0;background:transparent;border-radius:5px;cursor:pointer;color:var(--soft);transition:background var(--out) var(--soft-close),color var(--out) var(--soft-close);padding:0}
@@ -58,7 +58,7 @@ html.calm *,html.calm *::before,html.calm *::after{animation:none!important;tran
 .row:hover{background:var(--line);transition-duration:var(--in)}
 .row.on{background:var(--line-2)}
 .row.dragging{opacity:.4}
-.row .item{flex:1;min-width:0;background:transparent!important}
+.row .item{flex:1;min-width:0;background:transparent}
 .row .dots{position:absolute;right:4px;top:50%;transform:translateY(-50%);width:22px;height:22px;border:0;border-radius:4px;background:transparent;color:var(--mute);cursor:pointer;display:grid;place-items:center;opacity:0;transition:opacity .3s ease,background .3s ease,color .3s ease}
 .row:hover .dots,.row.on .dots,.row .dots:focus-visible,.row .dots[aria-expanded="true"]{opacity:1}
 .row .dots:hover,.row .dots[aria-expanded="true"]{background:var(--line-2);color:var(--ink)}
@@ -130,7 +130,6 @@ html.calm *,html.calm *::before,html.calm *::after{animation:none!important;tran
 @media (min-width:1100px){
 .app.dsp-open .main{margin-right:min(420px,100vw)}
 }
-.progress{position:absolute;left:0;top:0;height:var(--rule-medium);width:0;background:var(--gold);z-index:3;transition:width .3s linear;opacity:.7}
 #unfold{display:none}
 .app.folded #unfold{display:grid}
 .dsp-btn:hover{border-color:var(--line-3);color:var(--ink);transition-duration:var(--in)}
@@ -139,16 +138,12 @@ html.calm *,html.calm *::before,html.calm *::after{animation:none!important;tran
 .runpill[hidden]{display:none}
 .runpill i{width:5px;height:5px;border-radius:50%;background:var(--gold);animation:breathe 2s var(--release) infinite}
 .runpill .num{color:var(--soft);font-size:11px}
-.sig{display:flex;align-items:center;gap:7px;padding:0 6px}
-.sig i{width:5px;height:5px;border-radius:50%;background:var(--warn)}
-.sig.live i{background:var(--ok)}
 .scroll{flex:1;overflow-y:auto;padding:0 20px}
 .app:not(.has-chat) .scroll,.app:not(.has-chat) .dsp-btn{display:none}
 @media (max-width:760px){
 .scroll{padding-inline:16px}
 }
 /* quiet header, feathered edges */
-.sig,#sig{display:none!important}
 .dsp-btn{display:flex;align-items:center;cursor:pointer;gap:6px;height:24px;padding:0 9px 0 8px;border:var(--rule-hair) solid var(--line-2);border-radius:4px;background:none;font-size:11px;letter-spacing:.02em;color:var(--soft);transition:border-color .45s var(--soft-close),color .45s var(--soft-close),background .45s var(--soft-close)}
 .dsp-btn:hover,.dsp-btn[aria-expanded="true"],.dsp-open .dsp-btn{border-color:var(--line-3);color:var(--ink);background:var(--well)}
 .dsp-btn svg{width:12px;height:12px;flex:none}
@@ -159,7 +154,7 @@ html.calm *,html.calm *::before,html.calm *::after{animation:none!important;tran
 .runpill{display:flex;align-items:center;gap:8px;color:var(--ink);cursor:pointer;animation:blurIn .6s var(--soft-close) both;height:24px;padding:0 9px;border:var(--rule-hair) solid var(--line-2);border-radius:4px;background:none;font-size:11px}
 .fz,.fzx{--fs:0px;--fe:0px;transition:--fs .35s ease,--fe .35s ease}
 .fz{-webkit-mask-image:linear-gradient(to bottom,transparent 0,#000 var(--fs),#000 calc(100% - var(--fe)),transparent 100%);mask-image:linear-gradient(to bottom,transparent 0,#000 var(--fs),#000 calc(100% - var(--fe)),transparent 100%)}
-.fzx{-webkit-mask-image:linear-gradient(to right,transparent 0,#000 var(--fs),#000 calc(100% - var(--fe)),transparent 100%)!important;mask-image:linear-gradient(to right,transparent 0,#000 var(--fs),#000 calc(100% - var(--fe)),transparent 100%)!important}
+.fzx{-webkit-mask-image:linear-gradient(to right,transparent 0,#000 var(--fs),#000 calc(100% - var(--fe)),transparent 100%);mask-image:linear-gradient(to right,transparent 0,#000 var(--fs),#000 calc(100% - var(--fe)),transparent 100%)}
 .fz.f-s{--fs:22px}
 .fz.f-e{--fe:26px}
 .fzx.f-s{--fs:18px}
@@ -200,7 +195,7 @@ html.calm *,html.calm *::before,html.calm *::after{animation:none!important;tran
 @media (prefers-reduced-motion:reduce){
 #goo{display:none}
 }
-#ready{display:none!important}
+#ready{display:none}
 .hero .greet{margin-bottom:26px}
 #goo.gl{filter:none}
 .hero .mark-w{width:132px;margin-bottom:20px;animation:float 7s ease-in-out infinite;transition:transform 1.2s var(--sp-soft)}
@@ -223,20 +218,15 @@ html.calm *,html.calm *::before,html.calm *::after{animation:none!important;tran
 .hero .contents{width:min(880px,calc(100% - 32px));max-width:none}
 /* composer: one thin line that grows to seven */
 .dock{flex:none;padding:4px 20px calc(8px + env(safe-area-inset-bottom,0px))}
-.app:not(.has-chat) .dock{padding:0;width:100%;max-width:720px}
+.app:not(.has-chat) .dock{padding:0}
 .comp{max-width:720px;margin:0 auto;display:flex;align-items:flex-end;gap:4px;padding:4px 4px 4px 2px;background:var(--panel);border:var(--rule-hair) solid var(--line-3);border-radius:6px;box-shadow:var(--shadow);transition:border-color var(--out) var(--soft-close)}
 .comp:focus-within{border-color:color-mix(in srgb,var(--ink) 40%,transparent);transition-duration:var(--in)}
 #prompt{flex:1;min-width:0;display:block;border:0;background:transparent;resize:none;outline:none;padding:6px 10px;height:33px;min-height:33px;max-height:calc(21px * 7 + 12px);overflow-y:auto;font-size:14.5px;line-height:21px;font-weight:300}
 #prompt::placeholder{color:var(--mute)}
 .phx{position:absolute;left:10px;top:6px;right:8px;pointer-events:none;color:var(--mute);font-size:14.5px;line-height:21px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;transition:opacity .5s ease,transform .7s var(--soft-close),filter .5s ease}
 .phx.out{opacity:0;transform:translateY(-3px);filter:blur(2px)}
-.phx.gone{opacity:0!important;transition-duration:.12s}
+.phx.gone{opacity:0;transition-duration:.12s}
 .ctl{display:flex;align-items:center;gap:0;flex:none}
-.tg{display:flex;align-items:center;gap:6px;border:0;background:transparent;height:30px;padding:0 8px;border-radius:4px;cursor:pointer;font-size:11.5px;color:var(--mute);transition:background var(--out) var(--soft-close),color var(--out) var(--soft-close)}
-.tg:hover{background:var(--line);color:var(--ink);transition-duration:var(--in)}
-.tg i{width:5px;height:5px;border-radius:50%;border:var(--rule-medium) solid var(--mute);transition:background .3s ease,border-color .3s ease,transform .5s var(--soft-close)}
-.tg[aria-pressed="true"]{color:var(--text)}
-.tg[aria-pressed="true"] i{background:var(--gold);border-color:var(--gold);transform:scale(1.15)}
 .optb{display:flex;align-items:center;gap:7px;height:28px;border:var(--rule-hair) solid var(--line-2);background:transparent;border-radius:4px;padding:0 8px;margin-right:4px;cursor:pointer;font-size:11.5px;color:var(--soft);white-space:nowrap;transition:border-color var(--out) var(--soft-close),color var(--out) var(--soft-close),background var(--out) var(--soft-close)}
 .optb:hover,.optb[aria-expanded="true"]{border-color:var(--line-3);color:var(--ink);background:var(--line);transition-duration:var(--in)}
 .optb[aria-expanded="true"] svg{transform:rotate(180deg)}
@@ -251,7 +241,6 @@ html.calm *,html.calm *::before,html.calm *::after{animation:none!important;tran
 .send:disabled{opacity:.22;cursor:not-allowed;transform:none}
 .send svg{width:13px;height:13px}
 @media (max-width:560px){
-.tg span{display:none}
 .count{display:none}
 }
 .dock{position:relative}
@@ -297,7 +286,6 @@ html.calm *,html.calm *::before,html.calm *::after{animation:none!important;tran
 .ac .ax{opacity:1}
 }
 .ac.out{animation:acOut .32s var(--soft-close) both}
-@keyframes acIn{0%{opacity:0;transform:translateY(12px) scale(.16,.5);border-radius:18px}42%{opacity:1;transform:translateY(-1px) scale(1.03,.93);border-radius:10px}68%{transform:scale(.99,1.02)}100%{transform:none;border-radius:6px}}
 @keyframes acOut{to{opacity:0;transform:scale(.3,.7);filter:blur(2px)}}
 @keyframes fillup{from{clip-path:inset(100% 0 0 0 round 50% 50% 0 0)}60%{clip-path:inset(0 0 0 0 round 40% 40% 0 0/14% 14% 0 0)}to{clip-path:inset(0 0 0 0 round 0)}}
 @media (max-width:560px){
@@ -333,16 +321,13 @@ html.calm *,html.calm *::before,html.calm *::after{animation:none!important;tran
 .busy .cbar .spn{opacity:1;animation-play-state:running}
 @keyframes spin{to{transform:rotate(360deg)}}
 .dock,.comp,.cbar,.att,.qbar,.dbar{max-width:min(880px,100%)}
-.dock{margin-inline:auto;width:min(880px,calc(100% - 32px))!important;max-width:none!important;align-self:center}
+.dock{margin-inline:auto;width:min(880px,calc(100% - 32px));max-width:none;align-self:center}
 .spk{display:flex;align-items:center;gap:6px;height:24px;margin:0 10px;padding:0 8px;border:var(--rule-hair) solid var(--line-2);border-bottom:0;border-radius:6px 6px 0 0;background:var(--well);font-size:10.5px;color:var(--soft);cursor:pointer;transform-origin:50% 100%;transform:scaleX(calc(1 - var(--d)*.035));transition:color .25s,background .25s;animation:spkIn var(--sp-soft-d) var(--sp-soft) both;margin-right:44px}
 .comp,.cbar{width:100%}
 /* the send button sits on the text's centre line; model branding */
 .comp{align-items:flex-end}
 .comp .ctl{gap:0;height:33px;display:flex;align-items:center}
 .cbar .cst{white-space:nowrap;display:inline-flex;align-items:center;gap:7px;color:var(--soft)}
-.cbar .spark{width:11px;height:11px;margin-top:-2px;fill:var(--gold);transition:transform 1.2s var(--sp-soft)}
-.cbar .cst:hover .spark{transform:rotate(45deg) scale(1.08)}
-.busy .cbar .spark{animation:sparkP 2.4s ease-in-out infinite}
 @keyframes sparkP{0%,100%{opacity:1}50%{opacity:.45}}
 .cbar .mdl{font-size:11px;letter-spacing:.01em}
 .cbar .mdl b{font-weight:500;color:var(--ink)}
@@ -350,30 +335,16 @@ html.calm *,html.calm *::before,html.calm *::after{animation:none!important;tran
 .cbar .mode{font-size:9.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--gold);padding:1px 6px;border:var(--rule-hair) solid var(--line-2);border-radius:3px}
 .credit.legal{margin-top:14px;padding-top:10px;border-top:var(--rule-hair) solid var(--line-2)}
 /* working block: Claude's thinking row, set in EXPIRA type */
-.think{display:flex;flex-direction:column;max-width:520px}
-.think-h{display:flex;align-items:center;gap:10px;border:0;background:none;padding:2px 0 8px;cursor:pointer;text-align:left;font-size:12.5px;color:var(--soft)}
-.think-h .lbl{color:var(--text);transition:opacity .18s ease}
-.think-h .lbl.swap{opacity:0}
-.think.running .think-h .lbl{background:linear-gradient(90deg,var(--soft) 0 35%,var(--ink) 50%,var(--soft) 65% 100%);background-size:250% 100%;-webkit-background-clip:text;background-clip:text;color:transparent;animation:shim 2.6s linear infinite}
 @keyframes shim{from{background-position:120% 0}to{background-position:-120% 0}}
-.think-h .t{font-size:11px;color:var(--mute)}
 .chev{width:12px;height:12px;color:var(--mute);transition:transform var(--out) var(--soft-close)}
-.think.open .chev{transform:rotate(90deg)}
 /* the sheen: one hairline, one continuous glide, then it settles */
 .sheen{height:var(--rule-hair);background:var(--line-2);position:relative;overflow:hidden;margin-bottom:2px}
 .sheen::before{content:"";position:absolute;top:0;bottom:0;left:0;width:34%;background:linear-gradient(90deg,transparent,var(--head),transparent);transform:translateX(-100%);animation:sheen 2.4s cubic-bezier(.45,0,.55,1) infinite;opacity:1;transition:opacity .6s ease}
 @keyframes sheen{to{transform:translateX(300%)}}
 .sheen::after{content:"";position:absolute;inset:0;background:linear-gradient(90deg,transparent,color-mix(in srgb,var(--gold) 70%,transparent));transform:scaleX(0);transform-origin:left;transition:transform 1.4s var(--soft-close)}
-.think:not(.running) .sheen::before{opacity:0;animation-play-state:paused}
-.think.settled .sheen::after{transform:scaleX(1)}
-.think-b{display:grid;grid-template-rows:0fr;transition:grid-template-rows .8s var(--soft-close)}
-.think.open .think-b{grid-template-rows:1fr}
-.think-b>div{overflow:hidden}
 @keyframes evIn{from{opacity:0;transform:translateY(3px)}to{opacity:1;transform:none}}
-.think-b .rd{margin:6px 0 2px 14px;border:0;background:none;padding:0;cursor:pointer;font:italic 400 12px var(--f-display);color:var(--gold)}
 .glyph{width:17px;height:6px;flex:none}
 .glyph polygon{fill:var(--gold);opacity:.25}
-.think:not(.running) .glyph polygon{opacity:.85}
 @keyframes fct{0%,100%{opacity:.2}35%{opacity:1}}
 @media (prefers-reduced-motion:reduce){
 .sheen::before{display:none}
@@ -456,7 +427,7 @@ html.calm *,html.calm *::before,html.calm *::after{animation:none!important;tran
 .sb .vchip{display:inline-flex;align-items:center;gap:5px}
 .sb .vchip i{width:6px;height:6px;border-radius:50%}
 /* the thinking line: one live sentence, a stream beneath it that drips in, moments that swell and settle */
-.run .rail,.run .staff,.run .logw{display:none!important}
+.run .rail,.run .staff,.run .logw{display:none}
 .run-h{display:flex;align-items:center;gap:10px;border:0;background:none;cursor:pointer;text-align:left;color:var(--soft);width:100%;padding:1px 0 5px;font-size:12.5px}
 .run-h .lbl{flex:1;min-width:0;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;letter-spacing:.005em;transition:opacity .28s var(--soft-close),filter .28s var(--soft-close)}
 .run-h .lbl.swap{opacity:0;filter:blur(3px)}
@@ -486,7 +457,6 @@ html.calm *,html.calm *::before,html.calm *::after{animation:none!important;tran
 @keyframes drip{0%{transform:translateY(-8px) scaleY(1.7);opacity:0}25%{opacity:.9}82%{transform:translateY(13px) scaleY(1.25);opacity:.9}100%{transform:translateY(15px) scale(2.2,.35);opacity:0}}
 @keyframes jelly{0%{transform:scale(.15)}38%{transform:scale(1.4,.72)}58%{transform:scale(.88,1.14)}78%{transform:scale(1.06,.96)}100%{transform:scale(1)}}
 @keyframes swell{0%{background:transparent;box-shadow:inset 0 0 0 0 transparent}30%{background:var(--gold-wash);box-shadow:inset 1px 0 0 0 var(--gold)}70%{background:var(--gold-wash)}100%{background:transparent;box-shadow:inset 0 0 0 0 transparent}}
-.run .mrow .rd{margin:0 0 0 auto;font-size:11.5px}
 .run .mapw.show{display:block;animation:pour .75s var(--soft-close) both}
 @media (prefers-reduced-motion:reduce){
 .strm li.new::after{display:none}
@@ -515,11 +485,11 @@ html.calm *,html.calm *::before,html.calm *::after{animation:none!important;tran
 .vs button[aria-pressed="true"]{color:var(--ink);background:var(--panel);box-shadow:0 0 0 var(--rule-hair) var(--line-2)}
 .vs button:hover{color:var(--ink)}
 /* the map sits behind a toggle and pours open from it */
-.run .mrow{align-items:center;gap:14px;margin-top:8px;padding-top:7px;border-top:var(--rule-hair) solid var(--line);display:none!important}
 .run[data-view="log"] .mini{display:none}
 .run[data-view="map"] .flow,.run[data-view="map"] .cost,.run[data-view="map"] .ledw{display:none}
 .run .mini{margin:6px 0 2px;min-height:96px;animation:ink .5s var(--soft-close) both}
 .run .mini:empty::before{content:"The map fills in as desks are staffed.";display:block;padding:34px 0;text-align:center;font:italic 400 12px var(--f-display);color:var(--mute)}
+/* !important: a closed or off-screen surface rests; beats each unit's animation shorthand */
 .run[data-off] *,.run[data-off] *::before,.run[data-off] *::after{animation-play-state:paused!important}
 /* a denser, quieter log */
 .run .flow{position:relative;margin:6px 0 0;padding-left:16px}
@@ -540,7 +510,7 @@ html.calm *,html.calm *::before,html.calm *::after{animation:none!important;tran
 @media (max-width:560px){
 .run .rv{right:44px}
 .run.open .rv{position:static;margin:2px 0 6px 26px}
-.run.open .run-h .lbl{padding-right:0!important;white-space:normal}
+.run.open .run-h .lbl{padding-right:0;white-space:normal}
 }
 .strm .se::before{left:-9px}
 .strm .se.k-web::before{border-style:solid}
@@ -548,12 +518,12 @@ html.calm *,html.calm *::before,html.calm *::after{animation:none!important;tran
 .strm .sb.new::after{top:0;left:-13.75px}
 .strm .sb::before{content:"";position:absolute;top:50%;margin-top:3px;height:1px;background:var(--line-3);left:-12px;width:5px}
 /* nothing arrives before its parent */
-.strm .se.new::before{animation:mnb var(--sp-jelly-d) var(--sp-jelly) both .12s;animation-delay:.32s!important}
-.strm li.new>span,.strm li.new .sx{animation:ink .6s .12s var(--soft-close) both;animation-delay:.36s!important}
+.strm .se.new::before{animation:mnb var(--sp-jelly-d) var(--sp-jelly) both .12s;animation-delay:.32s}
+.strm li.new>span,.strm li.new .sx{animation:ink .6s .12s var(--soft-close) both;animation-delay:.36s}
 .run .rk{transition:opacity .3s ease}
 .run:hover .rk,.run.open .rk{opacity:0}
 .pw{flex:1;min-width:0;position:relative}
-.pw:focus-within .phx{opacity:0!important;transition-duration:.12s}
+.pw:focus-within .phx{opacity:0;transition-duration:.12s}
 .pw:not(:focus-within) #prompt::placeholder{color:transparent}
 .pw #prompt{width:100%}
 .fig-h{display:flex;align-items:baseline;gap:10px;flex-wrap:wrap;margin-bottom:8px}
@@ -624,6 +594,7 @@ html.calm *,html.calm *::before,html.calm *::after{animation:none!important;tran
 @keyframes fgDraw{from{stroke-dashoffset:1}to{stroke-dashoffset:0}}
 @keyframes fgSweep{from{stroke-dasharray:0 100}}
 @media (prefers-reduced-motion:reduce){
+/* !important: a figure not yet poured is drawn at rest, above its entrance animations */
 .fig.pre *{transform:none!important;opacity:1!important;stroke-dasharray:none!important}
 }
 .fig .stk{transform-box:view-box}
@@ -652,11 +623,11 @@ html.calm *,html.calm *::before,html.calm *::after{animation:none!important;tran
 .fig svg.ch{max-width:820px}
 @media (max-width:560px){
 .fig:hover,.fig:focus-within{-webkit-mask-image:none;mask-image:none}
-.fig{overflow-x:auto;-webkit-mask-image:linear-gradient(90deg,#000 calc(100% - 28px),rgba(0,0,0,.25));mask-image:linear-gradient(90deg,#000 calc(100% - 28px),rgba(0,0,0,.25));overflow:visible!important}
+.fig{overflow-x:auto;-webkit-mask-image:linear-gradient(90deg,#000 calc(100% - 28px),rgba(0,0,0,.25));mask-image:linear-gradient(90deg,#000 calc(100% - 28px),rgba(0,0,0,.25));overflow:visible}
 .fig svg.ch{width:560px;max-width:none}
 }
 /* figures: charts set like a journal plate */
-.fig{padding:14px 0 0;border-top:var(--rule-medium) solid var(--ink);margin:4px 0 16px;-webkit-mask-image:none!important;mask-image:none!important}
+.fig{padding:14px 0 0;border-top:var(--rule-medium) solid var(--ink);margin:4px 0 16px;-webkit-mask-image:none;mask-image:none}
 .exh-h{display:flex;align-items:center;gap:10px;margin-bottom:10px;width:100%;border:0;background:none;padding:0;cursor:pointer;text-align:left}
 .exh-h .cnt{font-size:10.5px;color:var(--mute)}
 .exh-h .ln{flex:1;height:var(--rule-hair);background:var(--line-3)}
@@ -705,7 +676,6 @@ html.calm *,html.calm *::before,html.calm *::after{animation:none!important;tran
 .stat{padding:0 0 14px}
 .stat+.stat{padding-left:14px;border-left:var(--rule-hair) solid var(--line-2)}
 .stat .v{font:400 16px/1.2 var(--f-display);color:var(--ink);display:block;margin-bottom:2px;font-variant-numeric:tabular-nums}
-.spark{display:block;width:100%;height:14px;margin-top:6px}
 .dsp h3{margin:0 0 12px;display:flex;align-items:center;gap:10px}
 .dsp h3::after{content:"";flex:1;height:var(--rule-hair);background:var(--line-2)}
 .desk{display:grid;grid-template-columns:24px 1fr;gap:0 8px;padding:0 0 12px;margin-bottom:12px;border-bottom:var(--rule-hair) solid var(--line);animation:open .9s var(--soft-close) both}
@@ -729,10 +699,6 @@ html.calm *,html.calm *::before,html.calm *::after{animation:none!important;tran
 .desk .mt .rd{margin-left:auto;border:0;background:none;padding:0;cursor:pointer;font:italic 400 12px var(--f-display);color:var(--gold)}
 .notes{grid-column:2;margin:10px 0 0;padding:0 0 0 12px;border-left:var(--rule-hair) solid var(--gold);font-size:12.5px;line-height:1.65;color:var(--soft);white-space:pre-wrap;word-break:break-word;max-height:0;overflow:hidden;opacity:0;transition:max-height .9s var(--soft-close),opacity .6s var(--soft-close)}
 .desk.show .notes{max-height:260px;overflow:auto;opacity:1}
-.chron{list-style:none;margin:0 0 22px;padding:0}
-.chron li{animation:evIn .5s var(--soft-close) both;display:grid;grid-template-columns:62px 1fr;gap:12px;padding:6px 0;font-size:12.5px;color:var(--text)}
-.chron .ts{font-size:10.5px;color:var(--mute);text-align:right;padding-top:2px;border-right:var(--rule-hair) solid var(--line-2);padding-right:12px}
-.chron .ph{font-size:9.5px;letter-spacing:var(--tracked-tight);text-transform:uppercase;color:var(--gold);margin-right:8px}
 .pull{margin:4px 0 20px;padding:12px 0;border-top:var(--rule-medium) solid var(--ink);border-bottom:var(--rule-hair) solid var(--line-2);font:italic 400 14.5px/1.5 var(--f-display);color:var(--ink);text-wrap:balance}
 .late{animation:evIn .7s var(--soft-close) both}
 .plate-h{display:flex;align-items:center;gap:12px;margin-bottom:6px;font-size:10px;letter-spacing:var(--tracked-tight);text-transform:uppercase;color:var(--mute)}
@@ -752,16 +718,13 @@ html.calm *,html.calm *::before,html.calm *::after{animation:none!important;tran
 }
 .desk .hd .fc{font:italic 400 12px var(--f-display);color:var(--soft)}
 .olog{list-style:none;margin:0;padding:0;max-height:260px;overflow:auto;padding-right:12px;scrollbar-gutter:stable}
-.tx-s .ans{font-size:13px;line-height:1.7}
-.tx-s .you{font-size:13px}
-.tx-l .ans{font-size:15.5px;line-height:1.75}
-.tx-l .you{font-size:15px}
 .stats3{display:grid;grid-template-columns:repeat(3,1fr);margin:0 0 6px;border-top:var(--rule-medium) solid var(--ink)}
 .stats3 div{padding:12px 0 14px;display:flex;flex-direction:column;gap:3px}
 .stats3 div+div{padding-left:16px;border-left:var(--rule-hair) solid var(--line-2)}
 .stats3 b{font:400 22px var(--f-display);color:var(--ink);font-weight:400}
 .notes,.olog,.dsp h2{-webkit-user-select:text;user-select:text}
 .stats.four{grid-template-columns:repeat(4,1fr)}
+/* !important: a closed or off-screen surface rests; beats each unit's animation shorthand */
 .dsp:not(.open) *,.dsp:not(.open) *::before,.dsp:not(.open) *::after{animation-play-state:paused!important}
 .sec{margin-top:6px}
 .ev{list-style:none;margin:10px 0 4px;padding:0 0 0 14px;border-left:var(--rule-hair) solid var(--line-2);display:flex;flex-direction:column;gap:5px}
@@ -889,7 +852,6 @@ html.calm *,html.calm *::before,html.calm *::after{animation:none!important;tran
 .fu span{flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .fu svg{width:11px;height:11px;flex:none;color:var(--mute);transition:transform .35s var(--soft-close),color .3s}
 .fu:hover svg{transform:translate(1px,-1px);color:var(--ink)}
-@keyframes fuIn{0%{opacity:0;transform:translateY(-6px) scale(.6,.8);transform-origin:0 0;border-radius:14px}55%{opacity:1;transform:scale(1.015,.97);border-radius:6px}100%{opacity:1;transform:none;border-radius:4px}}
 .bot.bi .docc{animation:docIn .8s var(--soft-close) both;transform-origin:0 0}
 @keyframes docIn{0%{opacity:0;transform:translateY(-8px) scale(.4,.6);border-radius:18px}50%{opacity:1;transform:scale(1.01,.98);border-radius:9px}100%{transform:none}}
 .caret{display:inline-block;background:var(--gold);width:5px;height:5px;border-radius:50%;margin-left:4px;vertical-align:.12em;animation:caretJ 1.1s var(--soft-close) infinite}
@@ -1023,6 +985,7 @@ html.calm *,html.calm *::before,html.calm *::after{animation:none!important;tran
 .fsmap{margin:0;padding:0;overflow:auto;min-height:0}
 .fsmap .mvb{padding:12px 16px 4px;margin:0}
 .mfs-l{border-left:var(--rule-hair) solid var(--line-2);overflow:auto;padding:16px 18px;min-height:0}
+/* !important: a closed or off-screen surface rests; beats each unit's animation shorthand */
 .mfs:not(.open) *{animation-play-state:paused!important}
 @media (max-width:860px){
 .mfs{inset:8px}
@@ -1032,7 +995,7 @@ html.calm *,html.calm *::before,html.calm *::after{animation:none!important;tran
 .field .k-doc .core{fill:var(--n-hollow);stroke:var(--gold);stroke-width:1.8}
 .map .k-doc .bx{stroke:var(--gold)}
 .mvx{flex:none;width:24px;height:24px;border-radius:5px;margin-left:4px}
-.mvx svg{width:12px!important;height:12px!important;display:block}
+.ib.mvx svg{width:12px;height:12px;display:block}
 .mapt{display:inline-flex;gap:6px;align-items:center;border:0;background:none;padding:0;cursor:pointer;font-size:9.5px;letter-spacing:.16em;text-transform:uppercase;color:var(--soft);transition:color .3s}
 .mapt:hover,.mapt[aria-expanded="true"]{color:var(--ink)}
 .mapt[aria-expanded="true"] svg{color:var(--gold)}
@@ -1083,13 +1046,17 @@ html.calm *,html.calm *::before,html.calm *::after{animation:none!important;tran
 .mini .md.s-wait{opacity:.6}
 .field .fn text{transition:opacity .3s ease .3s}
 .field .fn.unborn text,.field .fn.young text{opacity:0;transition:none}
+/* !important: order is truth; a hidden edge stays hidden while its flow loop runs */
 .map .eg:not(.drawn)~.fl{opacity:0!important}
 .field .ln,.field .lf{transition:opacity .35s ease}
+/* !important: order is truth; a hidden edge stays hidden while its flow loop runs */
 .field .ln.hid,.field .lf.hid{opacity:0!important}
 .mini .me.ne{stroke-dasharray:1;stroke-dashoffset:1;animation:fgDraw .5s cubic-bezier(.3,.6,.2,1) .34s forwards}
 .mini .me.dep.ne{stroke-dasharray:none;stroke-dashoffset:0;opacity:0;animation:ink .4s .5s forwards}
 .mini .mn.nb .halo{animation:mnb var(--sp-jelly-d) var(--sp-jelly) both,halo 1.2s ease-in-out .6s infinite}
+/* !important: holds the v39 CSS entrance off while the JS pour runs (replaced in Phase 3.3) */
 .mfs,.mfs.open{filter:none!important}
+/* !important: holds the v39 CSS entrance off while the JS pour runs (replaced in Phase 3.3) */
 #mfs.open{transition-duration:.18s!important;transition-delay:0s!important}
 .mnsc{position:absolute;left:0;right:0;top:0;height:34px;pointer-events:none;z-index:3;background:linear-gradient(180deg,transparent,color-mix(in srgb,var(--gold) 16%,transparent) 55%,transparent);border-radius:inherit}
 .mnsc.up{background:linear-gradient(0deg,transparent,color-mix(in srgb,var(--gold) 16%,transparent) 55%,transparent)}
@@ -1115,7 +1082,6 @@ html.calm *,html.calm *::before,html.calm *::after{animation:none!important;tran
 .seg{display:grid;grid-template-columns:repeat(3,1fr);gap:2px;margin:2px 4px 4px;padding:2px;border-radius:6px;background:var(--well);border:var(--rule-hair) solid var(--line-2)}
 .menu .seg button{flex-direction:column;justify-content:center;gap:4px;padding:8px 4px;font-size:11px;color:var(--soft);border-radius:4px;text-align:center}
 .menu .seg button svg{width:15px;height:15px}
-.menu.up-left{transform-origin:0 100%}
 .top{height:50px;flex:none;display:flex;align-items:center;gap:10px;padding:0 16px}
 .top .r{margin-left:auto;display:flex;align-items:center;gap:6px}
 .menu.open{opacity:1;visibility:visible;transform:none;filter:none;pointer-events:auto;transition-delay:0s}
@@ -1160,7 +1126,7 @@ html.calm *,html.calm *::before,html.calm *::after{animation:none!important;tran
 .seg2>button,.menu .seg>button{position:relative;z-index:1}
 .merc{position:absolute;z-index:0;border-radius:3px;background:var(--panel);box-shadow:0 1px 2px rgba(0,0,0,.1);pointer-events:none;opacity:0}
 .moving>.merc{opacity:1}
-.moving>button[aria-checked="true"]{background:transparent!important;box-shadow:none!important}
+.moving>button[aria-checked="true"]{background:transparent;box-shadow:none}
 .menu .seg .merc{border-radius:4px}
 /* claim cards, open threads, documents that drip in */
 .cpop{position:fixed;z-index:88;width:300px;padding:9px 11px 8px;background:var(--panel);border:var(--rule-hair) solid var(--line-3);border-radius:6px;box-shadow:var(--shadow);pointer-events:auto}
@@ -1181,8 +1147,10 @@ html.calm *,html.calm *::before,html.calm *::after{animation:none!important;tran
 .cpop .cs span{font-size:10.5px;color:var(--soft);border:var(--rule-hair) solid var(--line-2);border-radius:3px;padding:0 5px}
 .cpop .cs em{font:italic 400 11.5px/1.45 var(--f-display);color:var(--soft)}
 .cpop .cx{display:block;font:italic 400 11px var(--f-display);color:var(--gold)}
-.moving>[aria-selected="true"]{background:transparent!important}
+.moving>[aria-selected="true"]{background:transparent}
+/* !important: holds the v39 CSS entrance off while the JS pour runs (replaced in Phase 3.3) */
 .menu,.menu.open{filter:none!important}
+/* !important: holds the v39 CSS entrance off while the JS pour runs (replaced in Phase 3.3) */
 .menu{position:fixed;left:0;top:0;z-index:85;width:268px;background:var(--panel);border:var(--rule-hair) solid var(--line-3);border-radius:8px;box-shadow:var(--shadow);padding:6px;opacity:0;visibility:hidden;transform:translateY(6px) scale(.985);filter:blur(4px);pointer-events:none;transform-origin:100% 100%;transition:opacity .35s var(--soft-close),transform .7s var(--soft-close),filter .5s var(--soft-close),visibility 0s .7s;transition-property:opacity,transform,visibility,box-shadow!important}
 .chov{width:280px;opacity:0;transform:translateX(-4px);transition:opacity .22s ease,transform .45s var(--sp-soft);pointer-events:none}
 .chov.in{opacity:1;transform:none}
@@ -1191,6 +1159,7 @@ html.calm *,html.calm *::before,html.calm *::after{animation:none!important;tran
 .chov::after{display:none}
 .menu.opt{transform-origin:0 100%}
 /* menus pour: meniscus light (own rules) */
+/* !important: holds the v39 CSS entrance off while the JS pour runs (replaced in Phase 3.3) */
 .menu.open{transition-duration:.18s!important;transition-delay:0s!important}
 .selbar{position:fixed;left:0;top:0;z-index:96;display:flex;align-items:center;gap:1px;padding:3px;border-radius:7px;background:var(--ink);color:var(--bg);box-shadow:0 10px 30px -10px rgba(0,0,0,.45);opacity:0;visibility:hidden;transform:translateY(4px) scale(.98);filter:blur(2px);transition:opacity .2s ease,transform .45s var(--soft-close),filter .3s ease,visibility 0s linear .2s;pointer-events:none}
 .selbar.open{opacity:1;visibility:visible;transform:none;filter:none;pointer-events:auto;transition-delay:0s}
@@ -1265,12 +1234,15 @@ html.calm *,html.calm *::before,html.calm *::after{animation:none!important;tran
 .dpn span{letter-spacing:.14em;text-transform:uppercase;color:var(--mute);margin-left:4px;transition:color .3s;font-size:8.5px}
 /* cards in cards, a quieter composer, reversible hovers, smooth shadows */
 .docc .ac{display:flex;flex-wrap:wrap;gap:6px;width:auto;height:auto;padding:0;margin:0;border:0;background:none;box-shadow:none;animation:none;transform:none}
+/* !important: holds the v39 CSS entrance off while the JS pour runs (replaced in Phase 3.3) */
 .docv,.docv.open{filter:none!important}
+/* !important: holds the v39 CSS entrance off while the JS pour runs (replaced in Phase 3.3) */
 #docv.open{transition-duration:.18s!important;transition-delay:0s!important}
 .grp{padding:12px 8px 4px}
 /* the settings window */
 .stg{position:fixed;left:50%;top:50%;z-index:72;width:min(840px,calc(100vw - 32px));height:min(620px,calc(100vh - 48px));display:grid;grid-template-columns:200px minmax(0,1fr);background:var(--panel);border:var(--rule-hair) solid var(--line-3);border-radius:10px;box-shadow:0 40px 90px -40px rgba(0,0,0,.5),var(--shadow);overflow:hidden;opacity:0;visibility:hidden;transform:translate(-50%,-48.5%) scale(.985);filter:blur(4px);transition:opacity .45s var(--soft-close),transform .9s var(--soft-close),filter .6s var(--soft-close),visibility 0s linear .45s}
 .stg.open{opacity:1;visibility:visible;transform:translate(-50%,-50%);filter:none;transition-delay:0s}
+/* !important: a closed or off-screen surface rests; beats each unit's animation shorthand */
 .stg:not(.open) *{animation-play-state:paused!important}
 .stg-n{background:var(--side);border-right:var(--rule-hair) solid var(--line-2);padding:22px 10px 16px;display:flex;flex-direction:column;min-height:0}
 .stg-n h2{font:400 18px var(--f-display);color:var(--ink);margin:0 8px 18px}
@@ -1391,15 +1363,18 @@ html.calm *,html.calm *::before,html.calm *::after{animation:none!important;tran
 .rdx{width:20px;height:20px;display:grid;place-items:center;border:var(--rule-hair) solid var(--line-2);border-radius:4px;background:none;color:var(--mute);cursor:pointer;padding:0;transition:color .3s,border-color .3s}
 .rdx:hover{color:var(--gold);border-color:var(--line-3)}
 .rdx svg{width:10px;height:10px}
+/* !important: the motion kill switch must beat every unit's own motion */
 html.tnone *,html.tnone *::before,html.tnone *::after{transition:none!important}
-html.theming,html.theming *,html.theming *::before,html.theming *::after{transition:none!important}
+/* !important: holds the v39 CSS entrance off while the JS pour runs (replaced in Phase 3.3) */
 .stg,.stg.open,#setMenu,#setMenu.open{filter:none!important}
+/* !important: holds the v39 CSS entrance off while the JS pour runs (replaced in Phase 3.3) */
 .stg,#setMenu{transition-property:opacity,transform,visibility,box-shadow!important}
 @media (max-width:560px){
 .chs{overflow-x:auto;scrollbar-width:none}
 .chs::-webkit-scrollbar{display:none}
 }
 .chs{position:relative}
+/* !important: holds the v39 CSS entrance off while the JS pour runs (replaced in Phase 3.3) */
 #setMenu.open{transition-duration:.18s!important;transition-delay:0s!important}
 /* settings nav indicator (own rules) */
 .stg-n nav{position:relative}
@@ -1447,9 +1422,9 @@ html.theming,html.theming *,html.theming *::before,html.theming *::after{transit
 @media (max-width:760px){
 .side{position:fixed;inset:0 auto 0 0;z-index:60;box-shadow:var(--shadow)}
 .app.folded .side{margin-left:0;transform:translateX(-102%)}
-.hide-sm{display:none}
 }
 @media (prefers-reduced-motion:reduce){
+/* !important: the motion kill switch must beat every unit's own motion */
 *,*::before,*::after{animation:none!important;transition:none!important}
 }
 /* toasts only answer the viewer's own library actions, and sit with the library, never over the chat */
@@ -1460,7 +1435,9 @@ html.theming,html.theming *,html.theming *::before,html.theming *::after{transit
 .lbx[hidden]{display:none}
 .lbx img{min-width:120px;max-width:min(92vw,1100px);max-height:80vh;border-radius:4px;box-shadow:var(--shadow);transform-origin:center}
 .lbx p{margin:0;font-size:10.5px;letter-spacing:.04em;color:var(--soft)}
+/* !important: holds the v39 CSS entrance off while the JS pour runs (replaced in Phase 3.3) */
 .pal,.pal.open{filter:none!important}
+/* !important: holds the v39 CSS entrance off while the JS pour runs (replaced in Phase 3.3) */
 .pal{position:fixed;left:50%;top:16vh;z-index:71;width:min(540px,calc(100vw - 32px));background:var(--panel);border:var(--rule-hair) solid var(--line-3);border-radius:8px;box-shadow:var(--shadow);transform:translate(-50%,-6px) scale(.985);opacity:0;filter:blur(5px);pointer-events:none;transition:transform .9s var(--soft-close),opacity .5s var(--soft-close),filter .9s var(--soft-close);transition-property:opacity,transform,visibility,box-shadow!important}
 </style>
 
@@ -1484,7 +1461,6 @@ html.theming,html.theming *,html.theming *::before,html.theming *::after{transit
       <span class="crumb" id="crumb"></span><button class="ttl" id="ttl" data-tip="Rename  F2"></button>
       <div class="r">
         <button class="runpill" id="runPill" hidden><i></i><span id="runT">Working</span><span class="num" id="runE">00:00</span></button><button class="dsp-btn" id="dspBtn" data-tip="The Dispatch  ⌘L"><i aria-hidden="true"></i><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.1" aria-hidden="true"><rect x="1.5" y="2.5" width="13" height="11" rx="1.5"/><path class="pn" d="M10 2.5v11"/></svg><span>Dispatch</span></button>
-        <span class="sig capt" id="sig"><i></i><span id="sigT">Linking</span></span>
       </div>
     </header>
 
@@ -1803,7 +1779,6 @@ function summary_(w){const n=(w.steps||[]).length,p=(w.map&&w.map.pages||[]).len
 function summary(w){const t=ledgerStats(w.ledger);return (w.ms?"Worked for "+fmt(w.ms)+" · ":"")+summary_(w)+(t.n?` · ${t.g}/${t.n} grounded`:"")}
 const tokLine=w=>{const t=w.tok||(w.steps||[]).reduce((a,s)=>a+tok(s.out),0);return t?ft(t)+" tokens":""};
 const chipHTML=(r,n)=>`<span class="chip" data-r="${r}">${ROLE[r]||r}<b>${n>1?"×"+n:""}</b></span>`;
-function staffHTML(S){const g={};(S||[]).forEach(s=>g[s.role]=(g[s.role]||0)+1);return Object.entries(g).map(([r,n])=>chipHTML(r,n)).join("")}
 const PHN={plan:"Deliberate",desks:"Desks",review:"Verify",answer:"Answer",audit:"Audit",doc:"Document",exhibits:"Exhibits",firewall:"Firewall"};
 function railHTML(w,live,o={}){let keys,st={};
  if(live)keys=(o.direct?["answer",...(o.doc?["doc"]:[]),"exhibits"]:["plan","desks","review","answer","audit","doc","exhibits"]).concat(o.safe?["firewall"]:[]);
@@ -1852,7 +1827,6 @@ function runHTML(w,k,live,o={}){const M=w.map||{},th=M.thinking||[],n=(w.feed||[
  </div></div><p class="rnote" hidden></p></div>`}
 function splitQuote(c){const m=String(c).match(/^((?:> ?.*(?:\n|$))+)\n*([\s\S]*)$/);return m?[m[1].replace(/^> ?/gm,"").trim(),m[2]]:["",String(c)]}
 function youHTML(t,k){const [qt,body]=splitQuote(t.content);return `<div class="yw bi" data-k="${k}"><div class="you">${(t.imgs||[]).length?`<span class="yim">${t.imgs.map((m,i)=>`<button type="button" class="yi" data-lbx="${i}" aria-label="Open ${esc(m.name)}"><img alt="" src="${m.thumb}"></button>`).join("")}</span>`:""}${qt?`<span class="yq">${esc(qt)}</span>`:""}${esc(body)}</div><span class="yacts"><button class="ab" data-ycopy>Copy</button><button class="ab" data-yedit>Edit</button></span></div>`}
-function youHTML_old(t){return `<div class="you bi">${esc(t.content)}</div>`}
 const acts=k=>`<span class="acts"><button class="ab" data-copy>Copy</button><button class="ab" data-regen>Retry</button><button class="ab" data-read="${k}">Dispatch</button></span>`;
 const BYLINE=`${MARK}<span class="who">EXPIRA</span>`;
 function inThis(html){const d=document.createElement("div");d.innerHTML=html;const hs=[...d.querySelectorAll("h3")];if(hs.length<3)return "";return `<nav class="inthis"><span class="cap">In this answer</span>${hs.map((x,i)=>`<button data-sec="${i}" style="animation-delay:${i*.05}s"><b>${ROMAN[i]||i+1}</b>${esc(x.textContent)}</button>`).join("")}</nav>`}
@@ -1877,11 +1851,11 @@ const GOO=(()=>{let cv=null,tm=0,t0=0,gl=null,pr=null,uB,uC,uR,cpu=null,rgb=[.66
  function loop(){tm=setTimeout(loop,gl?42:90);if(document.hidden)return;if(nC++%60===0)colour();const s=(performance.now()-t0)/1000;gl?frameGL(s):frameCPU(s)}
  return{recolor(){nC=0},run(on){if(!cv){cv=document.getElementById("goo");if(!cv)return;if(!initGL()){cv.width=100;cv.height=60}}if(on&&!reduce&&!tm){t0=performance.now()-4e4;nC=0;loop()}else if((!on||reduce)&&tm){clearTimeout(tm);tm=0}}}})();
 function open(c){GOO.run(!c);setTimeout(()=>armFigs(),60);if(c!==cur&&$("#att"))attClear();window.__selHide&&window.__selHide();cur=c;app.classList.toggle("has-chat",!!c);GRAIN.run(!c&&PREF.grain);
- closeSheet();if(c){crumb();const la=c.turns.map(t=>t.role).lastIndexOf("assistant");$("#thread").innerHTML=c.turns.map((t,k)=>t.role==="user"?youHTML(t,k):botHTML(t,k,k===la)).join("");$("#main").append($("#dock"));FM.forEach(m=>{if(!m.host.isConnected)m.kill()});mountMaps();mountDocs();stick=true;requestAnimationFrame(()=>{sc.scrollTop=1e9;prog()})}
+ closeSheet();if(c){crumb();const la=c.turns.map(t=>t.role).lastIndexOf("assistant");$("#thread").innerHTML=c.turns.map((t,k)=>t.role==="user"?youHTML(t,k):botHTML(t,k,k===la)).join("");$("#main").append($("#dock"));FM.forEach(m=>{if(!m.host.isConnected)m.kill()});mountDocs();stick=true;requestAnimationFrame(()=>{sc.scrollTop=1e9;prog()})}
  else{$("#heroDock").append($("#dock"));$("#thread").innerHTML="";$("#crumb").textContent="";showDsp(false)}
  renderRecents()}
 document.addEventListener("click",e=>{
- const rh=e.target.closest(".run-h");if(rh){const t=rh.closest(".run");if(t.dataset.view==="map")requestAnimationFrame(()=>runView(t,"map"));t.classList.add("pinned");t.classList.toggle("open");rh.setAttribute("aria-expanded",t.classList.contains("open"));if(t.classList.contains("open"))mountMaps();return}
+ const rh=e.target.closest(".run-h");if(rh){const t=rh.closest(".run");if(t.dataset.view==="map")requestAnimationFrame(()=>runView(t,"map"));t.classList.add("pinned");t.classList.toggle("open");rh.setAttribute("aria-expanded",t.classList.contains("open"));if(t.classList.contains("open"))return}
  const lt=e.target.closest(".logt");if(lt){lt.closest(".logw").classList.toggle("open");return}
  const shb=e.target.closest("[data-sheet]");if(shb){openSheet($("#sheet")._w,shb.dataset.sheet,shb);return}
  const dso=e.target.closest("[data-docopen-sheet]");if(dso){const w=$("#sheet")._w;if(w&&w.doc)openDoc(w.doc);return}
@@ -2076,8 +2050,6 @@ $("#setMenu").addEventListener("input",e=>{const n=e.target.closest("[data-name]
 $("#setMenu").addEventListener("keydown",e=>{const m=$("#setMenu");
  if(e.target.getAttribute("role")==="tab"&&(e.key==="ArrowDown"||e.key==="ArrowUp"||e.key==="ArrowRight"||e.key==="ArrowLeft")){const T=[...m.querySelectorAll("[role=tab]")],i=T.indexOf(e.target),n=T[(i+(e.key==="ArrowDown"||e.key==="ArrowRight"?1:-1)+T.length)%T.length];e.preventDefault();n.focus();stab(n.dataset.tab);return}
  if(e.key==="Tab"){const F=[...m.querySelectorAll('button:not([disabled]),input,[tabindex="0"]')].filter(x=>x.offsetParent);if(!F.length)return;const a=F[0],z=F[F.length-1];if(e.shiftKey&&document.activeElement===a){e.preventDefault();z.focus()}else if(!e.shiftKey&&document.activeElement===z){e.preventDefault();a.focus()}}});
-function archivedMenu(){const A=chats.filter(c=>c.archived);ctxBtn=$("#me");ctx.innerHTML=`<div class="mh cap">Archived chats</div>${A.map(c=>`<button data-arch="${esc(c.id)}"><span class="t">${esc(c.title)}<small>Restore</small></span></button>`).join("")||`<div class="mh plain" style="color:var(--mute)">Nothing archived.</div>`}`;delete ctx.dataset.id;delete ctx.dataset.fid;placeMenu(ctx,$("#me"),224)}
-document.addEventListener("click",e=>{const r=e.target.closest("[data-arch]");if(!r)return;const c=chats.find(x=>x.id===r.dataset.arch);c.archived=false;save();renderRecents();closeCtx();toast("Restored")});
 /* options: desks, depth, client-safe, web; remembered per viewer */
 const OPT=Object.assign({desks:"auto",depth:"standard",safe:true,web:true,fresh:"12"},(()=>{try{return JSON.parse(localStorage.getItem("expira.opt")||"{}")}catch(e){return {}}})());
 const saveOpt=()=>{try{localStorage.setItem("expira.opt",JSON.stringify(OPT))}catch(e){}};
@@ -2442,7 +2414,7 @@ function closeFS(){const o=$("#mfs");if(!o.classList.contains("open"))return;o.c
 $("#mfsX").onclick=closeFS;
 document.addEventListener("click",e=>{const b=e.target.closest("[data-mfs]");if(b)mapFS(b)});
 document.addEventListener("click",e=>{const f=e.target.closest(".fbtn");if(f){const ol=f.closest(".strm");ol.classList.add("all");ol.querySelectorAll(".old").forEach(x=>x.classList.remove("old"));f.parentElement.remove();return}
- const m=e.target.closest(".mapt");if(m){const r=m.closest(".run"),hs=r.querySelector(".mapw"),on=!hs.classList.contains("show");hs.classList.toggle("show",on);m.setAttribute("aria-expanded",on);if(on){if(!hs.children.length)mountMaps();requestAnimationFrame(()=>FM.forEach(x=>x.host===hs&&x.sync&&x.sync()))}}});
+ const m=e.target.closest(".mapt");if(m){const r=m.closest(".run"),hs=r.querySelector(".mapw"),on=!hs.classList.contains("show");hs.classList.toggle("show",on);m.setAttribute("aria-expanded",on);if(on){requestAnimationFrame(()=>FM.forEach(x=>x.host===hs&&x.sync&&x.sync()))}}});
 document.addEventListener("click",e=>{const vb=e.target.closest(".vs [data-view]");if(vb){e.stopPropagation();const r=vb.closest(".run");if(!r.classList.contains("open")){r.classList.add("open","pinned");r.querySelector(".run-h").setAttribute("aria-expanded","true")}runView(r,vb.dataset.view,true);return}
  const mn=e.target.closest(".mini .mn");if(mn){const b=mn.closest(".bot"),w=b&&(b._work||cur?.turns[+b.dataset.k]?.work);e.stopPropagation();if(w)openSheet(w,mn.dataset.sheet,mn);return}},true);
 document.addEventListener("keydown",e=>{if((e.key==="Enter"||e.key===" ")&&e.target.closest?.(".mini .mn")){e.preventDefault();e.target.click()}});
@@ -2451,7 +2423,6 @@ function wakeMaps(){const f=()=>FM.forEach(m=>{if(!m.host.isConnected)return;if(
 /* cards off-screen rest: their loops pause, their SMIL beads stop */
 const RUNIO=new IntersectionObserver(es=>es.forEach(en=>{const r=en.target;r.toggleAttribute("data-off",!en.isIntersecting);r.querySelectorAll(".mini svg").forEach(v=>{try{en.isIntersecting?v.unpauseAnimations():v.pauseAnimations()}catch(e){}})}),{rootMargin:"200px"});
 new MutationObserver(()=>document.querySelectorAll("#thread .run:not([data-io])").forEach(r=>{r.dataset.io=1;RUNIO.observe(r)})).observe(document.getElementById("thread"),{childList:true,subtree:true});
-function mountMaps(){return;document.querySelectorAll("#thread .run.open .mapw:empty").forEach(hst=>{const b=hst.closest(".bot"),w=b&&(b._work||cur?.turns[+b.dataset.k]?.work);if(w&&(w.steps||[]).length)mkMap(hst,()=>w,{replay:true})})}
 const workOf=el=>{const b=el.closest(".bot");return b&&(b._work||cur?.turns[+b.dataset.k]?.work)};
 
 /* the sheet: what a node holds, spread open from the node itself */
@@ -2631,7 +2602,7 @@ document.addEventListener("click",async e=>{const o=e.target.closest("[data-doco
  const kt=e.target.closest("[data-ktpl]");if(kt){const K=await KLIB.load().catch(()=>null);const d=K&&K.derivatives.find(x=>x.file===kt.dataset.ktpl);if(d){setMenu(false);openDoc({type:d.type,src:d.src,second:d.second_signatory,basis:"The kernel's stock template, unfilled."},d.title)}}});
 /* ---------- runtime ---------- */
 let sample=null,db=null,ctl=null,busy=false;
-(async()=>{sample=await window.claude?.use?.("sample")??null;$("#sig").className="sig capt"+(sample?" live":"");swap($("#sigT"),sample?"Linked":"Preview");
+(async()=>{sample=await window.claude?.use?.("sample")??null;
  if(!sample)$("#phx").textContent="Open this page in Claude to brief EXPIRA";grow();attInit();db=await window.claude?.use?.("db")??null;webInit()})();
 open(chats.find(c=>!c.example)||chats[0]);
 
