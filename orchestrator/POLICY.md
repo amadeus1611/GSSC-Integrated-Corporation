@@ -10,6 +10,11 @@ This policy serves both surfaces:
 - **Client-facing** (EXPIRA Console artifact): the same roster, where
   low = quick, medium = default and high = complex model tiers.
 
+## Standing direction (Duke, 2026-09-25)
+- Duke gives values, vision and direction. The orchestrator makes every engineering decision itself and does not ask Duke about them.
+- Use one agent by default. Launch several only when there is a stated efficiency reason: independent work that finishes sooner in parallel, or a context too large for one agent. Record that reason in the tier log.
+- Optimise for cost and tokens: the cheapest tier that is accurate, compact prompts and outputs, and no redundant verification.
+
 ## Two tiers only: low and medium (Duke, 2026-09-25)
 Low is the default for most work. Medium is the ceiling, reserved for critical work: legal and finance, engines and data contracts, release checks, and redos after a FAIL. There is no high tier. This applies here, inside the EXPIRA Console's delegation, and in all future iterations.
 
