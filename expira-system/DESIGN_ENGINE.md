@@ -47,8 +47,8 @@ Motion is the heart of the UX: fidelity in the engine comes first.
 - **Liquid, not rigid:**
   - Surfaces open as a non-rigid blob that pours out of the exact point clicked. The corner radii wobble and settle into the card's own radius on a spring, and the surface drains back to the same point when it closes.
   - Content fades in once the shell has formed.
-- **Never clip a shadow.** No clip-path, mask or filter on a surface that has a shadow; the shadow moves with the shape.
-- **Springs, not curves.** Use the damped oscillator converted to CSS `linear()`: about 1% overshoot for chrome and about 9% for accents. Carry velocity over on interruption, so opening and closing can reverse mid-way without a jump.
+- **Never clip a shadow.** A clip-path reveal on a surface with a shadow must end outside it (negative inset), so the shadow is never cut; the shadow moves with the shape.
+- **Springs, not curves.** Use the damped oscillator converted to CSS `linear()`: critically damped, with no overshoot anywhere. No bounce. Carry velocity over on interruption, so opening and closing can reverse mid-way without a jump.
 - **Physics, not overlap.** Surfaces that would collide spring aside, each to a free position, and return home afterwards. The main column glides instead of jumping.
 - **Order is truth:**
   - a child never appears before its parent;
@@ -71,20 +71,11 @@ Motion is the heart of the UX: fidelity in the engine comes first.
 - **Build workflow:** patch modules on top of a base build, with anchored replacements and a smoke test before shipping.
 
 ## 5. Change log
-- **v38.2:**
-  - a focus lens that follows the working step, with content suited to each step's purpose (thinking, notes, queries, claims);
-  - the liquid-trio loader beside the glyph;
-  - intent-led log motion;
-  - the full screen runs only its own map;
-  - Flow labels shown in full, with halos;
-  - a continuous liquid close.
-
-- **v38:**
-  - liquid emergence from the click point, with shadows never clipped;
-  - push-aside physics;
-  - the footer's separate buttons and status stamp;
-  - execution-order trace maps with readable labels;
-  - Field births ordered and continuous;
-  - the unclipped logo split;
-  - a smaller composer;
-  - the mercury loading thread.
+- **v40:**
+  - the console's orchestrator plans, staffs and decides at high effort; desks run high by default and medium only for low-level work;
+  - the decision desk is folded into the orchestrator.
+- **v39** (built on v37; v38 was reverted):
+  - menus and sheets pour open with a rippling liquid crest, tinted while moving, content revealed in the wake;
+  - clip-path reveals end past the shadow;
+  - a transform-only indicator in the settings nav;
+  - web research through Exa.
