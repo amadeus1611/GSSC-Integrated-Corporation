@@ -12,6 +12,8 @@ Internal register: dense and lossless. Duke gives the values, vision and directi
 - He dislikes: loaders that break out of their container, glyph clutter, pill chips, big default text, visible pauses in motion, and anything that looks templated.
 
 ## Good habits (reinforced)
+- **Research is built in.** Every iteration starts with a quick search for the best current practice; don't wait to be asked. Current references: Emil Kowalski's animation standards (ease-out `cubic-bezier(.23,1,.32,1)`, UI motion ≤300ms, start at .9–.97 from the trigger, interruptible), and agentic UX (a docked live-progress panel beats hidden progress).
+- **No bounce, ever.** Every spring is critically damped; soft ease-out closes. Bounce reads as cheap.
 - **Ship only finished work I'm satisfied with.** Duke reviews complete work, never halfway states. Verify by eye (screenshots) and by numbers before reporting.
 - **See the whole console.** When one thing changes, check its siblings in the same category and everything it moves. Moved things must react intentionally, with one spring for one move: the Dispatch opening springs the whole column (margin), so the thread and the dock move together.
 - **Measure motion, don't trust it.** Sample per frame (transform, radius, opacity, rects), then assert that there are no jumps while the element is visible. Also check interruptions: close mid-open, reopen mid-close.
@@ -31,12 +33,17 @@ Internal register: dense and lossless. Duke gives the values, vision and directi
 - **A travelling loader bead on the card's top line.** It overflowed the card. Use a small liquid trio beside the glyph.
 - **Global reheating of a force graph on each birth.** It caused chaos. Queue births in seq order with continuous budding.
 - **Labels gated on a class that may never be set.** The information went missing. Details stay visible by default and animate in.
+- **Springs with overshoot** (jelly, snap, bouncing chart bars). Duke finds them cheap. They are now critically damped.
+- **A floating lens over the map.** Scrollbars and nodes covered it. It is now a docked now card: under the Dispatch map, and at the foot of the full screen with up-next and stats.
+- **A triple-dot loader.** Duke wants only the EXPIRA glyph's own loading.
+- **Idle and focused text styles that differ** (the .phx overlay at 14.5px against the 13px placeholder). Every text state must match.
 - **An always-on rAF loop for an overlay.** It burned idle CPU. Start the loop on demand and stop it when still.
 - **Flicker between two equally active targets.** It confused the focus. Use a priority rank plus hysteresis.
 - **Truncating labels at thin edge obstacles.** The information was lost. Let labels cross edges, with a halo.
 - **Launching eight agents at once.** It burned the usage limits and left partial work. Parallelise only what is truly independent and large.
 
 ## Short-term memory (current iteration)
+- v38.4: no bounce anywhere; a liquid pour starting at 64%/30% with a rim glint; the now card; matched composer text; master-template chart texture; a dot field behind the maps. Full plan: `brain/PLAN.md`.
 - v38.2 shipped: the focus lens, the trio loader beside the glyph, intent-led logs, the full-screen pause, readable Flow labels, and the liquid close fix.
 - v38.3 shipped: Flow end steps get label room (min interval 26/32px, wider right pad); the full-screen Field spreads over the whole stage (weaker centre pull, stronger repel).
 - Decided: no lens in the mini map. The run card already carries the live one-line log, and a floating card over a map under 180px tall would hide the trace. The lens stays in the Dispatch and full screen.
