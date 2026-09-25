@@ -20,16 +20,18 @@ code and is documented in the console itself.
 
 ## Roster
 
-High is the default for every role. Medium exists only for mechanical,
-low-level work.
+High is the default for every role. Medium exists only where a batch of
+low-level work runs in parallel; single mechanical tasks (a build script, a
+format check, one lookup) are done inline by the orchestrator, because a cold
+agent costs more than it saves.
 
 | Role | Default | Medium, only for |
 |---|---|---|
-| research | research-high | research-medium: a single fact lookup, or re-checking a named source |
+| research | research-high | research-medium: a batch of simple lookups run in parallel |
 | finance | finance-high | none |
 | legal | legal-high | none |
-| builder | builder-high | builder-medium: build_derivative.py runs, asset regeneration, a fully specified patch |
-| reviewer | reviewer-high | reviewer-medium: checklist-only checks (format, required sections, verification ran) |
+| builder | builder-high | none; mechanical builds are done inline |
+| reviewer | reviewer-high | none; checklist checks are done inline |
 | firewall | firewall-medium | this is the only tier |
 
 ## Decisions stay with the orchestrator
