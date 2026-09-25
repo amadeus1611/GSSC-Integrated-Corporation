@@ -1323,6 +1323,9 @@ html.theming,html.theming *,html.theming *::before,html.theming *::after{transit
 .run .rk{transition:opacity .3s ease}
 .run:hover .rk,.run.open .rk{opacity:0}
 @media (prefers-reduced-motion:reduce){.fz,.fzx{transition:none}}
+/* v39 · side card reveal (own rules) */
+.sheet{transition:clip-path .38s cubic-bezier(.55,0,.75,.25),visibility 0s linear .38s}
+.sheet.open{clip-path:circle(calc(150% + 80px) at var(--ox) var(--oy));transition:clip-path .9s cubic-bezier(.22,1,.36,1),visibility 0s}
 </style>
 
 <div class="app has-chat" id="app">
@@ -2499,7 +2502,7 @@ open(chats.find(c=>!c.example)||chats[0]);
 {let lastBtn=null;document.addEventListener("pointerdown",e=>{lastBtn=e.target.closest("button,[role=button]")},true);document.addEventListener("keydown",e=>{if(e.key==="Enter"||e.key===" ")lastBtn=document.activeElement},true);
  const pour=(m,open)=>{if(reduce)return;const b=m._from;if(!b||!b.isConnected||m.contains(b))return;const r=b.getBoundingClientRect(),q=m.getBoundingClientRect();if(!q.width||!r.width)return;
   const cl=(v,mx)=>Math.max(0,Math.min(v,mx)),from=`inset(${cl(r.top-q.top,q.height-6)}px ${cl(q.right-r.right,q.width-24)}px ${cl(q.bottom-r.bottom,q.height-6)}px ${cl(r.left-q.left,q.width-24)}px round 12px)`;
-  m.animate(open?[{clipPath:from},{clipPath:"inset(0px 0px 0px 0px round 11px)",offset:.62},{clipPath:"inset(0px 0px 0px 0px round 8px)"}]:[{clipPath:"inset(0px 0px 0px 0px round 8px)"},{clipPath:from}],{duration:open?(SPRING?SPRING.soft.ms:640):280,easing:open?(SPRING?SPRING.soft.e:"cubic-bezier(.32,.6,.18,1)"):"cubic-bezier(.5,0,.75,0)"})};
+  const big=q.width*q.height>250000,rOut="inset(-14px -30px -48px -30px round 26px)";if(open){const n=from.match(/-?[\d.]+/g).map(Number),mid=`inset(${(n[0]*.62).toFixed(1)}px 0px ${(n[2]*.62).toFixed(1)}px 0px round 24px)`;m.animate([{clipPath:from.replace("round 12px","round 16px")},{clipPath:mid,offset:.38},{clipPath:"inset(0px 0px 0px 0px round 18px)",offset:.74},{clipPath:rOut}],{duration:big?880:780,easing:"cubic-bezier(.65,.05,.25,1)"});m.animate([{transform:`translate(${((r.left+r.width/2)-(q.left+q.width/2))*.04}px,${((r.top+r.height/2)-(q.top+q.height/2))*.04}px) scale(.975)`},{transform:"none"}],{duration:big?880:780,easing:"cubic-bezier(.65,.05,.25,1)",composite:"add"});[...m.children].slice(0,12).forEach((k,i)=>k.animate([{opacity:0,transform:"translateY(4px)"},{opacity:1,transform:"none"}],{duration:420,delay:300+i*30,easing:"cubic-bezier(.22,1,.36,1)",fill:"backwards"}))}else m.animate([{clipPath:rOut},{clipPath:from}],{duration:300,easing:"cubic-bezier(.55,0,.75,.25)"})};
  const mo=new MutationObserver(ms=>ms.forEach(x=>{const m=x.target,o=m.classList.contains("open");if(o===!!m._o)return;m._o=o;if(o){m._from=lastBtn;requestAnimationFrame(()=>pour(m,true))}else pour(m,false)}));
  document.querySelectorAll(".menu,#mfs,#setMenu,#docv").forEach(m=>mo.observe(m,{attributes:true,attributeFilter:["class"]}))}
 /* mercury: the selected segment or tab slides across, stretching between the two */
@@ -2592,7 +2595,7 @@ setTimeout(featherAll,300);new MutationObserver(()=>setTimeout(()=>feather(docum
   P.hidden=false;const r=el.getBoundingClientRect(),q=P.getBoundingClientRect();const x=Math.max(12,Math.min(innerWidth-q.width-12,r.left+r.width/2-q.width/2));let y=r.top-q.height-9,below=false;if(y<12){y=r.bottom+9;below=true}
   P.style.left=x+"px";P.style.top=y+"px";const ox=Math.max(8,Math.min(q.width-8,r.left+r.width/2-x));P.style.setProperty("--ax",ox+"px");P.classList.toggle("below",below);
   if(!reduce){const a=Math.max(0,ox-6),b=Math.max(0,q.width-ox-6),from=below?`inset(0px ${b}px ${q.height-6}px ${a}px round 8px)`:`inset(${q.height-6}px ${b}px 0px ${a}px round 8px)`;
-   P.animate([{clipPath:from},{clipPath:"inset(0px 0px 0px 0px round 8px)",offset:.6},{clipPath:"inset(0px 0px 0px 0px round 6px)"}],{duration:440,easing:"cubic-bezier(.3,.6,.2,1)"})}};
+   P.animate([{clipPath:from.replace("round 8px","round 18px")},{clipPath:"inset(0px 0px 0px 0px round 14px)",offset:.55},{clipPath:"inset(-12px -26px -40px -26px round 22px)"}],{duration:560,easing:"cubic-bezier(.22,1,.36,1)"})}};
  const hide=()=>{on=null;P.hidden=true};
  document.addEventListener("pointerover",e=>{const c=e.target.closest?.(".cite");if(c){clearTimeout(tm);if(c!==on)tm=setTimeout(()=>show(c),130)}else if(on&&!e.target.closest?.("#cpop")){clearTimeout(tm);tm=setTimeout(hide,140)}});
  document.addEventListener("focusin",e=>{const c=e.target.closest?.(".cite");if(c)show(c)});document.addEventListener("click",e=>{if(e.target.closest(".cite"))hide();const f=e.target.closest(".fu,.dpn");if(f){promptEl.value=f.dataset.fu;grow();phSync&&phSync();promptEl.focus()}},true);addEventListener("scroll",hide,true)}
