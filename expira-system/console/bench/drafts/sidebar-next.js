@@ -54,7 +54,8 @@ const SB=(()=>{const side=$("#side"),scroll=$("#sbScroll");
  const bar=side.querySelector(".brand");bar.removeAttribute("aria-hidden");
  bar.innerHTML=`<button class="sb-tb" type="button" id="newChat" aria-label="New chat">${IC.compose}</button><button class="sb-tb" type="button" data-newf aria-label="New folder">${IC.newf}</button><button class="sb-tb" type="button" id="selBtn" aria-label="Select" aria-pressed="false">${IC.select}</button>`;
  bar.insertAdjacentHTML("afterend",`<label class="sb-search" id="findRow"><span class="sb-ic">${IC.search}</span><span class="sr">Search chats and files</span><input id="find" placeholder="Search" autocomplete="off" spellcheck="false"><button class="sb-clr" type="button" aria-label="Clear the search">${IC.x}</button></label>`);
- scroll.innerHTML=`<div class="sb-tree" id="sbTree" role="tree" aria-label="Chats and folders"></div>`;
+ scroll.innerHTML=`<div class="sb-path" id="sbPath" hidden><button class="sb-pbtn" type="button" data-rn="back" aria-label="Back">${IC.back}</button><button class="sb-pbtn" type="button" data-rn="fwd" aria-label="Forward">${IC.fwd}</button><div class="sb-crumbs" role="navigation" aria-label="Path"></div></div>`+
+  `<div class="sb-tree" id="sbTree" role="tree" aria-label="Chats and folders"></div>`;
  const tree=$("#sbTree");
  const esc=s=>String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
  const tok=n=>getComputedStyle(root).getPropertyValue(n).trim();
@@ -85,32 +86,37 @@ const SB=(()=>{const side=$("#side"),scroll=$("#sbScroll");
    mk("chat","Quotation for the Makati site",{ts:now-2*H,unread:true}),mk("folder","Drafts",{kids:[mk("doc","Q-2026-015 · draft",{ts:now-5*H})]})]}),
   mk("folder","Contracts",{kids:[mk("doc","Client MSA · structural template",{ts:now-80*H}),mk("doc","Supply agreement · draft",{ts:now-50*H})]}),
   mk("folder","Board",{kids:[mk("doc","Resolution 2026-07 · signatories",{ts:now-100*H}),mk("doc","Secretary's certificate",{ts:now-120*H})]}),
+  mk("folder","Archive",{kids:[mk("folder","2026",{kids:[mk("folder","Q3",{kids:[mk("folder","September",{kids:[mk("folder","Week 38",{kids:[mk("folder","Revisions",{kids:[
+   mk("folder","Superseded",{kids:[mk("doc","Q-2026-007 · first issue",{ts:now-900*H})]}),mk("doc","Q-2026-007 · rev C",{ts:now-700*H})]})]})]})]})]})]}),
   mk("folder","Company profile",{kids:[mk("doc","GSSC company profile · 2026",{ts:now-200*H})]}),
   mk("chat","Showroom fit-out, phase two and the lighting schedule",{live:true,ts:now-.2*H}),
-  mk("chat","GSSC master quotation",{pin:true,ts:now-400*H}),
+  mk("chat","GSSC master quotation",{pin:true,pinAt:1,ts:now-400*H}),
   mk("chat","Supplier shortlist review",{ts:now-26*H}),
   mk("doc","Board resolution draft",{ts:now-40*H,unread:true}),
   mk("chat","Warehouse lease terms",{ts:now-90*H}),
   mk("chat","Company profile refresh",{ts:now-300*H})]};
- let sel=ROOT.kids[6].id,query="",selMode=false,anchor=null;const picked=new Set();
+ let sel=ROOT.kids[7].id,query="",selMode=false,anchor=null;const picked=new Set();
  const find=(id,list=ROOT.kids,parent=ROOT)=>{for(const n of list){if(n.id===id)return{n,parent};if(n.kids){const r=find(id,n.kids,n);if(r)return r}}return null};
  const within=(a,b)=>a===b||!!(a.kids&&a.kids.some(k=>within(k,b)));
  /* folders come first. By default folders keep the order you made them in and items put pins first, then the newest;
     the selection bar's Sort offers oldest first, by name either way, and by kind (documents, then chats) */
  let sortBy="new";const KIND={folder:0,doc:1,chat:2};
  const byName=(a,b)=>a.t.localeCompare(b.t,undefined,{sensitivity:"base",numeric:true});
- const order=l=>[...l].sort((a,b)=>{const fa=a.kind==="folder",fb2=b.kind==="folder";if(fa!==fb2)return fa?-1:1;
+ const order=l=>[...l].sort((a,b)=>{if(!!a.pin!==!!b.pin)return a.pin?-1:1;if(a.pin)return (a.pinAt||0)-(b.pinAt||0);
+  const fa=a.kind==="folder",fb2=b.kind==="folder";if(fa!==fb2)return fa?-1:1;
   if(sortBy==="az")return byName(a,b);if(sortBy==="za")return byName(b,a);if(fa)return 0;
-  return (b.pin-a.pin)||(sortBy==="kind"?(KIND[a.kind]-KIND[b.kind])||(b.ts-a.ts):sortBy==="old"?(a.ts-b.ts):(b.ts-a.ts))});
+  return (sortBy==="kind"?(KIND[a.kind]-KIND[b.kind])||(b.ts-a.ts):sortBy==="old"?(a.ts-b.ts):(b.ts-a.ts))});
+ let rootId=null,rhist=[null],rat=0;
+ const rootNode=()=>{const f=rootId&&find(rootId);if(rootId&&!f){rootId=null}return f?f.n:ROOT};
  function flat(){const q=query.trim().toLowerCase(),out=[];const hit=n=>n.t.toLowerCase().includes(q),has=n=>hit(n)||(n.kids||[]).some(has);
   const walk=(l,d,all)=>order(l).forEach(n=>{if(q&&!all&&!has(n))return;out.push({id:n.id,n,d});
    if(n.kind==="folder"&&(q||n.open)){if(n.kids.length)walk(n.kids,d+1,all||(!!q&&hit(n)));else if(!q)out.push({id:n.id+":e",n:null,d:d+1,empty:true})}});
-  walk(ROOT.kids,0,false);return out}
+  if(q)walk(ROOT.kids,0,false);else{const r=rootNode();walk(r.kids,0,false);if(r!==ROOT&&!r.kids.length)out.push({id:r.id+":e",n:null,d:0,empty:true})}return out}
 
  /* ---- rows ---- */
  const glyph=n=>n.kind==="folder"?IC.folder:n.kind==="doc"?IC.doc:`<i class="sb-dot"></i>`;
  function make(w){const e=document.createElement("div");e.className="sb-row";e.dataset.id=w.id;
-  if(w.empty){e.classList.add("sb-empty");e.innerHTML=`<span class="sb-t">Empty</span>`;return e}
+  if(w.empty){e.classList.add("sb-empty");e.innerHTML=`<span class="sb-t"><span class="e1">Empty</span><span class="e2">Drop here</span></span>`;return e}
   e.draggable=true;e.innerHTML=`<button class="sb-hit" type="button"><span class="sb-car">${w.n.kind==="folder"?IC.car:""}</span><span class="sb-ic"><span class="g"></span><span class="sb-ck" aria-hidden="true"><svg viewBox="0 0 12 12"><path d="M3.2 6.2l1.8 1.8 3.8-4"/></svg></span></span><span class="sb-t"></span></button>`+
    `<span class="sb-pinmark" aria-hidden="true">${IC.pin}</span><button class="sb-kill" type="button" aria-label="Delete now" tabindex="-1">${IC.kill}</button><button class="sb-more" type="button" aria-label="Actions" aria-haspopup="menu" aria-expanded="false"><span class="d">${IC.dots}</span><span class="u">${IC.undo}</span></button>`;return e}
  function update(e,w){e.style.setProperty("--d",w.d);e.classList.toggle("deep",w.d>0);if(w.empty)return;const n=w.n;
@@ -124,10 +130,11 @@ const SB=(()=>{const side=$("#side"),scroll=$("#sbScroll");
  const els=new Map();
 
  /* ---- sync: the one move ---- */
- function sync(pre){hlS.off();
-  const want=flat(),keep=new Set(want.map(w=>w.id));
-  const before=new Map();els.forEach((e,id)=>{if(e.isConnected&&!e.classList.contains("gone"))before.set(id,e.getBoundingClientRect().top)});
+ function sync(pre,o={}){if(o.dir)hlS.hold(ms("--sb-move"));else hlS.off();
+  const before=new Map(),bx=new Map(),tx=e=>e.querySelector(".sb-t")?.getBoundingClientRect().left||0;
+  els.forEach((e,id)=>{if(e.isConnected&&!e.classList.contains("gone")){before.set(id,e.getBoundingClientRect().top);if(o.dir)bx.set(id,tx(e))}});
   if(pre)pre();
+  const want=flat(),keep=new Set(want.map(w=>w.id));
   /* rows that leave are pinned where they are, out of the flow, so the rows below can rise over them */
   const leaving=[];els.forEach((e,id)=>{if(keep.has(id)||!e.isConnected||e.classList.contains("gone"))return;leaving.push({e,id,top:e.offsetTop,left:e.offsetLeft,w:e.offsetWidth,h:e.offsetHeight})});
   leaving.forEach(({e,top,left,w})=>{e.getAnimations().forEach(a=>a.cancel());e.classList.add("gone");Object.assign(e.style,{position:"absolute",top:top+"px",left:left+"px",width:w+"px"})});
@@ -142,6 +149,16 @@ const SB=(()=>{const side=$("#side"),scroll=$("#sbScroll");
   feather();edges(tree);
   if(reduce)return drop();
   const T=ms("--sb-move"),IN=ms("--sb-in"),OUT=ms("--sb-out"),Es=EZ(),E=easeFn(Es),B=blurPx()*.5,L=leaving.length?Math.round(OUT*.25):0;
+  /* stepping into or out of a folder: the old list slides a little away and racks out, the new one slides in and pulls
+     focus, both on one clock; nothing waits on coverage */
+  if(o.dir){const t0=document.timeline.currentTime,dx=12*o.dir,go=(el,kf,f)=>{const a=el.animate(kf,{duration:T,easing:"linear",fill:f||"none"});a.startTime=t0;return a};
+   leaving.forEach(({e})=>go(e,sampled(T,Es,p=>{const q=Math.min(1,p*2);return{opacity:(1-q).toFixed(3),transform:`translateX(${(-dx*p).toFixed(2)}px)`,filter:`blur(${(B*q).toFixed(2)}px)`}}),"forwards"));
+   fresh.forEach(e=>go(e,sampled(T,Es,p=>({opacity:Math.min(1,.1+p*1.5).toFixed(3),transform:`translateX(${(dx*(1-p)).toFixed(2)}px)`,filter:fb(p,B,.5)})),"backwards"));
+   /* rows seen in both views travel from where their name was to where it is now, re-indenting on the same clock */
+   want.forEach(w=>{const e=els.get(w.id),b=before.get(w.id);if(b==null||fresh.has(e))return;e.getAnimations().forEach(a=>{if(!(a instanceof CSSTransition))a.cancel()});
+    const dy=Math.round(b-e.getBoundingClientRect().top),dxr=Math.round(bx.get(w.id)-tx(e));if(!dy&&!dxr)return;const M=Math.min(1.1,Math.hypot(dy,dxr)/70);
+    go(e,sampled(T,Es,(p,k)=>({transform:`translate(${(dxr*(1-p)).toFixed(2)}px,${(dy*(1-p)).toFixed(2)}px)`,filter:mb(k,M)})))});
+   if(leaving.length)setTimeout(drop,T+40);return}
   /* the rows that stay glide by whole pixels; rising ones wait a beat so what leaves can rack out first */
   want.forEach(w=>{const e=els.get(w.id),b=before.get(w.id);if(b==null)return;e.getAnimations().forEach(a=>{if(!(a instanceof CSSTransition)&&!(a instanceof CSSAnimation))a.cancel()});
    const dy=Math.round(b-e.getBoundingClientRect().top);if(!dy)return;const M=Math.min(1.1,Math.abs(dy)/70);
@@ -182,15 +199,41 @@ const SB=(()=>{const side=$("#side"),scroll=$("#sbScroll");
  bar.querySelector("[data-newf]").addEventListener("click",e=>{e.stopPropagation();newFolder()});
  /* the search field: typing filters the tree in place; Esc clears, and a second Esc leaves the field; arrow down steps into the tree */
  const inp=$("#find"),frow=$("#findRow");
- const clearQ=()=>{if(!inp.value)return;const typed=inp.value;inp.value="";frow.classList.remove("has");query="";sync()};
+ const clearQ=()=>{if(!inp.value)return;inp.value="";frow.classList.remove("has");query="";sync(paintPath)};
  function search(on){if(on){inp.focus({preventScroll:true});return}clearQ();inp.blur()}
  frow.querySelector(".sb-clr").addEventListener("click",e=>{e.preventDefault();e.stopPropagation();clearQ();inp.focus()});
- inp.addEventListener("input",()=>{frow.classList.toggle("has",!!inp.value);query=inp.value;sync()});
+ inp.addEventListener("input",()=>{frow.classList.toggle("has",!!inp.value);query=inp.value;sync(paintPath)});
  inp.addEventListener("keydown",e=>{if(e.key==="Escape"){e.stopPropagation();inp.value?clearQ():inp.blur()}
   if(e.key==="ArrowDown"){e.preventDefault();tree.querySelector(".sb-row:not(.gone) .sb-hit")?.focus()}});
 
  /* ---- clicks in the tree: a folder opens or closes, anything else is selected ---- */
- function toggle(n,open){n.open=open??!n.open;sync()}
+ /* how deep the tree may indent before a name would have less than ~90px: it adapts to the dock's width */
+ const maxDepth=()=>Math.max(2,Math.floor((tree.clientWidth-160)/12));
+ function toggle(n,open){const row=els.get(n.id),d=row?+row.style.getPropertyValue("--d")||0:0;open=open??!n.open;
+  if(open&&!query.trim()&&d+1>maxDepth())return goRoot(n.id,1);n.open=open;
+  /* like a browser: working the top level again drops the forward trail, and with it the bar */
+  if(!rootId&&rat<rhist.length-1){rhist=rhist.slice(0,rat+1);return sync(paintPath)}sync()}
+ /* the focus root: step into a folder, or back out; its own history for the path bar's back and forward */
+ const pathBar=()=>$("#sbPath");
+ function goRoot(id,dir,push=true){id=id||null;if(id===rootId)return;if(push){rhist=rhist.slice(0,rat+1);rhist.push(id);rat=rhist.length-1}
+  const f=id&&find(id);if(f)f.n.open=true;sync(()=>{rootId=id;paintPath()},{dir})}
+ function rnav(d){const i=rat+d;if(i<0||i>=rhist.length)return;rat=i;goRoot(rhist[i],d,false)}
+ function paintPath(){const bar=pathBar(),crumbs=bar.querySelector(".sb-crumbs");if(rootId&&!find(rootId))rootId=null;const on=(!!rootId||rat<rhist.length-1)&&!query.trim();
+  bar.querySelector('[data-rn="back"]').disabled=rat<=0;bar.querySelector('[data-rn="fwd"]').disabled=rat>=rhist.length-1;
+  if(on){const chain=[];let f=rootId&&find(rootId);while(f){chain.unshift(f.n);f=f.parent===ROOT?null:find(f.parent.id)}
+   crumbs.innerHTML=(chain.length?`<button type="button" data-root="">All</button>`:`<b>All</b>`)+chain.map((n,i)=>`<i>/</i>`+(i===chain.length-1?`<b>${esc(n.t)}</b>`:`<button type="button" data-root="${n.id}">${esc(n.t)}</button>`)).join("");
+   requestAnimationFrame(()=>{crumbs.scrollLeft=crumbs.scrollWidth;fadeCrumbs()})}
+  /* it surfaces with the list's own move; if it is asked back while still leaving, it turns round from where it is */
+  if(on&&(bar.hidden||bar._out)){const op=bar._out?+getComputedStyle(bar).opacity:0;bar._out=0;bar.getAnimations().forEach(a=>a.cancel());Object.assign(bar.style,{position:"",top:""});bar.hidden=false;
+   if(!reduce){const k=focusIn(blurPx()*.4);if(op)k[0]={...k[0],opacity:op};bar.animate(k,{duration:ms("--sb-move"),easing:EZ()})}}
+  else if(!on&&!bar.hidden&&!bar._out){if(reduce){bar.hidden=true;return}const tk=bar._out={};Object.assign(bar.style,{position:"absolute",top:bar.offsetTop+"px"});
+   bar.animate(focusOut(blurPx()*.4),{duration:ms("--sb-move")*.6,easing:EZ(),fill:"forwards"}).finished.then(()=>{if(bar._out!==tk)return;bar._out=0;bar.hidden=true;bar.getAnimations().forEach(a=>a.cancel());Object.assign(bar.style,{position:"",top:""})},()=>{})}}
+ /* the trail scrolls sideways when it is longer than the bar, and feathers only on the side that is cut off */
+ function fadeCrumbs(){const c=pathBar().querySelector(".sb-crumbs"),x=c.scrollLeft,m=c.scrollWidth-c.clientWidth;c.classList.toggle("ovl",x>1);c.classList.toggle("ovr",x<m-1)}
+ pathBar().querySelector(".sb-crumbs").addEventListener("scroll",fadeCrumbs,{passive:true});
+ pathBar().querySelector(".sb-crumbs").addEventListener("wheel",e=>{const c=e.currentTarget;if(Math.abs(e.deltaY)>Math.abs(e.deltaX)&&c.scrollWidth>c.clientWidth){e.preventDefault();c.scrollLeft+=e.deltaY}},{passive:false});
+ scroll.addEventListener("click",e=>{const b=e.target.closest("#sbPath [data-rn]");if(b){e.stopPropagation();rnav(b.dataset.rn==="back"?-1:1);return}
+  const c=e.target.closest("#sbPath [data-root]");if(c){e.stopPropagation();goRoot(c.dataset.root,-1)}});
  tree.addEventListener("click",e=>{const k=e.target.closest(".sb-kill");if(k){e.stopPropagation();const f=find(k.closest(".sb-row").dataset.id);if(f&&f.n.del)kill(f.n);return}
   const m=e.target.closest(".sb-more");if(m){e.stopPropagation();const r=m.closest(".sb-row"),f=find(r.dataset.id);
    if(f.n.del)return undoDel(f.n);pmFor===r&&pm.classList.contains("open")?pop(false):pop(true,r);return}
@@ -250,7 +293,7 @@ const SB=(()=>{const side=$("#side"),scroll=$("#sbScroll");
   const n=f.n,isF=n.kind==="folder";
   if(name==="main")return item("ren",IC.ren,"Rename")+item("pin",IC.pin,n.pin?"Unpin":"Pin")+item("p:folder",IC.folder,"Folder",0,true)+`<div class="sb-sep"></div>`+item("del",IC.del,"Delete");
   if(name==="folder")return cap(isF?esc(n.t):"Folder")+item("p:move",IC.move,isF?"Move folder":"Move to",0,true)+item("folder",IC.newf,isF?"New folder inside":"New folder here")+
-   (isF?item("chat",IC.plus,"New chat here"):"");
+   (isF?item("chat",IC.plus,"New chat here")+item("root",IC.folder,"Show on its own"):"");
   if(name==="move"){const dest=folders().filter(x=>!within(n,x.n)&&x.n!==f.parent);
    return cap("Move to")+(f.parent!==ROOT?item("mv:",IC.top,"Top level"):"")+(dest.map(x=>item("mv:"+x.n.id,IC.folder,esc(x.n.t),x.d)).join("")||`<div class="sb-none">No other folders</div>`)}}
  const PM=pager(card,nb,nf,hlP,page);
@@ -355,7 +398,8 @@ const SB=(()=>{const side=$("#side"),scroll=$("#sbScroll");
   if(!f){if(a==="chat")newChat();if(a==="folder")newFolder();return}
   const n=f.n;if(a==="chat")return newChat(n);if(a==="folder")return newFolder(n);
   if(a==="ren")return rename(els.get(n.id));
-  if(a==="pin"){n.pin=!n.pin;return sync()}
+  if(a==="root")return goRoot(n.id,1);
+  if(a==="pin"){n.pin=!n.pin;n.pinAt=Date.now();return sync()}
   if(a.startsWith("mv:"))return move(n,f.parent,a.slice(3)?find(a.slice(3)).n:ROOT);
   if(a==="del")return del(n)}
  function move(n,from,to){if(!to||within(n,to)||from===to)return;from.kids.splice(from.kids.indexOf(n),1);to.kids.push(n);sync();
@@ -374,8 +418,9 @@ const SB=(()=>{const side=$("#side"),scroll=$("#sbScroll");
 
  /* ---- drag onto a folder (a closed one springs open if you linger), or onto open tree for the top level ---- */
  let drag=null,spring=0,springOn=null;
- const target=e=>{const r=e.target.closest(".sb-tree .sb-row[data-k]");if(!r)return{t:ROOT,r:null};const f=find(r.dataset.id);return f.n.kind==="folder"?{t:f.n,r}:{t:f.parent,r:f.parent===ROOT?null:els.get(f.parent.id)}};
- const clear=()=>{tree.classList.remove("drop-root");tree.querySelectorAll(".drop").forEach(x=>x.classList.remove("drop"))};
+ const target=e=>{const c=e.target.closest("#sbPath [data-root]");if(c){const id=c.dataset.root;return{t:id?find(id).n:ROOT,r:c}}
+  const r=e.target.closest(".sb-tree .sb-row[data-k]");if(!r)return{t:rootNode(),r:null};const f=find(r.dataset.id);return f.n.kind==="folder"?{t:f.n,r}:{t:f.parent,r:f.parent===ROOT?null:els.get(f.parent.id)}};
+ const clear=()=>{tree.classList.remove("drop-root");scroll.querySelectorAll(".drop").forEach(x=>x.classList.remove("drop"))};
  tree.addEventListener("dragstart",e=>{const r=e.target.closest(".sb-row[data-k]");if(!r)return;drag=find(r.dataset.id);r.classList.add("dragging");e.dataTransfer.effectAllowed="move";try{e.dataTransfer.setData("text/plain",drag.n.t)}catch(x){}hlS.off()});
  tree.addEventListener("dragend",()=>{tree.querySelectorAll(".dragging").forEach(x=>x.classList.remove("dragging"));drag=null;clear();clearTimeout(spring)});
  scroll.addEventListener("dragover",e=>{if(!drag)return;const {t,r}=target(e);if(within(drag.n,t))return;e.preventDefault();clear();if(r)r.classList.add("drop");else tree.classList.add("drop-root");
@@ -390,7 +435,7 @@ const SB=(()=>{const side=$("#side"),scroll=$("#sbScroll");
   if(e.key==="ArrowDown")go(all[i+1]);else if(e.key==="ArrowUp")go(all[i-1]||inp);else if(e.key==="Home")go(all[0]);else if(e.key==="End")go(all[all.length-1]);
   else if(!f)return;
   else if(e.key==="ArrowRight"&&f.n.kind==="folder"){e.preventDefault();if(!f.n.open)toggle(f.n,true);else go(all[i+1])}
-  else if(e.key==="ArrowLeft"){e.preventDefault();if(f.n.kind==="folder"&&f.n.open)toggle(f.n,false);else if(f.parent!==ROOT)els.get(f.parent.id)?.querySelector(".sb-hit").focus()}
+  else if(e.key==="ArrowLeft"){e.preventDefault();if(f.n.kind==="folder"&&f.n.open)toggle(f.n,false);else if(rootId&&f.parent.id===rootId){const up=find(rootId);goRoot(up&&up.parent!==ROOT?up.parent.id:null,-1)}else if(f.parent!==ROOT)els.get(f.parent.id)?.querySelector(".sb-hit").focus()}
   else if(e.key==="F2"){e.preventDefault();rename(row)}
   else if(e.key==="Delete"||e.key==="Backspace"){e.preventDefault();f.n.del?undoDel(f.n):del(f.n)}
   else if(e.key==="ContextMenu"||(e.shiftKey&&e.key==="F10")){e.preventDefault();pop(true,row)}});

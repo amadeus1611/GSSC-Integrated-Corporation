@@ -113,8 +113,15 @@
 /* long names feather into the surface instead of ending in an ellipsis */
 .sb-t{flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:clip;
  -webkit-mask-image:linear-gradient(90deg,#000 calc(100% - 22px),transparent);mask-image:linear-gradient(90deg,#000 calc(100% - 22px),transparent)}
-.sb-empty{height:20px;color:var(--mute);font-size:var(--sb-fs-2);opacity:.6;pointer-events:none}
-.sb-empty .sb-t{padding-left:calc(var(--sp-2) + var(--d) * var(--sb-indent) + 15px);-webkit-mask-image:none;mask-image:none}
+/* an empty folder holds exactly one row of space: a quiet italic "Empty" where a child's name would start. Its dimness
+   is its colour, never its opacity, so the fade in and out lands exactly where it rests. While something is dragged
+   over its folder it answers "Drop here" in gold. */
+.sb-empty{pointer-events:none}
+.sb-empty .sb-t{position:relative;padding-left:calc(var(--sp-2) + var(--d) * var(--sb-indent) + 9px + var(--sp-1h) + var(--sb-ic) + var(--sp-1h));font:italic 400 var(--sb-fs-2)/1 var(--f-display);color:var(--mute);-webkit-mask-image:none;mask-image:none;overflow:visible}
+.sb-empty .e1,.sb-empty .e2{transition:opacity var(--sb-move) var(--sb-ease),filter var(--sb-move) var(--sb-ease)}
+.sb-empty .e2{position:absolute;left:calc(var(--sp-2) + var(--d) * var(--sb-indent) + 9px + var(--sp-1h) + var(--sb-ic) + var(--sp-1h));color:var(--gold-ink);opacity:0;filter:blur(2px)}
+.sb-row.drop + .sb-empty .e1,.sb-tree.drop-root > .sb-empty .e1{opacity:0;filter:blur(2px)}
+.sb-row.drop + .sb-empty .e2,.sb-tree.drop-root > .sb-empty .e2{opacity:1;filter:none}
 
 /* the row's action, and the new-folder action beside New chat: out of a light blur, and back into it */
 .sb-more{all:unset;position:absolute;right:2px;top:50%;width:20px;height:20px;margin-top:-10px;display:grid;place-items:center;border-radius:var(--sb-r-sm);color:var(--mute);cursor:pointer}
@@ -204,14 +211,14 @@ body.sb-resizing,body.sb-resizing *{cursor:col-resize!important;user-select:none
 .sb-page{position:relative}
 /* back and forward: two separate small frosted buttons, each its own surface with the cards' corners and depth */
 .sb-nav{position:absolute;right:0;bottom:calc(100% + 5px);display:flex;gap:4px}
-.sb-nav button{all:unset;box-sizing:border-box;width:26px;height:22px;display:grid;place-items:center;border-radius:var(--sb-r);color:var(--soft);cursor:pointer;
+.sb-nav button,.sb-pbtn{all:unset;box-sizing:border-box;width:26px;height:22px;flex:none;display:grid;place-items:center;border-radius:var(--sb-r);color:var(--soft);cursor:pointer;
  background:color-mix(in srgb,var(--panel) 80%,transparent);-webkit-backdrop-filter:blur(22px) saturate(1.5);backdrop-filter:blur(22px) saturate(1.5);border:var(--rule-hair) solid var(--line-3);box-shadow:var(--sb-depth);
  transition:background var(--sb-out) var(--sb-ease),color var(--sb-out) var(--sb-ease)}
-.sb-nav button svg{width:11px;height:11px;display:block}
-.sb-nav button:hover:not(:disabled){background:color-mix(in srgb,var(--panel) 80%,var(--line-3));color:var(--ink);transition-duration:calc(var(--sb-in) * .5)}
+.sb-nav button svg,.sb-pbtn svg{width:11px;height:11px;display:block}
+.sb-nav button:hover:not(:disabled),.sb-pbtn:hover:not(:disabled){background:color-mix(in srgb,var(--panel) 80%,var(--line-3));color:var(--ink);transition-duration:calc(var(--sb-in) * .5)}
 /* a disabled arrow dims its glyph, not its surface, so the pair keeps one weight */
-.sb-nav button:disabled{color:var(--line-3);cursor:default}
-.sb-nav button:focus-visible{outline:var(--rule) solid var(--gold)}
+.sb-nav button:disabled,.sb-pbtn:disabled{color:var(--line-3);cursor:default}
+.sb-nav button:focus-visible,.sb-pbtn:focus-visible{outline:var(--rule) solid var(--gold)}
 /* the row menu's pill sits between the card and the row, at the right, under the …; the account card's sits above it */
 .sb-pop[data-from="below"] .sb-nav{bottom:auto;top:calc(100% + 5px)}
 .sb-go{width:10px;height:10px;flex:none;margin-left:auto;color:var(--mute)}
@@ -359,3 +366,18 @@ html.sb-theming,html.sb-theming *,html.sb-theming *::before,html.sb-theming *::a
 /* the feather only where text actually runs long: an edge fade on text that fits would eat its last letter
    (sidebar-next.js edges() marks overflowing text .ov as widths change) */
 .sb-t:not(.ov),.sb-tile b:not(.ov),.sb-idt b:not(.ov),.sb-idt small:not(.ov),.sb-who:not(.ov){-webkit-mask-image:none;mask-image:none}
+
+/* ---- the path bar: when the tree is rooted on a folder (drilled in because nesting outgrew the width, or on purpose),
+   its trail sits at the top of the list with its own back and forward. It stays put while the list scrolls. ---- */
+.sb-path{position:sticky;top:0;z-index:3;left:0;right:0;display:flex;align-items:center;gap:4px;height:28px;margin:0 0 var(--sp-1);background:var(--side)}
+.sb-path[hidden]{display:none}
+.sb-crumbs{flex:1;min-width:0;display:flex;align-items:center;gap:2px;overflow-x:auto;overflow-y:hidden;overscroll-behavior-x:contain;white-space:nowrap;scrollbar-width:none;font-size:var(--sb-fs-2);color:var(--soft);--fl:0px;--fr:0px;
+ -webkit-mask-image:linear-gradient(90deg,transparent,#000 var(--fl),#000 calc(100% - var(--fr)),transparent);mask-image:linear-gradient(90deg,transparent,#000 var(--fl),#000 calc(100% - var(--fr)),transparent)}
+.sb-crumbs::-webkit-scrollbar{display:none}
+.sb-crumbs.ovl{--fl:18px}.sb-crumbs.ovr{--fr:18px}
+.sb-crumbs button{all:unset;flex:none;padding:3px 4px;border-radius:var(--sb-r-sm);color:var(--soft);cursor:pointer;transition:background var(--sb-out) var(--sb-ease),color var(--sb-out) var(--sb-ease)}
+.sb-crumbs button:hover{background:var(--line);color:var(--ink);transition-duration:calc(var(--sb-in) * .5)}
+.sb-crumbs button.drop{background:var(--gold-wash);color:var(--gold-ink)}
+.sb-crumbs button:focus-visible{outline:var(--rule) solid var(--gold)}
+.sb-crumbs i{flex:none;font-style:normal;color:var(--line-3)}
+.sb-crumbs b{flex:none;padding:3px 4px;font-weight:500;color:var(--ink)}

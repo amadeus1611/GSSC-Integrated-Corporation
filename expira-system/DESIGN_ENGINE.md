@@ -115,7 +115,15 @@ Motion is the heart of the UX: fidelity in the engine comes first.
   - A running chat is a gold dot that breathes.
   - A finished chat you have not opened yet is a gold ring: the dot settles into it with one soft pulse, and it fades to grey once you open it.
   - A new document you have not opened is a gold page.
-  - Pinned is not a colour. It is a small pin at the row's end (which gives way to the `…` on hover), and the item floats to the top of its level.
+  - Pinned is not a colour. It is a small pin at the row's end (which gives way to the `…` on hover), and the item floats to the top of its own level: a pin inside a folder goes to the top of that folder, and a pinned folder goes to the top of the level that holds it. Pins keep the order they were pinned in, ahead of folders and then items.
+- **An empty folder still holds one row of space.** It shows a quiet italic "Empty" where a child's name would begin. Its dimness is its colour, never its opacity, so its focus in and focus out land exactly where it rests and never jump. While something is dragged over its folder, "Empty" racks out and "Drop here" pulls focus in gold in the same place.
+- **Depth is bounded by width, not by a number.**
+  - A folder may nest to any depth. The tree indents while a name would still have about 90px, which is about six levels at the default width and fewer when the dock is narrow.
+  - Opening a folder past that point steps into it instead: the folder becomes the root of the view, and the list slides one way while the new one slides in from the other, on one clock. Rows that appear in both views travel to their new place.
+  - While the view is rooted in a folder, a path bar sits at the top of the list and stays put while the list scrolls: back and forward (the same two small frosted buttons as the cards), then the trail "All / … / current". A trail longer than the bar scrolls sideways and feathers only on the side that is cut off. Any step in the trail is a way back and a drop target.
+  - Every folder's `…` › Folder page also offers "Show on its own", so a person can step in at any depth.
+  - Left arrow at the top of a rooted view climbs out one level. Search always looks through everything, so it hides the bar while it runs.
+  - The bar follows browser rules: it stays while there is somewhere to go forward, and working the top level again drops that forward trail and the bar with it.
 - **Actions are a card of pages.**
   - The row's `…` menu opens a card whose first page is short: Rename, Pin, Folder, Delete.
   - Deeper choices are further pages of the same card, not new pop-ups: Folder leads to Move to, New folder and Pin, and Move to leads to the folders.
@@ -268,6 +276,10 @@ They live in `bench/drafts/sidebar-next.css`, and the dark stack lives in `bench
 - **Tokens (v41):** every value comes from `src/tokens.css`. Spacing is a 4px scale with half steps (`--sp-half`, `--sp-1h` … `--sp-4h`) below 20px for dense chrome; a 1px nudge is optical and stays literal. Layers are named (`--z-side`, `--z-menu`, `--z-tip` …) in one stacking order. Dark tokens are written once in `@dark{}`.
 
 ## 6. Change log
+- **v45 pins, Empty and deep nesting** (2026-09-26, Amadeus: "What happens when we have folders inside folders inside folders? … Will it then spawn the <> button?"):
+  - Pins sort first within their own level, folders included, in the order they were pinned.
+  - "Empty" is now an italic serif line in the muted colour, aligned with the child names. Its old `opacity:.6` fought the focus-in, which ends at 1, and made it jump. Measured: it only falls while its folder closes and only rises while it opens.
+  - Deep nesting steps in once a name would drop under about 90px. The path bar brings its own ‹ › and a scrolling, feathered trail; one clock for a step in or out (measured: every tree animation shares one start time).
 - **v45 status and fixes** (2026-09-26, Amadeus):
   - Gold now means "needs you": running is a gold dot, finished and unread is a gold ring (with one pulse as a run ends), and opening a chat reads it.
   - Pinned moves to its own small pin mark, and Pin is on the first page of the `…` menu.
