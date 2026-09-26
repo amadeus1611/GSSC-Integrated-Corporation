@@ -20,6 +20,7 @@ HERE = os.path.dirname(os.path.abspath(__file__))
 CONSOLE = os.path.dirname(HERE)
 SRC = os.path.join(CONSOLE, 'src')
 OUT = os.path.join(HERE, 'out')
+sys.dont_write_bytecode = True  # importing build.py must not leave a __pycache__ beside it
 sys.path.insert(0, CONSOLE)
 from build import expand_dark, read  # noqa: E402  one @dark rule for both builds
 
