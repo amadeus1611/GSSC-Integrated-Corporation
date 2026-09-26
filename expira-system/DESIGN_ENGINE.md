@@ -132,6 +132,11 @@ Motion is the heart of the UX: fidelity in the engine comes first.
   - Then a Control Center strip that acts in place: Appearance (Auto, Light, Dark; the page cross-fades), Calm motion, and Compact rows (the rows reflow in one move).
   - Then one icon column: Settings, Library, Data ›, Help ›. The last two are pages of the same card.
   - Last is a quiet system line, as About This Mac has: "EXPIRA Console 45 · Kernel 2.18".
+  - The card keeps its own type scale (the sidebar's density never reaches it) and lays itself out from its own width with container queries, so it stays whole and centred at any dock width.
+  - Positions inside it are proportional, never measured: the appearance pill steps in its own width, so it is centred on its choice at every size.
+  - Narrow, the switch keeps its icons and the tiles stack one per row with full names.
+  - The identity row opens an Account page (name, organisation, storage).
+  - The tiles act out their state: Calm's waves settle flat, and Compact's lines draw together. Their wells dip slightly under a press (the well, never the text).
 - **Direct manipulation.**
   - Drag onto a folder; a closed folder springs open if you linger, as in Finder.
   - Pull the sidebar's edge to resize it. The width is remembered.
@@ -243,6 +248,12 @@ They live in `bench/drafts/sidebar-next.css`, and the dark stack lives in `bench
 - **Tokens (v41):** every value comes from `src/tokens.css`. Spacing is a 4px scale with half steps (`--sp-half`, `--sp-1h` … `--sp-4h`) below 20px for dense chrome; a 1px nudge is optical and stays literal. Layers are named (`--z-side`, `--z-menu`, `--z-tip` …) in one stacking order. Dark tokens are written once in `@dark{}`.
 
 ## 6. Change log
+- **v45 system panel, refined** (2026-09-26, Amadeus: "not centred; Compact clips"):
+  - The card has a fixed type scale and container-query layout.
+  - The appearance pill is proportional, and was measured centred within 0.02px at 208, 256 and 400px, in both densities and both themes.
+  - Tiles stack when narrow, and their glyphs animate their state.
+  - The identity row opens an Account page, and Library shows its count.
+  - The appearance switch takes left and right arrows.
 - **v45 system panel** (2026-09-26, Amadeus):
   - The account card is rebuilt as a system panel: identity with sync status, a Control Center strip (Appearance, Calm motion, Compact), Settings, Library, Data ›, Help ›, and a system line.
   - A shared pager drives both the account card and the row menu. The back and forward pill sits between each card and what opened it.

@@ -267,12 +267,14 @@ const SB=(()=>{const side=$("#side"),scroll=$("#sbScroll");
  const tile=(k,ic,t)=>`<button class="sb-tile${PREF[k]?" on":""}" type="button" data-tg="${k}" aria-pressed="${PREF[k]}"><span class="w">${ic}</span><span class="l"><b>${t}</b><small>${PREF[k]?"On":"Off"}</small></span></button>`;
  function apage(name){
   if(name==="data")return cap("Data")+item("export",IC.out2,"Export everything")+item("import",IC.in2,"Import")+`<div class="sb-note"><i></i>Kept in your account, synced to your devices</div>`;
+  if(name==="account")return cap("Account")+`<div class="sb-field"><span>Name</span><b>Amadeus</b></div><div class="sb-field"><span>Organisation</span><b>GSSC Integrated Corporation</b></div>`+
+   `<div class="sb-field"><span>Storage</span><b>Your account, synced</b></div><div class="sb-sep"></div>`+item("settings",IC.gear,"Open Settings");
   if(name==="help")return cap("Help")+item("keys",IC.keys,"Keyboard shortcuts")+item("cmd",IC.cmd,"Commands")+item("new",IC.spark,"What's new")+`<div class="sb-sep"></div>`+item("about",IC.info,"About EXPIRA");
-  return `<div class="sb-id"><span class="sb-av">A</span><span class="sb-idt"><b>Amadeus</b><small>GSSC Integrated Corporation</small><em><i></i>Synced</em></span></div>`+
+  return `<button class="sb-id" type="button" data-a="p:account" aria-label="Account"><span class="sb-av">A</span><span class="sb-idt"><b>Amadeus</b><small>GSSC Integrated Corporation</small><em><i></i>Synced</em></span><span class="sb-go">${IC.fwd}</span></button>`+
    `<div class="sb-cc"><div class="sb-seg" role="radiogroup" aria-label="Appearance"><i class="pill" aria-hidden="true"></i>`+
     [["system",IC.sys,"Auto"],["light",IC.sun,"Light"],["dark",IC.moon,"Dark"]].map(([v,ic,l])=>`<button type="button" role="radio" data-th="${v}" aria-checked="false">${ic}<span>${l}</span></button>`).join("")+`</div>`+
    `<div class="sb-tiles">${tile("calm",IC.calm,"Calm motion")}${tile("compact",IC.rows,"Compact")}</div></div>`+
-   `<div class="sb-sep"></div>`+item("settings",IC.gear,"Settings")+item("library",IC.lib,"Library")+item("p:data",IC.data,"Data",0,true)+item("p:help",IC.help,"Help",0,true)+
+   `<div class="sb-sep"></div>`+item("settings",IC.gear,"Settings")+item("library",IC.lib,"Library").replace('</span></button>','</span><span class="sb-m">5</span></button>')+item("p:data",IC.data,"Data",0,true)+item("p:help",IC.help,"Help",0,true)+
    `<div class="sb-sysline"><span>EXPIRA Console 45</span><span>Kernel 2.18</span></div>`}
  const AP=pager(acard,anb,anf,hlM,n=>{const h=apage(n);setTimeout(()=>paintSeg(false),0);return h});
  function acct(o){o=o??!menu.classList.contains("open");if(o)pop(false);hlM.off();if(o&&!menu.classList.contains("open"))AP.reset("main");menu.classList.toggle("open",o);me.setAttribute("aria-expanded",String(o));
@@ -286,8 +288,13 @@ const SB=(()=>{const side=$("#side"),scroll=$("#sbScroll");
  function theme(v){const apply=()=>{if(v==="system")delete root.dataset.theme;else root.dataset.theme=v;if(window.BENCH){BENCH.state.th=v==="system"?undefined:v;BENCH.save()}paintSeg(true)};
   if(document.startViewTransition&&!reduce)document.startViewTransition(apply);else apply()}
  let segAt=-1;function paintSeg(anim){const seg=acard.querySelector(".sb-page:last-child .sb-seg");if(!seg)return;const v=root.dataset.theme||"system",bs=[...seg.querySelectorAll("[data-th]")],i=bs.findIndex(b=>b.dataset.th===v),pill=seg.querySelector(".pill");
-  bs.forEach(b=>b.setAttribute("aria-checked",String(b.dataset.th===v)));const w=pill.offsetWidth,to=i*w;pill.style.transform=`translateX(${to}px)`;
-  if(anim&&segAt>=0&&segAt!==i&&!reduce){const from=segAt*w,d=from-to,Es=EZ(),D=ms("--sb-move");pill.animate(sampled(D,Es,(p,k)=>({transform:`translateX(${(to+d*(1-p)).toFixed(2)}px)`,filter:mb(k,Math.min(1.4,Math.abs(d)/50))})),{duration:D,easing:"linear"})}segAt=i}
+  bs.forEach(b=>b.setAttribute("aria-checked",String(b.dataset.th===v)));pill.style.setProperty("--i",i);pill.getAnimations().forEach(a=>a.cancel());
+  /* in steps of its own width, so the travel and the landing stay centred however wide the card is */
+  if(anim&&segAt>=0&&segAt!==i&&!reduce){const from=segAt,d=from-i,Es=EZ(),D=ms("--sb-move");
+   pill.animate(sampled(D,Es,(p,k)=>({transform:`translateX(calc(${(i+d*(1-p)).toFixed(4)} * 100%))`,filter:mb(k,Math.min(1.4,Math.abs(d)*.7))})),{duration:D,easing:"linear"})}segAt=i}
+ /* the appearance switch is a radio group: left and right move the choice */
+ acard.addEventListener("keydown",e=>{const b=e.target.closest("[data-th]");if(!b||(e.key!=="ArrowLeft"&&e.key!=="ArrowRight"))return;e.preventDefault();e.stopPropagation();
+  const bs=[...b.parentElement.querySelectorAll("[data-th]")],j=(bs.indexOf(b)+(e.key==="ArrowRight"?1:-1)+bs.length)%bs.length;theme(bs[j].dataset.th);bs[j].focus()},true);
  new MutationObserver(()=>paintSeg(false)).observe(root,{attributes:true,attributeFilter:["data-theme"]});
  /* the tiles act in place: Calm motion turns every move into a state change; Compact sets the row height, and the
     rows reflow to it in one move. The state word pulls focus as it changes. */

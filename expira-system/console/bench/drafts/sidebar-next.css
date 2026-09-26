@@ -223,40 +223,77 @@ body.sb-resizing,body.sb-resizing *{cursor:col-resize!important;user-select:none
 .sb-scroll.f-s{--fs:16px}
 .sb-scroll.f-e{--fe:20px}
 
-/* ---- the account card: a system panel. It sits above the account row, leaving room for its pill by the chevrons ---- */
+/* ---- the account card: a system panel. It sits above the account row, leaving room for its pill by the chevrons.
+   It keeps its own type scale (the sidebar's density does not reach it) and lays itself out from its own width
+   (container queries), so it stays whole and centred at any dock width. Corners are concentric: an 11px card, a
+   5px inset, 8px modules and 6px controls inside them. ---- */
 .sb-acct{position:absolute;left:var(--sp-1h);right:var(--sp-1h);bottom:calc(100% + 34px);z-index:var(--z-menu);visibility:hidden;pointer-events:none}
 .sb-acct.open{visibility:visible;pointer-events:auto}
 .sb-acct.open .sb-card,.sb-acct.open .sb-nav{opacity:1}
-/* identity */
-.sb-id{position:relative;z-index:1;display:flex;align-items:center;gap:var(--sp-2h);padding:var(--sp-2) var(--sp-2) var(--sp-2h)}
-.sb-id .sb-av{width:32px;height:32px;font-size:15px}
-.sb-idt{min-width:0;display:flex;flex-direction:column;gap:1px}
-.sb-idt b{font-weight:450;font-size:12px;color:var(--ink)}
-.sb-idt small{font-size:var(--sb-fs-2);color:var(--mute);white-space:nowrap;overflow:hidden;-webkit-mask-image:linear-gradient(90deg,#000 calc(100% - 14px),transparent);mask-image:linear-gradient(90deg,#000 calc(100% - 14px),transparent)}
-.sb-idt em{display:flex;align-items:center;gap:5px;margin-top:2px;font-style:normal;font-size:var(--fs-micro);letter-spacing:.02em;color:var(--mute)}
-.sb-idt em i,.sb-note i{width:5px;height:5px;border-radius:var(--r-round);background:var(--ok);box-shadow:0 0 0 2px color-mix(in srgb,var(--ok) 18%,transparent)}
-/* the Control Center strip: appearance, then two tiles */
-.sb-cc{position:relative;z-index:1;display:flex;flex-direction:column;gap:5px;padding:0 1px 4px}
-.sb-cc .sb-seg{margin:0;padding:2px;border-radius:8px}
-.sb-cc .sb-seg .pill{border-radius:6px;transition:none}
-.sb-cc .sb-seg button{flex-direction:row;height:24px;border-radius:6px;gap:5px}
-.sb-cc .sb-seg button svg{width:12px;height:12px}
-.sb-tiles{display:grid;grid-template-columns:1fr 1fr;gap:5px}
-.sb-tile{all:unset;box-sizing:border-box;display:flex;align-items:center;gap:var(--sp-2);height:40px;padding:0 var(--sp-2);border-radius:8px;background:var(--well);box-shadow:inset 0 0 0 var(--rule-hair) var(--line-2);cursor:pointer;
+.sb-acct .sb-card{--sb-fs:11.5px;--sb-fs-2:10px;--sb-ic:13px;container-type:inline-size}
+/* identity: a button that opens the Account page; its chevron surfaces on hover */
+.sb-id{all:unset;box-sizing:border-box;position:relative;z-index:1;display:flex;align-items:center;gap:var(--sp-2h);width:100%;padding:var(--sp-2) var(--sp-2) var(--sp-2) var(--sp-1h);border-radius:8px;cursor:pointer;
+ transition:background var(--sb-out) var(--sb-ease)}
+.sb-id:hover{background:var(--line);transition-duration:calc(var(--sb-in) * .5)}
+.sb-id:focus-visible{outline:var(--rule) solid var(--gold);outline-offset:-1px}
+.sb-id .sb-av{width:34px;height:34px;font-size:16px}
+.sb-id:hover .sb-av{box-shadow:inset 0 0 0 var(--rule-hair) var(--gold),0 0 0 2px var(--gold-wash);transition-duration:var(--sb-in)}
+.sb-idt{flex:1;min-width:0;display:flex;flex-direction:column;gap:1px}
+.sb-idt b{font-weight:500;font-size:12.5px;letter-spacing:-.005em;color:var(--ink);white-space:nowrap;overflow:hidden;-webkit-mask-image:linear-gradient(90deg,#000 calc(100% - 14px),transparent);mask-image:linear-gradient(90deg,#000 calc(100% - 14px),transparent)}
+.sb-idt small{font-size:10.5px;color:var(--mute);white-space:nowrap;overflow:hidden;-webkit-mask-image:linear-gradient(90deg,#000 calc(100% - 14px),transparent);mask-image:linear-gradient(90deg,#000 calc(100% - 14px),transparent)}
+.sb-idt em{display:flex;align-items:center;gap:5px;margin-top:3px;font-style:normal;font-size:var(--fs-micro);letter-spacing:.02em;color:var(--mute)}
+.sb-idt em i,.sb-note i{width:5px;height:5px;flex:none;border-radius:var(--r-round);background:var(--ok);box-shadow:0 0 0 2px color-mix(in srgb,var(--ok) 18%,transparent)}
+.sb-id .sb-go{opacity:0;filter:blur(2px);transition:opacity var(--sb-out) var(--sb-ease),filter var(--sb-out) var(--sb-ease)}
+.sb-id:hover .sb-go,.sb-id:focus-visible .sb-go{opacity:1;filter:none;transition-duration:var(--sb-in)}
+/* the Control Center strip: appearance, then two tiles, equal insets on both sides */
+.sb-cc{position:relative;z-index:1;display:flex;flex-direction:column;gap:5px;padding:2px 0 5px}
+.sb-cc .sb-seg{margin:0;padding:2px;border-radius:8px;display:grid;grid-template-columns:repeat(3,minmax(0,1fr))}
+/* the pill is positioned proportionally (its own width per step), so it sits dead centre on its choice at any width */
+.sb-cc .sb-seg .pill{left:2px;top:2px;bottom:2px;width:calc((100% - 4px) / 3);border-radius:6px;transform:translateX(calc(var(--i,0) * 100%));transition:none;
+ box-shadow:0 0 0 var(--rule-hair) var(--line-3),0 1px 2px rgba(var(--sb-shc),calc(var(--sb-sha) * .35)),0 3px 8px -4px rgba(var(--sb-shc),calc(var(--sb-sha) * .5))}
+.sb-cc .sb-seg button{flex-direction:row;justify-content:center;min-width:0;height:26px;border-radius:6px;gap:5px;font-size:10.5px}
+.sb-cc .sb-seg button span{min-width:0;overflow:hidden;white-space:nowrap}
+.sb-cc .sb-seg button svg{width:12px;height:12px;flex:none;transition:transform var(--sb-move) var(--sb-ease)}
+.sb-cc .sb-seg button:hover svg{transform:rotate(-8deg)}
+.sb-cc .sb-seg button[data-th="system"]:hover svg{transform:none}
+.sb-tiles{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:5px}
+.sb-tile{all:unset;box-sizing:border-box;min-width:0;display:flex;align-items:center;gap:7px;height:42px;padding:0 7px;border-radius:8px;background:var(--well);box-shadow:inset 0 0 0 var(--rule-hair) var(--line-2);cursor:pointer;
  transition:background var(--sb-out) var(--sb-ease),box-shadow var(--sb-out) var(--sb-ease)}
-.sb-tile:hover{box-shadow:inset 0 0 0 var(--rule-hair) var(--line-3);transition-duration:calc(var(--sb-in) * .5)}
+.sb-tile:hover{box-shadow:inset 0 0 0 var(--rule-hair) var(--line-3);background:color-mix(in srgb,var(--well) 70%,var(--line-2));transition-duration:calc(var(--sb-in) * .5)}
 .sb-tile:focus-visible{outline:var(--rule) solid var(--gold);outline-offset:-1px}
+/* the well: grey when off, gold when on; it dips a little under the press (the well only, never the text) */
 .sb-tile .w{width:24px;height:24px;flex:none;display:grid;place-items:center;border-radius:var(--r-round);background:var(--line-2);color:var(--soft);
- transition:background var(--sb-in) var(--sb-ease),color var(--sb-in) var(--sb-ease),box-shadow var(--sb-in) var(--sb-ease)}
-.sb-tile .w svg{width:13px;height:13px}
-.sb-tile.on .w{background:color-mix(in srgb,var(--gold) 22%,transparent);color:var(--gold-hi,var(--gold));box-shadow:inset 0 0 0 var(--rule-hair) color-mix(in srgb,var(--gold) 55%,transparent)}
-.sb-tile .l{min-width:0;display:flex;flex-direction:column;gap:1px;line-height:1.15}
-.sb-tile b{font-weight:450;font-size:var(--sb-fs);color:var(--ink);white-space:nowrap}
-.sb-tile small{font-size:var(--fs-micro);color:var(--mute)}
+ transition:background var(--sb-in) var(--sb-ease),color var(--sb-in) var(--sb-ease),box-shadow var(--sb-in) var(--sb-ease),transform var(--sb-move) var(--sb-ease)}
+.sb-tile:active .w{transform:scale(.9);transition-duration:var(--sb-in),var(--sb-in),var(--sb-in),calc(var(--sb-in) * .4)}
+.sb-tile .w svg{width:13px;height:13px;overflow:visible}
+.sb-tile.on .w{background:color-mix(in srgb,var(--gold) 22%,transparent);color:var(--gold-hi,var(--gold));box-shadow:inset 0 0 0 var(--rule-hair) color-mix(in srgb,var(--gold) 55%,transparent),0 0 12px -2px color-mix(in srgb,var(--gold) 35%,transparent)}
+/* the glyphs act out their state: Calm's waves settle flat; Compact's lines draw together */
+.sb-tile .w path{transition:d var(--sb-move) var(--sb-ease),transform var(--sb-move) var(--sb-ease),opacity var(--sb-move) var(--sb-ease)}
+.sb-tile[data-tg="calm"].on .w path:first-child{d:path("M2 9.5c1.6 0 3 0 4.5 0s3 0 4.5 0 2.4 0 3 0")}
+.sb-tile[data-tg="calm"].on .w path:last-child{d:path("M2 6.5c1.6 0 3 0 4.5 0s3 0 4.5 0 2.4 0 3 0")}
+.sb-tile[data-tg="compact"] .w path:first-child{transform:translateY(-1.2px)}
+.sb-tile[data-tg="compact"] .w path:last-child{transform:translateY(1.2px)}
+.sb-tile[data-tg="compact"].on .w path:first-child{transform:translateY(1px)}
+.sb-tile[data-tg="compact"].on .w path:last-child{transform:translateY(-1px)}
+.sb-tile .l{flex:1;min-width:0;display:flex;flex-direction:column;gap:1px;line-height:1.15}
+.sb-tile b{font-weight:450;font-size:11px;color:var(--ink);white-space:nowrap;overflow:hidden;-webkit-mask-image:linear-gradient(90deg,#000 calc(100% - 12px),transparent);mask-image:linear-gradient(90deg,#000 calc(100% - 12px),transparent)}
+.sb-tile small{font-size:var(--fs-micro);color:var(--mute);transition:color var(--sb-in) var(--sb-ease)}
 .sb-tile.on small{color:var(--gold-ink)}
-/* a quiet note and the system line */
-.sb-note{position:relative;z-index:1;display:flex;align-items:center;gap:6px;padding:var(--sp-1h) var(--sp-2) var(--sp-1);font-size:var(--sb-fs-2);color:var(--mute)}
+/* narrow docks: the switch keeps its icons, the tiles keep their names */
+@container (max-width:226px){
+.sb-cc .sb-seg button span{display:none}
+.sb-tiles{grid-template-columns:minmax(0,1fr)}
+.sb-tile{height:36px}
+}
+/* a quiet note, the Account page's fields, and the system line */
+.sb-note{position:relative;z-index:1;display:flex;align-items:center;gap:6px;padding:var(--sp-1h) var(--sp-2) var(--sp-1);font-size:10px;color:var(--mute)}
+.sb-field{position:relative;z-index:1;display:flex;align-items:baseline;justify-content:space-between;gap:var(--sp-3);min-height:26px;padding:5px var(--sp-2);font-size:11.5px}
+.sb-field span{flex:none;color:var(--mute);font-size:10.5px}
+.sb-field b{min-width:0;font-weight:400;color:var(--ink);text-align:right;white-space:nowrap;overflow:hidden;-webkit-mask-image:linear-gradient(270deg,#000 calc(100% - 14px),transparent);mask-image:linear-gradient(270deg,#000 calc(100% - 14px),transparent)}
 .sb-sysline{position:relative;z-index:1;display:flex;justify-content:space-between;gap:var(--sp-2);margin:4px 3px 0;padding:var(--sp-1h) var(--sp-1h) 3px;border-top:var(--rule-hair) solid var(--line-2);font-size:var(--fs-micro);letter-spacing:.02em;color:var(--mute);font-variant-numeric:tabular-nums}
+.sb-sysline span{white-space:nowrap}
+.sb-sysline span:last-child{opacity:.8}
+.sb-card .sb-m{font-size:10px;color:var(--mute);font-variant-numeric:tabular-nums}
 /* Compact off: roomier rows (macOS's medium sidebar size) */
 :root[data-sb-density="roomy"]{--sb-row:28px;--sb-fs:12px;--sb-ic:14px}
 /* the theme change: the page cross-fades (a view transition) on the one curve */
