@@ -180,6 +180,11 @@ Motion is the heart of the UX: fidelity in the engine comes first.
   - The rows below move on the curve.
   - Each new row pulls focus the moment it is uncovered, and each leaving row racks out just before it is covered.
   - A closing block keeps its exact box while it fades.
+- **One clock per change.** When a card changes (a page switch, a change of shape as the dock resizes, a tile's state), every piece starts on the same frame and runs for the same time (`--sb-move`) on the same curve. That includes the card's height, the old and new pages, each tile's box, the icons and labels, and the rows that move. Nothing arrives early or late.
+  - A tile's box is its own layer, so it can morph from its old size to its new one while its icon and label glide inside it, and no text is ever scaled.
+  - A change of shape waits a beat (90 ms) for the dock's width to settle across the line, so dragging back and forth over it never flickers.
+  - The hover plate holds still for the length of a change, so the pointer landing on new rows cannot start a second clock.
+  - The theme cross-fade runs on the same `--sb-move`.
 - **Focus resolves before the move ends.** Blur is gone by 60% of the way, so the last stretch of every move is already sharp and nothing snaps into focus at the end. A lingering sub-pixel blur that clears only when the animation stops reads as a jolt.
 - **Depth moves with the card.** Every floating card and pill casts a soft, layered shadow (`--sb-depth`): an inner top highlight, a hairline, a near shadow and a long soft one. It grows in as the card arrives and eases away as it leaves, drawn from the same progress value.
 - **A theme change is one picture.** The page cross-fades between themes as a whole, and every CSS transition is held while it runs, so no element keeps fading on its own after the page has landed.
@@ -257,6 +262,11 @@ They live in `bench/drafts/sidebar-next.css`, and the dark stack lives in `bench
 - **Tokens (v41):** every value comes from `src/tokens.css`. Spacing is a 4px scale with half steps (`--sp-half`, `--sp-1h` … `--sp-4h`) below 20px for dense chrome; a 1px nudge is optical and stays literal. Layers are named (`--z-side`, `--z-menu`, `--z-tip` …) in one stacking order. Dark tokens are written once in `@dark{}`.
 
 ## 6. Change log
+- **v45 one clock** (2026-09-26, Amadeus: "not synced across all the assets"):
+  - A change in a card is one transaction on one clock. Measured: 16 animations share one start and one duration in a change of shape, and 4 in a page switch.
+  - Tile boxes morph on their own layer.
+  - The narrow switch waits 90 ms: 0 flips while jittering across the line.
+  - The hover plate holds during a change.
 - **v45 corners and resize** (2026-09-26, Amadeus):
   - Corners are tightened to 6, 4 and 3px everywhere.
   - Back and forward are two separate frosted buttons, placed above the account card.

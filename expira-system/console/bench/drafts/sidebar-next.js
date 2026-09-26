@@ -157,20 +157,21 @@ const SB=(()=>{const side=$("#side"),scroll=$("#sbScroll");
 
  /* ---- the gliding highlight: surfaces out of a blur, glides on the curve and stretches with its speed, racks out ---- */
  function glide(list,sel){const hl=document.createElement("i");hl.className="sb-hl";hl.setAttribute("aria-hidden","true");list.prepend(hl);
-  let shown=false,y=0,fade=null,mv=null;
+  let shown=false,y=0,fade=null,mv=null,holdTo=0;
   const curY=()=>{const m=/matrix\(([^)]+)\)/.exec(getComputedStyle(hl).transform);return m?+m[1].split(",")[5]:y};
-  function show(v){if(v===shown)return;shown=v;const op=+getComputedStyle(hl).opacity;fade?.cancel();hl.style.opacity=v?"1":"0";if(reduce)return;const B=blurPx()*.4;
+  function show(v,dur){if(v===shown)return;shown=v;const op=+getComputedStyle(hl).opacity;fade?.cancel();hl.style.opacity=v?"1":"0";if(reduce)return;const B=blurPx()*.4;
    fade=hl.animate(v?[{opacity:op,filter:`blur(${(B*(1-op)).toFixed(2)}px)`},{opacity:.95,filter:"blur(0px)",offset:.55},{opacity:1,filter:"blur(0px)"}]:[{opacity:op,filter:"blur(0px)"},{opacity:.45*op,filter:`blur(${(B*.7).toFixed(2)}px)`,offset:.35},{opacity:0,filter:`blur(${B}px)`}],
-    {duration:v?ms("--sb-in")*.5:ms("--sb-out"),easing:EZ()})}
+    {duration:dur||(v?ms("--sb-in")*.5:ms("--sb-out")),easing:EZ()});if(dur)fade.startTime=document.timeline.currentTime}
   function place(row){const y1=Math.round(row.getBoundingClientRect().top-list.getBoundingClientRect().top+list.scrollTop),h=row.offsetHeight;hl.style.height=h+"px";
    if(!shown||reduce){mv?.cancel();y=y1;hl.style.transform=`translateY(${y1}px)`;return}
    const y0=curY();mv?.cancel();y=y1;hl.style.transform=`translateY(${y1}px)`;const d=y1-y0;if(Math.abs(d)<.5)return;
    const T=ms("--sb-move")*.8,E=easeFn(EZ()),N=Math.max(14,Math.ceil(T/1000*120)),k=Math.min(.45,Math.abs(d)/(h*5)),vel=[];
    for(let i=0;i<=N;i++){const t=i/N;vel.push((E(Math.min(1,t+.01))-E(Math.max(0,t-.01)))/.02)}const vmax=Math.max(...vel)||1;
    const M=Math.min(1.4,Math.abs(d)/60);mv=hl.animate(vel.map((v,i)=>({transform:`translateY(${(y0+d*E(i/N)).toFixed(2)}px) scaleY(${(1+k*v/vmax).toFixed(3)})`,filter:mb(v/vmax,M)})),{duration:T,easing:"linear"})}
-  list.addEventListener("pointerover",e=>{const r=e.target.closest(sel);if(!r||!list.contains(r)||r.classList.contains("gone")||r.classList.contains("sb-empty")){if(!e.target.closest(".sb-hl"))show(false);return}place(r);show(true)});
+  list.addEventListener("pointerover",e=>{if(performance.now()<holdTo)return;const r=e.target.closest(sel);if(!r||!list.contains(r)||r.classList.contains("gone")||r.classList.contains("sb-empty")){if(!e.target.closest(".sb-hl"))show(false);return}place(r);show(true)});
   list.addEventListener("pointerleave",()=>show(false));
-  return{el:hl,off:()=>show(false)}}
+  /* hold: while a card changes as one move, the plate waits, so the pointer landing on new rows cannot start a second clock */
+  return{el:hl,off:()=>show(false),hold:ms0=>{holdTo=performance.now()+ms0;show(false,ms0)}}}
  const hlS=glide(scroll,".sb-row");
 
  /* ---- the top rows: New chat (with New folder beside it) and Search ---- */
@@ -222,12 +223,16 @@ const SB=(()=>{const side=$("#side"),scroll=$("#sbScroll");
   const paint=()=>{nb.disabled=at<=0;nf.disabled=at>=hist.length-1};
   function show(name,dir){const old=card.querySelector(".sb-page"),h0=card.offsetHeight,pg=document.createElement("div");pg.className="sb-page";pg.innerHTML=render(name);
    if(!old||reduce||!dir){card.replaceChildren(hl.el,pg);card.style.height="";paint();requestAnimationFrame(()=>edges(card));return}
-   hl.off();const Es=EZ(),IN=ms("--sb-in"),OUT=ms("--sb-out"),B=blurPx()*.5,dx=10*dir,cs=getComputedStyle(card);
+   /* one transaction: the old page, the new page and the card's height start on the same frame, run for the same time
+      on the same curve; the old one has racked out by halfway, the new one has pulled focus by then */
+   const Es=EZ(),T=ms("--sb-move"),B=blurPx()*.5,dx=10*dir,cs=getComputedStyle(card),t0=document.timeline.currentTime;hl.hold(T);
+   const go=(el,kf,o={})=>{const a=el.animate(kf,{duration:T,easing:"linear",...o});a.startTime=t0;return a};
    Object.assign(old.style,{position:"absolute",left:cs.paddingLeft,right:cs.paddingRight,top:old.offsetTop+"px"});card.append(pg);
-   const h1=pg.offsetHeight+parseFloat(cs.paddingTop)+parseFloat(cs.paddingBottom)+2;card.style.height=h0+"px";card.offsetWidth;card.style.height=h1+"px";
-   old.animate([{opacity:1,filter:"blur(0px)",transform:"none"},{opacity:0,filter:`blur(${B}px)`,transform:`translateX(${-dx}px)`}],{duration:OUT,easing:Es,fill:"forwards"}).finished.then(()=>old.remove(),()=>old.remove());
-   pg.animate([{opacity:0,filter:`blur(${B}px)`,transform:`translateX(${dx}px)`},{opacity:.85,filter:`blur(${(B*.25).toFixed(2)}px)`,offset:.3},{opacity:.97,filter:"blur(0px)",offset:.6},{opacity:1,filter:"blur(0px)",transform:"none"}],{duration:IN,easing:Es});
-   requestAnimationFrame(()=>edges(card));setTimeout(()=>{if(card.contains(pg))card.style.height=""},ms("--sb-move")+30);paint();setTimeout(()=>pg.querySelector(".sb-hit,button")?.focus({preventScroll:true}),40)}
+   const h1=pg.offsetHeight+parseFloat(cs.paddingTop)+parseFloat(cs.paddingBottom)+2;
+   card.getAnimations().forEach(a=>a.cancel());if(Math.abs(h1-h0)>1)go(card,sampled(T,Es,p=>({height:(h0+(h1-h0)*p).toFixed(2)+"px"})));
+   go(old,sampled(T,Es,p=>{const q=Math.min(1,p*2);return{opacity:(1-q).toFixed(3),transform:`translateX(${(-dx*p).toFixed(2)}px)`,filter:`blur(${(B*q).toFixed(2)}px)`}}),{fill:"forwards"}).finished.then(()=>old.remove(),()=>old.remove());
+   go(pg,sampled(T,Es,p=>({opacity:Math.min(1,.15+p*1.4).toFixed(3),transform:`translateX(${(dx*(1-p)).toFixed(2)}px)`,filter:fb(p,B,.5)})));
+   requestAnimationFrame(()=>edges(card));paint();setTimeout(()=>pg.querySelector(".sb-hit,button")?.focus({preventScroll:true}),40)}
   const go=n=>{hist=hist.slice(0,at+1);hist.push(n);at=hist.length-1;show(n,1)};
   const nav=d=>{const i=at+d;if(i<0||i>=hist.length)return;at=i;show(hist[at],d)};
   nb.addEventListener("click",e=>{e.stopPropagation();nav(-1)});nf.addEventListener("click",e=>{e.stopPropagation();nav(1)});
@@ -280,7 +285,7 @@ const SB=(()=>{const side=$("#side"),scroll=$("#sbScroll");
    `<div class="sb-sep"></div>`+item("settings",IC.gear,"Settings")+item("library",IC.lib,"Library").replace('</span></button>','</span><span class="sb-m">5</span></button>')+item("p:data",IC.data,"Data",0,true)+item("p:help",IC.help,"Help",0,true)+
    `<div class="sb-sysline"><span>EXPIRA Console 45</span><span>Kernel 2.18</span></div>`}
  const AP=pager(acard,anb,anf,hlM,n=>{const h=apage(n);setTimeout(()=>paintSeg(false),0);return h});
- function acct(o){o=o??!menu.classList.contains("open");if(o)pop(false);hlM.off();if(o&&!menu.classList.contains("open"))AP.reset("main");menu.classList.toggle("open",o);me.setAttribute("aria-expanded",String(o));
+ function acct(o){o=o??!menu.classList.contains("open");if(o)pop(false);hlM.off();if(o&&!menu.classList.contains("open")){AP.reset("main");mode(acard,false)}menu.classList.toggle("open",o);me.setAttribute("aria-expanded",String(o));
   if(o)setTimeout(()=>acard.querySelector('[aria-checked="true"]')?.focus({preventScroll:true}),60)}
  me.addEventListener("click",e=>{e.stopPropagation();acct()});
  menu.addEventListener("click",e=>{e.stopPropagation();const t=e.target.closest("[data-th]");if(t)return theme(t.dataset.th);
@@ -305,7 +310,7 @@ const SB=(()=>{const side=$("#side"),scroll=$("#sbScroll");
  /* the tiles act in place: Calm motion turns every move into a state change; Compact sets the row height, and the
     rows reflow to it in one move. The state word pulls focus as it changes. */
  function toggleTile(g){const k=g.dataset.tg,on=!PREF[k];PREF[k]=on;g.classList.toggle("on",on);g.setAttribute("aria-pressed",String(on));const sm=g.querySelector("small");sm.textContent=on?"On":"Off";
-  if(!reduce)sm.animate(focusIn(blurPx()*.4),{duration:ms("--sb-in"),easing:EZ()});
+  if(!reduce)sm.animate(focusIn(blurPx()*.4),{duration:ms("--sb-move"),easing:EZ()});
   if(k==="calm"){reduce=on||matchMedia("(prefers-reduced-motion: reduce)").matches;root.classList.toggle("calm",on)}
   if(k==="compact")sync(()=>{if(on)delete root.dataset.sbDensity;else root.dataset.sbDensity="roomy"})}
 
@@ -427,19 +432,31 @@ const SB=(()=>{const side=$("#side"),scroll=$("#sbScroll");
     drops to icons), nothing jumps: each piece that moved glides from where it was on the curve with a motion blur,
     labels that return pull focus, and the card eases to its new height. */
  const openCards=()=>[[menu,acard],[sortc,scard]].filter(([f])=>f.classList.contains("open")).map(([,c])=>c);
- function softly(apply){const cards=reduce?[]:openCards();if(!cards.length)return apply();
-  const snap=cards.map(c=>{const parts=[...c.querySelectorAll(".sb-page:last-child > *,.sb-tiles > *,.sb-seg button,.sb-seg button > *,.sb-tile .l")];
-   return{c,h:c.getBoundingClientRect().height,parts:parts.map(k=>[k,k.getBoundingClientRect(),k.getClientRects().length>0])}});
-  apply();
-  const T=ms("--sb-move"),Es=EZ();
-  snap.forEach(({c,h,parts})=>{const h1=c.getBoundingClientRect().height;
-   if(Math.abs(h1-h)>1&&!c._hFlight){c._hFlight=1;c.animate([{height:h+"px"},{height:h1+"px"}],{duration:T,easing:Es}).finished.finally(()=>c._hFlight=0)}
-   parts.forEach(([k,r0,was])=>{const now=k.getClientRects().length>0;if(!now)return;
-    if(!was){k.animate(focusIn(blurPx()*.4),{duration:ms("--sb-in"),easing:Es});return}
-    const r1=k.getBoundingClientRect(),dx=Math.round(r0.left-r1.left),dy=Math.round(r0.top-r1.top);
-    /* a width that simply grows moves things by a pixel or two; only a change of shape is animated */
-    if(Math.abs(dy)<3&&Math.abs(dx)<6)return;k.getAnimations().forEach(a=>{if(!(a instanceof CSSTransition))a.cancel()});
-    const M=Math.min(1.2,Math.hypot(dx,dy)/40);k.animate(sampled(T,Es,(p,v)=>({transform:`translate(${(dx*(1-p)).toFixed(2)}px,${(dy*(1-p)).toFixed(2)}px)`,filter:mb(v,M)})),{duration:T,easing:"linear"})})})}
+ /* one transaction for a card's change of shape: every piece starts on the same frame and runs for the same time on the
+    same curve. The card eases to its new height; each tile's box morphs from its old size to its new one (its own layer,
+    so no text is ever scaled) while its icon and label glide inside it; everything else glides from where it was with a
+    motion blur; labels that return pull focus. */
+ function txn(c,apply){const T=ms("--sb-move"),Es=EZ();
+  const parts=[...c.querySelectorAll(".sb-page:last-child > :not(.sb-cc),.sb-cc > .sb-seg,.sb-seg button > *,.sb-tile .w,.sb-tile .l")],tiles=[...c.querySelectorAll(".sb-page:last-child .sb-tile")];
+  const r0=new Map(parts.map(k=>[k,k.getClientRects().length?k.getBoundingClientRect():null])),b0=new Map(tiles.map(k=>[k,k.getBoundingClientRect()])),h0=c.getBoundingClientRect().height;
+  apply();if(reduce)return;
+  const t0=document.timeline.currentTime,go=(el,kf,o={})=>{const a=el.animate(kf,{duration:T,easing:"linear",...o});a.startTime=t0;return a};
+  const h1=c.getBoundingClientRect().height;if(Math.abs(h1-h0)>1){c.getAnimations().forEach(a=>a.cancel());go(c,sampled(T,Es,p=>({height:(h0+(h1-h0)*p).toFixed(2)+"px"})))}
+  tiles.forEach(k=>{const a=b0.get(k),b=k.getBoundingClientRect(),dx=a.left-b.left,dy=a.top-b.top,sx=a.width/b.width,sy=a.height/b.height;
+   if(Math.abs(dx)+Math.abs(dy)+Math.abs(a.width-b.width)+Math.abs(a.height-b.height)<2)return;
+   go(k,sampled(T,Es,p=>({transform:`translate(${(dx*(1-p)).toFixed(2)}px,${(dy*(1-p)).toFixed(2)}px) scale(${(sx+(1-sx)*p).toFixed(4)},${(sy+(1-sy)*p).toFixed(4)})`})),{pseudoElement:"::before"})});
+  parts.forEach(k=>{if(!k.getClientRects().length)return;const a=r0.get(k);
+   if(!a){go(k,sampled(T,Es,p=>({opacity:Math.min(1,p*1.6).toFixed(3),filter:fb(p,blurPx()*.4,.5)})));return}
+   const b=k.getBoundingClientRect(),dx=Math.round(a.left-b.left),dy=Math.round(a.top-b.top);if(!dx&&!dy)return;
+   const M=Math.min(1.2,Math.hypot(dx,dy)/40);go(k,sampled(T,Es,(p,v)=>({transform:`translate(${(dx*(1-p)).toFixed(2)}px,${(dy*(1-p)).toFixed(2)}px)`,filter:mb(v,M)})))});
+  requestAnimationFrame(()=>edges(c))}
+ /* the card goes narrow at 236px; while the dock is being dragged the switch waits a beat for the width to settle across
+    the line, so it never flickers back and forth, then runs as one transaction */
+ const NARROW=236,narrowNow=c=>c.getBoundingClientRect().width<=NARROW;
+ function mode(c,animate){const n=narrowNow(c);if(c.classList.contains("narrow")===n){clearTimeout(c._mt);c._mt=0;return}
+  if(!animate||reduce){c.classList.toggle("narrow",n);return}
+  if(!c._mt)c._mt=setTimeout(()=>{c._mt=0;const n2=narrowNow(c);if(c.classList.contains("narrow")!==n2)txn(c,()=>c.classList.toggle("narrow",n2))},90)}
+ function softly(apply){apply();openCards().forEach(c=>mode(c,true))}
  const setW=w=>softly(()=>{root.style.setProperty("--sb-w",Math.round(w)+"px");grip.setAttribute("aria-valuenow",String(Math.round(w)))});setW(W);
  const store=w=>{W=w;try{localStorage.setItem("bench.sbw",String(Math.round(W)))}catch(x){}};
  function settleTo(to){to=Math.min(MAX,Math.max(MIN,to));cancelAnimationFrame(settling);const from=parseFloat(tok("--sb-w"))||W;store(to);

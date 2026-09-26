@@ -190,7 +190,7 @@ body.sb-resizing,body.sb-resizing *{cursor:col-resize!important;user-select:none
 .sb-menu{position:absolute;left:var(--sp-1h);right:var(--sp-1h);bottom:calc(100% + var(--sp-1h));z-index:var(--z-menu)}
 /* the row menu: a card of pages, with a small pill of back and forward arrows sitting above it, like a browser's */
 .sb-pop{position:fixed;left:0;top:0;width:196px;z-index:var(--z-menu)}
-.sb-card{position:relative;overflow:hidden;padding:5px;border-radius:var(--sb-r-lg);transition:height var(--sb-move) var(--sb-ease)}  /* height eases between pages: a small surface, so its layout move is cheap */
+.sb-card{position:relative;overflow:hidden;padding:5px;border-radius:var(--sb-r-lg)}  /* height eases between pages: a small surface, so its layout move is cheap */
 .sb-page{position:relative}
 /* back and forward: two separate small frosted buttons, each its own surface with the cards' corners and depth */
 .sb-nav{position:absolute;right:0;bottom:calc(100% + 5px);display:flex;gap:4px}
@@ -264,17 +264,20 @@ body.sb-resizing,body.sb-resizing *{cursor:col-resize!important;user-select:none
 .sb-cc .sb-seg button:hover svg{transform:rotate(-8deg)}
 .sb-cc .sb-seg button[data-th="system"]:hover svg{transform:none}
 .sb-tiles{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:5px}
-.sb-tile{all:unset;box-sizing:border-box;min-width:0;display:flex;align-items:center;gap:7px;height:42px;padding:0 7px;border-radius:var(--sb-r);background:var(--well);box-shadow:inset 0 0 0 var(--rule-hair) var(--line-2);cursor:pointer;
- transition:background var(--sb-out) var(--sb-ease),box-shadow var(--sb-out) var(--sb-ease)}
-.sb-tile:hover{box-shadow:inset 0 0 0 var(--rule-hair) var(--line-3);background:color-mix(in srgb,var(--well) 70%,var(--line-2));transition-duration:calc(var(--sb-in) * .5)}
+/* every part of a tile changes on one clock (--sb-move on the curve); its box is its own layer (::before), so when the
+   card changes shape the box can morph from its old size to its new one while the icon and the label glide inside it */
+.sb-tile{all:unset;box-sizing:border-box;position:relative;isolation:isolate;min-width:0;display:flex;align-items:center;gap:7px;height:42px;padding:0 7px;border-radius:var(--sb-r);cursor:pointer}
+.sb-tile::before{content:"";position:absolute;inset:0;z-index:-1;border-radius:inherit;background:var(--well);box-shadow:inset 0 0 0 var(--rule-hair) var(--line-2);transform-origin:0 0;
+ transition:background var(--sb-move) var(--sb-ease),box-shadow var(--sb-move) var(--sb-ease)}
+.sb-tile:hover::before{box-shadow:inset 0 0 0 var(--rule-hair) var(--line-3);background:color-mix(in srgb,var(--well) 70%,var(--line-2))}
 .sb-tile:focus-visible{outline:var(--rule) solid var(--gold);outline-offset:-1px}
 /* the well: grey when off, gold when on; it dips a little under the press (the well only, never the text) */
 .sb-tile .w{width:24px;height:24px;flex:none;display:grid;place-items:center;border-radius:var(--r-round);background:var(--line-2);color:var(--soft);
- transition:background var(--sb-in) var(--sb-ease),color var(--sb-in) var(--sb-ease),box-shadow var(--sb-in) var(--sb-ease),transform var(--sb-move) var(--sb-ease)}
-.sb-tile:active .w{transform:scale(.9);transition-duration:var(--sb-in),var(--sb-in),var(--sb-in),calc(var(--sb-in) * .4)}
+ transition:background var(--sb-move) var(--sb-ease),color var(--sb-move) var(--sb-ease),box-shadow var(--sb-move) var(--sb-ease),transform var(--sb-move) var(--sb-ease)}
+.sb-tile:active .w{transform:scale(.9);transition-duration:var(--sb-move),var(--sb-move),var(--sb-move),calc(var(--sb-in) * .4)}
 .sb-tile .w svg{display:block;width:13px;height:13px;overflow:visible}
-.sb-tile.on{background:color-mix(in srgb,var(--gold) 9%,var(--well));box-shadow:inset 0 0 0 var(--rule-hair) color-mix(in srgb,var(--gold) 40%,transparent)}
-.sb-tile.on:hover{background:color-mix(in srgb,var(--gold) 13%,var(--well))}
+.sb-tile.on::before{background:color-mix(in srgb,var(--gold) 9%,var(--well));box-shadow:inset 0 0 0 var(--rule-hair) color-mix(in srgb,var(--gold) 40%,transparent)}
+.sb-tile.on:hover::before{background:color-mix(in srgb,var(--gold) 13%,var(--well))}
 .sb-tile.on .w{background:color-mix(in srgb,var(--gold) 22%,transparent);color:var(--gold-hi,var(--gold));box-shadow:inset 0 0 0 var(--rule-hair) color-mix(in srgb,var(--gold) 55%,transparent),0 0 12px -2px color-mix(in srgb,var(--gold) 35%,transparent)}
 /* the glyphs act out their state: Calm's waves settle flat; Compact's lines draw together */
 .sb-tile .w path{transition:d var(--sb-move) var(--sb-ease),transform var(--sb-move) var(--sb-ease),opacity var(--sb-move) var(--sb-ease)}
@@ -286,14 +289,13 @@ body.sb-resizing,body.sb-resizing *{cursor:col-resize!important;user-select:none
 .sb-tile[data-tg="compact"].on .w path:last-child{transform:translateY(-1px)}
 .sb-tile .l{flex:1;min-width:0;display:flex;flex-direction:column;gap:1px;line-height:1.15}
 .sb-tile b{font-weight:450;font-size:11px;color:var(--ink);white-space:nowrap;overflow:hidden;-webkit-mask-image:linear-gradient(90deg,#000 calc(100% - 12px),transparent);mask-image:linear-gradient(90deg,#000 calc(100% - 12px),transparent)}
-.sb-tile small{font-size:var(--fs-micro);color:var(--soft);transition:color var(--sb-in) var(--sb-ease)}
+.sb-tile small{font-size:var(--fs-micro);color:var(--soft);transition:color var(--sb-move) var(--sb-ease)}
 .sb-tile.on small{color:var(--gold-ink)}
-/* narrow docks: the switch keeps its icons, the tiles keep their names */
-@container (max-width:226px){
-.sb-cc .sb-seg button span{display:none}
-.sb-tiles{grid-template-columns:minmax(0,1fr)}
-.sb-tile{height:36px}
-}
+/* narrow docks: the switch keeps its icons, the tiles keep their names. The card switches to .narrow itself, a beat
+   after the dock's width settles across the line, and animates the change as one transaction (sidebar-next.js txn) */
+.sb-card.narrow .sb-cc .sb-seg button span{display:none}
+.sb-card.narrow .sb-tiles{grid-template-columns:minmax(0,1fr)}
+.sb-card.narrow .sb-tile{height:36px}
 /* a quiet note, the Account page's fields, and the system line */
 .sb-note{position:relative;z-index:1;display:flex;align-items:center;gap:6px;padding:var(--sp-1h) var(--sp-2) var(--sp-1);font-size:10px;color:var(--soft)}
 .sb-field{position:relative;z-index:1;display:flex;align-items:baseline;justify-content:space-between;gap:var(--sp-3);min-height:26px;padding:5px var(--sp-2);font-size:11.5px;line-height:1.35}
@@ -306,7 +308,7 @@ body.sb-resizing,body.sb-resizing *{cursor:col-resize!important;user-select:none
 /* Compact off: roomier rows (macOS's medium sidebar size) */
 :root[data-sb-density="roomy"]{--sb-row:28px;--sb-fs:12px;--sb-ic:14px}
 /* the theme change: the page cross-fades (a view transition) on the one curve */
-::view-transition-old(root),::view-transition-new(root){animation-duration:var(--sb-in);animation-timing-function:var(--sb-ease)}
+::view-transition-old(root),::view-transition-new(root){animation-duration:var(--sb-move);animation-timing-function:var(--sb-ease)}
 
 /* ---- select many ---- */
 .sb-tb[aria-pressed="true"]{background:var(--gold-wash);color:var(--gold-ink)}
