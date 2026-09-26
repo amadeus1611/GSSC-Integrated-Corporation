@@ -71,9 +71,12 @@ const SB=(()=>{const side=$("#side"),scroll=$("#sbScroll");
   const rows=moving(kids),before=new Map(rows.map(e=>[e,e.getBoundingClientRect().top]));
   [...rows,kids,...kids.children].forEach(e=>e.getAnimations({subtree:e===kids}).forEach(a=>a.cancel()));
   host.setAttribute("aria-expanded",String(open));
-  if(open){kids.hidden=false;Object.assign(kids.style,{position:"",left:"",right:"",top:""})}
-  else{const top=kids.offsetTop;Object.assign(kids.style,{position:"absolute",left:"0",right:"0",top:top+"px"})}
-  const done=()=>{if(kids._t!==tok)return;if(!open){kids.hidden=true;Object.assign(kids.style,{position:"",left:"",right:"",top:""})}};
+  /* closing takes the block out of the flow so the rows below can rise, but it keeps its exact box: the same left,
+     top and width it had in the flow, so not one title re-wraps or shifts while it fades */
+  const clear={position:"",left:"",width:"",top:""};
+  if(open){kids.hidden=false;Object.assign(kids.style,clear)}
+  else{const box={left:kids.offsetLeft+"px",top:kids.offsetTop+"px",width:kids.getBoundingClientRect().width+"px"};Object.assign(kids.style,{position:"absolute",...box})}
+  const done=()=>{if(kids._t!==tok)return;if(!open){kids.hidden=true;Object.assign(kids.style,clear)}};
   if(reduce)return done();
   const d=kids.offsetHeight||1,T=open?MO.move:MO.exit,Es=open?MO.spring:MO.soft,E=easeFn(Es),L=open?0:Math.min(90,MO.exit*.3),B=blurPx()*.45;
   rows.forEach(e=>{const dy=before.get(e)-e.getBoundingClientRect().top;if(Math.abs(dy)>.5)e.animate([{transform:`translateY(${dy}px)`},{transform:"none"}],{duration:T,easing:Es,delay:L,fill:"backwards"})});
