@@ -101,21 +101,45 @@ A four-second undo is not enough for business records.
 
 ## 9. Saving, and moving it into the console
 
-- **One model, extended rather than replaced:**
-  - `folders` gains `parent` (a folder id; empty means the top level), `pin`, `pinAt`, `ord` and `manual`.
-  - Chats keep `folder` as their parent link, and gain `ord` and `pinAt`. The existing `pinned` becomes the pin, so nothing is renamed on disk.
-  - Hand order per level (`manual`) lives on the parent folder, or in the KV key `rootOrder` for the top level.
-- **Migration on load:**
+Surveyed on 2026-09-26, after §1 to §8 were built in the bench. This is the one step that changes the shared page for every viewer and converts their stored data, so it follows `CLAUDE.md`'s rule for large changes: this plan first, then Amadeus's go.
+
+### What the live sidebar touches today
+
+| Unit | What changes |
+|---|---|
+| `shell.html` | The sidebar's markup: the brand row, the New chat / Search / Files / The Dispatch nav, `#find`, `#recents` and the foot become the v45 toolbar, search, path bar, tree and foot. |
+| `units/sidebar/sidebar.css` | About 90 lines of sidebar rules are replaced by the draft's. It also holds rules other units use (`.wm`, `.crumb`, `.ttl`, `.ro`, `.empty`, `.ib`, `.kb`), which stay. |
+| `units/library/library.js` | Replaced by the draft's tree (`units/sidebar/sidebar.js`), bound to the real records. |
+| `units/shell/shell.js` | `setFold` (v43: the sidebar, rail and Dispatch as one move, the chat on the panel's curve) and the draft's `dock()` (the button's travel, the dock's close curve, the drawer) are merged into one fold, with the v43 rail and Dispatch margins kept. `#findBtn` goes. |
+| `units/account/account.js` | The account menu becomes the draft's system panel. Its actions map to the real ones: Settings, Commands (the palette), Keyboard shortcuts, Library, About, theme; Calm to `PREF.motion`, Compact to `PREF.density`. |
+| `units/docs/docs.js`, `units/dispatch/dispatch.js` | Files and The Dispatch leave the sidebar. Files opens from the account card's Library; The Dispatch keeps its header button and ⌥L. |
+| `units/palette/palette.js` | `/` focuses the new search. The palette's chat commands read the same records. |
+| `core/boot.js`, `core/router.js`, `core/run.js`, `units/thread/cards.js` | `renderRecents()` becomes "refresh the tree from the records". A run marks its chat running; one that finishes while you are elsewhere marks it unread. The header's breadcrumb shows the folder path. |
+| `units/settings/panels.js` | Settings › Library keeps working on the same records, and learns about Recently Deleted. |
+| `core/prelude.js` | The storage adapter gains the `trash` key, mirrored one document per entry like chats (`t:<id>`), with the same 250KB limit per document. |
+| `qa/` | `smoke`, `hovers`, `a11y` and `perf` move to the new selectors; `store` gains the migration cases. |
+
+### Data
+
+- **Folders** gain `parent`, `pin`, `pinAt`, `ord`, `manual` and `archivedAt`.
+- **Chats** gain `ord`, `pinAt`, `unread` and `archivedAt`. `pinned`, `archived` and `folder` keep their names on disk.
+- **The top level's hand order** is a flag in the existing `opt` key.
+- **Recently Deleted is its own key, `trash`**, never a flag on a chat. A deleted chat, or a deleted folder with everything inside it, leaves `chats` and `folders` entirely, so no other part of the console can ever see it. Put back returns it (and lifts it from `gone`). Only Delete now, Empty or the 30-day purge add it to `gone`.
+- **Migration**, once and idempotent:
   - today's flat folders become top-level folders;
   - pinned chats keep their pins, with `pinAt` set from their current order;
-  - archived chats stay archived.
-  - It runs once, it is idempotent, and it is checked in `qa/store.js`.
-- **Import and export** carry the new fields. `clean()` treats `ord`, `pinAt` and `deletedAt` as numbers. An import whose folder chain loops, or points at a missing parent, lands at the top level.
-- **Documents** stay out of the tree for now. They appear once the docs unit gives each document its own id. The draft's document rows are a mock.
-- **Promotion:**
-  - The draft replaces `units/library/` and its sidebar rules in place. The tokens go into `tokens.css`, and the dock button joins `units/shell/`.
-  - `build.py` must pass its duplicate-selector check. `src/` and `index.html` are committed together.
-  - Then the console is republished to the same artifact link, keeping its capabilities.
+  - archived chats get an `archivedAt`;
+  - nothing is deleted.
+
+### The sidebar reads and writes the records
+
+The tree the draft works on is built from the records on load, and again whenever another unit or another device changes them (`renderRecents`). Every action edits the tree and writes the change straight back to the records it came from. Actions find their row again by id, so a refresh while a menu is open cannot act on a stale copy.
+
+### Release
+
+1. Build it on this branch, and run the whole suite in light and dark: `smoke`, `store`, `ground`, `hovers`, `perf`, `a11y` and the per-unit shots.
+2. Publish it first as a separate preview link. The live console stays as it is.
+3. Republish the live console (same link, same capabilities) only on Amadeus's go after the preview.
 
 ## Not doing
 
@@ -158,4 +182,4 @@ Each step is one commit, first in the bench and then in `src/`. Each is tested i
 
   The 8ms target is met on a normal tree but not with 2,000 rows open, where most of the time is the browser laying out the rows' boxes. Full virtualisation is the remaining step if real use ever needs it.
 - [x] §8 Screen readers and keyboard (2026-09-26, bench). axe is clean with the tree, the two places, the row menu, select mode, search and the account card. The account card became a dialog, since it is a panel of controls.
-- [ ] §9 Saving and promotion
+- [ ] §9 Saving and promotion: planned in detail above (2026-09-26); waiting on Amadeus's go.
