@@ -95,11 +95,21 @@
 .sb-ic{width:var(--sb-ic);height:var(--sb-ic);flex:none;display:grid;place-items:center;color:var(--mute);transition:color var(--sb-out) var(--sb-ease)}
 .sb-ic svg{display:block;width:100%;height:100%}
 .sb-row:hover .sb-ic,.sb-row.on .sb-ic{color:var(--ink);transition-duration:calc(var(--sb-in) * .5)}
-/* a chat is a small ring; a running one breathes gold; a pinned one wears a gold ring */
-.sb-dot{width:5px;height:5px;border-radius:var(--r-round);box-shadow:inset 0 0 0 1px currentColor}
-.sb-dot.live{background:var(--gold);box-shadow:none;animation:breathe var(--t-loop) var(--ease-inout) infinite}
-.sb-row.pinned .sb-dot:not(.live){box-shadow:inset 0 0 0 1px var(--gold);color:var(--gold)}
-.sb-row.pinned[data-k="doc"] .sb-ic{color:var(--gold-ink)}
+/* status: gold means "this needs you". A chat at rest is a small grey ring; a running one is a gold dot that breathes;
+   a finished one you have not opened yet is a gold ring (it settles from the dot with one soft pulse), which fades to
+   grey once you open it. A new document you have not opened is a gold page. */
+.sb-dot{position:relative;width:5px;height:5px;border-radius:var(--r-round);box-shadow:inset 0 0 0 1px currentColor;transition:box-shadow var(--sb-move) var(--sb-ease),background var(--sb-move) var(--sb-ease)}
+.sb-dot.live{background:var(--gold);box-shadow:inset 0 0 0 1px var(--gold);animation:breathe var(--t-loop) var(--ease-inout) infinite}
+.sb-dot.unread{box-shadow:inset 0 0 0 1.2px var(--gold)}
+.sb-dot.ping::after{content:"";position:absolute;inset:-1px;border-radius:inherit;box-shadow:0 0 0 1px var(--gold);animation:sbPing calc(var(--sb-move) * 2.2) var(--sb-ease) both}
+@keyframes sbPing{from{opacity:.9;transform:scale(1)}to{opacity:0;transform:scale(3.2)}}
+.sb-row.unread[data-k="doc"] .sb-ic{color:var(--gold-ink)}
+/* pinned has its own quiet mark: a small pin at the row's end, which gives way to the … on hover */
+.sb-pinmark{position:absolute;right:8px;top:50%;width:10px;height:10px;margin-top:-5px;color:var(--mute);opacity:0;filter:blur(1.5px);pointer-events:none;
+ transition:opacity var(--sb-out) var(--sb-ease),filter var(--sb-out) var(--sb-ease)}
+.sb-pinmark svg{display:block;width:10px;height:10px}
+.sb-row.pinned .sb-pinmark{opacity:.85;filter:none;transition-duration:var(--sb-in)}
+.sb-row.pinned:hover .sb-pinmark,.sb-row.pinned.undo .sb-pinmark,.selecting .sb-pinmark{opacity:0;filter:blur(1.5px);transition-duration:var(--sb-out)}
 /* long names feather into the surface instead of ending in an ellipsis */
 .sb-t{flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:clip;
  -webkit-mask-image:linear-gradient(90deg,#000 calc(100% - 22px),transparent);mask-image:linear-gradient(90deg,#000 calc(100% - 22px),transparent)}
@@ -272,21 +282,21 @@ body.sb-resizing,body.sb-resizing *{cursor:col-resize!important;user-select:none
 .sb-tile:hover::before{box-shadow:inset 0 0 0 var(--rule-hair) var(--line-3);background:color-mix(in srgb,var(--well) 70%,var(--line-2))}
 .sb-tile:focus-visible{outline:var(--rule) solid var(--gold);outline-offset:-1px}
 /* the well: grey when off, gold when on; it dips a little under the press (the well only, never the text) */
-.sb-tile .w{width:24px;height:24px;flex:none;display:grid;place-items:center;border-radius:var(--r-round);background:var(--line-2);color:var(--soft);
+.sb-tile .sb-well{width:24px;height:24px;flex:none;display:grid;place-items:center;border-radius:var(--r-round);background:var(--line-2);color:var(--soft);
  transition:background var(--sb-move) var(--sb-ease),color var(--sb-move) var(--sb-ease),box-shadow var(--sb-move) var(--sb-ease),transform var(--sb-move) var(--sb-ease)}
-.sb-tile:active .w{transform:scale(.9);transition-duration:var(--sb-move),var(--sb-move),var(--sb-move),calc(var(--sb-in) * .4)}
-.sb-tile .w svg{display:block;width:13px;height:13px;overflow:visible}
+.sb-tile:active .sb-well{transform:scale(.9);transition-duration:var(--sb-move),var(--sb-move),var(--sb-move),calc(var(--sb-in) * .4)}
+.sb-tile .sb-well svg{display:block;width:13px;height:13px;overflow:visible}
 .sb-tile.on::before{background:color-mix(in srgb,var(--gold) 9%,var(--well));box-shadow:inset 0 0 0 var(--rule-hair) color-mix(in srgb,var(--gold) 40%,transparent)}
 .sb-tile.on:hover::before{background:color-mix(in srgb,var(--gold) 13%,var(--well))}
-.sb-tile.on .w{background:color-mix(in srgb,var(--gold) 22%,transparent);color:var(--gold-hi,var(--gold));box-shadow:inset 0 0 0 var(--rule-hair) color-mix(in srgb,var(--gold) 55%,transparent),0 0 12px -2px color-mix(in srgb,var(--gold) 35%,transparent)}
+.sb-tile.on .sb-well{background:color-mix(in srgb,var(--gold) 22%,transparent);color:var(--gold-hi,var(--gold));box-shadow:inset 0 0 0 var(--rule-hair) color-mix(in srgb,var(--gold) 55%,transparent),0 0 12px -2px color-mix(in srgb,var(--gold) 35%,transparent)}
 /* the glyphs act out their state: Calm's waves settle flat; Compact's lines draw together */
-.sb-tile .w path{transition:d var(--sb-move) var(--sb-ease),transform var(--sb-move) var(--sb-ease),opacity var(--sb-move) var(--sb-ease)}
-.sb-tile[data-tg="calm"].on .w path:first-child{d:path("M2 9.5c1.6 0 3 0 4.5 0s3 0 4.5 0 2.4 0 3 0")}
-.sb-tile[data-tg="calm"].on .w path:last-child{d:path("M2 6.5c1.6 0 3 0 4.5 0s3 0 4.5 0 2.4 0 3 0")}
-.sb-tile[data-tg="compact"] .w path:first-child{transform:translateY(-1.2px)}
-.sb-tile[data-tg="compact"] .w path:last-child{transform:translateY(1.2px)}
-.sb-tile[data-tg="compact"].on .w path:first-child{transform:translateY(1px)}
-.sb-tile[data-tg="compact"].on .w path:last-child{transform:translateY(-1px)}
+.sb-tile .sb-well path{transition:d var(--sb-move) var(--sb-ease),transform var(--sb-move) var(--sb-ease),opacity var(--sb-move) var(--sb-ease)}
+.sb-tile[data-tg="calm"].on .sb-well path:first-child{d:path("M2 9.5c1.6 0 3 0 4.5 0s3 0 4.5 0 2.4 0 3 0")}
+.sb-tile[data-tg="calm"].on .sb-well path:last-child{d:path("M2 6.5c1.6 0 3 0 4.5 0s3 0 4.5 0 2.4 0 3 0")}
+.sb-tile[data-tg="compact"] .sb-well path:first-child{transform:translateY(-1.2px)}
+.sb-tile[data-tg="compact"] .sb-well path:last-child{transform:translateY(1.2px)}
+.sb-tile[data-tg="compact"].on .sb-well path:first-child{transform:translateY(1px)}
+.sb-tile[data-tg="compact"].on .sb-well path:last-child{transform:translateY(-1px)}
 .sb-tile .l{flex:1;min-width:0;display:flex;flex-direction:column;gap:1px;line-height:1.15}
 .sb-tile b{font-weight:450;font-size:11px;color:var(--ink);white-space:nowrap;overflow:hidden;-webkit-mask-image:linear-gradient(90deg,#000 calc(100% - 12px),transparent);mask-image:linear-gradient(90deg,#000 calc(100% - 12px),transparent)}
 .sb-tile small{font-size:var(--fs-micro);color:var(--soft);transition:color var(--sb-move) var(--sb-ease)}
@@ -345,7 +355,7 @@ body.sb-resizing,body.sb-resizing *{cursor:col-resize!important;user-select:none
 .sb-sortc .sb-ic{color:var(--gold-ink)}
 
 /* !important: while the theme cross-fades, every transition is held so the whole page changes as one picture */
-html.sb-theming,html.sb-theming *{transition:none!important}
+html.sb-theming,html.sb-theming *,html.sb-theming *::before,html.sb-theming *::after{transition:none!important}
 /* the feather only where text actually runs long: an edge fade on text that fits would eat its last letter
    (sidebar-next.js edges() marks overflowing text .ov as widths change) */
 .sb-t:not(.ov),.sb-tile b:not(.ov),.sb-idt b:not(.ov),.sb-idt small:not(.ov),.sb-who:not(.ov){-webkit-mask-image:none;mask-image:none}

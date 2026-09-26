@@ -67,7 +67,7 @@ let reduce=matchMedia("(prefers-reduced-motion: reduce)").matches,busy=false;con
 Object.assign(BENCH,{MO,easeFn});window.SB=SB;  /* bench only: test hooks */
 const ks=f=>()=>setTimeout(f,0);
 BENCH.actions.push({label:"Dock",key:"f",run:()=>SB.dock()},{label:"New chat",key:"n",run:()=>SB.newChat()},{label:"Account",key:"a",run:ks(()=>SB.acct())},
- {label:"Search",key:"s",run:ks(()=>SB.search(true))},{label:"Folder",key:"d",run:()=>SB.folder(0)},{label:"Row menu",key:"m",run:ks(()=>SB.pop(true,4))});
+ {label:"Search",key:"s",run:ks(()=>SB.search(true))},{label:"Folder",key:"d",run:()=>SB.folder(0)},{label:"Row menu",key:"m",run:ks(()=>SB.pop(true,4))},{label:"Finish run",key:"r",run:()=>SB.finish()});
 })();
 </script>
 <script>

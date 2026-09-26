@@ -110,9 +110,14 @@ Motion is the heart of the UX: fidelity in the engine comes first.
   - Show the fewest fixed things, then let the person's own structure carry the rest.
   - Layout, as in macOS: a toolbar row (New chat and New folder as icons, with the sidebar button at its right), then a real search field that never scrolls, then one tree: folders the person makes (they nest, and they hold chats and documents), then loose chats, newest first. Last come the account and the mark.
   - Don't add fixed categories, date headings or counts where order already says it.
-- **State is a property, not a place.** A pinned item stays where it lives and floats to the top of its level with a small gold ring. A running chat breathes a gold dot, and a document shows a page glyph.
+- **State is a property, not a place. Gold means "this needs you".**
+  - A chat at rest is a small grey ring.
+  - A running chat is a gold dot that breathes.
+  - A finished chat you have not opened yet is a gold ring: the dot settles into it with one soft pulse, and it fades to grey once you open it.
+  - A new document you have not opened is a gold page.
+  - Pinned is not a colour. It is a small pin at the row's end (which gives way to the `…` on hover), and the item floats to the top of its level.
 - **Actions are a card of pages.**
-  - The row's `…` menu opens a card whose first page is short: Rename, Folder, Delete.
+  - The row's `…` menu opens a card whose first page is short: Rename, Pin, Folder, Delete.
   - Deeper choices are further pages of the same card, not new pop-ups: Folder leads to Move to, New folder and Pin, and Move to leads to the folders.
   - Back and forward are two separate small frosted buttons, each its own surface with the cards' corners and depth. A disabled one dims its glyph, not its surface.
   - On the row menu they sit between the card and the row, at the right, under the `…`. On the account card they sit above the card, at its right.
@@ -123,6 +128,7 @@ Motion is the heart of the UX: fidelity in the engine comes first.
   - Right-aligned values, such as an Account field, wrap rather than fade.
   - Undo happens in place: a deleted row defocuses and its action becomes an undo arrow for a few seconds, with a trash can beside it to delete it at once. There is no toast.
   - Only an action menu may use words for its choices.
+- **A drag always ends.** The resize grip ends its drag on any of these: pointer up, a cancelled pointer, lost capture, the window losing focus, or a move with no button held. A release outside the frame therefore never leaves the pointer stuck to the grip.
 - **Rubber bands tighten.** Stretched past its limit, a surface resists more the further it is pulled, up to a fixed amount (the sidebar: 64px past its maximum). Released, it settles back very softly.
 - **Select many.** The toolbar's Select puts a round check where each row's glyph sits, so nothing moves.
   - Click picks and Shift-click picks a run; Space, ⌘A and Delete work too.
@@ -262,6 +268,13 @@ They live in `bench/drafts/sidebar-next.css`, and the dark stack lives in `bench
 - **Tokens (v41):** every value comes from `src/tokens.css`. Spacing is a 4px scale with half steps (`--sp-half`, `--sp-1h` … `--sp-4h`) below 20px for dense chrome; a 1px nudge is optical and stays literal. Layers are named (`--z-side`, `--z-menu`, `--z-tip` …) in one stacking order. Dark tokens are written once in `@dark{}`.
 
 ## 6. Change log
+- **v45 status and fixes** (2026-09-26, Amadeus):
+  - Gold now means "needs you": running is a gold dot, finished and unread is a gold ring (with one pulse as a run ends), and opening a chat reads it.
+  - Pinned moves to its own small pin mark, and Pin is on the first page of the `…` menu.
+  - Fixes:
+    - The tiles' well class `.w` collided with the console's streamed-word rule `.w{animation:inkw}`, so toggling Calm restarted Compact's icon. It is renamed `.sb-well`.
+    - The theme hold now reaches the tiles' own layers (`::before`), measured at exactly two colour states.
+    - The resize can no longer stick after a release the page did not hear.
 - **v45 one clock** (2026-09-26, Amadeus: "not synced across all the assets"):
   - A change in a card is one transaction on one clock. Measured: 16 animations share one start and one duration in a change of shape, and 4 in a page switch.
   - Tile boxes morph on their own layer.

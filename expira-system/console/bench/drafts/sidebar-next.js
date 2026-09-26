@@ -82,17 +82,17 @@ const SB=(()=>{const side=$("#side"),scroll=$("#sbScroll");
  const now=Date.now(),H=36e5;
  const ROOT={kind:"root",kids:[
   mk("folder","Quotations",{open:true,kids:[mk("doc","Q-2026-014 · Makati showroom",{ts:now-3*H}),mk("doc","Q-2026-011 · BGC office fit-out and fixtures",{ts:now-30*H}),
-   mk("chat","Quotation for the Makati site",{ts:now-2*H}),mk("folder","Drafts",{kids:[mk("doc","Q-2026-015 · draft",{ts:now-5*H})]})]}),
+   mk("chat","Quotation for the Makati site",{ts:now-2*H,unread:true}),mk("folder","Drafts",{kids:[mk("doc","Q-2026-015 · draft",{ts:now-5*H})]})]}),
   mk("folder","Contracts",{kids:[mk("doc","Client MSA · structural template",{ts:now-80*H}),mk("doc","Supply agreement · draft",{ts:now-50*H})]}),
   mk("folder","Board",{kids:[mk("doc","Resolution 2026-07 · signatories",{ts:now-100*H}),mk("doc","Secretary's certificate",{ts:now-120*H})]}),
   mk("folder","Company profile",{kids:[mk("doc","GSSC company profile · 2026",{ts:now-200*H})]}),
   mk("chat","Showroom fit-out, phase two and the lighting schedule",{live:true,ts:now-.2*H}),
   mk("chat","GSSC master quotation",{pin:true,ts:now-400*H}),
   mk("chat","Supplier shortlist review",{ts:now-26*H}),
-  mk("doc","Board resolution draft",{ts:now-40*H}),
+  mk("doc","Board resolution draft",{ts:now-40*H,unread:true}),
   mk("chat","Warehouse lease terms",{ts:now-90*H}),
   mk("chat","Company profile refresh",{ts:now-300*H})]};
- let sel=ROOT.kids[4].id,query="",selMode=false,anchor=null;const picked=new Set();
+ let sel=ROOT.kids[6].id,query="",selMode=false,anchor=null;const picked=new Set();
  const find=(id,list=ROOT.kids,parent=ROOT)=>{for(const n of list){if(n.id===id)return{n,parent};if(n.kids){const r=find(id,n.kids,n);if(r)return r}}return null};
  const within=(a,b)=>a===b||!!(a.kids&&a.kids.some(k=>within(k,b)));
  /* folders come first. By default folders keep the order you made them in and items put pins first, then the newest;
@@ -108,16 +108,17 @@ const SB=(()=>{const side=$("#side"),scroll=$("#sbScroll");
   walk(ROOT.kids,0,false);return out}
 
  /* ---- rows ---- */
- const glyph=n=>n.kind==="folder"?IC.folder:n.kind==="doc"?IC.doc:`<i class="sb-dot${n.live?" live":""}"></i>`;
+ const glyph=n=>n.kind==="folder"?IC.folder:n.kind==="doc"?IC.doc:`<i class="sb-dot"></i>`;
  function make(w){const e=document.createElement("div");e.className="sb-row";e.dataset.id=w.id;
   if(w.empty){e.classList.add("sb-empty");e.innerHTML=`<span class="sb-t">Empty</span>`;return e}
   e.draggable=true;e.innerHTML=`<button class="sb-hit" type="button"><span class="sb-car">${w.n.kind==="folder"?IC.car:""}</span><span class="sb-ic"><span class="g"></span><span class="sb-ck" aria-hidden="true"><svg viewBox="0 0 12 12"><path d="M3.2 6.2l1.8 1.8 3.8-4"/></svg></span></span><span class="sb-t"></span></button>`+
-   `<button class="sb-kill" type="button" aria-label="Delete now" tabindex="-1">${IC.kill}</button><button class="sb-more" type="button" aria-label="Actions" aria-haspopup="menu" aria-expanded="false"><span class="d">${IC.dots}</span><span class="u">${IC.undo}</span></button>`;return e}
+   `<span class="sb-pinmark" aria-hidden="true">${IC.pin}</span><button class="sb-kill" type="button" aria-label="Delete now" tabindex="-1">${IC.kill}</button><button class="sb-more" type="button" aria-label="Actions" aria-haspopup="menu" aria-expanded="false"><span class="d">${IC.dots}</span><span class="u">${IC.undo}</span></button>`;return e}
  function update(e,w){e.style.setProperty("--d",w.d);e.classList.toggle("deep",w.d>0);if(w.empty)return;const n=w.n;
-  e.dataset.k=n.kind;e.classList.toggle("on",n.id===sel);e.classList.toggle("pinned",!!n.pin);e.classList.toggle("undo",!!n.del);
+  e.dataset.k=n.kind;e.classList.toggle("on",n.id===sel);e.classList.toggle("pinned",!!n.pin);e.classList.toggle("undo",!!n.del);e.classList.toggle("unread",!!n.unread);
   if(n.kind==="folder")e.setAttribute("aria-expanded",String(!!(query.trim()||n.open)));
   e.querySelector(".sb-more").setAttribute("aria-label",n.del?"Undo delete":"Actions");e.querySelector(".sb-kill").tabIndex=n.del?0:-1;
   const ic=e.querySelector(".sb-ic .g"),g=glyph(n);if(ic._g!==g){ic.innerHTML=g;ic._g=g}
+  const dot=ic.querySelector(".sb-dot");if(dot){dot.classList.toggle("live",!!n.live);dot.classList.toggle("unread",!n.live&&!!n.unread)}
   e.classList.toggle("picked",picked.has(n.id));if(selMode)e.querySelector(".sb-hit").setAttribute("aria-pressed",String(picked.has(n.id)));else e.querySelector(".sb-hit").removeAttribute("aria-pressed");
   const t=e.querySelector(".sb-t");if(!t.querySelector("input")&&t.textContent!==n.t)t.textContent=n.t}
  const els=new Map();
@@ -195,7 +196,7 @@ const SB=(()=>{const side=$("#side"),scroll=$("#sbScroll");
    if(f.n.del)return undoDel(f.n);pmFor===r&&pm.classList.contains("open")?pop(false):pop(true,r);return}
   const h=e.target.closest(".sb-hit");if(!h||h.querySelector("input"))return;const f=find(h.parentElement.dataset.id);if(!f||f.n.del)return;
   if(selMode){e.stopPropagation();pick(f.n.id,e.shiftKey);return}
-  if(f.n.kind==="folder")return toggle(f.n);sel=f.n.id;tree.querySelectorAll(".sb-row.on").forEach(x=>x.classList.remove("on"));h.parentElement.classList.add("on")},true);
+  if(f.n.kind==="folder")return toggle(f.n);sel=f.n.id;if(f.n.unread){f.n.unread=false;update(h.parentElement,{n:f.n,d:+h.parentElement.style.getPropertyValue("--d")||0})}tree.querySelectorAll(".sb-row.on").forEach(x=>x.classList.remove("on"));h.parentElement.classList.add("on")},true);
 
  /* ---- pull: the sidebar's small surfaces (the account pull-up, the row menu). Opacity, a small drop and focus ride one
     progress value on the one curve; no scale, so text never changes size; each on its own layer. Reversal carries on. */
@@ -247,9 +248,9 @@ const SB=(()=>{const side=$("#side"),scroll=$("#sbScroll");
  function page(name){const f=pmNode;
   if(!f)return item("chat",IC.plus,"New chat")+item("folder",IC.newf,"New folder");
   const n=f.n,isF=n.kind==="folder";
-  if(name==="main")return item("ren",IC.ren,"Rename")+item("p:folder",IC.folder,"Folder",0,true)+`<div class="sb-sep"></div>`+item("del",IC.del,"Delete");
+  if(name==="main")return item("ren",IC.ren,"Rename")+item("pin",IC.pin,n.pin?"Unpin":"Pin")+item("p:folder",IC.folder,"Folder",0,true)+`<div class="sb-sep"></div>`+item("del",IC.del,"Delete");
   if(name==="folder")return cap(isF?esc(n.t):"Folder")+item("p:move",IC.move,isF?"Move folder":"Move to",0,true)+item("folder",IC.newf,isF?"New folder inside":"New folder here")+
-   (isF?item("chat",IC.plus,"New chat here"):item("pin",IC.pin,n.pin?"Unpin":"Pin to top"));
+   (isF?item("chat",IC.plus,"New chat here"):"");
   if(name==="move"){const dest=folders().filter(x=>!within(n,x.n)&&x.n!==f.parent);
    return cap("Move to")+(f.parent!==ROOT?item("mv:",IC.top,"Top level"):"")+(dest.map(x=>item("mv:"+x.n.id,IC.folder,esc(x.n.t),x.d)).join("")||`<div class="sb-none">No other folders</div>`)}}
  const PM=pager(card,nb,nf,hlP,page);
@@ -272,7 +273,7 @@ const SB=(()=>{const side=$("#side"),scroll=$("#sbScroll");
  const menu=$("#sbMenu"),me=$("#sbMe"),acard=menu.querySelector(".sb-card"),hlM=glide(acard,".sb-row");pull(menu,[acard,...menu.querySelectorAll(".sb-nav button")]);
  const anb=menu.querySelector("[data-nav=back]"),anf=menu.querySelector("[data-nav=fwd]");anb.innerHTML=IC.back;anf.innerHTML=IC.fwd;
  const PREF={calm:false,compact:true};
- const tile=(k,ic,t)=>`<button class="sb-tile${PREF[k]?" on":""}" type="button" data-tg="${k}" aria-pressed="${PREF[k]}"><span class="w">${ic}</span><span class="l"><b>${t}</b><small>${PREF[k]?"On":"Off"}</small></span></button>`;
+ const tile=(k,ic,t)=>`<button class="sb-tile${PREF[k]?" on":""}" type="button" data-tg="${k}" aria-pressed="${PREF[k]}"><span class="sb-well">${ic}</span><span class="l"><b>${t}</b><small>${PREF[k]?"On":"Off"}</small></span></button>`;
  function apage(name){
   if(name==="data")return cap("Data")+item("export",IC.out2,"Export everything")+item("import",IC.in2,"Import")+`<div class="sb-note"><i></i>Kept in your account, synced to your devices</div>`;
   if(name==="account")return cap("Account")+`<div class="sb-field"><span>Name</span><b>Amadeus</b></div><div class="sb-field"><span>Organisation</span><b>GSSC Integrated Corporation</b></div>`+
@@ -359,6 +360,8 @@ const SB=(()=>{const side=$("#side"),scroll=$("#sbScroll");
   if(a==="del")return del(n)}
  function move(n,from,to){if(!to||within(n,to)||from===to)return;from.kids.splice(from.kids.indexOf(n),1);to.kids.push(n);sync();
   if(to!==ROOT&&!to.open){const r=els.get(to.id);if(r){r.classList.remove("got");r.offsetWidth;r.classList.add("got")}}}
+ function finish(n){if(!n||!n.live)return;n.live=false;n.unread=n.id!==sel;const e=els.get(n.id);if(!e)return;update(e,{n,d:+e.style.getPropertyValue("--d")||0});
+  const dot=e.querySelector(".sb-dot");if(dot&&n.unread&&!reduce){dot.classList.remove("ping");dot.offsetWidth;dot.classList.add("ping");setTimeout(()=>dot.classList.remove("ping"),ms("--sb-move")*2.4)}}
  /* delete: the row defocuses in place and offers undo for a few seconds, then leaves */
  function del(n){n.del=true;sync();n._t=setTimeout(()=>{const f=find(n.id);if(f&&n.del){f.parent.kids.splice(f.parent.kids.indexOf(n),1);if(sel===n.id)sel=null;sync()}},4200)}
  function undoDel(n){clearTimeout(n._t);n.del=false;sync()}
@@ -437,7 +440,7 @@ const SB=(()=>{const side=$("#side"),scroll=$("#sbScroll");
     so no text is ever scaled) while its icon and label glide inside it; everything else glides from where it was with a
     motion blur; labels that return pull focus. */
  function txn(c,apply){const T=ms("--sb-move"),Es=EZ();
-  const parts=[...c.querySelectorAll(".sb-page:last-child > :not(.sb-cc),.sb-cc > .sb-seg,.sb-seg button > *,.sb-tile .w,.sb-tile .l")],tiles=[...c.querySelectorAll(".sb-page:last-child .sb-tile")];
+  const parts=[...c.querySelectorAll(".sb-page:last-child > :not(.sb-cc),.sb-cc > .sb-seg,.sb-seg button > *,.sb-tile .sb-well,.sb-tile .l")],tiles=[...c.querySelectorAll(".sb-page:last-child .sb-tile")];
   const r0=new Map(parts.map(k=>[k,k.getClientRects().length?k.getBoundingClientRect():null])),b0=new Map(tiles.map(k=>[k,k.getBoundingClientRect()])),h0=c.getBoundingClientRect().height;
   apply();if(reduce)return;
   const t0=document.timeline.currentTime,go=(el,kf,o={})=>{const a=el.animate(kf,{duration:T,easing:"linear",...o});a.startTime=t0;return a};
@@ -466,19 +469,23 @@ const SB=(()=>{const side=$("#side"),scroll=$("#sbScroll");
   const step=t=>{const u=Math.min(1,(t-t0)/D);setW(from+(to-from)*E(u));if(u<1)settling=requestAnimationFrame(step)};settling=requestAnimationFrame(step)}
  grip.addEventListener("pointerdown",e=>{if(e.button!==0)return;e.preventDefault();e.stopPropagation();cancelAnimationFrame(settling);pop(false);grip.setPointerCapture(e.pointerId);grip.classList.add("drag");document.body.classList.add("sb-resizing");hlS.off();
   const x0=side.getBoundingClientRect().left;let shutNow=false;
-  const moveP=ev=>{const x=ev.clientX-x0;let w=x;
+  let ended=false;
+  const moveP=ev=>{if(!(ev.buttons&1)){up();return}/* the release happened where we could not hear it (outside the frame): end now */
+   const x=ev.clientX-x0;let w=x;
    if(x>MAX)w=MAX+RUB*(1-Math.exp(-(x-MAX)/RUB));else if(x<MIN)w=MIN-RUB*.7*(1-Math.exp(-(MIN-x)/(RUB*.7)));
    shutNow=x<SHUT;grip.classList.toggle("shut",shutNow);
    /* below the minimum the content fades with the pull, so the dock visibly lets go */
    const k=x<MIN?Math.max(0,1-(MIN-x)/(MIN-SHUT+40)):1;inner().forEach(el=>{el.style.opacity=k<1?(.35+.65*k).toFixed(3):""});setW(w)};
-  const up=()=>{grip.removeEventListener("pointermove",moveP);grip.removeEventListener("pointerup",up);grip.removeEventListener("pointercancel",up);grip.classList.remove("drag","shut");document.body.classList.remove("sb-resizing");
+  const up=()=>{if(ended)return;ended=true;try{grip.releasePointerCapture(e.pointerId)}catch(x){}
+   grip.removeEventListener("pointermove",moveP);removeEventListener("pointermove",moveP,true);grip.removeEventListener("pointerup",up);removeEventListener("pointerup",up,true);grip.removeEventListener("pointercancel",up);grip.removeEventListener("lostpointercapture",up);removeEventListener("blur",up);grip.classList.remove("drag","shut");document.body.classList.remove("sb-resizing");
    inner().forEach(el=>el.style.opacity="");
    if(shutNow){dock(true);setTimeout(()=>{if(!app.classList.contains("folded"))return;
      /* docked, the dock is out of sight: put its remembered width back with no transition, or the margin would slide
         again from the pulled width to the remembered one and the chat would jump */
      const els2=[side,$("#main .top")];els2.forEach(x=>x.style.transition="none");setW(W);side.offsetWidth;els2.forEach(x=>x.style.transition="")},dockTime(true)+40);return}
    settleTo(parseFloat(tok("--sb-w")))};
-  grip.addEventListener("pointermove",moveP);grip.addEventListener("pointerup",up);grip.addEventListener("pointercancel",up)});
+  grip.addEventListener("pointermove",moveP);addEventListener("pointermove",moveP,true);grip.addEventListener("pointerup",up);addEventListener("pointerup",up,true);
+  grip.addEventListener("pointercancel",up);grip.addEventListener("lostpointercapture",up);addEventListener("blur",up)});
  grip.addEventListener("click",e=>e.stopPropagation());
  grip.addEventListener("dblclick",e=>{e.stopPropagation();settleTo(DEF)});
  grip.addEventListener("keydown",e=>{if(e.key==="ArrowLeft"||e.key==="ArrowRight"){e.preventDefault();settleTo(W+(e.key==="ArrowLeft"?-16:16))}if(e.key==="Enter"){e.preventDefault();dock(true)}});
@@ -487,4 +494,4 @@ const SB=(()=>{const side=$("#side"),scroll=$("#sbScroll");
  /* widths change with the dock and the density: re-check which text runs long */
  new ResizeObserver(()=>edges()).observe(side);
  return{acct,search,dock,IC,sync,newChat,folder:(i=0)=>toggle(ROOT.kids.filter(n=>n.kind==="folder")[i]),
-  pop:(o,i=0)=>pop(o,[...tree.querySelectorAll(".sb-row[data-k]:not(.gone)")][i]),go:n=>PM.go(n),nav:d=>PM.nav(d),setWidth:settleTo,get width(){return W},model:ROOT}})();
+  pop:(o,i=0)=>pop(o,[...tree.querySelectorAll(".sb-row[data-k]:not(.gone)")][i]),go:n=>PM.go(n),nav:d=>PM.nav(d),setWidth:settleTo,finish:()=>{const walk=l=>{for(const n of l){if(n.live)return n;if(n.kids){const r=walk(n.kids);if(r)return r}}};finish(walk(ROOT.kids))},get width(){return W},model:ROOT}})();
