@@ -41,9 +41,14 @@ Every specimen loads `early.js` in its head (it applies the tuned tokens before 
 
 ## Specimens
 
-- **sidebar-next**: the v45 sidebar draft and the near-black dark theme. Its CSS, markup and script are drafts in
-  `bench/drafts/`, not `src/`, because it is a redesign rather than a tune; it is promoted into `units/sidebar` once
-  approved. Keys: F fold, A account, S search, D a folder, R a section, M a row menu.
+- **sidebar-next**: the v45 sidebar draft, the reference implementation of DESIGN_ENGINE §4 (EXPIRA × macOS).
+  - A file system, not a form: New chat and Search, then folders you make and loose chats.
+  - The row menu is a card of pages with back and forward arrows.
+  - A resize grip docks the sidebar when pulled.
+  - The dock button travels across the dock.
+  - The dark theme is near black.
+  - Its CSS, markup and script are drafts in `bench/drafts/`, not `src/`, because it is a redesign rather than a tune.
+  - Keys: F dock, N new chat, S search, D a folder, M a row menu, A account.
 - **sidebar**: the current sidebar: the fold (`setFold`, the travelling button, the chat giving and taking the width) and the
   account menu's bloom (`core/pour.js`). Keys: F fold, A account menu.
 

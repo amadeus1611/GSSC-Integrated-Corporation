@@ -1,170 +1,197 @@
-/* draft v45 sidebar (bench only until promoted into units/sidebar). Claude's structure, EXPIRA's hand:
-   two actions (New chat, Search), then three quiet numbered sections after the master template: I Files (folders),
-   II Pinned, III Recents. The EXPIRA mark signs the foot, under the account row. Settings live in the account pull-up.
-   Motion (sidebar-next.js): one highlight glides between rows and stretches with its speed, like the mercury bead;
-   everything that appears resolves out of a blur, opacity first and focus last, slowly (--sb-in); everything that
-   leaves defocuses first and fades after, quickly (--sb-out). Text never scales or slides. */
+/* draft v45 sidebar (bench only until promoted into units/sidebar). A file system, not a form: New chat and Search,
+   then one tree the viewer shapes. Folders nest and hold chats and documents; loose chats follow, newest first; a pin
+   floats an item to the top of its folder. No fixed sections, no date labels, no tooltips: the order and small marks
+   carry the meaning. The EXPIRA mark signs the foot; settings live in the account pull-up. The sidebar resizes from
+   a grip on its edge and docks shut when pulled far enough. The sidebar button never moves: the dock slides away
+   under it and the chat's header comes to meet it.
+   Motion (sidebar-next.js): one curve for everything, fast and then a long soft settle (--sb-ease), with blur.
+   Entering pulls focus (opacity first, focus last); leaving racks out (focus first, fade after). Text never scales. */
 :root{
   /* the sidebar's own scale: small, dense type on short rows */
-  --sb-fs:11px;--sb-fs-2:10px;--sb-row:24px;--sb-ic:13px;   /* chrome sizes (DESIGN_ENGINE §2: 10.5–11px) */
-  /* the sidebar's blur timing (Amadeus, v45): entries resolve slowly out of the blur, closes are quick */
-  --sb-in:300ms;--sb-out:150ms;
+  --sb-fs:11px;--sb-fs-2:10px;--sb-row:24px;--sb-ic:13px;--sb-indent:12px;
+  /* one curve, fast then a long soft settle, for entries and exits alike (Amadeus, v45) */
+  --sb-ease:cubic-bezier(.19,1,.22,1);
+  --sb-in:420ms;--sb-out:320ms;--sb-move:460ms;--sb-dock:560ms;
+  --sb-w:256px;
 }
-@media (prefers-reduced-motion:reduce){:root{--sb-in:1ms;--sb-out:1ms}}
+@media (prefers-reduced-motion:reduce){:root{--sb-in:1ms;--sb-out:1ms;--sb-move:1ms;--sb-dock:1ms}}
 
-.side.sb{padding:var(--sp-2) var(--sp-2) var(--sp-1h);gap:0}
-/* the top row keeps only the sidebar button, at the left where Claude keeps it */
-.sb .brand{display:flex;align-items:center;height:30px;padding:0 var(--sp-half);margin-bottom:var(--sp-1)}
-.sb .brand .side-t{margin-left:0;width:26px;height:26px}
+/* the dock: width is the viewer's; folding slides it out on the one curve */
+.side.sb{width:var(--sb-w);padding:var(--sp-2) var(--sp-2) var(--sp-1h);gap:0;transition:margin-left var(--sb-dock) var(--sb-ease)}
+.app.folded .side.sb{margin-left:calc(var(--sb-w) * -1)}
+@media (max-width:760px){.app.folded .side.sb{margin-left:0}}
+/* the header row the sidebar button sits in while the dock is open */
+.sb .brand{height:34px;padding:0 var(--sp-2);margin:0}
+/* the sidebar button: one button on its own layer. Open, it sits at the dock's top right and follows the dock's width
+   as you resize; docked, it sits at the head of the chat. Docking, it travels across the dock into the chat on the
+   dock's own curve, blurring and stretching a little with its speed (sidebar-next.js dock). */
+.sb-dockbtn{position:fixed;top:10px;left:calc(var(--sb-w) - var(--sp-2) - 32px);z-index:calc(var(--z-side) + 1);transform-origin:50% 50%}
+.app.folded .sb-dockbtn{left:var(--sp-4)}
+.sb-dockbtn svg .pane,.sb-dockbtn svg .dv,.sb-dockbtn svg .chev{transition:transform var(--sb-dock) var(--sb-ease)}
+/* its hover previews where it will send the dock. Open, in the dock: the pane narrows a little and the chevron leans
+   left. Docked, in the chat: the pane widens a little and the chevron leans right. */
+.sb-dockbtn svg .chev{transition:transform var(--sb-dock) var(--sb-ease),translate var(--sb-out) var(--sb-ease)}
+.sb-dockbtn:hover svg .pane{transform:scaleX(.78)}
+.sb-dockbtn:hover svg .dv{transform:translateX(-.7px)}
+.sb-dockbtn:hover svg .chev{translate:-1.5px 0;transition:transform var(--sb-dock) var(--sb-ease),translate calc(var(--sb-in) * .5) var(--sb-ease)}
+.app.folded .sb-dockbtn:hover svg .pane{transform:scaleX(.55)}
+.app.folded .sb-dockbtn:hover svg .dv{transform:translateX(-1.5px)}
+.app.folded .sb-dockbtn:hover svg .chev{translate:1.5px 0}
+.top{transition:padding-left var(--sb-dock) var(--sb-ease)}
+.app.folded .top{padding-left:calc(var(--sp-4) + 30px + var(--sp-2))}
 .ib svg{width:15px;height:15px}  /* today this lives in units/sidebar; it stays there on promotion */
+
 .sb-scroll{flex:1;min-height:0;overflow-y:auto;position:relative;margin:0 calc(var(--sp-2) * -1);padding:0 var(--sp-2) var(--sp-3);scrollbar-width:none}
 .sb-scroll::-webkit-scrollbar{display:none}
+.sb-top{margin-bottom:var(--sp-3)}
+.sb-tree{position:relative}
 
-/* the gliding highlight: placed, stretched and faded by script; transform-origin centre so the stretch is even */
+/* the gliding highlight: placed, stretched and faded by script */
 .sb-hl{position:absolute;left:var(--sp-2);right:var(--sp-2);top:0;height:var(--sb-row);border-radius:var(--r-3);background:var(--line);opacity:0;pointer-events:none;z-index:0;transform-origin:50% 50%}
-.sb-menu .sb-hl,.sb-pop .sb-hl{left:4px;right:4px}
+.sb-card .sb-hl{left:4px;right:4px}
 
-/* rows */
-.sb-row{position:relative;z-index:1;display:flex;align-items:center;height:var(--sb-row);border-radius:var(--r-3);color:var(--text);font-size:var(--sb-fs);font-weight:400;letter-spacing:.002em}
-.sb-row+.sb-row,.sb-row+.sb-kids,.sb-kids+.sb-row{margin-top:1px}
-.sb-row.on{background:var(--line-2)}
-.sb-hit{all:unset;box-sizing:border-box;flex:1;min-width:0;height:100%;display:flex;align-items:center;gap:var(--sp-2);padding:0 var(--sp-2);cursor:pointer;border-radius:inherit}
+/* rows: one kind of row for everything; depth is an indent and a hairline guide under the parent's caret */
+.sb-row{--d:0;position:relative;z-index:1;display:flex;align-items:center;height:var(--sb-row);border-radius:var(--r-3);color:var(--text);font-size:var(--sb-fs);font-weight:400;letter-spacing:.002em}
+.sb-row+.sb-row{margin-top:1px}
+.sb-row.on{background:color-mix(in srgb,var(--gold) 9%,var(--line-2))}  /* selection: a warm grey, the only colour a resting row carries */
+.sb-tree .sb-row.deep::before{content:"";position:absolute;left:calc(var(--sp-2) + (var(--d) - 1) * var(--sb-indent) + 4px);top:-1px;bottom:0;width:var(--rule-hair);background:var(--line-2)}
+.sb-row.gone{pointer-events:none;z-index:0}
+.sb-hit{all:unset;box-sizing:border-box;flex:1;min-width:0;height:100%;display:flex;align-items:center;gap:var(--sp-1h);padding:0 var(--sp-2) 0 calc(var(--sp-2) + var(--d) * var(--sb-indent));cursor:pointer;border-radius:inherit}
 .sb-hit:focus-visible{outline:var(--rule) solid var(--gold);outline-offset:-1px}
-.sb-ic{width:var(--sb-ic);height:var(--sb-ic);flex:none;color:var(--mute);transition:color var(--sb-out) var(--ease-soft-close)}
+.sb-car{width:9px;height:9px;flex:none;color:var(--mute);display:grid;place-items:center}
+.sb-car svg{width:9px;height:9px;display:block}
+.sb-car path{transform-box:fill-box;transform-origin:center;transition:transform var(--sb-move) var(--sb-ease)}
+.sb-row[aria-expanded="false"] .sb-car path{transform:rotate(-90deg)}
+.sb-top .sb-car{display:none}
+.sb-ic{width:var(--sb-ic);height:var(--sb-ic);flex:none;display:grid;place-items:center;color:var(--mute);transition:color var(--sb-out) var(--sb-ease)}
 .sb-ic svg{display:block;width:100%;height:100%}
-.sb-row:hover .sb-ic,.sb-row.on .sb-ic{color:var(--ink);transition:color var(--sb-in) var(--ease-out)}
-.sb-t{flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.sb-m{flex:none;font-size:var(--sb-fs-2);color:var(--mute);font-variant-numeric:tabular-nums;transition:opacity var(--sb-out) var(--ease-soft-close),filter var(--sb-out) var(--ease-soft-close)}
-/* New chat: its plus sits in a small disc, and turns a quarter on the spring when the row is hovered */
-.sb-new .sb-ic{width:16px;height:16px;margin:0 -1px;padding:3px;border-radius:var(--r-round);background:var(--line-2);color:var(--ink);transition:background var(--sb-out) var(--ease-soft-close)}
-.sb-new .sb-ic svg{transition:transform var(--t-move) var(--spring)}
-.sb-new:hover .sb-ic{background:var(--line-3);transition:background var(--sb-in) var(--ease-out)}
+.sb-row:hover .sb-ic,.sb-row.on .sb-ic{color:var(--ink);transition-duration:calc(var(--sb-in) * .5)}
+/* a chat is a small ring; a running one breathes gold; a pinned one wears a gold ring */
+.sb-dot{width:5px;height:5px;border-radius:var(--r-round);box-shadow:inset 0 0 0 1px currentColor}
+.sb-dot.live{background:var(--gold);box-shadow:none;animation:breathe var(--t-loop) var(--ease-inout) infinite}
+.sb-row.pinned .sb-dot:not(.live){box-shadow:inset 0 0 0 1px var(--gold);color:var(--gold)}
+.sb-row.pinned[data-k="doc"] .sb-ic{color:var(--gold-ink)}
+/* long names feather into the surface instead of ending in an ellipsis */
+.sb-t{flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:clip;
+ -webkit-mask-image:linear-gradient(90deg,#000 calc(100% - 22px),transparent);mask-image:linear-gradient(90deg,#000 calc(100% - 22px),transparent)}
+/* New chat: its plus sits in a small disc, and turns a quarter when the row is hovered */
+.sb-new .sb-ic{width:16px;height:16px;margin:0 -1px;padding:3px;border-radius:var(--r-round);background:var(--line-2);color:var(--ink);transition:background var(--sb-out) var(--sb-ease)}
+.sb-new .sb-ic svg{transition:transform var(--sb-move) var(--sb-ease)}
+.sb-new:hover .sb-ic{background:var(--line-3);transition-duration:calc(var(--sb-in) * .5)}
 .sb-new:hover .sb-ic svg{transform:rotate(90deg)}
+.sb-empty{height:20px;color:var(--mute);font-size:var(--sb-fs-2);opacity:.6;pointer-events:none}
+.sb-empty .sb-t{padding-left:calc(var(--sp-2) + var(--d) * var(--sb-indent) + 15px);-webkit-mask-image:none;mask-image:none}
 
+/* the row's action, and the new-folder action beside New chat: out of a light blur, and back into it */
 .sb-more{all:unset;position:absolute;right:2px;top:50%;width:20px;height:20px;margin-top:-10px;display:grid;place-items:center;border-radius:var(--r-2);color:var(--mute);cursor:pointer}
 .sb-more svg{width:11px;height:11px}
 .sb-more:hover,.sb-more[aria-expanded="true"]{background:var(--line-2);color:var(--ink)}
 .sb-row:has(.sb-more) .sb-hit{padding-right:24px}
-.sb-row:has(.sb-more) .sb-m{margin-right:-16px}
+.sb-more{opacity:0;filter:blur(2px);transition:opacity var(--sb-out) var(--sb-ease),filter var(--sb-out) var(--sb-ease),background var(--sb-out) var(--sb-ease),color var(--sb-out) var(--sb-ease)}
+.sb-row:hover .sb-more,.sb-more:focus-visible,.sb-more[aria-expanded="true"],.sb-row.undo .sb-more{opacity:1;filter:none;transition-duration:calc(var(--sb-in) * .5)}
+.sb-more .u{display:none}
+/* deleted, for a moment: the row defocuses in place and its action becomes an undo arrow; no note, no pop-up */
+.sb-row.undo .sb-hit{opacity:.32;filter:blur(.6px);transition:opacity var(--sb-in) var(--sb-ease),filter var(--sb-in) var(--sb-ease)}
+.sb-row .sb-hit{transition:opacity var(--sb-out) var(--sb-ease),filter var(--sb-out) var(--sb-ease)}
+.sb-row.undo .sb-more .d{display:none}
+.sb-row.undo .sb-more .u{display:block;color:var(--gold-ink)}
 
-/* what appears on hover comes out of a light blur (slow) and goes back into it (quick); after the resets above */
-.sb-more,.sb-ha,.sb-h .sb-car{opacity:0;filter:blur(2px);transition:opacity var(--sb-out) var(--ease-soft-close),filter var(--sb-out) var(--ease-soft-close)}
-.sb-row:hover .sb-more,.sb-more:focus-visible,.sb-more[aria-expanded="true"],.sb-h:hover .sb-ha,.sb-ha:focus-within,.sb-ha:has(.on),.sb-h:hover .sb-car,.sb-h[aria-expanded="false"] .sb-car,.sb-h:focus-visible .sb-car{opacity:1;filter:none;transition:opacity calc(var(--sb-in) * .6) var(--ease-out),filter var(--sb-in) var(--ease-out)}
-.sb-row:hover .sb-m.hides{opacity:0;filter:blur(2px)}
-
-/* status, as Claude marks its sessions: a ring when idle, a live gold dot while a run works, a page when it built a document */
-.sb-g{width:var(--sb-ic);height:var(--sb-ic);flex:none;display:grid;place-items:center;color:var(--mute)}
-.sb-g i{width:5px;height:5px;border-radius:var(--r-round);box-shadow:inset 0 0 0 1px currentColor}
-.sb-g.live i{background:var(--gold);box-shadow:none;animation:breathe var(--t-loop) var(--ease-inout) infinite}
-.sb-g svg{width:12px;height:12px}
-
-/* section headers, quietly after the master template: a small italic numeral and tracked small caps, both muted.
-   On hover the numeral warms to gold, a hairline draws out from the label, and the caret and actions surface. */
-.sb-h{position:relative;z-index:1;display:flex;align-items:center;gap:var(--sp-1h);height:22px;margin-top:var(--sp-3h);padding:0 var(--sp-half) 0 var(--sp-2);cursor:pointer;user-select:none;outline:none}
-.sb-n{min-width:10px;font:italic 400 10px/1 var(--f-display);color:var(--mute);opacity:.75;transition:color var(--sb-out) var(--ease-soft-close),opacity var(--sb-out) var(--ease-soft-close)}
-.sb-l{font-size:var(--fs-micro);letter-spacing:var(--tracked-tight);text-transform:uppercase;color:var(--mute);opacity:.85;transition:opacity var(--sb-out) var(--ease-soft-close)}
-.sb-rule{flex:1;height:var(--rule-hair);margin:0 var(--sp-1) 0 var(--sp-1);background:var(--line-2);opacity:0;transform:scaleX(.4);transform-origin:0 50%;
- transition:opacity var(--sb-out) var(--ease-soft-close),transform var(--sb-out) var(--ease-soft-close)}
-.sb-h:hover .sb-n,.sb-h:focus-visible .sb-n{color:var(--gold-ink);opacity:1;transition:color var(--sb-in) var(--ease-out),opacity var(--sb-in) var(--ease-out)}
-.sb-h:hover .sb-l,.sb-h:focus-visible .sb-l{opacity:1;transition:opacity var(--sb-in) var(--ease-out)}
-.sb-h:hover .sb-rule,.sb-h:focus-visible .sb-rule{opacity:1;transform:none;transition:opacity var(--sb-in) var(--ease-out),transform var(--t-move) var(--spring)}
-.sb-car{width:9px;height:9px;flex:none;color:var(--mute)}
-.sb-car path{transform-box:fill-box;transform-origin:center;transition:transform var(--t-move) var(--ease-inout)}
-.sb-h[aria-expanded="false"] .sb-car path,.sb-fold[aria-expanded="false"] .sb-car path{transform:rotate(-90deg)}
-.sb-ha{display:flex;gap:1px}
-.sb-ib{all:unset;width:20px;height:20px;display:grid;place-items:center;border-radius:var(--r-2);color:var(--mute);cursor:pointer;transition:background var(--sb-out) var(--ease-soft-close),color var(--sb-out) var(--ease-soft-close)}
-.sb-ib svg{width:12px;height:12px}
-.sb-ib:hover{background:var(--line-2);color:var(--ink);transition:background var(--sb-in) var(--ease-out),color var(--sb-in) var(--ease-out)}
-.sb-ib:focus-visible{outline:var(--rule) solid var(--gold)}
-.sb-ib.on{color:var(--gold-ink);background:var(--gold-wash)}
-.sb-body,.sb-kids{position:relative}
-.sb-body{margin-top:var(--sp-half)}
-.sb-sub{position:relative;z-index:1;height:20px;display:flex;align-items:flex-end;padding:0 var(--sp-2) 4px;font-size:var(--fs-micro);color:var(--mute);opacity:.8}
-.sb-sub:first-child{height:16px}
-
-/* the folder tree: children sit on a hairline guide under their folder's caret */
-.sb-fold .sb-car{margin:0 -3px 0 -1px}
-.sb-kids{padding-left:13px}
-.sb-kids::before{content:"";position:absolute;left:14px;top:2px;bottom:2px;width:var(--rule-hair);background:var(--line-2);transform-origin:50% 0}
-.sb-kids .sb-ic{width:12px;height:12px}
-.sb-empty{position:relative;z-index:1;height:22px;display:flex;align-items:center;padding:0 var(--sp-2) 0 var(--sp-3);font-size:var(--sb-fs-2);color:var(--mute)}
-.sb-kids[hidden],.sb-body[hidden],.sb-row[hidden],.sb-sub[hidden],.sb-grp[hidden]{display:none}
-
-/* search: the row itself becomes the field. The icon and the word stay exactly where they are; only the field's
-   well fades in around them (slow), the word dims to a placeholder, and the caret arrives. Closing is quick. */
-.sb-find::before{content:"";position:absolute;inset:0;border-radius:inherit;background:var(--line);box-shadow:inset 0 0 0 var(--rule-hair) var(--line-3);opacity:0;pointer-events:none;
- transition:opacity var(--sb-out) var(--ease-soft-close)}
-.sb-find.on::before{opacity:1;transition:opacity var(--sb-in) var(--ease-out)}
-.sb-find .sb-ph{transition:color var(--sb-out) var(--ease-soft-close),opacity var(--sb-out) var(--ease-soft-close)}
-.sb-find.on .sb-ph{color:var(--mute);transition:color var(--sb-in) var(--ease-out),opacity var(--t-instant) var(--ease-out)}
+/* search: the row itself becomes the field. The icon and the word stay where they are; only the well fades in. */
+.sb-find::before{content:"";position:absolute;inset:0;border-radius:inherit;background:var(--line);box-shadow:inset 0 0 0 var(--rule-hair) var(--line-3);opacity:0;pointer-events:none;transition:opacity var(--sb-out) var(--sb-ease)}
+.sb-find.on::before{opacity:1;transition-duration:var(--sb-in)}
+.sb-find .sb-ph{transition:color var(--sb-out) var(--sb-ease),opacity var(--sb-out) var(--sb-ease)}
+.sb-find.on .sb-ph{color:var(--mute);transition-duration:var(--sb-in),calc(var(--sb-in) * .3)}
 .sb-find.on.has .sb-ph{opacity:0}
-.sb-find input{all:unset;position:absolute;left:calc(var(--sp-2) + var(--sb-ic) + var(--sp-2));right:26px;top:0;bottom:0;font-size:var(--sb-fs);font-weight:400;letter-spacing:.002em;color:var(--ink);caret-color:var(--gold);visibility:hidden}
+.sb-find input{all:unset;position:absolute;left:calc(var(--sp-2) + var(--sb-ic) + var(--sp-1h));right:26px;top:0;bottom:0;font-size:var(--sb-fs);font-weight:400;letter-spacing:.002em;color:var(--ink);caret-color:var(--gold);visibility:hidden}
 .sb-find.on input{visibility:visible}
 .sb-find .sb-clr{all:unset;position:absolute;right:3px;top:50%;width:18px;height:18px;margin-top:-9px;display:grid;place-items:center;border-radius:var(--r-2);color:var(--mute);cursor:pointer;opacity:0;filter:blur(2px);pointer-events:none;
- transition:opacity var(--sb-out) var(--ease-soft-close),filter var(--sb-out) var(--ease-soft-close),background var(--sb-out) var(--ease-soft-close)}
+ transition:opacity var(--sb-out) var(--sb-ease),filter var(--sb-out) var(--sb-ease),background var(--sb-out) var(--sb-ease)}
 .sb-find .sb-clr svg{width:10px;height:10px}
-.sb-find.on.has .sb-clr{opacity:1;filter:none;pointer-events:auto;transition:opacity var(--sb-in) var(--ease-out),filter var(--sb-in) var(--ease-out),background var(--sb-in)}
+.sb-find.on.has .sb-clr{opacity:1;filter:none;pointer-events:auto;transition-duration:var(--sb-in)}
 .sb-find .sb-clr:hover{background:var(--line-2);color:var(--ink)}
 .sb-find.on .sb-hit{cursor:text}
-.sb-none{position:relative;z-index:1;padding:var(--sp-2);font-size:var(--sb-fs-2);color:var(--mute)}
-.sb-none[hidden]{display:none}
+
+/* drag and drop: onto a folder (a closed one springs open if you linger), or onto the open tree for the top level */
+.sb-row.dragging{opacity:.35}
+.sb-row.drop{background:var(--gold-wash);box-shadow:inset 0 0 0 var(--rule-hair) var(--gold)}
+.sb-tree.drop-root{box-shadow:inset 0 0 0 var(--rule-hair) var(--gold);border-radius:var(--r-3)}
+.sb-row.got{animation:sbGot calc(var(--sb-in) * 2.2) var(--sb-ease)}
+@keyframes sbGot{from{background:var(--gold-wash);box-shadow:inset 0 0 0 var(--rule-hair) var(--gold)}}
+
+/* the resize grip: invisible until you reach the edge, then a hairline and a small pill surface out of a blur.
+   Pull past the minimum and the dock resists; pull further and the pill narrows and it will dock shut on release. */
+.sb-grip{position:absolute;top:0;bottom:0;right:-5px;width:9px;z-index:3;cursor:col-resize;touch-action:none;outline:none}
+.sb-grip::before{content:"";position:absolute;top:0;bottom:0;left:4px;width:1px;background:var(--line-3);opacity:0;transition:opacity var(--sb-out) var(--sb-ease),background var(--sb-out) var(--sb-ease)}
+.sb-grip::after{content:"";position:absolute;left:3px;top:50%;width:3px;height:30px;margin-top:-15px;border-radius:2px;background:var(--soft);opacity:0;filter:blur(2px);transform:scaleY(.6);
+ transition:opacity var(--sb-out) var(--sb-ease),filter var(--sb-out) var(--sb-ease),transform var(--sb-move) var(--sb-ease),background var(--sb-out) var(--sb-ease)}
+.sb-grip:hover::before,.sb-grip:focus-visible::before,.sb-grip.drag::before{opacity:1;transition-duration:var(--sb-in);transition-delay:80ms}
+.sb-grip:hover::after,.sb-grip:focus-visible::after,.sb-grip.drag::after{opacity:1;filter:none;transform:none;transition-duration:var(--sb-in),var(--sb-in),var(--sb-move),var(--sb-in);transition-delay:80ms}
+.sb-grip.drag::before{background:var(--gold);opacity:.5;transition-delay:0s}
+.sb-grip.drag::after{background:var(--gold);transition-delay:0s}
+.sb-grip.shut::after{transform:scaleY(.35);opacity:.6}
+.sb-grip.shut::before{opacity:.15}
+.app.folded .sb-grip{display:none}
+body.sb-resizing,body.sb-resizing *{cursor:col-resize!important;user-select:none}  /* !important: the whole page follows the grip while it is held */
 
 /* the foot: the account row (the pull-up; settings open from it), then the EXPIRA mark signing the bottom left */
 .sb-foot{position:relative;margin:var(--sp-1) calc(var(--sp-2) * -1) 0;padding:var(--sp-1h) var(--sp-2) 0;border-top:var(--rule-hair) solid var(--line)}
-.sb-me{all:unset;box-sizing:border-box;width:100%;height:36px;display:flex;align-items:center;gap:var(--sp-2);padding:0 var(--sp-2) 0 var(--sp-1h);border-radius:var(--r-4);cursor:pointer;
- transition:background var(--sb-out) var(--ease-soft-close)}
-.sb-me:hover,.sb-me[aria-expanded="true"]{background:var(--line);transition:background var(--sb-in) var(--ease-out)}
+.sb-me{all:unset;box-sizing:border-box;width:100%;height:36px;display:flex;align-items:center;gap:var(--sp-2);padding:0 var(--sp-2) 0 var(--sp-1h);border-radius:var(--r-4);cursor:pointer;transition:background var(--sb-out) var(--sb-ease)}
+.sb-me:hover,.sb-me[aria-expanded="true"]{background:var(--line);transition-duration:calc(var(--sb-in) * .5)}
 .sb-me:focus-visible{outline:var(--rule) solid var(--gold);outline-offset:-1px}
 .sb-av{width:22px;height:22px;flex:none;display:grid;place-items:center;border-radius:var(--r-round);background:var(--line-2);box-shadow:inset 0 0 0 var(--rule-hair) var(--line-3);color:var(--ink);font-size:var(--sb-fs-2);font-weight:500}
-.sb-who{flex:1;min-width:0;display:flex;align-items:baseline;gap:4px;white-space:nowrap;overflow:hidden}
-.sb-who b{font-weight:450;font-size:var(--sb-fs);color:var(--ink);overflow:hidden;text-overflow:ellipsis}
+.sb-who{flex:1;min-width:0;display:flex;align-items:baseline;gap:4px;white-space:nowrap;overflow:hidden;-webkit-mask-image:linear-gradient(90deg,#000 calc(100% - 18px),transparent);mask-image:linear-gradient(90deg,#000 calc(100% - 18px),transparent)}
+.sb-who b{font-weight:450;font-size:var(--sb-fs);color:var(--ink)}
 .sb-who small{font-size:var(--sb-fs-2);color:var(--mute)}
-.sb-chev{width:11px;height:11px;flex:none;color:var(--mute);transition:transform var(--t-move) var(--ease-inout),color var(--sb-out) var(--ease-soft-close)}
-.sb-me:hover .sb-chev{color:var(--ink);transition:transform var(--t-move) var(--ease-inout),color var(--sb-in) var(--ease-out)}
+.sb-chev{width:11px;height:11px;flex:none;color:var(--mute);transition:transform var(--sb-move) var(--sb-ease),color var(--sb-out) var(--sb-ease)}
+.sb-me:hover .sb-chev{color:var(--ink)}
 .sb-me[aria-expanded="true"] .sb-chev{transform:rotate(180deg)}
-.sb-sig{display:flex;align-items:center;gap:var(--sp-2);height:26px;padding:0 var(--sp-2);margin-top:var(--sp-half);opacity:.5;transition:opacity var(--sb-out) var(--ease-soft-close)}
-.sb-sig:hover{opacity:.95;transition:opacity var(--sb-in) var(--ease-out)}
+.sb-sig{display:flex;align-items:center;gap:var(--sp-2);height:26px;padding:0 var(--sp-2);margin-top:var(--sp-half);opacity:.5;transition:opacity var(--sb-out) var(--sb-ease)}
+.sb-sig:hover{opacity:.95;transition-duration:var(--sb-in)}
 .sb-sig .mark{width:32px;flex:none}
 .sb-sig .wm{width:50px;height:11px}
 
-/* the pull-up, the row menu and the undo note: one surface. Each keeps its own layer, so its text is not
-   re-rasterised as it starts to move. */
-.sb-menu,.sb-pop,.sb-toast{will-change:transform,opacity,filter}
-.sb-menu,.sb-pop{padding:4px;background:var(--panel);border:var(--rule-hair) solid var(--line-3);border-radius:var(--r-5);box-shadow:var(--e3);opacity:0;visibility:hidden;pointer-events:none}
-.sb-menu.open,.sb-pop.open{opacity:1;visibility:visible;pointer-events:auto}
+/* the pull-up and the row menu: one surface, each on its own layer so its text is not re-rasterised as it moves */
+.sb-menu,.sb-card,.sb-nav{will-change:transform,opacity,filter;opacity:0}
+.sb-menu,.sb-pop{visibility:hidden;pointer-events:none}
+/* the menus are frosted glass over the near-black, as macOS menus are over the desktop */
+.sb-menu,.sb-card,.sb-nav{background:color-mix(in srgb,var(--panel) 80%,transparent);-webkit-backdrop-filter:blur(22px) saturate(1.5);backdrop-filter:blur(22px) saturate(1.5);border:var(--rule-hair) solid var(--line-3);box-shadow:var(--e3)}
+.sb-pop.open .sb-card,.sb-pop.open .sb-nav{opacity:1}
+.sb-menu{padding:4px;border-radius:var(--r-5)}
+.sb-menu.open{opacity:1}
+.sb-menu.open,.sb-pop.open{visibility:visible;pointer-events:auto}
 .sb-menu{position:absolute;left:var(--sp-1h);right:var(--sp-1h);bottom:calc(100% + var(--sp-1h));z-index:var(--z-menu)}
-.sb-pop{position:fixed;left:0;top:0;width:200px;z-index:var(--z-menu)}
+/* the row menu: a card of pages, with a small pill of back and forward arrows sitting above it, like a browser's */
+.sb-pop{position:fixed;left:0;top:0;width:196px;z-index:var(--z-menu)}
+.sb-card{position:relative;overflow:hidden;padding:4px;border-radius:var(--r-5);transition:height var(--sb-move) var(--sb-ease)}  /* height eases between pages: a small surface, so its layout move is cheap */
+.sb-page{position:relative}
+.sb-nav{position:absolute;left:0;bottom:calc(100% + 5px);display:flex;gap:1px;padding:2px;border-radius:var(--r-round);box-shadow:var(--e2)}
+.sb-nav button{all:unset;width:20px;height:20px;display:grid;place-items:center;border-radius:var(--r-round);color:var(--soft);cursor:pointer;transition:background var(--sb-out) var(--sb-ease),color var(--sb-out) var(--sb-ease),opacity var(--sb-out) var(--sb-ease)}
+.sb-nav button svg{width:11px;height:11px}
+.sb-nav button:hover:not(:disabled){background:var(--line-2);color:var(--ink);transition-duration:calc(var(--sb-in) * .5)}
+.sb-nav button:disabled{opacity:.28;cursor:default}
+.sb-nav button:focus-visible{outline:var(--rule) solid var(--gold)}
+.sb-go{width:10px;height:10px;flex:none;margin-left:auto;color:var(--mute)}
+.sb-go svg{width:10px;height:10px;display:block}
+.sb-pop .sb-none{padding:var(--sp-1h) var(--sp-2);font-size:var(--sb-fs-2);color:var(--mute)}
 .sb-menu .sb-row,.sb-pop .sb-row{height:26px}
+.sb-pop .sb-row .sb-hit{padding-left:calc(var(--sp-2) + var(--d) * 10px)}
+.sb-menu .sb-hl{left:4px;right:4px}
 .sb-mh{position:relative;z-index:1;display:flex;flex-direction:column;gap:1px;padding:var(--sp-1h) var(--sp-2) var(--sp-2)}
 .sb-mh b{font-weight:450;font-size:var(--sb-fs);color:var(--ink)}
 .sb-mh small{font-size:var(--sb-fs-2);color:var(--mute)}
 .sb-pop .sb-mh.plain{padding:var(--sp-1h) var(--sp-2) var(--sp-1);font-size:var(--fs-micro);letter-spacing:var(--tracked-tight);text-transform:uppercase;color:var(--mute)}
-.sb-pop .sb-hit small{margin-left:auto;font-size:var(--fs-micro);color:var(--mute)}
 .sb-sep{height:var(--rule-hair);background:var(--line-2);margin:4px var(--sp-1h)}
 .sb-row.danger .sb-hit,.sb-row.danger .sb-ic{color:var(--bad)}
-/* the theme switch: a pill that slides to the choice on the spring */
 .sb-seg{position:relative;z-index:1;display:grid;grid-template-columns:repeat(3,1fr);margin:var(--sp-half) var(--sp-half) var(--sp-1);padding:2px;border-radius:var(--r-3);background:var(--well);box-shadow:inset 0 0 0 var(--rule-hair) var(--line-2)}
-.sb-seg .pill{position:absolute;top:2px;bottom:2px;left:2px;width:calc((100% - 4px) / 3);border-radius:var(--r-2);background:var(--panel);box-shadow:var(--e1),inset 0 0 0 var(--rule-hair) var(--line-3);transition:transform var(--t-move) var(--spring)}
-.sb-seg button{all:unset;position:relative;display:flex;align-items:center;justify-content:center;gap:5px;height:22px;border-radius:var(--r-2);font-size:var(--sb-fs-2);color:var(--soft);cursor:pointer;transition:color var(--sb-out) var(--ease-soft-close)}
+.sb-seg .pill{position:absolute;top:2px;bottom:2px;left:2px;width:calc((100% - 4px) / 3);border-radius:var(--r-2);background:var(--panel);box-shadow:var(--e1),inset 0 0 0 var(--rule-hair) var(--line-3);transition:transform var(--sb-move) var(--sb-ease)}
+.sb-seg button{all:unset;position:relative;display:flex;align-items:center;justify-content:center;gap:5px;height:22px;border-radius:var(--r-2);font-size:var(--sb-fs-2);color:var(--soft);cursor:pointer;transition:color var(--sb-out) var(--sb-ease)}
 .sb-seg button svg{width:12px;height:12px}
-.sb-seg button:hover,.sb-seg button[aria-checked="true"]{color:var(--ink);transition:color var(--sb-in) var(--ease-out)}
+.sb-seg button:hover,.sb-seg button[aria-checked="true"]{color:var(--ink);transition-duration:calc(var(--sb-in) * .5)}
 .sb-seg button:focus-visible{outline:var(--rule) solid var(--gold)}
-.sb-more[aria-expanded="true"]{background:var(--line-2);color:var(--ink)}
 /* rename in place: the field takes the title's exact box */
 .sb-ren{all:unset;box-sizing:border-box;width:100%;height:19px;margin:0 -4px;padding:0 4px;border-radius:var(--r-2);background:var(--well);box-shadow:inset 0 0 0 var(--rule-hair) var(--gold);color:var(--ink);font:inherit}
-/* drag and drop onto a folder; a folder that just received something glows once, softly */
-.sb-row.dragging{opacity:.35}
-.sb-fold{transition:background calc(var(--t-exit) * 2) var(--ease-soft-close),box-shadow calc(var(--t-exit) * 2) var(--ease-soft-close)}
-.sb-fold.drop,.sb-fold.got{background:var(--gold-wash);box-shadow:inset 0 0 0 var(--rule-hair) var(--gold)}
-.sb-fold.got{transition:background var(--sb-in) var(--ease-out),box-shadow var(--sb-in) var(--ease-out)}
-/* the undo note sits above the account row */
-.sb-toast{position:absolute;left:var(--sp-1h);right:var(--sp-1h);bottom:calc(100% + var(--sp-1h));z-index:var(--z-toast);display:flex;align-items:center;gap:var(--sp-2);height:30px;padding:0 var(--sp-1) 0 var(--sp-2h);background:var(--panel);border:var(--rule-hair) solid var(--line-3);border-radius:var(--r-4);box-shadow:var(--e2);font-size:var(--sb-fs-2);color:var(--soft);opacity:0;visibility:hidden;pointer-events:none}
-.sb-toast.open{opacity:1;visibility:visible;pointer-events:auto}
-.sb-toast span{flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.sb-toast em{font-style:normal;color:var(--ink)}
-.sb-toast button{all:unset;height:22px;padding:0 var(--sp-2);border-radius:var(--r-2);color:var(--gold-ink);font-weight:450;cursor:pointer;transition:background var(--sb-out) var(--ease-soft-close)}
-.sb-toast button:hover{background:var(--gold-wash);transition:background var(--sb-in) var(--ease-out)}
+.sb-t:has(.sb-ren){-webkit-mask-image:none;mask-image:none;overflow:visible}
 /* the list feathers at an edge only while more lies beyond it */
-.sb-scroll{--fs:0px;--fe:0px;transition:--fs var(--t-exit) var(--ease-soft-close),--fe var(--t-exit) var(--ease-soft-close);-webkit-mask-image:linear-gradient(to bottom,transparent 0,#000 var(--fs),#000 calc(100% - var(--fe)),transparent 100%);mask-image:linear-gradient(to bottom,transparent 0,#000 var(--fs),#000 calc(100% - var(--fe)),transparent 100%)}
+.sb-scroll{--fs:0px;--fe:0px;transition:--fs var(--sb-out) var(--sb-ease),--fe var(--sb-out) var(--sb-ease);-webkit-mask-image:linear-gradient(to bottom,transparent 0,#000 var(--fs),#000 calc(100% - var(--fe)),transparent 100%);mask-image:linear-gradient(to bottom,transparent 0,#000 var(--fs),#000 calc(100% - var(--fe)),transparent 100%)}
 .sb-scroll.f-s{--fs:16px}
 .sb-scroll.f-e{--fe:20px}

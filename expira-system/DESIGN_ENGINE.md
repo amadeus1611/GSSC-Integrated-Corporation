@@ -96,7 +96,112 @@ Motion is the heart of the UX: fidelity in the engine comes first.
 
   Nothing overshoots anywhere. The source is `console/qa/lab/tokens.proposed.css`, which becomes `src/tokens.css`.
 
-## 4. Build habits
+## 4. EXPIRA × macOS: the house style for the Console and its derivatives (v45, Amadeus, 2026-09-26)
+
+**What it is.** The EXPIRA Console and everything derived from it take the calm of macOS, as in Finder, the menus and the dock: quiet surfaces, one motion language, and structure the person shapes. They wear it in EXPIRA's own dress: near black, off-white, brand gold, the display serif, and hairlines. This is the global concept for the Console and its derivatives; §1–§3 still hold, and this section refines them.
+
+**Scope.**
+- **It applies to** the EXPIRA Console and every EXPIRA screen or derivative (menus, panels, the sidebar, settings, viewers).
+- **It does not apply to** the GSSC kernel templates or their derivatives: the quotation master, the company profile, the CMSA, the secretary's certificate, the board resolution and the notarial acknowledgment. Their layout and colour logic (§1) are settled, and they keep them. When the Console shows a GSSC document, the document keeps its own look inside the EXPIRA frame.
+- **The reference implementation** is the v45 sidebar in the bench: `console/bench/sidebar-next.html`, with `console/bench/drafts/`. It is promoted into `src/` unit by unit.
+
+### 4.1 Logic: a place people shape, not a form they fill in
+- **Structure.**
+  - Show the fewest fixed things, then let the person's own structure carry the rest. The sidebar is New chat, Search, and then one tree: folders the person makes (they nest, and they hold chats and documents), then loose chats, newest first.
+  - Don't add fixed categories, date headings or counts where order already says it.
+- **State is a property, not a place.** A pinned item stays where it lives and floats to the top of its level with a small gold ring. A running chat breathes a gold dot, and a document shows a page glyph.
+- **Actions are a card of pages.**
+  - The row's `…` menu opens a card whose first page is short: Rename, Folder, Delete.
+  - Deeper choices are further pages of the same card, not new pop-ups: Folder leads to Move to, New folder and Pin, and Move to leads to the folders.
+  - A small pill above the card carries browser-style back and forward arrows between the visited pages.
+  - Right-clicking empty space offers New chat and New folder.
+- **Fewer words, more detail. People are smarter than we think.**
+  - There are no tooltips and no shortcut hints on rows.
+  - Long names feather into the surface; they never end in "…".
+  - Undo happens in place: a deleted row defocuses and its action becomes an undo arrow for a few seconds. There is no toast.
+  - Only an action menu may use words for its choices.
+- **Direct manipulation.**
+  - Drag onto a folder; a closed folder springs open if you linger, as in Finder.
+  - Pull the sidebar's edge to resize it. The width is remembered.
+  - Pull the edge far enough left and the sidebar docks shut.
+  - Arrows walk the tree: right opens, left closes or climbs, F2 renames, and Delete deletes and undoes.
+
+### 4.2 Motion: one curve, focus in and focus out
+- **One curve for everything**, entering and leaving alike: fast, then a long soft settle (`--sb-ease` `cubic-bezier(.19,1,.22,1)`). It supersedes the per-direction curves of §3 for EXPIRA surfaces.
+- **Timing:**
+
+  | Token | Duration | Used for |
+  |---|---|---|
+  | `--sb-in` | 420 ms | appear |
+  | `--sb-out` | 320 ms | leave |
+  | `--sb-move` | 460 ms | layout moves and the hover plate |
+  | `--sb-dock` | 560 ms | the dock |
+- **Focus, not just fade.**
+  - Anything appearing pulls focus: opacity first, focus last.
+  - Anything leaving racks out: focus first, fade after.
+  - Only opacity and blur change, so text never changes size.
+- **Text never scales or slides.**
+  - Rows do not shrink when pressed.
+  - Search is the row itself becoming a field in place, with its icon and word fixed.
+  - Rows that move do so by whole pixels on the compositor.
+  - Only shapes without text may stretch: the hover plate and hairlines.
+- **The hover plate.** One soft plate per list surfaces out of a blur, glides between rows on the curve, and stretches along its path with its speed (the mercury bead's rule, §3). It racks out when the pointer leaves.
+- **Disclosure is one move.**
+  - The rows below move on the curve.
+  - Each new row pulls focus the moment it is uncovered, and each leaving row racks out just before it is covered.
+  - A closing block keeps its exact box while it fades.
+- **Small surfaces "pull".** Menus and cards use opacity, a small drop and focus on one progress value, with no scale, each on its own layer. Reversal carries on from where it is.
+- **The dock.**
+  - The dock slides out on the curve while its content racks out and drifts a little behind it (depth).
+  - The sidebar button travels with it: from the dock's top right, across the dock, into the head of the chat, on the dock's own curve and time, so it lands as the dock leaves at any width. While moving fast it blurs and stretches a little along its path, and it is sharp again as it settles. Opening sends it back.
+  - Its hover previews where it will send the dock: open, the pane narrows and the chevron leans left; docked, the pane widens and the chevron leans right.
+
+### 4.3 Colour: the improved EXPIRA stack
+The full palette is in `brand_assets/palette.json`, and §2 lists the ten colours. The stack below assigns their roles for EXPIRA surfaces.
+
+**Dark: near black, built from the brand ink rather than neutral grey.**
+- **Surfaces**, stepping up as they come forward:
+
+  | Surface | Hex |
+  |---|---|
+  | sidebar | `#04060B` |
+  | page | `#06090F` |
+  | sheet | `#090D15` |
+  | well | `#0A0E17` |
+  | panel | `#0C111B` |
+- **Text:**
+
+  | Token | Hex | Colour | Use | Contrast |
+  |---|---|---|---|---|
+  | `--text`, `--ink` | `#F7F5F0` | off-white | default text | 17–19:1 |
+  | `--soft` | `#A9ADB5` | between light grey and steel | secondary | 8–9:1 |
+  | `--mute` | `#7D838E` | steel grey | captions | 4.7–5.3:1, AA on every surface, a hovered row included |
+- **Hairlines:** off-white at 5.5%, 10% and 19%.
+- **Gold:**
+
+  | Hex | Colour | Roles |
+  |---|---|---|
+  | `#C9A35C` | light gold | rules, focus rings, gold text, the live dot, the pin ring |
+  | `#E9CF91` | pale gold | highlights |
+- **Selection:** a warm grey, gold 9% over the second hairline. It is the only colour a resting row carries.
+- **Menus are frosted glass:** the panel at 80% over a 22px backdrop blur with 1.5 saturation, a hairline border and a deep, soft shadow.
+
+**Light:** the Gate A paper palette of §2 stands. Surfaces are warm paper and ink is brand navy `#0B1A3F`. Decorative gold is `#A8862F` and gold text is `#846936`. The same roles apply: one warm selection, gold only where it means something.
+
+**Type:** chrome size throughout the sidebar and menus.
+- Rows are 11px on 24px, and meta is 10px.
+- Labels are 9.5px (the floor, §2), in Inter at 400.
+- The display serif appears only as an accent.
+
+### 4.4 Tokens
+The sidebar's tokens are:
+- motion: `--sb-ease`, `--sb-in`, `--sb-out`, `--sb-move`, `--sb-dock`;
+- scale: `--sb-fs`, `--sb-fs-2`, `--sb-row`, `--sb-ic`, `--sb-indent`;
+- width: `--sb-w`.
+
+They live in `bench/drafts/sidebar-next.css`, and the dark stack lives in `bench/drafts/dark-next.css`. On promotion they move into `src/tokens.css` under the same names: the `--sb-*` motion tokens become the EXPIRA-wide motion tokens, and the dark stack replaces the `@dark` block.
+
+## 5. Build habits
 
 - **Master-template layout:** a wide thread with a 72-character prose measure, and a dock with the composer controls underneath it.
 - **Performance budgets:**
@@ -107,7 +212,13 @@ Motion is the heart of the UX: fidelity in the engine comes first.
 - **Build workflow (v41):** edit `console/src/`, never `index.html`; `build.py` assembles the page and refuses duplicate ids or a selector defined in two units. Prove refactors with `qa/styles.js` (computed styles) and `qa/diff.js` (pixels) against a baseline, and ship only on a 0-error smoke test.
 - **Tokens (v41):** every value comes from `src/tokens.css`. Spacing is a 4px scale with half steps (`--sp-half`, `--sp-1h` … `--sp-4h`) below 20px for dense chrome; a 1px nudge is optical and stays literal. Layers are named (`--z-side`, `--z-menu`, `--z-tip` …) in one stacking order. Dark tokens are written once in `@dark{}`.
 
-## 5. Change log
+## 6. Change log
+- **v45 concept** (2026-09-26, Amadeus): §4 EXPIRA × macOS is added as the global house style for the Console and its derivatives.
+  - It covers the file-system logic, one curve with focus in and focus out, and the improved near-black stack.
+  - The GSSC kernel templates keep their own look.
+  - The sidebar draft becomes a file system: folders the person makes, loose chats newest first, no fixed sections, dates, tooltips or ellipses.
+  - The row menu becomes a card of pages with back and forward arrows. Rows are resizable, and pulling the edge docks the sidebar.
+  - The dock button travels across the dock into the chat with a motion blur, and its hover changes with where it is.
 - **v45 draft, in the bench only** (2026-09-26, Amadeus's sidebar notes; `console/bench/sidebar-next.html`; nothing is promoted yet):
   - the sidebar follows Claude's structure: New chat and Search, then the master template's numbered sections, I Files (folders), II Pinned and III Recents;
   - rows are 28px, one hairline apart;
