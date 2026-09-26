@@ -67,6 +67,9 @@ const SB=(()=>{const side=$("#side"),scroll=$("#sbScroll");
  /* depth: the floating cards' shadow, as a function of how far they have arrived; at 1 it equals --sb-depth in the CSS */
  function depth(p){const c=tok("--sb-shc")||"0,0,0",a=parseFloat(tok("--sb-sha"))||.7,h=tok("--sb-hi")||"255,255,255",ha=parseFloat(tok("--sb-hia"))||0,f=x=>x.toFixed(3);
   return `inset 0 1px 0 rgba(${h},${f(ha*p)}), 0 0 0 .5px rgba(${c},${f(.45*a*p)}), 0 ${(1+5*p).toFixed(1)}px ${(4+12*p).toFixed(1)}px -3px rgba(${c},${f(.45*a*p)}), 0 ${(4+18*p).toFixed(1)}px ${(14+42*p).toFixed(1)}px -10px rgba(${c},${f(.8*a*p)})`}
+ /* text that runs past its box feathers into the surface; text that fits is left whole */
+ const FE=".sb-t,.sb-tile b,.sb-idt b,.sb-idt small,.sb-who";
+ function edges(scope=side.parentElement){scope.querySelectorAll(FE).forEach(x=>{if(x.getClientRects().length)x.classList.toggle("ov",x.scrollWidth>x.clientWidth+.5)})}
  const mb=(k,max)=>k*max<.06?"blur(0px)":`blur(${(k*max).toFixed(2)}px)`;
  /* entering pulls focus (opacity first, focus last); leaving racks out (focus first, fade after). Only opacity and blur. */
  /* focus is fully resolved by 60% of the way, so the last stretch of a move is already sharp: nothing snaps into focus at the end */
@@ -135,7 +138,7 @@ const SB=(()=>{const side=$("#side"),scroll=$("#sbScroll");
    if(!e){e=make(w);els.set(w.id,e);fresh.add(e)}update(e,w);
    if(e===ref)ref=nxt(e.nextSibling);else tree.insertBefore(e,ref)});
   const drop=()=>leaving.forEach(({e,id})=>{if(e.classList.contains("gone")){e.remove();els.delete(id)}});
-  feather();
+  feather();edges(tree);
   if(reduce)return drop();
   const T=ms("--sb-move"),IN=ms("--sb-in"),OUT=ms("--sb-out"),Es=EZ(),E=easeFn(Es),B=blurPx()*.5,L=leaving.length?Math.round(OUT*.25):0;
   /* the rows that stay glide by whole pixels; rising ones wait a beat so what leaves can rack out first */
@@ -218,13 +221,13 @@ const SB=(()=>{const side=$("#side"),scroll=$("#sbScroll");
  function pager(card,nb,nf,hl,render){let hist=[],at=0;
   const paint=()=>{nb.disabled=at<=0;nf.disabled=at>=hist.length-1};
   function show(name,dir){const old=card.querySelector(".sb-page"),h0=card.offsetHeight,pg=document.createElement("div");pg.className="sb-page";pg.innerHTML=render(name);
-   if(!old||reduce||!dir){card.replaceChildren(hl.el,pg);card.style.height="";paint();return}
+   if(!old||reduce||!dir){card.replaceChildren(hl.el,pg);card.style.height="";paint();requestAnimationFrame(()=>edges(card));return}
    hl.off();const Es=EZ(),IN=ms("--sb-in"),OUT=ms("--sb-out"),B=blurPx()*.5,dx=10*dir,cs=getComputedStyle(card);
    Object.assign(old.style,{position:"absolute",left:cs.paddingLeft,right:cs.paddingRight,top:old.offsetTop+"px"});card.append(pg);
    const h1=pg.offsetHeight+parseFloat(cs.paddingTop)+parseFloat(cs.paddingBottom)+2;card.style.height=h0+"px";card.offsetWidth;card.style.height=h1+"px";
    old.animate([{opacity:1,filter:"blur(0px)",transform:"none"},{opacity:0,filter:`blur(${B}px)`,transform:`translateX(${-dx}px)`}],{duration:OUT,easing:Es,fill:"forwards"}).finished.then(()=>old.remove(),()=>old.remove());
    pg.animate([{opacity:0,filter:`blur(${B}px)`,transform:`translateX(${dx}px)`},{opacity:.85,filter:`blur(${(B*.25).toFixed(2)}px)`,offset:.3},{opacity:.97,filter:"blur(0px)",offset:.6},{opacity:1,filter:"blur(0px)",transform:"none"}],{duration:IN,easing:Es});
-   setTimeout(()=>{if(card.contains(pg))card.style.height=""},ms("--sb-move")+30);paint();setTimeout(()=>pg.querySelector(".sb-hit,button")?.focus({preventScroll:true}),40)}
+   requestAnimationFrame(()=>edges(card));setTimeout(()=>{if(card.contains(pg))card.style.height=""},ms("--sb-move")+30);paint();setTimeout(()=>pg.querySelector(".sb-hit,button")?.focus({preventScroll:true}),40)}
   const go=n=>{hist=hist.slice(0,at+1);hist.push(n);at=hist.length-1;show(n,1)};
   const nav=d=>{const i=at+d;if(i<0||i>=hist.length)return;at=i;show(hist[at],d)};
   nb.addEventListener("click",e=>{e.stopPropagation();nav(-1)});nf.addEventListener("click",e=>{e.stopPropagation();nav(1)});
@@ -285,8 +288,11 @@ const SB=(()=>{const side=$("#side"),scroll=$("#sbScroll");
   if(b.dataset.a.startsWith("p:"))return AP.go(b.dataset.a.slice(2));acct(false)});
  addEventListener("click",()=>{acct(false);pop(false)});addEventListener("keydown",e=>{if(e.key==="Escape"){acct(false);pop(false)}});
  /* appearance: the page cross-fades between themes (a view transition), and the pill slides with a motion blur */
+ /* the theme swap is one cross-fade of the whole page. While it runs, every CSS transition is held (html.sb-theming), or
+    the tiles and anything else with its own colour transition would keep fading after the page had already landed. */
  function theme(v){const apply=()=>{if(v==="system")delete root.dataset.theme;else root.dataset.theme=v;if(window.BENCH){BENCH.state.th=v==="system"?undefined:v;BENCH.save()}paintSeg(true)};
-  if(document.startViewTransition&&!reduce)document.startViewTransition(apply);else apply()}
+  root.classList.add("sb-theming");const done=()=>requestAnimationFrame(()=>requestAnimationFrame(()=>root.classList.remove("sb-theming")));
+  if(document.startViewTransition&&!reduce){const t=document.startViewTransition(apply);t.finished.then(done,done)}else{apply();done()}}
  let segAt=-1;function paintSeg(anim){const seg=acard.querySelector(".sb-page:last-child .sb-seg");if(!seg)return;const v=root.dataset.theme||"system",bs=[...seg.querySelectorAll("[data-th]")],i=bs.findIndex(b=>b.dataset.th===v),pill=seg.querySelector(".pill");
   bs.forEach(b=>b.setAttribute("aria-checked",String(b.dataset.th===v)));pill.style.setProperty("--i",i);pill.getAnimations().forEach(a=>a.cancel());
   /* in steps of its own width, so the travel and the landing stay centred however wide the card is */
@@ -443,5 +449,7 @@ const SB=(()=>{const side=$("#side"),scroll=$("#sbScroll");
  grip.addEventListener("keydown",e=>{if(e.key==="ArrowLeft"||e.key==="ArrowRight"){e.preventDefault();settleTo(W+(e.key==="ArrowLeft"?-16:16))}if(e.key==="Enter"){e.preventDefault();dock(true)}});
 
  sync();
+ /* widths change with the dock and the density: re-check which text runs long */
+ new ResizeObserver(()=>edges()).observe(side);
  return{acct,search,dock,IC,sync,newChat,folder:(i=0)=>toggle(ROOT.kids.filter(n=>n.kind==="folder")[i]),
   pop:(o,i=0)=>pop(o,[...tree.querySelectorAll(".sb-row[data-k]:not(.gone)")][i]),go:n=>PM.go(n),nav:d=>PM.nav(d),setWidth:settleTo,get width(){return W},model:ROOT}})();

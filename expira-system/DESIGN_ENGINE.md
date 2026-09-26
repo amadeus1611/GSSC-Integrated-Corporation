@@ -118,7 +118,8 @@ Motion is the heart of the UX: fidelity in the engine comes first.
   - Right-clicking empty space offers New chat and New folder.
 - **Fewer words, more detail. People are smarter than we think.**
   - There are no tooltips and no shortcut hints on rows.
-  - Long names feather into the surface; they never end in "…".
+  - Long names feather into the surface; they never end in "…". The feather applies only to text that actually overflows (checked live as widths change); text that fits is never touched.
+  - Right-aligned values, such as an Account field, wrap rather than fade.
   - Undo happens in place: a deleted row defocuses and its action becomes an undo arrow for a few seconds, with a trash can beside it to delete it at once. There is no toast.
   - Only an action menu may use words for its choices.
 - **Rubber bands tighten.** Stretched past its limit, a surface resists more the further it is pulled, up to a fixed amount (the sidebar: 64px past its maximum). Released, it settles back very softly.
@@ -179,6 +180,8 @@ Motion is the heart of the UX: fidelity in the engine comes first.
   - A closing block keeps its exact box while it fades.
 - **Focus resolves before the move ends.** Blur is gone by 60% of the way, so the last stretch of every move is already sharp and nothing snaps into focus at the end. A lingering sub-pixel blur that clears only when the animation stops reads as a jolt.
 - **Depth moves with the card.** Every floating card and pill casts a soft, layered shadow (`--sb-depth`): an inner top highlight, a hairline, a near shadow and a long soft one. It grows in as the card arrives and eases away as it leaves, drawn from the same progress value.
+- **A theme change is one picture.** The page cross-fades between themes as a whole, and every CSS transition is held while it runs, so no element keeps fading on its own after the page has landed.
+- **Optical centring is measured, not judged.** Glyphs are block-level and centred in their boxes, and labels sit on a 1.0 line box. The bench checks the centres to within 0.01px.
 - **Concentric corners, after macOS.** Menus are 11px, inset 5px, with 6px rows inside. Tiles are 8px.
 - **Small surfaces "pull".** Menus and cards use opacity, a small drop and focus on one progress value, with no scale, each on its own layer. Reversal carries on from where it is.
 - **The dock.**
@@ -248,6 +251,13 @@ They live in `bench/drafts/sidebar-next.css`, and the dark stack lives in `bench
 - **Tokens (v41):** every value comes from `src/tokens.css`. Spacing is a 4px scale with half steps (`--sp-half`, `--sp-1h` … `--sp-4h`) below 20px for dense chrome; a 1px nudge is optical and stays literal. Layers are named (`--z-side`, `--z-menu`, `--z-tip` …) in one stacking order. Dark tokens are written once in `@dark{}`.
 
 ## 6. Change log
+- **v45 system panel, second refinement** (2026-09-26, Amadeus):
+  - The theme swap holds all transitions, so the tiles change with the page.
+  - The feather applies only to overflowing text: the Account values and "Calm motion" were losing letters.
+  - Account values wrap.
+  - Secondary text in the card moves to `--soft` for legibility.
+  - An on-tile takes a whole warm tint.
+  - Glyph centring was measured at 0.00 to 0.01px.
 - **v45 system panel, refined** (2026-09-26, Amadeus: "not centred; Compact clips"):
   - The card has a fixed type scale and container-query layout.
   - The appearance pill is proportional, and was measured centred within 0.02px at 208, 256 and 400px, in both densities and both themes.

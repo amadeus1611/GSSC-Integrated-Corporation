@@ -191,7 +191,7 @@ body.sb-resizing,body.sb-resizing *{cursor:col-resize!important;user-select:none
 .sb-page{position:relative}
 .sb-nav{position:absolute;right:0;bottom:calc(100% + 5px);display:flex;gap:1px;padding:2px;border-radius:var(--r-round)}
 .sb-nav button{all:unset;width:20px;height:20px;display:grid;place-items:center;border-radius:var(--r-round);color:var(--soft);cursor:pointer;transition:background var(--sb-out) var(--sb-ease),color var(--sb-out) var(--sb-ease),opacity var(--sb-out) var(--sb-ease)}
-.sb-nav button svg{width:11px;height:11px}
+.sb-nav button svg{width:11px;height:11px;display:block}
 .sb-nav button:hover:not(:disabled){background:var(--line-2);color:var(--ink);transition-duration:calc(var(--sb-in) * .5)}
 .sb-nav button:disabled{opacity:.28;cursor:default}
 .sb-nav button:focus-visible{outline:var(--rule) solid var(--gold)}
@@ -206,7 +206,7 @@ body.sb-resizing,body.sb-resizing *{cursor:col-resize!important;user-select:none
 .sb-mh{position:relative;z-index:1;display:flex;flex-direction:column;gap:1px;padding:var(--sp-1h) var(--sp-2) var(--sp-2)}
 .sb-mh b{font-weight:450;font-size:var(--sb-fs);color:var(--ink)}
 .sb-mh small{font-size:var(--sb-fs-2);color:var(--mute)}
-.sb-card .sb-mh.plain{padding:var(--sp-1h) var(--sp-2) var(--sp-1);font-size:var(--fs-micro);letter-spacing:var(--tracked-tight);text-transform:uppercase;color:var(--mute)}
+.sb-card .sb-mh.plain{padding:var(--sp-1h) var(--sp-2) var(--sp-1);font-size:var(--fs-micro);letter-spacing:var(--tracked-tight);text-transform:uppercase;color:var(--soft);opacity:.85}
 .sb-sep{height:var(--rule-hair);background:var(--line-2);margin:4px var(--sp-1h)}
 .sb-row.danger .sb-hit,.sb-row.danger .sb-ic{color:var(--bad)}
 .sb-seg{position:relative;z-index:1;display:grid;grid-template-columns:repeat(3,1fr);margin:var(--sp-half) var(--sp-half) var(--sp-1);padding:2px;border-radius:var(--r-3);background:var(--well);box-shadow:inset 0 0 0 var(--rule-hair) var(--line-2)}
@@ -240,8 +240,8 @@ body.sb-resizing,body.sb-resizing *{cursor:col-resize!important;user-select:none
 .sb-id:hover .sb-av{box-shadow:inset 0 0 0 var(--rule-hair) var(--gold),0 0 0 2px var(--gold-wash);transition-duration:var(--sb-in)}
 .sb-idt{flex:1;min-width:0;display:flex;flex-direction:column;gap:1px}
 .sb-idt b{font-weight:500;font-size:12.5px;letter-spacing:-.005em;color:var(--ink);white-space:nowrap;overflow:hidden;-webkit-mask-image:linear-gradient(90deg,#000 calc(100% - 14px),transparent);mask-image:linear-gradient(90deg,#000 calc(100% - 14px),transparent)}
-.sb-idt small{font-size:10.5px;color:var(--mute);white-space:nowrap;overflow:hidden;-webkit-mask-image:linear-gradient(90deg,#000 calc(100% - 14px),transparent);mask-image:linear-gradient(90deg,#000 calc(100% - 14px),transparent)}
-.sb-idt em{display:flex;align-items:center;gap:5px;margin-top:3px;font-style:normal;font-size:var(--fs-micro);letter-spacing:.02em;color:var(--mute)}
+.sb-idt small{font-size:10.5px;color:var(--soft);white-space:nowrap;overflow:hidden;-webkit-mask-image:linear-gradient(90deg,#000 calc(100% - 14px),transparent);mask-image:linear-gradient(90deg,#000 calc(100% - 14px),transparent)}
+.sb-idt em{display:flex;align-items:center;gap:5px;margin-top:3px;font-style:normal;font-size:var(--fs-micro);letter-spacing:.02em;color:var(--soft)}
 .sb-idt em i,.sb-note i{width:5px;height:5px;flex:none;border-radius:var(--r-round);background:var(--ok);box-shadow:0 0 0 2px color-mix(in srgb,var(--ok) 18%,transparent)}
 .sb-id .sb-go{opacity:0;filter:blur(2px);transition:opacity var(--sb-out) var(--sb-ease),filter var(--sb-out) var(--sb-ease)}
 .sb-id:hover .sb-go,.sb-id:focus-visible .sb-go{opacity:1;filter:none;transition-duration:var(--sb-in)}
@@ -251,9 +251,9 @@ body.sb-resizing,body.sb-resizing *{cursor:col-resize!important;user-select:none
 /* the pill is positioned proportionally (its own width per step), so it sits dead centre on its choice at any width */
 .sb-cc .sb-seg .pill{left:2px;top:2px;bottom:2px;width:calc((100% - 4px) / 3);border-radius:6px;transform:translateX(calc(var(--i,0) * 100%));transition:none;
  box-shadow:0 0 0 var(--rule-hair) var(--line-3),0 1px 2px rgba(var(--sb-shc),calc(var(--sb-sha) * .35)),0 3px 8px -4px rgba(var(--sb-shc),calc(var(--sb-sha) * .5))}
-.sb-cc .sb-seg button{flex-direction:row;justify-content:center;min-width:0;height:26px;border-radius:6px;gap:5px;font-size:10.5px}
-.sb-cc .sb-seg button span{min-width:0;overflow:hidden;white-space:nowrap}
-.sb-cc .sb-seg button svg{width:12px;height:12px;flex:none;transition:transform var(--sb-move) var(--sb-ease)}
+.sb-cc .sb-seg button{flex-direction:row;align-items:center;justify-content:center;min-width:0;height:26px;border-radius:6px;gap:5px;font-size:10.5px;line-height:1}
+.sb-cc .sb-seg button span{min-width:0;overflow:hidden;white-space:nowrap;line-height:1}
+.sb-cc .sb-seg button svg{display:block;width:12px;height:12px;flex:none;transition:transform var(--sb-move) var(--sb-ease)}
 .sb-cc .sb-seg button:hover svg{transform:rotate(-8deg)}
 .sb-cc .sb-seg button[data-th="system"]:hover svg{transform:none}
 .sb-tiles{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:5px}
@@ -265,7 +265,9 @@ body.sb-resizing,body.sb-resizing *{cursor:col-resize!important;user-select:none
 .sb-tile .w{width:24px;height:24px;flex:none;display:grid;place-items:center;border-radius:var(--r-round);background:var(--line-2);color:var(--soft);
  transition:background var(--sb-in) var(--sb-ease),color var(--sb-in) var(--sb-ease),box-shadow var(--sb-in) var(--sb-ease),transform var(--sb-move) var(--sb-ease)}
 .sb-tile:active .w{transform:scale(.9);transition-duration:var(--sb-in),var(--sb-in),var(--sb-in),calc(var(--sb-in) * .4)}
-.sb-tile .w svg{width:13px;height:13px;overflow:visible}
+.sb-tile .w svg{display:block;width:13px;height:13px;overflow:visible}
+.sb-tile.on{background:color-mix(in srgb,var(--gold) 9%,var(--well));box-shadow:inset 0 0 0 var(--rule-hair) color-mix(in srgb,var(--gold) 40%,transparent)}
+.sb-tile.on:hover{background:color-mix(in srgb,var(--gold) 13%,var(--well))}
 .sb-tile.on .w{background:color-mix(in srgb,var(--gold) 22%,transparent);color:var(--gold-hi,var(--gold));box-shadow:inset 0 0 0 var(--rule-hair) color-mix(in srgb,var(--gold) 55%,transparent),0 0 12px -2px color-mix(in srgb,var(--gold) 35%,transparent)}
 /* the glyphs act out their state: Calm's waves settle flat; Compact's lines draw together */
 .sb-tile .w path{transition:d var(--sb-move) var(--sb-ease),transform var(--sb-move) var(--sb-ease),opacity var(--sb-move) var(--sb-ease)}
@@ -277,7 +279,7 @@ body.sb-resizing,body.sb-resizing *{cursor:col-resize!important;user-select:none
 .sb-tile[data-tg="compact"].on .w path:last-child{transform:translateY(-1px)}
 .sb-tile .l{flex:1;min-width:0;display:flex;flex-direction:column;gap:1px;line-height:1.15}
 .sb-tile b{font-weight:450;font-size:11px;color:var(--ink);white-space:nowrap;overflow:hidden;-webkit-mask-image:linear-gradient(90deg,#000 calc(100% - 12px),transparent);mask-image:linear-gradient(90deg,#000 calc(100% - 12px),transparent)}
-.sb-tile small{font-size:var(--fs-micro);color:var(--mute);transition:color var(--sb-in) var(--sb-ease)}
+.sb-tile small{font-size:var(--fs-micro);color:var(--soft);transition:color var(--sb-in) var(--sb-ease)}
 .sb-tile.on small{color:var(--gold-ink)}
 /* narrow docks: the switch keeps its icons, the tiles keep their names */
 @container (max-width:226px){
@@ -286,10 +288,10 @@ body.sb-resizing,body.sb-resizing *{cursor:col-resize!important;user-select:none
 .sb-tile{height:36px}
 }
 /* a quiet note, the Account page's fields, and the system line */
-.sb-note{position:relative;z-index:1;display:flex;align-items:center;gap:6px;padding:var(--sp-1h) var(--sp-2) var(--sp-1);font-size:10px;color:var(--mute)}
-.sb-field{position:relative;z-index:1;display:flex;align-items:baseline;justify-content:space-between;gap:var(--sp-3);min-height:26px;padding:5px var(--sp-2);font-size:11.5px}
-.sb-field span{flex:none;color:var(--mute);font-size:10.5px}
-.sb-field b{min-width:0;font-weight:400;color:var(--ink);text-align:right;white-space:nowrap;overflow:hidden;-webkit-mask-image:linear-gradient(270deg,#000 calc(100% - 14px),transparent);mask-image:linear-gradient(270deg,#000 calc(100% - 14px),transparent)}
+.sb-note{position:relative;z-index:1;display:flex;align-items:center;gap:6px;padding:var(--sp-1h) var(--sp-2) var(--sp-1);font-size:10px;color:var(--soft)}
+.sb-field{position:relative;z-index:1;display:flex;align-items:baseline;justify-content:space-between;gap:var(--sp-3);min-height:26px;padding:5px var(--sp-2);font-size:11.5px;line-height:1.35}
+.sb-field span{flex:none;color:var(--soft);font-size:10.5px}
+.sb-field b{min-width:0;font-weight:450;color:var(--ink);text-align:right;overflow-wrap:anywhere}
 .sb-sysline{position:relative;z-index:1;display:flex;justify-content:space-between;gap:var(--sp-2);margin:4px 3px 0;padding:var(--sp-1h) var(--sp-1h) 3px;border-top:var(--rule-hair) solid var(--line-2);font-size:var(--fs-micro);letter-spacing:.02em;color:var(--mute);font-variant-numeric:tabular-nums}
 .sb-sysline span{white-space:nowrap}
 .sb-sysline span:last-child{opacity:.8}
@@ -332,3 +334,9 @@ body.sb-resizing,body.sb-resizing *{cursor:col-resize!important;user-select:none
 .sb-sortc.open{visibility:visible;pointer-events:auto}
 .sb-sortc.open .sb-card{opacity:1}
 .sb-sortc .sb-ic{color:var(--gold-ink)}
+
+/* !important: while the theme cross-fades, every transition is held so the whole page changes as one picture */
+html.sb-theming,html.sb-theming *{transition:none!important}
+/* the feather only where text actually runs long: an edge fade on text that fits would eat its last letter
+   (sidebar-next.js edges() marks overflowing text .ov as widths change) */
+.sb-t:not(.ov),.sb-tile b:not(.ov),.sb-idt b:not(.ov),.sb-idt small:not(.ov),.sb-who:not(.ov){-webkit-mask-image:none;mask-image:none}
