@@ -15,6 +15,6 @@ document.addEventListener("click",e=>{
  const tv=e.target.closest("[data-tv]");if(tv){const f=tv.closest(".fig"),t=f.querySelector(".tv");t.hidden=!t.hidden;tv.textContent=t.hidden?"Table":"Chart";f.querySelector("svg.ch").style.display=t.hidden?"":"none";return}
  const c=e.target.closest("[data-copy]");if(c){const t=c.closest(".bot").querySelector(".ans").innerText;const done=m=>{c.textContent=m;clearTimeout(c._t);c._t=setTimeout(()=>c.textContent="Copy",1600)};navigator.clipboard?navigator.clipboard.writeText(t).then(()=>done("Copied"),()=>done("Select to copy")):done("Select to copy");return}
  const r=e.target.closest("[data-regen]");if(r){if(busy)return;if(cur?.example){toast("Start a new chat to brief EXPIRA yourself");return}const k=+r.closest(".bot").dataset.k,q=cur.turns[k-1]?.content;if(q){const fa=cur.turns[k-1]._att||[];cur.turns.splice(k-1);save();open(cur);send(q,{att:fa})}return}
- const d=e.target.closest("[data-read]");if(d){if(busy&&d.dataset.read==="live"){showDsp(true);return}const k=+d.dataset.read,t=cur.turns[k];if(!t||!t.work)return;recordedDispatch(t.work,cur,cur.turns[k-1]?.ts||t.ts);showDsp(true);return}
+ const d=e.target.closest("[data-read]");if(d){if(busy&&d.dataset.read==="live"){showDsp(true);return}const k=+d.dataset.read,t=cur.turns[k];if(!t||!t.work)return;showDsp(true,()=>recordedDispatch(t.work,cur,cur.turns[k-1]?.ts||t.ts));return}
  const pk=e.target.closest("[data-notes]");if(pk){const dk=pk.closest(".desk");dk.classList.toggle("show");pk.textContent=dk.classList.contains("show")?"Close notes":"Read notes"}});
 

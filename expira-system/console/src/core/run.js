@@ -1,11 +1,14 @@
 /* scroll requests collect and land once per frame */
 const ENDS=new Set();let endRaf=0;
 function toEnd(el){ENDS.add(el);if(!endRaf)endRaf=requestAnimationFrame(()=>{endRaf=0;for(const e of ENDS){if(e)e.scrollTop=e.scrollHeight;else if(stick)sc.scrollTop=sc.scrollHeight}ENDS.clear()})}
-async function send(q,re){const KL=await KLIB.load().catch(()=>null),docPre=DOCSEL||docIntent(q);setDoc(null);
+/* the brief lands, the composer clears and the run goes busy in the same frame as the Enter; the kernel loads after that,
+   so the message shows at once and a second Enter meets a busy run instead of starting another */
+async function send(q,re){if(busy)return;const docPre=DOCSEL||docIntent(q);setDoc(null);
  if(!cur||cur.example){cur={id:"c"+Date.now(),no:nextNo(),title:(q.replace(/^(?:> ?.*\n)+\n*/,"")||"Quoted passage").slice(0,52),ts:Date.now(),turns:[],folder:pendingFolder};pendingFolder=null;chats.unshift(cur)}
  const tsQ=Date.now();const IMGS=re?(re.att||[]):ATT.slice();if(!re)attClear();const IM=IMGS.length?{images:IMGS.map(a=>a.file)}:{};
  const ut={role:"user",content:q,ts:tsQ};if(IMGS.length)ut.imgs=IMGS.map(a=>{const m={name:a.name,w:a.w,h:a.h,thumb:a.thumb};Object.defineProperty(m,"url",{value:URL.createObjectURL(a.file),enumerable:false});return m});Object.defineProperty(ut,"_att",{value:IMGS,enumerable:false});cur.turns.push(ut);
  if(IMGS.length)q+=`\n\n[Attached: ${IMGS.length} image${IMGS.length>1?"s":""} (${IMGS.map(a=>a.name).join(", ")}). They are shown to you with this message: read them closely and use what they show. Say so if something in them cannot be made out.]`;promptEl.value="";phSync();open(cur);setBusy(true);ctl=new AbortController();stick=true;closeSheet();
+ const KL=await KLIB.load().catch(()=>null);
  const safe=OPT.safe,thorough=OPT.desks==="always",direct=OPT.desks==="off",depthDeep=OPT.depth==="deep";let webOn=OPT.web&&WEB.ok;
  if(webOn){try{const lim=await sample.limits();if(!lim||!lim.tools)webOn=false}catch(e){webOn=false}}
  const K=cur.turns.length,t0=performance.now(),now=()=>performance.now()-t0;
