@@ -46,6 +46,9 @@ const FAKE = ({ seed, uid }) => {
   ok(D.includes('c:l1') && !D.includes('c:example'), 'db: local chat mirrored, example kept out: ' + D);
   await p.evaluate(() => { const c = JSON.parse(localStorage.getItem('expira.v6')).filter(c => c.id !== 'l1'); __KV.put('chats', c) }); await p.waitForTimeout(800);
   D = await p.evaluate(() => Object.keys(__FDB)); ok(!D.includes('c:l1'), 'db: delete mirrored');
+  // the run log goes to this viewer's private subtree (the fake refuses any other path) and is never hydrated as a key
+  await p.evaluate(() => __KV.log({ ts: 1, steps: [{ role: 'research', focus: 'private' }], firewall: 'clear' })); await p.waitForTimeout(300);
+  D = await p.evaluate(() => Object.keys(__FDB)); ok(D.some(k => k.startsWith('r:')), 'db: run log kept in the private subtree: ' + D);
   ok(errs.length === 0, 'db errors: ' + errs); await p.close();
   // 5. db: the newer copy wins, a deleted chat stays deleted, an oversized chat stays local
   const old = chat('n1', 'Newer here'), newer = Object.assign(chat('n1', 'Newer here'), { turns: [...old.turns, { role: 'assistant', ts: Date.now() + 5000, content: 'later' }] });

@@ -1669,7 +1669,7 @@ const KV=(()=>{const P="expira.",AL={chats:"v6"},KEYS=["chats","prefs","opt","fo
  /* hydrate: for each chat the newer copy wins; deletions on either side hold; what only this browser holds is sent up */
  const ready=(async()=>{try{const C=window.claude;const u=await C?.use?.("user"),id=u&&typeof u.id==="function"?await u.id():null;if(!id)return"local";const d=await C.use("db");if(!d)return"local";
   const col=d.collection("data/users/"+id),s=await col.get();R=col;const got={},dc=new Map();
-  for(const x of s.docs){const b=x.data();if(!b)continue;seen.set(x.id,JSON.stringify(b));if(x.id.startsWith("c:")){if(b.v&&typeof b.v.id==="string"&&Array.isArray(b.v.turns))dc.set(b.v.id,cleanChat(b.v))}else got[x.id.slice(2)]=b.v}
+  for(const x of s.docs){const b=x.data();if(!b||x.id.startsWith("r:"))continue;seen.set(x.id,JSON.stringify(b));if(x.id.startsWith("c:")){if(b.v&&typeof b.v.id==="string"&&Array.isArray(b.v.turns))dc.set(b.v.id,cleanChat(b.v))}else got[x.id.slice(2)]=b.v}
   (got.gone||[]).forEach(g=>gone.add(g));
   for(const k of KEYS){if(k==="chats")continue;if(k in got){const j=JSON.stringify(got[k]);if(j!==JSON.stringify(get(k,null))){local(k,got[k]);subs.forEach(f=>f(k,got[k]))}}else{const v=get(k,null);if(v!=null)mirror(k,v)}}
   const lc=get("chats",[])||[],m=new Map();for(const c of lc)if(c&&!gone.has(c.id))m.set(c.id,c);for(const [cid,c] of dc)if(c){if(gone.has(cid))send("c:"+cid,null);else m.set(cid,c.example?c:pick(m.get(cid),c))}
@@ -1694,7 +1694,9 @@ const KV=(()=>{const P="expira.",AL={chats:"v6"},KEYS=["chats","prefs","opt","fo
   const n={chats:[...mc.values()],folders:[...mf.values()]};
   if(o.prefs&&typeof o.prefs==="object")n.prefs=Object.assign({},get("prefs",{}),o.prefs);if(o.opt&&typeof o.opt==="object")n.opt=Object.assign({},get("opt",{}),o.opt);
   for(const k in n){put(k,n[k]);subs.forEach(f=>f(k,n[k]))}return{chats:ch.length,folders:fo.length}};
- return{get,put,remove:k=>put(k,null),list:()=>KEYS.filter(k=>get(k,null)!=null),subscribe:f=>(subs.add(f),()=>subs.delete(f)),ready,where:()=>R?"db":"local",exportAll,importAll}})();
+ return{get,put,remove:k=>put(k,null),list:()=>KEYS.filter(k=>get(k,null)!=null),subscribe:f=>(subs.add(f),()=>subs.delete(f)),ready,where:()=>R?"db":"local",exportAll,importAll,
+ /* a run's shape (desks, verdicts), kept in the private subtree only; with no private subtree it is not kept at all */
+ log:b=>{ready.then(()=>{if(R)R.doc("r:"+Date.now()).set(b).catch(()=>{})})}}})();
 window.__KV=KV;
 const PREF=Object.assign({name:"",full:"",org:"",text:"m",density:"comfortable",motion:"full",grain:true},KV.get("prefs",{}));
 const FORCES=Object.assign({center:1,repel:1,link:1,dist:1},PREF.forces||{});
@@ -3240,9 +3242,9 @@ document.addEventListener("click",async e=>{const o=e.target.closest("[data-doco
  const fo=e.target.closest("[data-fopen]"),fs2=e.target.closest("[data-fsave]");if(fo||fs2){const [cid,k]=(fo||fs2).dataset[fo?"fopen":"fsave"].split("|"),c=chats.find(x=>x.id===cid),d=c&&c.turns[+k]&&c.turns[+k].doc;if(!d)return;if(fo){setMenu(false);openDoc(d)}else{const b=fs2;b.textContent="Preparing…";const ok=await saveDoc(d);b.textContent=ok?"Saved":"Download";setTimeout(()=>b.textContent="Download",1800)}return}
  const kt=e.target.closest("[data-ktpl]");if(kt){const K=await KLIB.load().catch(()=>null);const d=K&&K.derivatives.find(x=>x.file===kt.dataset.ktpl);if(d){setMenu(false);openDoc({type:d.type,src:d.src,second:d.second_signatory,basis:"The kernel's stock template, unfilled."},d.title)}}});
 /* ---------- runtime ---------- */
-let sample=null,db=null,ctl=null,busy=false;
+let sample=null,ctl=null,busy=false;
 (async()=>{sample=await window.claude?.use?.("sample")??null;
- if(!sample)$("#phx").textContent="Open this page in Claude to brief EXPIRA";grow();attInit();db=await window.claude?.use?.("db")??null;webInit()})();
+ if(!sample)$("#phx").textContent="Open this page in Claude to brief EXPIRA";grow();attInit();webInit()})();
 open(chats.find(c=>!c.example)||chats[0]);
 
 /* storage: apply what the durable copy or an import brings in */
@@ -3617,8 +3619,8 @@ ${PG.length?`Web sources the desks consulted, newest first (use these urls in "s
   cur.turns.push({role:"assistant",content,ex,doc:work.doc||null,ts:Date.now(),work:{ms:work.ms,firewall:work.firewall,feed:work.feed,sig:work.sig.slice(-600),sigKeys:work.sigKeys,tok:totTok(),ph:phOut,
    steps:steps.map(s=>({role:s.role,tier:s.tier,focus:s.focus,task:s.task,why:s.why,after:s.after,web:!!s.web,v:s.v,redo:s.redo,ms:s.ms,tb:s.tb,ts:s.ts,te:s.te,searches:s.searches||0,out:(s.out||"").slice(0,4000)})),web:M.pages.length,ledger:work.ledger?{claims:work.ledger.claims.map(c=>Object.assign({},c)),audit:work.ledger.audit||null}:null,atok:work.atok||tok(fin2.text),
    map:{thinking:M.thinking.slice(0,6).map(t=>clip(t,240)),rationale:clip(M.rationale,240),kind:clip(M.kind,80),calls:M.calls.slice(0,40),pages:M.pages.slice(0,30)}}});save();
-  try{if(db)/* the run log is shared with every viewer of the page, so it keeps the shape of the run, never the brief */
-  await db.collection("runs").doc("r"+Date.now()).set({ts:Date.now(),steps:steps.map(s=>({role:s.role,tier:s.tier,focus:s.focus||"",verdict:s.v||"",redo:s.redo})),firewall:work.firewall})}catch(e){}
+  /* the run log lives in this viewer's own private subtree beside their chats, never in a collection other viewers can read */
+  KV.log({ts:Date.now(),steps:steps.map(s=>({role:s.role,tier:s.tier,focus:s.focus||"",verdict:s.v||"",redo:s.redo})),firewall:work.firewall});
   const k=cur.turns.length-1;bot.dataset.k=k;bot.classList.add("fresh");run.classList.remove("running");run.classList.add("settled");swap(lbl,summary(work));tEl.textContent=mmss(work.ms);{const mi=run.querySelector(".mini");if(mi){mi._sig=null;if(run.dataset.view==="map")setTimeout(()=>miniDraw(run,cur.turns[cur.turns.length-1].work,false),60)}}setTimeout(()=>{if(!run.classList.contains("pinned")){disclose(run,"open",false,run.querySelector(".run-b"));run.querySelector(".run-h").setAttribute("aria-expanded","false")}},1100);rk.textContent=tokLine(cur.turns[k].work);
   run.querySelector("[data-read]").dataset.read=k;run.querySelector(".flow")?.insertAdjacentHTML("afterend",costHTML(cur.turns[k].work));if(work.firewall==="blocked")ans.innerHTML=md(content);
   bot.insertAdjacentHTML("beforeend",`<div class="bi">${inThis(ans.innerHTML)}</div>${fupsHTML(cur.turns[k].work)}<div class="filed capt bi"><span>Filed ${hhmm(Date.now())}</span><i class="dotsep"></i>${meta(content)}${acts(k)}</div>`);

@@ -28,7 +28,7 @@ const KV=(()=>{const P="expira.",AL={chats:"v6"},KEYS=["chats","prefs","opt","fo
  /* hydrate: for each chat the newer copy wins; deletions on either side hold; what only this browser holds is sent up */
  const ready=(async()=>{try{const C=window.claude;const u=await C?.use?.("user"),id=u&&typeof u.id==="function"?await u.id():null;if(!id)return"local";const d=await C.use("db");if(!d)return"local";
   const col=d.collection("data/users/"+id),s=await col.get();R=col;const got={},dc=new Map();
-  for(const x of s.docs){const b=x.data();if(!b)continue;seen.set(x.id,JSON.stringify(b));if(x.id.startsWith("c:")){if(b.v&&typeof b.v.id==="string"&&Array.isArray(b.v.turns))dc.set(b.v.id,cleanChat(b.v))}else got[x.id.slice(2)]=b.v}
+  for(const x of s.docs){const b=x.data();if(!b||x.id.startsWith("r:"))continue;seen.set(x.id,JSON.stringify(b));if(x.id.startsWith("c:")){if(b.v&&typeof b.v.id==="string"&&Array.isArray(b.v.turns))dc.set(b.v.id,cleanChat(b.v))}else got[x.id.slice(2)]=b.v}
   (got.gone||[]).forEach(g=>gone.add(g));
   for(const k of KEYS){if(k==="chats")continue;if(k in got){const j=JSON.stringify(got[k]);if(j!==JSON.stringify(get(k,null))){local(k,got[k]);subs.forEach(f=>f(k,got[k]))}}else{const v=get(k,null);if(v!=null)mirror(k,v)}}
   const lc=get("chats",[])||[],m=new Map();for(const c of lc)if(c&&!gone.has(c.id))m.set(c.id,c);for(const [cid,c] of dc)if(c){if(gone.has(cid))send("c:"+cid,null);else m.set(cid,c.example?c:pick(m.get(cid),c))}
@@ -53,7 +53,9 @@ const KV=(()=>{const P="expira.",AL={chats:"v6"},KEYS=["chats","prefs","opt","fo
   const n={chats:[...mc.values()],folders:[...mf.values()]};
   if(o.prefs&&typeof o.prefs==="object")n.prefs=Object.assign({},get("prefs",{}),o.prefs);if(o.opt&&typeof o.opt==="object")n.opt=Object.assign({},get("opt",{}),o.opt);
   for(const k in n){put(k,n[k]);subs.forEach(f=>f(k,n[k]))}return{chats:ch.length,folders:fo.length}};
- return{get,put,remove:k=>put(k,null),list:()=>KEYS.filter(k=>get(k,null)!=null),subscribe:f=>(subs.add(f),()=>subs.delete(f)),ready,where:()=>R?"db":"local",exportAll,importAll}})();
+ return{get,put,remove:k=>put(k,null),list:()=>KEYS.filter(k=>get(k,null)!=null),subscribe:f=>(subs.add(f),()=>subs.delete(f)),ready,where:()=>R?"db":"local",exportAll,importAll,
+ /* a run's shape (desks, verdicts), kept in the private subtree only; with no private subtree it is not kept at all */
+ log:b=>{ready.then(()=>{if(R)R.doc("r:"+Date.now()).set(b).catch(()=>{})})}}})();
 window.__KV=KV;
 const PREF=Object.assign({name:"",full:"",org:"",text:"m",density:"comfortable",motion:"full",grain:true},KV.get("prefs",{}));
 const FORCES=Object.assign({center:1,repel:1,link:1,dist:1},PREF.forces||{});

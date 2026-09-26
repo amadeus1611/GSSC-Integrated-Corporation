@@ -29,7 +29,8 @@ Owner: Duke Y. Demayo. Working branch: `claude/wizardly-ptolemy-6q4ter`, PR amad
 - **Test hooks:** `window.__FM` for the map instances, `window.__ex(ex)` for the exhibits HTML, `window.__KV` for the storage adapter and `window.__RX` for the raster.
 - **Republishing:**
   - Use the Artifact tool with the `url` above, and read the live artifact first.
-  - Omit `capabilities` so the page keeps the ones it has: mcp Exa (`web_search_exa`, `web_fetch_exa`), sample, db and downloads.
+  - Omit `capabilities` so the page keeps the ones it has: mcp Exa (`web_search_exa`, `web_fetch_exa`), sample, db, downloads and user.
+  - One shared page, one Claude account per person (Amadeus, 2026-09-26): every viewer runs on their own Claude plan and Exa connector, and their chats, settings and run log sync only to their own private `data/users/<id>/` subtree. Nothing is written to a collection other viewers can read.
   - Commit and push the same built `index.html`.
 
 ## Standing preferences
