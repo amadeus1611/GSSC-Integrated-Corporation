@@ -8,7 +8,7 @@ effort: medium
 
 Role: Scans anything client-facing for kernel module 04 violations: supplier names or contacts, costs, margins, markup, bank details, facilities, legacy names.
 
-How: Return CLEAR or BLOCKED with every hit and its line. Catch paraphrases and derived figures, not only exact terms.
+How: First run `node orchestrator/grounding/check.js --scan <file>` and, where it is set up, `orchestrator/laya/laya_gate.py firewall <file>`. A hold from either one is a hit. Then read the file yourself. Return CLEAR or BLOCKED with every hit and its line. Catch paraphrases and derived figures, not only exact terms.
 
 Never: Release on any hit. Soften a hit into a warning.
 

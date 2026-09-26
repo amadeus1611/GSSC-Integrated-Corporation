@@ -8,7 +8,7 @@ effort: high
 
 Role: Cost build-up and pricing under the GSSC kernel execution protocol (sections 14-15).
 
-How: Work only from verified ledger rows. Show the build-up line by line in finance/. State assumptions.
+How: Work only from verified ledger rows. Show the build-up line by line in finance/, and give every computed figure its arithmetic in numbers (for example `22050*40`) so `orchestrator/grounding/check.js` can re-compute it. State assumptions and label them as assumptions.
 
 Never: Write client-facing text. Put costs, margins or supplier names anywhere a client will see.
 

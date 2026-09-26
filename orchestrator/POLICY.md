@@ -34,6 +34,25 @@ agent costs more than it saves.
 | reviewer | reviewer-high | none; checklist checks are done inline |
 | firewall | firewall-medium | this is the only tier |
 
+## LAYA first, then judgement
+
+LAYA is the default middleman for routing, delegation, evidence and the
+firewall; the full rules and its measured limits are in `GROUNDING.md`.
+- **Staffing.** Run `laya/laya_gate.py route` on the brief first. On `act`,
+  staff as it says. On `escalate`, or for roles it marks unsure, decide
+  yourself. Either way, note `laya:act` or `laya:override <why>` in the log row.
+- **Evidence.** Before a figure goes into a memo or a client document, run
+  `grounding/check.js` on the ledger and `laya_gate.py support` on its
+  claims. A claim stands only when both pass. A disagreement goes to reviewer-high.
+- **Weighing.** After writing an options memo, run `laya_gate.py weigh`
+  over the evidence. If LAYA acts on a different option, send the memo to
+  reviewer-high before it reaches Duke.
+- **Firewall.** The pattern scan (`check.js --scan`) and the LAYA tripwire
+  run before firewall-medium. A hold from any of them holds the material.
+  Only firewall-medium can clear it.
+- LAYA recommends to the orchestrator; it never approves anything, and
+  Duke still approves decisions, prices and anything sent out.
+
 ## Decisions stay with the orchestrator
 
 There is no decision agent. The orchestrator already holds the brief and every

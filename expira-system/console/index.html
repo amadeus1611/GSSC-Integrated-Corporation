@@ -2957,7 +2957,7 @@ function sheetHTML(w,id){const S=w.steps||[],M=w.map||{},P=M.pages||[],C=M.calls
  if(id==="doc"){const d=w.doc;if(!d)return "";if(d.error)return si(`<span class="k cap">Document held</span><h4>${esc(DOCT[d.type]||"Document")}</h4><p class="tk">${esc(d.error)}</p>`);return si(`<span class="k cap">Document · kernel ${esc(d.kernel||"")}</span><h4>${esc(d.title)}</h4><div class="mt"><span>${d.pages} pages</span><span>Verified by the kernel builder</span></div><ul class="ql">${(d.checks||[]).map(c=>`<li><span class="num">✓</span><span>${esc(c[0])}</span></li>`).join("")}</ul>`)+si(`<button class="btn2" data-docopen-sheet>Open the document</button>`)}
  if(id==="ans"){const au=w.ledger&&w.ledger.audit,t=ledgerStats(w.ledger);return si(`<span class="k cap">Answer</span><h4>${t.n?`${t.g} of ${t.n} claims grounded`:"Filed"}</h4><p class="tk">The answer may only state what the ledger supports; estimates are marked as such, and each figure carries its claim number.</p>`)+(au?si(`<span class="k2 cap">Audit</span>${au.flags?`<ul class="ql">${(au.items||[]).map(x=>`<li><span class="num">—</span><span>“${esc(x.quote)}” <small style="color:var(--mute)">${esc(x.why||"")}</small></span></li>`).join("")}</ul><p class="tk">These lines were qualified or removed before filing.</p>`:`<p class="tk">Every factual statement was backed by the ledger.</p>`}`):"")}
  if(id.startsWith("k:")){const Lg=w.ledger,c=Lg&&(Lg.claims||[]).find(x=>String(x.id)===id.slice(2));if(!c)return "";const pg=(c.urls||[]).map(u=>P.find(p=>p.url===u)).filter(Boolean);
-  return si(`<span class="k cap">Claim c${c.id}</span><h4>${esc(c.text)}</h4><div class="mt"><span class="vchip v-${esc(c.v)}">${esc(VL[c.v]||c.v)}</span>${c.conf!=null?`<span class="num">${Math.round(c.conf*100)}% confidence</span>`:""}${S[c.desk]?`<span>${dn(c.desk)}</span>`:""}</div>${c.note?`<p class="tk">${esc(c.note)}</p>`:""}`)+(pg.length?pg.map(page).join(""):si(`<p class="empty2">${c.v==="derived"?"Computed from other claims or your own figures.":"No page backs this claim. Treat it as an estimate."}</p>`))}
+  return si(`<span class="k cap">Claim c${c.id}</span><h4>${esc(c.text)}</h4><div class="mt"><span class="vchip v-${esc(c.v)}">${esc(VL[c.v]||c.v)}</span>${c.conf!=null?`<span class="num">${Math.round(c.conf*100)}% confidence</span>`:""}${S[c.desk]?`<span>${dn(c.desk)}</span>`:""}</div>${c.note?`<p class="tk">${esc(c.note)}</p>`:""}${c.chk&&c.chk.q==="ok"&&c.quote?`<p class="tk">Checked word for word against the page: “${esc(c.quote)}”</p>`:c.chk&&c.chk.how==="calc"&&c.calc?`<p class="tk">Re-computed from checked figures: ${esc(c.calc)}</p>`:""}`)+(pg.length?pg.map(page).join(""):si(`<p class="empty2">${c.v==="derived"?"Computed from other claims or your own figures.":"No page backs this claim. Treat it as an estimate."}</p>`))}
  if(/^a\d+$/.test(id)){const i=+id.slice(1),s=S[i];if(!s)return "";const q=C.filter(c=>c.i===i),hs=hostsOf(P.filter(p=>p.i===i));
   return si(`<span class="k cap">Desk ${ROMAN[i]} · ${ROLE[s.role]}</span><h4>${esc(s.focus||s.task)}</h4>${s.focus?`<p class="tk">${esc(s.task)}</p>`:""}<div class="mt"><span>${TIERS[s.tier].w} effort</span>${s.ms?`<span class="num">${fmt(s.ms)}</span>`:s._live?"<span>Working</span>":""}${s.v?`<span class="${esc(s.v)}">${s.v==="pass"?"Passed review":"Returned"}</span>`:""}${s.after&&s.after.length?`<span>After ${s.after.map(n=>"desk "+ROMAN[n-1]).join(" and ")}</span>`:""}</div>${s.why?`<p class="tk" style="font-size:12px;color:var(--soft)">${esc(cap1(s.why))}</p>`:""}`)
    +(q.length?si(`<span class="k2 cap">Searches</span><ul class="ql">${q.map(c=>`<li><span class="num">${mmss(c.t)}</span><span>${c.fetch?"Read ":""}${c.q.map(x=>c.fetch?esc(x):`“${esc(x)}”`).join(", ")}</span></li>`).join("")}</ul>`):"")
@@ -3046,6 +3046,96 @@ function webTools(ctx){/* ctx: {onSearch(queries), onSources(list), onError(code
   {name:"web_fetch",description:"Read specific pages when search excerpts are not enough (exact wording, full tables). Pass up to 3 urls and an objective. Returns focused excerpts per page.",
    inputSchema:{type:"object",properties:{urls:{type:"array",items:{type:"string"}},objective:{type:"string"}},required:["urls","objective"]},
    execute:async(inp,{signal})=>{const u=(Array.isArray(inp.urls)?inp.urls:[inp.urls]).map(String).filter(x=>/^https?:\/\//.test(x)).slice(0,3);if(!u.length)throw new Error("Give at least one http(s) url.");ctx.onSearch(u.map(x=>(x.match(/^https?:\/\/([^/]+)/)||[])[1]||x),true);return trim(await call("web_fetch_exa",{urls:u,maxCharacters:3000},signal))}}]}
+/* ---------- the grounding gate (orchestrator/GROUNDING.md) ----------
+   LAYA's rule, applied where the console can run it. A decision is a closed set of options, checked in code and voted on;
+   a claim counts as sourced only when its quote is found word for word in the page it cites and its figures are in that
+   quote; a derived figure counts only when its arithmetic re-computes from figures already checked. No DOM here: the same
+   file runs under Node for orchestrator/grounding/check.js and qa/ground.js. */
+const GROUND=(()=>{
+ const WN={zero:0,two:2,three:3,four:4,five:5,six:6,seven:7,eight:8,nine:9,ten:10,eleven:11,twelve:12,thirteen:13,fourteen:14,fifteen:15,sixteen:16,seventeen:17,eighteen:18,nineteen:19,twenty:20,thirty:30,forty:40,fifty:50,sixty:60,seventy:70,eighty:80,ninety:90,hundred:100,dozen:12};
+ const MUL={thousand:1e3,k:1e3,million:1e6,mn:1e6,m:1e6,billion:1e9,bn:1e9,b:1e9};
+ const EST=/\b(estimates?|estimated|assum\w*|approx\w*|roughly|indicative|illustrative|hypothetical|for example|e\.g\.)|~/i;
+ const norm=s=>String(s||"").normalize("NFKC").toLowerCase().replace(/[‘’‛′`]/g,"'").replace(/[“”‟″]/g,'"').replace(/[‐-―−]/g,"-").replace(/…/g,"...").replace(/\*\*|__/g,"").replace(/\s+/g," ").trim();
+ const strip=s=>String(s||"").replace(/\[(?:c|s)\d+\]/gi," ").replace(/^\s*(?:\d+[.)]|#+)\s+/gm," ");
+ /* every figure in a text, as candidate values: "9,500" is 9500; "1.2 million" is 1.2 and 1200000; "five" is 5 (words only when asked; "one" is left out, it is mostly a pronoun) */
+ function nums(s,{words=true}={}){const t=norm(strip(s)),out=[];
+  t.replace(/(\d{1,3}(?:,\d{3})+|\d+)(\.\d+)?(?:\s?(thousand|million|billion|mn|bn|k|m|b)\b)?(\s?%)?/g,(m,a,d,u)=>{const v=parseFloat(a.replace(/,/g,"")+(d||""));if(!isFinite(v))return m;const c=[v];if(u)c.push(v*MUL[u]);out.push({raw:m.trim(),v:c,dec:d?d.length-1:0});return m});
+  if(words)t.replace(/\b(twenty|thirty|forty|fifty|sixty|seventy|eighty|ninety)-(one|two|three|four|five|six|seven|eight|nine)\b|\b([a-z]+)\b/g,(m,tens,unit,w)=>{if(tens){out.push({raw:m,v:[WN[tens]+WN[unit]],dec:0,word:1})}else if(w in WN)out.push({raw:m,v:[WN[w]],dec:0,word:1});return m});
+  return out}
+ const same=(x,y,dec=6)=>Math.abs(x-y)<=Math.max(.5*Math.pow(10,-dec),1e-9*Math.abs(y));
+ const inPool=(n,pool)=>n.v.some(x=>pool.some(y=>same(x,y,n.dec)));
+ const byStep=(n,steps)=>n.v.some(x=>Math.abs(x)>=100&&steps.some(y=>same(x,y,n.dec)));
+ /* a quote is found when, after normalising, it (or each piece of it around an ellipsis, in order) is in the text */
+ function quoteIn(q,text){const Q=norm(q).replace(/^["']|["']$/g,""),T=norm(text);if(Q.length<12)return false;
+  const parts=Q.split(/\s*\.\.\.\s*/).filter(p=>p.length>=6);if(!parts.length)return false;let at=0;
+  for(const p of parts){const k=T.indexOf(p,at);if(k<0)return false;at=k+p.length}return true}
+ /* a tiny arithmetic reader: numbers, + - * / ( ) and %; nothing else is evaluated */
+ function calc(expr){const s=String(expr||"").replace(/[×x]/g,"*").replace(/÷/g,"/").replace(/(\d),(?=\d{3}\b)/g,"$1");if(!s.trim()||/[^\d.+\-*/()%\s]/.test(s))return null;
+  const tk=s.match(/\d+(?:\.\d+)?|[+\-*/()%]/g)||[];let i=0;const ops=[];
+  const atom=()=>{const t=tk[i++];if(t==="("){const v=sum();if(tk[i++]!==")")throw 0;return pct(v)}if(t==="-")return -atom();if(t==null||!/^\d/.test(t))throw 0;const v=parseFloat(t);ops.push(v);return pct(v)};
+  const pct=v=>{if(tk[i]==="%"){i++;return v/100}return v};
+  const prod=()=>{let v=atom();while(tk[i]==="*"||tk[i]==="/"){const o=tk[i++],r=atom();v=o==="*"?v*r:v/r}return v};
+  const sum=()=>{let v=prod();while(tk[i]==="+"||tk[i]==="-"){const o=tk[i++],r=prod();v=o==="+"?v+r:v-r}return v};
+  try{const v=sum();if(i!==tk.length||!isFinite(v))return null;return {v,ops}}catch(e){return null}}
+ /* one step of arithmetic over a small pool: sums, differences, products, quotients and percentages. Small figures are
+    reached by chance too easily (40/5 is 8), so a step only accounts for a figure of 100 or more; smaller ones must be in the pool */
+ function oneStep(pool){const P=[...new Set(pool)].slice(0,60),r=[];for(const a of P)for(const b of P){r.push(a+b,a-b,a*b,a*b/100);if(b)r.push(a/b)}return r}
+ const SOURCED=["supported","partial","conflict"];
+ /* the gate: re-judges the Arbiter's ledger in code. claims: [{text,v,conf,urls,quote,calc,note}], pages: [{url,ex,title,date}] */
+ function gateClaims(claims,pages,userText,prior){const byUrl=u=>pages.find(p=>p.url===u);
+  const base=[...nums(userText).flatMap(n=>n.v),...nums(todayStamp()).flatMap(n=>n.v)];
+  const verified=[];(prior||[]).forEach(c=>{if(c.chk&&c.chk.ok)verified.push(...nums(c.text).flatMap(n=>n.v))});
+  const down=(c,v,why)=>{c.v=v;c.conf=Math.min(c.conf||0,v==="unsupported"?.3:.6);c.note=((c.note?c.note+" ":"")+"("+why+")").slice(0,220)};
+  let st={checked:0,quotes:0,down:0,calcs:0};
+  for(const c of claims){if(!SOURCED.includes(c.v))continue;st.checked++;const qs=[].concat(c.quote||[]).map(String).filter(Boolean),pg=(c.urls||[]).map(byUrl).filter(Boolean);
+   const hit=qs.filter(q=>pg.some(p=>quoteIn(q,[p.title,p.ex].join(" "))));
+   if(!hit.length){c.chk={ok:false,q:!pg.length?"nopage":qs.length?"miss":"none"};down(c,"unsupported",!pg.length?"cited page not in this run":qs.length?"quote not found in the cited page":"no quote from the page");st.down++;continue}
+   st.quotes++;const have=[...hit.flatMap(q=>nums(q).flatMap(n=>n.v)),...pg.flatMap(p=>nums([p.title,p.date].join(" ")).flatMap(n=>n.v)),...base];
+   const miss=nums(c.text).filter(n=>!inPool(n,have)).map(n=>n.raw);
+   c.quote=hit[0].slice(0,400);c.chk={ok:!miss.length,q:"ok",miss};
+   if(miss.length){if(c.v==="supported")down(c,"partial",`${miss.slice(0,3).join(", ")} not in the quote`);else c.note=((c.note?c.note+" ":"")+`(${miss.slice(0,3).join(", ")} not in the quote)`).slice(0,220);st.down+=c.v==="partial"?1:0}
+   else verified.push(...nums(c.text).flatMap(n=>n.v))}
+  /* derived claims, in rounds: a claim checked in one round lends its figures to the next */
+  const der=claims.filter(c=>c.v==="derived");let open=der.slice(),grew=true;
+  while(open.length&&grew){grew=false;const pool=[...base,...verified],steps=oneStep(pool);
+   for(const c of open.slice()){const fig=nums(c.text,{words:false}),need=fig.filter(n=>!inPool(n,pool));let ok=!need.length,how="";
+    if(!ok&&c.calc){const r=calc(c.calc);if(r&&r.ops.every(o=>pool.some(y=>same(o,y))||[1,2,3,4,10,12,100,1000].includes(o))&&need.every(n=>n.v.some(x=>same(x,r.v,Math.max(n.dec,0)))))ok=true,how="calc"}
+    if(!ok&&need.every(n=>byStep(n,steps)))ok=true,how="step";
+    if(ok){c.chk={ok:true,how:how||"pool"};verified.push(...fig.flatMap(n=>n.v));open.splice(open.indexOf(c),1);grew=true;if(how==="calc")st.calcs++}}}
+  for(const c of open){c.chk={ok:false,miss:nums(c.text,{words:false}).map(n=>n.raw)};down(c,"partial","arithmetic not reproduced from checked figures");st.down++}
+  return st}
+ const todayStamp=()=>{const d=new Date();return `${d.getFullYear()} ${d.getMonth()+1} ${d.getDate()}`};
+ /* the answer's figures: each must come from a checked claim, the user, or one step of arithmetic over those.
+    Sentences that mark themselves as estimates are left to the auditor; small counts written as words are structure. */
+ function auditAnswer(answer,claims,userText){const ok=(claims||[]).filter(c=>c.v!=="unsupported");
+  const pool=[...ok.flatMap(c=>nums(c.text).flatMap(n=>n.v)),...nums(userText).flatMap(n=>n.v),...nums(todayStamp()).flatMap(n=>n.v)],steps=oneStep(pool),flags=[];
+  const sents=strip(answer).replace(/\|/g,"\n").split(/(?<=[.!?])\s+|\n+/).map(s=>s.trim()).filter(Boolean);
+  for(const s of sents){if(EST.test(s))continue;const bad=nums(s,{words:false}).filter(n=>!inPool(n,pool)&&!byStep(n,steps));
+   if(bad.length)flags.push({quote:s.replace(/^[-*>\s]+/,"").slice(0,160),why:`${bad.slice(0,3).map(n=>n.raw).join(", ")} not in the ledger`,figs:bad.map(n=>n.raw)})}
+  return flags}
+ /* typed decisions, as LAYA and Jev frame them (choice, score, noul), answered by Claude: options are keys, anything off the
+    list is a spoiled vote, and confidence is the share of votes for the winner. Below the bar it escalates, it never guesses. */
+ async function decide(sj,state,questions,{votes=3,tier="default",signal,bar=1,evidence=false,context=""}={}){const keys=Object.keys(questions);
+  const opts=q=>q.type==="noul"?["yes","no"]:q.type==="score"?q.criteria.map((_,i)=>String(i)):Object.keys(q.criteria).map(k=>k.toLowerCase());
+  const line=k=>{const q=questions[k];return `- ${k}: ${q.instructions} Answer with one of: ${q.type==="score"?q.criteria.map((c,i)=>`${i} (${c})`).join(", "):q.type==="noul"?"yes, no":Object.entries(q.criteria).map(([o,d])=>`${o.toLowerCase()} (${d})`).join(", ")}.`};
+  const ask=`Decide each question about the material below. Judge only what the material says.\n${keys.map(line).join("\n")}\nReply with only JSON: {${keys.map(k=>`"${k}": option${evidence?`, "${k}_quotes": [exact phrases copied from the material that decide it]`:""}`).join(", ")}}\n\nMaterial:\n${state}${context?`\n\n${context}`:""}`;
+  const rs=await Promise.all(Array.from({length:votes},()=>sj(ask,{modelTier:tier,cache:false,signal}).catch(e=>{if(e&&e.code==="cancelled")throw e;return null})));
+  const out={};for(const k of keys){const q=questions[k],O=opts(q),t=Object.fromEntries(O.map(o=>[o,0]));let valid=0;const quotes=new Set();
+   for(const r of rs){const v=r&&String(r[k]??"").trim().toLowerCase();if(v in t){t[v]++;valid++}if(evidence&&r&&Array.isArray(r[k+"_quotes"]))r[k+"_quotes"].map(String).filter(x=>quoteIn(x,state)).forEach(x=>quotes.add(x.slice(0,160)))}
+   const top=O.reduce((a,b)=>t[b]>t[a]?b:a,O[0]),conf=t[top]/votes,probs=Object.fromEntries(O.map(o=>[o,t[o]/votes]));
+   out[k]={type:q.type,choice:valid?top:null,probabilities:probs,confidence:conf,votes,valid,action:valid===votes&&conf>=bar?"act":"escalate",quotes:[...quotes]};
+   if(q.type==="noul")out[k].noul=probs.yes;if(q.type==="score")out[k].score=O.reduce((a,o)=>a+Number(o)*probs[o],0)}
+  return {answers:out}}
+ /* the firewall's own eyes: patterns that hold material on sight, and softer words handed to the voters */
+ const HOLD=[[/\b(?:acct|account|a\/c)\s*(?:no\.?|number|#)?\s*[:\-]?\s*\d[\d\s-]{6,}\d/i,"bank account number"],[/\b(?:iban|swift|bic)(?:\s*code)?\s*[:\-]?\s*[a-z0-9]{6,}/i,"bank routing code"],[/\b(?:bdo|bpi|metrobank|landbank|pnb|security bank|unionbank|rcbc|china ?bank|eastwest)\b[^.\n]{0,40}\d{6,}/i,"bank details"],[/\bmark-?ups?\b/i,"markup"],[/\bcost basis\b/i,"cost basis"],[/\b(?:gross|net|profit|our)\s+margins?\b/i,"margin"],[/\bsupplier(?:'s)?\s+(?:price|pricing|cost|invoice|quote)s?\b/i,"supplier pricing"],[/\b(?:our|unit|landed|buying)\s+cost\b/i,"cost basis"]];
+ const SOFT=[/\bsuppliers?\b/i,/\bvendors?\b/i,/\bmargins?\b/i,/\bwarehouse\b|\bfactory\b|\bfacility\b/i,/\b09\d{2}[\s-]?\d{3}[\s-]?\d{4}\b|\+63\s?\d/];
+ function scan(text){const t=String(text||""),hold=[];for(const [re,what] of HOLD){const m=t.match(re);if(m)hold.push({what,quote:m[0].slice(0,80)})}return {hold,soft:SOFT.some(re=>re.test(t))}}
+ /* fail closed: held on a pattern, on any vote to hold, or when the votes cannot agree */
+ async function firewall(sj,material,rules,{signal}={}){const sc=scan(material);
+  const d=await decide(sj,material,{restricted:{type:"noul",instructions:"Does this client-facing material reveal supplier names or contacts, supplier pricing or cost basis, margin or markup, bank details, facility locations, or internal worksheets?"}},{votes:3,signal,evidence:true,context:rules?`Firewall rules (context, not material):\n${rules}`:""});
+  const a=d.answers.restricted,blocked=!!sc.hold.length||a.valid<a.votes||(a.noul||0)>0;
+  return {verdict:blocked?"blocked":"clear",hits:[...sc.hold.map(h=>`${h.what}: “${h.quote}”`),...a.quotes.map(q=>`“${q}”`)].slice(0,8),votes:a,why:sc.hold.length?"pattern":a.valid<a.votes?"votes spoiled":(a.noul||0)>0?"voted to hold":"clear"}}
+ return {norm,nums,quoteIn,calc,gateClaims,auditAnswer,decide,scan,firewall}})();
 /* ---------- the kernel builder: runtime/build_derivative.py (Mode B), ported line for line ----------
    A derivative is the quotation master's <head> carried verbatim, at most one appended derivative style,
    and a new <body> written in the master's component vocabulary; brand assets hydrate from the package,
@@ -3428,8 +3518,8 @@ You staffed these desks; now judge what they filed.
 2. Break the notes into the atomic factual claims an answer would rest on (figures, prices, dates, names, rules, events), at most 16.
 3. Judge each claim strictly against the numbered sources below${webOn?" and any checks you run":""}:
    supported: a source states it; derived: correctly computed from other claims or the user's own figures; partial: a source supports part of it or an older value; conflict: sources disagree (prefer the newest and say so); unsupported: no source (an estimate, assumption, or memory).
-   Never call a claim supported without citing a source number. Prefer newer sources. A figure the desk calls an estimate or assumption is unsupported unless a source backs it.
-${webOn?"You may run up to 2 web_search calls, only to check the unsupported or conflicting claims that matter most.\n":""}Reply with only JSON: {"desks":[{"step":number,"verdict":"pass"|"fail","reason":string (under 14 words)}],"claims":[{"claim":string (one sentence with its figure and unit),"desk":number (step number, 0 if none),"verdict":"supported"|"derived"|"partial"|"conflict"|"unsupported","confidence":number (0 to 1),"sources":["S1"],"note":string (under 16 words: why, with the source date)}]}
+   Never call a claim supported without citing a source number. The console then checks each quote against the source text, each figure against its quote and each calc against checked figures, and downgrades whatever fails. Prefer newer sources. A figure the desk calls an estimate or assumption is unsupported unless a source backs it.
+${webOn?"You may run up to 2 web_search calls, only to check the unsupported or conflicting claims that matter most.\n":""}Reply with only JSON: {"desks":[{"step":number,"verdict":"pass"|"fail","reason":string (under 14 words)}],"claims":[{"claim":string (one sentence with its figure and unit),"desk":number (step number, 0 if none),"verdict":"supported"|"derived"|"partial"|"conflict"|"unsupported","confidence":number (0 to 1),"sources":["S1"],"quote":string (supported, partial or conflict: the exact words of one cited source that state it, copied character for character; "" otherwise),"calc":string (derived: the arithmetic in numbers and + - * / ( ) %, e.g. "22050*40"; "" otherwise),"note":string (under 16 words: why, with the source date)}]}
 
 Desks:
 ${pend2.map(i=>`Step ${i+1} (${steps[i].role}${steps[i].focus?", "+steps[i].focus:""}) task: ${steps[i].task}\n${(outs[i]||"").slice(0,2600)}`).join("\n\n---\n\n")}
@@ -3441,9 +3531,10 @@ ${srcList||"(none: judge figures unsupported unless they are arithmetic from giv
     for(const r of (rv&&Array.isArray(rv.desks))?rv.desks:[]){const i=Number(r.step)-1;if(!steps[i]||!pend2.includes(i))continue;steps[i].v=r.verdict==="fail"&&steps[i].redo<2?"fail":"pass";steps[i].feedback=r.reason;if(steps[i].v==="fail"){fail.push(i);F(`Returned desk ${ROMAN[i]}`,`The Arbiter returned desk ${ROMAN[i]}: ${esc(r.reason||"it did not answer its task")}.`)}}
     pend2.forEach(i=>{if(!steps[i].v)steps[i].v="pass"});
     const VS=["supported","derived","partial","conflict","unsupported"];
-    const nc=((rv&&Array.isArray(rv.claims))?rv.claims:[]).filter(c=>c&&(c.claim||c.text)).slice(0,16).map(c=>{const d=Number(c.desk)-1;return {text:clip(c.claim||c.text,240),desk:steps[d]?d:-1,v:VS.includes(c.verdict)?c.verdict:"unsupported",conf:Math.max(0,Math.min(1,Number(c.confidence)||0)),urls:[...new Set((Array.isArray(c.sources)?c.sources:[]).map(x=>parseInt(String(x).replace(/\D/g,""),10)-1).filter(k=>PGs[k]).map(k=>PGs[k].url))],note:clip(c.note||"",180)}})
+    const nc=((rv&&Array.isArray(rv.claims))?rv.claims:[]).filter(c=>c&&(c.claim||c.text)).slice(0,16).map(c=>{const d=Number(c.desk)-1;return {text:clip(c.claim||c.text,240),desk:steps[d]?d:-1,v:VS.includes(c.verdict)?c.verdict:"unsupported",conf:Math.max(0,Math.min(1,Number(c.confidence)||0)),urls:[...new Set((Array.isArray(c.sources)?c.sources:[]).map(x=>parseInt(String(x).replace(/\D/g,""),10)-1).filter(k=>PGs[k]).map(k=>PGs[k].url))],note:clip(c.note||"",180),quote:clip(c.quote||"",400),calc:String(c.calc||"").slice(0,120)}})
      /* a claim called supported with no page behind it is not supported */
      .map(c=>c.v==="supported"&&!c.urls.length?Object.assign(c,{v:"unsupported",note:(c.note?c.note+" ":"")+"(no source cited)"}):c);
+    const gst=GROUND.gateClaims(nc,PGs,q,round?ledger.claims:null);if(gst.checked)F(null,`Grounding gate: ${gst.quotes} of ${gst.checked} source quote${gst.checked===1?"":"s"} found word for word${gst.down?`; ${words(gst.down).toLowerCase()} claim${gst.down===1?"":"s"} downgraded`:""}.`);
     if(round===0)ledger.claims=nc;else ledger.claims=ledger.claims.filter(c=>!pend2.includes(c.desk)).concat(nc.filter(c=>c.desk<0||pend2.includes(c.desk)));
     ledger.claims.forEach((c,k)=>c.id=k+1);work.ledger=ledger;
     steps.forEach((s,i)=>{const e=$("#ds"+i);e.className="st "+s.v;swap(e,s.v==="pass"?(s.redo?"Passed, deepened":"Passed"):"Returned")});mapSync();
@@ -3469,11 +3560,16 @@ ${work.ledger&&work.ledger.claims.length?`Claims ledger, weighed by the Arbiter.
   /* the compiler's last pass: every factual line in the answer must trace to the ledger */
   if(work.ledger&&work.ledger.claims.length){P("audit","on");work._au=1;mapSync();
    try{const au=await sample.json(`You are the EXPIRA auditor, the compiler's last pass. ${todayLine()} Check the answer against the claims ledger. List each factual statement in the answer (a figure, price, date, name, rule or event) that no supported, derived, partial or conflict claim backs, or that states an unsupported claim as fact. Figures the user gave are backed. Ignore recommendations, opinions and advice.\nReply with only JSON: {"ungrounded":[{"quote":string (exact words from the answer, under 20 words),"why":string (under 12 words)}]}\n\nLedger:\n${ledText()}\n\nUser's message:\n${q.slice(0,2000)}\n\nAnswer:\n${fin2.text.slice(0,6000)}`,{modelTier:"default",cache:false,signal:ctl.signal});
-    const ug=((au&&Array.isArray(au.ungrounded))?au.ungrounded:[]).filter(x=>x&&x.quote).slice(0,8);work.ledger.audit={flags:ug.length,items:ug.map(x=>({quote:clip(x.quote,160),why:clip(x.why||"",100)}))};
+    const ug=((au&&Array.isArray(au.ungrounded))?au.ungrounded:[]).filter(x=>x&&x.quote).slice(0,8);
+    /* the gate reads every figure too, in code: one the ledger, the user or one step of arithmetic cannot account for is flagged */
+    GROUND.auditAnswer(fin2.text,work.ledger.claims,q).forEach(g=>{if(ug.length<12&&!ug.some(x=>GROUND.norm(g.quote).includes(GROUND.norm(x.quote))||GROUND.norm(x.quote).includes(GROUND.norm(g.quote))))ug.push(g)});work.ledger.audit={flags:ug.length,items:ug.map(x=>({quote:clip(x.quote,160),why:clip(x.why||"",100)}))};
     if(ug.length){F(`Audit flagged ${words(ug.length).toLowerCase()}`,`Audit: ${words(ug.length).toLowerCase()} statement${ug.length>1?"s":""} not backed by the ledger; revising.`);swap(lbl,"Revising ungrounded lines");work._aw=1;mapSync();mapPulse("v","ans");
      const sst2={h:[]};let rRaf=0;const rev=await sample(`Revise this answer. For each flagged statement, remove it, mark it as an estimate or assumption, or tie it to a ledger claim with its [cN] citation. Change nothing else: keep the headings, the citations and the style. Reply with the full revised answer only.\n\nFlagged:\n${ug.map(x=>`- "${x.quote}" (${x.why||"not in the ledger"})`).join("\n")}\n\nLedger:\n${ledText()}\n\nAnswer:\n${fin2.text}`,{modelTier:"default",cache:false,signal:ctl.signal,onText:({text})=>{aText=text;if(!rRaf)rRaf=requestAnimationFrame(()=>{rRaf=0;streamInto(ans,aText,sst2);follow()})}});
      cancelAnimationFrame(rRaf);work._aw=0;if(rev&&rev.text&&rev.text.length>fin2.text.length*.4){fin2.text=rev.text;work.atok=tok(rev.text)}aText=fin2.text;ans.innerHTML=md(fin2.text);F("Revised the answer",`Revised the answer: ${words(ug.length).toLowerCase()} line${ug.length>1?"s":""} qualified or removed.`)}
-    else F("Audit clear","Audit: every factual statement traces to the ledger.")}
+    else F("Audit clear","Audit: every factual statement traces to the ledger.")
+    /* what the revision still leaves unaccounted for is said plainly under the answer, never passed as fact */
+    const left=[...new Set(GROUND.auditAnswer(fin2.text,work.ledger.claims,q).flatMap(g=>g.figs))];work.ledger.audit.left=left.length;if(left.length){fin2.text+=`\n\n_Unverified figures: ${left.slice(0,8).join(", ")}. The grounding gate found no source, ledger claim or figure of yours behind them._`;aText=fin2.text;ans.innerHTML=md(fin2.text);F("Unverified figures marked",`Grounding gate: ${words(left.length).toLowerCase()} figure${left.length>1?"s":""} still unverified after revision; marked under the answer.`)}
+   }
    catch(e){if(e&&e.code==="cancelled")throw e;F(null,"The audit could not run; the answer stands as written.")}
    work._au=0;work._aw=0;run.querySelector(".ledw").innerHTML=ledgerHTML(work);P("audit","done");mapSync()}
   else if(!direct)P("audit","skip");
@@ -3511,7 +3607,8 @@ ${PG.length?`Web sources the desks consulted, newest first (use these urls in "s
    think.O=0;work._o=false;mapSync();const hx=exhibitsHTML(ex,true);if(hx){exw.innerHTML=hx;countUp(exw);follow();const n=(ex.facts||[]).length,c=(ex.charts||[]).length;F("Set the exhibits",`Set the exhibits: ${[n?`${words(n).toLowerCase()} figure${n>1?"s":""}`:"",c?`${words(c).toLowerCase()} chart${c>1?"s":""}`:"",ex.matrix?"a comparison":"",(ex.sources||[]).length?"sources":""].filter(Boolean).join(", ")}.`)}else ex=null;P("exhibits","done")}
   else P("exhibits","skip");
   if(safe){P("firewall","on");think.O=1;work._o=true;mapSync();
-   const fw=await sample.json(`EXPIRA firewall. Does this client-facing material contain supplier names or contacts, supplier pricing or cost basis, margin or markup, bank details, facility locations, or internal worksheets?\nReply with only JSON: {"verdict":"clear"|"blocked","hits":[string]}\n\n${fin2.text}\n\n${ex?JSON.stringify(ex).slice(0,6000):""}${work.doc&&work.doc.src?`\n\nDocument text:\n${work.doc.src.replace(/<style[\s\S]*?<\/style>/g,"").replace(/<[^>]+>/g," ").replace(/\s+/g," ").slice(0,6000)}`:""}${KL?`\n\nKernel 04_firewall rules:\n${kJ(KL.kernel["04_firewall"],2500)}`:""}`,{modelTier:"default",cache:false,signal:ctl.signal});
+   /* typed and voted, and failing closed: a pattern, one vote to hold or a spoiled vote holds it (core/ground.js) */
+   const fw=await GROUND.firewall(sample.json,`${fin2.text}\n\n${ex?JSON.stringify(ex).slice(0,6000):""}${work.doc&&work.doc.src?`\n\nDocument text:\n${work.doc.src.replace(/<style[\s\S]*?<\/style>/g,"").replace(/<[^>]+>/g," ").replace(/\s+/g," ").slice(0,6000)}`:""}`,KL?kJ(KL.kernel["04_firewall"],2500):"",{signal:ctl.signal});
    think.O=0;work._o=false;work.firewall=fw.verdict==="blocked"?"blocked":"clear";P("firewall","done");if(work.firewall==="blocked")run.querySelector('.rail [data-ph="firewall"]')?.classList.add("bad");
    F(work.firewall==="clear"?"Firewall clear":"Held by the firewall",work.firewall==="clear"?"Firewall: clear. Nothing restricted leaves with this answer.":"Firewall: held. Found "+esc((fw.hits||[]).join("; "))+".")}
   work.ms=now();F("Delivered",`Delivered in ${fmt(work.ms)}.`);
