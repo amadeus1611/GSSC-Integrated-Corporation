@@ -59,7 +59,7 @@ const FAKE = ({ seed, uid }) => {
   D = await p.evaluate(() => __FDB);
   ok(D['c:n1'].v.turns.length === 2 && !D['c:b1'] && !D['c:z1'], 'db: newer copy sent up, oversized copy removed from db');
   // 6. import: an older export does not roll back a newer chat, and a crafted feed stays text
-  const evil = Object.assign(chat('x1', 'Crafted'), { turns: [{ role: 'user', ts: 1, content: 'q' }, { role: 'assistant', ts: 2, content: 'a', work: { ms: 1, steps: [], feed: [[1, '<img src=x onerror="window.__pwn=1">', '<img src=x onerror="window.__pwn=1">']] } }] });
+  const evil = Object.assign(chat('x1', 'Crafted'), { turns: [{ role: 'user', ts: 1, content: 'q' }, { role: 'assistant', ts: 2, content: 'a', work: { ms: 1, tok: '<img src=x onerror="window.__pwn=3">', steps: [{ role: 'research', tier: 'high', v: '"><img src=x onerror="window.__pwn=4">', searches: '<b>x</b>', out: 'n' }], ledger: { claims: [{ id: '"><img src=x onerror="window.__pwn=5">', text: 't', v: '<img src=x onerror="window.__pwn=6">' }], audit: { flags: '<img src=x onerror="window.__pwn=7">' } }, feed: [[1, '<img src=x onerror="window.__pwn=1">', '<img src=x onerror="window.__pwn=1">']] }, imgs: [{ name: 'i', thumb: 'x" onerror="window.__pwn=8' }] }], no: '<img src=x onerror="window.__pwn=2">' });
   await p.evaluate(e => __KV.importAll({ format: 'expira.library', chats: e }), [old, evil]); await p.waitForTimeout(300);
   ok(await p.evaluate(() => JSON.parse(localStorage.getItem('expira.v6')).find(c => c.id === 'n1').turns.length) === 2, 'import: older copy does not roll back');
   await p.click('text=Crafted').catch(() => {}); await p.waitForTimeout(800); await p.click('#dspBtn').catch(() => {}); await p.waitForTimeout(1500);

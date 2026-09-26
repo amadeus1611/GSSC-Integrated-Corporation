@@ -43,8 +43,9 @@
 .dsp-btn svg{width:12px;height:12px;flex:none}
 .dsp-btn svg .pn{transition:transform var(--t-move) var(--spring)}
 .dsp-btn:hover svg .pn,.dsp-open .dsp-btn svg .pn{transform:translateX(-2.5px)}
-.dsp-btn i{width:0;height:4px;margin-right:calc(var(--sp-1h) * -1);border-radius:var(--r-round);background:var(--gold);opacity:0;animation:none;transition:width var(--t-move) var(--spring),margin var(--t-move) var(--spring),opacity var(--t-exit) var(--ease-soft-close)}
-.busy .dsp-btn i{width:4px;margin-right:0;opacity:1;animation:breathe var(--t-loop) var(--ease-inout) infinite}
+/* the live dot takes its slot as a state change and scales in (transform and opacity only) */
+.dsp-btn i{width:0;height:4px;margin-right:calc(var(--sp-1h) * -1);border-radius:var(--r-round);background:var(--gold);opacity:0;transform:scale(0);animation:none;transition:transform var(--t-move) var(--spring),opacity var(--t-exit) var(--ease-soft-close)}
+.busy .dsp-btn i{width:4px;margin-right:0;opacity:1;transform:none;animation:breathe var(--t-loop) var(--ease-inout) infinite}
 .runpill{display:flex;align-items:center;gap:var(--sp-2);color:var(--ink);cursor:pointer;animation:blurIn var(--t-enter) var(--ease-out) both;height:24px;padding:0 var(--sp-2);border:var(--rule-hair) solid var(--line-2);border-radius:var(--r-2);background:none;font-size:var(--fs-chrome-2)}
 .fz,.fzx{--fs:0px;--fe:0px;transition:--fs var(--t-exit) var(--ease-soft-close),--fe var(--t-exit) var(--ease-soft-close)}
 .fz{-webkit-mask-image:linear-gradient(to bottom,transparent 0,#000 var(--fs),#000 calc(100% - var(--fe)),transparent 100%);mask-image:linear-gradient(to bottom,transparent 0,#000 var(--fs),#000 calc(100% - var(--fe)),transparent 100%)}

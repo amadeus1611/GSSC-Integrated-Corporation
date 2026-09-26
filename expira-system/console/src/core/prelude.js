@@ -28,17 +28,27 @@ const KV=(()=>{const P="expira.",AL={chats:"v6"},KEYS=["chats","prefs","opt","fo
  /* hydrate: for each chat the newer copy wins; deletions on either side hold; what only this browser holds is sent up */
  const ready=(async()=>{try{const C=window.claude;const u=await C?.use?.("user"),id=u&&typeof u.id==="function"?await u.id():null;if(!id)return"local";const d=await C.use("db");if(!d)return"local";
   const col=d.collection("data/users/"+id),s=await col.get();R=col;const got={},dc=new Map();
-  for(const x of s.docs){const b=x.data();if(!b)continue;seen.set(x.id,JSON.stringify(b));if(x.id.startsWith("c:"))dc.set(b.v&&b.v.id,b.v);else got[x.id.slice(2)]=b.v}
+  for(const x of s.docs){const b=x.data();if(!b)continue;seen.set(x.id,JSON.stringify(b));if(x.id.startsWith("c:")){if(b.v&&typeof b.v.id==="string"&&Array.isArray(b.v.turns))dc.set(b.v.id,cleanChat(b.v))}else got[x.id.slice(2)]=b.v}
   (got.gone||[]).forEach(g=>gone.add(g));
   for(const k of KEYS){if(k==="chats")continue;if(k in got){const j=JSON.stringify(got[k]);if(j!==JSON.stringify(get(k,null))){local(k,got[k]);subs.forEach(f=>f(k,got[k]))}}else{const v=get(k,null);if(v!=null)mirror(k,v)}}
   const lc=get("chats",[])||[],m=new Map();for(const c of lc)if(c&&!gone.has(c.id))m.set(c.id,c);for(const [cid,c] of dc)if(c){if(gone.has(cid))send("c:"+cid,null);else m.set(cid,c.example?c:pick(m.get(cid),c))}
   const merged=[...m.values()],was=JSON.stringify(lc);local("chats",merged);mirror("chats",merged);saveGone();if(JSON.stringify(merged)!==was)subs.forEach(f=>f("chats",merged));return"db"}catch(e){R=null;return"local"}})();
+ /* a chat from outside (an imported file) is normalised before it is kept: counts become numbers, verdict words stay
+    short words, and images must be inline data URLs; everything else is rendered escaped */
+ const NUMK=new Set(["no","ts","ms","tok","atok","searches","pages","flags","conf","w","h"]),IMG=/^data:image\/(png|jpe?g|gif|webp);base64,[A-Za-z0-9+\/=]+$/;
+ const clean=(x,k)=>{if(Array.isArray(x))return x.map(y=>clean(y,k));if(x&&typeof x==="object"){const o={};for(const [kk,v] of Object.entries(x)){
+    if(kk==="__proto__"||kk==="constructor")continue;if(NUMK.has(kk)&&v!=null&&typeof v!=="object"){const n=+v;o[kk]=isFinite(n)?n:0;continue}
+    if(kk==="v"&&typeof v==="string"){o[kk]=/^[a-z_-]{1,24}$/.test(v)?v:"";continue}
+    if((kk==="thumb"||kk==="url")&&k==="imgs"){if(typeof v==="string"&&IMG.test(v))o[kk]=v;continue}
+    if(kk==="id"&&k==="claims"){const n=+v;o[kk]=isFinite(n)?n:0;continue}
+    o[kk]=clean(v,kk)}if(k==="imgs"&&!o.thumb&&!o.url)return null;return o}return x};
+ const cleanChat=c=>{const o=clean(c,"chat");o.title=typeof o.title==="string"?o.title:"Imported chat";o.turns=(o.turns||[]).filter(t=>t&&typeof t==="object").map(t=>{if(t.role!=="user")t.role="assistant";if(typeof t.content!=="string")t.content="";if(Array.isArray(t.imgs))t.imgs=t.imgs.filter(Boolean);return t});return o};
  /* the whole library as one file, for moving devices or owners */
  const exportAll=()=>{const o={format:"expira.library",version:1,exported:new Date().toISOString()};for(const k of KEYS)if(k!=="noExample"){let v=get(k,null);if(k==="chats")v=(v||[]).filter(c=>!c.example);if(v!=null)o[k]=v}return o};
  const importAll=o=>{if(!o||typeof o!=="object"||(o.format&&o.format!=="expira.library"))throw new Error("Not an EXPIRA library file");
   const ch=Array.isArray(o.chats)?o.chats.filter(c=>c&&typeof c.id==="string"&&!c.example&&Array.isArray(c.turns)):[],fo=Array.isArray(o.folders)?o.folders.filter(f=>f&&typeof f.id==="string"&&typeof f.name==="string"):[];
   if(!ch.length&&!fo.length&&!o.prefs&&!o.opt)throw new Error("Nothing to import");
-  const mc=new Map((get("chats",[])||[]).map(c=>[c.id,c]));ch.forEach(c=>mc.set(c.id,pick(mc.get(c.id),c)));
+  const mc=new Map((get("chats",[])||[]).map(c=>[c.id,c]));ch.map(cleanChat).forEach(c=>mc.set(c.id,pick(mc.get(c.id),c)));
   const mf=new Map((get("folders",[])||[]).map(f=>[f.id,f]));fo.forEach(f=>mf.set(f.id,f));
   const n={chats:[...mc.values()],folders:[...mf.values()]};
   if(o.prefs&&typeof o.prefs==="object")n.prefs=Object.assign({},get("prefs",{}),o.prefs);if(o.opt&&typeof o.opt==="object")n.opt=Object.assign({},get("opt",{}),o.opt);

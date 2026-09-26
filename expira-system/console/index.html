@@ -303,8 +303,9 @@ html.calm *,html.calm *::before,html.calm *::after{animation:none!important;tran
 .dsp-btn svg{width:12px;height:12px;flex:none}
 .dsp-btn svg .pn{transition:transform var(--t-move) var(--spring)}
 .dsp-btn:hover svg .pn,.dsp-open .dsp-btn svg .pn{transform:translateX(-2.5px)}
-.dsp-btn i{width:0;height:4px;margin-right:calc(var(--sp-1h) * -1);border-radius:var(--r-round);background:var(--gold);opacity:0;animation:none;transition:width var(--t-move) var(--spring),margin var(--t-move) var(--spring),opacity var(--t-exit) var(--ease-soft-close)}
-.busy .dsp-btn i{width:4px;margin-right:0;opacity:1;animation:breathe var(--t-loop) var(--ease-inout) infinite}
+/* the live dot takes its slot as a state change and scales in (transform and opacity only) */
+.dsp-btn i{width:0;height:4px;margin-right:calc(var(--sp-1h) * -1);border-radius:var(--r-round);background:var(--gold);opacity:0;transform:scale(0);animation:none;transition:transform var(--t-move) var(--spring),opacity var(--t-exit) var(--ease-soft-close)}
+.busy .dsp-btn i{width:4px;margin-right:0;opacity:1;transform:none;animation:breathe var(--t-loop) var(--ease-inout) infinite}
 .runpill{display:flex;align-items:center;gap:var(--sp-2);color:var(--ink);cursor:pointer;animation:blurIn var(--t-enter) var(--ease-out) both;height:24px;padding:0 var(--sp-2);border:var(--rule-hair) solid var(--line-2);border-radius:var(--r-2);background:none;font-size:var(--fs-chrome-2)}
 .fz,.fzx{--fs:0px;--fe:0px;transition:--fs var(--t-exit) var(--ease-soft-close),--fe var(--t-exit) var(--ease-soft-close)}
 .fz{-webkit-mask-image:linear-gradient(to bottom,transparent 0,#000 var(--fs),#000 calc(100% - var(--fe)),transparent 100%);mask-image:linear-gradient(to bottom,transparent 0,#000 var(--fs),#000 calc(100% - var(--fe)),transparent 100%)}
@@ -1629,17 +1630,27 @@ const KV=(()=>{const P="expira.",AL={chats:"v6"},KEYS=["chats","prefs","opt","fo
  /* hydrate: for each chat the newer copy wins; deletions on either side hold; what only this browser holds is sent up */
  const ready=(async()=>{try{const C=window.claude;const u=await C?.use?.("user"),id=u&&typeof u.id==="function"?await u.id():null;if(!id)return"local";const d=await C.use("db");if(!d)return"local";
   const col=d.collection("data/users/"+id),s=await col.get();R=col;const got={},dc=new Map();
-  for(const x of s.docs){const b=x.data();if(!b)continue;seen.set(x.id,JSON.stringify(b));if(x.id.startsWith("c:"))dc.set(b.v&&b.v.id,b.v);else got[x.id.slice(2)]=b.v}
+  for(const x of s.docs){const b=x.data();if(!b)continue;seen.set(x.id,JSON.stringify(b));if(x.id.startsWith("c:")){if(b.v&&typeof b.v.id==="string"&&Array.isArray(b.v.turns))dc.set(b.v.id,cleanChat(b.v))}else got[x.id.slice(2)]=b.v}
   (got.gone||[]).forEach(g=>gone.add(g));
   for(const k of KEYS){if(k==="chats")continue;if(k in got){const j=JSON.stringify(got[k]);if(j!==JSON.stringify(get(k,null))){local(k,got[k]);subs.forEach(f=>f(k,got[k]))}}else{const v=get(k,null);if(v!=null)mirror(k,v)}}
   const lc=get("chats",[])||[],m=new Map();for(const c of lc)if(c&&!gone.has(c.id))m.set(c.id,c);for(const [cid,c] of dc)if(c){if(gone.has(cid))send("c:"+cid,null);else m.set(cid,c.example?c:pick(m.get(cid),c))}
   const merged=[...m.values()],was=JSON.stringify(lc);local("chats",merged);mirror("chats",merged);saveGone();if(JSON.stringify(merged)!==was)subs.forEach(f=>f("chats",merged));return"db"}catch(e){R=null;return"local"}})();
+ /* a chat from outside (an imported file) is normalised before it is kept: counts become numbers, verdict words stay
+    short words, and images must be inline data URLs; everything else is rendered escaped */
+ const NUMK=new Set(["no","ts","ms","tok","atok","searches","pages","flags","conf","w","h"]),IMG=/^data:image\/(png|jpe?g|gif|webp);base64,[A-Za-z0-9+\/=]+$/;
+ const clean=(x,k)=>{if(Array.isArray(x))return x.map(y=>clean(y,k));if(x&&typeof x==="object"){const o={};for(const [kk,v] of Object.entries(x)){
+    if(kk==="__proto__"||kk==="constructor")continue;if(NUMK.has(kk)&&v!=null&&typeof v!=="object"){const n=+v;o[kk]=isFinite(n)?n:0;continue}
+    if(kk==="v"&&typeof v==="string"){o[kk]=/^[a-z_-]{1,24}$/.test(v)?v:"";continue}
+    if((kk==="thumb"||kk==="url")&&k==="imgs"){if(typeof v==="string"&&IMG.test(v))o[kk]=v;continue}
+    if(kk==="id"&&k==="claims"){const n=+v;o[kk]=isFinite(n)?n:0;continue}
+    o[kk]=clean(v,kk)}if(k==="imgs"&&!o.thumb&&!o.url)return null;return o}return x};
+ const cleanChat=c=>{const o=clean(c,"chat");o.title=typeof o.title==="string"?o.title:"Imported chat";o.turns=(o.turns||[]).filter(t=>t&&typeof t==="object").map(t=>{if(t.role!=="user")t.role="assistant";if(typeof t.content!=="string")t.content="";if(Array.isArray(t.imgs))t.imgs=t.imgs.filter(Boolean);return t});return o};
  /* the whole library as one file, for moving devices or owners */
  const exportAll=()=>{const o={format:"expira.library",version:1,exported:new Date().toISOString()};for(const k of KEYS)if(k!=="noExample"){let v=get(k,null);if(k==="chats")v=(v||[]).filter(c=>!c.example);if(v!=null)o[k]=v}return o};
  const importAll=o=>{if(!o||typeof o!=="object"||(o.format&&o.format!=="expira.library"))throw new Error("Not an EXPIRA library file");
   const ch=Array.isArray(o.chats)?o.chats.filter(c=>c&&typeof c.id==="string"&&!c.example&&Array.isArray(c.turns)):[],fo=Array.isArray(o.folders)?o.folders.filter(f=>f&&typeof f.id==="string"&&typeof f.name==="string"):[];
   if(!ch.length&&!fo.length&&!o.prefs&&!o.opt)throw new Error("Nothing to import");
-  const mc=new Map((get("chats",[])||[]).map(c=>[c.id,c]));ch.forEach(c=>mc.set(c.id,pick(mc.get(c.id),c)));
+  const mc=new Map((get("chats",[])||[]).map(c=>[c.id,c]));ch.map(cleanChat).forEach(c=>mc.set(c.id,pick(mc.get(c.id),c)));
   const mf=new Map((get("folders",[])||[]).map(f=>[f.id,f]));fo.forEach(f=>mf.set(f.id,f));
   const n={chats:[...mc.values()],folders:[...mf.values()]};
   if(o.prefs&&typeof o.prefs==="object")n.prefs=Object.assign({},get("prefs",{}),o.prefs);if(o.opt&&typeof o.opt==="object")n.opt=Object.assign({},get("opt",{}),o.opt);
@@ -1674,6 +1685,16 @@ function toast(h){const box=$("#toasts");box.innerHTML="";const e=document.creat
  document.addEventListener("pointerdown",()=>{clearTimeout(tm);tip.classList.remove("on");cur=null});
  addEventListener("scroll",()=>tip.classList.remove("on"),true)})();
 
+/* disclosures (Gate A): opening shows the body and it rises in; closing fades the body out on the soft close, then the space
+   closes and whatever sat below glides up from where it was (FLIP, transform only). `inv` when the class marks the closed state. */
+function disclose(host,cls,on,body,inv){const isOn=()=>host.classList.contains(cls)!==!!inv,set=v=>host.classList.toggle(cls,inv?!v:v);
+ if(isOn()===on&&!host._dc)return;host._want=on;const tok=host._dc={};if(host._fa){host._fa.cancel();host._fa=null}if(on||reduce||!body||!host.isConnected){set(on);host._dc=null;return}
+ const fa=host._fa=body.animate([{opacity:1},{opacity:0}],{duration:MO.enter,easing:MO.soft,fill:"forwards"});fa.finished.then(()=>{if(host._dc!==tok)return;host._dc=null;host._fa=null;
+  const below=[];for(let n=host,k=0;n&&k<4&&n.id!=="scroll";n=n.parentElement,k++)for(let s=n.nextElementSibling;s;s=s.nextElementSibling)below.push(s);
+  const was=below.map(s=>s.getBoundingClientRect().top);set(false);fa.cancel();
+  host._want=null;below.forEach((s,i)=>{const d=was[i]-s.getBoundingClientRect().top;if(Math.abs(d)>.5)s.animate([{transform:`translateY(${d}px)`},{transform:"none"}],{duration:MO.move,easing:MO.spring})})}).catch(()=>{})}
+/* a click flips what the disclosure is heading to, so a click mid-close reopens it */
+function discToggle(host,cls,body,inv){const open=host._dc?host._want:host.classList.contains(cls)!==!!inv;disclose(host,cls,!open,body,inv);return!open}
 /* ---------- the pour (Gate A: the surface-tension droplet; reference qa/lab/pours.js, candidate A) ----------
    A bead leaves the point that opened a surface and spreads into it, width leading and height following, and drains
    back to the same point when it closes. One critically damped spring drives every layer on one clock: the surface
@@ -1844,7 +1865,7 @@ function renderRecents(){const q=$("#find").value.trim().toLowerCase(),live=chat
 $("#find").addEventListener("input",renderRecents);
 $("#recents").addEventListener("click",e=>{
  const nf=e.target.closest("[data-newf]");if(nf){newFolder();return}
- const ft=e.target.closest("[data-ftoggle]");if(ft){const f=FOLDERS.find(x=>x.id===ft.dataset.ftoggle);f.open=!f.open;saveF();ft.closest(".fold").classList.toggle("open",f.open);return}
+ const ft=e.target.closest("[data-ftoggle]");if(ft){const f=FOLDERS.find(x=>x.id===ft.dataset.ftoggle);f.open=!f.open;saveF();const fo=ft.closest(".fold");disclose(fo,"open",f.open,fo.querySelector(".fb"));return}
  const cm=e.target.closest("[data-cmenu]");if(cm){e.stopPropagation();chatMenu(cm.dataset.cmenu,cm);return}
  const fm=e.target.closest("[data-fmenu]");if(fm){e.stopPropagation();folderMenu(fm.dataset.fmenu,fm);return}
  const b=e.target.closest(".item");if(!b||busy||b.querySelector(".rn-in"))return;open(chats.find(c=>c.id===b.dataset.id));if(innerWidth<760)setFold(true)});
@@ -1891,13 +1912,13 @@ function archiveChat(c){c.archived=true;save();if(cur===c)open(null);renderRecen
 function deleteChat(c){const idx=chats.indexOf(c);chats.splice(idx,1);save();if(c.example)KV.put("noExample","1");if(cur===c)open(null);renderRecents();
  toastUndo(`Deleted <em>${esc(c.title.length>28?c.title.slice(0,27)+"…":c.title)}</em>`,()=>{chats.splice(idx,0,c);if(c.example)KV.remove("noExample");save();renderRecents()})}
 function toastUndo(h,undo){const box=$("#toasts");box.innerHTML="";const e=document.createElement("div");e.className="toast";e.style.animationDuration="5.2s";e.innerHTML=`<span>${h}</span><button class="ua">Undo</button>`;e.querySelector(".ua").onclick=()=>{undo();e.remove();toast("Restored")};box.append(e);clearTimeout(box._t);box._t=setTimeout(()=>e.remove(),5300)}
-function crumb(){const f=cur&&folderOf(cur);$("#crumb").textContent=f?f.name:"";if(cur)$("#ttl").innerHTML=`${esc(cur.title)} <span class="ttl-ref">· No. ${pad(cur.no||0,3)}</span>`;$("#h1").textContent=cur?cur.title:""}
+function crumb(){const f=cur&&folderOf(cur);$("#crumb").textContent=f?f.name:"";if(cur)$("#ttl").innerHTML=`${esc(cur.title)} <span class="ttl-ref">· No. ${pad(+cur.no||0,3)}</span>`;$("#h1").textContent=cur?cur.title:""}
 $("#ttl").onclick=()=>{if(cur&&!$("#ttl").querySelector(".rn-in"))inlineEdit($("#ttl"),cur.title,v=>{cur.title=v;save();renderRecents();crumb();toast("Renamed")})};
 const VL={supported:"Supported",derived:"Derived",partial:"Partial",conflict:"Conflict",unsupported:"Unsupported"};
 function ledgerStats(L){const c=(L&&L.claims)||[],k=v=>c.filter(x=>x.v===v).length;return {n:c.length,g:k("supported")+k("derived"),q:k("partial")+k("conflict"),u:k("unsupported")}}
 function ledgerHTML(w,full){const L=w&&w.ledger;if(!L||!(L.claims||[]).length)return "";const t=ledgerStats(L);
  return `<div class="led${full?" full":""}"><div class="lh"><span class="cap">Claims ledger</span><span class="gm" aria-hidden="true">${["g","q","u"].map(k=>`<i class="${k}" style="flex:${t[k]}"></i>`).join("")}</span><span class="lsum num">${t.g} of ${t.n} grounded${t.q?` · ${t.q} qualified`:""}${t.u?` · ${t.u} open`:""}</span></div>
- <ol class="lc">${L.claims.map((c,i)=>`<li><button type="button" class="lci v-${c.v}" data-claim="${c.id}" style="animation-delay:${Math.min(i*.04,.6)}s"><b class="num">c${c.id}</b><span class="tx">${esc(c.text)}</span><span class="vd"><i></i>${VL[c.v]||c.v}</span></button></li>`).join("")}</ol>${L.audit?`<p class="aud">${L.audit.flags?`The auditor found ${words(L.audit.flags).toLowerCase()} ungrounded statement${L.audit.flags>1?"s":""} in the draft; the answer was revised.`:"The auditor found every factual statement in the answer backed by the ledger."}</p>`:""}</div>`}
+ <ol class="lc">${L.claims.map((c,i)=>`<li><button type="button" class="lci v-${esc(c.v)}" data-claim="${esc(c.id)}" style="animation-delay:${Math.min(i*.04,.6)}s"><b class="num">c${c.id}</b><span class="tx">${esc(c.text)}</span><span class="vd"><i></i>${esc(VL[c.v]||c.v)}</span></button></li>`).join("")}</ol>${L.audit?`<p class="aud">${L.audit.flags?`The auditor found ${words(+L.audit.flags||0).toLowerCase()} ungrounded statement${L.audit.flags>1?"s":""} in the draft; the answer was revised.`:"The auditor found every factual statement in the answer backed by the ledger."}</p>`:""}</div>`}
 const evLi=f=>f[1]?`<li><span>${feedH(f[1])}</span><span class="x num">${mmss(f[0])}</span></li>`:"";
 function summary_(w){const n=(w.steps||[]).length,p=(w.map&&w.map.pages||[]).length;return (n?`Staffed ${words(n).toLowerCase()} desk${n>1?"s":""}`:"Answered directly")+(p?` · ${p} source${p>1?"s":""}`:"")+(w.firewall==="clear"?" · firewall clear":w.firewall==="blocked"?" · held for internal use":"")}
 function summary(w){const t=ledgerStats(w.ledger);return (w.ms?"Worked for "+fmt(w.ms)+" · ":"")+summary_(w)+(t.n?` · ${t.g}/${t.n} grounded`:"")}
@@ -1939,7 +1960,7 @@ function runHTML(w,k,live,o={}){const M=w.map||{},th=M.thinking||[],n=(w.feed||[
  <div class="logw${live?" open":""}"><button class="logt" type="button"><span class="cap">Log</span><span class="n num">${n||""}</span>${CHEV}</button><div class="logb"><div><ol class="ev">${(w.feed||[]).map(evLi).join("")}</ol></div></div></div>
  </div></div><p class="rnote" hidden></p></div>`}
 function splitQuote(c){const m=String(c).match(/^((?:> ?.*(?:\n|$))+)\n*([\s\S]*)$/);return m?[m[1].replace(/^> ?/gm,"").trim(),m[2]]:["",String(c)]}
-function youHTML(t,k){const [qt,body]=splitQuote(t.content);return `<div class="yw bi" data-k="${k}"><div class="you">${(t.imgs||[]).length?`<span class="yim">${t.imgs.map((m,i)=>`<button type="button" class="yi" data-lbx="${i}" aria-label="Open ${esc(m.name)}"><img alt="" src="${m.thumb}"></button>`).join("")}</span>`:""}${qt?`<span class="yq">${esc(qt)}</span>`:""}${esc(body)}</div><span class="yacts"><button class="ab" data-ycopy>Copy</button><button class="ab" data-yedit>Edit</button></span></div>`}
+function youHTML(t,k){const [qt,body]=splitQuote(t.content);return `<div class="yw bi" data-k="${k}"><div class="you">${(t.imgs||[]).length?`<span class="yim">${t.imgs.map((m,i)=>`<button type="button" class="yi" data-lbx="${i}" aria-label="Open ${esc(m.name)}"><img alt="" src="${esc(m.thumb)}"></button>`).join("")}</span>`:""}${qt?`<span class="yq">${esc(qt)}</span>`:""}${esc(body)}</div><span class="yacts"><button class="ab" data-ycopy>Copy</button><button class="ab" data-yedit>Edit</button></span></div>`}
 const acts=k=>`<span class="acts"><button class="ab" data-copy>Copy</button><button class="ab" data-regen>Retry</button><button class="ab" data-read="${k}">Dispatch</button></span>`;
 const BYLINE=`${MARK}<span class="who">EXPIRA</span>`;
 function inThis(html){const d=document.createElement("div");d.innerHTML=html;const hs=[...d.querySelectorAll("h3")];if(hs.length<3)return "";return `<nav class="inthis"><span class="cap">In this answer</span>${hs.map((x,i)=>`<button data-sec="${i}" style="animation-delay:${i*.05}s"><b>${ROMAN[i]||i+1}</b>${esc(x.textContent)}</button>`).join("")}</nav>`}
@@ -1951,14 +1972,14 @@ function open(c){setTimeout(()=>armFigs(),60);if(c!==cur&&$("#att"))attClear();w
  else{$("#heroDock").append($("#dock"));$("#thread").innerHTML="";$("#crumb").textContent="";showDsp(false)}
  renderRecents()}
 document.addEventListener("click",e=>{
- const rh=e.target.closest(".run-h");if(rh){const t=rh.closest(".run");if(t.dataset.view==="map")requestAnimationFrame(()=>runView(t,"map"));t.classList.add("pinned");t.classList.toggle("open");rh.setAttribute("aria-expanded",t.classList.contains("open"));if(t.classList.contains("open"))return}
- const lt=e.target.closest(".logt");if(lt){lt.closest(".logw").classList.toggle("open");return}
+ const rh=e.target.closest(".run-h");if(rh){const t=rh.closest(".run");if(t.dataset.view==="map")requestAnimationFrame(()=>runView(t,"map"));t.classList.add("pinned");const o=discToggle(t,"open",t.querySelector(".run-b"));rh.setAttribute("aria-expanded",String(o));if(o)return}
+ const lt=e.target.closest(".logt");if(lt){const w=lt.closest(".logw");discToggle(w,"open",w.querySelector(".logb"));return}
  const shb=e.target.closest("[data-sheet]");if(shb){openSheet($("#sheet")._w,shb.dataset.sheet,shb);return}
  const dso=e.target.closest("[data-docopen-sheet]");if(dso){const w=$("#sheet")._w;if(w&&w.doc)openDoc(w.doc);return}
  const ck=e.target.closest("[data-claim]");if(ck){openSheet(workOf(ck)||$("#sheet")._w,"k:"+ck.dataset.claim,ck);return}
  const sa=e.target.closest("a[data-src]");if(sa){const w=workOf(sa);if(w&&((w.map||{}).pages||[]).some(p=>p.url===sa.dataset.src)){e.preventDefault();openSheet(w,"u:"+sa.dataset.src,sa)}return}
  const sb=e.target.closest("[data-sec]");if(sb){const h3=sb.closest(".bot").querySelectorAll(".ans h3")[+sb.dataset.sec];h3&&h3.scrollIntoView({behavior:reduce?"auto":"smooth",block:"start"});return}
- const ex=e.target.closest("[data-exf]");if(ex){const w=ex.closest(".exh");w.classList.toggle("folded");ex.setAttribute("aria-expanded",!w.classList.contains("folded"));return}
+ const ex=e.target.closest("[data-exf]");if(ex){const w=ex.closest(".exh"),o=discToggle(w,"folded",w.querySelector(".exb"),true);ex.setAttribute("aria-expanded",String(o));return}
  const cc=e.target.closest("[data-cpc]");if(cc){const t=cc.closest(".code").querySelector("pre").innerText;navigator.clipboard?.writeText(t).then(()=>{cc.textContent="Copied";setTimeout(()=>cc.textContent="Copy",1400)},()=>toast("Select the code to copy it"));return}
  const tv=e.target.closest("[data-tv]");if(tv){const f=tv.closest(".fig"),t=f.querySelector(".tv");t.hidden=!t.hidden;tv.textContent=t.hidden?"Table":"Chart";f.querySelector("svg.ch").style.display=t.hidden?"":"none";return}
  const c=e.target.closest("[data-copy]");if(c){const t=c.closest(".bot").querySelector(".ans").innerText;const done=m=>{c.textContent=m;clearTimeout(c._t);c._t=setTimeout(()=>c.textContent="Copy",1600)};navigator.clipboard?navigator.clipboard.writeText(t).then(()=>done("Copied"),()=>done("Select to copy")):done("Select to copy");return}
@@ -2264,7 +2285,7 @@ function topHTML(w){const s=w?w.steps||[]:[],lt=ledgerStats(w&&w.ledger),tokens=
 function dxLive(ms,n,tk){const S=(q,v)=>{const e=$(q);if(e&&e.textContent!==v)e.textContent=v};S("#dxS0",mmss(ms));S("#dxS1",String(n));S("#dxS2",ft(tk))}
 function dxStand(w){const e=$("#dxSF"),t=standfirst(w);if(e&&e.textContent!==t)e.textContent=t}
 function deskHTML(s,i,d=0){const st=s.v?(s.v==="pass"?(s.redo?"Passed, deepened":"Passed"):"Returned"):"Opening";
- return `<article class="desk" id="dk${i}" style="animation-delay:${d}s"><span class="rn">${ROMAN[i]}.</span><div class="hd"><b>${ROLE[s.role]}</b>${s.focus?`<span class="fc">${esc(s.focus)}</span>`:""}<span class="eff">${meter(s.tier)}<span id="ef${i}">${TIERS[s.tier].w}</span></span><span class="st ${s.v||""}" id="ds${i}">${st}</span></div>
+ return `<article class="desk" id="dk${i}" style="animation-delay:${d}s"><span class="rn">${ROMAN[i]}.</span><div class="hd"><b>${ROLE[s.role]}</b>${s.focus?`<span class="fc">${esc(s.focus)}</span>`:""}<span class="eff">${meter(s.tier)}<span id="ef${i}">${TIERS[s.tier].w}</span></span><span class="st ${esc(s.v||"")}" id="ds${i}">${st}</span></div>
  <p class="task">${esc(s.task)}</p><canvas class="mini" id="mn${i}"></canvas><div class="mt num"><span id="dm${i}">${s.ms?fmt(s.ms):"—"}</span><span id="dq${i}">${s.searches?`${s.searches} search${s.searches>1?"es":""} · `:""}${s.out?ft(tok(s.out))+" tokens":""}</span><button class="rd" data-notes>Read notes</button></div><div class="notes" id="dn${i}">${esc(s.out||"")}</div></article>`}
 const logLi=(f,d)=>`<li style="${d!=null?`animation-delay:${d}s`:""}"><span class="ts">${mmss(f[0])}</span><span class="tx">${feedH(f[2]||f[1])}</span></li>`;
 function finishTop(w){$("#dxTop").innerHTML=topHTML(w);const lt=ledgerStats(w.ledger);
@@ -2846,9 +2867,9 @@ function sheetHTML(w,id){const S=w.steps||[],M=w.map||{},P=M.pages||[],C=M.calls
  if(id==="doc"){const d=w.doc;if(!d)return "";if(d.error)return si(`<span class="k cap">Document held</span><h4>${esc(DOCT[d.type]||"Document")}</h4><p class="tk">${esc(d.error)}</p>`);return si(`<span class="k cap">Document · kernel ${esc(d.kernel||"")}</span><h4>${esc(d.title)}</h4><div class="mt"><span>${d.pages} pages</span><span>Verified by the kernel builder</span></div><ul class="ql">${(d.checks||[]).map(c=>`<li><span class="num">✓</span><span>${esc(c[0])}</span></li>`).join("")}</ul>`)+si(`<button class="btn2" data-docopen-sheet>Open the document</button>`)}
  if(id==="ans"){const au=w.ledger&&w.ledger.audit,t=ledgerStats(w.ledger);return si(`<span class="k cap">Answer</span><h4>${t.n?`${t.g} of ${t.n} claims grounded`:"Filed"}</h4><p class="tk">The answer may only state what the ledger supports; estimates are marked as such, and each figure carries its claim number.</p>`)+(au?si(`<span class="k2 cap">Audit</span>${au.flags?`<ul class="ql">${(au.items||[]).map(x=>`<li><span class="num">—</span><span>“${esc(x.quote)}” <small style="color:var(--mute)">${esc(x.why||"")}</small></span></li>`).join("")}</ul><p class="tk">These lines were qualified or removed before filing.</p>`:`<p class="tk">Every factual statement was backed by the ledger.</p>`}`):"")}
  if(id.startsWith("k:")){const Lg=w.ledger,c=Lg&&(Lg.claims||[]).find(x=>String(x.id)===id.slice(2));if(!c)return "";const pg=(c.urls||[]).map(u=>P.find(p=>p.url===u)).filter(Boolean);
-  return si(`<span class="k cap">Claim c${c.id}</span><h4>${esc(c.text)}</h4><div class="mt"><span class="vchip v-${c.v}">${VL[c.v]||c.v}</span>${c.conf!=null?`<span class="num">${Math.round(c.conf*100)}% confidence</span>`:""}${S[c.desk]?`<span>${dn(c.desk)}</span>`:""}</div>${c.note?`<p class="tk">${esc(c.note)}</p>`:""}`)+(pg.length?pg.map(page).join(""):si(`<p class="empty2">${c.v==="derived"?"Computed from other claims or your own figures.":"No page backs this claim. Treat it as an estimate."}</p>`))}
+  return si(`<span class="k cap">Claim c${c.id}</span><h4>${esc(c.text)}</h4><div class="mt"><span class="vchip v-${esc(c.v)}">${esc(VL[c.v]||c.v)}</span>${c.conf!=null?`<span class="num">${Math.round(c.conf*100)}% confidence</span>`:""}${S[c.desk]?`<span>${dn(c.desk)}</span>`:""}</div>${c.note?`<p class="tk">${esc(c.note)}</p>`:""}`)+(pg.length?pg.map(page).join(""):si(`<p class="empty2">${c.v==="derived"?"Computed from other claims or your own figures.":"No page backs this claim. Treat it as an estimate."}</p>`))}
  if(/^a\d+$/.test(id)){const i=+id.slice(1),s=S[i];if(!s)return "";const q=C.filter(c=>c.i===i),hs=hostsOf(P.filter(p=>p.i===i));
-  return si(`<span class="k cap">Desk ${ROMAN[i]} · ${ROLE[s.role]}</span><h4>${esc(s.focus||s.task)}</h4>${s.focus?`<p class="tk">${esc(s.task)}</p>`:""}<div class="mt"><span>${TIERS[s.tier].w} effort</span>${s.ms?`<span class="num">${fmt(s.ms)}</span>`:s._live?"<span>Working</span>":""}${s.v?`<span class="${s.v}">${s.v==="pass"?"Passed review":"Returned"}</span>`:""}${s.after&&s.after.length?`<span>After ${s.after.map(n=>"desk "+ROMAN[n-1]).join(" and ")}</span>`:""}</div>${s.why?`<p class="tk" style="font-size:12px;color:var(--soft)">${esc(cap1(s.why))}</p>`:""}`)
+  return si(`<span class="k cap">Desk ${ROMAN[i]} · ${ROLE[s.role]}</span><h4>${esc(s.focus||s.task)}</h4>${s.focus?`<p class="tk">${esc(s.task)}</p>`:""}<div class="mt"><span>${TIERS[s.tier].w} effort</span>${s.ms?`<span class="num">${fmt(s.ms)}</span>`:s._live?"<span>Working</span>":""}${s.v?`<span class="${esc(s.v)}">${s.v==="pass"?"Passed review":"Returned"}</span>`:""}${s.after&&s.after.length?`<span>After ${s.after.map(n=>"desk "+ROMAN[n-1]).join(" and ")}</span>`:""}</div>${s.why?`<p class="tk" style="font-size:12px;color:var(--soft)">${esc(cap1(s.why))}</p>`:""}`)
    +(q.length?si(`<span class="k2 cap">Searches</span><ul class="ql">${q.map(c=>`<li><span class="num">${mmss(c.t)}</span><span>${c.fetch?"Read ":""}${c.q.map(x=>c.fetch?esc(x):`“${esc(x)}”`).join(", ")}</span></li>`).join("")}</ul>`):"")
    +(hs.length?si(`<span class="k2 cap">Sites it drew on</span><ul class="ql">${hs.map(o=>`<li><span class="num">${o.n}</span><button class="lnk" data-sheet="s:${esc(o.h)}">${esc(o.h)}</button></li>`).join("")}</ul>`):"")
    +si(`<span class="k2 cap">Notes</span><div class="nt2">${esc(s.out||(s._live?"Writing…":"No notes filed."))}</div>`)}
@@ -3117,7 +3138,7 @@ setTimeout(featherAll,300);new MutationObserver(()=>setTimeout(()=>feather(docum
 /* claim cards: hovering a citation draws its claim out of the marker */
 {const P=$("#cpop");let tm=0,on=null;const CP=POUR.attach(P,{blur:true,origin:()=>{if(!on)return null;const r=on.getBoundingClientRect();return{x:r.left+r.width/2,y:r.top+r.height/2}}});const host=u=>{try{return new URL(u).hostname.replace(/^www\./,"")}catch(e){return String(u)}};
  const show=el=>{const w=workOf(el),c=w?.ledger?.claims?.find(x=>String(x.id)===el.dataset.claim);if(!c)return;on=el;
-  P.innerHTML=`<div class="ch"><span class="vd v-${c.v}"><i></i>${VL[c.v]||c.v}</span><b class="num">c${c.id}</b>${c.conf?`<span class="cf num">${Math.round(c.conf*100)}% sure</span>`:""}</div><p>${esc(c.text)}</p>${(c.urls||[]).length?`<div class="cs">${c.urls.slice(0,3).map(u=>`<span>${esc(host(u))}</span>`).join("")}</div>`:c.note?`<div class="cs"><em>${esc(c.note)}</em></div>`:""}<span class="cx">Click for the evidence</span>`;
+  P.innerHTML=`<div class="ch"><span class="vd v-${esc(c.v)}"><i></i>${esc(VL[c.v]||c.v)}</span><b class="num">c${c.id}</b>${c.conf?`<span class="cf num">${Math.round(c.conf*100)}% sure</span>`:""}</div><p>${esc(c.text)}</p>${(c.urls||[]).length?`<div class="cs">${c.urls.slice(0,3).map(u=>`<span>${esc(host(u))}</span>`).join("")}</div>`:c.note?`<div class="cs"><em>${esc(c.note)}</em></div>`:""}<span class="cx">Click for the evidence</span>`;
   if(P.classList.contains("open")){CP.snap(false);P.classList.remove("open")}const r=el.getBoundingClientRect(),q=P.getBoundingClientRect();const x=Math.max(12,Math.min(innerWidth-q.width-12,r.left+r.width/2-q.width/2));let y=r.top-q.height-9,below=false;if(y<12){y=r.bottom+9;below=true}
   P.style.left=x+"px";P.style.top=y+"px";const ox=Math.max(8,Math.min(q.width-8,r.left+r.width/2-x));P.style.setProperty("--ax",ox+"px");P.classList.toggle("below",below);P.classList.add("open");};
  const hide=()=>{on=null;P.classList.remove("open")};
@@ -3134,7 +3155,7 @@ async function attAdd(files){if(!IMGCAP)return;const types=IMGCAP.mediaTypes||[]
  if(IMGCAP.maxInputBytes&&f.size>IMGCAP.maxInputBytes){sk.push(`${nm}: over ${fmtB(IMGCAP.maxInputBytes)}`);continue}
  const m=await thumbOf(f);if(!m){sk.push(`${nm}: unreadable`);continue}
  const a={file:f,name:f.name&&f.name!=="image.png"?f.name:"Pasted image",size:f.size,...m,id:Math.random().toString(36).slice(2,8)};ATT.push(a);attDraw(a)}if(sk.length)attNote(`${sk.length} skipped · ${sk.join(" · ")}`)}
-function attDraw(a){const t=$("#att");t.hidden=false;const an=t.querySelector(".an");(an?an.insertAdjacentHTML.bind(an,"beforebegin"):t.insertAdjacentHTML.bind(t,"beforeend"))(`<figure class="ac" data-id="${a.id}"><span class="th"><img alt="" src="${a.thumb}"></span><figcaption><b>${esc(a.name)}</b><i class="num">${a.w}×${a.h} · ${fmtB(a.size)}</i></figcaption><button type="button" class="ax" aria-label="Remove ${esc(a.name)}"><svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.2"><path d="M3 3l6 6M9 3l-6 6"/></svg></button></figure>`)}
+function attDraw(a){const t=$("#att");t.hidden=false;const an=t.querySelector(".an");(an?an.insertAdjacentHTML.bind(an,"beforebegin"):t.insertAdjacentHTML.bind(t,"beforeend"))(`<figure class="ac" data-id="${a.id}"><span class="th"><img alt="" src="${esc(a.thumb)}"></span><figcaption><b>${esc(a.name)}</b><i class="num">${a.w}×${a.h} · ${fmtB(a.size)}</i></figcaption><button type="button" class="ax" aria-label="Remove ${esc(a.name)}"><svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.2"><path d="M3 3l6 6M9 3l-6 6"/></svg></button></figure>`)}
 function attDrop(id){const el=$("#att").querySelector(`[data-id="${id}"]`);ATT=ATT.filter(x=>x.id!==id);if(el){el.classList.add("out");setTimeout(()=>{el.remove();if(!ATT.length&&!$("#att .an"))$("#att").hidden=true},reduce?0:320)}}
 function attClear(){ATT=[];const t=$("#att");t.innerHTML="";t.hidden=true}
 {const f=$("#form"),bar=document.createElement("div");bar.className="cbar";bar.innerHTML='<div class="cl"></div><div class="cr"><span class="cst" id="cst"></span><i class="spn" aria-hidden="true"></i></div>';f.after(bar);const cl=bar.firstChild,cr=bar.lastChild;["#attIn","#attBtn","#docBtn","#optBtn"].forEach(q=>{const e=$(q);if(e)cl.append(e)});const c=$("#count");if(c)cr.prepend(c)}
@@ -3366,12 +3387,12 @@ ${PG.length?`Web sources the desks consulted, newest first (use these urls in "s
    map:{thinking:M.thinking.slice(0,6).map(t=>clip(t,240)),rationale:clip(M.rationale,240),kind:clip(M.kind,80),calls:M.calls.slice(0,40),pages:M.pages.slice(0,30)}}});save();
   try{if(db)/* the run log is shared with every viewer of the page, so it keeps the shape of the run, never the brief */
   await db.collection("runs").doc("r"+Date.now()).set({ts:Date.now(),steps:steps.map(s=>({role:s.role,tier:s.tier,focus:s.focus||"",verdict:s.v||"",redo:s.redo})),firewall:work.firewall})}catch(e){}
-  const k=cur.turns.length-1;bot.dataset.k=k;bot.classList.add("fresh");run.classList.remove("running");run.classList.add("settled");swap(lbl,summary(work));tEl.textContent=mmss(work.ms);{const mi=run.querySelector(".mini");if(mi){mi._sig=null;if(run.dataset.view==="map")setTimeout(()=>miniDraw(run,cur.turns[cur.turns.length-1].work,false),60)}}setTimeout(()=>{if(!run.classList.contains("pinned")){run.classList.remove("open");run.querySelector(".run-h").setAttribute("aria-expanded","false")}},1100);rk.textContent=tokLine(cur.turns[k].work);
+  const k=cur.turns.length-1;bot.dataset.k=k;bot.classList.add("fresh");run.classList.remove("running");run.classList.add("settled");swap(lbl,summary(work));tEl.textContent=mmss(work.ms);{const mi=run.querySelector(".mini");if(mi){mi._sig=null;if(run.dataset.view==="map")setTimeout(()=>miniDraw(run,cur.turns[cur.turns.length-1].work,false),60)}}setTimeout(()=>{if(!run.classList.contains("pinned")){disclose(run,"open",false,run.querySelector(".run-b"));run.querySelector(".run-h").setAttribute("aria-expanded","false")}},1100);rk.textContent=tokLine(cur.turns[k].work);
   run.querySelector("[data-read]").dataset.read=k;run.querySelector(".flow")?.insertAdjacentHTML("afterend",costHTML(cur.turns[k].work));if(work.firewall==="blocked")ans.innerHTML=md(content);
   bot.insertAdjacentHTML("beforeend",`<div class="bi">${inThis(ans.innerHTML)}</div>${fupsHTML(cur.turns[k].work)}<div class="filed capt bi"><span>Filed ${hhmm(Date.now())}</span><i class="dotsep"></i>${meta(content)}${acts(k)}</div>`);
   finishTop(cur.turns[k].work);
  }catch(e){
-  const code=e&&e.code;work.ms=now();run.classList.remove("running");run.classList.add("settled");swap(lbl,(code==="cancelled"?"Stopped":"Interrupted")+" after "+fmt(work.ms));if(code==="cancelled")setTimeout(()=>{if(!run.classList.contains("pinned")){run.classList.remove("open");run.querySelector(".run-h").setAttribute("aria-expanded","false")}},1100);run.querySelectorAll(".rail li.on").forEach(li=>{li.classList.remove("on");li.classList.add("stop")});
+  const code=e&&e.code;work.ms=now();run.classList.remove("running");run.classList.add("settled");swap(lbl,(code==="cancelled"?"Stopped":"Interrupted")+" after "+fmt(work.ms));if(code==="cancelled")setTimeout(()=>{if(!run.classList.contains("pinned")){disclose(run,"open",false,run.querySelector(".run-b"));run.querySelector(".run-h").setAttribute("aria-expanded","false")}},1100);run.querySelectorAll(".rail li.on").forEach(li=>{li.classList.remove("on");li.classList.add("stop")});
   if(e&&e.text)ans.innerHTML=md(e.text);F(code==="cancelled"?"Stopped at your request":"Interrupted",code==="cancelled"?"Stopped at your request.":"Interrupted.");
   if(code!=="cancelled")say(COPY[code]||"Something interrupted that. Send it again.");
   if(code==="not_granted"||code==="sampling_disabled")sample=null;save();

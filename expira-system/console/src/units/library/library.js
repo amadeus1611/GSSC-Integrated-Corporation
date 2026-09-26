@@ -26,7 +26,7 @@ function renderRecents(){const q=$("#find").value.trim().toLowerCase(),live=chat
 $("#find").addEventListener("input",renderRecents);
 $("#recents").addEventListener("click",e=>{
  const nf=e.target.closest("[data-newf]");if(nf){newFolder();return}
- const ft=e.target.closest("[data-ftoggle]");if(ft){const f=FOLDERS.find(x=>x.id===ft.dataset.ftoggle);f.open=!f.open;saveF();ft.closest(".fold").classList.toggle("open",f.open);return}
+ const ft=e.target.closest("[data-ftoggle]");if(ft){const f=FOLDERS.find(x=>x.id===ft.dataset.ftoggle);f.open=!f.open;saveF();const fo=ft.closest(".fold");disclose(fo,"open",f.open,fo.querySelector(".fb"));return}
  const cm=e.target.closest("[data-cmenu]");if(cm){e.stopPropagation();chatMenu(cm.dataset.cmenu,cm);return}
  const fm=e.target.closest("[data-fmenu]");if(fm){e.stopPropagation();folderMenu(fm.dataset.fmenu,fm);return}
  const b=e.target.closest(".item");if(!b||busy||b.querySelector(".rn-in"))return;open(chats.find(c=>c.id===b.dataset.id));if(innerWidth<760)setFold(true)});

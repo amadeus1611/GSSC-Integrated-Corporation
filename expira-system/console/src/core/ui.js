@@ -12,3 +12,13 @@ function toast(h){const box=$("#toasts");box.innerHTML="";const e=document.creat
  document.addEventListener("pointerdown",()=>{clearTimeout(tm);tip.classList.remove("on");cur=null});
  addEventListener("scroll",()=>tip.classList.remove("on"),true)})();
 
+/* disclosures (Gate A): opening shows the body and it rises in; closing fades the body out on the soft close, then the space
+   closes and whatever sat below glides up from where it was (FLIP, transform only). `inv` when the class marks the closed state. */
+function disclose(host,cls,on,body,inv){const isOn=()=>host.classList.contains(cls)!==!!inv,set=v=>host.classList.toggle(cls,inv?!v:v);
+ if(isOn()===on&&!host._dc)return;host._want=on;const tok=host._dc={};if(host._fa){host._fa.cancel();host._fa=null}if(on||reduce||!body||!host.isConnected){set(on);host._dc=null;return}
+ const fa=host._fa=body.animate([{opacity:1},{opacity:0}],{duration:MO.enter,easing:MO.soft,fill:"forwards"});fa.finished.then(()=>{if(host._dc!==tok)return;host._dc=null;host._fa=null;
+  const below=[];for(let n=host,k=0;n&&k<4&&n.id!=="scroll";n=n.parentElement,k++)for(let s=n.nextElementSibling;s;s=s.nextElementSibling)below.push(s);
+  const was=below.map(s=>s.getBoundingClientRect().top);set(false);fa.cancel();
+  host._want=null;below.forEach((s,i)=>{const d=was[i]-s.getBoundingClientRect().top;if(Math.abs(d)>.5)s.animate([{transform:`translateY(${d}px)`},{transform:"none"}],{duration:MO.move,easing:MO.spring})})}).catch(()=>{})}
+/* a click flips what the disclosure is heading to, so a click mid-close reopens it */
+function discToggle(host,cls,body,inv){const open=host._dc?host._want:host.classList.contains(cls)!==!!inv;disclose(host,cls,!open,body,inv);return!open}
