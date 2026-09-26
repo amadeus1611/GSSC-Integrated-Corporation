@@ -4,11 +4,11 @@ Owner: Duke Y. Demayo. Working branch: `claude/wizardly-ptolemy-6q4ter`, PR amad
 
 ## Map
 - `README.md` is the GSSC company site: one self-contained HTML page.
-- `expira-system/console/index.html` is the EXPIRA Console, a single-file artifact. It is live at https://claude.ai/artifact/LcLXJASXhWZ56g74sHVRxt and currently at v42. It is built from `src/`; never edit it by hand.
+- `expira-system/console/index.html` is the EXPIRA Console, a single-file artifact. It is live at https://claude.ai/artifact/LcLXJASXhWZ56g74sHVRxt and currently at v43. It is built from `src/`; never edit it by hand.
   - `lib/gssc-kernel.json` is the GSSC kernel. It is published beside the page and read at run time.
   - `kernel_builder.js` is the JavaScript port of `build_derivative.py`.
   - See `console/README.md` for more.
-- `expira-system/console/REBUILD_PLAN.md` is the v41 clean rebuild plan (shipped). `INSPECTOR_PLAN.md` is v42: synced disclosures and the Details rail.
+- `expira-system/console/REBUILD_PLAN.md` is the v41 clean rebuild plan (shipped). `INSPECTOR_PLAN.md` is v42: synced disclosures and the Details rail. v43 made the sidebar, rail and Dispatch moves transform-only (`glide()` in `units/shell/shell.js`).
 - `expira-system/DESIGN_ENGINE.md` holds the design and motion canon. **Read it before any design or motion work**, and add to its change log after each iteration.
 - `expira-system/brand_assets/`, `logo_pack/` and `source/` hold the EXPIRA mark, the wordmark and the brand tokens.
 - `orchestrator/POLICY.md` and `.claude/agents/` define the sub-agent roster and when to escalate. `orchestrator/tier_log.csv` is the run log.
