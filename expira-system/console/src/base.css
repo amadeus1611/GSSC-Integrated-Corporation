@@ -12,6 +12,13 @@ button,input,textarea{font:inherit;color:inherit}
 @keyframes blurIn{from{opacity:.001;filter:blur(var(--blur-enter));transform:translateY(6px)}to{opacity:1;filter:none;transform:none}}
 @keyframes rise{from{opacity:.001;transform:translateY(6px)}to{opacity:1;transform:none}}
 .bi{animation:rise var(--t-enter) var(--ease-out) both}
+/* a disclosure's drawn frame (core/ui.js disclose): a top cap, a band that scales on Y, a bottom cap that travels with the edge.
+   At rest the three pieces draw exactly the card's own hairline and fill; the host sets --fr-bg, --fr-line and --fr-r */
+.dfr{position:absolute;inset:calc(var(--rule-hair) * -1);z-index:-1;pointer-events:none}
+.dfr>b{position:absolute;left:0;right:0;background:var(--fr-bg);border:var(--rule-hair) solid var(--fr-line)}
+.dfr>b:nth-child(1){top:0;height:var(--fr-r);border-bottom:0;border-radius:var(--fr-r) var(--fr-r) 0 0}
+.dfr>b:nth-child(2){top:calc(var(--fr-r) - 1px);bottom:calc(var(--fr-r) - 1px);border-top:0;border-bottom:0;border-radius:0;transform-origin:top}
+.dfr>b:nth-child(3){bottom:0;height:var(--fr-r);border-top:0;border-radius:0 0 var(--fr-r) var(--fr-r)}
 .grain{position:relative;isolation:isolate}
 .grain::after{content:"";position:absolute;inset:0;pointer-events:none;background-image:var(--grain);background-size:150px;mix-blend-mode:soft-light;opacity:.6;-webkit-mask:var(--gmask) center/contain no-repeat;mask:var(--gmask) center/contain no-repeat}
 .app{display:flex;height:100%}

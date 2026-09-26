@@ -151,6 +151,13 @@ button,input,textarea{font:inherit;color:inherit}
 @keyframes blurIn{from{opacity:.001;filter:blur(var(--blur-enter));transform:translateY(6px)}to{opacity:1;filter:none;transform:none}}
 @keyframes rise{from{opacity:.001;transform:translateY(6px)}to{opacity:1;transform:none}}
 .bi{animation:rise var(--t-enter) var(--ease-out) both}
+/* a disclosure's drawn frame (core/ui.js disclose): a top cap, a band that scales on Y, a bottom cap that travels with the edge.
+   At rest the three pieces draw exactly the card's own hairline and fill; the host sets --fr-bg, --fr-line and --fr-r */
+.dfr{position:absolute;inset:calc(var(--rule-hair) * -1);z-index:-1;pointer-events:none}
+.dfr>b{position:absolute;left:0;right:0;background:var(--fr-bg);border:var(--rule-hair) solid var(--fr-line)}
+.dfr>b:nth-child(1){top:0;height:var(--fr-r);border-bottom:0;border-radius:var(--fr-r) var(--fr-r) 0 0}
+.dfr>b:nth-child(2){top:calc(var(--fr-r) - 1px);bottom:calc(var(--fr-r) - 1px);border-top:0;border-bottom:0;border-radius:0;transform-origin:top}
+.dfr>b:nth-child(3){bottom:0;height:var(--fr-r);border-top:0;border-radius:0 0 var(--fr-r) var(--fr-r)}
 .grain{position:relative;isolation:isolate}
 .grain::after{content:"";position:absolute;inset:0;pointer-events:none;background-image:var(--grain);background-size:150px;mix-blend-mode:soft-light;opacity:.6;-webkit-mask:var(--gmask) center/contain no-repeat;mask:var(--gmask) center/contain no-repeat}
 .app{display:flex;height:100%}
@@ -635,7 +642,9 @@ html.calm *,html.calm *::before,html.calm *::after{animation:none!important;tran
 .cost .cl .tk{margin-left:auto}
 .cost .dp{display:flex;flex-wrap:wrap;gap:var(--sp-1)}
 /* the run card: stays in place, only ever adds */
-.run{display:flex;flex-direction:column;border:var(--rule-hair) solid var(--line-2);background:var(--sheet);padding:var(--sp-2) var(--sp-3) var(--sp-2);border-radius:var(--r-5);position:relative}
+.run{display:flex;flex-direction:column;border:var(--rule-hair) solid var(--line-2);background:var(--sheet);padding:var(--sp-2) var(--sp-3) var(--sp-2);border-radius:var(--r-5);position:relative;--fr-bg:var(--sheet);--fr-line:var(--line-2);--fr-r:var(--r-5)}
+/* once it has opened or closed, the card is drawn by its frame (base.css .dfr) so the frame can follow the edge */
+.run:has(>.dfr){border-color:transparent;background:transparent;isolation:isolate}
 .run .rv{position:absolute;right:36px;top:6px;display:flex;align-items:center;gap:var(--sp-1h);opacity:0;pointer-events:none;transform:translateY(-2px);transition:opacity var(--t-exit) var(--ease-soft-close),transform var(--t-move) var(--ease-soft-close)}
 .run.open .rv{opacity:1;pointer-events:auto;transform:none}
 .run.running .rv{right:84px}
@@ -1685,17 +1694,43 @@ function toast(h){const box=$("#toasts");box.innerHTML="";const e=document.creat
  document.addEventListener("pointerdown",()=>{clearTimeout(tm);tip.classList.remove("on");cur=null});
  addEventListener("scroll",()=>tip.classList.remove("on"),true)})();
 
-/* disclosures (Gate A): opening shows the body and it rises in; closing fades the body out on the soft close, then the space
-   closes and whatever sat below glides up from where it was (FLIP, transform only). `inv` when the class marks the closed state. */
+/* disclosures (Gate A, v42): one timeline moves the card's edge, whatever sits below it, and the body's lines together.
+   The layout holds the open state for the whole move. A framed card (DFR) draws its frame as a top cap, a band that scales
+   on Y and a bottom cap that travels, so the frame follows the edge; what sits below is translated to follow it too; each
+   line of the body rises in as the edge passes it, and on the way back fades just before the edge reaches it.
+   Transform and opacity only. `inv` when the class marks the closed state. */
+const DFR=".run";
+function dcStop(host){const s=host._dc;if(!s)return;s.anims.forEach(a=>a.cancel());s.lines.forEach(a=>a.cancel());s.anims=[];s.lines=[]}
+function dcUnits(body,vh){const out=[],walk=el=>{for(const c of el.children){const r=c.getBoundingClientRect();if(!r.height||r.bottom<0||r.top>vh)continue;
+  if(r.height<=40||!c.children.length||c.matches("canvas,svg,table,img,figure,pre,.mini")||[...c.childNodes].some(n=>n.nodeType===3&&n.textContent.trim()))out.push([c,r]);
+  else{/* a container's own drawing (a rail, a rule) shows only once all of it is inside the card */
+   for(const pe of["::before","::after"]){const cs=getComputedStyle(c,pe);if(cs.content!=="none"&&cs.content!=="normal"&&cs.display!=="none")out.push([c,r,pe])}walk(c)}}};walk(body);return out}
 function disclose(host,cls,on,body,inv){const isOn=()=>host.classList.contains(cls)!==!!inv,set=v=>host.classList.toggle(cls,inv?!v:v);
- if(isOn()===on&&!host._dc)return;host._want=on;const tok=host._dc={};if(host._fa){host._fa.cancel();host._fa=null}
- /* what sat below moves from where it was to where it lands: transform only */
- const glide=()=>{const below=[];for(let n=host,k=0;n&&k<4&&n.id!=="scroll";n=n.parentElement,k++)for(let s=n.nextElementSibling;s;s=s.nextElementSibling)below.push(s);
-  const was=below.map(s=>s.getBoundingClientRect().top);return()=>below.forEach((s,i)=>{const d=was[i]-s.getBoundingClientRect().top;if(Math.abs(d)>.5)s.animate([{transform:`translateY(${d}px)`},{transform:"none"}],{duration:MO.move,easing:MO.spring})})};
- if(reduce||!body||!host.isConnected){set(on);host._dc=null;host._want=null;return}
- if(on){const land=glide();set(true);host._dc=null;host._want=null;land();return}
- const fa=host._fa=body.animate([{opacity:1},{opacity:0}],{duration:MO.exit,easing:MO.soft,fill:"forwards"});fa.finished.then(()=>{if(host._dc!==tok)return;host._dc=null;host._fa=null;
-  const land=glide();set(false);fa.cancel();host._want=null;land()}).catch(()=>{})}
+ const st=host._dc;if(st?st.on===on:isOn()===on)return;
+ if(reduce||!body||!host.isConnected){dcStop(host);set(on);host._dc=null;host._want=null;return}
+ /* where the edge is now: mid-move, the height the frame is drawn at */
+ const hNow=st?st.h(st.E(Math.min(1,(performance.now()-st.t0)/st.T))):null;dcStop(host);
+ const frames=[];for(let n=host;n&&n.id!=="scroll";n=n.parentElement)if(n.matches(DFR))frames.push(n);
+ frames.forEach(f=>{if(!f.querySelector(":scope>.dfr")){const d=document.createElement("i");d.className="dfr";d.setAttribute("aria-hidden","true");d.innerHTML="<b></b><b></b><b></b>";f.prepend(d)}});
+ const below=[];for(let n=body,k=0;n&&k<8&&n.id!=="scroll";n=n.parentElement,k++)for(let s=n.nextElementSibling;s;s=s.nextElementSibling)below.push(s);
+ const hOf=e=>e.getBoundingClientRect().height,tops=()=>below.map(s=>s.getBoundingClientRect().top);
+ set(false);const H0=hOf(host),F0=frames.map(hOf),P0=tops();
+ set(true);const hr=host.getBoundingClientRect(),H1=hr.height,F1=frames.map(hOf),P1=tops();
+ /* the body's own rise would run ahead of the edge: this move reveals it instead */
+ body.getAnimations({subtree:true}).forEach(a=>{if(a.animationName==="rise")a.cancel()});
+ if(H1-H0<1){set(on);host._dc=null;host._want=null;return}
+ const from=hNow??(on?H0:H1),to=on?H1:H0,T=on?MO.move:MO.exit,ez=on?MO.spring:MO.soft,E=easeFn(ez),kOf=h=>(H1-h)/(H1-H0),k0=kOf(from),k1=kOf(to),
+  opt={duration:T,easing:ez,fill:"forwards"},anims=[],lines=[],ty=v=>({transform:`translateY(${v.toFixed(2)}px)`});
+ frames.forEach((f,j)=>{const b=f.querySelector(":scope>.dfr").children,R=parseFloat(getComputedStyle(f).getPropertyValue("--fr-r"))||8,full=F1[j]+3-2*R,
+  hf=k=>F1[j]-k*(F1[j]-F0[j]),sc=k=>`scaleY(${Math.max(0,(hf(k)+3-2*R)/full).toFixed(4)})`;
+  anims.push(b[1].animate([{transform:sc(k0)},{transform:sc(k1)}],opt),b[2].animate([ty(hf(k0)-F1[j]),ty(hf(k1)-F1[j])],opt))});
+ below.forEach((s,i)=>{const d=P0[i]-P1[i];if(Math.abs(d)>.5)anims.push(s.animate([ty(k0*d),ty(k1*d)],opt))});
+ dcUnits(body,innerHeight).forEach(([el,r,pe])=>{const y=r.top-hr.top,pk=pe?{pseudoElement:pe}:{};
+  if(on){const at=pe?y+r.height:y+Math.min(r.height/2,10);if(at<=from)return;lines.push(el.animate(pe?[{opacity:0},{opacity:1}]:[{opacity:0,transform:"translateY(4px)"},{opacity:1,transform:"none"}],{duration:MO.enter*.8,delay:easeInv(E,(at-from)/(to-from))*T,easing:MO.out,fill:"backwards",...pk}))}
+  else{const end=easeInv(E,(from-Math.min(y+r.height,from))/(from-to))*T,fd=Math.min(MO.enter*.7,Math.max(60,end));lines.push(el.animate([{opacity:1},{opacity:0}],{duration:fd,delay:Math.max(0,end-fd),easing:MO.soft,fill:"both",...pk}))}});
+ const clock=host.animate([],{duration:T});anims.push(clock);
+ const s=host._dc={on,t0:performance.now(),T,E,h:e=>from+(to-from)*e,anims,lines};host._want=on;
+ clock.finished.then(()=>{if(host._dc!==s)return;if(!on){set(false);lines.forEach(a=>a.cancel())}anims.forEach(a=>a.cancel());host._dc=null;host._want=null}).catch(()=>{})}
 /* a click flips what the disclosure is heading to, so a click mid-close reopens it */
 function discToggle(host,cls,body,inv){const open=host._dc?host._want:host.classList.contains(cls)!==!!inv;disclose(host,cls,!open,body,inv);return!open}
 /* ---------- the pour (Gate A: the surface-tension droplet; reference qa/lab/pours.js, candidate A) ----------
@@ -3071,6 +3106,13 @@ const MO=(()=>{const cs=getComputedStyle(root),v=(n,d)=>cs.getPropertyValue(n).t
  return{instant:ms("--t-instant",90),enter:ms("--t-enter",200),exit:ms("--t-exit",380),move:ms("--t-move",380),draw:ms("--t-draw",420),
   out:v("--ease-out","cubic-bezier(.16,1,.3,1)"),soft:v("--ease-soft-close","cubic-bezier(.4,0,.1,1)"),inout:v("--ease-inout","cubic-bezier(.65,0,.35,1)"),
   spring:ok?v("--spring","cubic-bezier(.16,1,.3,1)"):"cubic-bezier(.16,1,.3,1)"}})();
+/* an easing as a function of progress, for script that must know where a move is at a given moment (disclosures) */
+function easeFn(s){let m=/cubic-bezier\(([^)]+)\)/.exec(s);if(m){const[a,b,c,d]=m[1].split(",").map(Number),bz=(t,p,q)=>3*p*t*(1-t)*(1-t)+3*q*t*t*(1-t)+t*t*t;
+  return u=>{let lo=0,hi=1;for(let i=0;i<24;i++){const t=(lo+hi)/2;if(bz(t,a,c)<u)lo=t;else hi=t}return bz((lo+hi)/2,b,d)}}
+ m=/linear\(([^)]+)\)/.exec(s);if(m){const p=m[1].split(",").map(parseFloat),n=p.length-1;return u=>{if(u<=0)return p[0];if(u>=1)return p[n];const x=u*n,i=Math.floor(x);return p[i]+(p[i+1]-p[i])*(x-i)}}
+ return u=>u}
+/* the moment (0–1) at which a monotonic ease reaches y */
+function easeInv(E,y){if(y<=0)return 0;if(y>=1)return 1;let lo=0,hi=1;for(let i=0;i<22;i++){const m=(lo+hi)/2;if(E(m)<y)lo=m;else hi=m}return(lo+hi)/2}
 /* ---------- more forms: ranked bars, stacked, donut, waterfall, ranges, timeline; each animates in its own liquid way ---------- */
 const ROW=(lb,v,u,c)=>`<b>${esc(lb)}</b><span>${c?`<i style="background:${c}"></i>`:""}<em class="num">${esc(fmtV(v,u))}</em></span>`;
 const FH=(no,title,unit,extra)=>`<div class="fig-h"><span class="no">Fig. ${no}</span><span class="tt">${esc(title)}</span>${unit?`<span class="capt">${esc(unit)}</span>`:""}<button class="tb" data-tv>Table</button><button class="tb" data-png aria-label="Save as PNG">PNG</button></div>${extra||""}<div class="ro">${RO0}</div>`;

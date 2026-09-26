@@ -141,7 +141,9 @@
 .cost .cl .tk{margin-left:auto}
 .cost .dp{display:flex;flex-wrap:wrap;gap:var(--sp-1)}
 /* the run card: stays in place, only ever adds */
-.run{display:flex;flex-direction:column;border:var(--rule-hair) solid var(--line-2);background:var(--sheet);padding:var(--sp-2) var(--sp-3) var(--sp-2);border-radius:var(--r-5);position:relative}
+.run{display:flex;flex-direction:column;border:var(--rule-hair) solid var(--line-2);background:var(--sheet);padding:var(--sp-2) var(--sp-3) var(--sp-2);border-radius:var(--r-5);position:relative;--fr-bg:var(--sheet);--fr-line:var(--line-2);--fr-r:var(--r-5)}
+/* once it has opened or closed, the card is drawn by its frame (base.css .dfr) so the frame can follow the edge */
+.run:has(>.dfr){border-color:transparent;background:transparent;isolation:isolate}
 .run .rv{position:absolute;right:36px;top:6px;display:flex;align-items:center;gap:var(--sp-1h);opacity:0;pointer-events:none;transform:translateY(-2px);transition:opacity var(--t-exit) var(--ease-soft-close),transform var(--t-move) var(--ease-soft-close)}
 .run.open .rv{opacity:1;pointer-events:auto;transform:none}
 .run.running .rv{right:84px}
