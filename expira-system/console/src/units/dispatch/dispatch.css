@@ -52,6 +52,9 @@
 .lvN{margin-left:auto}
 .dsec{margin-bottom:var(--sp-7)}
 .dx-mast{margin-bottom:var(--sp-2)}
+/* the empty Dispatch: one quiet page, the same type as a filed one */
+.dx-empty{padding-top:var(--sp-6);max-width:320px}
+.dx-empty p{color:var(--soft);margin:0 0 var(--sp-5)}
 .olog li{display:grid;grid-template-columns:40px 1fr;gap:var(--sp-2h);padding:var(--sp-1) 0;font-size:var(--fs-ui);line-height:1.55;color:var(--text);animation:evIn var(--t-enter) var(--ease-out) both}
 .olog .ts{font-size:var(--fs-micro);color:var(--mute);padding-top:var(--sp-half)}
 .olog em{font-family:var(--f-display);color:var(--gold-ink)}

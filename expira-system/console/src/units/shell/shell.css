@@ -1,5 +1,5 @@
-/* frame: the sidebar folds on a transform (setFold in shell.js); the main column takes its new width at once and glides */
-.side{width:256px;flex:none;background:var(--side);border-right:var(--rule-hair) solid var(--line-2);display:flex;flex-direction:column;padding:var(--sp-4) var(--sp-2h) var(--sp-3);transition:transform var(--t-move) var(--ease-inout)}
+/* frame: the sidebar folds by easing its margin on --t-move; the chat takes the width as it goes, in one continuous move (setFold) */
+.side{width:256px;flex:none;background:var(--side);border-right:var(--rule-hair) solid var(--line-2);display:flex;flex-direction:column;padding:var(--sp-4) var(--sp-2h) var(--sp-3);transition:margin var(--t-move) var(--ease-inout),transform var(--t-move) var(--ease-inout)}
 .app.folded .side{margin-left:-256px}
 .side{position:relative;z-index:var(--z-side)}
 @media (max-width:760px){
@@ -23,13 +23,10 @@
 .app.folded .side-t svg .chev{transform:translateX(-1px) rotate(180deg)}
 .app.folded .side-t:hover svg .chev{translate:1px 0}
 /* main */
-.main{flex:1;min-width:0;display:flex;flex-direction:column;position:relative}
-/* while a glide holds the column at its old width it can be wider than its new room for a moment. The scroller's clip box
-   widens by the same margin it gives back in padding, so the text box and the lines keep their width and nothing is cut at
-   the edge; it never scrolls sideways. The sidebar sits above, so a line that passes under it is covered, not drawn on top. */
-.app.gliding .scroll{overflow-x:hidden;margin-inline:-320px;padding-inline:calc(var(--sp-5) + 320px)}
+/* the chat makes room for a panel on the panel's own time and curve: the spring as it arrives, the soft close as it leaves */
+.main{flex:1;min-width:0;display:flex;flex-direction:column;position:relative;transition:margin-right var(--t-exit) var(--ease-soft-close)}
 @media (min-width:1100px){
-.app.dsp-open .main{margin-right:min(420px,100vw)}
+.app.dsp-open .main{margin-right:min(420px,100vw);transition:margin-right var(--t-move) var(--spring)}
 }
 .dsp-btn:hover{border-color:var(--line-3);color:var(--ink);transition-duration:var(--t-instant);transition-timing-function:var(--ease-out)}
 .app.busy .dsp-btn i{background:var(--gold);animation:breathe var(--t-loop) var(--ease-inout) infinite}

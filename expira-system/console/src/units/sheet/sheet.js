@@ -34,8 +34,7 @@ const INS=(()=>{const sh=$("#sheet"),B=$("#sheetB"),V=$("#insV"),P=$("#sheetP"),
  const wide=()=>innerWidth>=1100,isOpen=()=>sh.classList.contains("open");
  const mode=m=>{sh.dataset.mode=m;st.textContent=m==="pin"?"Pinned":m==="view"?"Preview":"";un.hidden=m!=="pin"};
  const land=el=>{if(!reduce)el.animate([{opacity:0,transform:"translateY(4px)"},{opacity:1,transform:"none"}],{duration:MO.enter,easing:MO.out})};
- /* the chat makes room for the rail in one glide (shell.js): it arrives on the rail's own spring and closes on the soft close */
- let live=false;const open=(o,keep)=>{const ch=o!==isOpen();glide(()=>{sh.classList.toggle("open",o);app.classList.toggle("ins-open",o)},live&&ch&&{duration:o?MO.move:MO.exit,easing:o?MO.spring:MO.soft});btn&&btn.setAttribute("aria-expanded",String(o));if(!keep&&wide())KV.put("rail",o)};
+ const open=(o,keep)=>{sh.classList.toggle("open",o);app.classList.toggle("ins-open",o);btn&&btn.setAttribute("aria-expanded",String(o));if(!keep&&wide())KV.put("rail",o)};
  const showPinned=()=>{V.hidden=true;B.hidden=false;P.hidden=false;mode("pin")};
  const api={isOpen,wide,pinned:()=>pin,open,
   /* a click: keep this in the rail */
@@ -47,7 +46,7 @@ const INS=(()=>{const sh=$("#sheet"),B=$("#sheetB"),V=$("#insV"),P=$("#sheetP"),
   unpin(){pin=false;clearTimeout(back);vk=pk=null;B.innerHTML="";V.innerHTML="";V._h="";sh._id=null;sh._stack=[];sheetPeek();V.hidden=true;B.hidden=false;mode("");document.querySelectorAll(".map .sel").forEach(x=>x.classList.remove("sel"))},
   viewing:()=>vk};
  mode("");
- const saved=KV.get("rail",null);if(wide()&&(saved==null||saved))open(true,true);live=true;
+ const saved=KV.get("rail",null);if(wide()&&(saved==null||saved))open(true,true);
  /* the rail steps aside for the Dispatch; asking for it brings it back */
  const toggle=()=>{if(app.classList.contains("dsp-open")){showDsp(false);open(true)}else open(!isOpen())};
  btn&&btn.addEventListener("click",toggle);

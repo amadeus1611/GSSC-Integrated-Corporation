@@ -10,9 +10,9 @@
    the chat and only a click opens it. It steps aside while the Dispatch is open and sits beside the map in full screen. */
 .sheet{position:fixed;top:0;right:0;bottom:0;z-index:var(--z-dispatch);width:var(--rail-w);display:flex;flex-direction:column;background:var(--sheet);border-left:var(--rule-hair) solid var(--line-2);opacity:0;visibility:hidden;pointer-events:none;transform:translateX(24px);transition:transform var(--t-exit) var(--ease-soft-close),opacity var(--t-exit) var(--ease-soft-close),visibility 0s linear var(--t-exit)}
 .sheet.open{opacity:1;visibility:visible;pointer-events:auto;transform:none;transition:transform var(--t-move) var(--spring),opacity var(--t-enter) var(--ease-out),visibility 0s}
-@media (min-width:1100px){.app.ins-open .main{margin-right:var(--rail-w)}.app.dsp-open.ins-open .main{margin-right:min(420px,100vw)}}
+@media (min-width:1100px){.app.ins-open .main{margin-right:var(--rail-w);transition:margin-right var(--t-move) var(--spring)}.app.dsp-open.ins-open .main{margin-right:min(420px,100vw)}}
 @media (max-width:1099px){.sheet{box-shadow:var(--e-side)}}
-/* docked on a wide window, the rail comes in from past the edge, so it never lies see-through over the column making room for it */
+/* docked on a wide window, the rail comes in from past the edge: its edge and the chat's edge travel together, on one curve */
 @media (min-width:1100px){.sheet:not(.open),.app.dsp-open~.sheet.open{transform:translateX(100%)}}
 .app.dsp-open~.sheet.open{opacity:0;visibility:hidden;pointer-events:none;transform:translateX(24px)}
 .mfs.open~.sheet.open{z-index:var(--z-map);top:20px;right:20px;bottom:20px;border:var(--rule-hair) solid var(--line-3);border-radius:var(--r-5);box-shadow:var(--e3)}

@@ -266,8 +266,8 @@ html.calm *,html.calm *::before,html.calm *::after{animation:none!important;tran
 @media (prefers-reduced-motion:reduce){
 .brand .mark polygon{transition:none}
 }
-/* frame: the sidebar folds on a transform (setFold in shell.js); the main column takes its new width at once and glides */
-.side{width:256px;flex:none;background:var(--side);border-right:var(--rule-hair) solid var(--line-2);display:flex;flex-direction:column;padding:var(--sp-4) var(--sp-2h) var(--sp-3);transition:transform var(--t-move) var(--ease-inout)}
+/* frame: the sidebar folds by easing its margin on --t-move; the chat takes the width as it goes, in one continuous move (setFold) */
+.side{width:256px;flex:none;background:var(--side);border-right:var(--rule-hair) solid var(--line-2);display:flex;flex-direction:column;padding:var(--sp-4) var(--sp-2h) var(--sp-3);transition:margin var(--t-move) var(--ease-inout),transform var(--t-move) var(--ease-inout)}
 .app.folded .side{margin-left:-256px}
 .side{position:relative;z-index:var(--z-side)}
 @media (max-width:760px){
@@ -291,13 +291,10 @@ html.calm *,html.calm *::before,html.calm *::after{animation:none!important;tran
 .app.folded .side-t svg .chev{transform:translateX(-1px) rotate(180deg)}
 .app.folded .side-t:hover svg .chev{translate:1px 0}
 /* main */
-.main{flex:1;min-width:0;display:flex;flex-direction:column;position:relative}
-/* while a glide holds the column at its old width it can be wider than its new room for a moment. The scroller's clip box
-   widens by the same margin it gives back in padding, so the text box and the lines keep their width and nothing is cut at
-   the edge; it never scrolls sideways. The sidebar sits above, so a line that passes under it is covered, not drawn on top. */
-.app.gliding .scroll{overflow-x:hidden;margin-inline:-320px;padding-inline:calc(var(--sp-5) + 320px)}
+/* the chat makes room for a panel on the panel's own time and curve: the spring as it arrives, the soft close as it leaves */
+.main{flex:1;min-width:0;display:flex;flex-direction:column;position:relative;transition:margin-right var(--t-exit) var(--ease-soft-close)}
 @media (min-width:1100px){
-.app.dsp-open .main{margin-right:min(420px,100vw)}
+.app.dsp-open .main{margin-right:min(420px,100vw);transition:margin-right var(--t-move) var(--spring)}
 }
 .dsp-btn:hover{border-color:var(--line-3);color:var(--ink);transition-duration:var(--t-instant);transition-timing-function:var(--ease-out)}
 .app.busy .dsp-btn i{background:var(--gold);animation:breathe var(--t-loop) var(--ease-inout) infinite}
@@ -890,6 +887,9 @@ html.calm *,html.calm *::before,html.calm *::after{animation:none!important;tran
 .lvN{margin-left:auto}
 .dsec{margin-bottom:var(--sp-7)}
 .dx-mast{margin-bottom:var(--sp-2)}
+/* the empty Dispatch: one quiet page, the same type as a filed one */
+.dx-empty{padding-top:var(--sp-6);max-width:320px}
+.dx-empty p{color:var(--soft);margin:0 0 var(--sp-5)}
 .olog li{display:grid;grid-template-columns:40px 1fr;gap:var(--sp-2h);padding:var(--sp-1) 0;font-size:var(--fs-ui);line-height:1.55;color:var(--text);animation:evIn var(--t-enter) var(--ease-out) both}
 .olog .ts{font-size:var(--fs-micro);color:var(--mute);padding-top:var(--sp-half)}
 .olog em{font-family:var(--f-display);color:var(--gold-ink)}
@@ -1156,9 +1156,9 @@ html.calm *,html.calm *::before,html.calm *::after{animation:none!important;tran
    the chat and only a click opens it. It steps aside while the Dispatch is open and sits beside the map in full screen. */
 .sheet{position:fixed;top:0;right:0;bottom:0;z-index:var(--z-dispatch);width:var(--rail-w);display:flex;flex-direction:column;background:var(--sheet);border-left:var(--rule-hair) solid var(--line-2);opacity:0;visibility:hidden;pointer-events:none;transform:translateX(24px);transition:transform var(--t-exit) var(--ease-soft-close),opacity var(--t-exit) var(--ease-soft-close),visibility 0s linear var(--t-exit)}
 .sheet.open{opacity:1;visibility:visible;pointer-events:auto;transform:none;transition:transform var(--t-move) var(--spring),opacity var(--t-enter) var(--ease-out),visibility 0s}
-@media (min-width:1100px){.app.ins-open .main{margin-right:var(--rail-w)}.app.dsp-open.ins-open .main{margin-right:min(420px,100vw)}}
+@media (min-width:1100px){.app.ins-open .main{margin-right:var(--rail-w);transition:margin-right var(--t-move) var(--spring)}.app.dsp-open.ins-open .main{margin-right:min(420px,100vw)}}
 @media (max-width:1099px){.sheet{box-shadow:var(--e-side)}}
-/* docked on a wide window, the rail comes in from past the edge, so it never lies see-through over the column making room for it */
+/* docked on a wide window, the rail comes in from past the edge: its edge and the chat's edge travel together, on one curve */
 @media (min-width:1100px){.sheet:not(.open),.app.dsp-open~.sheet.open{transform:translateX(100%)}}
 .app.dsp-open~.sheet.open{opacity:0;visibility:hidden;pointer-events:none;transform:translateX(24px)}
 .mfs.open~.sheet.open{z-index:var(--z-map);top:20px;right:20px;bottom:20px;border:var(--rule-hair) solid var(--line-3);border-radius:var(--r-5);box-shadow:var(--e3)}
@@ -2126,33 +2126,19 @@ const hm=document.querySelector("#stage .mark");if(!reduce){$("#hero").addEventL
 
 /* chrome */
 const sc=$("#scroll");
-/* v43 glide: a move that changes the main column's width (the sidebar fold, the Details rail, the Dispatch) snaps the layout
-   once and plays back on transforms. While it moves, the centred column always has the narrower of its two widths: a column
-   that narrows re-wraps at once, as the panel starts to arrive, and one that widens keeps its width and re-wraps once as it
-   lands. So no line reflows mid-move and the column never passes under a panel. A glide that starts mid-glide measures where
-   things are drawn now, so a reversal carries on from there. */
-let glA=[];
-function glide(mutate,o){const cols=[$("#thread"),$("#dock"),$("#hero")].filter(e=>e&&e.offsetWidth),r0=cols.map(e=>e.getBoundingClientRect());
- glA.forEach(a=>a.cancel());glA=[];cols.forEach(e=>{e.style.width=e.style.maxWidth=""});mutate();
- if(reduce||!o)return;const hold=[$("#thread"),$("#dock")],r1=cols.map(e=>e.getBoundingClientRect());app.classList.add("gliding");
- cols.forEach((e,i)=>{if(hold.includes(e)&&r0[i].width<r1[i].width-.5){e.style.width=r0[i].width+"px";e.style.maxWidth="none"}});
- cols.forEach((e,i)=>{const dx=(r0[i].left+r0[i].width/2)-(r1[i].left+r1[i].width/2);
-  if(Math.abs(dx)>.5)glA.push(e.animate([{transform:`translateX(${dx}px)`},{transform:"none"}],o))});
- const mine=glA,done=()=>{if(mine!==glA||glA.some(a=>a.playState==="running"))return;cols.forEach(e=>{e.style.width=e.style.maxWidth=""});app.classList.remove("gliding")};
- glA.length?glA.forEach(a=>a.finished.then(done,()=>{})):done()}
 /* the sidebar button travels: it lives in the sidebar header while the sidebar is open and in the main header while it is
-   folded. FLIP: measure it, move it, then play it back from where it was, on the same curve and time as the sidebar.
-   The sidebar itself slides on a transform; the layout under it changes once (glide above). */
+   folded. v43: every layout move of the chat (this fold, the Details rail, the Dispatch) is one continuous move. The sidebar's
+   margin and the chat's margin run on the same time and curve as the panel that causes them, so the chat, its column and the
+   composer travel with the panel from where they are, frame by frame, and never jump or snap. The button and the title FLIP
+   from where they were against where the layout starts, on that same curve, so their path is one smooth line. */
 function setFold(on,travel=true){const b=$("#fold"),to=on?$("#main .top"):$("#side .brand");if(app.classList.contains("folded")===on&&b.parentElement===to)return;
- const side=$("#side"),desk=innerWidth>760,f=b.getBoundingClientRect(),hd=[$("#crumb"),$("#ttl")],hf=hd.map(e=>e.getBoundingClientRect().left),sx=side.getBoundingClientRect().left;
- const o={duration:MO.move,easing:MO.inout},move=travel&&!reduce;[b,side,...hd].forEach(e=>e.getAnimations().forEach(a=>{if(!(a instanceof CSSTransition))a.cancel()}));
- glide(()=>{on?to.prepend(b):to.append(b);
-  getComputedStyle(b.querySelector(".chev")).transform;/* moving a node drops its transitions: settle its style first, so the icon morph runs */
-  app.classList.toggle("folded",on)},move&&desk&&o);
+ const f=b.getBoundingClientRect(),hd=[$("#crumb"),$("#ttl")],hf=hd.map(e=>e.getBoundingClientRect().left);[b,...hd].forEach(e=>e.getAnimations().forEach(a=>{if(!(a instanceof CSSTransition))a.cancel()}));
+ on?to.prepend(b):to.append(b);
+ getComputedStyle(b.querySelector(".chev")).transform;/* moving a node drops its transitions: settle its style first, so the icon morph runs */
+ app.classList.toggle("folded",on);
  const l=on?"Open sidebar":"Close sidebar";b.setAttribute("aria-expanded",String(!on));b.setAttribute("aria-label",l);b.dataset.tip=l;
- if(!move)return;const t=b.getBoundingClientRect(),dx=f.left-t.left,dy=f.top-t.top;
- if(dx||dy)b.animate([{transform:`translate(${dx}px,${dy}px)`},{transform:"none"}],o);
- if(desk){const d=sx-side.getBoundingClientRect().left;if(d)side.animate([{transform:`translateX(${d}px)`},{transform:"none"}],o)}
+ if(!travel||reduce)return;const t=b.getBoundingClientRect(),dx=f.left-t.left,dy=f.top-t.top;
+ const o={duration:MO.move,easing:MO.inout};if(dx||dy)b.animate([{transform:`translate(${dx}px,${dy}px)`},{transform:"none"}],o);
  /* the title makes room for the button, or takes its place, on the same move */
  hd.forEach((e,i)=>{const d=hf[i]-e.getBoundingClientRect().left;if(d&&e.offsetWidth)e.animate([{transform:`translateX(${d}px)`},{transform:"none"}],o)})}
 $("#fold").onclick=()=>setFold(!app.classList.contains("folded"));if(innerWidth<760)setFold(true,false);
@@ -2353,10 +2339,13 @@ addEventListener("keydown",e=>{const k=e.key.toLowerCase();if(k==="escape"&&INS.
  else if(k==="/"&&document.activeElement===document.body){e.preventDefault();setFold(false);$("#side").classList.add("searching");$("#find").focus()}});
 
 /* ---------- The Dispatch: it fills in as the work unfolds ---------- */
-const dsp=$("#dsp");/* fill, when given, builds the panel inside the glide, after the layout is measured, so opening costs one layout, not two */
-const showDsp=(o,fill)=>{const ch=!!o!==dsp.classList.contains("open");glide(()=>{fill&&fill();dsp.classList.toggle("open",o);app.classList.toggle("dsp-open",o)},ch&&{duration:o?MO.move:MO.exit,easing:o?MO.spring:MO.soft});$("#dspBtn")?.setAttribute("aria-expanded",String(!!o));if(o&&ch)setTimeout(()=>FM.forEach(m=>m.go()),reduce?30:MO.move)/* the maps wake once the panel has landed, so their first frames never share the slide */};
+const dsp=$("#dsp");/* fill, when given, builds the panel before it opens */
+const showDsp=(o,fill)=>{const ch=!!o!==dsp.classList.contains("open");fill&&fill();dsp.classList.toggle("open",o);app.classList.toggle("dsp-open",o);$("#dspBtn")?.setAttribute("aria-expanded",String(!!o));if(o&&ch)setTimeout(()=>FM.forEach(m=>m.go()),reduce?30:MO.move)/* the maps wake once the panel has landed, so their first frames never share the slide */};
 $("#dspClose").onclick=()=>showDsp(false);$("#runPill").onclick=()=>showDsp(true);$("#dspBtn").onclick=()=>dsp.classList.contains("open")?showDsp(false):openLatest();$("#dspNav").onclick=()=>openLatest();
-function openLatest(){if(busy){showDsp(true);return}const c=cur||chats[0];if(!c)return;const k=c.turns.map(t=>t.role).lastIndexOf("assistant");if(k<0){toast("No dispatch yet. Brief EXPIRA first.");return}if(c!==cur)open(c);showDsp(true,()=>recordedDispatch(c.turns[k].work||{ms:0,steps:[],feed:[],firewall:"off"},c,c.turns[k-1]?.ts||c.turns[k].ts))}
+/* with nothing filed yet the Dispatch still opens, and says what will appear here and how to get it */
+function emptyDispatch(){$("#dspNo").textContent="";$("#dspB").innerHTML=`<div class="dx-empty"><div class="kicker bi"><span class="cap">Nothing filed yet</span></div><h2 class="bi" style="animation-delay:.04s">The Dispatch is written as EXPIRA works.</h2><p class="bi" style="animation-delay:.08s">Send a brief and this page fills with the run: the plan, each desk's notes, the Arbiter's verdicts, the sources and the map.</p><button class="btn2 bi" type="button" data-dx-go style="animation-delay:.12s">Write a brief</button></div>`}
+$("#dspB").addEventListener("click",e=>{if(e.target.closest("[data-dx-go]")){showDsp(false);promptEl.focus()}});
+function openLatest(){if(busy){showDsp(true);return}const c=cur||chats.find(x=>!x.example),k=c?c.turns.map(t=>t.role).lastIndexOf("assistant"):-1;if(k<0){showDsp(true,emptyDispatch);return}if(c!==cur)open(c);showDsp(true,()=>recordedDispatch(c.turns[k].work||{ms:0,steps:[],feed:[],firewall:"off"},c,c.turns[k-1]?.ts||c.turns[k].ts))}
 function standfirst(w){const s=w.steps||[];if(!s.length)return "EXPIRA answered directly; no desk was needed for this brief.";
  const by={};s.forEach(x=>{const t=TIERS[x.tier].w;(by[t]=by[t]||{})[x.role]=(by[t][x.role]||0)+1});
  const list=o=>{const u=Object.entries(o).map(([r,n])=>(n>1?words(n).toLowerCase()+" ":"")+ROLE[r].toLowerCase());return u.length<2?u[0]:u.slice(0,-1).join(", ")+" and "+u[u.length-1]};
@@ -2986,8 +2975,7 @@ const INS=(()=>{const sh=$("#sheet"),B=$("#sheetB"),V=$("#insV"),P=$("#sheetP"),
  const wide=()=>innerWidth>=1100,isOpen=()=>sh.classList.contains("open");
  const mode=m=>{sh.dataset.mode=m;st.textContent=m==="pin"?"Pinned":m==="view"?"Preview":"";un.hidden=m!=="pin"};
  const land=el=>{if(!reduce)el.animate([{opacity:0,transform:"translateY(4px)"},{opacity:1,transform:"none"}],{duration:MO.enter,easing:MO.out})};
- /* the chat makes room for the rail in one glide (shell.js): it arrives on the rail's own spring and closes on the soft close */
- let live=false;const open=(o,keep)=>{const ch=o!==isOpen();glide(()=>{sh.classList.toggle("open",o);app.classList.toggle("ins-open",o)},live&&ch&&{duration:o?MO.move:MO.exit,easing:o?MO.spring:MO.soft});btn&&btn.setAttribute("aria-expanded",String(o));if(!keep&&wide())KV.put("rail",o)};
+ const open=(o,keep)=>{sh.classList.toggle("open",o);app.classList.toggle("ins-open",o);btn&&btn.setAttribute("aria-expanded",String(o));if(!keep&&wide())KV.put("rail",o)};
  const showPinned=()=>{V.hidden=true;B.hidden=false;P.hidden=false;mode("pin")};
  const api={isOpen,wide,pinned:()=>pin,open,
   /* a click: keep this in the rail */
@@ -2999,7 +2987,7 @@ const INS=(()=>{const sh=$("#sheet"),B=$("#sheetB"),V=$("#insV"),P=$("#sheetP"),
   unpin(){pin=false;clearTimeout(back);vk=pk=null;B.innerHTML="";V.innerHTML="";V._h="";sh._id=null;sh._stack=[];sheetPeek();V.hidden=true;B.hidden=false;mode("");document.querySelectorAll(".map .sel").forEach(x=>x.classList.remove("sel"))},
   viewing:()=>vk};
  mode("");
- const saved=KV.get("rail",null);if(wide()&&(saved==null||saved))open(true,true);live=true;
+ const saved=KV.get("rail",null);if(wide()&&(saved==null||saved))open(true,true);
  /* the rail steps aside for the Dispatch; asking for it brings it back */
  const toggle=()=>{if(app.classList.contains("dsp-open")){showDsp(false);open(true)}else open(!isOpen())};
  btn&&btn.addEventListener("click",toggle);
