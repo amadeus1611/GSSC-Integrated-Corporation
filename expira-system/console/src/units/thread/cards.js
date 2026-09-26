@@ -19,7 +19,7 @@ function railHTML(w,live,o={}){let keys,st={};
 const PHB={plan:"Deliberation",desks:"Desks",review:"Verification",answer:"Answer",audit:"Audit",doc:"Document",exhibits:"Exhibits",firewall:"Firewall"};
 const plainT=h=>{const d=document.createElement("div");d.innerHTML=h;return d.textContent};
 function evKind(t){t=String(t||"");return /Firewall/.test(t)?"k-fw mo":/^Ledger|claims? grounded/.test(t)?"k-led mo":/^Built|Document held|kernel builder|Planned a document/.test(t)?"k-doc mo":/^Audit|^Revised/.test(t)?"k-au":/filed .*notes/.test(t)?"k-desk mo":/searched|read |checked the web|Web research/.test(t)?"k-web":/[Dd]esk|Staffed/.test(t)?"k-desk":/^Delivered|^Stopped|^Interrupted/.test(t)?"k-end":""}
-const stLi=f=>`<li class="se ${evKind(f[2]||f[1])}"><span class="sx">${f[2]||f[1]}</span><span class="x num">${mmss(f[0])}</span></li>`;
+const stLi=f=>{const k=evKind(f[2]||f[1]);return`<li class="se ${k}">${/\bmo\b/.test(k)?`<i class="sw" aria-hidden="true"></i>`:""}<span class="sx">${f[2]||f[1]}</span><span class="x num">${mmss(f[0])}</span></li>`};
 const sbLi=k=>`<li class="sb"><span>${PHB[k]}</span></li>`;
 const foldLi=n=>`<li class="fold"><button type="button" class="fbtn"><i></i><span>${n} earlier step${n>1?"s":""}</span></button></li>`;
 function streamHTML(w){const F=(w.feed||[]).filter(f=>f[2]||f[1]),ph=w.ph||{};const br=Object.keys(PHB).filter(k=>ph[k]&&!ph[k].skip&&ph[k].s!=null).map(k=>[k==="plan"?-1:ph[k].s,k]).sort((a,b)=>a[0]-b[0]);const it=[];let j=0;

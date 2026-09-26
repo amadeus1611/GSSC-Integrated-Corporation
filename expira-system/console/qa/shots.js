@@ -66,6 +66,15 @@ const UNITS = {
     ['live-done', async p => { await p.waitForFunction(() => !document.querySelector('.app').classList.contains('busy'), null, { timeout: 150000 }); await wait(p, 2500); console.log('settled', await p.evaluate(() => { const m = window.__RX().main; return `fpc ${m.fpc} cols ${m.cols} live ${m.live} say "${document.querySelector('#specS').textContent}"` })) }],
     ['live-hover', async p => { const b = await (await p.$('#spec')).boundingBox(); await p.mouse.move(b.x + b.width * .6, b.y + 70); await wait(p, 400) }],
   ],
+  thread: [
+    ['thinking', async p => { await H.brief(p, H.BRIEF, { noWait: true }); await wait(p, 1600) }],
+    ['desks', async p => { await wait(p, 2600) }],
+    ['writing', async p => { await p.waitForFunction(() => document.querySelector('.ans.live, .caret'), null, { timeout: 60000 }).catch(() => {}); await wait(p, 500) }],
+    ['filed', async p => { await p.waitForFunction(() => !document.querySelector('.app').classList.contains('busy'), null, { timeout: 150000 }); await wait(p, 1500) }],
+    ['example', async p => { await H.example(p); await wait(p, 900) }],
+    ['claim', async p => { const c = await p.$('.cite'); if (c) { await c.scrollIntoViewIfNeeded(); await c.click(); await wait(p, 700) } else console.log('no cite') }],
+    ['select', async p => { await p.keyboard.press('Escape'); await wait(p, 400); const ok = await p.evaluate(() => { const el = document.querySelector('.ans p'); if (!el) return false; el.scrollIntoView({ block: 'center' }); const r = document.createRange(); r.selectNodeContents(el); const s = getSelection(); s.removeAllRanges(); s.addRange(r); document.dispatchEvent(new Event('selectionchange')); el.dispatchEvent(new MouseEvent('mouseup', { bubbles: true })); return true }); await wait(p, 700); if (!ok) console.log('no paragraph') }],
+  ],
   composer: [
     ['idle', async p => { await click(p, '#newChat'); await p.mouse.move(900, 800); await wait(p, 600) }],
     ['focus', async p => { await p.focus('#prompt'); await wait(p, 500) }],

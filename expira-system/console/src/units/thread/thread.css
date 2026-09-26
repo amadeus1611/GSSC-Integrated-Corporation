@@ -71,7 +71,7 @@
 .cite{font:500 var(--fs-micro)/0 var(--f-body);color:var(--gold);cursor:pointer;padding:1px var(--sp-half);margin-left:1px;border-radius:var(--r-1);vertical-align:super;transition:background var(--t-enter) var(--ease-soft-close),color var(--t-enter) var(--ease-soft-close)}
 .cite:hover,.cite:focus-visible{background:var(--gold-wash);color:var(--ink);outline:none}
 .ledw:empty{display:none}
-.ledw{margin-top:var(--sp-3);padding-top:var(--sp-2h);border-top:var(--rule-hair) solid var(--line);animation:blurIn var(--t-enter) var(--ease-out) both}
+.ledw{margin-top:var(--sp-3);padding-top:var(--sp-2h);border-top:var(--rule-hair) solid var(--line);animation:rise var(--t-enter) var(--ease-out) both}
 .led .lh{display:flex;align-items:center;gap:var(--sp-2h);margin-bottom:var(--sp-1h);flex-wrap:wrap}
 .led .gm{flex:1;display:flex;gap:var(--sp-half);height:4px;min-width:60px;max-width:180px}
 .led .gm i{border-radius:var(--r-1);min-width:0}
@@ -103,10 +103,10 @@
 .fu span{flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .fu svg{width:11px;height:11px;flex:none;color:var(--mute);transition:transform var(--t-move) var(--ease-soft-close),color var(--t-exit)}
 .fu:hover svg{transform:translate(1px,-1px);color:var(--ink)}
-.bot.bi .docc{animation:docIn var(--t-enter) var(--ease-out) both;transform-origin:0 0}
-@keyframes docIn{0%{opacity:0;transform:translateY(-8px) scale(.4,.6);border-radius:18px}50%{opacity:1;transform:scale(1.01,.98);border-radius:9px}100%{transform:none}}
-.caret{display:inline-block;background:var(--gold);width:5px;height:5px;border-radius:var(--r-round);margin-left:var(--sp-1);vertical-align:.12em;animation:caretJ var(--t-beat) var(--ease-out) infinite}
-@keyframes caretJ{0%,100%{transform:scale(1)}30%{transform:scale(1.35,.7)}55%{transform:scale(.85,1.15)}}
+/* a built document arrives from the top left on the spring: no overshoot, no radius change */
+.bot.bi .docc{animation:docIn var(--t-move) var(--spring) both;transform-origin:0 0}
+@keyframes docIn{from{opacity:0;transform:translateY(-6px) scale(.94)}to{opacity:1;transform:none}}
+.caret{display:inline-block;background:var(--gold);width:5px;height:5px;border-radius:var(--r-round);margin-left:var(--sp-1);vertical-align:.12em;animation:breathe var(--t-beat) var(--ease-inout) infinite}
 .fu{display:inline-flex;align-items:center;gap:var(--sp-2h);width:min(100%,480px);height:30px;padding:0 var(--sp-2h);border:var(--rule-hair) solid var(--line-2);border-radius:var(--r-2);background:transparent;cursor:pointer;text-align:left;font-size:var(--fs-ui);color:var(--text);transition:border-color var(--t-exit),background var(--t-exit);animation:fuIn2 var(--t-move) var(--spring) calc(var(--i)*var(--stagger) * 1.75 + var(--stagger) * 2) both}
 @keyframes fuIn2{from{opacity:0;transform:translateY(-4px) scale(.7,.9);transform-origin:0 0}to{opacity:1;transform:none}}
 .thread{margin:0 auto;padding:var(--sp-4h) 0 var(--sp-9);display:flex;flex-direction:column;max-width:min(1120px,calc(100% - 56px));gap:var(--sp-6)}

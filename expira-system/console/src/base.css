@@ -8,8 +8,10 @@ button,input,textarea{font:inherit;color:inherit}
 .capt{font-size:var(--fs-micro);font-weight:400;letter-spacing:var(--tracked-tight);text-transform:uppercase;color:var(--mute)}
 .serif{font-family:var(--f-display);font-weight:400}
 /* the shared entrance: fade with a soft blur, soft close */
-@keyframes blurIn{from{opacity:.001;filter:blur(5px);transform:translateY(6px)}to{opacity:1;filter:none;transform:none}}
-.bi{animation:blurIn var(--t-enter) var(--ease-out) both}
+/* blurIn is for small surfaces only (Gate A); large blocks and streamed words rise without a filter */
+@keyframes blurIn{from{opacity:.001;filter:blur(var(--blur-enter));transform:translateY(6px)}to{opacity:1;filter:none;transform:none}}
+@keyframes rise{from{opacity:.001;transform:translateY(6px)}to{opacity:1;transform:none}}
+.bi{animation:rise var(--t-enter) var(--ease-out) both}
 .grain{position:relative;isolation:isolate}
 .grain::after{content:"";position:absolute;inset:0;pointer-events:none;background-image:var(--grain);background-size:150px;mix-blend-mode:soft-light;opacity:.6;-webkit-mask:var(--gmask) center/contain no-repeat;mask:var(--gmask) center/contain no-repeat}
 .app{display:flex;height:100%}
@@ -21,7 +23,7 @@ html.calm *,html.calm *::before,html.calm *::after{animation:none!important;tran
 .ib{width:30px;height:30px;display:grid;place-items:center;border:0;background:transparent;border-radius:var(--r-3);cursor:pointer;color:var(--soft);transition:background var(--t-exit) var(--ease-soft-close),color var(--t-exit) var(--ease-soft-close);padding:0}
 /* ink, steer, costs, beads, the liquid field */
 .w{animation:inkw var(--t-enter) var(--ease-out) both}
-@keyframes inkw{from{opacity:0;filter:blur(3px);transform:translateY(1.5px)}60%{opacity:.85;filter:blur(.4px)}to{opacity:1;filter:none;transform:none}}
+@keyframes inkw{from{opacity:0;transform:translateY(1.5px)}to{opacity:1;transform:none}}
 ::view-transition-old(root),::view-transition-new(root){animation-duration:var(--t-move);animation-timing-function:var(--ease-inout)}
 @property --fs{syntax:"<length>";inherits:false;initial-value:0px}
 @property --fe{syntax:"<length>";inherits:false;initial-value:0px}

@@ -2,7 +2,7 @@
 const hostOf=u=>{try{return new URL(u).hostname.replace(/^www\./,"")}catch(e){return ""}};
 const FM=new Set();window.__FM=FM;
 /* a map only works while someone can see it: on screen, tab visible, and its panel open */
-const seen=m=>m.vis&&!document.hidden&&!m.host.closest(".dsp:not(.open),.stg:not(.open),.mfs:not(.open),.run .mapw");
+const seen=m=>m.vis&&!document.hidden&&!m.host.closest(".dsp:not(.open),.stg:not(.open),.mfs:not(.open)");
 const SITES=9;
 function hostsOf(P){const hs=[];(P||[]).forEach(p=>{const h=hostOf(p.url);if(!h)return;let o=hs.find(x=>x.h===h);if(!o)hs.push(o={h,n:0,t:0});o.n++;o.t+=tok(p.ex)});return hs}
 /* what a node is, in one line, for the map's readout */

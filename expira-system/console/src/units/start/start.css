@@ -6,7 +6,7 @@
 .greet em{font-style:italic;color:var(--gold);background:linear-gradient(100deg,var(--gold) 0 40%,var(--gold-hi) 50%,var(--gold) 60% 100%);background-size:300% 100%;background-position:100% 0;-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;animation:none}
 @keyframes settle{from{opacity:0;filter:blur(6px);transform:translateY(6px)}to{opacity:1;filter:none;transform:none}}
 .greet{font:400 clamp(var(--fs-h2),2.8vw,var(--fs-h1))/1.25 var(--f-display);color:var(--ink);margin:0 0 var(--sp-8);text-align:center;text-wrap:balance;margin-bottom:var(--sp-2h)}
-.ready{display:flex;align-items:center;gap:var(--sp-2);margin:0 0 var(--sp-7);animation:blurIn var(--t-enter) var(--ease-out) calc(var(--stagger) * 22) both}
+.ready{display:flex;align-items:center;gap:var(--sp-2);margin:0 0 var(--sp-7);animation:rise var(--t-enter) var(--ease-out) calc(var(--stagger) * 22) both}
 .ready i{width:5px;height:5px;border-radius:var(--r-round);background:var(--ok);animation:breathe var(--t-loop) var(--ease-inout) infinite}
 .colon{animation:none}
 .contents{width:100%;max-width:720px;margin-top:var(--sp-8)}

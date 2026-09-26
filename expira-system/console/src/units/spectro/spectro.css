@@ -13,7 +13,7 @@
 .plate figcaption{display:flex;gap:var(--sp-2);margin-top:var(--sp-1h);font:italic 400 var(--fs-chrome-2)/1.5 var(--f-display);color:var(--soft)}
 .plate figcaption b{font-style:normal;font-weight:400;color:var(--gold);white-space:nowrap}
 .plate canvas{display:block;width:100%;height:132px;contain:layout paint}
-.sp{animation:blurIn var(--t-enter) var(--ease-out) both}
+.sp{animation:rise var(--t-enter) var(--ease-out) both}
 .sp .lede{font:italic 400 var(--fs-ui)/1.55 var(--f-display);color:var(--soft);margin:0 0 var(--sp-4h);max-width:52ch}
 .sp .grp{padding:var(--sp-4h) 0;border-top:var(--rule-hair) solid var(--line-2)}
 .sp .gh{display:flex;align-items:baseline;justify-content:space-between;gap:var(--sp-4);margin-bottom:var(--sp-3)}

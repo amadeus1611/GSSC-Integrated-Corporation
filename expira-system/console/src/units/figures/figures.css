@@ -26,7 +26,7 @@
 @keyframes blink{50%{opacity:0}}
 .fig-h .tt{font:400 var(--fs-body) var(--f-display);color:var(--ink);font-size:var(--fs-body)}
 .fig-h .no{font:italic 400 var(--fs-ui) var(--f-display);color:var(--gold);font-size:var(--fs-chrome-2)}
-@keyframes ink{from{opacity:0;filter:blur(3px);transform:translateY(-2px)}to{opacity:1;filter:none;transform:none}}
+@keyframes ink{from{opacity:0;transform:translateY(-2px)}to{opacity:1;transform:none}}
 /* dots on the stem, one-step theme change, charts that pour in */
 .fig-h .tb+.tb{margin-left:var(--sp-3h)}
 .ch text.lbl{fill:var(--text);font-size:var(--fs-chrome)}

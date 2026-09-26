@@ -147,8 +147,10 @@ button,input,textarea{font:inherit;color:inherit}
 .capt{font-size:var(--fs-micro);font-weight:400;letter-spacing:var(--tracked-tight);text-transform:uppercase;color:var(--mute)}
 .serif{font-family:var(--f-display);font-weight:400}
 /* the shared entrance: fade with a soft blur, soft close */
-@keyframes blurIn{from{opacity:.001;filter:blur(5px);transform:translateY(6px)}to{opacity:1;filter:none;transform:none}}
-.bi{animation:blurIn var(--t-enter) var(--ease-out) both}
+/* blurIn is for small surfaces only (Gate A); large blocks and streamed words rise without a filter */
+@keyframes blurIn{from{opacity:.001;filter:blur(var(--blur-enter));transform:translateY(6px)}to{opacity:1;filter:none;transform:none}}
+@keyframes rise{from{opacity:.001;transform:translateY(6px)}to{opacity:1;transform:none}}
+.bi{animation:rise var(--t-enter) var(--ease-out) both}
 .grain{position:relative;isolation:isolate}
 .grain::after{content:"";position:absolute;inset:0;pointer-events:none;background-image:var(--grain);background-size:150px;mix-blend-mode:soft-light;opacity:.6;-webkit-mask:var(--gmask) center/contain no-repeat;mask:var(--gmask) center/contain no-repeat}
 .app{display:flex;height:100%}
@@ -160,7 +162,7 @@ html.calm *,html.calm *::before,html.calm *::after{animation:none!important;tran
 .ib{width:30px;height:30px;display:grid;place-items:center;border:0;background:transparent;border-radius:var(--r-3);cursor:pointer;color:var(--soft);transition:background var(--t-exit) var(--ease-soft-close),color var(--t-exit) var(--ease-soft-close);padding:0}
 /* ink, steer, costs, beads, the liquid field */
 .w{animation:inkw var(--t-enter) var(--ease-out) both}
-@keyframes inkw{from{opacity:0;filter:blur(3px);transform:translateY(1.5px)}60%{opacity:.85;filter:blur(.4px)}to{opacity:1;filter:none;transform:none}}
+@keyframes inkw{from{opacity:0;transform:translateY(1.5px)}to{opacity:1;transform:none}}
 ::view-transition-old(root),::view-transition-new(root){animation-duration:var(--t-move);animation-timing-function:var(--ease-inout)}
 @property --fs{syntax:"<length>";inherits:false;initial-value:0px}
 @property --fe{syntax:"<length>";inherits:false;initial-value:0px}
@@ -317,7 +319,7 @@ html.calm *,html.calm *::before,html.calm *::after{animation:none!important;tran
 .greet em{font-style:italic;color:var(--gold);background:linear-gradient(100deg,var(--gold) 0 40%,var(--gold-hi) 50%,var(--gold) 60% 100%);background-size:300% 100%;background-position:100% 0;-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;animation:none}
 @keyframes settle{from{opacity:0;filter:blur(6px);transform:translateY(6px)}to{opacity:1;filter:none;transform:none}}
 .greet{font:400 clamp(var(--fs-h2),2.8vw,var(--fs-h1))/1.25 var(--f-display);color:var(--ink);margin:0 0 var(--sp-8);text-align:center;text-wrap:balance;margin-bottom:var(--sp-2h)}
-.ready{display:flex;align-items:center;gap:var(--sp-2);margin:0 0 var(--sp-7);animation:blurIn var(--t-enter) var(--ease-out) calc(var(--stagger) * 22) both}
+.ready{display:flex;align-items:center;gap:var(--sp-2);margin:0 0 var(--sp-7);animation:rise var(--t-enter) var(--ease-out) calc(var(--stagger) * 22) both}
 .ready i{width:5px;height:5px;border-radius:var(--r-round);background:var(--ok);animation:breathe var(--t-loop) var(--ease-inout) infinite}
 .colon{animation:none}
 .contents{width:100%;max-width:720px;margin-top:var(--sp-8)}
@@ -481,7 +483,7 @@ html.calm *,html.calm *::before,html.calm *::after{animation:none!important;tran
 .pw:not(:focus-within) #prompt::placeholder{color:transparent}
 .pw #prompt{width:100%}
 /* working block: Claude's thinking row, set in EXPIRA type */
-@keyframes shim{from{background-position:120% 0}to{background-position:-120% 0}}
+@keyframes shim{to{transform:translateX(100%)}}
 .chev{width:12px;height:12px;color:var(--mute);transition:transform var(--t-move) var(--ease-soft-close)}
 /* the sheen: one hairline, one continuous glide, then it settles */
 .sheen{height:var(--rule-hair);background:var(--line-2);position:relative;overflow:hidden;margin-bottom:var(--sp-half)}
@@ -495,7 +497,9 @@ html.calm *,html.calm *::before,html.calm *::after{animation:none!important;tran
 @media (prefers-reduced-motion:reduce){
 .sheen::before{display:none}
 }
-.run.running .run-h .lbl{background:linear-gradient(90deg,var(--soft) 0 35%,var(--ink) 50%,var(--soft) 65% 100%);background-size:250% 100%;-webkit-background-clip:text;background-clip:text;color:transparent;animation:shim var(--t-loop) linear infinite}
+/* the live label: a soft sheen passes over the words, moved by transform (the words themselves never repaint) */
+.run.running .run-h .lbl{position:relative;color:var(--ink)}
+.run.running .run-h .lbl::after{content:"";position:absolute;inset:0;background:linear-gradient(90deg,transparent 30%,color-mix(in srgb,var(--panel) 62%,transparent) 50%,transparent 70%);transform:translateX(-100%);animation:shim var(--t-loop) linear infinite;pointer-events:none}
 .run-h .t,.run-h .rk{font-size:var(--fs-chrome);color:var(--mute)}
 .run.open>.run-h .chev{transform:rotate(90deg)}
 .run:not(.running) .sheen::before{opacity:0;animation-play-state:paused}
@@ -576,7 +580,7 @@ html.calm *,html.calm *::before,html.calm *::after{animation:none!important;tran
 .run .rail,.run .staff,.run .logw{display:none}
 .run-h{display:flex;align-items:center;gap:var(--sp-2h);border:0;background:none;cursor:pointer;text-align:left;color:var(--soft);width:100%;padding:1px 0 var(--sp-1);font-size:var(--fs-ui)}
 .run-h .lbl{flex:1;min-width:0;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;letter-spacing:.005em;transition:opacity var(--t-exit) var(--ease-soft-close),filter var(--t-exit) var(--ease-soft-close)}
-.run-h .lbl.swap{opacity:0;filter:blur(3px)}
+.run-h .lbl.swap{opacity:0;filter:blur(var(--blur-exit))}
 .run.settled .run-h .t{display:none}
 .run.running .now:not(:empty){display:block}
 .run .now.ink{animation:ink var(--t-enter) var(--ease-out) both}
@@ -599,11 +603,12 @@ html.calm *,html.calm *::before,html.calm *::after{animation:none!important;tran
 .strm .fold{padding:1px 0 var(--sp-1)}
 .fbtn:hover{border-color:var(--line-3);color:var(--ink)}
 .fbtn i{width:14px;height:1px;background:var(--line-3);box-shadow:0 -3px 0 var(--line-2),0 3px 0 var(--line-2)}
-.strm .se.mo.new{animation:swell var(--t-enter) calc(var(--stagger) * 5) var(--ease-out) both}
+/* a moment swells: a gold wash under the line comes up and settles, on its own layer (opacity only) */
+.strm .se.mo{position:relative}
+.strm .se .sw{position:absolute;inset:0;border-radius:inherit;background:var(--gold-wash);box-shadow:inset 1px 0 0 0 var(--gold);opacity:0;pointer-events:none}
+.strm .se.mo.new .sw{animation:swell calc(var(--t-exit) * 2) calc(var(--stagger) * 5) var(--ease-inout) both}
 @keyframes drip{0%{transform:translateY(-8px) scaleY(1.7);opacity:0}25%{opacity:.9}82%{transform:translateY(13px) scaleY(1.25);opacity:.9}100%{transform:translateY(15px) scale(2.2,.35);opacity:0}}
-@keyframes jelly{0%{transform:scale(.15)}38%{transform:scale(1.4,.72)}58%{transform:scale(.88,1.14)}78%{transform:scale(1.06,.96)}100%{transform:scale(1)}}
-@keyframes swell{0%{background:transparent;box-shadow:inset 0 0 0 0 transparent}30%{background:var(--gold-wash);box-shadow:inset 1px 0 0 0 var(--gold)}70%{background:var(--gold-wash)}100%{background:transparent;box-shadow:inset 0 0 0 0 transparent}}
-.run .mapw.show{display:block;animation:pour var(--t-draw) var(--ease-out) both}
+@keyframes swell{30%,60%{opacity:1}}
 @media (prefers-reduced-motion:reduce){
 .strm li.new::after{display:none}
 }
@@ -611,7 +616,6 @@ html.calm *,html.calm *::before,html.calm *::after{animation:none!important;tran
 .run-h .rk{display:none}
 .run.settled .run-h .lbl{white-space:normal;line-height:1.4}
 }
-@keyframes pour{from{clip-path:inset(0 88% 92% 0 round 16px);opacity:.3}to{clip-path:inset(0 0 0 0 round 6px);opacity:1}}
 [data-docsave].drip::after{content:"";position:absolute;left:50%;top:-10px;width:4px;height:8px;margin-left:calc(var(--sp-half) * -1);border-radius:50% 50% 50% 50%/62% 62% 38% 38%;background:var(--gold);pointer-events:none;animation:drip var(--t-enter) var(--ease-soft-close) both}
 @media (prefers-reduced-motion:reduce){
 [data-docsave].drip::after{display:none}
@@ -696,7 +700,7 @@ html.calm *,html.calm *::before,html.calm *::after{animation:none!important;tran
 @keyframes blink{50%{opacity:0}}
 .fig-h .tt{font:400 var(--fs-body) var(--f-display);color:var(--ink);font-size:var(--fs-body)}
 .fig-h .no{font:italic 400 var(--fs-ui) var(--f-display);color:var(--gold);font-size:var(--fs-chrome-2)}
-@keyframes ink{from{opacity:0;filter:blur(3px);transform:translateY(-2px)}to{opacity:1;filter:none;transform:none}}
+@keyframes ink{from{opacity:0;transform:translateY(-2px)}to{opacity:1;transform:none}}
 /* dots on the stem, one-step theme change, charts that pour in */
 .fig-h .tb+.tb{margin-left:var(--sp-3h)}
 .ch text.lbl{fill:var(--text);font-size:var(--fs-chrome)}
@@ -778,7 +782,7 @@ html.calm *,html.calm *::before,html.calm *::after{animation:none!important;tran
 .exb{display:grid;grid-template-rows:1fr;transition:grid-template-rows var(--t-move) var(--ease-soft-close)}
 .exb>div{overflow:hidden}
 .exh.folded .exb{grid-template-rows:0fr}
-.exi{animation:blurIn var(--t-enter) var(--ease-out) both}
+.exi{animation:rise var(--t-enter) var(--ease-out) both}
 .facts{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));margin:0 0 var(--sp-4);border-top:var(--rule) solid var(--ink)}
 .fact{padding:var(--sp-2h) var(--sp-3) var(--sp-2h) 0;display:flex;flex-direction:column;gap:var(--sp-half)}
 .fact+.fact{padding-left:var(--sp-3);border-left:var(--rule-hair) solid var(--line-2)}
@@ -886,7 +890,7 @@ html.calm *,html.calm *::before,html.calm *::after{animation:none!important;tran
 .plate figcaption{display:flex;gap:var(--sp-2);margin-top:var(--sp-1h);font:italic 400 var(--fs-chrome-2)/1.5 var(--f-display);color:var(--soft)}
 .plate figcaption b{font-style:normal;font-weight:400;color:var(--gold);white-space:nowrap}
 .plate canvas{display:block;width:100%;height:132px;contain:layout paint}
-.sp{animation:blurIn var(--t-enter) var(--ease-out) both}
+.sp{animation:rise var(--t-enter) var(--ease-out) both}
 .sp .lede{font:italic 400 var(--fs-ui)/1.55 var(--f-display);color:var(--soft);margin:0 0 var(--sp-4h);max-width:52ch}
 .sp .grp{padding:var(--sp-4h) 0;border-top:var(--rule-hair) solid var(--line-2)}
 .sp .gh{display:flex;align-items:baseline;justify-content:space-between;gap:var(--sp-4);margin-bottom:var(--sp-3)}
@@ -978,7 +982,7 @@ html.calm *,html.calm *::before,html.calm *::after{animation:none!important;tran
 .cite{font:500 var(--fs-micro)/0 var(--f-body);color:var(--gold);cursor:pointer;padding:1px var(--sp-half);margin-left:1px;border-radius:var(--r-1);vertical-align:super;transition:background var(--t-enter) var(--ease-soft-close),color var(--t-enter) var(--ease-soft-close)}
 .cite:hover,.cite:focus-visible{background:var(--gold-wash);color:var(--ink);outline:none}
 .ledw:empty{display:none}
-.ledw{margin-top:var(--sp-3);padding-top:var(--sp-2h);border-top:var(--rule-hair) solid var(--line);animation:blurIn var(--t-enter) var(--ease-out) both}
+.ledw{margin-top:var(--sp-3);padding-top:var(--sp-2h);border-top:var(--rule-hair) solid var(--line);animation:rise var(--t-enter) var(--ease-out) both}
 .led .lh{display:flex;align-items:center;gap:var(--sp-2h);margin-bottom:var(--sp-1h);flex-wrap:wrap}
 .led .gm{flex:1;display:flex;gap:var(--sp-half);height:4px;min-width:60px;max-width:180px}
 .led .gm i{border-radius:var(--r-1);min-width:0}
@@ -1010,10 +1014,10 @@ html.calm *,html.calm *::before,html.calm *::after{animation:none!important;tran
 .fu span{flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .fu svg{width:11px;height:11px;flex:none;color:var(--mute);transition:transform var(--t-move) var(--ease-soft-close),color var(--t-exit)}
 .fu:hover svg{transform:translate(1px,-1px);color:var(--ink)}
-.bot.bi .docc{animation:docIn var(--t-enter) var(--ease-out) both;transform-origin:0 0}
-@keyframes docIn{0%{opacity:0;transform:translateY(-8px) scale(.4,.6);border-radius:18px}50%{opacity:1;transform:scale(1.01,.98);border-radius:9px}100%{transform:none}}
-.caret{display:inline-block;background:var(--gold);width:5px;height:5px;border-radius:var(--r-round);margin-left:var(--sp-1);vertical-align:.12em;animation:caretJ var(--t-beat) var(--ease-out) infinite}
-@keyframes caretJ{0%,100%{transform:scale(1)}30%{transform:scale(1.35,.7)}55%{transform:scale(.85,1.15)}}
+/* a built document arrives from the top left on the spring: no overshoot, no radius change */
+.bot.bi .docc{animation:docIn var(--t-move) var(--spring) both;transform-origin:0 0}
+@keyframes docIn{from{opacity:0;transform:translateY(-6px) scale(.94)}to{opacity:1;transform:none}}
+.caret{display:inline-block;background:var(--gold);width:5px;height:5px;border-radius:var(--r-round);margin-left:var(--sp-1);vertical-align:.12em;animation:breathe var(--t-beat) var(--ease-inout) infinite}
 .fu{display:inline-flex;align-items:center;gap:var(--sp-2h);width:min(100%,480px);height:30px;padding:0 var(--sp-2h);border:var(--rule-hair) solid var(--line-2);border-radius:var(--r-2);background:transparent;cursor:pointer;text-align:left;font-size:var(--fs-ui);color:var(--text);transition:border-color var(--t-exit),background var(--t-exit);animation:fuIn2 var(--t-move) var(--spring) calc(var(--i)*var(--stagger) * 1.75 + var(--stagger) * 2) both}
 @keyframes fuIn2{from{opacity:0;transform:translateY(-4px) scale(.7,.9);transform-origin:0 0}to{opacity:1;transform:none}}
 .thread{margin:0 auto;padding:var(--sp-4h) 0 var(--sp-9);display:flex;flex-direction:column;max-width:min(1120px,calc(100% - 56px));gap:var(--sp-6)}
@@ -1077,10 +1081,6 @@ html.calm *,html.calm *::before,html.calm *::after{animation:none!important;tran
 .map .k-doc .bx{stroke:var(--gold)}
 .mvx{flex:none;width:24px;height:24px;border-radius:var(--r-3);margin-left:var(--sp-1)}
 .ib.mvx svg{width:12px;height:12px;display:block}
-.mapt{display:inline-flex;gap:var(--sp-1h);align-items:center;border:0;background:none;padding:0;cursor:pointer;font-size:var(--fs-micro);letter-spacing:.16em;text-transform:uppercase;color:var(--soft);transition:color var(--t-exit)}
-.mapt:hover,.mapt[aria-expanded="true"]{color:var(--ink)}
-.mapt[aria-expanded="true"] svg{color:var(--gold)}
-.run .mapw{display:none;border-top:0;padding-top:var(--sp-2)}
 /* the map plate: the canvas paints; the list of nodes over it takes focus and anchors the sheet */
 .map{position:relative;display:block;width:100%;contain:layout paint;overflow:visible}
 .map canvas{display:block;touch-action:pan-y}
@@ -1858,7 +1858,7 @@ function railHTML(w,live,o={}){let keys,st={};
 const PHB={plan:"Deliberation",desks:"Desks",review:"Verification",answer:"Answer",audit:"Audit",doc:"Document",exhibits:"Exhibits",firewall:"Firewall"};
 const plainT=h=>{const d=document.createElement("div");d.innerHTML=h;return d.textContent};
 function evKind(t){t=String(t||"");return /Firewall/.test(t)?"k-fw mo":/^Ledger|claims? grounded/.test(t)?"k-led mo":/^Built|Document held|kernel builder|Planned a document/.test(t)?"k-doc mo":/^Audit|^Revised/.test(t)?"k-au":/filed .*notes/.test(t)?"k-desk mo":/searched|read |checked the web|Web research/.test(t)?"k-web":/[Dd]esk|Staffed/.test(t)?"k-desk":/^Delivered|^Stopped|^Interrupted/.test(t)?"k-end":""}
-const stLi=f=>`<li class="se ${evKind(f[2]||f[1])}"><span class="sx">${f[2]||f[1]}</span><span class="x num">${mmss(f[0])}</span></li>`;
+const stLi=f=>{const k=evKind(f[2]||f[1]);return`<li class="se ${k}">${/\bmo\b/.test(k)?`<i class="sw" aria-hidden="true"></i>`:""}<span class="sx">${f[2]||f[1]}</span><span class="x num">${mmss(f[0])}</span></li>`};
 const sbLi=k=>`<li class="sb"><span>${PHB[k]}</span></li>`;
 const foldLi=n=>`<li class="fold"><button type="button" class="fbtn"><i></i><span>${n} earlier step${n>1?"s":""}</span></button></li>`;
 function streamHTML(w){const F=(w.feed||[]).filter(f=>f[2]||f[1]),ph=w.ph||{};const br=Object.keys(PHB).filter(k=>ph[k]&&!ph[k].skip&&ph[k].s!=null).map(k=>[k==="plan"?-1:ph[k].s,k]).sort((a,b)=>a[0]-b[0]);const it=[];let j=0;
@@ -1881,7 +1881,7 @@ const viewDefault=()=>{try{return localStorage.getItem("expira.runview")||"log"}
 function runHTML(w,k,live,o={}){const M=w.map||{},th=M.thinking||[],n=(w.feed||[]).filter(f=>f[1]).length,op=live||o.open;
  const dl=live?(o.direct?"":`<div class="delib"><span class="cap">Deliberation</span><p class="typing">Reading the brief</p></div>`):th.length?`<div class="delib"><span class="cap">Deliberation</span>${th.map(t=>`<p>${esc(t)}</p>`).join("")}</div>`:"";
  return `<div class="run ${live?"running":"settled"}${op?" open":""}" data-view="${(live&&!o.direct)||(w.steps||[]).length?viewDefault():"log"}"><button class="run-h" type="button" aria-expanded="${!!op}">${GLYPH}<span class="lbl">${live?(o.direct?"Considering":"Deliberating"):esc(summary(w))}</span><span class="rk num">${live?"":tokLine(w)}</span><span class="t num">${mmss(w.ms||0)}</span>${CHEV}</button>${(live&&!o.direct)||(w.steps||[]).length?`<div class="rv" role="group" aria-label="View"><span class="vs"><button type="button" data-view="log" aria-pressed="true">Log</button><button type="button" data-view="map" aria-pressed="false">Map</button></span><button type="button" class="rdx" data-read="${live?"live":k}" aria-label="Open the Dispatch" data-tip="The Dispatch"><svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.1"><path d="M4.5 3h4.5v4.5M9 3 3.5 8.5"/></svg></button></div>`:`<div class="rv"><button type="button" class="rdx" data-read="${live?"live":k}" aria-label="Open the Dispatch" data-tip="The Dispatch"><svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.1"><path d="M4.5 3h4.5v4.5M9 3 3.5 8.5"/></svg></button></div>`}<div class="sheen"></div>${railHTML(w,live,o)}
- <p class="now" aria-live="polite"></p><div class="run-b"><div><div class="flow">${dl}<ol class="strm">${live?"":streamHTML(w)}</ol></div>${live?"":costHTML(w)}<div class="staff" hidden></div><div class="mini" aria-label="Map of this run"></div><div class="mapw" hidden></div><div class="ledw">${live?"":ledgerHTML(w)}</div>
+ <p class="now" aria-live="polite"></p><div class="run-b"><div><div class="flow">${dl}<ol class="strm">${live?"":streamHTML(w)}</ol></div>${live?"":costHTML(w)}<div class="staff" hidden></div><div class="mini" aria-label="Map of this run"></div><div class="ledw">${live?"":ledgerHTML(w)}</div>
  <div class="logw${live?" open":""}"><button class="logt" type="button"><span class="cap">Log</span><span class="n num">${n||""}</span>${CHEV}</button><div class="logb"><div><ol class="ev">${(w.feed||[]).map(evLi).join("")}</ol></div></div></div>
  </div></div><p class="rnote" hidden></p></div>`}
 function splitQuote(c){const m=String(c).match(/^((?:> ?.*(?:\n|$))+)\n*([\s\S]*)$/);return m?[m[1].replace(/^> ?/gm,"").trim(),m[2]]:["",String(c)]}
@@ -1926,7 +1926,8 @@ $("#qx").onclick=()=>{setQuote("");promptEl.focus()};
   txt=t.slice(0,1200);ctxT=((host.closest(".bot")?.querySelector(".ans"))||host).innerText.slice(0,1800);
   const rs=[...r.getClientRects()].filter(x=>x.width>1),a=rs[0]||r.getBoundingClientRect(),z=rs[rs.length-1]||a;
   bar.classList.remove("below");bar.style.left="0px";bar.style.top="0px";const w=bar.offsetWidth,hh=bar.offsetHeight,cx=(a.left+Math.min(a.right,a.left+Math.max(a.width,40)))/2;
-  let x=Math.max(8,Math.min(innerWidth-w-8,cx-w/2)),y=a.top-hh-10;if(y<60){y=z.bottom+10;bar.classList.add("below")}
+  /* the bar stays inside the reading column: it never lands on the sidebar or the Dispatch */
+  const M=$("#main").getBoundingClientRect(),lo=Math.max(8,M.left+8),hi=Math.min(innerWidth,M.right)-w-8;let x=Math.max(lo,Math.min(hi,cx-w/2)),y=a.top-hh-10;if(y<60){y=z.bottom+10;bar.classList.add("below")}
   bar.style.left=x+"px";bar.style.top=y+"px";bar.style.setProperty("--cx",Math.max(12,Math.min(w-12,cx-x))+"px");
   bar.querySelectorAll("[data-sa=explain],[data-sa=define]").forEach(b=>b.disabled=!sample);bar.classList.add("open")}
  const soon=()=>{clearTimeout(tm);tm=setTimeout(check,12)};
@@ -2302,7 +2303,7 @@ function countUp(root){if(reduce)return;root.querySelectorAll("[data-count]").fo
 const hostOf=u=>{try{return new URL(u).hostname.replace(/^www\./,"")}catch(e){return ""}};
 const FM=new Set();window.__FM=FM;
 /* a map only works while someone can see it: on screen, tab visible, and its panel open */
-const seen=m=>m.vis&&!document.hidden&&!m.host.closest(".dsp:not(.open),.stg:not(.open),.mfs:not(.open),.run .mapw");
+const seen=m=>m.vis&&!document.hidden&&!m.host.closest(".dsp:not(.open),.stg:not(.open),.mfs:not(.open)");
 const SITES=9;
 function hostsOf(P){const hs=[];(P||[]).forEach(p=>{const h=hostOf(p.url);if(!h)return;let o=hs.find(x=>x.h===h);if(!o)hs.push(o={h,n:0,t:0});o.n++;o.t+=tok(p.ex)});return hs}
 /* what a node is, in one line, for the map's readout */
@@ -2747,8 +2748,7 @@ function mapFS(btn){const host=btn.closest(".mapw,.mini"),m=[...FM].find(x=>x.ho
 function closeFS(){const o=$("#mfs");if(!o.classList.contains("open"))return;o.classList.remove("open");$("#veil").classList.remove("open");FM.forEach(x=>{if(x.opt.fs)x.kill()})}
 $("#mfsX").onclick=closeFS;
 document.addEventListener("click",e=>{const b=e.target.closest("[data-mfs]");if(b)mapFS(b)});
-document.addEventListener("click",e=>{const f=e.target.closest(".fbtn");if(f){const ol=f.closest(".strm");ol.classList.add("all");ol.querySelectorAll(".old").forEach(x=>x.classList.remove("old"));f.parentElement.remove();return}
- const m=e.target.closest(".mapt");if(m){const r=m.closest(".run"),hs=r.querySelector(".mapw"),on=!hs.classList.contains("show");hs.classList.toggle("show",on);m.setAttribute("aria-expanded",on);if(on){requestAnimationFrame(()=>FM.forEach(x=>x.host===hs&&x.sync&&x.sync()))}}});
+document.addEventListener("click",e=>{const f=e.target.closest(".fbtn");if(f){const ol=f.closest(".strm");ol.classList.add("all");ol.querySelectorAll(".old").forEach(x=>x.classList.remove("old"));f.parentElement.remove();return}});
 document.addEventListener("click",e=>{const vb=e.target.closest(".vs [data-view]");if(vb){e.stopPropagation();const r=vb.closest(".run");if(!r.classList.contains("open")){r.classList.add("open","pinned");r.querySelector(".run-h").setAttribute("aria-expanded","true")}runView(r,vb.dataset.view,true);return}},true);
 function wakeMaps(){const f=()=>FM.forEach(m=>{if(!m.host.isConnected)return;if(m.host.getBoundingClientRect().width){m.vis=true;try{m.sync()}catch(e){}m.go&&m.go()}});requestAnimationFrame(f);setTimeout(f,420);setTimeout(f,900)}
 {const mo=new MutationObserver(wakeMaps);["#dsp","#mfs","#setMenu"].forEach(q=>{const el=$(q);if(el)mo.observe(el,{attributes:true,attributeFilter:["class"]})})}
@@ -3091,7 +3091,7 @@ async function send(q,re){const KL=await KLIB.load().catch(()=>null),docPre=DOCS
  const bot=document.createElement("div");bot.className="bot bi";bot.dataset.k=K;bot._work=work;
  bot.innerHTML=`<div class="by">${BYLINE}<time class="num">${hhmm(Date.now())}</time></div>${runHTML(work,K,true,{direct,safe,doc:!!docPre})}<div class="ans"></div><div class="exw"></div><div class="docw"></div>`;
  $("#thread").append(bot);sc.scrollTop=1e9;
- const run=bot.querySelector(".run"),lbl=run.querySelector(".lbl"),tEl=run.querySelector(".run-h .t"),rk=run.querySelector(".rk"),evs=run.querySelector(".ev"),logN=run.querySelector(".logt .n"),dlb=run.querySelector(".delib"),strm=run.querySelector(".strm"),nowEl=run.querySelector(".now"),stf=run.querySelector(".staff"),mapH=run.querySelector(".mapw"),note=run.querySelector(".rnote"),ans=bot.querySelector(".ans"),exw=bot.querySelector(".exw");
+ const run=bot.querySelector(".run"),lbl=run.querySelector(".lbl"),tEl=run.querySelector(".run-h .t"),rk=run.querySelector(".rk"),evs=run.querySelector(".ev"),logN=run.querySelector(".logt .n"),dlb=run.querySelector(".delib"),strm=run.querySelector(".strm"),nowEl=run.querySelector(".now"),stf=run.querySelector(".staff"),note=run.querySelector(".rnote"),ans=bot.querySelector(".ans"),exw=bot.querySelector(".exw");
  shell(cur,tsQ,true);
  if(!direct){mkMap($("#dxMap"),()=>work,{live:true})}else $("#dxMapF").hidden=true;
  const mapSync=()=>FM.forEach(m=>m.get()===work&&m.sync()),mapPulse=(a,b)=>FM.forEach(m=>m.get()===work&&m.pulse(a,b));

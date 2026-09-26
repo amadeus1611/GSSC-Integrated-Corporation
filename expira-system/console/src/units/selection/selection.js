@@ -12,7 +12,8 @@ $("#qx").onclick=()=>{setQuote("");promptEl.focus()};
   txt=t.slice(0,1200);ctxT=((host.closest(".bot")?.querySelector(".ans"))||host).innerText.slice(0,1800);
   const rs=[...r.getClientRects()].filter(x=>x.width>1),a=rs[0]||r.getBoundingClientRect(),z=rs[rs.length-1]||a;
   bar.classList.remove("below");bar.style.left="0px";bar.style.top="0px";const w=bar.offsetWidth,hh=bar.offsetHeight,cx=(a.left+Math.min(a.right,a.left+Math.max(a.width,40)))/2;
-  let x=Math.max(8,Math.min(innerWidth-w-8,cx-w/2)),y=a.top-hh-10;if(y<60){y=z.bottom+10;bar.classList.add("below")}
+  /* the bar stays inside the reading column: it never lands on the sidebar or the Dispatch */
+  const M=$("#main").getBoundingClientRect(),lo=Math.max(8,M.left+8),hi=Math.min(innerWidth,M.right)-w-8;let x=Math.max(lo,Math.min(hi,cx-w/2)),y=a.top-hh-10;if(y<60){y=z.bottom+10;bar.classList.add("below")}
   bar.style.left=x+"px";bar.style.top=y+"px";bar.style.setProperty("--cx",Math.max(12,Math.min(w-12,cx-x))+"px");
   bar.querySelectorAll("[data-sa=explain],[data-sa=define]").forEach(b=>b.disabled=!sample);bar.classList.add("open")}
  const soon=()=>{clearTimeout(tm);tm=setTimeout(check,12)};

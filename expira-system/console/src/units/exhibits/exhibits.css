@@ -6,7 +6,7 @@
 .exb{display:grid;grid-template-rows:1fr;transition:grid-template-rows var(--t-move) var(--ease-soft-close)}
 .exb>div{overflow:hidden}
 .exh.folded .exb{grid-template-rows:0fr}
-.exi{animation:blurIn var(--t-enter) var(--ease-out) both}
+.exi{animation:rise var(--t-enter) var(--ease-out) both}
 .facts{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));margin:0 0 var(--sp-4);border-top:var(--rule) solid var(--ink)}
 .fact{padding:var(--sp-2h) var(--sp-3) var(--sp-2h) 0;display:flex;flex-direction:column;gap:var(--sp-half)}
 .fact+.fact{padding-left:var(--sp-3);border-left:var(--rule-hair) solid var(--line-2)}

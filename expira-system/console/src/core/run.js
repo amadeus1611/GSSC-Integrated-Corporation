@@ -13,7 +13,7 @@ async function send(q,re){const KL=await KLIB.load().catch(()=>null),docPre=DOCS
  const bot=document.createElement("div");bot.className="bot bi";bot.dataset.k=K;bot._work=work;
  bot.innerHTML=`<div class="by">${BYLINE}<time class="num">${hhmm(Date.now())}</time></div>${runHTML(work,K,true,{direct,safe,doc:!!docPre})}<div class="ans"></div><div class="exw"></div><div class="docw"></div>`;
  $("#thread").append(bot);sc.scrollTop=1e9;
- const run=bot.querySelector(".run"),lbl=run.querySelector(".lbl"),tEl=run.querySelector(".run-h .t"),rk=run.querySelector(".rk"),evs=run.querySelector(".ev"),logN=run.querySelector(".logt .n"),dlb=run.querySelector(".delib"),strm=run.querySelector(".strm"),nowEl=run.querySelector(".now"),stf=run.querySelector(".staff"),mapH=run.querySelector(".mapw"),note=run.querySelector(".rnote"),ans=bot.querySelector(".ans"),exw=bot.querySelector(".exw");
+ const run=bot.querySelector(".run"),lbl=run.querySelector(".lbl"),tEl=run.querySelector(".run-h .t"),rk=run.querySelector(".rk"),evs=run.querySelector(".ev"),logN=run.querySelector(".logt .n"),dlb=run.querySelector(".delib"),strm=run.querySelector(".strm"),nowEl=run.querySelector(".now"),stf=run.querySelector(".staff"),note=run.querySelector(".rnote"),ans=bot.querySelector(".ans"),exw=bot.querySelector(".exw");
  shell(cur,tsQ,true);
  if(!direct){mkMap($("#dxMap"),()=>work,{live:true})}else $("#dxMapF").hidden=true;
  const mapSync=()=>FM.forEach(m=>m.get()===work&&m.sync()),mapPulse=(a,b)=>FM.forEach(m=>m.get()===work&&m.pulse(a,b));
