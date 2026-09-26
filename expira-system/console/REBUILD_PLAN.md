@@ -267,12 +267,12 @@ For each unit: rebuild it in `src/units/<unit>/`, run the smoke test, take scree
   - [x] Lab built: `qa/lab/index.html` (3 pours × 2 themes, motion token sheet, palette sheet with live validator); `qa/lab/cast.js` + `strips.py` capture exact frames; 0 errors both themes
   - [x] Gate A decided 2026-09-25 (`GATE_A.md` §Decisions), written into DESIGN_ENGINE §2, §3 and the change log
 - [x] Phase 2.1: pure restructure into `src/` plus `build.py`, parity smoke passes (2026-09-25, session 3: 80 files; the rebuilt `index.html` is byte-identical to v39, sha256 `a697549cd1499e54…`; `qa/diff.js` reports identical DOM and pixels in both themes; the 7 cross-unit selectors v39 already doubled are listed in `build.py` `KNOWN_DUPES` for 2.2)
-- [ ] Phase 2.2: tokens landed; version layers, dead rules and `!important` removed
+- [x] Phase 2.2: tokens landed; version layers, dead rules and `!important` removed (2026-09-26)
   - [x] Version layers folded: the 22 layers (953 rules) now live in 17 units under `src/units/`, 131 repeated selectors merged; computed styles identical to v39 in 20 UI states × 2 themes (`qa/styles.js`), pixels identical (`qa/diff.js`), smoke 0 errors
   - [x] `!important` 43 → 20, each remaining one commented (motion kill switches, paused off-screen surfaces, figures at rest, hidden edges, and the v39 pour holds that Phase 3.3 removes); 41 dead rules (`.tg`, `.spark`, `.chron`, `.think*`, `.mrow`, `.progress`, `.tx-s/.tx-l`, `html.theming`…), 3 superseded keyframes (`word`, `acIn`, `fuIn`), the hidden `#sig` and the dead JS (`mountMaps`, `archivedMenu`, `staffHTML`, `youHTML_old`) removed; computed styles otherwise identical
   - [x] Tokens: `src/tokens.css` from the lab, snapped to the brand stack (dark gold → brand `#C9A35C`, gold as text → brand hue darkened to `#846936`, raster ramp ends on brand navy; light decorative gold stays `#A8862F` because brand `#AE8A47` is under 3:1 on the sidebar). The dark set is written once (`@dark{}` in build.py). 910 literals replaced by `qa/tools/tokenize.py`: type sizes snap to the Gate A scale (body 13px, floor 9.5px), radii to 3–8px, z-index to named layers in the v39 order, spacing to a 4px scale with half steps below 20px, shadows to `--e1…3`/`--e-side`, colours to tokens (mask gradients keep `#000`: alpha, not colour). Smoke 0 errors
   - [x] Motion: `qa/tools/motion.py` put 254 transitions and animations on the vocabulary (base rule = exit with `--t-exit`/`--ease-soft-close`, state rule = entry with `--t-instant`/`--t-enter` and `--ease-out`, layout travel `--t-move`, pours `--t-draw`, delays in `--stagger`, live-only loops on `--t-loop`/`--t-beat`/`--t-flow`); the three overshooting springs and the lightbox curve are gone (`core/motion.js` gives WAAPI the same tokens); the forever start-page loops (`float`, `facet`, `breath`, `colon`) are removed. Only `units/pour/pour.js` keeps its own curves until Phase 3.3 replaces it
-  - [ ] Gate A defaults: Arbiter label, real orchestrator effort, GOO removed, still grain, settings version label
+  - [x] Gate A defaults: "Decision agent" and the example decision desk read **Arbiter** everywhere (map column, node, tooltip, sheet, feed, settings, prompts; the stored role key stays `decision` so saved chats still load); the orchestrator node shows its real effort, `HIGH` (the planner runs at the complex tier); the hidden WebGL `#goo` loop and `units/start/goo.js` are deleted; the grain renders once as a still texture (the 24 fps interval and `GRAIN.run` are gone; the settings switch still shows or hides it); the settings footer and About read v41
 - [ ] Phase 3.1: shell and travelling sidebar button
 - [ ] Phase 3.2: composer
 - [ ] Phase 3.3: pour across all menus, sheets and cards
@@ -286,19 +286,6 @@ For each unit: rebuild it in `src/units/<unit>/`, run the smoke test, take scree
 
 ### Resume here
 
-- **State (2026-09-25, end of session 2):** Phases 0 and 1 are done and Gate A is passed. The decisions are in `GATE_A.md` §Decisions and DESIGN_ENGINE. Nothing in `index.html` has changed yet.
-- **Next: Phase 2.1**, a pure restructure. Split `index.html` into `src/` (tokens placeholder, base, `units/<unit>/`, `core/`, `shell.html`) plus a deterministic `build.py`.
-  - The output must behave identically, and `qa/smoke.js` must report 0 errors in light and dark.
-  - Add a byte- or behaviour-diff check: rebuilt vs original.
-  - Commit.
-- **Then Phase 2.2:**
-  - move `qa/lab/tokens.proposed.css` into `src/tokens.css`;
-  - replace every literal with a token;
-  - delete version layers, dead rules and `!important`;
-  - replace all overshooting springs and curves with the Gate A vocabulary;
-  - apply the §5 defaults of `GATE_A.md` (Arbiter label, real orchestrator effort, remove GOO, still grain);
-  - commit, then push at the end of Phase 2.
-- **Tools:**
-  - the lab: `qa/lab/cast.js`, then `qa/lab/strips.py` (needs `pip install pillow`);
-  - the audit probes: `qa/audit_probe.js` and `qa/audit_probe2.js`;
-  - the session prompt: `SESSION_3_PROMPT.md`.
+- **State (2026-09-26, session 3):** Phases 2.1 and 2.2 are done and pushed. `index.html` is now built from `src/` by `build.py`; every value comes from `src/tokens.css`; motion is on the Gate A vocabulary; the Gate A defaults are applied. Smoke reports 0 errors in both themes.
+- **Next: Phase 3, unit by unit** (3.1 shell and travelling sidebar button, then 3.2 … 3.8). For each unit: build, smoke (0 errors both themes), screenshots light, dark and reduced motion, tick Progress, commit. Push at the end of Phase 3.
+- **Tools:** `python3 build.py` (and `--check`); `qa/smoke.js`; `qa/styles.js A B` for computed-style diffs across 20 states; `qa/diff.js A B` for DOM and pixels. `.base.html` (git-ignored) is the v39 baseline: `git show 97874b2:expira-system/console/index.html > .base.html`.

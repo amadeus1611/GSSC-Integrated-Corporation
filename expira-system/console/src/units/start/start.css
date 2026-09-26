@@ -21,14 +21,9 @@
 .toc button:hover .lead{border-color:var(--gold)}
 /* start */
 .hero{flex:1;display:none;flex-direction:column;align-items:center;justify-content:center;padding:0 var(--sp-5) 5vh;overflow:auto;position:relative}
-#goo{position:absolute;left:50%;top:30%;width:min(560px,100%);height:auto;aspect-ratio:5/3;transform:translate(-50%,-50%);pointer-events:none;filter:blur(6px);z-index:var(--z-0);opacity:1}
-.hero>*:not(#goo){position:relative;z-index:var(--z-1)}
-@media (prefers-reduced-motion:reduce){
-#goo{display:none}
-}
+.hero>*{position:relative;z-index:var(--z-1)}
 #ready{display:none}
 .hero .greet{margin-bottom:var(--sp-7)}
-#goo.gl{filter:none}
 .hero .mark-w{width:132px;margin-bottom:var(--sp-5);animation:none;transition:transform var(--t-move) var(--spring)}
 .hero .mark polygon{transition:transform var(--t-move) var(--spring);transform-box:view-box}
 .hero .mark-w:hover .mark polygon:nth-child(1){transform:translate(-40px,-16px)}

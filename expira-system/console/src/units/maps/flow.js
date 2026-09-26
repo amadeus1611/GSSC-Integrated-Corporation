@@ -23,7 +23,7 @@ class FlowMap{
   const T=(c,x,y,t,an)=>{const e=sv("text",{class:c,x,y,...(an?{"text-anchor":an}:{})});e.textContent=t;g.append(e)};
   const fit=(t,px,cw)=>{t=String(t||"");const m=Math.max(3,Math.floor(px/cw));return t.length>m?t.slice(0,m-1).trimEnd()+"…":t};
   const dot=(y)=>g.append(sv("circle",{class:"dt",cx:p.w-10,cy:y,r:2.5}));
-  if(n.kind==="orch"||n.kind==="arb"||n.kind==="ans"||n.kind==="doc"){T("sf",10,17,{orch:"Orchestrator",arb:"Decision agent",ans:"Answer",doc:"Document"}[n.kind]);T("cp",10,30,fitS(n.t2,Math.floor((p.w-26)/6)));dot(13)}
+  if(n.kind==="orch"||n.kind==="arb"||n.kind==="ans"||n.kind==="doc"){T("sf",10,17,{orch:"Orchestrator",arb:"Arbiter",ans:"Answer",doc:"Document"}[n.kind]);T("cp",10,30,fitS(n.t2,Math.floor((p.w-26)/6)));dot(13)}
   else if(n.kind==="agent"){T("rn",9,21.5,n.rn+".");T("cp",30,14,fit(n.t1,p.w-46,6.2));T("it",30,26.5,fit(n.t2,p.w-46,5.3));dot(p.h/2)}
   else if(n.kind==="conn"){T("t1",10,16,"Exa");T("cp",10,28.5,fit(n.t2,p.w-20,6.2));dot(13)}
   else if(n.kind==="site"){T("t1 sm",9,14.5,fit(n.t1,p.w-30,5.4));T("nm",p.w-8,14.5,String(n.num),"end")}
@@ -73,4 +73,4 @@ function metaball(r1,r2,c1,c2,hs=2.4,v=.5){const HP=Math.PI/2,d=Math.hypot(c2[0]
  return `M${f(p1)}C${f(h1)} ${f(h3)} ${f(p3)}A${r2.toFixed(1)},${r2.toFixed(1)} 0 ${d>r1?1:0} 0 ${f(p4)}C${f(h4)} ${f(h2)} ${f(p2)}Z`}
 const rad=(t,k)=>k==="site"?Math.min(11,3.5+Math.sqrt(Math.max(0,t))*.3):Math.min(20,5+Math.sqrt(Math.max(0,t))*.5);
 const fitS=(t,n)=>{t=String(t||"");return t.length>n?t.slice(0,n-1).trimEnd()+"…":t};
-const flabel=n=>n.kind==="doc"?"Document":n.kind==="arb"?"Decision agent":n.kind==="ans"?"Answer":n.kind==="orch"?"Orchestrator":n.kind==="conn"?"Exa":n.kind==="agent"?`${n.rn} · ${fitS(n.t2,20)}`:fitS(n.t1,20);
+const flabel=n=>n.kind==="doc"?"Document":n.kind==="arb"?"Arbiter":n.kind==="ans"?"Answer":n.kind==="orch"?"Orchestrator":n.kind==="conn"?"Exa":n.kind==="agent"?`${n.rn} · ${fitS(n.t2,20)}`:fitS(n.t1,20);

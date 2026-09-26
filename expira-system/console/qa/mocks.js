@@ -10,7 +10,7 @@ const MOCK = () => {
   }
   const PLAN = JSON.stringify({
     thinking: ["Forty rooms in Iloilo before December, so local rates come first.", "Rates and lead times are separate questions; two research desks can split them.", "The total will clear PHP 500,000, so finance works at deep effort.", "A decision desk weighs the schedule once the numbers are in."],
-    title: "Belmont refit, second pass", kind: "hotel fit-out, scope and price", rationale: "Two research desks feed finance; decision closes it.",
+    title: "Belmont refit, second pass", kind: "hotel fit-out, scope and price", rationale: "Two research desks feed finance; the arbiter closes it.",
     steps: [
       { role: "research", focus: "Drapery rates", tier: "medium", task: "Current Iloilo rates for blackout drapery", why: "Prices move; check current listings", web: true, after: [] },
       { role: "research", focus: "Lead times", tier: "medium", task: "Supplier lead times for ceiling track", why: "December deadline depends on it", web: true, after: [] },

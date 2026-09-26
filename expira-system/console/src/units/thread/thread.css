@@ -67,7 +67,7 @@
 .yedit .ya{display:flex;justify-content:flex-end;gap:var(--sp-1h)}
 .acts{margin-left:auto;display:flex;gap:var(--sp-half);transition:opacity var(--t-exit) var(--ease-soft-close);opacity:.55}
 .bot:hover .acts,.bot:focus-within .acts{opacity:1}
-/* the decision agent, the claims ledger, the audit, full screen */
+/* the Arbiter, the claims ledger, the audit, full screen */
 .cite{font:500 var(--fs-micro)/0 var(--f-body);color:var(--gold);cursor:pointer;padding:1px var(--sp-half);margin-left:1px;border-radius:var(--r-1);vertical-align:super;transition:background var(--t-enter) var(--ease-soft-close),color var(--t-enter) var(--ease-soft-close)}
 .cite:hover,.cite:focus-visible{background:var(--gold-wash);color:var(--ink);outline:none}
 .ledw:empty{display:none}

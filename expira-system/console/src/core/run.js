@@ -43,7 +43,7 @@ async function send(q,re){const KL=await KLIB.load().catch(()=>null),docPre=DOCS
  const normStep=r=>{if(!r||!ROSTER[r.role])return null;const R=ROSTER[r.role];let tier=R.tiers.includes(r.tier)?r.tier:R.tiers[R.tiers.length-1];if(TIERS[tier].n<TIERS[R.floor].n)tier=R.floor;if(depthDeep&&R.tiers.includes("high"))tier="high";
   return{role:r.role,tier,focus:clip(r.focus||"",42),task:String(r.task||""),why:String(r.why||""),after:(Array.isArray(r.after)?r.after:[]).map(Number).filter(n=>n>0&&n<=8),redo:0,web:!!(webOn&&WEB_ROLES.has(r.role)&&r.web!==false)}};
  const staffUp=()=>{const g={};work.steps.forEach(s=>g[s.role]=(g[s.role]||0)+1);Object.entries(g).forEach(([r,n])=>{const c=stf.querySelector(`[data-r="${r}"]`);if(!c)stf.insertAdjacentHTML("beforeend",chipHTML(r,n));else c.querySelector("b").textContent=n>1?"×"+n:""})};
- const addStep=r=>{if(!work._vs){work._vs=1;F(null,"Handed the plan to the decision agent to staff.")}if(work.steps.length>=8)return;const s=normStep(r);if(!s)return;const i=work.steps.length;work.steps.push(s);
+ const addStep=r=>{if(!work._vs){work._vs=1;F(null,"Handed the plan to the Arbiter to staff.")}if(work.steps.length>=8)return;const s=normStep(r);if(!s)return;const i=work.steps.length;work.steps.push(s);
   $("#dxDesks").hidden=false;$("#desks").insertAdjacentHTML("beforeend",deskHTML(s,i));openBand("d"+i);requestAnimationFrame(()=>miniPlate(i,"d"+i));staffUp();
   F(null,`Staffed desk ${ROMAN[i]}: ${ROLE[s.role].toLowerCase()}${s.focus?`, <em>${esc(s.focus.toLowerCase())}</em>,`:""} at ${TIERS[s.tier].w} effort${s.web?" with the web":""}${s.why?`; ${esc(s.why.charAt(0).toLowerCase()+s.why.slice(1).replace(/\.$/,""))}`:""}.`);
   if(s.after.length)F(null,`Desk ${ROMAN[i]} waits for ${s.after.map(n=>"desk "+ROMAN[n-1]).join(" and ")}.`);
@@ -92,16 +92,16 @@ ${history?`Conversation so far:\n${history}\n\n`:""}New message: ${q}`,{modelTie
     finally{s._live=false;think[key]=0;s.ms=performance.now()-s._t0;$("#dm"+i).textContent=fmt(s.ms);stE.className="st";swap(stE,"Filed");mapSync()}};
    const done=[];steps.forEach((s,i)=>done[i]=(async()=>{for(const n of s.after)if(n-1<i&&done[n-1])await done[n-1];const r=await runOne(i);F(`Desk ${ROMAN[i]} filed its notes`,`Desk ${ROMAN[i]} filed ${ft(tok(r))} tokens of notes in ${fmt(s.ms)}.`);return r})());
    await Promise.all(done);P("desks","done");P("review","on");work._vd=1;mapSync();steps.forEach((_,k)=>setTimeout(()=>mapPulse("a"+k,"v"),120+k*110));
-   /* the decision agent weighs truth: each desk passes or returns, and every claim is checked against the pages read */
+   /* the Arbiter weighs truth: each desk passes or returns, and every claim is checked against the pages read */
    const arbTier="complex";const ledger={claims:[]};work.ledger=null;
    for(let round=0;round<=2;round++){
     const pend2=steps.map((_,i)=>i).filter(i=>steps[i].v!=="pass");if(!pend2.length)break;
     think.O=1;work._va=1;mapSync();pend2.forEach(i=>{$("#ds"+i).className="st live";swap($("#ds"+i),"Being weighed")});
     const PGs=work.map.pages.slice(0,26),srcList=PGs.map((p,k)=>`[S${k+1}] ${p.title||hostOf(p.url)} — ${p.url} (${p.date||"undated"}${ageOf(p.date)!=null?`, ${ageText(ageOf(p.date))}`:""})\n${String(p.ex||"").slice(0,520)}`).join("\n\n");
-    const arbTools=webOn?webTools({onSearch:(qs,fetch)=>{work._vweb=performance.now();work.map.calls.push({t:Math.round(now()),i:-1,q:qs.slice(0,4).map(x=>clip(x,90)),fetch:!!fetch});F(fetch?"The decision agent read a page":"The decision agent checked the web",fetch?`Decision agent read ${qs.map(x=>`<em>${esc(x)}</em>`).join(", ")} to check a claim.`:`Decision agent searched: ${qs.map(x=>`“${esc(x)}”`).join(", ")}.`);mapSync();mapPulse("v","c")},
+    const arbTools=webOn?webTools({onSearch:(qs,fetch)=>{work._vweb=performance.now();work.map.calls.push({t:Math.round(now()),i:-1,q:qs.slice(0,4).map(x=>clip(x,90)),fetch:!!fetch});F(fetch?"The Arbiter read a page":"The Arbiter checked the web",fetch?`The Arbiter read ${qs.map(x=>`<em>${esc(x)}</em>`).join(", ")} to check a claim.`:`The Arbiter searched: ${qs.map(x=>`“${esc(x)}”`).join(", ")}.`);mapSync();mapPulse("v","c")},
       onSources:list=>{const fresh=[];list.forEach(r=>{if(!r.url||work.map.pages.some(p=>p.url===r.url))return;const hh=hostOf(r.url);if(hh&&!work.map.pages.some(p=>hostOf(p.url)===hh))fresh.push(hh);work.map.pages.push({url:r.url,title:clip(r.title,140),date:r.published||null,ex:clip(r.excerpt,700),i:-1,q:""})});mapSync();fresh.slice(0,6).forEach((hh,j)=>setTimeout(()=>mapPulse("c","s:"+hh),160+j*110))},onError:()=>{}}):null;
     let rv=null;
-    try{rv=await sample.json(`You are the EXPIRA decision agent, acting as arbiter of truth. ${todayLine()}
+    try{rv=await sample.json(`You are the EXPIRA Arbiter, the judge of truth. ${todayLine()}
 You staffed these desks; now judge what they filed.
 1. For each desk, decide whether it answered its task (pass or fail).
 2. Break the notes into the atomic factual claims an answer would rest on (figures, prices, dates, names, rules, events), at most 16.
@@ -115,9 +115,9 @@ ${pend2.map(i=>`Step ${i+1} (${steps[i].role}${steps[i].focus?", "+steps[i].focu
 
 Sources:
 ${srcList||"(none: judge figures unsupported unless they are arithmetic from given inputs)"}`,{modelTier:arbTier,cache:false,...IM,signal:ctl.signal,...(arbTools?{tools:arbTools}:{})})}
-    catch(e){if(e&&e.code==="cancelled")throw e;rv=null;F("Verification unavailable","The decision agent could not return a ledger; the notes go forward unverified.")}
+    catch(e){if(e&&e.code==="cancelled")throw e;rv=null;F("Verification unavailable","The Arbiter could not return a ledger; the notes go forward unverified.")}
     think.O=0;work._va=0;const fail=[];
-    for(const r of (rv&&Array.isArray(rv.desks))?rv.desks:[]){const i=Number(r.step)-1;if(!steps[i]||!pend2.includes(i))continue;steps[i].v=r.verdict==="fail"&&steps[i].redo<2?"fail":"pass";steps[i].feedback=r.reason;if(steps[i].v==="fail"){fail.push(i);F(`Returned desk ${ROMAN[i]}`,`Decision agent returned desk ${ROMAN[i]}: ${esc(r.reason||"it did not answer its task")}.`)}}
+    for(const r of (rv&&Array.isArray(rv.desks))?rv.desks:[]){const i=Number(r.step)-1;if(!steps[i]||!pend2.includes(i))continue;steps[i].v=r.verdict==="fail"&&steps[i].redo<2?"fail":"pass";steps[i].feedback=r.reason;if(steps[i].v==="fail"){fail.push(i);F(`Returned desk ${ROMAN[i]}`,`The Arbiter returned desk ${ROMAN[i]}: ${esc(r.reason||"it did not answer its task")}.`)}}
     pend2.forEach(i=>{if(!steps[i].v)steps[i].v="pass"});
     const VS=["supported","derived","partial","conflict","unsupported"];
     const nc=((rv&&Array.isArray(rv.claims))?rv.claims:[]).filter(c=>c&&(c.claim||c.text)).slice(0,16).map(c=>{const d=Number(c.desk)-1;return {text:clip(c.claim||c.text,240),desk:steps[d]?d:-1,v:VS.includes(c.verdict)?c.verdict:"unsupported",conf:Math.max(0,Math.min(1,Number(c.confidence)||0)),urls:[...new Set((Array.isArray(c.sources)?c.sources:[]).map(x=>parseInt(String(x).replace(/\D/g,""),10)-1).filter(k=>PGs[k]).map(k=>PGs[k].url))],note:clip(c.note||"",180)}})
@@ -141,7 +141,7 @@ ${srcList||"(none: judge figures unsupported unless they are arithmetic from giv
 ${todayLine()} Where desks give differing figures, use the most recent and give its date for anything time-sensitive.
 Style: precise, calm, editorial. Lead with the answer. Use "### " headings, "- " bullets and "> " for one key takeaway when they help. Keep it as short as the question allows. Key figures, charts and comparison tables are added below your answer as exhibits, so do not draw charts or repeat long tables.
 ${safe?"CLIENT-SAFE: never include supplier names or contacts, supplier costs or cost basis, margins, markup, bank details, facility locations or internal worksheets.":""}
-${work.ledger&&work.ledger.claims.length?`Claims ledger, weighed by the decision agent. Cite a claim as [c3] right after the sentence that uses it. State supported and derived claims as fact; give partial and conflict claims with their caveat and date; present unsupported claims only as estimates or assumptions, or leave them out. Never introduce a figure, date or name that is not in the ledger or the user's message.\n${ledText()}\n\n`:""}${history?`Conversation so far:\n${history}\n\n`:""}${steps.length?`Desk notes (context only; the ledger decides what is true):\n${steps.map((s,i)=>`[${s.role}${s.focus?", "+s.focus:""}, ${s.tier} effort]\n${(outs[i]||"").slice(0,1800)}`).join("\n\n")}\n\n`:""}Latest message: ${q}`;
+${work.ledger&&work.ledger.claims.length?`Claims ledger, weighed by the Arbiter. Cite a claim as [c3] right after the sentence that uses it. State supported and derived claims as fact; give partial and conflict claims with their caveat and date; present unsupported claims only as estimates or assumptions, or leave them out. Never introduce a figure, date or name that is not in the ledger or the user's message.\n${ledText()}\n\n`:""}${history?`Conversation so far:\n${history}\n\n`:""}${steps.length?`Desk notes (context only; the ledger decides what is true):\n${steps.map((s,i)=>`[${s.role}${s.focus?", "+s.focus:""}, ${s.tier} effort]\n${(outs[i]||"").slice(0,1800)}`).join("\n\n")}\n\n`:""}Latest message: ${q}`;
   const sst={h:[]};let first=true,sRaf=0;
   ans.classList.add("live");const fin=await sample(input+steerNote(),{modelTier:steps.length?"complex":"default",cache:false,...IM,signal:ctl.signal,onText:({text})=>{pend.A=(pend.A||0)+Math.max(0,text.length-aText.length);aText=text;if(first){first=false;think.A=0}if(!sRaf)sRaf=requestAnimationFrame(()=>{sRaf=0;streamInto(ans,aText,sst);follow()})}});
   const fin2={text:fin.text};cancelAnimationFrame(sRaf);sRaf=0;aText=fin2.text;ans.innerHTML=md(fin2.text);think.A=0;work._aw=0;work.atok=tok(fin2.text);P("answer","done");F(null,`Composed the answer: about ${ft(tok(fin2.text))} tokens.`);

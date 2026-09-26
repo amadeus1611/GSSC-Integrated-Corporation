@@ -5,7 +5,7 @@ const ROSTER={
  finance:{tiers:["high"],floor:"high",desk:"Finance desk",verb:"Costing",brief:"Finance specialist. Build costs and pricing line by line from the facts given; state every assumption; totals in PHP unless told otherwise."},
  legal:{tiers:["high"],floor:"high",desk:"Legal desk",verb:"Reading clauses",brief:"Legal review specialist (Philippine context unless told otherwise). Flag each risk with the clause, exposure and a fix. No final legal opinion; say where counsel is needed."},
  builder:{tiers:["medium","high"],floor:"medium",desk:"Drafting desk",verb:"Drafting",brief:"Builder. Produce the concrete artefact asked for (outline, plan, draft, table, code) in clean usable form."}};
-const ROLE={research:"Research",finance:"Finance",legal:"Legal",decision:"Decision",builder:"Drafting"};
+const ROLE={research:"Research",finance:"Finance",legal:"Legal",decision:"Arbiter",builder:"Drafting"};
 const meter=t=>`<span class="meter" aria-hidden="true">${[1,2,3].map(i=>`<i class="${i<=TIERS[t].n?"on":""}"></i>`).join("")}</span>`;
 const GLYPH=`<svg class="glyph" viewBox="0 0 1413 425" aria-hidden="true"><polygon class="f1" points="0,0 233,0 391,100 206,425 40,425 0,302"/><polygon class="f2" points="233,0 728,0 391,100"/><polygon class="f3" points="391,100 1058,425 206,425"/><polygon class="f4" points="391,100 728,0 778,0 871,225 1166,425 1058,425"/><polygon class="f5" points="918,0 1043,0 1408,425 1241,425 968,192"/><polygon class="f6" points="1043,0 1340,0 1408,425"/></svg>`;
 const CHEV=`<svg class="chev" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.1"><path d="M4.5 2.5L8 6l-3.5 3.5"/></svg>`;

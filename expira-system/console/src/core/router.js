@@ -1,4 +1,4 @@
-function open(c){GOO.run(!c);setTimeout(()=>armFigs(),60);if(c!==cur&&$("#att"))attClear();window.__selHide&&window.__selHide();cur=c;app.classList.toggle("has-chat",!!c);GRAIN.run(!c&&PREF.grain);
+function open(c){setTimeout(()=>armFigs(),60);if(c!==cur&&$("#att"))attClear();window.__selHide&&window.__selHide();cur=c;app.classList.toggle("has-chat",!!c);
  closeSheet();if(c){crumb();const la=c.turns.map(t=>t.role).lastIndexOf("assistant");$("#thread").innerHTML=c.turns.map((t,k)=>t.role==="user"?youHTML(t,k):botHTML(t,k,k===la)).join("");$("#main").append($("#dock"));FM.forEach(m=>{if(!m.host.isConnected)m.kill()});mountDocs();stick=true;requestAnimationFrame(()=>{sc.scrollTop=1e9;prog()})}
  else{$("#heroDock").append($("#dock"));$("#thread").innerHTML="";$("#crumb").textContent="";showDsp(false)}
  renderRecents()}
