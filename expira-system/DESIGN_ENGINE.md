@@ -193,6 +193,14 @@ Motion is the heart of the UX: fidelity in the engine comes first.
 - **One curve for everything**, entering and leaving alike: fast, then a long soft settle (`--sb-ease` `cubic-bezier(.19,1,.22,1)`). It supersedes the per-direction curves of §3 for EXPIRA surfaces.
 - **Large moves get a travel curve.** A curve that is right for a menu is wrong for a whole panel: it covers most of the distance in the first 100 ms and then crawls the last pixels, which reads as "instant, then a stop". The dock closing and a resize settling therefore use `--sb-dock-close` `cubic-bezier(.3,.85,.15,1)` over 720 ms and 760 ms. It still leaves quickly, but it spreads the travel so the eye can follow it, then settles very softly.
 - **A large surface dissolves as it slows.** Closing, the dock stays solid through the fast part and fades and blurs over its settle, so its last pixels melt away rather than stop and vanish.
+- **Whole-list moves are one field, arranged around an anchor** (stepping into a folder, stepping out, searching; after Material's choreography rules and Amadeus's "react with the other files and folders"). The anchor is the folder you step into or out of, or the search field.
+  - **One direction per move, so nothing crosses:** stepping in, everything rises; stepping out, everything settles down; a search pours its results down out of the field and draws what goes back up into it.
+  - **Depth, not sideways travel,** says into and out of: a lateral slide would say the two lists are peers.
+  - **Space clears before it fills.** Rows that go rack out first, nearest the anchor first, drifting 5px with the move. Rows that arrive then pull focus in order of their distance from the anchor, 16ms a row and at most 150ms apart, drifting 6px in the move's direction.
+  - **Arrivals wait for their space:** 70ms in a search, 40ms stepping in; stepping out, the rows above the folder wait 100ms for it and its contents to pass.
+  - **Rows that stay glide.** In a search, a row that would cross more than five rows leaves a ghost where it was and surfaces where it lands, rather than flying across the list.
+  - **The anchor hands over to the path bar.** Stepping in, the folder's row rises into its step in the path bar, its name landing on the step's; stepping out, it comes back down from there with its contents settling beneath it.
+- **The path bar never jumps.** Steps on their way out fade from an overlay above the trail, so they never widen it; the trail opens already scrolled to its right end and holds there. Its edge feathers fade in and out rather than switching.
 - **Everything that moves has a slight motion blur**, in proportion to its speed and sharp at rest:
   - the dock, up to 1.6px;
   - the sidebar button, up to 2.4px;
@@ -305,6 +313,9 @@ They live in `bench/drafts/sidebar-next.css`, and the dark stack lives in `bench
 - **Tokens (v41):** every value comes from `src/tokens.css`. Spacing is a 4px scale with half steps (`--sp-half`, `--sp-1h` … `--sp-4h`) below 20px for dense chrome; a 1px nudge is optical and stays literal. Layers are named (`--z-side`, `--z-menu`, `--z-tip` …) in one stacking order. Dark tokens are written once in `@dark{}`.
 
 ## 6. Change log
+- **v45 the field** (2026-09-26, Amadeus: "the path line jumping ruins immersion"; "isolating back … slots in from the top"; "reorder by hierarchy … so it reacts with the other files and folders"):
+  - **Path bar.** The jump was the scroll width shrinking as outgoing steps were removed, which snapped the scroll back. Outgoing steps now fade in an overlay; measured frame by frame, the trail holds one scroll position from start to end.
+  - **Stepping in, stepping out and search now run as one field** (§4.2), replacing a lateral slide and separate fades. Filmstrips showed rows crossing paths (leaving rows drifting against rising ones; a search match flying up the whole list); the field removes every crossing.
 - **v45 sidebar, finished in the bench** (2026-09-26, Amadeus: "do all the recommendations … very well designed, fully featured, animations, premium … subtle"): see `console/SUPER_PLAN_45.md`.
   - The path bar is always on under Search, and Isolate is a menu choice; the automatic step-in by width is gone. Depth indents 12px for five levels, then 4px.
   - Closed folders roll up running and unread.

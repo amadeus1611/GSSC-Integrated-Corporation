@@ -239,7 +239,9 @@ const SB=(()=>{const side=$("#side"),scroll=$("#sbScroll");
  const els=new Map();
 
  /* ---- sync: the one move ---- */
- function sync(pre,o={}){const t00=performance.now();if(o.dir)hlS.hold(ms("--sb-move"));else hlS.off();
+ function sync(pre,o={}){const t00=performance.now();if(o.field&&o.field!=="filter")hlS.hold(ms("--sb-move"));else hlS.off();
+  /* where the path bar's steps are, so a row can hand over to it or come back from it */
+  const cr0=o.field?new Map([...crumbs.children].map(x=>[x.dataset.k,x.getBoundingClientRect()])):null;
   /* read: where every row is (one layout), and where the names start for the rows on or near the screen */
   const v0=scroll.getBoundingClientRect(),near0=y=>y>=v0.top-v0.height&&y<=v0.bottom+v0.height;
   const before=new Map(),bx=new Map(),tx=e=>e.querySelector(".sb-t")?.getBoundingClientRect().left||0;
@@ -248,7 +250,7 @@ const SB=(()=>{const side=$("#side"),scroll=$("#sbScroll");
   /* Recently Deleted lets go of anything older than 30 days */
   for(let i=TRASH.length-1;i>=0;i--)if(Date.now()-TRASH[i].at>KEEP)TRASH.splice(i,1);
   /* an isolated folder that has gone: the view climbs to its nearest surviving parent */
-  if(rootId&&!SYS[rootId]&&!find(rootId)){rootId=[...rootAnc].reverse().find(id=>find(id))||null;o={...o,dir:-1};hlS.hold(ms("--sb-move"))}
+  if(rootId&&!SYS[rootId]&&!find(rootId)){const was=rootAnc;rootId=[...was].reverse().find(id=>find(id))||null;const i=rootId?was.indexOf(rootId):-1;o={...o,field:"out",anchor:was[i+1]&&find(was[i+1])?was[i+1]:null};hlS.hold(ms("--sb-move"))}
   IND=parseFloat(tok("--sb-indent"))||12;rollup();
   const want=flat(),keep=new Set(want.map(w=>w.id));if(arr&&!keep.has(arr))arrange(null);
   /* rows that leave: on or near the screen, they are pinned where they are, out of the flow, so the rows below can rise
@@ -277,18 +279,13 @@ const SB=(()=>{const side=$("#side"),scroll=$("#sbScroll");
   const vr=scroll.getBoundingClientRect(),near=y=>y>=vr.top-vr.height&&y<=vr.bottom+vr.height;
   const moved=[],born=[];
   want.forEach(w=>{const e=els.get(w.id),b=before.get(w.id);if(b==null||fresh.has(e)||e.classList.contains("far"))return;const y1=e.getBoundingClientRect().top;if(!near(b)&&!near(y1))return;
-   const dy=Math.round(b-y1),dx=bx.has(w.id)?Math.round(bx.get(w.id)-tx(e)):0;if(dy||dx)moved.push({e,dy,dx})});
-  fresh.forEach(e=>{if(e.classList.contains("far"))return;const y=e.getBoundingClientRect().top;if(near(y))born.push({e,top:e.offsetTop,h:e.offsetHeight})});
+   const dy=Math.round(b-y1),dx=bx.has(w.id)?Math.round(bx.get(w.id)-tx(e)):0;if(dy||dx)moved.push({e,id:w.id,dy,dx,y0:b,y1})});
+  fresh.forEach(e=>{if(e.classList.contains("far"))return;const y=e.getBoundingClientRect().top;if(near(y))born.push({e,id:e.dataset.id,y,top:e.offsetTop,h:e.offsetHeight})});
   moved.forEach(({e})=>e.getAnimations().forEach(a=>{if(!(a instanceof CSSTransition)&&!(a instanceof CSSAnimation))a.cancel()}));
   const T=ms("--sb-move"),IN=ms("--sb-in"),OUT=ms("--sb-out"),Es=EZ(),E=easeFn(Es),B=blurPx()*.5,L=leaving.length?Math.round(OUT*.25):0;
   const slide=({dx,dy})=>{const M=Math.min(1.1,Math.hypot(dx,dy)/70);return sampled(T,Es,(p,k)=>({transform:`translate(${(dx*(1-p)).toFixed(2)}px,${(dy*(1-p)).toFixed(2)}px)`,filter:mb(k,M)}))};
-  /* stepping into or out of a folder: the old list slides a little away and racks out, the new one slides in and pulls
-     focus, and rows seen in both travel to their new place, re-indenting, all on one clock */
-  if(o.dir){const t0=document.timeline.currentTime,dx=12*o.dir,go=(el,kf,f)=>{const a=el.animate(kf,{duration:T,easing:"linear",fill:f||"none"});a.startTime=t0;return a};
-   const kOut=sampled(T,Es,p=>{const q=Math.min(1,p*2);return{opacity:(1-q).toFixed(3),transform:`translateX(${(-dx*p).toFixed(2)}px)`,filter:`blur(${(B*q).toFixed(2)}px)`}}),
-    kIn=sampled(T,Es,p=>({opacity:Math.min(1,.1+p*1.5).toFixed(3),transform:`translateX(${(dx*(1-p)).toFixed(2)}px)`,filter:fb(p,B,.5)}));
-   leaving.forEach(({e})=>go(e,kOut,"forwards"));born.forEach(({e})=>go(e,kIn,"backwards"));moved.forEach(m=>go(m.e,slide(m)));
-   if(leaving.length)setTimeout(drop,T+40);SB_T.last=performance.now()-t00;return}
+  /* the moves that change the whole list (stepping into a folder, out of one, searching) run as one field */
+  if(o.field){field(o,{moved,born,leaving,before,cr0,vr,slide,T,IN,OUT,Es,B,drop});SB_T.last=performance.now()-t00;return}
   /* the rows that stay glide by whole pixels (re-indenting if their depth changed); rising ones wait a beat so what
      leaves can rack out first */
   moved.forEach(m=>m.e.animate(slide(m),{duration:T,easing:"linear",delay:m.dy>0?L:0,fill:"backwards"}));
@@ -302,6 +299,43 @@ const SB=(()=>{const side=$("#side"),scroll=$("#sbScroll");
    bk.items.forEach(x=>{const e0=L+T*easeInv(E,Math.max(0,1-(x.top+x.h-bk.start)/d)),dur=Math.max(90,Math.min(OUT,e0+OUT*.4)),del=Math.max(0,e0-dur*.6);
     x.e.animate(kOff,{duration:dur,delay:del,easing:Es,fill:"forwards"});end=Math.max(end,del+dur)})});
   if(leaving.length)setTimeout(drop,end+40);SB_T.last=performance.now()-t00}
+
+ /* ---- the field: one choreography for the moves that change the whole list ----
+    It is arranged around an anchor: the folder you step into or out of, or, for a search, the search field. Rows that
+    stay glide to their new place. Rows that go rack out first, nearest the anchor first, so the space clears; rows that
+    arrive then pull focus in order of their distance from the anchor (16ms a row, at most 150ms), so the list unfolds
+    from it. Depth, not sideways travel, says "into" and "out of": a
+    lateral slide would say the two lists are peers. Stepping into a folder, its row hands over to the path bar; stepping
+    out, it comes back down from there with its contents. In a search, a row that would cross a long way leaves a ghost
+    where it was and surfaces where it lands, rather than flying across the list. */
+ function field(o,{moved,born,leaving,before,cr0,vr,slide,T,IN,OUT,Es,B,drop}){
+  const t0=document.timeline.currentTime,go=(el,kf,dur,delay,fill)=>{const a=el.animate(kf,{duration:dur,easing:"linear",delay:delay||0,fill:fill||"none"});a.startTime=t0;return a};
+  const RH=parseFloat(tok("--sb-row"))||24,aRow=o.anchor&&els.get(o.anchor);
+  let ay=vr.top+4;if(o.field==="in"&&o.anchor&&before.has(o.anchor))ay=before.get(o.anchor);else if(o.field==="out"&&aRow&&!aRow.classList.contains("gone"))ay=aRow.getBoundingClientRect().top;
+  const dist=y=>Math.abs(y-ay)/RH;
+  /* one direction per move, so nothing crosses: stepping in, everything rises; stepping out, everything settles down;
+     a search pours its results down out of the field and draws what goes back up into it */
+  const up=o.field==="in",sIn=up?-1:1,sOut=o.field==="out"?1:-1;
+  const kIn=sampled(IN,Es,p=>({opacity:Math.min(1,p*1.6).toFixed(3),transform:`translateY(${(-sIn*6*(1-p)).toFixed(2)}px)`,filter:fb(p,B,.55)}));
+  const kOut=sampled(OUT,Es,p=>{const q=Math.min(1,p*1.8);return{opacity:(1-q).toFixed(3),transform:`translateY(${(sOut*5*p).toFixed(2)}px)`,filter:`blur(${(B*q).toFixed(2)}px)`}});
+  /* arrivals wait for their space: after what leaves has cleared it (a search, stepping in), or after the returning
+     folder and its contents have passed (the rows above it, stepping out) */
+  const wait=y=>o.field==="filter"?70:up?40:y<ay-2?100:0;
+  const handoff=(e,from,to,fin)=>{/* the anchor's row travels between its place and the path bar's step, its name onto the step's */
+   const t=e.querySelector(".sb-t").getBoundingClientRect(),r=e.getBoundingClientRect(),c=to||from;if(!c)return false;
+   const dx=Math.round(c.left-t.left),dy=Math.round(c.top+c.height/2-(r.top+r.height/2));
+   go(e,sampled(T,Es,(p,k)=>{const q=fin?1-p:p;return{transform:`translate(${(dx*q).toFixed(2)}px,${(dy*q).toFixed(2)}px)`,opacity:(fin?Math.min(1,.15+p*1.7):Math.max(0,1-p*1.5)).toFixed(3),filter:mb(k,Math.min(1.4,Math.hypot(dx,dy)/60))}}),T,0,fin?"backwards":"forwards");return true};
+  /* in a search, long crossings become a ghost and an arrival */
+  const LONG=RH*5;moved.forEach(m=>{if(o.field!=="filter"||Math.abs(m.dy)<=LONG)return;m.skip=true;
+   const g=m.e.cloneNode(true);g.classList.add("gone");g.removeAttribute("role");g.setAttribute("aria-hidden","true");Object.assign(g.style,{position:"absolute",top:(m.e.offsetTop+m.dy)+"px",left:m.e.offsetLeft+"px",width:m.e.offsetWidth+"px"});tree.appendChild(g);
+   leaving.push({e:g,id:"ghost:"+m.id,ghost:true,y:m.y0});born.push({e:m.e,id:m.id,y:m.y1})});
+  moved.forEach(m=>{if(!m.skip)go(m.e,slide(m),T)});
+  born.forEach(x=>{if(o.field==="out"&&x.id===o.anchor&&cr0&&handoff(x.e,cr0.get(o.anchor),null,true))return;
+   go(x.e,kIn,IN,wait(x.y)+Math.min(150,dist(x.y)*16),"backwards")});
+  const yOf=x=>x.y??before.get(x.id)??ay;
+  leaving.forEach(x=>{if(o.field==="in"&&x.id===o.anchor){const c=crumbs.querySelector(`[data-k="${o.anchor}"]`);if(c&&handoff(x.e,null,c.getBoundingClientRect(),false))return}
+   go(x.e,kOut,OUT,Math.min(60,dist(yOf(x))*5),"forwards")});
+  setTimeout(drop,Math.max(T,OUT+90)+40)}
 
  /* ---- the gliding highlight: surfaces out of a blur, glides on the curve and stretches with its speed, racks out ---- */
  function glide(list,sel){const hl=document.createElement("i");hl.className="sb-hl";hl.setAttribute("aria-hidden","true");list.prepend(hl);
@@ -333,22 +367,24 @@ const SB=(()=>{const side=$("#side"),scroll=$("#sbScroll");
  bar.querySelector("[data-newf]").addEventListener("click",e=>{e.stopPropagation();newFolder()});
  /* the search field: typing filters the tree in place; Esc clears, and a second Esc leaves the field; arrow down steps into the tree */
  const inp=$("#find"),frow=$("#findRow");
- let qT=0;const clearQ=()=>{clearTimeout(qT);if(!inp.value&&!query)return;inp.value="";frow.classList.remove("has");query="";sync()};
+ let qT=0;const clearQ=()=>{clearTimeout(qT);if(!inp.value&&!query)return;inp.value="";frow.classList.remove("has");query="";sync(null,{field:"filter"})};
  function search(on){if(on){inp.focus({preventScroll:true});return}clearQ();inp.blur()}
  frow.querySelector(".sb-clr").addEventListener("click",e=>{e.preventDefault();e.stopPropagation();clearQ();inp.focus()});
  /* typing settles for 120ms before the tree follows, so a quick word is one move, not five */
- inp.addEventListener("input",()=>{frow.classList.toggle("has",!!inp.value);clearTimeout(qT);qT=setTimeout(()=>{query=inp.value;sync();if(query.trim())say(lastCount===1?"1 result":lastCount+" results")},inp.value?120:0)});
+ inp.addEventListener("input",()=>{frow.classList.toggle("has",!!inp.value);clearTimeout(qT);qT=setTimeout(()=>{query=inp.value;sync(null,{field:"filter"});if(query.trim())say(lastCount===1?"1 result":lastCount+" results")},inp.value?120:0)});
  inp.addEventListener("keydown",e=>{if(e.key==="Escape"){e.stopPropagation();inp.value?clearQ():inp.blur()}
   if(e.key==="ArrowDown"){e.preventDefault();tree.querySelector(".sb-row:not(.gone) .sb-hit")?.focus()}});
 
  /* ---- clicks in the tree: a folder opens or closes, anything else opens ---- */
  function toggle(n,open){n.open=open??!n.open;sync()}
  /* ---- isolate: a folder (or a place) becomes the view's root; the list slides one way as the new one slides in ---- */
- const pathEl=$("#sbPath"),crumbs=pathEl.querySelector(".sb-crumbs"),pb=pathEl.querySelector('[data-rn="back"]'),pf=pathEl.querySelector('[data-rn="fwd"]');
+ const pathEl=$("#sbPath"),crumbs=pathEl.querySelector(".sb-crumbs"),cghost=(()=>{const g=document.createElement("div");g.className="sb-crumbs-ghost";g.setAttribute("aria-hidden","true");pathEl.appendChild(g);return g})(),pb=pathEl.querySelector('[data-rn="back"]'),pf=pathEl.querySelector('[data-rn="fwd"]');
  const chainOf=id=>{const out=[];let f=id&&find(id);while(f){out.unshift(f.n);f=f.parent===ROOT?null:find(f.parent.id)}return out};
  function goRoot(id,dir,push=true){id=id||null;if(id===rootId)return;if(push){rhist=rhist.slice(0,rat+1);rhist.push(id);rat=rhist.length-1}
   const hadFocus=side.contains(document.activeElement),f=id&&!SYS[id]&&find(id);if(f)f.n.open=true;if(SYS[id])SYS[id].open=true;
-  sync(()=>{rootId=id},{dir});say(id?"Showing "+(SYS[id]||f.n).t:"Showing all");
+  /* the anchor: stepping in, the folder you enter; stepping out, the folder on your way back that is now in view */
+  let anchor=null;if(dir>0)anchor=id;else{const ch=SYS[rootId]?[rootId]:rootId?chainOf(rootId).map(n=>n.id):[],i=id?ch.indexOf(id):-1;anchor=ch[i+1]||null}
+  sync(()=>{rootId=id},{field:dir>0?"in":"out",anchor});say(id?"Showing "+(SYS[id]||f.n).t:"Showing all");
   if(hadFocus&&(!side.contains(document.activeElement)||document.activeElement.closest(".gone")))tree.querySelector(".sb-row:not(.gone) .sb-hit")?.focus({preventScroll:true})}
  function rnav(d){let i=rat+d;while(i>=0&&i<rhist.length&&rhist[i]&&!SYS[rhist[i]]&&!find(rhist[i]))i+=d;if(i<0||i>=rhist.length)return;rat=i;goRoot(rhist[i],d,false)}
  const climb=()=>{if(!rootId)return;if(SYS[rootId])return goRoot(null,-1);const up=find(rootId);goRoot(up&&up.parent!==ROOT?up.parent.id:null,-1)};
@@ -371,8 +407,10 @@ const SB=(()=>{const side=$("#side"),scroll=$("#sbScroll");
    const tag=x.item||x.meta?"B":"BUTTON";let el=old.get(x.k);if(el&&el.tagName!==tag)el=null;if(el)old.delete(x.k);else{el=document.createElement(tag);el.dataset.k=x.k;if(tag==="BUTTON")el.type="button"}
    el.className=x.item?"item":x.meta?"meta":x.here?"here":"";if(tag==="BUTTON"){el.dataset.root=x.root;if(x.here)el.setAttribute("aria-current","location");else el.removeAttribute("aria-current")}
    if(el.textContent!==x.text)el.textContent=x.text;nodes.push(el)});
-  const outs=[];old.forEach(x=>{const r=x.getBoundingClientRect();x.classList.add("out");Object.assign(x.style,{position:"absolute",left:(r.left-cr.left+crumbs.scrollLeft)+"px",top:(r.top-cr.top)+"px"});outs.push(x)});
-  crumbs.replaceChildren(...nodes,...outs);crumbs.scrollLeft=crumbs.scrollWidth;fadeCrumbs();
+  /* steps that go leave from an overlay over the trail, so they never widen it: the trail opens already scrolled to its
+     right end, and nothing snaps back when they are gone */
+  Object.assign(cghost.style,{left:crumbs.offsetLeft+"px",width:crumbs.offsetWidth+"px"});const gr=cghost.getBoundingClientRect(),outs=[];old.forEach(x=>{const r=x.getBoundingClientRect();x.classList.add("out");Object.assign(x.style,{position:"absolute",left:(r.left-gr.left)+"px",top:(r.top-gr.top)+"px"});outs.push(x)});
+  crumbs.replaceChildren(...nodes);cghost.append(...outs);crumbs.scrollLeft=crumbs.scrollWidth;fadeCrumbs();
   if(reduce||!r0.size){outs.forEach(x=>x.remove());return}
   const T=ms("--sb-move"),Es=EZ(),B=blurPx()*.4,t0=document.timeline.currentTime,go=(el,kf,f)=>{const a=el.animate(kf,{duration:T,easing:"linear",fill:f||"none"});a.startTime=t0;return a};
   outs.forEach(x=>go(x,sampled(T,Es,p=>{const k=Math.min(1,p*2);return{opacity:(1-k).toFixed(3),filter:`blur(${(B*k).toFixed(2)}px)`}}),"forwards").finished.then(()=>x.remove(),()=>x.remove()));

@@ -385,20 +385,24 @@ html.sb-theming,html.sb-theming *,html.sb-theming *::before,html.sb-theming *::a
 
 /* ---- the path bar: always under Search, never scrolling. It says where you are (the open chat's path, or the isolated
    folder's), "All" first; any step isolates that folder. Back and forward walk the roots you have visited. ---- */
-.sb-path{display:flex;align-items:center;gap:4px;height:26px;margin:0 0 var(--sp-2);padding:0 0 0 1px}
-.sb-crumbs{position:relative;flex:1;min-width:0;height:100%;padding-left:2px;display:flex;align-items:center;gap:2px;overflow-x:auto;overflow-y:hidden;overscroll-behavior-x:contain;white-space:nowrap;scrollbar-width:none;font-size:var(--sb-fs-2);color:var(--soft);--fl:0px;--fr:0px;
+.sb-path{position:relative;display:flex;align-items:center;gap:4px;height:26px;margin:0 0 var(--sp-2);padding:0 0 0 1px}
+/* steps on their way out, over the trail (sidebar-next.js paintPath) */
+.sb-crumbs-ghost{position:absolute;top:0;bottom:0;overflow:hidden;pointer-events:none;font-size:var(--sb-fs-2);color:var(--soft);white-space:nowrap}
+@property --fl{syntax:"<length>";inherits:false;initial-value:0px}
+@property --fr{syntax:"<length>";inherits:false;initial-value:0px}
+.sb-crumbs{position:relative;flex:1;min-width:0;height:100%;padding-left:2px;display:flex;align-items:center;gap:2px;overflow-x:auto;overflow-y:hidden;overscroll-behavior-x:contain;white-space:nowrap;scrollbar-width:none;font-size:var(--sb-fs-2);color:var(--soft);--fl:0px;--fr:0px;transition:--fl var(--sb-move) var(--sb-ease),--fr var(--sb-move) var(--sb-ease);
  -webkit-mask-image:linear-gradient(90deg,transparent,#000 var(--fl),#000 calc(100% - var(--fr)),transparent);mask-image:linear-gradient(90deg,transparent,#000 var(--fl),#000 calc(100% - var(--fr)),transparent)}
 .sb-crumbs::-webkit-scrollbar{display:none}
 .sb-crumbs.ovl{--fl:18px}.sb-crumbs.ovr{--fr:18px}
-.sb-crumbs button{all:unset;flex:none;padding:3px 4px;border-radius:var(--sb-r-sm);color:var(--soft);cursor:pointer;transition:background var(--sb-out) var(--sb-ease),color var(--sb-out) var(--sb-ease)}
-.sb-crumbs button:hover{background:var(--line);color:var(--ink);transition-duration:calc(var(--sb-in) * .5)}
+:is(.sb-crumbs,.sb-crumbs-ghost) button{all:unset;flex:none;padding:3px 4px;border-radius:var(--sb-r-sm);color:var(--soft);cursor:pointer;transition:background var(--sb-out) var(--sb-ease),color var(--sb-out) var(--sb-ease)}
+:is(.sb-crumbs,.sb-crumbs-ghost) button:hover{background:var(--line);color:var(--ink);transition-duration:calc(var(--sb-in) * .5)}
 .sb-crumbs button.drop{background:var(--gold-wash);color:var(--gold-ink)}
 .sb-crumbs button:focus-visible{outline:var(--rule) solid var(--gold)}
-.sb-crumbs i{flex:none;font-style:normal;color:var(--line-3)}
-.sb-crumbs button.here{color:var(--ink);font-weight:500}
-.sb-crumbs b{flex:none;padding:3px 4px;font-weight:400}
-.sb-crumbs b.item{font:italic 400 10.5px/1 var(--f-display);color:var(--soft)}  /* the open item, in the display italic */
-.sb-crumbs b.meta{color:var(--mute);font-variant-numeric:tabular-nums}
+:is(.sb-crumbs,.sb-crumbs-ghost) i{flex:none;font-style:normal;color:var(--line-3)}
+:is(.sb-crumbs,.sb-crumbs-ghost) button.here{color:var(--ink);font-weight:500}
+:is(.sb-crumbs,.sb-crumbs-ghost) b{flex:none;padding:3px 4px;font-weight:400}
+:is(.sb-crumbs,.sb-crumbs-ghost) b.item{font:italic 400 10.5px/1 var(--f-display);color:var(--soft)}  /* the open item, in the display italic */
+:is(.sb-crumbs,.sb-crumbs-ghost) b.meta{color:var(--mute);font-variant-numeric:tabular-nums}
 .sb-crumbs .out{pointer-events:none}
 
 /* ---- rearrange: the row lifts onto its own surface, and the ‹ › buttons, turned upright, stand where the … was ---- */
