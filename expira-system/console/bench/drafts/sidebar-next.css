@@ -16,7 +16,12 @@
      settle with no crawl (Amadeus, v45: "fast, smooth, then a really soft close") */
   --sb-dock-close:cubic-bezier(.3,.85,.15,1);--sb-dock-out:720ms;--sb-settle:760ms;
   --sb-w:256px;
+  /* depth: floating cards cast a soft, layered shadow that grows in with them (sidebar-next.js depth() at 1 equals this) */
+  --sb-shc:11,26,63;--sb-sha:.34;--sb-hi:255,255,255;--sb-hia:.7;
+  --sb-depth:inset 0 1px 0 rgba(var(--sb-hi),var(--sb-hia)),0 0 0 .5px rgba(var(--sb-shc),calc(var(--sb-sha) * .45)),0 6px 16px -3px rgba(var(--sb-shc),calc(var(--sb-sha) * .45)),0 22px 56px -10px rgba(var(--sb-shc),calc(var(--sb-sha) * .8));
 }
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--sb-shc:0,0,0;--sb-sha:.8;--sb-hia:.05}}
+:root[data-theme="dark"]{--sb-shc:0,0,0;--sb-sha:.8;--sb-hia:.05}
 @media (prefers-reduced-motion:reduce){:root{--sb-in:1ms;--sb-out:1ms;--sb-move:1ms;--sb-dock:1ms;--sb-dock-out:1ms;--sb-settle:1ms}}
 
 /* the dock: width is the viewer's; folding slides it out on the one curve */
@@ -70,7 +75,7 @@
 
 /* the gliding highlight: placed, stretched and faded by script */
 .sb-hl{position:absolute;left:var(--sp-2);right:var(--sp-2);top:0;height:var(--sb-row);border-radius:var(--r-3);background:var(--line);opacity:0;pointer-events:none;z-index:0;transform-origin:50% 50%}
-.sb-card .sb-hl{left:4px;right:4px}
+.sb-card .sb-hl{left:5px;right:5px;border-radius:6px}
 
 /* rows: one kind of row for everything; depth is an indent and a hairline guide under the parent's caret */
 .sb-row{--d:0;position:relative;z-index:1;display:flex;align-items:center;height:var(--sb-row);border-radius:var(--r-3);color:var(--text);font-size:var(--sb-fs);font-weight:400;letter-spacing:.002em}
@@ -171,10 +176,10 @@ body.sb-resizing,body.sb-resizing *{cursor:col-resize!important;user-select:none
 .sb-sig .wm{width:50px;height:11px}
 
 /* the pull-up and the row menu: one surface, each on its own layer so its text is not re-rasterised as it moves */
-.sb-menu,.sb-card,.sb-nav{will-change:transform,opacity,filter;opacity:0}
+.sb-card,.sb-nav{will-change:transform,opacity,filter;opacity:0}
 .sb-menu,.sb-pop{visibility:hidden;pointer-events:none}
 /* the menus are frosted glass over the near-black, as macOS menus are over the desktop */
-.sb-menu,.sb-card,.sb-nav{background:color-mix(in srgb,var(--panel) 80%,transparent);-webkit-backdrop-filter:blur(22px) saturate(1.5);backdrop-filter:blur(22px) saturate(1.5);border:var(--rule-hair) solid var(--line-3);box-shadow:var(--e3)}
+.sb-menu,.sb-card,.sb-nav,.sb-selbar{background:color-mix(in srgb,var(--panel) 80%,transparent);-webkit-backdrop-filter:blur(22px) saturate(1.5);backdrop-filter:blur(22px) saturate(1.5);border:var(--rule-hair) solid var(--line-3);box-shadow:var(--sb-depth)}
 .sb-pop.open .sb-card,.sb-pop.open .sb-nav{opacity:1}
 .sb-menu{padding:4px;border-radius:var(--r-5)}
 .sb-menu.open{opacity:1}
@@ -182,24 +187,26 @@ body.sb-resizing,body.sb-resizing *{cursor:col-resize!important;user-select:none
 .sb-menu{position:absolute;left:var(--sp-1h);right:var(--sp-1h);bottom:calc(100% + var(--sp-1h));z-index:var(--z-menu)}
 /* the row menu: a card of pages, with a small pill of back and forward arrows sitting above it, like a browser's */
 .sb-pop{position:fixed;left:0;top:0;width:196px;z-index:var(--z-menu)}
-.sb-card{position:relative;overflow:hidden;padding:4px;border-radius:var(--r-5);transition:height var(--sb-move) var(--sb-ease)}  /* height eases between pages: a small surface, so its layout move is cheap */
+.sb-card{position:relative;overflow:hidden;padding:5px;border-radius:11px;transition:height var(--sb-move) var(--sb-ease)}  /* height eases between pages: a small surface, so its layout move is cheap */
 .sb-page{position:relative}
-.sb-nav{position:absolute;left:0;bottom:calc(100% + 5px);display:flex;gap:1px;padding:2px;border-radius:var(--r-round);box-shadow:var(--e2)}
+.sb-nav{position:absolute;right:0;bottom:calc(100% + 5px);display:flex;gap:1px;padding:2px;border-radius:var(--r-round)}
 .sb-nav button{all:unset;width:20px;height:20px;display:grid;place-items:center;border-radius:var(--r-round);color:var(--soft);cursor:pointer;transition:background var(--sb-out) var(--sb-ease),color var(--sb-out) var(--sb-ease),opacity var(--sb-out) var(--sb-ease)}
 .sb-nav button svg{width:11px;height:11px}
 .sb-nav button:hover:not(:disabled){background:var(--line-2);color:var(--ink);transition-duration:calc(var(--sb-in) * .5)}
 .sb-nav button:disabled{opacity:.28;cursor:default}
 .sb-nav button:focus-visible{outline:var(--rule) solid var(--gold)}
+/* the pill sits between the card and what opened it, at the right, under the … (or the account row's chevrons) */
+.sb-pop[data-from="below"] .sb-nav,.sb-acct .sb-nav{bottom:auto;top:calc(100% + 5px)}
 .sb-go{width:10px;height:10px;flex:none;margin-left:auto;color:var(--mute)}
 .sb-go svg{width:10px;height:10px;display:block}
 .sb-pop .sb-none{padding:var(--sp-1h) var(--sp-2);font-size:var(--sb-fs-2);color:var(--mute)}
-.sb-menu .sb-row,.sb-pop .sb-row{height:26px}
+.sb-card .sb-row{height:26px;border-radius:6px}  /* concentric: 11px card, 5px inset, 6px rows */
 .sb-pop .sb-row .sb-hit{padding-left:calc(var(--sp-2) + var(--d) * 10px)}
 .sb-menu .sb-hl{left:4px;right:4px}
 .sb-mh{position:relative;z-index:1;display:flex;flex-direction:column;gap:1px;padding:var(--sp-1h) var(--sp-2) var(--sp-2)}
 .sb-mh b{font-weight:450;font-size:var(--sb-fs);color:var(--ink)}
 .sb-mh small{font-size:var(--sb-fs-2);color:var(--mute)}
-.sb-pop .sb-mh.plain{padding:var(--sp-1h) var(--sp-2) var(--sp-1);font-size:var(--fs-micro);letter-spacing:var(--tracked-tight);text-transform:uppercase;color:var(--mute)}
+.sb-card .sb-mh.plain{padding:var(--sp-1h) var(--sp-2) var(--sp-1);font-size:var(--fs-micro);letter-spacing:var(--tracked-tight);text-transform:uppercase;color:var(--mute)}
 .sb-sep{height:var(--rule-hair);background:var(--line-2);margin:4px var(--sp-1h)}
 .sb-row.danger .sb-hit,.sb-row.danger .sb-ic{color:var(--bad)}
 .sb-seg{position:relative;z-index:1;display:grid;grid-template-columns:repeat(3,1fr);margin:var(--sp-half) var(--sp-half) var(--sp-1);padding:2px;border-radius:var(--r-3);background:var(--well);box-shadow:inset 0 0 0 var(--rule-hair) var(--line-2)}
@@ -215,3 +222,76 @@ body.sb-resizing,body.sb-resizing *{cursor:col-resize!important;user-select:none
 .sb-scroll{--fs:0px;--fe:0px;transition:--fs var(--sb-out) var(--sb-ease),--fe var(--sb-out) var(--sb-ease);-webkit-mask-image:linear-gradient(to bottom,transparent 0,#000 var(--fs),#000 calc(100% - var(--fe)),transparent 100%);mask-image:linear-gradient(to bottom,transparent 0,#000 var(--fs),#000 calc(100% - var(--fe)),transparent 100%)}
 .sb-scroll.f-s{--fs:16px}
 .sb-scroll.f-e{--fe:20px}
+
+/* ---- the account card: a system panel. It sits above the account row, leaving room for its pill by the chevrons ---- */
+.sb-acct{position:absolute;left:var(--sp-1h);right:var(--sp-1h);bottom:calc(100% + 34px);z-index:var(--z-menu);visibility:hidden;pointer-events:none}
+.sb-acct.open{visibility:visible;pointer-events:auto}
+.sb-acct.open .sb-card,.sb-acct.open .sb-nav{opacity:1}
+/* identity */
+.sb-id{position:relative;z-index:1;display:flex;align-items:center;gap:var(--sp-2h);padding:var(--sp-2) var(--sp-2) var(--sp-2h)}
+.sb-id .sb-av{width:32px;height:32px;font-size:15px}
+.sb-idt{min-width:0;display:flex;flex-direction:column;gap:1px}
+.sb-idt b{font-weight:450;font-size:12px;color:var(--ink)}
+.sb-idt small{font-size:var(--sb-fs-2);color:var(--mute);white-space:nowrap;overflow:hidden;-webkit-mask-image:linear-gradient(90deg,#000 calc(100% - 14px),transparent);mask-image:linear-gradient(90deg,#000 calc(100% - 14px),transparent)}
+.sb-idt em{display:flex;align-items:center;gap:5px;margin-top:2px;font-style:normal;font-size:var(--fs-micro);letter-spacing:.02em;color:var(--mute)}
+.sb-idt em i,.sb-note i{width:5px;height:5px;border-radius:var(--r-round);background:var(--ok);box-shadow:0 0 0 2px color-mix(in srgb,var(--ok) 18%,transparent)}
+/* the Control Center strip: appearance, then two tiles */
+.sb-cc{position:relative;z-index:1;display:flex;flex-direction:column;gap:5px;padding:0 1px 4px}
+.sb-cc .sb-seg{margin:0;padding:2px;border-radius:8px}
+.sb-cc .sb-seg .pill{border-radius:6px;transition:none}
+.sb-cc .sb-seg button{flex-direction:row;height:24px;border-radius:6px;gap:5px}
+.sb-cc .sb-seg button svg{width:12px;height:12px}
+.sb-tiles{display:grid;grid-template-columns:1fr 1fr;gap:5px}
+.sb-tile{all:unset;box-sizing:border-box;display:flex;align-items:center;gap:var(--sp-2);height:40px;padding:0 var(--sp-2);border-radius:8px;background:var(--well);box-shadow:inset 0 0 0 var(--rule-hair) var(--line-2);cursor:pointer;
+ transition:background var(--sb-out) var(--sb-ease),box-shadow var(--sb-out) var(--sb-ease)}
+.sb-tile:hover{box-shadow:inset 0 0 0 var(--rule-hair) var(--line-3);transition-duration:calc(var(--sb-in) * .5)}
+.sb-tile:focus-visible{outline:var(--rule) solid var(--gold);outline-offset:-1px}
+.sb-tile .w{width:24px;height:24px;flex:none;display:grid;place-items:center;border-radius:var(--r-round);background:var(--line-2);color:var(--soft);
+ transition:background var(--sb-in) var(--sb-ease),color var(--sb-in) var(--sb-ease),box-shadow var(--sb-in) var(--sb-ease)}
+.sb-tile .w svg{width:13px;height:13px}
+.sb-tile.on .w{background:color-mix(in srgb,var(--gold) 22%,transparent);color:var(--gold-hi,var(--gold));box-shadow:inset 0 0 0 var(--rule-hair) color-mix(in srgb,var(--gold) 55%,transparent)}
+.sb-tile .l{min-width:0;display:flex;flex-direction:column;gap:1px;line-height:1.15}
+.sb-tile b{font-weight:450;font-size:var(--sb-fs);color:var(--ink);white-space:nowrap}
+.sb-tile small{font-size:var(--fs-micro);color:var(--mute)}
+.sb-tile.on small{color:var(--gold-ink)}
+/* a quiet note and the system line */
+.sb-note{position:relative;z-index:1;display:flex;align-items:center;gap:6px;padding:var(--sp-1h) var(--sp-2) var(--sp-1);font-size:var(--sb-fs-2);color:var(--mute)}
+.sb-sysline{position:relative;z-index:1;display:flex;justify-content:space-between;gap:var(--sp-2);margin:4px 3px 0;padding:var(--sp-1h) var(--sp-1h) 3px;border-top:var(--rule-hair) solid var(--line-2);font-size:var(--fs-micro);letter-spacing:.02em;color:var(--mute);font-variant-numeric:tabular-nums}
+/* Compact off: roomier rows (macOS's medium sidebar size) */
+:root[data-sb-density="roomy"]{--sb-row:28px;--sb-fs:12px;--sb-ic:14px}
+/* the theme change: the page cross-fades (a view transition) on the one curve */
+::view-transition-old(root),::view-transition-new(root){animation-duration:var(--sb-in);animation-timing-function:var(--sb-ease)}
+
+/* ---- select many ---- */
+.sb-tb[aria-pressed="true"]{background:var(--gold-wash);color:var(--gold-ink)}
+/* the check takes the glyph's place: the glyph racks out and the check pulls focus, in the same spot */
+.sb-ic{position:relative}
+.sb-ic .g{display:grid;place-items:center;width:100%;height:100%;transition:opacity var(--sb-out) var(--sb-ease),filter var(--sb-out) var(--sb-ease)}
+.sb-ck{position:absolute;inset:-1px;display:grid;place-items:center;border-radius:var(--r-round);box-shadow:inset 0 0 0 1px var(--mute);opacity:0;filter:blur(2px);pointer-events:none;
+ transition:opacity var(--sb-out) var(--sb-ease),filter var(--sb-out) var(--sb-ease),background var(--sb-out) var(--sb-ease),box-shadow var(--sb-out) var(--sb-ease)}
+.sb-ck svg{width:9px;height:9px;fill:none;stroke:var(--bg);stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:10;stroke-dashoffset:10;transition:stroke-dashoffset var(--sb-move) var(--sb-ease)}
+.selecting .sb-tree .sb-ic .g{opacity:0;filter:blur(2px)}
+.selecting .sb-tree .sb-ck{opacity:1;filter:none;transition-duration:var(--sb-in)}
+.sb-row.picked .sb-ck{background:var(--gold);box-shadow:inset 0 0 0 1px var(--gold)}
+.sb-row.picked .sb-ck svg{stroke-dashoffset:0}
+.selecting .sb-row.picked{background:color-mix(in srgb,var(--gold) 12%,var(--line))}
+.selecting .sb-more{display:none}
+.selecting .sb-row .sb-hit{padding-right:var(--sp-2)}
+/* the selection bar: pulls up above the account row, one row of icons and the count */
+.sb-selbar{position:absolute;left:var(--sp-1h);right:var(--sp-1h);bottom:calc(100% + var(--sp-1h));z-index:var(--z-toast);display:flex;align-items:center;gap:2px;height:34px;padding:0 4px 0 var(--sp-2h);border-radius:11px;
+ will-change:transform,opacity,filter;opacity:0;visibility:hidden;pointer-events:none}
+.sb-selbar.open{opacity:1;visibility:visible;pointer-events:auto}
+.sb-selbar .n{flex:1;display:flex;align-items:baseline;gap:4px;font-size:var(--sb-fs-2);color:var(--mute)}
+.sb-selbar .n b{font-weight:500;font-size:var(--sb-fs);color:var(--ink);font-variant-numeric:tabular-nums}
+.sb-selbar button{all:unset;width:26px;height:26px;display:grid;place-items:center;border-radius:6px;color:var(--soft);cursor:pointer;transition:background var(--sb-out) var(--sb-ease),color var(--sb-out) var(--sb-ease),opacity var(--sb-out) var(--sb-ease)}
+.sb-selbar button svg{width:14px;height:14px}
+.sb-selbar button:hover:not(:disabled),.sb-selbar button[aria-expanded="true"]{background:var(--line-2);color:var(--ink);transition-duration:calc(var(--sb-in) * .5)}
+.sb-selbar button.danger:hover:not(:disabled){background:color-mix(in srgb,var(--bad) 14%,transparent);color:var(--bad)}
+.sb-selbar button:disabled{opacity:.3;cursor:default}
+.sb-selbar button:focus-visible{outline:var(--rule) solid var(--gold)}
+.sb-selbar .sep{width:var(--rule-hair);height:16px;margin:0 3px;background:var(--line-3)}
+/* the sort card sits above the bar, at its right */
+.sb-sortc{position:absolute;right:var(--sp-1h);width:176px;bottom:calc(100% + var(--sp-1h) + 34px + 6px);z-index:calc(var(--z-toast) + 1);visibility:hidden;pointer-events:none}
+.sb-sortc.open{visibility:visible;pointer-events:auto}
+.sb-sortc.open .sb-card{opacity:1}
+.sb-sortc .sb-ic{color:var(--gold-ink)}

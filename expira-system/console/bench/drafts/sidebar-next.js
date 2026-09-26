@@ -34,13 +34,25 @@ const SB=(()=>{const side=$("#side"),scroll=$("#sbScroll");
   compose:sv('<path d="M8.5 2.5H4a1.5 1.5 0 00-1.5 1.5v8A1.5 1.5 0 004 13.5h8a1.5 1.5 0 001.5-1.5V7.5"/><path d="M12.2 2.3l1.5 1.5-5.6 5.6-2.1.6.6-2.1z"/>'),
   kill:sv('<path d="M3 4.5h10M6.2 4.5V3.2h3.6v1.3M4.4 4.5l.6 8.3h6l.6-8.3M6.8 7l2.4 3.6M9.2 7l-2.4 3.6"/>'),
   updown:`<svg class="sb-ud" viewBox="0 0 12 16" fill="none" stroke="currentColor" stroke-width="1.15" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path class="u" d="M3.4 6.2 6 3.6l2.6 2.6"/><path class="d" d="M3.4 9.8 6 12.4l2.6-2.6"/></svg>`,
+  data:sv('<ellipse cx="8" cy="4" rx="5" ry="1.9"/><path d="M3 4v8c0 1 2.2 1.9 5 1.9s5-.9 5-1.9V4M3 8c0 1 2.2 1.9 5 1.9S13 9 13 8"/>'),
+  out2:sv('<path d="M8 10V2.5M5.2 5.2 8 2.5l2.8 2.7M3 9.5v3a1 1 0 001 1h8a1 1 0 001-1v-3"/>'),
+  in2:sv('<path d="M8 2.5V10M5.2 7.3 8 10l2.8-2.7M3 9.5v3a1 1 0 001 1h8a1 1 0 001-1v-3"/>'),
+  keys:sv('<rect x="1.5" y="4" width="13" height="8" rx="1.4"/><path d="M4 6.5h.5M6.5 6.5h.5M9 6.5h.5M11.5 6.5h.5M5 9.5h6"/>'),
+  cmd:sv('<path d="M5 3a2 2 0 100 4h6a2 2 0 100-4 2 2 0 00-2 2v6a2 2 0 102-2H5a2 2 0 102 2V5a2 2 0 00-2-2z"/>'),
+  spark:sv('<path d="M8 2v3M8 11v3M2 8h3M11 8h3M4 4l1.8 1.8M10.2 10.2 12 12M4 12l1.8-1.8M10.2 5.8 12 4"/>'),
+  calm:sv('<path d="M2 9.5c1.6-1.6 3-1.6 4.5 0s3 1.6 4.5 0 2.4-1.6 3 0"/><path d="M2 6.5c1.6-1.6 3-1.6 4.5 0s3 1.6 4.5 0 2.4-1.6 3 0" opacity=".45"/>'),
+  rows:sv('<path d="M3 4.5h10M3 8h10M3 11.5h10"/>'),
+  select:sv('<circle cx="8" cy="8" r="5.8"/><path d="M5.6 8.1l1.7 1.7 3.2-3.4"/>',1.15),
+  all:sv('<rect x="2" y="2" width="9" height="9" rx="2"/><path d="M5 13.8h7.2a1.6 1.6 0 001.6-1.6V5M4.6 6.6l1.5 1.5 2.8-3"/>'),
+  sort:sv('<path d="M5 3v10M2.8 5.2 5 3l2.2 2.2M11 13V3M8.8 10.8 11 13l2.2-2.2"/>'),
+  done:sv('<path d="M3.5 8.4l3 3 6-6.4"/>',1.3),
   back:sv('<path d="M9.5 4 5.5 8l4 4"/>',1.3),fwd:sv('<path d="M6.5 4l4 4-4 4"/>',1.3)};
  /* the foot's markup names its icons as <!--name--> placeholders; fill them before anything binds to it */
  const foot=$(".sb-foot");foot.innerHTML=foot.innerHTML.replace(/<!--(\w+)-->/g,(m,k)=>IC[k]?IC[k].replace("<svg",k==="chev"?'<svg class="sb-chev"':"<svg"):m);
  /* macOS layout: the header row is a toolbar (New chat, New folder; the sidebar button sits at its right), a real search
     field sits under it and never scrolls, and the tree fills the rest */
  const bar=side.querySelector(".brand");bar.removeAttribute("aria-hidden");
- bar.innerHTML=`<button class="sb-tb" type="button" id="newChat" aria-label="New chat">${IC.compose}</button><button class="sb-tb" type="button" data-newf aria-label="New folder">${IC.newf}</button>`;
+ bar.innerHTML=`<button class="sb-tb" type="button" id="newChat" aria-label="New chat">${IC.compose}</button><button class="sb-tb" type="button" data-newf aria-label="New folder">${IC.newf}</button><button class="sb-tb" type="button" id="selBtn" aria-label="Select" aria-pressed="false">${IC.select}</button>`;
  bar.insertAdjacentHTML("afterend",`<label class="sb-search" id="findRow"><span class="sb-ic">${IC.search}</span><span class="sr">Search chats and files</span><input id="find" placeholder="Search" autocomplete="off" spellcheck="false"><button class="sb-clr" type="button" aria-label="Clear the search">${IC.x}</button></label>`);
  scroll.innerHTML=`<div class="sb-tree" id="sbTree" role="tree" aria-label="Chats and folders"></div>`;
  const tree=$("#sbTree");
@@ -52,9 +64,14 @@ const SB=(()=>{const side=$("#side"),scroll=$("#sbScroll");
  /* motion blur: every move is sampled from its curve, and blurs in proportion to its speed, sharp at rest */
  function sampled(D,Es,frame){const E=easeFn(Es),N=Math.max(16,Math.ceil(D/1000*120)),v=[];for(let i=0;i<=N;i++){const t=i/N;v.push((E(Math.min(1,t+.008))-E(Math.max(0,t-.008)))/.016)}
   const vm=Math.max(...v)||1;return v.map((x,i)=>frame(E(i/N),x/vm,i/N))}
+ /* depth: the floating cards' shadow, as a function of how far they have arrived; at 1 it equals --sb-depth in the CSS */
+ function depth(p){const c=tok("--sb-shc")||"0,0,0",a=parseFloat(tok("--sb-sha"))||.7,h=tok("--sb-hi")||"255,255,255",ha=parseFloat(tok("--sb-hia"))||0,f=x=>x.toFixed(3);
+  return `inset 0 1px 0 rgba(${h},${f(ha*p)}), 0 0 0 .5px rgba(${c},${f(.45*a*p)}), 0 ${(1+5*p).toFixed(1)}px ${(4+12*p).toFixed(1)}px -3px rgba(${c},${f(.45*a*p)}), 0 ${(4+18*p).toFixed(1)}px ${(14+42*p).toFixed(1)}px -10px rgba(${c},${f(.8*a*p)})`}
  const mb=(k,max)=>k*max<.06?"blur(0px)":`blur(${(k*max).toFixed(2)}px)`;
  /* entering pulls focus (opacity first, focus last); leaving racks out (focus first, fade after). Only opacity and blur. */
- const focusIn=B=>[{opacity:0,filter:`blur(${B}px)`},{opacity:.85,filter:`blur(${(B*.4).toFixed(2)}px)`,offset:.35},{opacity:1,filter:"blur(0px)"}];
+ /* focus is fully resolved by 60% of the way, so the last stretch of a move is already sharp: nothing snaps into focus at the end */
+ const fb=(p,B,at=.6)=>p>=at?"blur(0px)":`blur(${(B*Math.pow(1-p/at,2)).toFixed(2)}px)`;
+ const focusIn=B=>[{opacity:0,filter:`blur(${B}px)`},{opacity:.85,filter:`blur(${(B*.25).toFixed(2)}px)`,offset:.3},{opacity:.97,filter:"blur(0px)",offset:.6},{opacity:1,filter:"blur(0px)"}];
  const focusOut=B=>[{opacity:1,filter:"blur(0px)"},{opacity:.55,filter:`blur(${(B*.75).toFixed(2)}px)`,offset:.35},{opacity:0,filter:`blur(${B}px)`}];
 
  /* ---- the model (bench sample; the console builds it from chats, FOLDERS and the documents the kernel builds) ---- */
@@ -72,11 +89,16 @@ const SB=(()=>{const side=$("#side"),scroll=$("#sbScroll");
   mk("doc","Board resolution draft",{ts:now-40*H}),
   mk("chat","Warehouse lease terms",{ts:now-90*H}),
   mk("chat","Company profile refresh",{ts:now-300*H})]};
- let sel=ROOT.kids[4].id,query="";
+ let sel=ROOT.kids[4].id,query="",selMode=false,anchor=null;const picked=new Set();
  const find=(id,list=ROOT.kids,parent=ROOT)=>{for(const n of list){if(n.id===id)return{n,parent};if(n.kids){const r=find(id,n.kids,n);if(r)return r}}return null};
  const within=(a,b)=>a===b||!!(a.kids&&a.kids.some(k=>within(k,b)));
- /* folders keep the order you made them in; items put pins first, then the newest */
- const order=l=>[...l].sort((a,b)=>(a.kind==="folder")!==(b.kind==="folder")?(a.kind==="folder"?-1:1):a.kind==="folder"?0:((b.pin-a.pin)||(b.ts-a.ts)));
+ /* folders come first. By default folders keep the order you made them in and items put pins first, then the newest;
+    the selection bar's Sort offers oldest first, by name either way, and by kind (documents, then chats) */
+ let sortBy="new";const KIND={folder:0,doc:1,chat:2};
+ const byName=(a,b)=>a.t.localeCompare(b.t,undefined,{sensitivity:"base",numeric:true});
+ const order=l=>[...l].sort((a,b)=>{const fa=a.kind==="folder",fb2=b.kind==="folder";if(fa!==fb2)return fa?-1:1;
+  if(sortBy==="az")return byName(a,b);if(sortBy==="za")return byName(b,a);if(fa)return 0;
+  return (b.pin-a.pin)||(sortBy==="kind"?(KIND[a.kind]-KIND[b.kind])||(b.ts-a.ts):sortBy==="old"?(a.ts-b.ts):(b.ts-a.ts))});
  function flat(){const q=query.trim().toLowerCase(),out=[];const hit=n=>n.t.toLowerCase().includes(q),has=n=>hit(n)||(n.kids||[]).some(has);
   const walk=(l,d,all)=>order(l).forEach(n=>{if(q&&!all&&!has(n))return;out.push({id:n.id,n,d});
    if(n.kind==="folder"&&(q||n.open)){if(n.kids.length)walk(n.kids,d+1,all||(!!q&&hit(n)));else if(!q)out.push({id:n.id+":e",n:null,d:d+1,empty:true})}});
@@ -86,20 +108,22 @@ const SB=(()=>{const side=$("#side"),scroll=$("#sbScroll");
  const glyph=n=>n.kind==="folder"?IC.folder:n.kind==="doc"?IC.doc:`<i class="sb-dot${n.live?" live":""}"></i>`;
  function make(w){const e=document.createElement("div");e.className="sb-row";e.dataset.id=w.id;
   if(w.empty){e.classList.add("sb-empty");e.innerHTML=`<span class="sb-t">Empty</span>`;return e}
-  e.draggable=true;e.innerHTML=`<button class="sb-hit" type="button"><span class="sb-car">${w.n.kind==="folder"?IC.car:""}</span><span class="sb-ic"></span><span class="sb-t"></span></button>`+
+  e.draggable=true;e.innerHTML=`<button class="sb-hit" type="button"><span class="sb-car">${w.n.kind==="folder"?IC.car:""}</span><span class="sb-ic"><span class="g"></span><span class="sb-ck" aria-hidden="true"><svg viewBox="0 0 12 12"><path d="M3.2 6.2l1.8 1.8 3.8-4"/></svg></span></span><span class="sb-t"></span></button>`+
    `<button class="sb-kill" type="button" aria-label="Delete now" tabindex="-1">${IC.kill}</button><button class="sb-more" type="button" aria-label="Actions" aria-haspopup="menu" aria-expanded="false"><span class="d">${IC.dots}</span><span class="u">${IC.undo}</span></button>`;return e}
  function update(e,w){e.style.setProperty("--d",w.d);e.classList.toggle("deep",w.d>0);if(w.empty)return;const n=w.n;
   e.dataset.k=n.kind;e.classList.toggle("on",n.id===sel);e.classList.toggle("pinned",!!n.pin);e.classList.toggle("undo",!!n.del);
   if(n.kind==="folder")e.setAttribute("aria-expanded",String(!!(query.trim()||n.open)));
   e.querySelector(".sb-more").setAttribute("aria-label",n.del?"Undo delete":"Actions");e.querySelector(".sb-kill").tabIndex=n.del?0:-1;
-  const ic=e.querySelector(".sb-ic"),g=glyph(n);if(ic._g!==g){ic.innerHTML=g;ic._g=g}
+  const ic=e.querySelector(".sb-ic .g"),g=glyph(n);if(ic._g!==g){ic.innerHTML=g;ic._g=g}
+  e.classList.toggle("picked",picked.has(n.id));if(selMode)e.querySelector(".sb-hit").setAttribute("aria-pressed",String(picked.has(n.id)));else e.querySelector(".sb-hit").removeAttribute("aria-pressed");
   const t=e.querySelector(".sb-t");if(!t.querySelector("input")&&t.textContent!==n.t)t.textContent=n.t}
  const els=new Map();
 
  /* ---- sync: the one move ---- */
- function sync(){hlS.off();
+ function sync(pre){hlS.off();
   const want=flat(),keep=new Set(want.map(w=>w.id));
   const before=new Map();els.forEach((e,id)=>{if(e.isConnected&&!e.classList.contains("gone"))before.set(id,e.getBoundingClientRect().top)});
+  if(pre)pre();
   /* rows that leave are pinned where they are, out of the flow, so the rows below can rise over them */
   const leaving=[];els.forEach((e,id)=>{if(keep.has(id)||!e.isConnected||e.classList.contains("gone"))return;leaving.push({e,id,top:e.offsetTop,left:e.offsetLeft,w:e.offsetWidth,h:e.offsetHeight})});
   leaving.forEach(({e,top,left,w})=>{e.getAnimations().forEach(a=>a.cancel());e.classList.add("gone");Object.assign(e.style,{position:"absolute",top:top+"px",left:left+"px",width:w+"px"})});
@@ -133,7 +157,7 @@ const SB=(()=>{const side=$("#side"),scroll=$("#sbScroll");
   let shown=false,y=0,fade=null,mv=null;
   const curY=()=>{const m=/matrix\(([^)]+)\)/.exec(getComputedStyle(hl).transform);return m?+m[1].split(",")[5]:y};
   function show(v){if(v===shown)return;shown=v;const op=+getComputedStyle(hl).opacity;fade?.cancel();hl.style.opacity=v?"1":"0";if(reduce)return;const B=blurPx()*.4;
-   fade=hl.animate(v?[{opacity:op,filter:`blur(${(B*(1-op)).toFixed(2)}px)`},{opacity:1,filter:"blur(0px)"}]:[{opacity:op,filter:"blur(0px)"},{opacity:.45*op,filter:`blur(${(B*.7).toFixed(2)}px)`,offset:.35},{opacity:0,filter:`blur(${B}px)`}],
+   fade=hl.animate(v?[{opacity:op,filter:`blur(${(B*(1-op)).toFixed(2)}px)`},{opacity:.95,filter:"blur(0px)",offset:.55},{opacity:1,filter:"blur(0px)"}]:[{opacity:op,filter:"blur(0px)"},{opacity:.45*op,filter:`blur(${(B*.7).toFixed(2)}px)`,offset:.35},{opacity:0,filter:`blur(${B}px)`}],
     {duration:v?ms("--sb-in")*.5:ms("--sb-out"),easing:EZ()})}
   function place(row){const y1=Math.round(row.getBoundingClientRect().top-list.getBoundingClientRect().top+list.scrollTop),h=row.offsetHeight;hl.style.height=h+"px";
    if(!shown||reduce){mv?.cancel();y=y1;hl.style.transform=`translateY(${y1}px)`;return}
@@ -144,7 +168,7 @@ const SB=(()=>{const side=$("#side"),scroll=$("#sbScroll");
   list.addEventListener("pointerover",e=>{const r=e.target.closest(sel);if(!r||!list.contains(r)||r.classList.contains("gone")||r.classList.contains("sb-empty")){if(!e.target.closest(".sb-hl"))show(false);return}place(r);show(true)});
   list.addEventListener("pointerleave",()=>show(false));
   return{el:hl,off:()=>show(false)}}
- const hlS=glide(scroll,".sb-row"),hlM=glide($("#sbMenu"),".sb-row");
+ const hlS=glide(scroll,".sb-row");
 
  /* ---- the top rows: New chat (with New folder beside it) and Search ---- */
  function newChat(parent=ROOT){const n=mk("chat","New chat",{ts:Date.now()});parent.kids.push(n);if(parent!==ROOT)parent.open=true;sel=n.id;sync();return n}
@@ -166,6 +190,7 @@ const SB=(()=>{const side=$("#side"),scroll=$("#sbScroll");
   const m=e.target.closest(".sb-more");if(m){e.stopPropagation();const r=m.closest(".sb-row"),f=find(r.dataset.id);
    if(f.n.del)return undoDel(f.n);pmFor===r&&pm.classList.contains("open")?pop(false):pop(true,r);return}
   const h=e.target.closest(".sb-hit");if(!h||h.querySelector("input"))return;const f=find(h.parentElement.dataset.id);if(!f||f.n.del)return;
+  if(selMode){e.stopPropagation();pick(f.n.id,e.shiftKey);return}
   if(f.n.kind==="folder")return toggle(f.n);sel=f.n.id;tree.querySelectorAll(".sb-row.on").forEach(x=>x.classList.remove("on"));h.parentElement.classList.add("on")},true);
 
  /* ---- pull: the sidebar's small surfaces (the account pull-up, the row menu). Opacity, a small drop and focus ride one
@@ -174,22 +199,11 @@ const SB=(()=>{const side=$("#side"),scroll=$("#sbScroll");
   const now=()=>{if(!cur)return rest;const u=Math.min(1,Math.max(0,(document.timeline.currentTime-cur.t0)/cur.T));return cur.p0+(cur.g-cur.p0)*cur.E(u)};
   function run(g){const p0=now();anims.forEach(a=>a.cancel());anims=[];if(reduce||!el.animate){cur=null;rest=g;return}
    const open=g===1,T=Math.max(50,(open?ms("--sb-in"):ms("--sb-out"))*Math.abs(g-p0)),E=easeFn(EZ()),N=Math.max(10,Math.ceil(T/1000*120)),B=blurPx()*.6,dy=el.dataset.from==="above"?-6:6;
-   const f=p=>{const q=1-p;return{opacity:(1-q*q).toFixed(3),transform:`translateY(${(q*dy).toFixed(2)}px)`,filter:q<.01?"blur(0px)":`blur(${(B*Math.pow(q,.75)).toFixed(2)}px)`,visibility:"visible"}};
+   const f=p=>{const q=1-p;return{opacity:(1-q*q).toFixed(3),transform:`translateY(${(q*dy).toFixed(2)}px)`,filter:fb(p,B),boxShadow:depth(p),visibility:"visible"}};
    const t0=document.timeline.currentTime,ks=Array.from({length:N+1},(_,i)=>f(p0+(g-p0)*E(i/N)));
    anims=parts.map(x=>{const a=x.animate(ks,{duration:T,easing:"linear",fill:"forwards"});a.startTime=t0;return a});
    const mine=cur={p0,g,T,E,t0};Promise.all(anims.map(a=>a.finished)).then(()=>{if(cur!==mine)return;rest=g;cur=null;anims.forEach(a=>a.cancel());anims=[]},()=>{})}
   new MutationObserver(()=>{const o=el.classList.contains("open")?1:0;if(o!==(cur?cur.g:rest))run(o)}).observe(el,{attributes:true,attributeFilter:["class"]})}
-
- /* ---- the account pull-up ---- */
- const menu=$("#sbMenu"),me=$("#sbMe"),seg=$("#sbSeg");pull(menu);
- function acct(o){o=o??!menu.classList.contains("open");if(o)pop(false);hlM.off();menu.classList.toggle("open",o);me.setAttribute("aria-expanded",String(o));if(o)setTimeout(()=>seg.querySelector('[aria-checked="true"]')?.focus({preventScroll:true}),60)}
- me.addEventListener("click",e=>{e.stopPropagation();acct()});
- menu.addEventListener("click",e=>{e.stopPropagation();const t=e.target.closest("[data-th]");if(t)return theme(t.dataset.th);if(e.target.closest(".sb-hit"))acct(false)});
- addEventListener("click",()=>{acct(false);pop(false)});addEventListener("keydown",e=>{if(e.key==="Escape"){acct(false);pop(false)}});
- function theme(v){if(v==="system")delete root.dataset.theme;else root.dataset.theme=v;if(window.BENCH){BENCH.state.th=v==="system"?undefined:v;BENCH.save()}paintSeg()}
- function paintSeg(){const v=root.dataset.theme||"system",bs=[...seg.querySelectorAll("[data-th]")];bs.forEach(b=>b.setAttribute("aria-checked",String(b.dataset.th===v)));
-  seg.querySelector(".pill").style.transform=`translateX(${bs.findIndex(b=>b.dataset.th===v)*100}%)`}
- paintSeg();new MutationObserver(paintSeg).observe(root,{attributes:true,attributeFilter:["data-theme"]});
 
  /* ---- the row menu: a card of pages, from a row's … or a right-click ----
     The first page holds only Rename, Folder and Delete. Folder turns the same card into its next page (Move to,
@@ -198,7 +212,27 @@ const SB=(()=>{const side=$("#side"),scroll=$("#sbScroll");
     racks out as it slides a little away, the new pulls focus as it slides in, and the card eases to its new height. */
  const pm=$("#sbPop"),card=pm.querySelector(".sb-card"),nb=pm.querySelector("[data-nav=back]"),nf=pm.querySelector("[data-nav=fwd]"),hlP=glide(card,".sb-row");pull(pm,[card,pm.querySelector(".sb-nav")]);
  nb.innerHTML=IC.back;nf.innerHTML=IC.fwd;
- let pmFor=null,pmNode=null,hist=[],at=0;
+ let pmFor=null,pmNode=null;
+ /* a card of pages: back and forward like a browser. Pages cross on the one curve: the old racks out as it slides a
+    little away, the new pulls focus as it slides in, and the card eases to its new height. */
+ function pager(card,nb,nf,hl,render){let hist=[],at=0;
+  const paint=()=>{nb.disabled=at<=0;nf.disabled=at>=hist.length-1};
+  function show(name,dir){const old=card.querySelector(".sb-page"),h0=card.offsetHeight,pg=document.createElement("div");pg.className="sb-page";pg.innerHTML=render(name);
+   if(!old||reduce||!dir){card.replaceChildren(hl.el,pg);card.style.height="";paint();return}
+   hl.off();const Es=EZ(),IN=ms("--sb-in"),OUT=ms("--sb-out"),B=blurPx()*.5,dx=10*dir,cs=getComputedStyle(card);
+   Object.assign(old.style,{position:"absolute",left:cs.paddingLeft,right:cs.paddingRight,top:old.offsetTop+"px"});card.append(pg);
+   const h1=pg.offsetHeight+parseFloat(cs.paddingTop)+parseFloat(cs.paddingBottom)+2;card.style.height=h0+"px";card.offsetWidth;card.style.height=h1+"px";
+   old.animate([{opacity:1,filter:"blur(0px)",transform:"none"},{opacity:0,filter:`blur(${B}px)`,transform:`translateX(${-dx}px)`}],{duration:OUT,easing:Es,fill:"forwards"}).finished.then(()=>old.remove(),()=>old.remove());
+   pg.animate([{opacity:0,filter:`blur(${B}px)`,transform:`translateX(${dx}px)`},{opacity:.85,filter:`blur(${(B*.25).toFixed(2)}px)`,offset:.3},{opacity:.97,filter:"blur(0px)",offset:.6},{opacity:1,filter:"blur(0px)",transform:"none"}],{duration:IN,easing:Es});
+   setTimeout(()=>{if(card.contains(pg))card.style.height=""},ms("--sb-move")+30);paint();setTimeout(()=>pg.querySelector(".sb-hit,button")?.focus({preventScroll:true}),40)}
+  const go=n=>{hist=hist.slice(0,at+1);hist.push(n);at=hist.length-1;show(n,1)};
+  const nav=d=>{const i=at+d;if(i<0||i>=hist.length)return;at=i;show(hist[at],d)};
+  nb.addEventListener("click",e=>{e.stopPropagation();nav(-1)});nf.addEventListener("click",e=>{e.stopPropagation();nav(1)});
+  card.addEventListener("keydown",e=>{const b=e.target.closest("[data-a]");
+   if(e.key==="ArrowRight"&&b&&b.dataset.a.startsWith("p:")){e.preventDefault();go(b.dataset.a.slice(2))}
+   else if(e.key==="ArrowLeft"){e.preventDefault();nav(-1)}
+   else if(e.key==="ArrowDown"||e.key==="ArrowUp"){e.preventDefault();const all=[...card.querySelectorAll(".sb-page:last-child .sb-hit,.sb-page:last-child .sb-tile,.sb-page:last-child [data-th]")],i=all.indexOf(e.target);(all[i+(e.key==="ArrowDown"?1:-1)]||all[e.key==="ArrowDown"?0:all.length-1])?.focus()}});
+  return{go,nav,reset(n){hist=[n];at=0;show(n,0)},refresh(){const pg=card.querySelector(".sb-page:last-child");if(pg)pg.innerHTML=render(hist[at])}}}
  const item=(a,ic,t,d=0,go=false)=>`<div class="sb-row${a==="del"?" danger":""}" style="--d:${d}"><button class="sb-hit" type="button" role="menuitem" data-a="${a}"${go?' aria-haspopup="menu"':""}><span class="sb-ic">${ic}</span><span class="sb-t">${t}</span>${go?`<span class="sb-go">${IC.fwd}</span>`:""}</button></div>`;
  const cap=t=>`<div class="sb-mh plain">${t}</div>`;
  function folders(l=ROOT.kids,d=0,out=[]){l.filter(n=>n.kind==="folder").forEach(n=>{out.push({n,d});folders(n.kids,d+1,out)});return out}
@@ -210,32 +244,92 @@ const SB=(()=>{const side=$("#side"),scroll=$("#sbScroll");
    (isF?item("chat",IC.plus,"New chat here"):item("pin",IC.pin,n.pin?"Unpin":"Pin to top"));
   if(name==="move"){const dest=folders().filter(x=>!within(n,x.n)&&x.n!==f.parent);
    return cap("Move to")+(f.parent!==ROOT?item("mv:",IC.top,"Top level"):"")+(dest.map(x=>item("mv:"+x.n.id,IC.folder,esc(x.n.t),x.d)).join("")||`<div class="sb-none">No other folders</div>`)}}
- function paint(){nb.disabled=at<=0;nf.disabled=at>=hist.length-1;pm.classList.toggle("paged",hist.length>1)}
- /* dir: 1 forward (deeper), -1 back */
- function show(name,dir){const old=card.querySelector(".sb-page"),h0=card.offsetHeight,pg=document.createElement("div");pg.className="sb-page";pg.innerHTML=page(name);
-  if(!old||reduce||!dir){card.replaceChildren(hlP.el,pg);card.style.height="";paint();return}
-  hlP.off();const Es=EZ(),IN=ms("--sb-in"),OUT=ms("--sb-out"),B=blurPx()*.5,dx=10*dir;
-  Object.assign(old.style,{position:"absolute",left:"4px",right:"4px",top:old.offsetTop+"px"});card.append(pg);
-  const h1=pg.offsetHeight+8;card.style.height=h0+"px";card.offsetWidth;card.style.height=h1+"px";
-  old.animate([{opacity:1,filter:"blur(0px)",transform:"none"},{opacity:0,filter:`blur(${B}px)`,transform:`translateX(${-dx}px)`}],{duration:OUT,easing:Es,fill:"forwards"}).finished.then(()=>old.remove(),()=>old.remove());
-  pg.animate([{opacity:0,filter:`blur(${B}px)`,transform:`translateX(${dx}px)`},{opacity:.85,filter:`blur(${(B*.4).toFixed(2)}px)`,offset:.35},{opacity:1,filter:"blur(0px)",transform:"none"}],{duration:IN,easing:Es});
-  setTimeout(()=>{if(card.contains(pg))card.style.height=""},ms("--sb-move")+30);paint();setTimeout(()=>pg.querySelector(".sb-hit")?.focus({preventScroll:true}),40)}
- function go(name){hist=hist.slice(0,at+1);hist.push(name);at=hist.length-1;show(name,1)}
- function nav(d){const i=at+d;if(i<0||i>=hist.length)return;at=i;show(hist[at],d)}
- nb.addEventListener("click",e=>{e.stopPropagation();nav(-1)});nf.addEventListener("click",e=>{e.stopPropagation();nav(1)});
+ const PM=pager(card,nb,nf,hlP,page);
  function pop(o,row,pt){hlP.off();if(!o){pm.classList.remove("open");pmFor?.querySelector(".sb-more")?.setAttribute("aria-expanded","false");pmFor=null;return}
-  acct(false);pmFor=row;pmNode=row?find(row.dataset.id):null;hist=["main"];at=0;show("main",0);
+  acct(false);pmFor=row;pmNode=row?find(row.dataset.id):null;PM.reset("main");
   const sr=side.getBoundingClientRect(),r=pt||row.getBoundingClientRect(),W=196;pm.style.left=Math.min(sr.right-8-W,Math.max(sr.left+8,(pt?pt.left:r.right-W)))+"px";
   pm.style.top="0px";pm.style.bottom="auto";pm.classList.add("open");const h=pm.offsetHeight,below=(pt?pt.top:r.bottom)+34;
-  /* below the row when it fits (the arrows' pill sits above the card); otherwise above it, anchored at its foot so the card grows upward */
-  if(below+h+160>innerHeight){pm.style.top="auto";pm.style.bottom=(innerHeight-(pt?pt.top:r.top)+4)+"px";pm.dataset.from="below"}else{pm.style.top=below+"px";pm.dataset.from="above"}
+  /* below the row when it fits, otherwise above it (anchored at its foot so it grows upward); either way the back and
+     forward pill sits between the card and the row, right under the … it came from */
+  if(below+h+160>innerHeight){pm.style.top="auto";pm.style.bottom=(innerHeight-(pt?pt.top:r.top)+34)+"px";pm.dataset.from="below"}else{pm.style.top=below+"px";pm.dataset.from="above"}
   row?.querySelector(".sb-more")?.setAttribute("aria-expanded","true");setTimeout(()=>card.querySelector(".sb-hit")?.focus({preventScroll:true}),40)}
- pm.addEventListener("click",e=>{e.stopPropagation();const b=e.target.closest("[data-a]");if(!b)return;const a=b.dataset.a;if(a.startsWith("p:"))return go(a.slice(2));const f=pmNode;pop(false);act(a,f)});
- pm.addEventListener("keydown",e=>{const b=e.target.closest("[data-a]");
-  if(e.key==="ArrowRight"&&b&&b.dataset.a.startsWith("p:")){e.preventDefault();go(b.dataset.a.slice(2))}
-  else if(e.key==="ArrowLeft"||(e.key==="Backspace"&&e.target.tagName!=="INPUT")){e.preventDefault();nav(-1)}
-  else if(e.key==="ArrowDown"||e.key==="ArrowUp"){e.preventDefault();const all=[...card.querySelectorAll(".sb-page:last-child .sb-hit")],i=all.indexOf(e.target);(all[i+(e.key==="ArrowDown"?1:-1)]||all[e.key==="ArrowDown"?0:all.length-1])?.focus()}});
+ pm.addEventListener("click",e=>{e.stopPropagation();const b=e.target.closest("[data-a]");if(!b)return;const a=b.dataset.a;if(a.startsWith("p:"))return PM.go(a.slice(2));const f=pmNode;pop(false);act(a,f)});
  scroll.addEventListener("contextmenu",e=>{if(e.target.closest(".sb-top"))return;const r=e.target.closest(".sb-tree .sb-row[data-k]");e.preventDefault();e.stopPropagation();pop(true,r,{left:e.clientX,top:e.clientY,right:e.clientX,bottom:e.clientY})});
+
+ /* ---- the account card: a system panel, not an app menu ----
+    Identity (the monogram, the name, the organisation, and where the data lives); a Control Center strip (Appearance,
+    Calm motion, Compact rows) that acts in place; one column of icons for Settings, Library, Data and Help, the last two
+    as pages of the same card with the back and forward pill; and a quiet system line, as About This Mac has. It pulls
+    up from the account row and its indicator turns inward while it is open. */
+ const menu=$("#sbMenu"),me=$("#sbMe"),acard=menu.querySelector(".sb-card"),hlM=glide(acard,".sb-row");pull(menu,[acard,menu.querySelector(".sb-nav")]);
+ const anb=menu.querySelector("[data-nav=back]"),anf=menu.querySelector("[data-nav=fwd]");anb.innerHTML=IC.back;anf.innerHTML=IC.fwd;
+ const PREF={calm:false,compact:true};
+ const tile=(k,ic,t)=>`<button class="sb-tile${PREF[k]?" on":""}" type="button" data-tg="${k}" aria-pressed="${PREF[k]}"><span class="w">${ic}</span><span class="l"><b>${t}</b><small>${PREF[k]?"On":"Off"}</small></span></button>`;
+ function apage(name){
+  if(name==="data")return cap("Data")+item("export",IC.out2,"Export everything")+item("import",IC.in2,"Import")+`<div class="sb-note"><i></i>Kept in your account, synced to your devices</div>`;
+  if(name==="help")return cap("Help")+item("keys",IC.keys,"Keyboard shortcuts")+item("cmd",IC.cmd,"Commands")+item("new",IC.spark,"What's new")+`<div class="sb-sep"></div>`+item("about",IC.info,"About EXPIRA");
+  return `<div class="sb-id"><span class="sb-av">A</span><span class="sb-idt"><b>Amadeus</b><small>GSSC Integrated Corporation</small><em><i></i>Synced</em></span></div>`+
+   `<div class="sb-cc"><div class="sb-seg" role="radiogroup" aria-label="Appearance"><i class="pill" aria-hidden="true"></i>`+
+    [["system",IC.sys,"Auto"],["light",IC.sun,"Light"],["dark",IC.moon,"Dark"]].map(([v,ic,l])=>`<button type="button" role="radio" data-th="${v}" aria-checked="false">${ic}<span>${l}</span></button>`).join("")+`</div>`+
+   `<div class="sb-tiles">${tile("calm",IC.calm,"Calm motion")}${tile("compact",IC.rows,"Compact")}</div></div>`+
+   `<div class="sb-sep"></div>`+item("settings",IC.gear,"Settings")+item("library",IC.lib,"Library")+item("p:data",IC.data,"Data",0,true)+item("p:help",IC.help,"Help",0,true)+
+   `<div class="sb-sysline"><span>EXPIRA Console 45</span><span>Kernel 2.18</span></div>`}
+ const AP=pager(acard,anb,anf,hlM,n=>{const h=apage(n);setTimeout(()=>paintSeg(false),0);return h});
+ function acct(o){o=o??!menu.classList.contains("open");if(o)pop(false);hlM.off();if(o&&!menu.classList.contains("open"))AP.reset("main");menu.classList.toggle("open",o);me.setAttribute("aria-expanded",String(o));
+  if(o)setTimeout(()=>acard.querySelector('[aria-checked="true"]')?.focus({preventScroll:true}),60)}
+ me.addEventListener("click",e=>{e.stopPropagation();acct()});
+ menu.addEventListener("click",e=>{e.stopPropagation();const t=e.target.closest("[data-th]");if(t)return theme(t.dataset.th);
+  const g=e.target.closest("[data-tg]");if(g)return toggleTile(g);const b=e.target.closest("[data-a]");if(!b)return;
+  if(b.dataset.a.startsWith("p:"))return AP.go(b.dataset.a.slice(2));acct(false)});
+ addEventListener("click",()=>{acct(false);pop(false)});addEventListener("keydown",e=>{if(e.key==="Escape"){acct(false);pop(false)}});
+ /* appearance: the page cross-fades between themes (a view transition), and the pill slides with a motion blur */
+ function theme(v){const apply=()=>{if(v==="system")delete root.dataset.theme;else root.dataset.theme=v;if(window.BENCH){BENCH.state.th=v==="system"?undefined:v;BENCH.save()}paintSeg(true)};
+  if(document.startViewTransition&&!reduce)document.startViewTransition(apply);else apply()}
+ let segAt=-1;function paintSeg(anim){const seg=acard.querySelector(".sb-page:last-child .sb-seg");if(!seg)return;const v=root.dataset.theme||"system",bs=[...seg.querySelectorAll("[data-th]")],i=bs.findIndex(b=>b.dataset.th===v),pill=seg.querySelector(".pill");
+  bs.forEach(b=>b.setAttribute("aria-checked",String(b.dataset.th===v)));const w=pill.offsetWidth,to=i*w;pill.style.transform=`translateX(${to}px)`;
+  if(anim&&segAt>=0&&segAt!==i&&!reduce){const from=segAt*w,d=from-to,Es=EZ(),D=ms("--sb-move");pill.animate(sampled(D,Es,(p,k)=>({transform:`translateX(${(to+d*(1-p)).toFixed(2)}px)`,filter:mb(k,Math.min(1.4,Math.abs(d)/50))})),{duration:D,easing:"linear"})}segAt=i}
+ new MutationObserver(()=>paintSeg(false)).observe(root,{attributes:true,attributeFilter:["data-theme"]});
+ /* the tiles act in place: Calm motion turns every move into a state change; Compact sets the row height, and the
+    rows reflow to it in one move. The state word pulls focus as it changes. */
+ function toggleTile(g){const k=g.dataset.tg,on=!PREF[k];PREF[k]=on;g.classList.toggle("on",on);g.setAttribute("aria-pressed",String(on));const sm=g.querySelector("small");sm.textContent=on?"On":"Off";
+  if(!reduce)sm.animate(focusIn(blurPx()*.4),{duration:ms("--sb-in"),easing:EZ()});
+  if(k==="calm"){reduce=on||matchMedia("(prefers-reduced-motion: reduce)").matches;root.classList.toggle("calm",on)}
+  if(k==="compact")sync(()=>{if(on)delete root.dataset.sbDensity;else root.dataset.sbDensity="roomy"})}
+
+ /* ---- select many: the toolbar's Select puts a round check where each row's glyph sits (nothing moves); click picks,
+    Shift-click picks a run; a selection bar pulls up above the account row with the count, Select all, Sort, Delete
+    and Done. Sort opens its own small card; choosing an order glides the rows into it. ---- */
+ const selBtn=$("#selBtn");
+ foot.insertAdjacentHTML("afterbegin",`<div class="sb-selbar" id="sbSel" role="toolbar" aria-label="Selection"><span class="n"><b>0</b><span>selected</span></span>`+
+  `<button type="button" data-s="all" aria-label="Select all">${IC.all}</button><button type="button" data-s="sort" aria-label="Sort" aria-haspopup="menu" aria-expanded="false">${IC.sort}</button>`+
+  `<button type="button" data-s="del" class="danger" aria-label="Delete selected">${IC.del}</button><i class="sep"></i><button type="button" data-s="done" aria-label="Done">${IC.done}</button></div>`+
+  `<div class="sb-sortc" id="sbSort"><div class="sb-card" role="menu" aria-label="Sort"></div></div>`);
+ const selbar=$("#sbSel"),sortc=$("#sbSort"),scard=sortc.querySelector(".sb-card"),hlO=glide(scard,".sb-row");pull(selbar);pull(sortc,[scard]);
+ const visibleItems=()=>flat().filter(w=>!w.empty&&!w.n.del).map(w=>w.n.id);
+ function count(){const b=selbar.querySelector(".n b"),v=String(picked.size);if(b.textContent===v)return;b.textContent=v;if(!reduce)b.animate(focusIn(blurPx()*.4),{duration:ms("--sb-in"),easing:EZ()});
+  selbar.querySelector('[data-s="del"]').disabled=!picked.size}
+ function selectMode(on){on=on??!selMode;if(on===selMode)return;selMode=on;side.classList.toggle("selecting",on);selBtn.setAttribute("aria-pressed",String(on));
+  if(!on){picked.clear();anchor=null;sortOpen(false)}else{acct(false);pop(false)}selbar.classList.toggle("open",on);count();els.forEach((e,id)=>{const f=find(id);if(f)update(e,{n:f.n,d:+e.style.getPropertyValue("--d")||0})})}
+ function pick(id,range){const ids=visibleItems();
+  if(range&&anchor&&ids.includes(anchor)){const a=ids.indexOf(anchor),b=ids.indexOf(id);ids.slice(Math.min(a,b),Math.max(a,b)+1).forEach(x=>picked.add(x))}
+  else{picked.has(id)?picked.delete(id):picked.add(id);anchor=id}
+  els.forEach((e,i)=>{if(!e.classList.contains("sb-empty"))e.classList.toggle("picked",picked.has(i))});count()}
+ function selectAll(){const ids=visibleItems(),all=ids.every(x=>picked.has(x));picked.clear();if(!all)ids.forEach(x=>picked.add(x));els.forEach((e,i)=>e.classList.toggle("picked",picked.has(i)));count()}
+ function deletePicked(){/* a picked folder takes its contents with it; each deleted row keeps its own undo */
+  const top=[...picked].map(id=>find(id)).filter(f=>f&&![...picked].some(o=>o!==f.n.id&&within(find(o)?.n||{},f.n)));selectMode(false);top.forEach(f=>{f.n.del=true;n_timer(f.n)});sync()}
+ const n_timer=n=>{clearTimeout(n._t);n._t=setTimeout(()=>{const f=find(n.id);if(f&&n.del){f.parent.kids.splice(f.parent.kids.indexOf(n),1);if(sel===n.id)sel=null;sync()}},5200)};
+ const SORTS=[["new","Newest first"],["old","Oldest first"],["az","Name, A to Z"],["za","Name, Z to A"],["kind","By kind"]];
+ function sortOpen(o){o=o??!sortc.classList.contains("open");hlO.off();if(o){scard.replaceChildren(hlO.el);scard.insertAdjacentHTML("beforeend",`<div class="sb-page">`+cap("Sort")+
+   SORTS.map(([k,l])=>`<div class="sb-row"><button class="sb-hit" type="button" role="menuitemradio" aria-checked="${k===sortBy}" data-sort="${k}"><span class="sb-ic">${k===sortBy?IC.done:""}</span><span class="sb-t">${l}</span></button></div>`).join("")+`</div>`)}
+  sortc.classList.toggle("open",o);selbar.querySelector('[data-s="sort"]').setAttribute("aria-expanded",String(o));if(o)setTimeout(()=>scard.querySelector('[aria-checked="true"]')?.focus({preventScroll:true}),60)}
+ selBtn.addEventListener("click",e=>{e.stopPropagation();selectMode()});
+ selbar.addEventListener("click",e=>{e.stopPropagation();const b=e.target.closest("[data-s]");if(!b)return;const a=b.dataset.s;
+  if(a==="all")selectAll();if(a==="sort")sortOpen();if(a==="del")deletePicked();if(a==="done")selectMode(false)});
+ sortc.addEventListener("click",e=>{e.stopPropagation();const b=e.target.closest("[data-sort]");if(!b)return;sortBy=b.dataset.sort;sortOpen(false);sync()});
+ addEventListener("click",e=>{if(!e.target.closest("#sbSort"))sortOpen(false)});
+ addEventListener("keydown",e=>{if(!selMode)return;if(e.key==="Escape"){e.preventDefault();sortc.classList.contains("open")?sortOpen(false):selectMode(false)}
+  if((e.metaKey||e.ctrlKey)&&e.key.toLowerCase()==="a"&&!/INPUT/.test(document.activeElement?.tagName)){e.preventDefault();selectAll()}
+  if((e.key==="Delete"||e.key==="Backspace")&&picked.size&&!/INPUT/.test(document.activeElement?.tagName)){e.preventDefault();deletePicked()}},true);
 
  /* ---- what an item can do ---- */
  function act(a,f){
@@ -269,7 +363,8 @@ const SB=(()=>{const side=$("#side"),scroll=$("#sbScroll");
 
  /* ---- keys: arrows walk what is visible; right opens or steps in, left closes or climbs; F2 renames; Delete deletes ---- */
  const stops=()=>[...scroll.querySelectorAll(".sb-hit")].filter(x=>x.getClientRects().length&&!x.closest(".gone"));
- scroll.addEventListener("keydown",e=>{if(e.target.tagName==="INPUT")return;const all=stops(),i=all.indexOf(e.target.closest(".sb-hit"));if(i<0)return;const row=all[i].closest(".sb-row"),f=row.dataset.id?find(row.dataset.id):null;
+ scroll.addEventListener("keydown",e=>{if(e.target.tagName==="INPUT")return;
+  if(selMode&&e.key===" "){const r=e.target.closest(".sb-row[data-k]");if(r){e.preventDefault();pick(r.dataset.id,e.shiftKey)}return}const all=stops(),i=all.indexOf(e.target.closest(".sb-hit"));if(i<0)return;const row=all[i].closest(".sb-row"),f=row.dataset.id?find(row.dataset.id):null;
   const go=x=>{if(x){e.preventDefault();x.focus()}};
   if(e.key==="ArrowDown")go(all[i+1]);else if(e.key==="ArrowUp")go(all[i-1]||inp);else if(e.key==="Home")go(all[0]);else if(e.key==="End")go(all[all.length-1]);
   else if(!f)return;
@@ -305,7 +400,7 @@ const SB=(()=>{const side=$("#side"),scroll=$("#sbScroll");
    {duration:D,easing:"linear",fill:shut?"forwards":"none"}));
   inner().forEach(el=>{el.getAnimations().forEach(a=>{if(!(a instanceof CSSTransition))a.cancel()});
    panel.push(el.animate(sampled(D,Es,p=>shut?{transform:`translateX(${(p*20).toFixed(2)}px)`,opacity:(1-p*.55).toFixed(3),filter:`blur(${(p*B).toFixed(2)}px)`}
-    :{transform:`translateX(${((1-p)*20).toFixed(2)}px)`,opacity:(.2+.8*Math.min(1,p*1.25)).toFixed(3),filter:`blur(${((1-p)*B).toFixed(2)}px)`}),{duration:D,easing:"linear",fill:shut?"forwards":"none"}))})}
+    :{transform:`translateX(${((1-p)*20).toFixed(2)}px)`,opacity:(.2+.8*Math.min(1,p*1.25)).toFixed(3),filter:fb(p,B)}),{duration:D,easing:"linear",fill:shut?"forwards":"none"}))})}
  fold.addEventListener("click",()=>dock());
 
  /* ---- the resize grip ----
@@ -331,7 +426,10 @@ const SB=(()=>{const side=$("#side"),scroll=$("#sbScroll");
    const k=x<MIN?Math.max(0,1-(MIN-x)/(MIN-SHUT+40)):1;inner().forEach(el=>{el.style.opacity=k<1?(.35+.65*k).toFixed(3):""});setW(w)};
   const up=()=>{grip.removeEventListener("pointermove",moveP);grip.removeEventListener("pointerup",up);grip.removeEventListener("pointercancel",up);grip.classList.remove("drag","shut");document.body.classList.remove("sb-resizing");
    inner().forEach(el=>el.style.opacity="");
-   if(shutNow){dock(true);setTimeout(()=>{if(app.classList.contains("folded"))setW(W)},dockTime(true)+40);return}
+   if(shutNow){dock(true);setTimeout(()=>{if(!app.classList.contains("folded"))return;
+     /* docked, the dock is out of sight: put its remembered width back with no transition, or the margin would slide
+        again from the pulled width to the remembered one and the chat would jump */
+     const els2=[side,$("#main .top")];els2.forEach(x=>x.style.transition="none");setW(W);side.offsetWidth;els2.forEach(x=>x.style.transition="")},dockTime(true)+40);return}
    settleTo(parseFloat(tok("--sb-w")))};
   grip.addEventListener("pointermove",moveP);grip.addEventListener("pointerup",up);grip.addEventListener("pointercancel",up)});
  grip.addEventListener("dblclick",()=>settleTo(DEF));
@@ -339,4 +437,4 @@ const SB=(()=>{const side=$("#side"),scroll=$("#sbScroll");
 
  sync();
  return{acct,search,dock,IC,sync,newChat,folder:(i=0)=>toggle(ROOT.kids.filter(n=>n.kind==="folder")[i]),
-  pop:(o,i=0)=>pop(o,[...tree.querySelectorAll(".sb-row[data-k]:not(.gone)")][i]),go,nav,setWidth:settleTo,get width(){return W},model:ROOT}})();
+  pop:(o,i=0)=>pop(o,[...tree.querySelectorAll(".sb-row[data-k]:not(.gone)")][i]),go:n=>PM.go(n),nav:d=>PM.nav(d),setWidth:settleTo,get width(){return W},model:ROOT}})();

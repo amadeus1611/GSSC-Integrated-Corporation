@@ -114,7 +114,7 @@ Motion is the heart of the UX: fidelity in the engine comes first.
 - **Actions are a card of pages.**
   - The row's `…` menu opens a card whose first page is short: Rename, Folder, Delete.
   - Deeper choices are further pages of the same card, not new pop-ups: Folder leads to Move to, New folder and Pin, and Move to leads to the folders.
-  - A small pill above the card carries browser-style back and forward arrows between the visited pages.
+  - A small pill carries browser-style back and forward arrows between the visited pages. It sits between the card and what opened it, at the right, right under the `…` (or, for the account card, by the account row's chevrons).
   - Right-clicking empty space offers New chat and New folder.
 - **Fewer words, more detail. People are smarter than we think.**
   - There are no tooltips and no shortcut hints on rows.
@@ -122,6 +122,16 @@ Motion is the heart of the UX: fidelity in the engine comes first.
   - Undo happens in place: a deleted row defocuses and its action becomes an undo arrow for a few seconds, with a trash can beside it to delete it at once. There is no toast.
   - Only an action menu may use words for its choices.
 - **Rubber bands tighten.** Stretched past its limit, a surface resists more the further it is pulled, up to a fixed amount (the sidebar: 64px past its maximum). Released, it settles back very softly.
+- **Select many.** The toolbar's Select puts a round check where each row's glyph sits, so nothing moves.
+  - Click picks and Shift-click picks a run; Space, ⌘A and Delete work too.
+  - A frosted selection bar pulls up above the account row with the count, Select all, Sort, Delete and Done.
+  - Sort opens its own small card: newest, oldest, by name either way, by kind. Folders stay first, and the rows glide into the new order.
+  - A mass delete puts every picked row into its own in-place undo.
+- **The account card is a system panel, not an app menu.**
+  - Identity comes first: the monogram, the name, the organisation and where the data lives ("Synced").
+  - Then a Control Center strip that acts in place: Appearance (Auto, Light, Dark; the page cross-fades), Calm motion, and Compact rows (the rows reflow in one move).
+  - Then one icon column: Settings, Library, Data ›, Help ›. The last two are pages of the same card.
+  - Last is a quiet system line, as About This Mac has: "EXPIRA Console 45 · Kernel 2.18".
 - **Direct manipulation.**
   - Drag onto a folder; a closed folder springs open if you linger, as in Finder.
   - Pull the sidebar's edge to resize it. The width is remembered.
@@ -162,6 +172,9 @@ Motion is the heart of the UX: fidelity in the engine comes first.
   - The rows below move on the curve.
   - Each new row pulls focus the moment it is uncovered, and each leaving row racks out just before it is covered.
   - A closing block keeps its exact box while it fades.
+- **Focus resolves before the move ends.** Blur is gone by 60% of the way, so the last stretch of every move is already sharp and nothing snaps into focus at the end. A lingering sub-pixel blur that clears only when the animation stops reads as a jolt.
+- **Depth moves with the card.** Every floating card and pill casts a soft, layered shadow (`--sb-depth`): an inner top highlight, a hairline, a near shadow and a long soft one. It grows in as the card arrives and eases away as it leaves, drawn from the same progress value.
+- **Concentric corners, after macOS.** Menus are 11px, inset 5px, with 6px rows inside. Tiles are 8px.
 - **Small surfaces "pull".** Menus and cards use opacity, a small drop and focus on one progress value, with no scale, each on its own layer. Reversal carries on from where it is.
 - **The dock.**
   - The dock slides out on the curve while its content racks out and drifts a little behind it (depth).
@@ -230,6 +243,13 @@ They live in `bench/drafts/sidebar-next.css`, and the dark stack lives in `bench
 - **Tokens (v41):** every value comes from `src/tokens.css`. Spacing is a 4px scale with half steps (`--sp-half`, `--sp-1h` … `--sp-4h`) below 20px for dense chrome; a 1px nudge is optical and stays literal. Layers are named (`--z-side`, `--z-menu`, `--z-tip` …) in one stacking order. Dark tokens are written once in `@dark{}`.
 
 ## 6. Change log
+- **v45 system panel** (2026-09-26, Amadeus):
+  - The account card is rebuilt as a system panel: identity with sync status, a Control Center strip (Appearance, Calm motion, Compact), Settings, Library, Data ›, Help ›, and a system line.
+  - A shared pager drives both the account card and the row menu. The back and forward pill sits between each card and what opened it.
+  - Select many is added, with a selection bar and a Sort card.
+  - Soft depth shadows animate with every card.
+  - Focus now resolves by 60% of each move, which fixes the late snap into sharpness.
+  - Pulling the sidebar shut no longer replays the slide: the remembered width is restored with no transition while docked.
 - **v45 dock and layout** (2026-09-26, Amadeus):
   - The dock's close no longer rushes and then stalls. It now has its own travel curve, and it dissolves as it slows.
   - Opening keeps its feel and gains motion blur.
