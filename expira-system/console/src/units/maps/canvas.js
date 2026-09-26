@@ -69,7 +69,7 @@ class MapBase{
  /* hover and keyboard focus: the neighbourhood stays, the rest dims; the tooltip opens after 120 ms, at once on focus */
  hover(id,kb){if(this.hov===id&&!kb)return;this.hov=id;const nb=new Set();if(id&&this.g){nb.add(id);this.g.E.forEach(e=>{if(e.a===id)nb.add(e.b);if(e.b===id)nb.add(e.a)})}this.nb=id?nb:null;
   clearTimeout(this.tipTo);if(id){this.tipTo=setTimeout(()=>{this.tipId=id;this.tipAt=0;this.go()},kb?0:120)}else this.tipTo=setTimeout(()=>{if(this.tipRail){INS.leave(this.tip.id+":"+this.tipRail);this.tipRail=null}this.tipId=null;this.tip.classList.remove("on");this.cv.removeAttribute("aria-describedby")},80);this.go()}
- dim(id){const f=this.lens||this.hov;if(!f)return 1;const on=this.lens?this.lensSet().has(id):this.nb&&this.nb.has(id);return on?1:this.lens?.2:.35}
+ dim(id){const f=this.lens||this.hov;if(!f)return 1;const on=this.lens?this.lensSet().has(id):this.nb&&this.nb.has(id);return on?1:this.lens?.42:.5}/* v44: what is not in focus stays readable */
  lensSet(){if(this._lk===this.lens)return this._ls;const s=new Set([this.lens]);this.g&&this.g.E.forEach(e=>{if(e.a===this.lens)s.add(e.b);if(e.b===this.lens)s.add(e.a)});this._lk=this.lens;this._ls=s;return s}
  /* the light: the running node with the highest rate holds it; a new start takes it at once; a challenger needs 1.5× for 400 ms */
  light(t){const g=this.g,T=g.T,L=this.lt;let want=null;

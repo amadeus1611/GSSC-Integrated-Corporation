@@ -15,8 +15,6 @@
 /* docked on a wide window, the rail comes in from past the edge: its edge and the chat's edge travel together, on one curve */
 @media (min-width:1100px){.sheet:not(.open),.app.dsp-open~.sheet.open{transform:translateX(100%)}}
 .app.dsp-open~.sheet.open{opacity:0;visibility:hidden;pointer-events:none;transform:translateX(24px)}
-.mfs.open~.sheet.open{z-index:var(--z-map);top:20px;right:20px;bottom:20px;border:var(--rule-hair) solid var(--line-3);border-radius:var(--r-5);box-shadow:var(--e3)}
-@media (min-width:1100px){.app.ins-open~.mfs{right:calc(var(--rail-w) + 32px)}}
 .ins-h{display:flex;align-items:center;gap:var(--sp-2);flex:none;padding:var(--sp-3h) var(--sp-3) var(--sp-3) var(--sp-4h);border-bottom:var(--rule-hair) solid var(--line-2)}
 .ins-h>.cap:first-child{color:var(--ink)}
 .ins-st{color:var(--mute)}
@@ -34,3 +32,8 @@
 .ins-v{-webkit-user-select:text;user-select:text}
 .ins-v::after{content:"Click it to keep it here.";display:block;margin-top:var(--sp-3);font:italic 400 var(--fs-chrome-2) var(--f-display);color:var(--mute)}
 .app:not(.dsp-open) .ins-btn[aria-expanded="true"]{border-color:var(--line-3);color:var(--ink);background:var(--well)}
+/* v44: docked in the full-screen map's side pane as its Details tab: a plain column, no frame of its own */
+.sheet.infs{position:static;width:auto;flex:1;min-height:0;z-index:auto;background:transparent;border:0;box-shadow:none;border-radius:0;opacity:1;visibility:visible;pointer-events:auto;transform:none;transition:none}
+.sheet.infs .ins-h>.cap:first-child,.sheet.infs .sx{display:none}
+.sheet.infs .ins-h{border-bottom:0;padding-bottom:0}
+.sheet:not(.infs) [data-fslog]{display:none}

@@ -17,11 +17,12 @@ function sheetHTML(w,id){const S=w.steps||[],M=w.map||{},P=M.pages||[],C=M.calls
   return si(`<span class="k cap">Desk ${ROMAN[i]} · ${ROLE[s.role]}</span><h4>${esc(s.focus||s.task)}</h4>${s.focus?`<p class="tk">${esc(s.task)}</p>`:""}<div class="mt"><span>${TIERS[s.tier].w} effort</span>${s.ms?`<span class="num">${fmt(s.ms)}</span>`:s._live?"<span>Working</span>":""}${s.v?`<span class="${esc(s.v)}">${s.v==="pass"?"Passed review":"Returned"}</span>`:""}${s.after&&s.after.length?`<span>After ${s.after.map(n=>"desk "+ROMAN[n-1]).join(" and ")}</span>`:""}</div>${s.why?`<p class="tk" style="font-size:12px;color:var(--soft)">${esc(cap1(s.why))}</p>`:""}`)
    +(q.length?si(`<span class="k2 cap">Searches</span><ul class="ql">${q.map(c=>`<li><span class="num">${mmss(c.t)}</span><span>${c.fetch?"Read ":""}${c.q.map(x=>c.fetch?esc(x):`“${esc(x)}”`).join(", ")}</span></li>`).join("")}</ul>`):"")
    +(hs.length?si(`<span class="k2 cap">Sites it drew on</span><ul class="ql">${hs.map(o=>`<li><span class="num">${o.n}</span><button class="lnk" data-sheet="s:${esc(o.h)}">${esc(o.h)}</button></li>`).join("")}</ul>`):"")
+   +si(`<button type="button" class="lnk" data-fslog="${i}">Show this desk in the log</button>`)
    +si(`<span class="k2 cap">Notes</span><div class="nt2">${esc(s.out||(s._live?"Writing…":"No notes filed."))}</div>`)}
  return ""}
 const sheetTitle=B=>(B.querySelector("h4")?.textContent||B.querySelector(".k,.cap")?.textContent||"Back").trim().slice(0,48);
 function sheetPeek(){const sh=$("#sheet"),st=sh._stack||[],P=$("#sheetP");P.innerHTML=st.map((x,i)=>`<button type="button" class="spk" data-spop="${i}" style="--d:${st.length-i}"><svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.2"><path d="M7.5 2.5 4 6l3.5 3.5"/></svg><span>${esc(x.title)}</span></button>`).join("");sh.classList.toggle("deep",st.length>0)}
-function sheetSwap(html,dir){const B=$("#sheetB");B.innerHTML=html;B.scrollTop=0;B.querySelectorAll(".si").forEach((x,i)=>x.style.animationDelay=(.06+i*.05).toFixed(2)+"s");if(!reduce)B.animate(dir>0?[{opacity:0,transform:"translateX(18px) scale(.985)"},{opacity:1,transform:"none"}]:[{opacity:0,transform:"translateX(-14px) scale(.985)"},{opacity:1,transform:"none"}],{duration:MO.move,easing:MO.spring})}
+function sheetSwap(html,dir){const B=$("#sheetB");B.innerHTML=html;B.scrollTop=0;B.querySelectorAll(".si").forEach((x,i)=>x.style.animationDelay=(.06+i*.05).toFixed(2)+"s");if(!reduce)B.animate([{opacity:0,filter:"blur(4px)",transform:`translateX(${dir>0?6:-6}px)`},{opacity:1,filter:"none",transform:"none"}],{duration:MO.enter,easing:MO.out})}
 function sheetPush(w,id){const sh=$("#sheet"),B=$("#sheetB"),st=sh._stack=sh._stack||[];if(id===sh._id)return;const at=st.findIndex(x=>x.id===id);if(at>=0){sheetPop(at);return}const html=sheetHTML(w,id);if(!html)return;
  st.push({id:sh._id,html:B.innerHTML,top:B.scrollTop,title:sheetTitle(B)});if(st.length>4)st.shift();sh._id=id;sheetPeek();sheetSwap(html,1)}
 function sheetPop(to){const sh=$("#sheet"),st=sh._stack||[];if(!st.length)return false;const i=to==null?st.length-1:to,x=st[i];st.length=i;sh._id=x.id;sheetPeek();sheetSwap(x.html,-1);$("#sheetB").scrollTop=x.top;return true}
@@ -34,11 +35,11 @@ const INS=(()=>{const sh=$("#sheet"),B=$("#sheetB"),V=$("#insV"),P=$("#sheetP"),
  const wide=()=>innerWidth>=1100,isOpen=()=>sh.classList.contains("open");
  const mode=m=>{sh.dataset.mode=m;st.textContent=m==="pin"?"Pinned":m==="view"?"Preview":"";un.hidden=m!=="pin"};
  const land=el=>{if(!reduce)el.animate([{opacity:0,transform:"translateY(4px)"},{opacity:1,transform:"none"}],{duration:MO.enter,easing:MO.out})};
- const open=(o,keep)=>{sh.classList.toggle("open",o);app.classList.toggle("ins-open",o);btn&&btn.setAttribute("aria-expanded",String(o));if(!keep&&wide())KV.put("rail",o)};
+ const open=(o,keep)=>{if(sh.classList.contains("infs")){sh.classList.add("open");return}sh.classList.toggle("open",o);app.classList.toggle("ins-open",o);btn&&btn.setAttribute("aria-expanded",String(o));if(!keep&&wide())KV.put("rail",o)};
  const showPinned=()=>{V.hidden=true;B.hidden=false;P.hidden=false;mode("pin")};
  const api={isOpen,wide,pinned:()=>pin,open,
   /* a click: keep this in the rail */
-  pin(html){if(!isOpen())open(true,!wide());clearTimeout(back);pk=vk;vk=null;pin=true;B.innerHTML=html;B.scrollTop=0;showPinned();land(B)},
+  pin(html){if(!isOpen())open(true,!wide());if(sh.classList.contains("infs"))fsTab("d");clearTimeout(back);pk=vk;vk=null;pin=true;B.innerHTML=html;B.scrollTop=0;showPinned();land(B)},
   /* a hover or focus: preview it, unless the rail is closed or the window is narrow (the caller keeps its own card then) */
   view(key,html,w){if(!isOpen()||!wide())return false;if(pin&&key===pk)return true;clearTimeout(back);if(w)sh._vw=w;if(vk===key){if(V._h!==html){V._h=html;V.innerHTML=html}return true}
    vk=key;V._h=html;V.innerHTML=html;V.scrollTop=0;V.hidden=false;B.hidden=true;P.hidden=true;mode("view");land(V);return true},
@@ -48,7 +49,7 @@ const INS=(()=>{const sh=$("#sheet"),B=$("#sheetB"),V=$("#insV"),P=$("#sheetP"),
  mode("");
  const saved=KV.get("rail",null);if(wide()&&(saved==null||saved))open(true,true);
  /* the rail steps aside for the Dispatch; asking for it brings it back */
- const toggle=()=>{if(app.classList.contains("dsp-open")){showDsp(false);open(true)}else open(!isOpen())};
+ const toggle=()=>{if(sh.classList.contains("infs")){fsTab("d");return}if(app.classList.contains("dsp-open")){showDsp(false);open(true)}else open(!isOpen())};
  btn&&btn.addEventListener("click",toggle);
  un.addEventListener("click",()=>api.unpin());
  $("#sheetX").addEventListener("click",()=>open(false));
@@ -65,3 +66,17 @@ function openSheet(w,id,anchor){const sh=$("#sheet");if(!w)return;
 /* unpin and clear; the rail itself stays where it is */
 function closeSheet(){if(INS.pinned()||INS.viewing())INS.unpin()}
 
+
+/* v44: in full screen the rail docks inside the map's side pane as its Details tab, so what a click brings up opens
+   beside the map, linked to the Weighing and the Log; it goes home once the full screen has closed */
+const FSP=(()=>{const sh=$("#sheet"),mark=document.createComment("sheet");sh.before(mark);let was=false,t=0;
+ return{dock(on){clearTimeout(t);if(on){if(sh.classList.contains("infs"))return;was=sh.classList.contains("open");$("#mfsD").append(sh);sh.classList.add("infs","open")}
+  else t=setTimeout(()=>{if(!sh.classList.contains("infs"))return;sh.classList.remove("infs");if(!was)sh.classList.remove("open");mark.after(sh)},MO.exit+40)}}})();
+function fsTab(t,quiet){const L=$("#mfsL");L.querySelectorAll("[data-ft]").forEach(b=>{const on=b.dataset.ft===t;b.setAttribute("aria-selected",String(on));b.tabIndex=on?0:-1});
+ L.querySelectorAll(".mfs-p").forEach(p=>{const on=p.dataset.p===t,shown=!p.hidden;p.hidden=!on;if(on&&!shown&&!quiet&&!reduce)p.animate([{opacity:0,filter:"blur(4px)",transform:"translateY(3px)"},{opacity:1,filter:"none",transform:"none"}],{duration:MO.enter,easing:MO.out})})}
+$("#mfsL").addEventListener("click",e=>{const b=e.target.closest("[data-ft]");if(b){fsTab(b.dataset.ft);return}
+ const li=e.target.closest("[data-fsd]");if(li){openSheet($("#mfs")._w,"a"+li.dataset.fsd,li)}});
+$("#mfsL").addEventListener("keydown",e=>{const b=e.target.closest("[data-ft]");if(b&&(e.key==="ArrowRight"||e.key==="ArrowLeft")){e.preventDefault();const L=[...$("#mfsL").querySelectorAll("[data-ft]")],n=L[(L.indexOf(b)+(e.key==="ArrowRight"?1:L.length-1))%L.length];fsTab(n.dataset.ft);n.focus()}
+ const li=e.target.closest("[data-fsd]");if(li&&(e.key==="Enter"||e.key===" ")){e.preventDefault();openSheet($("#mfs")._w,"a"+li.dataset.fsd,li)}});
+document.addEventListener("click",e=>{const b=e.target.closest("[data-fslog]");if(!b)return;const i=b.dataset.fslog;fsTab("l");
+ const L=[...$("#mfsLg").querySelectorAll("li")];L.forEach(x=>x.classList.toggle("hit",x.dataset.fsd===i));const f=L.find(x=>x.dataset.fsd===i);f&&f.scrollIntoView({block:"center",behavior:reduce?"auto":"smooth"})});

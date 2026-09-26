@@ -12,7 +12,7 @@ class FieldMap extends MapBase{
  rebuild(){const g=this.g,W=this.W,narrow=W<560,fs=this.opt.fs,card=this.opt.card,wv={};let mx=0;
   g.N.forEach(n=>{if(n.kind==="ans"||n.kind==="doc")return;wv[n.id]=n.parent&&wv[n.parent]!=null?wv[n.parent]+1:0;mx=Math.max(mx,wv[n.id])});g.N.forEach(n=>{if(wv[n.id]==null)wv[n.id]=mx+1});
   const N=g.N.length;this.H=fs?Math.max(320,Math.round(this.host.clientHeight-40)):card?Math.round(Math.min(320,Math.max(180,130+N*10))):Math.round(narrow?Math.min(560,Math.max(260,200+N*15)):Math.min(460,Math.max(230,160+N*12)));
-  if(this.fresh||!this.Hc)this.Hc=this.H;this.rep=fs?190:narrow?70:95;this.sp=fs?Math.min(2.6,W/440):narrow?1:Math.min(1.5,W/560);this.v=fs?110:72;
+  if(this.fresh||!this.Hc)this.Hc=this.H;this.rep=fs?190:narrow?70:95;this.sp=fs?Math.min(3.2,W/360):narrow?1:Math.min(1.5,W/560);this.v=fs?110:72;
   const anim=this.opt.replay||this.opt.live||g.live,seen=new Set();let heat=0;
   g.N.forEach(n=>{seen.add(n.id);let s=this.S.get(n.id);if(!s){s={id:n.id,x:W/2,y:this.Hc/2,vx:0,vy:0,r:0,rv:0,a:0,vis:false};this.S.set(n.id,s);this.Q.push(n.id);heat=.5}
    const R=this.radius(n);if(s.n&&Math.abs(s.R-R.r)>1)heat=Math.max(heat,.08);s.n=n;s.wave=wv[n.id];s.R=R.r;s.cl=R.cl;const lb=this.label(n);if(s.lb!==lb){s.lb=lb;s.lw=0}});
@@ -23,7 +23,7 @@ class FieldMap extends MapBase{
   /* a run opened after the fact lands settled: every node placed, 300 ticks computed at once (d3's static layout) */
   if(this.fresh&&!anim){this.Q.forEach(id=>this.release(id,0,true));this.Q=[];this.colW(true);for(let i=0;i<300;i++)this.tick();this.al=0;this.S.forEach(s=>{s.r=s.R;s.a=1});this.L.forEach(l=>l.p=1)}
   else this.al=Math.max(this.al,heat)}
- colW(snap){const vw=[...this.S.values()].filter(s=>s.vis).map(s=>s.wave),n=vw.length?Math.max(...vw)+1:1,pad=this.opt.fs?90:64,w=n>1?Math.min(this.opt.fs?210:132,(this.W-2*pad)/(n-1)):0,x0=(this.W-w*(n-1))/2;
+ colW(snap){const vw=[...this.S.values()].filter(s=>s.vis).map(s=>s.wave),n=vw.length?Math.max(...vw)+1:1,pad=this.opt.fs?90:64,w=n>1?Math.min(this.opt.fs?300:132,(this.W-2*pad)/(n-1)):0,x0=(this.W-w*(n-1))/2;
   this.cw={w,x0};if(snap){this.cam.w=w;this.cam.x0=x0}}
  cx(s){return this.cam.x0+s.wave*this.cam.w}
  /* a birth: the child leaves its parent's centre toward its wave, swelling as it goes */
@@ -115,7 +115,12 @@ const fitS=(t,n)=>{t=String(t||"");return t.length>n?t.slice(0,n-1).trimEnd()+"â
 /* full screen: the same run, with room to read it, and its ledger beside it */
 POUR.attach($("#mfs"));
 function mapFS(btn){const host=btn.closest(".mapw,.mini"),m=[...FM].find(x=>x.host===host);if(!m)return;const w=m.get(),o=$("#mfs");acctMenu(false);
- $("#mfsT").textContent=cur?cur.title:"";$("#mfsL").innerHTML=ledgerHTML(w,true)||`<p class="empty2">This run has no claims ledger.</p>`;FM.forEach(x=>{if(x.opt.fs)x.kill()});$("#mfsMap").innerHTML="";
- o.classList.add("open");$("#veil").classList.add("open");setTimeout(()=>{mkMap($("#mfsMap"),()=>w,{replay:true,fs:true});$("#mfsX").focus({preventScroll:true})},60)}
-function closeFS(){const o=$("#mfs");if(!o.classList.contains("open"))return;o.classList.remove("open");$("#veil").classList.remove("open");FM.forEach(x=>{if(x.opt.fs)x.kill()})}
+ o._w=w;$("#mfsT").textContent=cur?cur.title:"";$("#mfsW").innerHTML=ledgerHTML(w,true)||`<p class="empty2">This run has no claims ledger.</p>`;$("#mfsLg").innerHTML=fsLogHTML(w);FM.forEach(x=>{if(x.opt.fs)x.kill()});$("#mfsMap").innerHTML="";
+ /* v44: the map opens already drawn (no replay), and the Details rail docks inside as the first tab */
+ FSP.dock(true);fsTab(INS.pinned()?"d":"w",true);o.classList.add("open");$("#veil").classList.add("open");requestAnimationFrame(()=>{mkMap($("#mfsMap"),()=>w,{fs:true});$("#mfsX").focus({preventScroll:true})})}
+function closeFS(){const o=$("#mfs");if(!o.classList.contains("open"))return;o.classList.remove("open");$("#veil").classList.remove("open");FM.forEach(x=>{if(x.opt.fs)x.kill()});FSP.dock(false)}
+/* the full-screen log: a line that names a desk opens that desk's details */
+function fsLogHTML(w){const f=w.feed||[];if(!f.length)return `<p class="empty2">This run has no log.</p>`;
+ return `<ol class="olog num fs-log">${f.map(x=>{const t=String(x[2]||x[1]||""),m=/\bdesk ([IVX]+)\b/i.exec(t.replace(/<[^>]+>/g,"")),d=m?ROMAN.indexOf(m[1].toUpperCase()):-1;
+  return `<li${d>=0&&(w.steps||[])[d]?` class="lk" data-fsd="${d}" tabindex="0"`:""}><span class="ts">${mmss(x[0])}</span><span class="tx">${feedH(t)}</span></li>`}).join("")}</ol>`}
 $("#mfsX").onclick=closeFS;

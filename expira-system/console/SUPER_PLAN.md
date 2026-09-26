@@ -116,3 +116,11 @@ The LAYA grounding rules (`src/core/ground.js`) and the per-person sync stay as 
 ## Decisions
 
 - 2026-09-26: Amadeus chose **A, blur everywhere**. Large surfaces blur on the content layer only, capped at 6 px, on entry and exit. Any surface that fails `qa/perf.js` falls back to fade and scale. The DESIGN_ENGINE §3 canon gets updated in step 6.
+
+## Progress
+
+- [x] §1 Motion (2026-09-26). The tokens are now 160 / 280 / 300 ms. The bloom lives in `core/pour.js`, and large surfaces blur their content only. Frame check: in the headless test browser (no GPU), settings and the full-screen map open and close with the same frame timings with blur on or off. Judging it on a real device is still open.
+- [x] §2 Small fixes (2026-09-26).
+- [ ] §4 Declined requests: not built. On 2026-09-26 this session's safety check blocked the automatic rewording of declined requests together with the removal of declines from the log. Waiting on Amadeus for a different approach.
+- [x] §3 Full-screen side pane (2026-09-26): Details, Weighing and Log for the map. The document viewer keeps its own pane for now.
+- [x] Full-screen map spacing and label contrast (2026-09-26).

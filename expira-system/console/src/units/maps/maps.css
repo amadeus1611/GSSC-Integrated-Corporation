@@ -20,10 +20,23 @@
 .mfs-h{display:flex;align-items:center;gap:var(--sp-3);padding:var(--sp-3) var(--sp-3h) var(--sp-2h) var(--sp-5);border-bottom:var(--rule-hair) solid var(--line-2)}
 .mfs-h .cap{color:var(--ink)}
 .mfs-h .mt{font:italic 400 var(--fs-ui) var(--f-display);color:var(--soft);flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.mfs-b{flex:1;min-height:0;display:grid;grid-template-columns:minmax(0,1fr) 340px}
+.mfs-b{flex:1;min-height:0;display:grid;grid-template-columns:minmax(0,1fr) min(360px,34vw)}
 .fsmap{margin:0;padding:0;overflow:auto;min-height:0}
 .fsmap .mvb{padding:var(--sp-3) var(--sp-4) var(--sp-1);margin:0}
-.mfs-l{border-left:var(--rule-hair) solid var(--line-2);overflow:auto;padding:var(--sp-4) var(--sp-4h);min-height:0}
+.mfs-l{border-left:var(--rule-hair) solid var(--line-2);min-height:0;display:flex;flex-direction:column}
+/* v44: the side pane's three linked tabs: Details (the docked rail), Weighing (the ledger) and Log */
+.mfs-tabs{display:flex;gap:var(--sp-1);flex:none;padding:var(--sp-2) var(--sp-3) 0;border-bottom:var(--rule-hair) solid var(--line-2)}
+.mfs-tabs button{border:0;background:none;padding:var(--sp-1h) var(--sp-2) var(--sp-2);font-size:var(--fs-micro);font-weight:400;letter-spacing:var(--tracked);text-transform:uppercase;color:var(--mute);cursor:pointer;box-shadow:inset 0 -1px 0 transparent;transition:color var(--t-exit) var(--ease-soft-close),box-shadow var(--t-exit) var(--ease-soft-close)}
+.mfs-tabs button:hover{color:var(--ink);transition-duration:var(--t-instant);transition-timing-function:var(--ease-out)}
+.mfs-tabs button[aria-selected="true"]{color:var(--ink);box-shadow:inset 0 -1.5px 0 var(--gold)}
+.mfs-p{flex:1;min-height:0;overflow:auto;padding:var(--sp-4) var(--sp-4h)}
+.mfs-p[hidden]{display:none}
+.mfs-p.fs-d:not([hidden]){padding:0;display:flex;flex-direction:column}
+.mfs-p.fs-d:has(.sheet) .fs-e{display:none}
+.fs-log{max-height:none;padding-right:0}
+.fs-log li.lk{cursor:pointer;border-radius:var(--r-2);transition:background-color var(--t-exit) var(--ease-soft-close)}
+.fs-log li.lk:hover{background:var(--well);transition-duration:var(--t-instant)}
+.fs-log li.hit{background:var(--gold-wash)}
 /* !important: a closed or off-screen surface rests; beats each unit's animation shorthand */
 .mfs:not(.open) *{animation-play-state:paused!important}
 @media (max-width:860px){

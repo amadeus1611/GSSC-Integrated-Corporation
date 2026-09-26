@@ -1087,10 +1087,23 @@ html.calm *,html.calm *::before,html.calm *::after{animation:none!important;tran
 .mfs-h{display:flex;align-items:center;gap:var(--sp-3);padding:var(--sp-3) var(--sp-3h) var(--sp-2h) var(--sp-5);border-bottom:var(--rule-hair) solid var(--line-2)}
 .mfs-h .cap{color:var(--ink)}
 .mfs-h .mt{font:italic 400 var(--fs-ui) var(--f-display);color:var(--soft);flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.mfs-b{flex:1;min-height:0;display:grid;grid-template-columns:minmax(0,1fr) 340px}
+.mfs-b{flex:1;min-height:0;display:grid;grid-template-columns:minmax(0,1fr) min(360px,34vw)}
 .fsmap{margin:0;padding:0;overflow:auto;min-height:0}
 .fsmap .mvb{padding:var(--sp-3) var(--sp-4) var(--sp-1);margin:0}
-.mfs-l{border-left:var(--rule-hair) solid var(--line-2);overflow:auto;padding:var(--sp-4) var(--sp-4h);min-height:0}
+.mfs-l{border-left:var(--rule-hair) solid var(--line-2);min-height:0;display:flex;flex-direction:column}
+/* v44: the side pane's three linked tabs: Details (the docked rail), Weighing (the ledger) and Log */
+.mfs-tabs{display:flex;gap:var(--sp-1);flex:none;padding:var(--sp-2) var(--sp-3) 0;border-bottom:var(--rule-hair) solid var(--line-2)}
+.mfs-tabs button{border:0;background:none;padding:var(--sp-1h) var(--sp-2) var(--sp-2);font-size:var(--fs-micro);font-weight:400;letter-spacing:var(--tracked);text-transform:uppercase;color:var(--mute);cursor:pointer;box-shadow:inset 0 -1px 0 transparent;transition:color var(--t-exit) var(--ease-soft-close),box-shadow var(--t-exit) var(--ease-soft-close)}
+.mfs-tabs button:hover{color:var(--ink);transition-duration:var(--t-instant);transition-timing-function:var(--ease-out)}
+.mfs-tabs button[aria-selected="true"]{color:var(--ink);box-shadow:inset 0 -1.5px 0 var(--gold)}
+.mfs-p{flex:1;min-height:0;overflow:auto;padding:var(--sp-4) var(--sp-4h)}
+.mfs-p[hidden]{display:none}
+.mfs-p.fs-d:not([hidden]){padding:0;display:flex;flex-direction:column}
+.mfs-p.fs-d:has(.sheet) .fs-e{display:none}
+.fs-log{max-height:none;padding-right:0}
+.fs-log li.lk{cursor:pointer;border-radius:var(--r-2);transition:background-color var(--t-exit) var(--ease-soft-close)}
+.fs-log li.lk:hover{background:var(--well);transition-duration:var(--t-instant)}
+.fs-log li.hit{background:var(--gold-wash)}
 /* !important: a closed or off-screen surface rests; beats each unit's animation shorthand */
 .mfs:not(.open) *{animation-play-state:paused!important}
 @media (max-width:860px){
@@ -1151,8 +1164,6 @@ html.calm *,html.calm *::before,html.calm *::after{animation:none!important;tran
 /* docked on a wide window, the rail comes in from past the edge: its edge and the chat's edge travel together, on one curve */
 @media (min-width:1100px){.sheet:not(.open),.app.dsp-open~.sheet.open{transform:translateX(100%)}}
 .app.dsp-open~.sheet.open{opacity:0;visibility:hidden;pointer-events:none;transform:translateX(24px)}
-.mfs.open~.sheet.open{z-index:var(--z-map);top:20px;right:20px;bottom:20px;border:var(--rule-hair) solid var(--line-3);border-radius:var(--r-5);box-shadow:var(--e3)}
-@media (min-width:1100px){.app.ins-open~.mfs{right:calc(var(--rail-w) + 32px)}}
 .ins-h{display:flex;align-items:center;gap:var(--sp-2);flex:none;padding:var(--sp-3h) var(--sp-3) var(--sp-3) var(--sp-4h);border-bottom:var(--rule-hair) solid var(--line-2)}
 .ins-h>.cap:first-child{color:var(--ink)}
 .ins-st{color:var(--mute)}
@@ -1170,6 +1181,11 @@ html.calm *,html.calm *::before,html.calm *::after{animation:none!important;tran
 .ins-v{-webkit-user-select:text;user-select:text}
 .ins-v::after{content:"Click it to keep it here.";display:block;margin-top:var(--sp-3);font:italic 400 var(--fs-chrome-2) var(--f-display);color:var(--mute)}
 .app:not(.dsp-open) .ins-btn[aria-expanded="true"]{border-color:var(--line-3);color:var(--ink);background:var(--well)}
+/* v44: docked in the full-screen map's side pane as its Details tab: a plain column, no frame of its own */
+.sheet.infs{position:static;width:auto;flex:1;min-height:0;z-index:auto;background:transparent;border:0;box-shadow:none;border-radius:0;opacity:1;visibility:visible;pointer-events:auto;transform:none;transition:none}
+.sheet.infs .ins-h>.cap:first-child,.sheet.infs .sx{display:none}
+.sheet.infs .ins-h{border-bottom:0;padding-bottom:0}
+.sheet:not(.infs) [data-fslog]{display:none}
 .menu.ctx{width:224px}
 .menu .sub{display:none;border-left:var(--rule-hair) solid var(--line-2);margin:var(--sp-half) 0 var(--sp-half) var(--sp-3);padding-left:var(--sp-1)}
 .menu .sub.open{display:block;animation:evIn var(--t-enter) var(--ease-out) both}
@@ -1623,7 +1639,7 @@ html.tnone *,html.tnone *::before,html.tnone *::after{transition:none!important}
 <div class="toasts" id="toasts" aria-live="polite"></div>
 <div class="selbar" id="selbar" role="toolbar" aria-label="Selection"><button type="button" data-sa="ask"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.1" aria-hidden="true"><path d="M2.5 3.5h11v7h-6l-3 2.5v-2.5h-2z"/></svg><span>Ask EXPIRA</span></button><button type="button" data-sa="explain"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.1" aria-hidden="true"><circle cx="8" cy="8" r="5.5"/><path d="M6.4 6.4a1.7 1.7 0 113 1c-.6.4-1.4.8-1.4 1.6M8 11v.3"/></svg><span>Explain</span></button><button type="button" data-sa="define"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.1" aria-hidden="true"><path d="M3 2.5h7.5L13 5v8.5H3z"/><path d="M5.5 7h5M5.5 9.5h5M5.5 12h3"/></svg><span>Define</span></button><i class="sep"></i><button type="button" data-sa="copy"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.1" aria-hidden="true"><rect x="5.5" y="5.5" width="8" height="8" rx="1"/><path d="M10.5 5.5v-2a1 1 0 00-1-1h-6a1 1 0 00-1 1v6a1 1 0 001 1h2"/></svg><span>Copy</span></button><button type="button" data-sa="newchat"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.1" aria-hidden="true"><path d="M8 3v10M3 8h10"/></svg><span>New chat</span></button></div>
 <div class="defc" id="defc" role="dialog" aria-label="Definition"><div class="dk cap">Define</div><div class="dt" id="defT"></div><p class="dd" id="defD"></p><div class="da"><button type="button" class="ab" data-sa="ask">Ask more</button><button type="button" class="ab" data-dclose>Close</button></div></div>
-<div class="mfs" id="mfs" role="dialog" aria-modal="true" aria-label="The map, full screen"><div class="mfs-h"><span class="cap">The map</span><span class="mt" id="mfsT"></span><button class="ib" id="mfsX" aria-label="Close full screen" data-tip="Close  Esc"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.1"><path d="M4 4l8 8M12 4l-8 8"/></svg></button></div><div class="mfs-b"><div class="mapw fsmap" id="mfsMap"></div><aside class="mfs-l" id="mfsL"></aside></div></div>
+<div class="mfs" id="mfs" role="dialog" aria-modal="true" aria-label="The map, full screen"><div class="mfs-h"><span class="cap">The map</span><span class="mt" id="mfsT"></span><button class="ib" id="mfsX" aria-label="Close full screen" data-tip="Close  Esc"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.1"><path d="M4 4l8 8M12 4l-8 8"/></svg></button></div><div class="mfs-b"><div class="mapw fsmap" id="mfsMap"></div><aside class="mfs-l" id="mfsL"><div class="mfs-tabs" role="tablist" aria-label="Beside the map"><button type="button" role="tab" id="ftD" data-ft="d" aria-controls="mfsD" aria-selected="false">Details</button><button type="button" role="tab" id="ftW" data-ft="w" aria-controls="mfsW" aria-selected="true">Weighing</button><button type="button" role="tab" id="ftL" data-ft="l" aria-controls="mfsLg" aria-selected="false">Log</button></div><div class="mfs-p fs-d" id="mfsD" data-p="d" role="tabpanel" aria-labelledby="ftD" hidden><p class="ins-e fs-e">Click a node, a claim or a source and its details open here.</p></div><div class="mfs-p" id="mfsW" data-p="w" role="tabpanel" aria-labelledby="ftW"></div><div class="mfs-p" id="mfsLg" data-p="l" role="tabpanel" aria-labelledby="ftL" hidden></div></aside></div></div>
 <div class="docv" id="docv" role="dialog" aria-modal="true" aria-labelledby="docvT"><div class="docv-h"><span class="cap">Document</span><span class="dt" id="docvT"></span><span class="dm num" id="docvM"></span><span class="da"><button type="button" class="btn2" id="docvCopy">Copy HTML</button><button type="button" class="btn2" id="docvSave">Download</button><button class="ib" id="docvX" aria-label="Close the document" data-tip="Close  Esc"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.1"><path d="M4 4l8 8M12 4l-8 8"/></svg></button></span></div><div class="docv-b"><iframe id="docvF" title="Document preview" sandbox="allow-same-origin"></iframe><aside class="docv-l" id="docvL"></aside></div></div>
 <div class="tip" id="tip" aria-hidden="true"></div>
 <aside class="sheet" id="sheet" aria-label="Details"><div class="ins-h"><span class="cap">Details</span><span class="ins-st cap" id="insSt"></span><button class="ins-un" id="insUn" type="button" hidden>Unpin</button><button class="ib sx" id="sheetX" type="button" aria-label="Close details" data-tip="Close details  ⌥I"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.1"><path d="M4 4l8 8M12 4l-8 8"/></svg></button></div><div class="speek" id="sheetP"></div><div class="sb" id="sheetB" aria-live="polite"></div><div class="sb ins-v" id="insV" hidden></div><p class="ins-e" id="insE">Hover a citation, a source, a chat or a map node and its details show here. Click one to keep it.</p></aside>
@@ -2639,7 +2655,7 @@ class MapBase{
  /* hover and keyboard focus: the neighbourhood stays, the rest dims; the tooltip opens after 120 ms, at once on focus */
  hover(id,kb){if(this.hov===id&&!kb)return;this.hov=id;const nb=new Set();if(id&&this.g){nb.add(id);this.g.E.forEach(e=>{if(e.a===id)nb.add(e.b);if(e.b===id)nb.add(e.a)})}this.nb=id?nb:null;
   clearTimeout(this.tipTo);if(id){this.tipTo=setTimeout(()=>{this.tipId=id;this.tipAt=0;this.go()},kb?0:120)}else this.tipTo=setTimeout(()=>{if(this.tipRail){INS.leave(this.tip.id+":"+this.tipRail);this.tipRail=null}this.tipId=null;this.tip.classList.remove("on");this.cv.removeAttribute("aria-describedby")},80);this.go()}
- dim(id){const f=this.lens||this.hov;if(!f)return 1;const on=this.lens?this.lensSet().has(id):this.nb&&this.nb.has(id);return on?1:this.lens?.2:.35}
+ dim(id){const f=this.lens||this.hov;if(!f)return 1;const on=this.lens?this.lensSet().has(id):this.nb&&this.nb.has(id);return on?1:this.lens?.42:.5}/* v44: what is not in focus stays readable */
  lensSet(){if(this._lk===this.lens)return this._ls;const s=new Set([this.lens]);this.g&&this.g.E.forEach(e=>{if(e.a===this.lens)s.add(e.b);if(e.b===this.lens)s.add(e.a)});this._lk=this.lens;this._ls=s;return s}
  /* the light: the running node with the highest rate holds it; a new start takes it at once; a challenger needs 1.5× for 400 ms */
  light(t){const g=this.g,T=g.T,L=this.lt;let want=null;
@@ -2798,7 +2814,7 @@ class FieldMap extends MapBase{
  rebuild(){const g=this.g,W=this.W,narrow=W<560,fs=this.opt.fs,card=this.opt.card,wv={};let mx=0;
   g.N.forEach(n=>{if(n.kind==="ans"||n.kind==="doc")return;wv[n.id]=n.parent&&wv[n.parent]!=null?wv[n.parent]+1:0;mx=Math.max(mx,wv[n.id])});g.N.forEach(n=>{if(wv[n.id]==null)wv[n.id]=mx+1});
   const N=g.N.length;this.H=fs?Math.max(320,Math.round(this.host.clientHeight-40)):card?Math.round(Math.min(320,Math.max(180,130+N*10))):Math.round(narrow?Math.min(560,Math.max(260,200+N*15)):Math.min(460,Math.max(230,160+N*12)));
-  if(this.fresh||!this.Hc)this.Hc=this.H;this.rep=fs?190:narrow?70:95;this.sp=fs?Math.min(2.6,W/440):narrow?1:Math.min(1.5,W/560);this.v=fs?110:72;
+  if(this.fresh||!this.Hc)this.Hc=this.H;this.rep=fs?190:narrow?70:95;this.sp=fs?Math.min(3.2,W/360):narrow?1:Math.min(1.5,W/560);this.v=fs?110:72;
   const anim=this.opt.replay||this.opt.live||g.live,seen=new Set();let heat=0;
   g.N.forEach(n=>{seen.add(n.id);let s=this.S.get(n.id);if(!s){s={id:n.id,x:W/2,y:this.Hc/2,vx:0,vy:0,r:0,rv:0,a:0,vis:false};this.S.set(n.id,s);this.Q.push(n.id);heat=.5}
    const R=this.radius(n);if(s.n&&Math.abs(s.R-R.r)>1)heat=Math.max(heat,.08);s.n=n;s.wave=wv[n.id];s.R=R.r;s.cl=R.cl;const lb=this.label(n);if(s.lb!==lb){s.lb=lb;s.lw=0}});
@@ -2809,7 +2825,7 @@ class FieldMap extends MapBase{
   /* a run opened after the fact lands settled: every node placed, 300 ticks computed at once (d3's static layout) */
   if(this.fresh&&!anim){this.Q.forEach(id=>this.release(id,0,true));this.Q=[];this.colW(true);for(let i=0;i<300;i++)this.tick();this.al=0;this.S.forEach(s=>{s.r=s.R;s.a=1});this.L.forEach(l=>l.p=1)}
   else this.al=Math.max(this.al,heat)}
- colW(snap){const vw=[...this.S.values()].filter(s=>s.vis).map(s=>s.wave),n=vw.length?Math.max(...vw)+1:1,pad=this.opt.fs?90:64,w=n>1?Math.min(this.opt.fs?210:132,(this.W-2*pad)/(n-1)):0,x0=(this.W-w*(n-1))/2;
+ colW(snap){const vw=[...this.S.values()].filter(s=>s.vis).map(s=>s.wave),n=vw.length?Math.max(...vw)+1:1,pad=this.opt.fs?90:64,w=n>1?Math.min(this.opt.fs?300:132,(this.W-2*pad)/(n-1)):0,x0=(this.W-w*(n-1))/2;
   this.cw={w,x0};if(snap){this.cam.w=w;this.cam.x0=x0}}
  cx(s){return this.cam.x0+s.wave*this.cam.w}
  /* a birth: the child leaves its parent's centre toward its wave, swelling as it goes */
@@ -2901,9 +2917,14 @@ const fitS=(t,n)=>{t=String(t||"");return t.length>n?t.slice(0,n-1).trimEnd()+"�
 /* full screen: the same run, with room to read it, and its ledger beside it */
 POUR.attach($("#mfs"));
 function mapFS(btn){const host=btn.closest(".mapw,.mini"),m=[...FM].find(x=>x.host===host);if(!m)return;const w=m.get(),o=$("#mfs");acctMenu(false);
- $("#mfsT").textContent=cur?cur.title:"";$("#mfsL").innerHTML=ledgerHTML(w,true)||`<p class="empty2">This run has no claims ledger.</p>`;FM.forEach(x=>{if(x.opt.fs)x.kill()});$("#mfsMap").innerHTML="";
- o.classList.add("open");$("#veil").classList.add("open");setTimeout(()=>{mkMap($("#mfsMap"),()=>w,{replay:true,fs:true});$("#mfsX").focus({preventScroll:true})},60)}
-function closeFS(){const o=$("#mfs");if(!o.classList.contains("open"))return;o.classList.remove("open");$("#veil").classList.remove("open");FM.forEach(x=>{if(x.opt.fs)x.kill()})}
+ o._w=w;$("#mfsT").textContent=cur?cur.title:"";$("#mfsW").innerHTML=ledgerHTML(w,true)||`<p class="empty2">This run has no claims ledger.</p>`;$("#mfsLg").innerHTML=fsLogHTML(w);FM.forEach(x=>{if(x.opt.fs)x.kill()});$("#mfsMap").innerHTML="";
+ /* v44: the map opens already drawn (no replay), and the Details rail docks inside as the first tab */
+ FSP.dock(true);fsTab(INS.pinned()?"d":"w",true);o.classList.add("open");$("#veil").classList.add("open");requestAnimationFrame(()=>{mkMap($("#mfsMap"),()=>w,{fs:true});$("#mfsX").focus({preventScroll:true})})}
+function closeFS(){const o=$("#mfs");if(!o.classList.contains("open"))return;o.classList.remove("open");$("#veil").classList.remove("open");FM.forEach(x=>{if(x.opt.fs)x.kill()});FSP.dock(false)}
+/* the full-screen log: a line that names a desk opens that desk's details */
+function fsLogHTML(w){const f=w.feed||[];if(!f.length)return `<p class="empty2">This run has no log.</p>`;
+ return `<ol class="olog num fs-log">${f.map(x=>{const t=String(x[2]||x[1]||""),m=/\bdesk ([IVX]+)\b/i.exec(t.replace(/<[^>]+>/g,"")),d=m?ROMAN.indexOf(m[1].toUpperCase()):-1;
+  return `<li${d>=0&&(w.steps||[])[d]?` class="lk" data-fsd="${d}" tabindex="0"`:""}><span class="ts">${mmss(x[0])}</span><span class="tx">${feedH(t)}</span></li>`}).join("")}</ol>`}
 $("#mfsX").onclick=closeFS;
 document.addEventListener("click",e=>{const b=e.target.closest("[data-mfs]");if(b)mapFS(b)});
 document.addEventListener("click",e=>{const f=e.target.closest(".fbtn");if(f){const ol=f.closest(".strm");ol.classList.add("all");ol.querySelectorAll(".old").forEach(x=>x.classList.remove("old"));f.parentElement.remove();return}});
@@ -2913,7 +2934,7 @@ function wakeMaps(){const f=()=>FM.forEach(m=>{if(!m.host.isConnected)return;if(
 /* cards off-screen rest: their loops pause (each map sleeps on its own when it cannot be seen) */
 const RUNIO=new IntersectionObserver(es=>es.forEach(en=>en.target.toggleAttribute("data-off",!en.isIntersecting)),{rootMargin:"200px"});
 new MutationObserver(()=>document.querySelectorAll("#thread .run:not([data-io])").forEach(r=>{r.dataset.io=1;RUNIO.observe(r)})).observe(document.getElementById("thread"),{childList:true,subtree:true});
-const workOf=el=>{const b=el.closest(".bot");return b&&(b._work||cur?.turns[+b.dataset.k]?.work)};
+const workOf=el=>{const b=el.closest(".bot");if(!b&&el.closest("#mfs"))return $("#mfs")._w||null;return b&&(b._work||cur?.turns[+b.dataset.k]?.work)};
 
 /* the sheet: what a node holds, spread open from the node itself */
 function exList(t){const p=String(t||"").split(/\s*…\s*/).map(x=>x.trim()).filter(x=>x.length>2).slice(0,5);return p.length?`<ol class="ex">${p.map(x=>`<li>${esc(x)}</li>`).join("")}</ol>`:""}
@@ -2934,11 +2955,12 @@ function sheetHTML(w,id){const S=w.steps||[],M=w.map||{},P=M.pages||[],C=M.calls
   return si(`<span class="k cap">Desk ${ROMAN[i]} · ${ROLE[s.role]}</span><h4>${esc(s.focus||s.task)}</h4>${s.focus?`<p class="tk">${esc(s.task)}</p>`:""}<div class="mt"><span>${TIERS[s.tier].w} effort</span>${s.ms?`<span class="num">${fmt(s.ms)}</span>`:s._live?"<span>Working</span>":""}${s.v?`<span class="${esc(s.v)}">${s.v==="pass"?"Passed review":"Returned"}</span>`:""}${s.after&&s.after.length?`<span>After ${s.after.map(n=>"desk "+ROMAN[n-1]).join(" and ")}</span>`:""}</div>${s.why?`<p class="tk" style="font-size:12px;color:var(--soft)">${esc(cap1(s.why))}</p>`:""}`)
    +(q.length?si(`<span class="k2 cap">Searches</span><ul class="ql">${q.map(c=>`<li><span class="num">${mmss(c.t)}</span><span>${c.fetch?"Read ":""}${c.q.map(x=>c.fetch?esc(x):`“${esc(x)}”`).join(", ")}</span></li>`).join("")}</ul>`):"")
    +(hs.length?si(`<span class="k2 cap">Sites it drew on</span><ul class="ql">${hs.map(o=>`<li><span class="num">${o.n}</span><button class="lnk" data-sheet="s:${esc(o.h)}">${esc(o.h)}</button></li>`).join("")}</ul>`):"")
+   +si(`<button type="button" class="lnk" data-fslog="${i}">Show this desk in the log</button>`)
    +si(`<span class="k2 cap">Notes</span><div class="nt2">${esc(s.out||(s._live?"Writing…":"No notes filed."))}</div>`)}
  return ""}
 const sheetTitle=B=>(B.querySelector("h4")?.textContent||B.querySelector(".k,.cap")?.textContent||"Back").trim().slice(0,48);
 function sheetPeek(){const sh=$("#sheet"),st=sh._stack||[],P=$("#sheetP");P.innerHTML=st.map((x,i)=>`<button type="button" class="spk" data-spop="${i}" style="--d:${st.length-i}"><svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.2"><path d="M7.5 2.5 4 6l3.5 3.5"/></svg><span>${esc(x.title)}</span></button>`).join("");sh.classList.toggle("deep",st.length>0)}
-function sheetSwap(html,dir){const B=$("#sheetB");B.innerHTML=html;B.scrollTop=0;B.querySelectorAll(".si").forEach((x,i)=>x.style.animationDelay=(.06+i*.05).toFixed(2)+"s");if(!reduce)B.animate(dir>0?[{opacity:0,transform:"translateX(18px) scale(.985)"},{opacity:1,transform:"none"}]:[{opacity:0,transform:"translateX(-14px) scale(.985)"},{opacity:1,transform:"none"}],{duration:MO.move,easing:MO.spring})}
+function sheetSwap(html,dir){const B=$("#sheetB");B.innerHTML=html;B.scrollTop=0;B.querySelectorAll(".si").forEach((x,i)=>x.style.animationDelay=(.06+i*.05).toFixed(2)+"s");if(!reduce)B.animate([{opacity:0,filter:"blur(4px)",transform:`translateX(${dir>0?6:-6}px)`},{opacity:1,filter:"none",transform:"none"}],{duration:MO.enter,easing:MO.out})}
 function sheetPush(w,id){const sh=$("#sheet"),B=$("#sheetB"),st=sh._stack=sh._stack||[];if(id===sh._id)return;const at=st.findIndex(x=>x.id===id);if(at>=0){sheetPop(at);return}const html=sheetHTML(w,id);if(!html)return;
  st.push({id:sh._id,html:B.innerHTML,top:B.scrollTop,title:sheetTitle(B)});if(st.length>4)st.shift();sh._id=id;sheetPeek();sheetSwap(html,1)}
 function sheetPop(to){const sh=$("#sheet"),st=sh._stack||[];if(!st.length)return false;const i=to==null?st.length-1:to,x=st[i];st.length=i;sh._id=x.id;sheetPeek();sheetSwap(x.html,-1);$("#sheetB").scrollTop=x.top;return true}
@@ -2951,11 +2973,11 @@ const INS=(()=>{const sh=$("#sheet"),B=$("#sheetB"),V=$("#insV"),P=$("#sheetP"),
  const wide=()=>innerWidth>=1100,isOpen=()=>sh.classList.contains("open");
  const mode=m=>{sh.dataset.mode=m;st.textContent=m==="pin"?"Pinned":m==="view"?"Preview":"";un.hidden=m!=="pin"};
  const land=el=>{if(!reduce)el.animate([{opacity:0,transform:"translateY(4px)"},{opacity:1,transform:"none"}],{duration:MO.enter,easing:MO.out})};
- const open=(o,keep)=>{sh.classList.toggle("open",o);app.classList.toggle("ins-open",o);btn&&btn.setAttribute("aria-expanded",String(o));if(!keep&&wide())KV.put("rail",o)};
+ const open=(o,keep)=>{if(sh.classList.contains("infs")){sh.classList.add("open");return}sh.classList.toggle("open",o);app.classList.toggle("ins-open",o);btn&&btn.setAttribute("aria-expanded",String(o));if(!keep&&wide())KV.put("rail",o)};
  const showPinned=()=>{V.hidden=true;B.hidden=false;P.hidden=false;mode("pin")};
  const api={isOpen,wide,pinned:()=>pin,open,
   /* a click: keep this in the rail */
-  pin(html){if(!isOpen())open(true,!wide());clearTimeout(back);pk=vk;vk=null;pin=true;B.innerHTML=html;B.scrollTop=0;showPinned();land(B)},
+  pin(html){if(!isOpen())open(true,!wide());if(sh.classList.contains("infs"))fsTab("d");clearTimeout(back);pk=vk;vk=null;pin=true;B.innerHTML=html;B.scrollTop=0;showPinned();land(B)},
   /* a hover or focus: preview it, unless the rail is closed or the window is narrow (the caller keeps its own card then) */
   view(key,html,w){if(!isOpen()||!wide())return false;if(pin&&key===pk)return true;clearTimeout(back);if(w)sh._vw=w;if(vk===key){if(V._h!==html){V._h=html;V.innerHTML=html}return true}
    vk=key;V._h=html;V.innerHTML=html;V.scrollTop=0;V.hidden=false;B.hidden=true;P.hidden=true;mode("view");land(V);return true},
@@ -2965,7 +2987,7 @@ const INS=(()=>{const sh=$("#sheet"),B=$("#sheetB"),V=$("#insV"),P=$("#sheetP"),
  mode("");
  const saved=KV.get("rail",null);if(wide()&&(saved==null||saved))open(true,true);
  /* the rail steps aside for the Dispatch; asking for it brings it back */
- const toggle=()=>{if(app.classList.contains("dsp-open")){showDsp(false);open(true)}else open(!isOpen())};
+ const toggle=()=>{if(sh.classList.contains("infs")){fsTab("d");return}if(app.classList.contains("dsp-open")){showDsp(false);open(true)}else open(!isOpen())};
  btn&&btn.addEventListener("click",toggle);
  un.addEventListener("click",()=>api.unpin());
  $("#sheetX").addEventListener("click",()=>open(false));
@@ -2982,6 +3004,20 @@ function openSheet(w,id,anchor){const sh=$("#sheet");if(!w)return;
 /* unpin and clear; the rail itself stays where it is */
 function closeSheet(){if(INS.pinned()||INS.viewing())INS.unpin()}
 
+
+/* v44: in full screen the rail docks inside the map's side pane as its Details tab, so what a click brings up opens
+   beside the map, linked to the Weighing and the Log; it goes home once the full screen has closed */
+const FSP=(()=>{const sh=$("#sheet"),mark=document.createComment("sheet");sh.before(mark);let was=false,t=0;
+ return{dock(on){clearTimeout(t);if(on){if(sh.classList.contains("infs"))return;was=sh.classList.contains("open");$("#mfsD").append(sh);sh.classList.add("infs","open")}
+  else t=setTimeout(()=>{if(!sh.classList.contains("infs"))return;sh.classList.remove("infs");if(!was)sh.classList.remove("open");mark.after(sh)},MO.exit+40)}}})();
+function fsTab(t,quiet){const L=$("#mfsL");L.querySelectorAll("[data-ft]").forEach(b=>{const on=b.dataset.ft===t;b.setAttribute("aria-selected",String(on));b.tabIndex=on?0:-1});
+ L.querySelectorAll(".mfs-p").forEach(p=>{const on=p.dataset.p===t,shown=!p.hidden;p.hidden=!on;if(on&&!shown&&!quiet&&!reduce)p.animate([{opacity:0,filter:"blur(4px)",transform:"translateY(3px)"},{opacity:1,filter:"none",transform:"none"}],{duration:MO.enter,easing:MO.out})})}
+$("#mfsL").addEventListener("click",e=>{const b=e.target.closest("[data-ft]");if(b){fsTab(b.dataset.ft);return}
+ const li=e.target.closest("[data-fsd]");if(li){openSheet($("#mfs")._w,"a"+li.dataset.fsd,li)}});
+$("#mfsL").addEventListener("keydown",e=>{const b=e.target.closest("[data-ft]");if(b&&(e.key==="ArrowRight"||e.key==="ArrowLeft")){e.preventDefault();const L=[...$("#mfsL").querySelectorAll("[data-ft]")],n=L[(L.indexOf(b)+(e.key==="ArrowRight"?1:L.length-1))%L.length];fsTab(n.dataset.ft);n.focus()}
+ const li=e.target.closest("[data-fsd]");if(li&&(e.key==="Enter"||e.key===" ")){e.preventDefault();openSheet($("#mfs")._w,"a"+li.dataset.fsd,li)}});
+document.addEventListener("click",e=>{const b=e.target.closest("[data-fslog]");if(!b)return;const i=b.dataset.fslog;fsTab("l");
+ const L=[...$("#mfsLg").querySelectorAll("li")];L.forEach(x=>x.classList.toggle("hit",x.dataset.fsd===i));const f=L.find(x=>x.dataset.fsd===i);f&&f.scrollIntoView({block:"center",behavior:reduce?"auto":"smooth"})});
 /* reads the planner's JSON while it streams: the thoughts so far, and each desk as soon as its object closes */
 function jstr(t,i){let o="";i++;while(i<t.length){const c=t[i];if(c==="\\"){const n=t[i+1];if(n===undefined)return [o,-1];if(n==="u"){const x=t.substr(i+2,4);if(x.length<4)return [o,-1];o+=String.fromCharCode(parseInt(x,16));i+=6;continue}o+=({n:"\n",t:"\t",r:"",b:"",f:""})[n]??n;i+=2;continue}if(c==='"')return [o,i+1];o+=c;i++}return [o,-1]}
 function peekPlan(t){const r={thinking:[],partial:false,steps:[]};let m=t.indexOf('"thinking"');

@@ -6,5 +6,5 @@ function wakeMaps(){const f=()=>FM.forEach(m=>{if(!m.host.isConnected)return;if(
 /* cards off-screen rest: their loops pause (each map sleeps on its own when it cannot be seen) */
 const RUNIO=new IntersectionObserver(es=>es.forEach(en=>en.target.toggleAttribute("data-off",!en.isIntersecting)),{rootMargin:"200px"});
 new MutationObserver(()=>document.querySelectorAll("#thread .run:not([data-io])").forEach(r=>{r.dataset.io=1;RUNIO.observe(r)})).observe(document.getElementById("thread"),{childList:true,subtree:true});
-const workOf=el=>{const b=el.closest(".bot");return b&&(b._work||cur?.turns[+b.dataset.k]?.work)};
+const workOf=el=>{const b=el.closest(".bot");if(!b&&el.closest("#mfs"))return $("#mfs")._w||null;return b&&(b._work||cur?.turns[+b.dataset.k]?.work)};
 

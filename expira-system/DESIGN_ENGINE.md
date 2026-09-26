@@ -63,7 +63,8 @@ Motion is the heart of the UX: fidelity in the engine comes first.
 - **Loading is a mercury bead** on a hairline: it stretches with its speed and pools at the ends. It is not a stock progress bar.
 - **Stillness when settled:** a finished run animates nothing, and anything off-screen pauses.
 - **Reduced motion:** state changes only.
-- **The pour (Gate A, v41): the surface-tension droplet.**
+- **The bloom (v44, replaces the v41 pour).** A surface opens where it lives: it comes out of a soft blur, fades up and settles from a hair under full size (0.965 small, 0.985 large) on `--t-enter` and `--ease-out`. It closes in place on the soft close, fading, easing a hair smaller and softening back into the blur. It never travels to or from the click point. The blur is gone by 70% of the way open, so the landing is sharp. Reversal mid-flight carries on from where it is. Source: `console/src/core/pour.js` (the `POUR.attach` API is unchanged).
+- **The pour (Gate A, v41; retired in v44): the surface-tension droplet.**
   - A small bead leaves the exact point clicked and spreads into the card, with width leading and height following.
   - One critically damped spring drives every layer (shell, shadow plate, bead, content) on one clock. Open settles in about 220 ms and close in about 360 ms.
   - Only transform and opacity move. The shadow is its own plate, so nothing is ever clipped.
@@ -72,14 +73,14 @@ Motion is the heart of the UX: fidelity in the engine comes first.
   - There is no gold meniscus rim.
   - Reference implementation: `console/qa/lab/pours.js`, candidate A.
 - **Soft close (Gate A):** exits behave like a luxury car door. They travel, then are pulled gently shut, decelerating into rest; they never accelerate out.
-  - Tokens: `--ease-soft-close` `cubic-bezier(.4,0,.1,1)` over `--t-exit` 380 ms. Entry stays fast (`--t-enter` 200 ms, `--ease-out`).
-- **Blur transition (Gate A, Duke):** a light blur accompanies entry (`--blur-enter` 4px) and exit (`--blur-exit` 3px). It is the one sanctioned exception to "transform and opacity only", and it has limits:
-  - small surfaces only (menus, cards, toasts, tips, the pour's content);
+  - Tokens: `--ease-soft-close` `cubic-bezier(.4,0,.1,1)` over `--t-exit` 280 ms (380 before v44). Entry stays fast (`--t-enter` 160 ms, 200 before v44, `--ease-out`). Amadeus's rule: fast push, slower soft close. Most design systems close faster than they open (Material, NN/g, Atlassian); EXPIRA deliberately keeps the close a little slower, but both stay well under the 400 ms where motion reads as waiting.
+- **Blur transition (Gate A, Duke; widened in v44 by Amadeus):** a blur accompanies entry (`--blur-enter` 8px) and exit (`--blur-exit` 6px). It is the one sanctioned exception to "transform and opacity only", and it has limits:
+  - small surfaces blur as a whole; large surfaces (settings, the full-screen map, the document viewer) blur only their content, at `--blur-enter-lg` 6px and `--blur-exit-lg` 5px, because a blur costs in proportion to area × radius (Chrome, "Animating a blur"). A large surface that drops frames on a real device falls back to fade and scale;
   - enter and exit only, on the moving layer;
   - `filter:none` at rest, and never in loops;
-  - never on the docs viewer, the full-screen map, large sheets or streamed words.
+  - never on streamed words.
 - **The vocabulary (Gate A):**
-  - durations: `--t-instant` 90, `--t-enter` 200, `--t-exit` 380, `--t-move` 380, `--t-draw` 420 ms × length;
+  - durations: `--t-instant` 90, `--t-enter` 160, `--t-exit` 280, `--t-move` 300, `--t-draw` 420 ms × length (v44);
   - curves: `--ease-out`, `--ease-soft-close` and `--ease-inout`;
   - one critically damped `--spring`;
   - `--stagger` 40 ms.
@@ -98,6 +99,13 @@ Motion is the heart of the UX: fidelity in the engine comes first.
 - **Tokens (v41):** every value comes from `src/tokens.css`. Spacing is a 4px scale with half steps (`--sp-half`, `--sp-1h` … `--sp-4h`) below 20px for dense chrome; a 1px nudge is optical and stays literal. Layers are named (`--z-side`, `--z-menu`, `--z-tip` …) in one stacking order. Dark tokens are written once in `@dark{}`.
 
 ## 5. Change log
+- **v44** (2026-09-26, Amadeus's super plan, `console/SUPER_PLAN.md`):
+  - faster and softer: entry 160 ms, the soft close 280 ms, layout moves 300 ms;
+  - the pour is retired: cards, menus, settings, the full-screen map and the document open by blooming out of a blur in place and close back into it, never returning to the click point; large surfaces blur their content only;
+  - the full-screen map has one side pane with linked tabs: Details (the Details rail docks inside while full screen is open), Weighing (the ledger) and Log. A click on a node, claim or source opens Details there; a desk's details link to its lines in the log, and a log line naming a desk opens that desk. The map opens already drawn instead of replaying;
+  - in full screen the columns spread wider, and what is out of focus dims to 42% instead of 20%, so labels stay readable;
+  - settings: clicking the open tab no longer rebuilds it; the start page's preset briefs are gone; every run card opens on the log;
+  - the Details rail swaps content with a short blur cross-fade instead of a sliding spring.
 - **v43** (2026-09-26, after Amadeus's notes on the sidebar, card stutter and repeated Enter):
   - layout moves are one continuous move (after Amadeus's v55 notes: the transform-only version re-wrapped the text before or after the move, which read as a jump). The sidebar's margin and the chat's margin run on the time and curve of the panel that causes them (the sidebar on --ease-inout; the Details rail and the Dispatch on the spring as they arrive and the soft close as they leave), so the chat column, its text and the composer travel with the panel frame by frame. On a wide window the rail and the Dispatch come in from past the edge, so the panel's edge and the chat's edge move together. The fold button and the title FLIP against where the layout starts, on the same curve, so their path is one line. This is a deliberate exception to "transform and opacity only": the chat's own width is what moves;
   - the sidebar header keeps the fold button's height after the button leaves it, so the items below never jump up;
