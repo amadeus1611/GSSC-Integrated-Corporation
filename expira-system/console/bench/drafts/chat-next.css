@@ -1,0 +1,204 @@
+/* draft v45 chat (bench only until promoted into units/start, units/composer and units/thread). The chat pane is the
+   document: no card around the answer and no run card above it. A new chat is a quiet greeting over the composer; a
+   brief reads as a GSSC pull quote; the answer is laid out as the master template lays out a page (Roman-numeral
+   sections, hairline rules with the gold lead-in, navy-ruled tables, serif figures, a filed colophon), in the
+   EXPIRA × macOS house style: the dock's colours, one curve, focus in and focus out, text that never scales.
+   Motion (chat-next.js) rides the sidebar's tokens: --sb-ease, --sb-in, --sb-out, --sb-move. */
+:root{
+  --ch-col:680px;            /* the reading column: about 72 characters of 13px body */
+  --ch-fs:13px;--ch-lh:1.62;
+  --ch-bar:#0C2461;          /* the chart's one series: royal navy in light, light gold in dark */
+  --ch-strong:color-mix(in srgb,var(--ink) 78%,transparent);  /* the template's navy rule */
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--ch-bar:#C9A35C}}
+:root[data-theme="dark"]{--ch-bar:#C9A35C}
+
+/* the pane: the header, the thread (which scrolls under a feathered veil) and the composer's dock */
+.main{position:relative}
+.top .crumb{display:none}
+.top .ttl{font:400 13px/1 var(--f-display);color:var(--ink);letter-spacing:-.005em;opacity:1;transition:opacity var(--sb-out) var(--sb-ease),filter var(--sb-out) var(--sb-ease)}
+.top .ttl small{margin-left:var(--sp-2);font:400 var(--fs-chrome)/1 var(--f-body);letter-spacing:var(--tracked-tight);text-transform:uppercase;color:var(--mute)}
+.ch{position:relative;flex:1;min-height:0;display:flex;flex-direction:column}
+.ch-scroll{flex:1;min-height:0;overflow-y:auto;scrollbar-width:thin;padding:var(--sp-6) var(--sp-6) 204px;
+ --fs:0px;-webkit-mask-image:linear-gradient(to bottom,transparent 0,#000 var(--fs),#000 100%);mask-image:linear-gradient(to bottom,transparent 0,#000 var(--fs),#000 100%);transition:--fs var(--sb-out) var(--sb-ease)}
+.ch-scroll.f-s{--fs:18px}
+.ch-col{max-width:var(--ch-col);margin:0 auto}
+.ch.start .ch-scroll{visibility:hidden}
+
+/* ---- a new chat: the date, a small greeting with your name in the display italic, the gold lead-in, the composer,
+   three quiet starters. The mark stays at the dock's foot; nothing else is on the page. ---- */
+.ch-hero{position:absolute;inset:0;display:none;flex-direction:column;align-items:center;justify-content:center;padding:0 var(--sp-6) 14vh;pointer-events:none}
+.ch.start .ch-hero,.ch.leaving .ch-hero{display:flex}
+.ch.leaving .ch-hero{pointer-events:none}
+.ch-hero>*{pointer-events:auto}
+.ch-date{font-size:var(--fs-micro);letter-spacing:var(--tracked);text-transform:uppercase;color:var(--mute);font-variant-numeric:tabular-nums}
+.ch-hi{margin:var(--sp-3) 0 0;font:400 24px/1.2 var(--f-display);letter-spacing:-.012em;color:var(--ink);text-align:center}
+.ch-hi em{font-style:italic}
+.ch-lead{width:var(--lead-in);height:var(--rule);margin:var(--sp-4) 0 var(--sp-6);background:var(--gold);transform-origin:50% 50%}
+.ch-slot{width:min(var(--ch-col),100%)}
+.ch-starters{display:flex;flex-wrap:wrap;justify-content:center;gap:2px var(--sp-1);margin-top:var(--sp-4);font-size:var(--fs-chrome-2);color:var(--mute);transition:opacity var(--sb-out) var(--sb-ease),filter var(--sb-out) var(--sb-ease)}
+.ch-starters i{font-style:normal;color:var(--line-3);align-self:center}
+.ch-starters.hush{opacity:0;filter:blur(2px);pointer-events:none}
+/* a starter is words, not a chip: it warms to ink and a hairline draws under it, left to right */
+.ch-st{all:unset;position:relative;padding:3px 4px;color:var(--mute);cursor:pointer;transition:color var(--sb-out) var(--sb-ease)}
+.ch-st::after{content:"";position:absolute;left:4px;right:4px;bottom:1px;height:var(--rule-hair);background:currentColor;transform:scaleX(0);transform-origin:0 50%;transition:transform var(--sb-out) var(--sb-ease)}
+.ch-st:hover,.ch-st:focus-visible{color:var(--ink);transition-duration:calc(var(--sb-in) * .5)}
+.ch-st:hover::after,.ch-st:focus-visible::after{transform:none;transition-duration:var(--sb-in)}
+.ch-st:focus-visible{outline:var(--rule) solid var(--gold);outline-offset:1px;border-radius:var(--sb-r-sm)}
+
+/* ---- the composer: one quiet field. It warms to gold when you are in it, as the search does; its controls are the
+   sidebar's small plates. In a new chat it sits under the greeting; in a thread it sits in the dock. ---- */
+.ch-dock{position:absolute;left:0;right:0;bottom:0;padding:calc(var(--sp-6) * 2) var(--sp-6) var(--sp-4);pointer-events:none;
+ background:linear-gradient(to bottom,color-mix(in srgb,var(--bg) 0%,transparent),color-mix(in srgb,var(--bg) 82%,transparent) 38%,var(--bg) 58%)}
+.ch-dock>*{pointer-events:auto;max-width:var(--ch-col);margin:0 auto}
+.ch.start .ch-dock{visibility:hidden}
+.ch-comp{position:relative;display:flex;flex-direction:column;gap:2px;padding:var(--sp-2h) var(--sp-2h) var(--sp-1h) var(--sp-3h);border-radius:var(--sb-r-lg);
+ background:var(--panel);box-shadow:inset 0 0 0 var(--rule-hair) var(--line-3),0 1px 2px rgba(var(--sb-shc),calc(var(--sb-sha) * .18)),0 10px 30px -18px rgba(var(--sb-shc),calc(var(--sb-sha) * .7));
+ transition:box-shadow var(--sb-out) var(--sb-ease)}
+.ch-comp:hover{box-shadow:inset 0 0 0 var(--rule-hair) color-mix(in srgb,var(--line-3) 60%,var(--soft)),0 1px 2px rgba(var(--sb-shc),calc(var(--sb-sha) * .18)),0 10px 30px -18px rgba(var(--sb-shc),calc(var(--sb-sha) * .7))}
+.ch-comp:focus-within{box-shadow:inset 0 0 0 var(--rule-hair) color-mix(in srgb,var(--gold) 55%,transparent),0 0 0 3px var(--gold-wash),0 10px 30px -18px rgba(var(--sb-shc),calc(var(--sb-sha) * .7));transition-duration:var(--sb-in)}
+.ch-comp textarea{all:unset;display:block;width:100%;min-height:22px;max-height:220px;overflow-y:auto;font:400 var(--ch-fs)/1.55 var(--f-body);color:var(--ink);caret-color:var(--gold);white-space:pre-wrap;word-wrap:break-word;scrollbar-width:thin}
+.ch-comp textarea::placeholder{color:var(--mute)}
+.ch-cbar{display:flex;align-items:center;gap:2px;margin:0 -4px 0 -6px}
+.ch-ib{all:unset;display:grid;place-items:center;width:26px;height:24px;border-radius:var(--sb-r-sm);color:var(--mute);cursor:pointer;transition:background var(--sb-out) var(--sb-ease),color var(--sb-out) var(--sb-ease)}
+.ch-ib svg{width:14px;height:14px}
+.ch-ib:hover{background:var(--line);color:var(--ink);transition-duration:calc(var(--sb-in) * .5)}
+.ch-ib:focus-visible,.ch-chip:focus-visible,.ch-send:focus-visible{outline:var(--rule) solid var(--gold);outline-offset:-1px}
+.ch-chip{all:unset;display:flex;align-items:center;gap:5px;height:24px;padding:0 var(--sp-2);border-radius:var(--sb-r-sm);font-size:var(--fs-chrome);color:var(--soft);cursor:pointer;transition:background var(--sb-out) var(--sb-ease),color var(--sb-out) var(--sb-ease)}
+.ch-chip:hover{background:var(--line);color:var(--ink);transition-duration:calc(var(--sb-in) * .5)}
+.ch-chip .bars{display:flex;gap:1.5px;align-items:flex-end;height:9px}
+.ch-chip .bars i{width:2px;border-radius:1px;background:currentColor}
+.ch-chip .bars i:nth-child(1){height:4px}.ch-chip .bars i:nth-child(2){height:6.5px}.ch-chip .bars i:nth-child(3){height:9px;opacity:.35}
+.ch-model{margin-left:auto;margin-right:var(--sp-2);font-size:var(--fs-chrome);color:var(--mute);white-space:nowrap}
+.ch-model em{font:italic 400 var(--fs-chrome) var(--f-display)}
+/* send: quiet until there is something to send, then it becomes ink, out of a blur */
+.ch-send{all:unset;display:grid;place-items:center;width:26px;height:26px;border-radius:var(--sb-r);background:var(--line-2);color:var(--mute);cursor:default;
+ transition:background var(--sb-out) var(--sb-ease),color var(--sb-out) var(--sb-ease),transform var(--sb-move) var(--sb-ease)}
+.ch-send svg{width:13px;height:13px}
+.ch-comp.has .ch-send{background:var(--ink);color:var(--bg);cursor:pointer;transition-duration:var(--sb-in)}
+.ch-comp.has .ch-send:hover svg{transform:translateY(-1px);transition:transform var(--sb-in) var(--sb-ease)}
+.ch-send svg{transition:transform var(--sb-out) var(--sb-ease)}
+.ch-comp.busy .ch-send{background:var(--line-2);color:var(--soft);cursor:pointer}
+
+/* ---- the thread ---- */
+.ch-turn{position:relative}
+.ch-turn+.ch-turn{margin-top:var(--sp-8)}
+/* a brief is a pull quote from the master template: the display italic on a gold rule, under a quiet kicker */
+.ch-brief{margin:0 0 var(--sp-6)}
+.ch-kick{display:flex;gap:var(--sp-2);font-size:var(--fs-micro);letter-spacing:var(--tracked);text-transform:uppercase;color:var(--mute);font-variant-numeric:tabular-nums}
+.ch-kick b{font-weight:600;color:var(--gold-ink)}
+.ch-quote{margin:var(--sp-2) 0 0;padding:2px 0 2px var(--sp-4h);border-left:2px solid var(--gold);font:italic 400 15.5px/1.55 var(--f-display);color:var(--ink);white-space:pre-wrap}
+
+/* the work, in one quiet line where the run card used to be: a breathing gold dot while the desks work, then a
+   settled summary; Show the work opens the desks in place as a ruled ledger */
+.ch-proc{display:flex;align-items:center;gap:var(--sp-2);min-height:22px;margin:0 0 var(--sp-5);font-size:var(--fs-chrome);color:var(--mute)}
+.ch-proc .dot{width:5px;height:5px;flex:none;border-radius:var(--r-round);box-shadow:inset 0 0 0 1px currentColor;transition:background var(--sb-move) var(--sb-ease),box-shadow var(--sb-move) var(--sb-ease)}
+.ch-proc.live .dot{background:var(--gold);box-shadow:inset 0 0 0 1px var(--gold);animation:breathe var(--t-loop) var(--ease-inout) infinite}
+.ch-proc .desks{display:flex;align-items:center;gap:var(--sp-1h);font-size:var(--fs-micro);letter-spacing:var(--tracked-tight);text-transform:uppercase}
+.ch-proc .desks span{transition:color var(--sb-move) var(--sb-ease)}
+.ch-proc .desks span.on{color:var(--ink)}
+.ch-proc .desks span.done{color:var(--soft)}
+.ch-proc .desks i{font-style:normal;color:var(--line-3)}
+.ch-proc .now{flex:1;min-width:0;white-space:nowrap;overflow:hidden;font:italic 400 var(--fs-chrome-2) var(--f-display);color:var(--soft);
+ -webkit-mask-image:linear-gradient(90deg,#000 calc(100% - 18px),transparent);mask-image:linear-gradient(90deg,#000 calc(100% - 18px),transparent)}
+.ch-proc .sum{white-space:nowrap}
+.ch-proc .sum b{font-weight:500;color:var(--soft)}
+.ch-proc .t{font-variant-numeric:tabular-nums;color:var(--mute)}
+.ch-show{all:unset;display:flex;align-items:center;gap:4px;margin-left:auto;padding:2px 6px;border-radius:var(--sb-r-sm);color:var(--soft);cursor:pointer;transition:background var(--sb-out) var(--sb-ease),color var(--sb-out) var(--sb-ease)}
+.ch-show:hover{background:var(--line);color:var(--ink);transition-duration:calc(var(--sb-in) * .5)}
+.ch-show:focus-visible{outline:var(--rule) solid var(--gold)}
+.ch-show svg{width:9px;height:9px;transition:transform var(--sb-move) var(--sb-ease)}
+.ch-show[aria-expanded="true"] svg{transform:rotate(90deg)}
+/* the ledger: the desks as ruled rows, as the template rules a schedule; a row opens to what that desk found */
+.ch-led{margin:calc(var(--sp-3) * -1) 0 var(--sp-6);border-top:var(--rule) solid var(--ch-strong);border-bottom:var(--rule-hair) solid var(--line-3)}
+.ch-led[hidden]{display:none}
+.ch-delib{padding:var(--sp-3) 0 var(--sp-2);border-bottom:var(--rule-hair) solid var(--line-2)}
+.ch-delib p{margin:0 0 3px;font:italic 400 var(--fs-chrome-2)/1.5 var(--f-display);color:var(--soft)}
+.ch-step{border-bottom:var(--rule-hair) solid var(--line-2)}
+.ch-step:last-child{border-bottom:0}
+.ch-sh{all:unset;box-sizing:border-box;display:grid;grid-template-columns:78px 1fr auto 44px;align-items:baseline;gap:var(--sp-3);width:100%;padding:var(--sp-2) var(--sp-1);cursor:pointer;border-radius:var(--sb-r-sm);transition:background var(--sb-out) var(--sb-ease)}
+.ch-sh:hover{background:var(--line);transition-duration:calc(var(--sb-in) * .5)}
+.ch-sh:focus-visible{outline:var(--rule) solid var(--gold);outline-offset:-1px}
+.ch-sh .role{font-size:var(--fs-micro);letter-spacing:var(--tracked);text-transform:uppercase;color:var(--gold-ink);font-weight:600}
+.ch-sh .what{min-width:0;font-size:var(--fs-chrome-2);color:var(--text)}
+.ch-sh .what small{display:block;margin-top:1px;font-size:var(--fs-chrome);color:var(--mute)}
+.ch-sh .v{display:flex;align-items:center;gap:4px;font-size:var(--fs-chrome);color:var(--soft)}
+.ch-sh .v svg{width:10px;height:10px;color:var(--ok)}
+.ch-sh .t{text-align:right;font-size:var(--fs-chrome);color:var(--mute);font-variant-numeric:tabular-nums}
+.ch-out{margin:0 var(--sp-1) var(--sp-3) calc(78px + var(--sp-3) + var(--sp-1));font-size:var(--fs-chrome-2);line-height:1.55;color:var(--soft);white-space:pre-wrap}
+.ch-out[hidden]{display:none}
+
+/* ---- the answer, laid out as the master template lays out a page ---- */
+.ch-doc{font-size:var(--ch-fs);line-height:var(--ch-lh);color:var(--text)}
+.ch-doc p{margin:0 0 var(--sp-3)}
+.ch-doc b{font-weight:600;color:var(--ink)}
+/* a section: its Roman numeral in the display italic, gold; its title in the display serif; a hairline rule under
+   them that begins with the 34px gold lead-in */
+.ch-sec{margin:0 0 var(--sp-6)}
+.ch-mk{position:relative;display:flex;align-items:baseline;gap:var(--sp-3);padding-bottom:var(--sp-2);margin-bottom:var(--sp-3);border-bottom:var(--rule-hair) solid var(--line-3)}
+.ch-mk::after{content:"";position:absolute;left:0;bottom:calc(var(--rule-hair) * -1);width:var(--lead-in);height:var(--rule);background:var(--gold)}
+.ch-mk .n{min-width:22px;font:italic 400 14px/1 var(--f-display);color:var(--gold-ink);font-feature-settings:"onum" 1}
+.ch-mk h3{margin:0;font:400 var(--fs-h3)/1.3 var(--f-display);letter-spacing:-.006em;color:var(--ink)}
+.ch-doc ul{margin:0 0 var(--sp-3);padding:0;list-style:none}
+.ch-doc li{position:relative;padding-left:var(--sp-4);margin-bottom:var(--sp-1h)}
+.ch-doc li::before{content:"";position:absolute;left:2px;top:.72em;width:5px;height:var(--rule);background:var(--gold)}
+/* tables: the template's schedule. A strong rule over the tracked-caps head, hairlines between rows, tabular figures
+   right-aligned; a total row carries the strong rule and the ink */
+.ch-dt{width:100%;border-collapse:collapse;margin:var(--sp-2) 0 var(--sp-4);font-size:var(--fs-ui);font-variant-numeric:tabular-nums}
+.ch-dt th{padding:var(--sp-1h) var(--sp-2);border-top:var(--rule) solid var(--ch-strong);border-bottom:var(--rule-hair) solid var(--ch-strong);font-size:var(--fs-micro);font-weight:600;letter-spacing:var(--tracked);text-transform:uppercase;color:var(--ink);text-align:left}
+.ch-dt td{padding:var(--sp-1h) var(--sp-2);border-bottom:var(--rule-hair) solid var(--line-2);color:var(--text);vertical-align:top}
+.ch-dt tbody tr:nth-child(even) td{background:color-mix(in srgb,var(--line) 55%,transparent)}
+.ch-dt .num{text-align:right;white-space:nowrap}
+.ch-dt tr.total td{border-top:var(--rule) solid var(--ch-strong);border-bottom:var(--rule) solid var(--ch-strong);background:none;color:var(--ink);font-weight:600}
+.ch-dt th:first-child,.ch-dt td:first-child{padding-left:0}
+.ch-dt th:last-child,.ch-dt td:last-child{padding-right:0}
+
+/* ---- exhibits: the figures, a chart, a comparison and the sources, each under a quiet label and a hairline ---- */
+.ch-ex{margin:var(--sp-8) 0 0}
+.ch-exh{display:flex;align-items:baseline;gap:var(--sp-3);margin-bottom:var(--sp-3);font-size:var(--fs-micro);letter-spacing:var(--tracked);text-transform:uppercase;color:var(--mute)}
+.ch-exh::after{content:"";flex:1;height:var(--rule-hair);background:var(--line-3);align-self:center}
+/* figures: the template's price block. Serif figures between a strong rule and a hairline, divided by hairlines */
+.ch-figs{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));border-top:var(--rule) solid var(--ch-strong);border-bottom:var(--rule-hair) solid var(--line-3);margin-bottom:var(--sp-6)}
+.ch-figs>div{padding:var(--sp-3) var(--sp-4) var(--sp-3h) 0}
+.ch-figs>div+div{padding-left:var(--sp-4);border-left:var(--rule-hair) solid var(--line-3)}
+.ch-figs b{display:block;font:400 22px/1.15 var(--f-display);letter-spacing:-.012em;color:var(--ink);font-variant-numeric:tabular-nums}
+.ch-figs span{display:block;margin-top:var(--sp-1h);font-size:var(--fs-micro);letter-spacing:var(--tracked);text-transform:uppercase;color:var(--soft)}
+.ch-figs em{display:block;margin-top:2px;font:italic 400 var(--fs-chrome) var(--f-display);color:var(--mute)}
+.ch-fig{margin:0 0 var(--sp-6)}
+.ch-fcap{display:flex;align-items:baseline;gap:var(--sp-2);margin-bottom:var(--sp-2)}
+.ch-fcap .f{font:italic 400 var(--fs-chrome-2) var(--f-display);color:var(--gold-ink)}
+.ch-fcap b{font:400 13.5px/1.3 var(--f-display);color:var(--ink)}
+.ch-fcap small{font-size:var(--fs-micro);letter-spacing:var(--tracked);text-transform:uppercase;color:var(--mute)}
+.ch-chart{display:block;width:100%;height:auto;overflow:visible}
+.ch-chart .grid line{stroke:var(--line-2);stroke-width:1;vector-effect:non-scaling-stroke}
+.ch-chart .base{stroke:var(--ch-strong);stroke-width:1;vector-effect:non-scaling-stroke}
+.ch-chart .bar{fill:var(--ch-bar);transform-box:fill-box;transform-origin:50% 100%}
+.ch-chart text{font:400 10px var(--f-body);fill:var(--mute);font-variant-numeric:tabular-nums}
+.ch-chart text.v{fill:var(--soft)}
+.ch-note{margin:var(--sp-1h) 0 0;font:italic 400 var(--fs-chrome-2)/1.5 var(--f-display);color:var(--mute)}
+.ch-dots{display:inline-flex;gap:3px;vertical-align:middle}
+.ch-dots i{width:5px;height:5px;border-radius:var(--r-round);box-shadow:inset 0 0 0 1px var(--line-3)}
+.ch-dots i.on{background:var(--gold);box-shadow:inset 0 0 0 1px var(--gold)}
+.ch-dt tr.pick td:first-child{color:var(--ink)}
+.ch-dt tr.pick td:first-child em{margin-left:var(--sp-1h);font:italic 400 var(--fs-chrome) var(--f-display);color:var(--gold-ink)}
+.ch-src{margin:0;padding:0;list-style:none;counter-reset:s}
+.ch-doc .ch-src li{counter-increment:s;display:flex;align-items:baseline;gap:var(--sp-2);margin:0;padding:3px 0;font-size:var(--fs-ui);color:var(--text)}
+.ch-doc .ch-src li::before{content:counter(s)".";position:static;width:auto;min-width:14px;height:auto;background:none;font:italic 400 var(--fs-chrome-2) var(--f-display);color:var(--gold-ink)}
+.ch-src em{font:italic 400 var(--fs-chrome) var(--f-display);color:var(--mute)}
+.ch-src em.ok{color:var(--soft)}
+/* the colophon: when it was filed and how long it is, with the answer's actions as words */
+.ch-colo{display:flex;align-items:center;gap:var(--sp-3);margin-top:var(--sp-6);padding-top:var(--sp-2h);border-top:var(--rule-hair) solid var(--line-3);font-size:var(--fs-micro);letter-spacing:var(--tracked);text-transform:uppercase;color:var(--mute);font-variant-numeric:tabular-nums}
+.ch-colo .acts{margin-left:auto;display:flex;gap:2px}
+.ch-act{all:unset;position:relative;padding:3px 6px;border-radius:var(--sb-r-sm);color:var(--mute);cursor:pointer;transition:color var(--sb-out) var(--sb-ease),background var(--sb-out) var(--sb-ease)}
+.ch-act:hover{color:var(--ink);background:var(--line);transition-duration:calc(var(--sb-in) * .5)}
+.ch-act:focus-visible{outline:var(--rule) solid var(--gold)}
+.ch-act.done{color:var(--gold-ink)}
+
+/* a document opened from the tree: its title as the page's title, over the lead-in rule */
+.ch-dochead{margin:0 0 var(--sp-6)}
+.ch-dochead h2{margin:var(--sp-2) 0 var(--sp-3);font:400 var(--fs-h2)/1.25 var(--f-display);letter-spacing:-.01em;color:var(--ink)}
+.ch-dochead .ch-lead{margin:0}
+
+/* words ink in as they stream: each one surfaces out of a small blur, on the one curve (chat-next.js) */
+.ch-w{display:inline}
+@media (max-width:760px){.ch-scroll{padding:var(--sp-4) var(--sp-4) 170px}.ch-dock{padding:var(--sp-4)}.ch-hero{padding:0 var(--sp-4) 12vh}.ch-sh{grid-template-columns:64px 1fr auto}.ch-sh .t{display:none}.ch-out{margin-left:var(--sp-1)}}

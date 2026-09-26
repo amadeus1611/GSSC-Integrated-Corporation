@@ -304,6 +304,35 @@ The sidebar's tokens are:
 
 They live in `bench/drafts/sidebar-next.css`, and the dark stack lives in `bench/drafts/dark-next.css`. On promotion they move into `src/tokens.css` under the same names: the `--sb-*` motion tokens become the EXPIRA-wide motion tokens, and the dark stack replaces the `@dark` block.
 
+### 4.5 The chat: no card, the page is the answer (v45 chat bench, Amadeus, 2026-09-26)
+The chat pane follows §4.1–§4.4 and the sidebar's colour logic. The old answer card, which boxed the log, the answer and the exhibits, is gone: the pane itself is the page. The draft is `bench/chat-next.html` (`drafts/chat-next.css`, `drafts/chat-next.js`).
+- **A new chat** is almost empty. It shows:
+  - the date in tracked caps;
+  - a small serif greeting that knows the hour ("Good morning", "Good afternoon", "Good evening", or "Working late" after 22:00), with the name in the display italic;
+  - a gold lead-in;
+  - the composer;
+  - three word-only starters.
+
+  The EXPIRA mark stays at the foot of the sidebar; the chat carries only the name.
+- **The composer** is one quiet field on the panel colour, edged with a hairline. It warms to gold on focus, as Search does. Its controls are the sidebar's small plates: attach, the Auto effort chip and the model in words. Send turns to ink once there is text.
+  - In a new chat the composer sits under the greeting. On send it glides straight down into the dock: it is measured before anything is hidden, so it never flies from a corner.
+  - The greeting clears with focus out, 20ms apart per part.
+  - The dock fades the thread into the background above it; nothing scrolls under a hard edge.
+- **The brief** is a tracked-caps kicker with the time, over the master template's pull quote: an italic serif with a 2px gold rule.
+- **The work** is one line, not a card:
+  - while the desks run, a breathing dot, the four desks in tracked caps with the current one lit, a phrase in italics and a timer;
+  - once settled, "Four desks · 1:25 · Firewall clear" and a "Show the work" word button.
+
+  The ledger opens under a strong rule: the deliberation in italics, then one row per desk with its focus, verdict and time. Each row opens to its output.
+- **The answer is a master-template page:**
+  - sections under a Roman numeral in gold italic, with a serif heading over a hairline that carries a gold lead-in;
+  - `table.dt` tables: a strong top rule, a tracked caps head, hairline rows, alternating shading, tabular right-aligned figures, and a total row in the royal navy bar (gold in dark);
+  - figures in large serif numerals, a bar chart with rounded ticks, a comparison with dots, and numbered sources;
+  - a colophon with the filing time, the word count and reading time, and word buttons (Copy, Retry, Dispatch).
+- **Ink:** the answer arrives block by block. Prose writes in word by word at 26ms a word, up to 900ms a block, each word a light blur resolving. Table rows follow 55ms apart, and chart bars rise from the baseline 60ms apart.
+- **Opening a saved chat or document** reveals the page with focus in, 16ms apart per block and capped at 260ms, rather than writing it in again.
+- **Reduced motion:** everything appears at once, with no blur.
+
 ## 5. Build habits
 
 - **Master-template layout:** a wide thread with a 72-character prose measure, and a dock with the composer controls underneath it.
@@ -316,6 +345,11 @@ They live in `bench/drafts/sidebar-next.css`, and the dark stack lives in `bench
 - **Tokens (v41):** every value comes from `src/tokens.css`. Spacing is a 4px scale with half steps (`--sp-half`, `--sp-1h` … `--sp-4h`) below 20px for dense chrome; a 1px nudge is optical and stays literal. Layers are named (`--z-side`, `--z-menu`, `--z-tip` …) in one stacking order. Dark tokens are written once in `@dark{}`.
 
 ## 6. Change log
+- **v45 chat bench** (2026-09-26, Amadeus: "No more card now, let us utilize the big chat interface, redesign the output that follows the GSSC Template EXPIRA style MacOS … a small Good morning Duke … very subtle"): a separate bench for the chat pane, `bench/chat-next.html`, on the sidebar's colours and motion. See §4.5.
+  - A new chat shows the date, the greeting, the composer and three starters.
+  - The composer glides into the dock on send.
+  - The answer card is gone. The work is one line with a ledger that opens underneath, and the answer is a master-template page with numerals, tables, figures, a chart and sources.
+  - The answer writes in word by word.
 - **v45 the field, like ‹ ›** (2026-09-26, Amadeus: "that weird animation where it comes from the top right … fix it to be like the ‹ ›"): the row's hand-off to the path bar is gone, because on multi-level jumps it flew a long diagonal. Every move is now built like one level of ‹ ›: the anchor stands still, no row travels more than five rows, and the band a gliding group sweeps stays clear until it has passed. Also fixed: ‹ › chose their motion by history, not by the tree, so back into a deeper folder played "out"; and stepping in measured arrivals from the folder's old place, leaving the new view blank for about 200ms.
 - **v45 the field, anchored on the folder you left** (2026-09-26, Amadeus: "When I click on Revisions … and then click on All, it moves Records back"): stepping out anchored on the top-level folder of the path, so Records flew down from the path bar although Revisions was the folder left. It now anchors on the deepest visible folder of the path and scrolls it into view. An audit of every whole-list move (path steps up and down, back, forward, climb, All, isolate, open, search, clear) lists only the anchor and its own contents travelling.
 - **v45 the field** (2026-09-26, Amadeus: "the path line jumping ruins immersion"; "isolating back … slots in from the top"; "reorder by hierarchy … so it reacts with the other files and folders"):

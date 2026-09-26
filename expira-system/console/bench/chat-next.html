@@ -1,0 +1,81 @@
+<!doctype html>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Chat Next</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@200..600&family=Libre+Baskerville:ital@0;1&display=swap" rel="stylesheet">
+<!-- Specimen: the v45 chat draft, beside the finished v45 sidebar draft (they meet at the fold, so they are judged
+     together). The chat's CSS, markup and script are drafts in bench/drafts/chat-next.*; nothing in src/ changes until
+     it is promoted. Based on the sidebar specimen: the v45 sidebar draft. The sidebar's CSS, markup and script are drafts in bench/drafts/ (nothing in src/
+     changes until it is promoted); the tokens, the frame (units/shell), the fold, the motion vocabulary and the bloom
+     are the console's own, read from src/. drafts/dark-next.css is the dark theme rebuilt on the full palette. -->
+<style>
+<!--@include tokens.css-->
+<!--@bench drafts/dark-next.css-->
+<!--@include base.css-->
+<!--@include units/shell/shell.css-->
+<!--@rule units/sidebar/sidebar.css .wm-->
+<!--@bench drafts/sidebar-next.css-->
+<!--@bench drafts/chat-next.css-->
+<!--@bench panel.css-->
+/* the chat's own dock owns the bottom edge; the bench panel waits top right */
+#bn{top:12px;bottom:auto}
+/* bench only: the chat pane is the draft's; nothing else here */
+</style>
+<script>
+var BENCH_EXTRA={time:["--sb-in","--sb-out","--sb-move","--sb-dock","--sb-dock-out","--sb-settle"],curve:["--sb-ease","--sb-dock-close"]};  /* the sidebar's own motion: one curve, fast then a long soft settle */
+<!--@bench early.js-->
+BENCH.name="Chat · v45 draft";
+</script>
+
+<div class="app has-chat" id="app">
+  <button class="ib side-t sb-dockbtn" id="fold" aria-controls="side" aria-expanded="true" aria-label="Close sidebar" data-tip="Close sidebar"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1"><rect x="1.5" y="2.5" width="13" height="11" rx="1.5"/><path class="pane" d="M2.5 3h3.5v10h-3.5z"/><path class="dv" d="M6 2.5v11"/><path class="chev" d="M11 6.2 9.2 8l1.8 1.8"/></svg></button>
+  <nav class="side sb" aria-label="Sidebar" id="side">
+    <div class="brand" aria-hidden="true"></div>
+    <div class="sb-scroll" id="sbScroll"></div>
+    <div class="sb-grip" id="sbGrip" role="separator" aria-orientation="vertical" aria-label="Resize the sidebar" aria-valuemin="208" aria-valuemax="400" tabindex="0"></div>
+    <div class="sb-foot">
+      <div class="sb-acct" id="sbMenu"><div class="sb-nav" role="group" aria-label="Menu pages"><button type="button" data-nav="back" aria-label="Back"></button><button type="button" data-nav="fwd" aria-label="Forward"></button></div><div class="sb-card" role="dialog" aria-label="Account"></div></div>
+      <button class="sb-me" id="sbMe" type="button" aria-haspopup="dialog" aria-expanded="false" aria-controls="sbMenu"><span class="sb-av">A</span><span class="sb-who"><b>Amadeus</b><small>GSSC Integrated</small></span><!--updown--></button>
+      <div class="sb-sig"><svg class="mark" viewBox="0 0 1413 425" role="img" aria-label="EXPIRA mark"><polygon points="0,0 233,0 391,100 206,425 40,425 0,302" fill="var(--mark-a)"/><polygon points="233,0 728,0 391,100" fill="var(--gold)"/><polygon points="391,100 728,0 778,0 871,225 1166,425 1058,425" fill="var(--mark-a)"/><polygon points="391,100 1058,425 206,425" fill="var(--mark-b)"/><polygon points="918,0 1043,0 1408,425 1241,425 968,192" fill="var(--gold)"/><polygon points="1043,0 1340,0 1408,425" fill="var(--mark-b)"/></svg><span class="wm" role="img" aria-label="EXPIRA"></span></div>
+    </div>
+  </nav>
+  <div class="sb-pop" id="sbPop"><div class="sb-nav" role="group" aria-label="Menu pages"><button type="button" data-nav="back" aria-label="Back"></button><button type="button" data-nav="fwd" aria-label="Forward"></button></div><div class="sb-card" role="menu" aria-label="Actions"></div></div>
+  <main class="main" id="main">
+    <header class="top"><span class="crumb" id="crumb"></span><h1 class="ttl" id="ttl"></h1></header>
+    <div class="ch start" id="ch">
+      <div class="ch-scroll" id="chScroll"><div class="ch-col" id="chCol" role="log" aria-label="Conversation"></div></div>
+      <div class="ch-hero" id="chHero">
+        <div class="ch-date" id="chDate"></div>
+        <p class="ch-hi" id="chHi"></p>
+        <div class="ch-lead" aria-hidden="true"></div>
+        <div class="ch-slot" id="chSlot"><form class="ch-comp" id="chComp" onsubmit="return false"><label class="sr" for="prompt">Brief EXPIRA</label><textarea id="prompt" rows="1" placeholder="Brief EXPIRA"></textarea><div class="ch-cbar"><button class="ch-ib" type="button" aria-label="Attach a file"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.15" stroke-linecap="round" stroke-linejoin="round"><path d="M11.5 7.2 7.3 11.4a2.6 2.6 0 01-3.7-3.7l4.6-4.6a1.7 1.7 0 012.4 2.4L6.2 9.9a.8.8 0 01-1.1-1.1l3.9-3.9"/></svg></button><button class="ch-chip" type="button" aria-label="Effort: Auto"><span class="bars" aria-hidden="true"><i></i><i></i><i></i></span>Auto</button><span class="ch-model">Claude <em>dynamic</em></span><button class="ch-send" id="chSend" type="button" aria-label="Send"></button></div></form></div>
+        <div class="ch-starters" id="chStarters"><button class="ch-st" type="button" data-brief="Price the fit-out of a 240 m² showroom: ceiling, lighting track, joinery and glazing.">Price a fit-out</button><i aria-hidden="true">·</i><button class="ch-st" type="button" data-brief="Review this delay clause for a fixed-opening contract and flag the exposure.">Review a clause</button><i aria-hidden="true">·</i><button class="ch-st" type="button" data-brief="Draft a board resolution authorising the president to sign the Makati contract.">Draft a resolution</button></div>
+      </div>
+      <div class="ch-dock" id="chDock"></div>
+    </div>
+  </main>
+</div>
+
+<script>
+(()=>{
+/* bench stubs: the few globals the scripts expect from core/prelude.js */
+const $=s=>document.querySelector(s),app=$("#app"),root=document.documentElement;
+let reduce=matchMedia("(prefers-reduced-motion: reduce)").matches,busy=false;const open=()=>{},promptEl={focus(){}};
+<!--@include core/motion.js-->
+<!--@include core/pour.js-->
+<!--@bench drafts/sidebar-next.js-->
+<!--@bench drafts/chat-next.js-->
+Object.assign(BENCH,{MO,easeFn});window.SB=SB;window.CH=CH;  /* bench only: test hooks */
+/* the tree opens chats and documents into the pane; New chat returns to the greeting */
+SB.onopen=n=>CH.open(n);$("#newChat").addEventListener("click",()=>CH.start());
+
+const ks=f=>()=>setTimeout(f,0);
+BENCH.actions.push({label:"New chat",key:"n",run:()=>CH.start()},{label:"Send a brief",key:"b",run:()=>CH.send(CH.RICH.brief)},
+ {label:"Example",key:"e",run:()=>{const f=SB.model.kids.find(n=>n.t==="Quotations");f.open=true;SB.sync();CH.open(f.kids.find(k=>k.t==="Quotation for the Makati site"))}},
+ {label:"Running",key:"r",run:()=>CH.open(SB.model.kids.find(n=>n.live)||{t:"Showroom fit-out",live:true,body:""})},{label:"Dock",key:"f",run:()=>SB.dock()});
+})();
+</script>
+<script>
+<!--@bench panel.js-->
+</script>
