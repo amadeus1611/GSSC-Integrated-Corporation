@@ -3474,7 +3474,7 @@ async function send(q,re){if(busy)return;const docPre=DOCSEL||docIntent(q);setDo
    let thN=0;const paint=(th,partial)=>{if(th.length>thN&&th.length>1){thN=th.length;setNow(th[th.length-2])}th.forEach((t,i)=>{let el=dps[i];if(!el){el=document.createElement("p");dlb.append(el);dps[i]=el}if(el.textContent!==t)el.textContent=t;el.classList.toggle("typing",!!partial&&i===th.length-1)})};
    /* a declined plan is asked once more in plain terms, at the default tier; declined again, the brief is answered directly.
       Never a loop: the service says resending the same words gets the same answer, so the second ask changes the words. */
-   const planAgain=async e=>{if(!e||e.code!=="refused")throw e;F("Planning again","The planner declined the brief as worded; planning it again in plain terms.");
+   const planAgain=async e=>{if(!e||e.code!=="refused")throw e;F("Planning again",`The planner declined the brief as worded${e.message?` (the service said: ${esc(clip(String(e.message),160))})`:""}; planning it again in plain terms.`);
     try{return await sample.json(`Plan how a small consulting team should handle this business request. ${todayLine()}
 Roles: research, finance, legal, builder. Use 0 to 4 steps, none for small talk or a simple fact.
 Reply with only JSON: {"title": string (3-6 words), "kind": string (under 8 words), "rationale": string (one sentence), "document": null, "steps": [{"role": string, "focus": string (2-3 words), "tier": "high", "task": string (short phrase), "why": string (under 12 words), "web": ${webOn?"boolean":"false"}, "after": []}]}
@@ -3517,7 +3517,7 @@ ${history?`Conversation so far:\n${history}\n\n`:""}New message: ${q}`,{modelTie
     try{const r=await sample(brief(s,i)+steerNote(),{modelTier:TIERS[s.tier].m,cache:false,...IM,signal:ctl.signal,...(tools?{tools}:{}),onText:({text})=>{pend[key]=(pend[key]||0)+Math.max(0,text.length-len);len=text.length;s.out=text;if(!s._raf)s._raf=requestAnimationFrame(()=>{s._raf=0;out.textContent=s.out;if(out.parentElement.classList.contains("show"))toEnd(out);const q=$("#dq"+i),v=(s.searches?`${s.searches} search${s.searches>1?"es":""} · `:"")+ft(tok(s.out))+" tokens";if(q&&q.textContent!==v)q.textContent=v})}});
      outs[i]=r.text;s.out=r.text;return r.text}
     /* a desk that declines files nothing; the run goes on without it and the Arbiter weighs it as empty */
-    catch(e){if(!e||e.code!=="refused")throw e;const t="(This desk declined its task and filed no notes.)";outs[i]=t;s.out=t;F(`Desk ${ROMAN[i]} declined`,`Desk ${ROMAN[i]} declined its task; the run goes on without it.`);return t}
+    catch(e){if(!e||e.code!=="refused")throw e;const t="(This desk declined its task and filed no notes.)";outs[i]=t;s.out=t;F(`Desk ${ROMAN[i]} declined`,`Desk ${ROMAN[i]} declined its task${e.message?` (the service said: ${esc(clip(String(e.message),160))})`:""}; the run goes on without it.`);return t}
     finally{s._live=false;think[key]=0;s.ms=performance.now()-s._t0;s.te=Math.round(now());$("#dm"+i).textContent=fmt(s.ms);stE.className="st";swap(stE,"Filed");mapSync()}};
    const done=[];steps.forEach((s,i)=>done[i]=(async()=>{for(const n of s.after)if(n-1<i&&done[n-1])await done[n-1];const r=await runOne(i);F(`Desk ${ROMAN[i]} filed its notes`,`Desk ${ROMAN[i]} filed ${ft(tok(r))} tokens of notes in ${fmt(s.ms)}.`);return r})());
    await Promise.all(done);P("desks","done");P("review","on");work._vd=1;mapSync();steps.forEach((_,k)=>setTimeout(()=>mapPulse("a"+k,"v"),120+k*110));
