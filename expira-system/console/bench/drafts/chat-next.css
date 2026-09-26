@@ -10,68 +10,119 @@
   --ch-bar:#0C2461;          /* the chart's one series: royal navy in light, light gold in dark */
   --ch-strong:color-mix(in srgb,var(--ink) 78%,transparent);  /* the template's navy rule */
   --ch-sign-x:28px;--ch-sign-y:11px;  /* the signature's corner: set against the sidebar's foot */
-  --ch-glass:62%;--ch-rim:0 0 #0000;  /* the composer's material: how much panel shows, and its top light in dark */
+  --ch-sheet-r:14px;         /* the sheet's corner */
+  --ch-glass:58%;            /* how much panel shows in the glass */
+  --ch-rim:inset 0 1px 0 rgba(255,255,255,.75);  /* the glass's lit top edge */
+  --ch-sheen:linear-gradient(to bottom,rgba(255,255,255,.34),rgba(255,255,255,0) 44%);
 }
-@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--ch-bar:#C9A35C;--ch-glass:58%;--ch-rim:inset 0 .5px 0 rgba(255,255,255,.06)}}
-:root[data-theme="dark"]{--ch-bar:#C9A35C;--ch-glass:58%;--ch-rim:inset 0 .5px 0 rgba(255,255,255,.06)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--ch-bar:#C9A35C;--ch-glass:54%;--ch-rim:inset 0 .5px 0 rgba(255,255,255,.09);--ch-sheen:linear-gradient(to bottom,rgba(255,255,255,.045),rgba(255,255,255,0) 44%)}}
+:root[data-theme="dark"]{--ch-bar:#C9A35C;--ch-glass:54%;--ch-rim:inset 0 .5px 0 rgba(255,255,255,.09);--ch-sheen:linear-gradient(to bottom,rgba(255,255,255,.045),rgba(255,255,255,0) 44%)}
 
-/* the pane: the header, the thread (which scrolls under a feathered veil) and the composer's dock */
+/* the pane: the header, the thread (feathered at both ends), the pull tab and its sheet */
 .main{position:relative}
 .top .crumb{display:none}
 .top .ttl{font:400 13px/1 var(--f-display);color:var(--ink);letter-spacing:-.005em;opacity:1;transition:opacity var(--sb-out) var(--sb-ease),filter var(--sb-out) var(--sb-ease)}
 .top .ttl small{margin-left:var(--sp-2);font:400 var(--fs-chrome)/1 var(--f-body);letter-spacing:var(--tracked-tight);text-transform:uppercase;color:var(--mute)}
 .ch{position:relative;flex:1;min-height:0;display:flex;flex-direction:column}
-.ch-scroll{flex:1;min-height:0;overflow-y:auto;scrollbar-width:thin;padding:var(--sp-6) var(--sp-6) 168px;
- --fs:0px;-webkit-mask-image:linear-gradient(to bottom,transparent 0,#000 var(--fs),#000 calc(100% - var(--sp-4)),transparent 100%);mask-image:linear-gradient(to bottom,transparent 0,#000 var(--fs),#000 calc(100% - var(--sp-4)),transparent 100%);transition:--fs var(--sb-out) var(--sb-ease)}
+.ch-scroll{flex:1;min-height:0;overflow-y:auto;scrollbar-width:thin;padding:var(--sp-6) var(--sp-6) 96px;
+ --fs:0px;-webkit-mask-image:linear-gradient(to bottom,transparent 0,#000 var(--fs),#000 calc(100% - 72px),transparent 100%);mask-image:linear-gradient(to bottom,transparent 0,#000 var(--fs),#000 calc(100% - 72px),transparent 100%);transition:--fs var(--sb-out) var(--sb-ease)}
 .ch-scroll.f-s{--fs:18px}
 .ch-col{max-width:var(--ch-col);margin:0 auto}
 .ch.start .ch-scroll{visibility:hidden}
 
-/* ---- a new chat: the composer alone in the middle of the page, and a signature in the bottom-left corner: the gold
+/* ---- a new chat: the pull tab alone in the middle of the page, and a signature in the bottom-left corner: the gold
    lead-in, a small greeting with your name in the display italic, and the date in plain words. The signature sits on
    the sidebar's foot, the greeting level with the account and the date level with the EXPIRA mark, so the two panes
    close on one line. No starters and no clock. ---- */
-.ch-hero{position:absolute;inset:0;display:none;flex-direction:column;align-items:center;justify-content:center;padding:0 var(--sp-6) 9vh;pointer-events:none}
-.ch.start .ch-hero,.ch.leaving .ch-hero{display:flex}
-.ch.leaving .ch-hero{pointer-events:none}
-.ch-hero>*{pointer-events:auto}
-.ch-slot{width:min(var(--ch-col),100%)}
+.ch-hero{position:absolute;inset:0;display:none;pointer-events:none}
+.ch.start .ch-hero,.ch.leaving .ch-hero{display:block}
 .ch-sign{position:absolute;left:var(--ch-sign-x);bottom:var(--ch-sign-y);display:flex;flex-direction:column;align-items:flex-start;pointer-events:none;user-select:none}
 .ch-lead{width:var(--lead-in);height:var(--rule);margin:0 0 var(--sp-3h);background:var(--gold);transform-origin:0 50%}
 .ch-hi{margin:0;font:400 20px/1.2 var(--f-display);letter-spacing:-.012em;color:var(--ink)}
 .ch-hi em{font-style:italic}
 .ch-date{margin:var(--sp-3h) 0 0;font-size:var(--fs-chrome);color:var(--mute);font-variant-numeric:tabular-nums}
 
-/* ---- the composer: one quiet field. It warms to gold when you are in it, as the search does; its controls are the
-   sidebar's small plates. In a new chat it sits under the greeting; in a thread it sits in the dock. ---- */
-.ch-dock{position:absolute;left:0;right:0;bottom:0;padding:0 var(--sp-6) var(--sp-4);pointer-events:none}
-.ch-dock>*{pointer-events:auto;max-width:var(--ch-col);margin:0 auto}
-.ch.start .ch-dock{visibility:hidden}
-.ch-comp{position:relative;display:flex;flex-direction:column;gap:2px;padding:var(--sp-2h) var(--sp-2h) var(--sp-1h) var(--sp-3h);border-radius:var(--sb-r-lg);
- background:color-mix(in srgb,var(--panel) var(--ch-glass),transparent);-webkit-backdrop-filter:blur(16px) saturate(1.8);backdrop-filter:blur(16px) saturate(1.8);
- box-shadow:var(--ch-rim),inset 0 0 0 var(--rule-hair) var(--line-3),0 1px 2px rgba(var(--sb-shc),calc(var(--sb-sha) * .18)),0 10px 30px -18px rgba(var(--sb-shc),calc(var(--sb-sha) * .7));
- transition:box-shadow var(--sb-out) var(--sb-ease)}
-.ch-comp:hover{box-shadow:var(--ch-rim),inset 0 0 0 var(--rule-hair) color-mix(in srgb,var(--line-3) 60%,var(--soft)),0 1px 2px rgba(var(--sb-shc),calc(var(--sb-sha) * .18)),0 10px 30px -18px rgba(var(--sb-shc),calc(var(--sb-sha) * .7))}
-.ch-comp:focus-within{box-shadow:var(--ch-rim),inset 0 0 0 var(--rule-hair) color-mix(in srgb,var(--gold) 55%,transparent),0 0 0 3px var(--gold-wash),0 10px 30px -18px rgba(var(--sb-shc),calc(var(--sb-sha) * .7));transition-duration:var(--sb-in)}
-/* the composer is a material, as macOS bars are: the thread passes under it, softened (apple.com's bar is the same
-   recipe, blur and saturation). Opaque where the browser has no backdrop filter, and when the system asks for less
-   transparency. The blur stays at 16px: headless software renderers drop larger radii altogether, and they leave a
-   thin band at the edge unblurred at any radius, so judge the glass in a real browser, not in qa screenshots. */
-@supports not ((backdrop-filter:blur(1px)) or (-webkit-backdrop-filter:blur(1px))){.ch-comp{background:var(--panel)}}
-@media (prefers-reduced-transparency:reduce){.ch-comp{background:var(--panel);-webkit-backdrop-filter:none;backdrop-filter:none}}
-.ch-comp textarea{all:unset;display:block;width:100%;min-height:22px;max-height:220px;overflow-y:auto;font:400 var(--ch-fs)/1.55 var(--f-body);color:var(--ink);caret-color:var(--gold);white-space:pre-wrap;word-wrap:break-word;scrollbar-width:thin}
+/* ---- the pull tab: the composer at rest is one short line, the sheet's own grabber. In a new chat it waits in the
+   middle of the page over "Brief EXPIRA"; in a thread it waits at the foot of the pane, and says "Follow up" only
+   when you are on it. Pull it up, click it, press Enter or Space on it, or just start typing: the line grows into the
+   sheet. On hover it lifts 2px and widens, the way a grabber invites the pull; while the desks work it breathes gold. ---- */
+.ch-tab{all:unset;box-sizing:border-box;position:absolute;left:0;right:0;margin:0 auto;z-index:2;width:240px;height:72px;top:calc(50% - 36px - 4vh);
+ display:flex;flex-direction:column;align-items:center;padding-top:34px;cursor:grab;touch-action:none;user-select:none;-webkit-tap-highlight-color:transparent}
+.ch-tab:active{cursor:grabbing}
+.ch-tab .ln,.ch-grab .ln{display:block;flex:none;width:36px;height:4px;border-radius:2px;background:var(--line-3);
+ transition:transform var(--sb-out) var(--sb-ease),background var(--sb-out) var(--sb-ease),box-shadow var(--sb-out) var(--sb-ease)}
+.ch-tab .lb{margin-top:var(--sp-2h);font-size:var(--fs-chrome-2);color:var(--mute);white-space:nowrap}
+.ch-tab .ht{margin-top:3px;font-size:var(--fs-chrome);color:var(--mute);white-space:nowrap;opacity:0;filter:blur(1.5px);transform:translateY(-2px);
+ transition:opacity var(--sb-out) var(--sb-ease),filter var(--sb-out) var(--sb-ease),transform var(--sb-out) var(--sb-ease)}
+.ch-tab:hover .ln,.ch-tab:focus-visible .ln{background:var(--soft);transform:translateY(-2px) scaleX(1.18);transition-duration:var(--sb-in)}
+.ch-tab:hover .ht,.ch-tab:focus-visible .ht{opacity:.85;filter:blur(0);transform:none;transition-duration:var(--sb-in)}
+.ch-tab:focus-visible{outline:none}
+.ch-tab:focus-visible .ln{box-shadow:0 0 0 3px var(--gold-wash)}
+.ch-tab.away .ln{visibility:hidden}
+.ch.thread .ch-tab{top:auto;bottom:0;height:40px;padding-top:22px}
+.ch.thread .ch-tab .lb{position:absolute;bottom:24px;margin:0;opacity:0;filter:blur(1.5px);transform:translateY(2px);
+ transition:opacity var(--sb-out) var(--sb-ease),filter var(--sb-out) var(--sb-ease),transform var(--sb-out) var(--sb-ease)}
+.ch.thread .ch-tab .ht{display:none}
+.ch.thread .ch-tab:hover .lb,.ch.thread .ch-tab:focus-visible .lb{opacity:1;filter:blur(0);transform:none;transition-duration:var(--sb-in)}
+.ch-tab.live .ln{background:var(--gold);animation:breathe var(--t-loop) var(--ease-inout) infinite}
+
+/* the veil: the page steps back while the sheet is up (a tint, not a blur, so the glass has something sharp to soften) */
+.ch-veil{position:absolute;inset:0;z-index:2;background:color-mix(in srgb,var(--bg) 55%,transparent);opacity:0;visibility:hidden}
+.ch-veil.on{visibility:visible}
+
+/* ---- the sheet: the focused place to write. The grabber, the brief, the chat's settings, then attach, the model,
+   esc and send. It is glass: the tint, a sheen and a lit top edge over a 24px backdrop blur, so it reads as a material
+   even over an empty page, and the thread shows through it softened. In a new chat it opens in the middle of the page,
+   growing out of the line; in a thread it rises from the foot. The motion is chat-next.js's frame(): one progress,
+   0 to 1, drives the grabber's travel, the reveal, the veil and the contents, so a pull and a click are the same move. ---- */
+.ch-sheet{position:absolute;left:0;right:0;margin:0 auto;z-index:3;width:min(var(--ch-col),calc(100% - var(--sp-6) * 2));visibility:hidden;pointer-events:none}
+.ch-sheet.on{visibility:visible;pointer-events:auto}
+.ch-sheet.mid{top:0;bottom:0;margin:auto;height:fit-content}
+.ch-sheet.low{bottom:var(--sp-3)}
+.ch-glass{position:absolute;inset:0;border-radius:var(--ch-sheet-r);
+ background:var(--ch-sheen),color-mix(in srgb,var(--panel) var(--ch-glass),transparent);-webkit-backdrop-filter:blur(24px) saturate(1.8);backdrop-filter:blur(24px) saturate(1.8);
+ box-shadow:var(--ch-rim),inset 0 0 0 var(--rule-hair) var(--line-3),0 1px 2px rgba(var(--sb-shc),calc(var(--sb-sha) * .2)),0 24px 56px -24px rgba(var(--sb-shc),calc(var(--sb-sha) * 1.1))}
+/* opaque where the browser has no backdrop filter, and when the system asks for less transparency. Headless software
+   renderers drop a blur this large, so qa screenshots show the tint alone: judge the glass in a real browser. */
+@supports not ((backdrop-filter:blur(1px)) or (-webkit-backdrop-filter:blur(1px))){.ch-glass{background:var(--panel)}}
+@media (prefers-reduced-transparency:reduce){.ch-glass{background:var(--panel);-webkit-backdrop-filter:none;backdrop-filter:none}}
+.ch-fg{position:relative}
+.ch-grab{height:22px;display:grid;place-items:center;cursor:grab;touch-action:none;user-select:none}
+.ch-grab:active{cursor:grabbing}
+.ch-grab:hover .ln{background:var(--soft);transform:translateY(1px) scaleX(1.18);transition-duration:var(--sb-in)}
+.ch-comp{position:relative;display:flex;flex-direction:column;padding:0 var(--sp-3h) var(--sp-2h)}
+.ch-comp textarea{all:unset;display:block;width:100%;min-height:44px;max-height:240px;overflow-y:auto;padding:2px 0;font:400 14px/1.55 var(--f-body);color:var(--ink);caret-color:var(--gold);white-space:pre-wrap;word-wrap:break-word;scrollbar-width:thin}
 .ch-comp textarea::placeholder{color:var(--mute)}
+/* the chat's settings: four quiet rows under a hairline. Words, not chips: the chosen word is ink over a hairline that
+   slides to it (transform only); a desk is on when its dot is filled; client-facing is a small switch, and says what
+   the firewall keeps out. */
+.ch-set{display:grid;gap:1px;margin:var(--sp-2) calc(var(--sp-3h) * -1) var(--sp-1h);padding:var(--sp-1h) var(--sp-3h);border-top:var(--rule-hair) solid var(--line);border-bottom:var(--rule-hair) solid var(--line)}
+.ch-row{display:flex;align-items:center;gap:var(--sp-2);min-height:26px}
+.ch-row .k{flex:none;width:92px;font-size:var(--fs-chrome);color:var(--mute)}
+.ch-seg,.ch-tg{position:relative;display:flex;flex-wrap:wrap;gap:1px;margin-left:calc(var(--sp-2) * -1)}
+.ch-seg button,.ch-tg button{all:unset;position:relative;display:flex;align-items:center;gap:6px;height:22px;padding:0 var(--sp-2);border-radius:var(--sb-r-sm);font-size:var(--fs-chrome-2);color:var(--mute);cursor:pointer;
+ transition:color var(--sb-out) var(--sb-ease),background var(--sb-out) var(--sb-ease)}
+.ch-seg button:hover,.ch-tg button:hover{color:var(--ink);background:var(--line);transition-duration:calc(var(--sb-in) * .5)}
+.ch-seg button[aria-checked="true"]{color:var(--ink)}
+.ch-seg .u{position:absolute;left:0;bottom:1px;width:1px;height:var(--rule);background:var(--ink);transform-origin:0 50%;pointer-events:none;transition:transform var(--sb-move) var(--sb-ease)}
+.ch-seg .u.still{transition:none}
+.ch-tg button::before{content:"";width:5px;height:5px;border-radius:50%;box-shadow:inset 0 0 0 1px var(--line-3);transition:background var(--sb-out) var(--sb-ease),box-shadow var(--sb-out) var(--sb-ease)}
+.ch-tg button[aria-pressed="true"]{color:var(--soft)}
+.ch-tg button[aria-pressed="true"]::before{background:var(--ink);box-shadow:inset 0 0 0 1px var(--ink);transition-duration:var(--sb-in)}
+.ch-sw{all:unset;position:relative;flex:none;width:24px;height:14px;border-radius:7px;background:var(--line-2);box-shadow:inset 0 0 0 var(--rule-hair) var(--line-3);cursor:pointer;transition:background var(--sb-out) var(--sb-ease)}
+.ch-sw i{position:absolute;top:2px;left:2px;width:10px;height:10px;border-radius:50%;background:var(--soft);box-shadow:0 1px 2px rgba(var(--sb-shc),calc(var(--sb-sha) * .3));transition:transform var(--sb-move) var(--sb-ease),background var(--sb-out) var(--sb-ease)}
+.ch-sw[aria-checked="true"]{background:var(--ink);transition-duration:var(--sb-in)}
+.ch-sw[aria-checked="true"] i{transform:translateX(10px);background:var(--bg)}
+.ch-fw{margin-left:var(--sp-1);font-size:var(--fs-chrome);color:var(--mute);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .ch-cbar{display:flex;align-items:center;gap:2px;margin:0 -4px 0 -6px}
 .ch-ib{all:unset;display:grid;place-items:center;width:26px;height:24px;border-radius:var(--sb-r-sm);color:var(--mute);cursor:pointer;transition:background var(--sb-out) var(--sb-ease),color var(--sb-out) var(--sb-ease)}
 .ch-ib svg{width:14px;height:14px}
 .ch-ib:hover{background:var(--line);color:var(--ink);transition-duration:calc(var(--sb-in) * .5)}
-.ch-ib:focus-visible,.ch-chip:focus-visible,.ch-send:focus-visible{outline:var(--rule) solid var(--gold);outline-offset:-1px}
-.ch-chip{all:unset;display:flex;align-items:center;gap:5px;height:24px;padding:0 var(--sp-2);border-radius:var(--sb-r-sm);font-size:var(--fs-chrome);color:var(--soft);cursor:pointer;transition:background var(--sb-out) var(--sb-ease),color var(--sb-out) var(--sb-ease)}
-.ch-chip:hover{background:var(--line);color:var(--ink);transition-duration:calc(var(--sb-in) * .5)}
-.ch-chip .bars{display:flex;gap:1.5px;align-items:flex-end;height:9px}
-.ch-chip .bars i{width:2px;border-radius:1px;background:currentColor}
-.ch-chip .bars i:nth-child(1){height:4px}.ch-chip .bars i:nth-child(2){height:6.5px}.ch-chip .bars i:nth-child(3){height:9px;opacity:.35}
-.ch-model{margin-left:auto;margin-right:var(--sp-2);font-size:var(--fs-chrome);color:var(--mute);white-space:nowrap}
+.ch-ib:focus-visible,.ch-send:focus-visible,.ch-esc:focus-visible,.ch-seg button:focus-visible,.ch-tg button:focus-visible,.ch-sw:focus-visible{outline:var(--rule) solid var(--gold);outline-offset:-1px}
+.ch-esc{all:unset;height:18px;margin-right:var(--sp-2);padding:0 5px;border-radius:4px;font:500 10px/18px var(--f-body);letter-spacing:.02em;color:var(--mute);box-shadow:inset 0 0 0 var(--rule-hair) var(--line-3);cursor:pointer;
+ transition:color var(--sb-out) var(--sb-ease),background var(--sb-out) var(--sb-ease)}
+.ch-esc:hover{color:var(--ink);background:var(--line);transition-duration:calc(var(--sb-in) * .5)}
+.ch-model{margin-left:auto;margin-right:var(--sp-3);font-size:var(--fs-chrome);color:var(--mute);white-space:nowrap}
 .ch-model em{font:italic 400 var(--fs-chrome) var(--f-display)}
 /* send: quiet until there is something to send, then it becomes ink, out of a blur */
 .ch-send{all:unset;display:grid;place-items:center;width:26px;height:26px;border-radius:var(--sb-r);background:var(--line-2);color:var(--mute);cursor:default;
@@ -145,7 +196,7 @@
 .ch-mk{position:relative;display:flex;align-items:baseline;gap:var(--sp-3);padding-bottom:var(--sp-2);margin-bottom:var(--sp-3);border-bottom:var(--rule-hair) solid var(--line-3)}
 .ch-mk::after{content:"";position:absolute;left:0;bottom:calc(var(--rule-hair) * -1);width:var(--lead-in);height:var(--rule);background:var(--gold)}
 .ch-mk .n{min-width:22px;font:italic 400 14px/1 var(--f-display);color:var(--gold-ink);font-feature-settings:"onum" 1}
-.ch-mk h3{margin:0;font:400 var(--fs-h3)/1.3 var(--f-display);letter-spacing:-.006em;color:var(--ink)}
+.ch-mk h2{margin:0;font:400 var(--fs-h3)/1.3 var(--f-display);letter-spacing:-.006em;color:var(--ink)}
 .ch-doc ul{margin:0 0 var(--sp-3);padding:0;list-style:none}
 .ch-doc li{position:relative;padding-left:var(--sp-4);margin-bottom:var(--sp-1h)}
 .ch-doc li::before{content:"";position:absolute;left:2px;top:.72em;width:5px;height:var(--rule);background:var(--gold)}
@@ -187,7 +238,7 @@
 .ch-dots i{width:5px;height:5px;border-radius:var(--r-round);box-shadow:inset 0 0 0 1px var(--line-3)}
 .ch-dots i.on{background:var(--gold);box-shadow:inset 0 0 0 1px var(--gold)}
 .ch-dt tr.pick td:first-child{color:var(--ink)}
-.ch-dt tr.pick td:first-child em{margin-left:var(--sp-1h);font:italic 400 var(--fs-chrome) var(--f-display);color:var(--gold-ink)}
+.ch-dt tr.pick td:first-child em{margin-left:var(--sp-1h);font:italic 400 var(--fs-chrome) var(--f-display);color:var(--soft)}
 .ch-src{margin:0;padding:0;list-style:none;counter-reset:s}
 .ch-doc .ch-src li{counter-increment:s;display:flex;align-items:baseline;gap:var(--sp-2);margin:0;padding:3px 0;font-size:var(--fs-ui);color:var(--text)}
 .ch-doc .ch-src li::before{content:counter(s)".";position:static;width:auto;min-width:14px;height:auto;background:none;font:italic 400 var(--fs-chrome-2) var(--f-display);color:var(--gold-ink)}
@@ -208,4 +259,4 @@
 
 /* words ink in as they stream: each one surfaces out of a small blur, on the one curve (chat-next.js) */
 .ch-w{display:inline}
-@media (max-width:760px){.ch-scroll{padding:var(--sp-4) var(--sp-4) 150px}.ch-dock{padding:0 var(--sp-4) var(--sp-4)}.ch-hero{padding:0 var(--sp-4) 12vh}.ch-sign{left:var(--sp-4)}.ch-when{display:none}.ch-sh{grid-template-columns:64px 1fr auto}.ch-sh .t{display:none}.ch-out{margin-left:var(--sp-1)}}
+@media (max-width:760px){.ch-scroll{padding:var(--sp-4) var(--sp-4) 88px}.ch-sheet{width:calc(100% - var(--sp-4) * 2)}.ch-row .k{width:76px}.ch-sign{left:var(--sp-4)}.ch-when{display:none}.ch-sh{grid-template-columns:64px 1fr auto}.ch-sh .t{display:none}.ch-out{margin-left:var(--sp-1)}}

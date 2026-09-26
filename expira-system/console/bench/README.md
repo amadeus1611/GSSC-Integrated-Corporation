@@ -42,11 +42,9 @@ Every specimen loads `early.js` in its head (it applies the tuned tokens before 
 ## Specimens
 
 - **chat-next**: the v45 chat pane draft (DESIGN_ENGINE §4.5), beside the sidebar draft.
-  - A new chat: the composer in the middle and a signature in the bottom-left corner (the gold lead-in, a greeting that knows the hour, the date), level with the sidebar's foot.
-  - On send, the composer glides into the dock.
-  - The composer is a translucent material; the thread passes under it.
+  - The composer rests as a pull tab, one short line: in the middle of a new chat (beside a signature in the corner, level with the sidebar's foot) and at the foot of a thread. Pull it up, click it, or start typing, and it grows into a glass sheet with the chat's settings. On send it folds back into the line.
   - The answer has no card. The work is one line with a ledger that opens underneath, and the answer is a GSSC master-template page.
-  - Bench actions: New chat (n), Send a brief (b), Example (e), Running (r), Dock (f).
+  - Bench actions (buttons only; letters would open the sheet): Pull up, New chat, Send a brief, Example, Running, Dock.
   - Opening a chat in the sidebar opens it here.
 - **sidebar-next**: the v45 sidebar draft, the reference implementation of DESIGN_ENGINE §4 (EXPIRA × macOS).
   - A file system, not a form: New chat and Search, then folders you make and loose chats.

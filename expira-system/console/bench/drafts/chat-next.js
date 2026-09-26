@@ -1,10 +1,11 @@
 /* ---------- draft v45 chat (bench only until promoted into units/start, units/composer and units/thread) ----------
-   The pane is the document. A new chat is the composer in the middle and a signature in the corner. Sending the first brief carries the
-   composer down into its dock on the dock's own curve, while the signature racks out and the brief pulls focus as a
-   pull quote. The desks work in one quiet line (no run card); the answer then inks in, word by word, laid out as the
+   The pane is the document. The composer rests as a pull tab, one short line: in a new chat it waits in the middle of
+   the page, beside a signature in the corner; in a thread it waits at the foot. Pulled, clicked or typed at, the line
+   grows into a glass sheet with the chat's settings. Sending folds the sheet back into the line at the foot, while
+   the signature racks out and the brief pulls focus as a pull quote. The desks work in one quiet line (no run card); the answer then inks in, word by word, laid out as the
    master template lays out a page. A chat opened from the tree is shown settled, its blocks pulling focus in order.
    Reads MO, easeFn and easeInv from core/motion.js, and $, root and reduce from the prelude (the bench stubs them). */
-const CH=(()=>{const ch=$("#ch"),scroll=$("#chScroll"),col=$("#chCol"),hero=$("#chHero"),slot=$("#chSlot"),dock=$("#chDock"),comp=$("#chComp"),ta=$("#prompt"),send=$("#chSend"),ttl=$("#ttl");
+const CH=(()=>{const ch=$("#ch"),scroll=$("#chScroll"),col=$("#chCol"),tab=$("#chTab"),sheet=$("#chSheet"),glass=sheet.querySelector(".ch-glass"),fg=sheet.querySelector(".ch-fg"),grab=$("#chGrab"),veil=$("#chVeil"),comp=$("#chComp"),set=$("#chSet"),ta=$("#prompt"),send=$("#chSend"),ttl=$("#ttl");
  const tok=n=>getComputedStyle(root).getPropertyValue(n).trim();
  const ms=n=>{const v=tok(n);return parseFloat(v)*(/ms$/.test(v)?1:1000)||1};
  const EZ=()=>tok("--sb-ease")||"cubic-bezier(.19,1,.22,1)",B=()=>parseFloat(tok("--blur-enter"))||3;
@@ -27,37 +28,98 @@ const CH=(()=>{const ch=$("#ch"),scroll=$("#chScroll"),col=$("#chCol"),hero=$("#
   $("#chDate").textContent=d.toLocaleDateString("en-GB",{weekday:"long",day:"numeric",month:"long"}).replace(",","");
   $("#chHi").innerHTML=`${g}, <em>${esc(NAME)}</em>`}
 
- /* ---- the composer: grows with what you type (up to eight lines); Enter sends, Shift-Enter breaks the line ---- */
- const fit=()=>{ta.style.height="auto";ta.style.height=Math.min(220,ta.scrollHeight)+"px";comp.classList.toggle("has",!!ta.value.trim())};
+ /* ---- the composer: grows with what you type (up to ten lines); Enter sends, Shift-Enter breaks the line ---- */
+ const fit=()=>{ta.style.height="auto";ta.style.height=Math.min(240,ta.scrollHeight)+"px";comp.classList.toggle("has",!!ta.value.trim())};
  ta.addEventListener("input",fit);
  ta.addEventListener("keydown",e=>{if(e.key==="Enter"&&!e.shiftKey&&!e.isComposing){e.preventDefault();go()}});
  send.addEventListener("click",()=>{if(running)return stopRun();go()});
  comp.addEventListener("click",e=>{if(e.target===comp)ta.focus()});
 
- /* the composer travels between the middle of the page and its dock on the dock's own curve, blurring a little with its speed */
- function carry(to,between){const r0=comp.getBoundingClientRect();between&&between();(to==="dock"?dock:slot).appendChild(comp);if(reduce)return;const r1=comp.getBoundingClientRect(),dx=r0.left-r1.left,dy=r0.top-r1.top;if(Math.abs(dx)+Math.abs(dy)<1)return;
-  const D=ms(to==="dock"?"--sb-dock":"--sb-move"),Es=EZ(),M=Math.min(1.6,Math.hypot(dx,dy)/160);
-  comp.animate(sampled(D,Es,(p,k)=>({transform:`translate(${(dx*(1-p)).toFixed(2)}px,${(dy*(1-p)).toFixed(2)}px)`,filter:mb(k,M)})),{duration:D,easing:"linear"})}
+ /* ---- the pull tab and its sheet. One progress P, 0 (the line) to 1 (the open sheet), drives everything in frame():
+    the grabber's travel, the reveal growing out of the line (wide first, then tall, so the line becomes a bar and the
+    bar rises), the glass, the contents focusing in, and the veil. A click tweens P on the dock's curve, a pull sets it
+    under the finger, and a release finishes it by position and speed, so the pull and the click are one move. Opening
+    is fast (--sb-dock on --sb-ease); closing is soft (--sb-dock-out on --sb-dock-close). After a send the sheet folds
+    back into the line, and the line waits at the foot of the thread. ---- */
+ let P=0,tw=0,G=null;const SH=22,LW=36;  /* SH: the grabber's band at the top of the sheet; LW: the line */
+ const lerp=(a,b,t)=>a+(b-a)*t,cl=(v,a=0,b=1)=>Math.max(a,Math.min(b,v)),sm=(p,a,b)=>{const t=cl((p-a)/(b-a));return t*t*(3-2*t)};
+ const box=el=>{const r=el.getBoundingClientRect();return{x:r.left,y:r.top,w:r.width,h:r.height}};
+ const isOpen=()=>sheet.classList.contains("on"),tabLn=tab.querySelector(".ln"),tabLb=tab.querySelector(".lb"),tabHt=tab.querySelector(".ht");
+ function prep(){if(isOpen())return;sheet.classList.remove("mid","low");sheet.classList.add("on",mode==="start"?"mid":"low");veil.classList.add("on");tab.classList.add("away");tab.setAttribute("aria-expanded","true");paintSeg(true)}
+ function measure(){sheet.style.transform=glass.style.clipPath=fg.style.clipPath="";const S=box(sheet),l=box(tabLn);G={S,L:{x:l.x+l.w/2-LW/2,y:l.y+l.h/2-SH/2,w:LW,h:SH}}}
+ function frame(p){P=p;const {S,L}=G,ew=1-Math.pow(1-p,3),w=lerp(L.w,S.w,ew),h=lerp(L.h,S.h,p),cx=lerp(L.x+L.w/2,S.x+S.w/2,ew),y=lerp(L.y,S.y,p);
+  const o=40*Math.pow(p,6),r=lerp(2,14,cl(p*1.6)),side=(S.w-w)/2-o;  /* o: the reveal ends past the shadow, never clipping it */
+  sheet.style.transform=p>=1?"":`translate(${(cx-(S.x+S.w/2)).toFixed(2)}px,${(y-S.y).toFixed(2)}px)`;
+  glass.style.clipPath=fg.style.clipPath=p>=1?"":`inset(${-o}px ${side.toFixed(2)}px ${(S.h-h-o).toFixed(2)}px ${side.toFixed(2)}px round ${r.toFixed(2)}px)`;
+  glass.style.opacity=p>=1?"":sm(p,0,.32);
+  const q=sm(p,.3,.92);comp.style.opacity=q>=1?"":q;comp.style.transform=q>=1?"":`translateY(${((1-q)*8).toFixed(2)}px)`;comp.style.filter=q>=1||reduce?"":mb(1-q,2);
+  veil.style.opacity=p;tabLb.style.opacity=tabHt.style.opacity=p<=0?"":mode==="start"?1-sm(p,0,.22):0}  /* in a thread the label only ever shows on hover */
+ function tween(to,D,Es,done){cancelAnimationFrame(tw);tw=0;const p0=P,E=easeFn(Es),t0=performance.now();
+  if(reduce||D<5){frame(to);done&&done();return}
+  const step=now=>{const t=Math.min(1,(now-t0)/D);frame(p0+(to-p0)*E(t));if(t<1)tw=requestAnimationFrame(step);else{tw=0;done&&done()}};tw=requestAnimationFrame(step)}
+ function rise(){if(isOpen()&&P>=1)return ta.focus({preventScroll:true});if(!isOpen()){prep();measure();frame(0)}
+  ta.focus({preventScroll:true});tween(1,ms("--sb-dock")*Math.max(.35,1-P),EZ())}
+ function shut(instant,after){if(!isOpen()){after&&after();return}if(P>=1||!G)measure();
+  tween(0,instant?0:ms("--sb-dock-out")*Math.max(.35,P),tok("--sb-dock-close")||EZ(),()=>{
+   sheet.classList.remove("on","mid","low");veil.classList.remove("on");tab.classList.remove("away");tab.setAttribute("aria-expanded","false");
+   [sheet,glass,fg,comp,veil,tabLb,tabHt].forEach(x=>{x.style.transform=x.style.clipPath=x.style.opacity=x.style.filter=""});P=0;after&&after()})}
+ const back=()=>shut(false,()=>tab.focus({preventScroll:true}));
+ /* the pull: the grabber follows the finger, 1:1; let go and it finishes by where it is and how fast it was moving */
+ function draggable(el,opening){el.addEventListener("pointerdown",e=>{if(e.button!==0)return;const y0=e.clientY;let moved=false,p0=0,trail=[[e.timeStamp,y0]];
+  try{el.setPointerCapture(e.pointerId)}catch(x){}
+  const mv=ev=>{const dy=ev.clientY-y0;if(!moved){if(Math.abs(dy)<4)return;moved=true;cancelAnimationFrame(tw);tw=0;if(opening&&!isOpen()){prep();measure()}else if(P>=1)measure();p0=P;if(opening)ta.focus({preventScroll:true})}
+   frame(cl(p0-dy/Math.max(40,G.L.y-G.S.y)));trail.push([ev.timeStamp,ev.clientY]);if(trail.length>5)trail.shift()};
+  const up=ev=>{el.removeEventListener("pointermove",mv);el.removeEventListener("pointerup",up);el.removeEventListener("pointercancel",up);
+   if(!moved){if(ev.type==="pointerup")opening?rise():back();return}
+   const [t1,y1]=trail[0],v=(ev.clientY-y1)/Math.max(1,ev.timeStamp-t1);  /* px per ms; down is positive */
+   (v<-.3||(v<=.3&&P>(opening?.3:.6)))?rise():back()};
+  el.addEventListener("pointermove",mv);el.addEventListener("pointerup",up);el.addEventListener("pointercancel",up)})}
+ draggable(tab,true);draggable(grab,false);
+ tab.addEventListener("click",e=>{if(e.detail===0)rise()});  /* Enter and Space; a pointer click is handled on release */
+ veil.addEventListener("pointerdown",back);$("#chEsc").addEventListener("click",back);
+ sheet.addEventListener("keydown",e=>{if(e.key==="Escape"){e.preventDefault();e.stopPropagation();back()}});
+ /* start typing anywhere in the pane and the sheet comes up with what you typed */
+ addEventListener("keydown",e=>{if(isOpen()||e.metaKey||e.ctrlKey||e.altKey||e.isComposing||e.key.length!==1)return;
+  const a=document.activeElement;if(a&&a!==document.body&&(/INPUT|TEXTAREA|SELECT/.test(a.tagName)||a.isContentEditable||a.closest(".side,.sb-pop,#bn")||(e.key===" "&&a!==tab)))return;
+  e.preventDefault();e.stopImmediatePropagation();rise();if(e.key!==" "){ta.value+=e.key;fit()}});
+ function tabSay(){const t=mode==="start"?"Brief EXPIRA":running?"Working · follow up":"Follow up";tabLb.textContent=t;tab.setAttribute("aria-label",mode==="start"?"Brief EXPIRA: pull up, or start typing":t)}
+
+ /* ---- the chat's settings: effort and output are one choice each, the desks any of four (never none), and
+    client-facing turns the firewall on. The chosen word's hairline slides to it; arrows move within a choice. ---- */
+ const SET={effort:"Auto",out:"Auto",desks:new Set(["Research","Finance","Legal","Decision"]),client:false};
+ function paintSeg(still){set.querySelectorAll(".ch-seg").forEach(g=>{const b=g.querySelector('[aria-checked="true"]'),u=g.querySelector(".u");if(!b)return;
+  u.classList.toggle("still",!!still);u.style.transform=`translateX(${b.offsetLeft+8}px) scaleX(${Math.max(1,b.offsetWidth-16)})`;if(still)requestAnimationFrame(()=>u.classList.remove("still"))})}
+ function choose(g,b){g.querySelectorAll("button").forEach(x=>{const on=x===b;x.setAttribute("aria-checked",String(on));x.tabIndex=on?0:-1});SET[g.dataset.k]=b.dataset.v;paintSeg()}
+ const fw=$("#chFw");
+ set.addEventListener("click",e=>{const b=e.target.closest("button");if(!b)return;
+  if(b.classList.contains("ch-sw")){SET.client=b.getAttribute("aria-checked")!=="true";b.setAttribute("aria-checked",String(SET.client));
+   fw.textContent=SET.client?"On: suppliers, costs, margins and bank details stay out":"Off: the answer is for the team";pull(fw,0,ms("--sb-in"));return}
+  const g=b.parentElement;
+  if(g.classList.contains("ch-seg"))choose(g,b);
+  else if(g.classList.contains("ch-tg")){const on=b.getAttribute("aria-pressed")!=="true";if(!on&&SET.desks.size===1)return;b.setAttribute("aria-pressed",String(on));SET.desks[on?"add":"delete"](b.dataset.v)}});
+ set.addEventListener("keydown",e=>{const b=e.target.closest(".ch-seg button");if(!b||!/^Arrow(Left|Right)$/.test(e.key))return;e.preventDefault();
+  const bs=[...b.parentElement.querySelectorAll("button")],n=bs[(bs.indexOf(b)+(e.key==="ArrowRight"?1:bs.length-1))%bs.length];choose(b.parentElement,n);n.focus()});
 
  /* ---- a new chat ---- */
  let mode="start",running=null,cur=null;
- function start(){if(running)stopRun();cur=null;const was=mode;mode="start";ttl.innerHTML="";greet();
+ function start(){if(running)stopRun();cur=null;const was=mode;mode="start";ttl.innerHTML="";ttl.hidden=true;greet();
   const heroParts=[$(".ch-lead"),$("#chHi"),$("#chDate")];
-  const show=()=>{ch.classList.add("start");col.replaceChildren();carry("hero");ta.value="";fit();
-   heroParts.forEach((x,i)=>{if(i===0){if(!reduce)x.animate([{transform:"scaleX(0)"},{transform:"none"}],{duration:ms("--sb-move"),delay:40,easing:EZ(),fill:"backwards"})}else pull(x,60+i*40)});setTimeout(()=>ta.focus({preventScroll:true}),60)};
+  const show=()=>{shut(true);ch.classList.add("start");ch.classList.remove("thread");col.replaceChildren();ta.value="";fit();tabSay();pull(tab,40);
+   heroParts.forEach((x,i)=>{if(i===0){if(!reduce)x.animate([{transform:"scaleX(0)"},{transform:"none"}],{duration:ms("--sb-move"),delay:40,easing:EZ(),fill:"backwards"})}else pull(x,60+i*40)});setTimeout(()=>tab.focus({preventScroll:true}),60)};
   if(was==="thread"&&col.children.length&&!reduce){const a=col.animate(focusOut(B()*.6),{duration:ms("--sb-out"),easing:EZ(),fill:"forwards"});a.finished.then(()=>{a.cancel();show()},show)}else show()}
 
- /* ---- sending: the signature racks out, the composer glides down into its dock, the brief pulls focus ---- */
+ /* ---- sending: the signature racks out, the sheet folds back into the line at the foot of the thread, the brief
+    pulls focus ---- */
  function go(){const text=ta.value.trim();if(!text||running)return;
   if(mode==="start"){mode="thread";const parts=[$("#chDate"),$("#chHi"),$(".ch-lead")];
-   /* the signature stays on screen while it racks out; the composer is measured where it is, then carried */
-   ch.classList.add("leaving");carry("dock",()=>ch.classList.remove("start"));
+   ch.classList.add("leaving","thread");ch.classList.remove("start");
    const an=reduce?[]:parts.map((x,i)=>x.animate(focusOut(B()*.6),{duration:ms("--sb-out"),delay:i*20,easing:EZ(),fill:"forwards"}));
    Promise.all(an.map(a=>a.finished)).then(()=>{an.forEach(a=>a.cancel());ch.classList.remove("leaving")},()=>ch.classList.remove("leaving"))}
-  ta.value="";fit();const title=text.length>48?text.slice(0,46).replace(/\s+\S*$/,"")+"…":text;if(!cur){cur={t:title};setTitle(title)}
+  const clear=()=>{ta.value="";fit()};isOpen()?shut(false,clear):clear();
+  const title=text.length>48?text.slice(0,46).replace(/\s+\S*$/,"")+"…":text;if(!cur){cur={t:title};setTitle(title)}
   const turn=brief(text,new Date());col.appendChild(turn);pull(turn.querySelector(".ch-quote"),90);
   const a=answerShell(RICH.work,true);col.appendChild(a);pull(a.querySelector(".ch-proc"),220);scrollEnd(true);run(a,RICH)}
- function setTitle(t){ttl.innerHTML=`${esc(t)}`;if(!reduce)ttl.animate(focusIn(B()*.5),{duration:ms("--sb-in"),easing:EZ()})}
+ function setTitle(t){ttl.hidden=false;ttl.innerHTML=`${esc(t)}`;if(!reduce)ttl.animate(focusIn(B()*.5),{duration:ms("--sb-in"),easing:EZ()})}
 
  /* ---- the thread ---- */
  const hhmm=d=>d.toLocaleTimeString("en-GB",{hour:"2-digit",minute:"2-digit"});
@@ -95,14 +157,14 @@ const CH=(()=>{const ch=$("#ch"),scroll=$("#chScroll"),col=$("#chCol"),hero=$("#
  const isNum=c=>/^(\*\*)?(PHP|₱|\$)?\s?-?[\d,.]+(%| days?| weeks?)?(\*\*)?$/.test(c.trim());
  function table(rows){const [h,...b]=rows;const nc=h.map((_,j)=>b.length&&b.every(r=>!r[j]||isNum(r[j])));
   return `<table class="ch-dt"><thead><tr>${h.map((c,j)=>`<th${nc[j]?' class="num"':""}>${inl(c)}</th>`).join("")}</tr></thead><tbody>${b.map(r=>`<tr${r.every(c=>!c||/^\*\*.*\*\*$/.test(c))?' class="total"':""}>${r.map((c,j)=>`<td${nc[j]?' class="num"':""}>${inl(c)}</td>`).join("")}</tr>`).join("")}</tbody></table>`}
- function page(md0){return md(md0).map((s,i)=>`<section class="ch-sec">${s.title?`<header class="ch-mk"><span class="n">${ROMAN[i-(md(md0)[0].title?0:1)]||""}</span><h3>${inl(s.title)}</h3></header>`:""}`+
+ function page(md0){return md(md0).map((s,i)=>`<section class="ch-sec">${s.title?`<header class="ch-mk"><span class="n">${ROMAN[i-(md(md0)[0].title?0:1)]||""}</span><h2>${inl(s.title)}</h2></header>`:""}`+
   s.body.map(b=>b.t==="p"?`<p>${inl(b.text)}</p>`:b.t==="ul"?`<ul>${b.items.map(x=>`<li>${inl(x)}</li>`).join("")}</ul>`:table(b.rows)).join("")+`</section>`).join("")}
 
  /* ---- exhibits: figures, a chart, a comparison, the sources ---- */
  function exhibits(ex){if(!ex)return"";let h=`<div class="ch-ex">`,n=0;
   if(ex.facts?.length)h+=`<div class="ch-exh">Figures</div><div class="ch-figs">${ex.facts.map(f=>`<div><b>${esc(f.value)}</b><span>${esc(f.label)}</span>${f.note?`<em>${esc(f.note)}</em>`:""}</div>`).join("")}</div>`;
   (ex.charts||[]).forEach(c=>{n++;h+=`<figure class="ch-fig"><figcaption class="ch-fcap"><span class="f">Fig. ${n}</span><b>${esc(c.title)}</b><small>${esc(c.unit||"")}</small></figcaption>${bars(c)}${c.note?`<p class="ch-note">${esc(c.note)}</p>`:""}</figure>`});
-  if(ex.matrix){const m=ex.matrix;h+=`<figure class="ch-fig"><figcaption class="ch-fcap"><span class="f">Table</span><b>${esc(m.title)}</b></figcaption><table class="ch-dt"><thead><tr><th></th>${m.columns.map(c=>`<th>${esc(c)}</th>`).join("")}</tr></thead><tbody>`+
+  if(ex.matrix){const m=ex.matrix;h+=`<figure class="ch-fig"><figcaption class="ch-fcap"><span class="f">Table</span><b>${esc(m.title)}</b></figcaption><table class="ch-dt"><thead><tr><th><span class="sr">Option</span></th>${m.columns.map(c=>`<th>${esc(c)}</th>`).join("")}</tr></thead><tbody>`+
    m.rows.map(r=>`<tr${/recommended/i.test(r.name)?' class="pick"':""}><td>${esc(r.name.replace(/\s*\(recommended\)/i,""))}${/recommended/i.test(r.name)?"<em>recommended</em>":""}</td>${r.cells.map(v=>`<td>${typeof v==="number"?`<span class="ch-dots" role="img" aria-label="${v} of 5">${[1,2,3,4,5].map(k=>`<i class="${k<=v?"on":""}"></i>`).join("")}</span>`:esc(v)}</td>`).join("")}</tr>`).join("")+`</tbody></table>${m.note?`<p class="ch-note">${esc(m.note)}</p>`:""}</figure>`}
   if(ex.sources?.length)h+=`<div class="ch-exh">Sources</div><ol class="ch-src">${ex.sources.map(s=>`<li><span>${esc(s.title)}</span><em class="${s.note==="verified"?"ok":""}">${esc(s.note||"")}</em></li>`).join("")}</ol>`;
   return h+`</div>`}
@@ -122,18 +184,18 @@ const CH=(()=>{const ch=$("#ch"),scroll=$("#chScroll"),col=$("#chCol"),hero=$("#
 
  /* ---- running: the desks work in the one line, then the answer inks in ---- */
  function run(a,R){const steps=R.work.steps,proc=a.querySelector(".ch-proc"),desk=[...proc.querySelectorAll(".desks span")],now=proc.querySelector(".now"),t=proc.querySelector(".t"),t0=performance.now();
-  comp.classList.add("busy");send.innerHTML=IC.stop;send.setAttribute("aria-label","Stop");
+  comp.classList.add("busy");send.innerHTML=IC.stop;send.setAttribute("aria-label","Stop");tab.classList.add("live");
   const tick=setInterval(()=>{t.textContent=mmss((performance.now()-t0)*16)},250);
   const say=x=>{now.textContent=x;if(!reduce)now.animate(focusIn(B()*.5),{duration:ms("--sb-in"),easing:EZ()})};
   const timers=[];let i=0;
   const next=()=>{if(i>0){desk[i-1].classList.remove("on");desk[i-1].classList.add("done")}
    if(i<steps.length){desk[i].classList.add("on");say(R.phrases[i]);i++;timers.push(setTimeout(next,1100))}
    else{clearInterval(tick);ink(a,R,()=>finish(a,R))}};
-  timers.push(setTimeout(next,700));running={a,stop:()=>{timers.forEach(clearTimeout);clearInterval(tick);ink.cancel?.()}}}
- function finish(a,R){running=null;comp.classList.remove("busy");send.innerHTML=IC.arrow;send.setAttribute("aria-label","Send");a.setAttribute("aria-busy","false");
+  timers.push(setTimeout(next,700));running={a,stop:()=>{timers.forEach(clearTimeout);clearInterval(tick);ink.cancel?.()}};tabSay()}
+ function finish(a,R){running=null;comp.classList.remove("busy");tab.classList.remove("live");tabSay();send.innerHTML=IC.arrow;send.setAttribute("aria-label","Send");a.setAttribute("aria-busy","false");
   const proc=a.querySelector(".ch-proc");const old=[...proc.childNodes].slice(1);old.forEach(x=>x.remove());proc.classList.remove("live");proc.insertAdjacentHTML("beforeend",settledLine(R.work));
   [...proc.children].slice(1).forEach((x,i)=>pull(x,i*30))}
- function stopRun(){if(!running)return;running.stop();const a=running.a;running=null;comp.classList.remove("busy");send.innerHTML=IC.arrow;send.setAttribute("aria-label","Send");a.setAttribute("aria-busy","false");
+ function stopRun(){if(!running)return;running.stop();const a=running.a;running=null;comp.classList.remove("busy");tab.classList.remove("live");tabSay();send.innerHTML=IC.arrow;send.setAttribute("aria-label","Send");a.setAttribute("aria-busy","false");
   const p=a.querySelector(".ch-proc");p.classList.remove("live");p.querySelector(".now").textContent="Stopped"}
  /* ink: blocks arrive in order; inside a paragraph or a list item the words surface a few at a time out of a small
     blur, as if written; tables arrive row by row, figures one by one, the chart's bars grow from the baseline */
@@ -155,7 +217,7 @@ const CH=(()=>{const ch=$("#ch"),scroll=$("#chScroll"),col=$("#chCol"),hero=$("#
  function scrollEnd(smooth){scroll.scrollTo({top:scroll.scrollHeight,behavior:smooth&&!reduce?"smooth":"auto"})}
 
  /* ---- opening a chat or a document from the tree: shown settled; its blocks pull focus in order, 16ms apart ---- */
- function open(n){if(running)stopRun();cur=n;const was=mode;mode="thread";ch.classList.remove("start");carry("dock");setTitle(n.t);
+ function open(n){if(running)stopRun();cur=n;const was=mode;mode="thread";shut(true);ch.classList.remove("start");ch.classList.add("thread");tabSay();setTitle(n.t);
   let h;if(n.kind==="doc"){h=`<header class="ch-dochead"><div class="ch-kick"><b>Document</b><span>${n.ts?new Date(n.ts).toLocaleDateString("en-GB",{day:"numeric",month:"short",year:"numeric"}):""}</span></div><h2>${esc(n.t)}</h2><div class="ch-lead"></div></header><article class="ch-turn ch-a"><div class="ch-doc">${page(n.body||"")}</div></article>`;col.innerHTML=h}
   else{const R=n.t==="Quotation for the Makati site"?RICH:generic(n);const d=new Date(n.ts||Date.now());col.replaceChildren(brief(R.brief,new Date(d.getTime()-R.work.ms)));
    const a=answerShell(R.work,false);a.querySelector(".ch-doc").innerHTML=page(R.md)+exhibits(R.ex)+colophon(d,R.md);col.appendChild(a);
@@ -181,5 +243,5 @@ const CH=(()=>{const ch=$("#ch"),scroll=$("#chScroll"),col=$("#chCol"),hero=$("#
     {role:"legal",focus:"Permit and handover",task:"Risks behind a Sunday lift and a fixed opening",v:"pass",ms:24000,out:"Secure the Sunday permit before quoting a date; exclude delay from late layout approval; variations by signed order only.\nCONFIDENCE: high"},
     {role:"decision",focus:"The schedule",task:"How the company should proceed",v:"pass",ms:18000,out:"Recommend two phases. Options: one continuous build, two phases, night shifts only. You decide the schedule and the contingency.\nCONFIDENCE: high"}]}};
 
- greet();
- return{start,open,go,send:t=>{ta.value=t;fit();go()},get mode(){return mode},RICH}})();
+ greet();tabSay();ttl.hidden=!ttl.textContent;
+ return{start,open,go,pull:rise,shut,send:t=>{ta.value=t;fit();go()},get mode(){return mode},RICH}})();

@@ -46,10 +46,19 @@ BENCH.name="Chat · v45 draft";
     <div class="ch start" id="ch">
       <div class="ch-scroll" id="chScroll"><div class="ch-col" id="chCol" role="log" aria-label="Conversation"></div></div>
       <div class="ch-hero" id="chHero">
-        <div class="ch-slot" id="chSlot"><form class="ch-comp" id="chComp" onsubmit="return false"><label class="sr" for="prompt">Brief EXPIRA</label><textarea id="prompt" rows="1" placeholder="Brief EXPIRA"></textarea><div class="ch-cbar"><button class="ch-ib" type="button" aria-label="Attach a file"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.15" stroke-linecap="round" stroke-linejoin="round"><path d="M11.5 7.2 7.3 11.4a2.6 2.6 0 01-3.7-3.7l4.6-4.6a1.7 1.7 0 012.4 2.4L6.2 9.9a.8.8 0 01-1.1-1.1l3.9-3.9"/></svg></button><button class="ch-chip" type="button" aria-label="Effort: Auto"><span class="bars" aria-hidden="true"><i></i><i></i><i></i></span>Auto</button><span class="ch-model">Claude <em>dynamic</em></span><button class="ch-send" id="chSend" type="button" aria-label="Send"></button></div></form></div>
         <div class="ch-sign" id="chSign"><div class="ch-lead" aria-hidden="true"></div><p class="ch-hi" id="chHi"></p><p class="ch-date" id="chDate"></p></div>
       </div>
-      <div class="ch-dock" id="chDock"></div>
+      <div class="ch-veil" id="chVeil" aria-hidden="true"></div>
+      <button class="ch-tab" id="chTab" type="button" aria-expanded="false" aria-controls="chSheet" aria-label="Brief EXPIRA: pull up, or start typing"><i class="ln"></i><span class="lb">Brief EXPIRA</span><span class="ht">pull up, or start typing</span></button>
+      <div class="ch-sheet" id="chSheet" role="dialog" aria-label="Brief EXPIRA">
+        <div class="ch-glass" aria-hidden="true"></div>
+        <div class="ch-fg">
+          <div class="ch-grab" id="chGrab" role="button" tabindex="-1" aria-label="Close"><i class="ln"></i></div>
+          <form class="ch-comp" id="chComp" onsubmit="return false"><label class="sr" for="prompt">Brief EXPIRA</label><textarea id="prompt" rows="2" placeholder="Brief EXPIRA"></textarea>
+            <div class="ch-set" id="chSet"><div class="ch-row"><span class="k" id="k-effort">Effort</span><div class="ch-seg" role="radiogroup" aria-labelledby="k-effort" data-k="effort"><button type="button" role="radio" aria-checked="false" tabindex="-1" data-v="Quick">Quick</button><button type="button" role="radio" aria-checked="true" tabindex="0" data-v="Auto">Auto</button><button type="button" role="radio" aria-checked="false" tabindex="-1" data-v="Deep">Deep</button><i class="u" aria-hidden="true"></i></div></div><div class="ch-row"><span class="k" id="k-desks">Desks</span><div class="ch-tg" role="group" aria-labelledby="k-desks" data-k="desks"><button type="button" aria-pressed="true" data-v="Research">Research</button><button type="button" aria-pressed="true" data-v="Finance">Finance</button><button type="button" aria-pressed="true" data-v="Legal">Legal</button><button type="button" aria-pressed="true" data-v="Decision">Decision</button></div></div><div class="ch-row"><span class="k" id="k-out">Output</span><div class="ch-seg" role="radiogroup" aria-labelledby="k-out" data-k="out"><button type="button" role="radio" aria-checked="true" tabindex="0" data-v="Auto">Auto</button><button type="button" role="radio" aria-checked="false" tabindex="-1" data-v="Quotation">Quotation</button><button type="button" role="radio" aria-checked="false" tabindex="-1" data-v="Contract">Contract</button><button type="button" role="radio" aria-checked="false" tabindex="-1" data-v="Resolution">Resolution</button><button type="button" role="radio" aria-checked="false" tabindex="-1" data-v="Memo">Memo</button><i class="u" aria-hidden="true"></i></div></div><div class="ch-row"><span class="k" id="k-client">Client-facing</span><button class="ch-sw" type="button" role="switch" aria-checked="false" aria-labelledby="k-client" data-k="client"><i></i></button><span class="ch-fw" id="chFw">Off: the answer is for the team</span></div></div>
+            <div class="ch-cbar"><button class="ch-ib" type="button" aria-label="Attach a file"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.15" stroke-linecap="round" stroke-linejoin="round"><path d="M11.5 7.2 7.3 11.4a2.6 2.6 0 01-3.7-3.7l4.6-4.6a1.7 1.7 0 012.4 2.4L6.2 9.9a.8.8 0 01-1.1-1.1l3.9-3.9"/></svg></button><span class="ch-model">Claude <em>dynamic</em></span><button class="ch-esc" type="button" id="chEsc" aria-label="Close">esc</button><button class="ch-send" id="chSend" type="button" aria-label="Send"></button></div></form>
+        </div>
+      </div>
     </div>
   </main>
 </div>
@@ -68,9 +77,9 @@ Object.assign(BENCH,{MO,easeFn});window.SB=SB;window.CH=CH;  /* bench only: test
 SB.onopen=n=>CH.open(n);$("#newChat").addEventListener("click",()=>CH.start());
 
 const ks=f=>()=>setTimeout(f,0);
-BENCH.actions.push({label:"New chat",key:"n",run:()=>CH.start()},{label:"Send a brief",key:"b",run:()=>CH.send(CH.RICH.brief)},
- {label:"Example",key:"e",run:()=>{const f=SB.model.kids.find(n=>n.t==="Quotations");f.open=true;SB.sync();CH.open(f.kids.find(k=>k.t==="Quotation for the Makati site"))}},
- {label:"Running",key:"r",run:()=>CH.open(SB.model.kids.find(n=>n.live)||{t:"Showroom fit-out",live:true,body:""})},{label:"Dock",key:"f",run:()=>SB.dock()});
+BENCH.actions.push({label:"Pull up",run:()=>CH.pull()},{label:"New chat",run:()=>CH.start()},{label:"Send a brief",run:()=>CH.send(CH.RICH.brief)},
+ {label:"Example",run:()=>{const f=SB.model.kids.find(n=>n.t==="Quotations");f.open=true;SB.sync();CH.open(f.kids.find(k=>k.t==="Quotation for the Makati site"))}},
+ {label:"Running",run:()=>CH.open(SB.model.kids.find(n=>n.live)||{t:"Showroom fit-out",live:true,body:""})},{label:"Dock",run:()=>SB.dock()});
 })();
 </script>
 <script>

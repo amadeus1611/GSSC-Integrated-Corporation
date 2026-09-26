@@ -306,14 +306,25 @@ They live in `bench/drafts/sidebar-next.css`, and the dark stack lives in `bench
 
 ### 4.5 The chat: no card, the page is the answer (v45 chat bench, Amadeus, 2026-09-26)
 The chat pane follows §4.1–§4.4 and the sidebar's colour logic. The old answer card, which boxed the log, the answer and the exhibits, is gone: the pane itself is the page. The draft is `bench/chat-next.html` (`drafts/chat-next.css`, `drafts/chat-next.js`).
-- **A new chat** is almost empty: the composer alone in the middle of the page, and a signature in the bottom-left corner. There are no suggested prompts.
+- **The composer rests as a pull tab**, not a box. It is one short line (36 by 4px, the sheet's own grabber). This is the chat's difference from the usual chat interface: nothing waits open at the foot of the page, and writing is a place you pull up into.
+  - In a new chat the tab waits in the middle of the page over "Brief EXPIRA". On hover it lifts 2px and widens, the way a grabber invites the pull, and "pull up, or start typing" focuses in beneath it.
+  - In a thread it waits at the foot of the pane, and says "Follow up" only when you are on it. While the desks work it breathes gold.
+  - It opens by pulling it up, by clicking it, by Enter or Space on it, or by just starting to type anywhere in the pane; the key you typed is kept. It is a real button, so a drag always has a single-pointer and a keyboard alternative (Material's rule for drag handles).
+- **A new chat** is otherwise empty: the tab, and a signature in the bottom-left corner. There are no suggested prompts.
   - The signature is the gold lead-in, a small serif greeting that knows the hour ("Good morning", "Good afternoon", "Good evening", or "Working late" after 22:00) with the name in the display italic, and the date in plain words ("Saturday 26 September"). There is no clock and no tracked caps.
   - It is set against the sidebar's foot: the lead-in sits on the foot's hairline, the greeting is level with the account, and the date is level with the EXPIRA mark, so the two panes close on one line. The mark itself stays in the sidebar.
   - It arrives as the lead-in draws from the left and the two lines focus in, 40ms apart.
-- **The composer** is a material, as macOS bars are: the panel colour at 62% (58% in dark) over a 16px backdrop blur with saturation, edged with a hairline, with a faint top light in dark. The thread passes under it softened; there is no veil above it, only a 16px feather at the pane's foot. It is opaque where the browser has no backdrop filter and when the system asks for reduced transparency.
-  - It warms to gold on focus, as Search does. Its controls are the sidebar's small plates: attach, the Auto effort chip and the model in words. Send turns to ink once there is text.
-  - On send it glides straight down from the middle into the dock: it is measured before anything is hidden, so it never flies from a corner. The signature clears with focus out, 20ms apart per part.
-  - Keep the blur at 16px. Headless software renderers drop larger radii altogether and leave a thin unblurred band at the edge at any radius, so judge the glass in a real browser, not in qa screenshots.
+- **The sheet** is the focused place to write: the grabber, the brief (14px, two lines to start, growing to ten), the chat's settings, then attach, the model in words, an esc key and send.
+  - **The settings** are four quiet rows under a hairline: Effort (Quick, Auto, Deep), Desks (Research, Finance, Legal, Decision; never none), Output (Auto, Quotation, Contract, Resolution, Memo) and Client-facing. They are words, not chips: the chosen word is ink over a hairline that slides to it (transform only), and arrows move within a choice. A desk is on when its dot is filled. Client-facing is a small switch, and says what the firewall keeps out: suppliers, costs, margins and bank details.
+  - **It is glass:** the panel at 58% (54% in dark), a sheen and a lit top edge over a 24px backdrop blur with saturation. It reads as a material even over an empty page, and over a thread the answer shows through it, softened. It is opaque where the browser has no backdrop filter and when the system asks for reduced transparency. Headless renderers drop a blur this large, so judge the glass in a real browser.
+  - **A veil** steps the page back while it is up: a tint of the page colour, not a blur, so the glass has something sharp to soften.
+  - **It closes** with Esc, the esc key, a click on the veil, a click on the grabber, or a pull down. Focus goes back to the tab.
+- **One move, one progress.** A single progress, 0 (the line) to 1 (the open sheet), drives the grabber's travel, the reveal growing out of the line, the glass, the contents and the veil.
+  - The reveal grows wide first, then tall, so the line becomes a bar and the bar rises. In a new chat the sheet opens in the middle of the page; in a thread it rises from the foot.
+  - The reveal ends 40px past the shadow, so it never clips it. The contents focus in over the second half (8px of travel and a 2px blur).
+  - A click tweens the progress; a pull sets it under the finger, 1:1. Let go and it finishes by position and speed: past a third of the way (or flicked up faster than 0.3px/ms) it opens; otherwise it settles back. Pulling the open sheet down closes it past 40% of the way or on a flick down.
+  - Opening is fast (`--sb-dock` on `--sb-ease`); closing is soft (`--sb-dock-out` on `--sb-dock-close`), as the sidebar docks.
+  - **On send** the sheet folds back into the line, travelling down to the foot of the thread, while the signature clears with focus out, 20ms apart per part. The line waits there as the tab.
 - **The brief** is the master template's pull quote alone: an italic serif with a 2px gold rule. Its time is marginalia: it waits in the left margin, level with the first line, and shows on hover, fast in and soft out (hidden below 760px).
 - **The work** is one line, not a card:
   - while the desks run, a breathing dot, the four desks in tracked caps with the current one lit, a phrase in italics and a timer;
@@ -341,6 +352,14 @@ The chat pane follows §4.1–§4.4 and the sidebar's colour logic. The old answ
 - **Tokens (v41):** every value comes from `src/tokens.css`. Spacing is a 4px scale with half steps (`--sp-half`, `--sp-1h` … `--sp-4h`) below 20px for dense chrome; a 1px nudge is optical and stays literal. Layers are named (`--z-side`, `--z-menu`, `--z-tip` …) in one stacking order. Dark tokens are written once in `@dark{}`.
 
 ## 6. Change log
+- **v45 chat bench, the pull tab** (2026-09-26, Amadeus: "make the chat interface like a pull up tab from the center middle like a line … that pulls up into a focused chat typing interface with settings for the chat … once the composer and outputs start coming in, it moves toward the bottom area … as the pull up tab as well"; "It doesn't look like glass"): see §4.5.
+  - The composer now rests as a line in the middle of a new chat and at the foot of a thread. Pulled, clicked or typed at, it grows into a glass sheet with the chat's settings: effort, desks, output and client-facing.
+  - The glass is stronger: a 24px blur, a sheen and a lit top edge, over a veil that steps the page back. Over a thread the answer now visibly shows through it.
+  - Also fixed from axe:
+    - the empty title before the first message;
+    - section headings that skipped a level;
+    - a blank header cell in the comparison table;
+    - the contrast of "recommended".
 - **v45 chat bench, the signature and the glass** (2026-09-26, Amadeus: "remove the recommended prompts … move the intro text to the bottom left … editorial … clear up the time and date … should we make the text interface transparent too like macOS?"):
   - The starters are gone.
   - The greeting moved to a signature in the bottom-left corner, on the sidebar's foot line; the composer sits alone in the middle.
