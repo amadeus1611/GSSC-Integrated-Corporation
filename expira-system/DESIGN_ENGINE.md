@@ -115,7 +115,10 @@ Motion is the heart of the UX: fidelity in the engine comes first.
   - A running chat is a gold dot that breathes.
   - A finished chat you have not opened yet is a gold ring: the dot settles into it with one soft pulse, and it fades to grey once you open it.
   - A new document you have not opened is a gold page.
-  - Pinned is not a colour. It is a small pin at the row's end (which gives way to the `…` on hover), and the item floats to the top of its own level: a pin inside a folder goes to the top of that folder, and a pinned folder goes to the top of the level that holds it. Pins keep the order they were pinned in, ahead of folders and then items.
+  - Pinned is not a colour. It is a small pin at the row's end (which gives way to the `…` on hover), and the item floats to the top of its own level: a pin inside a folder goes to the top of that folder, and a pinned folder goes to the top of the level that holds it.
+  - Every level has four groups, always in this order: pinned folders, pinned items, folders, items. Pinned folders always lead the pins.
+  - A pin holds its place. It moves only among the pins, and it cannot be dragged or moved into a folder; the Folder page says "Pinned · unpin to move". A pinned folder already brings everything inside it forward, while a pinned file stands on its own, so filing a pin into a folder would blur the two.
+  - Unpinned items are filed freely: drag, Move to, or drop on a folder or a step in the path bar.
 - **An empty folder still holds one row of space.** It shows a quiet italic "Empty" where a child's name would begin. Its dimness is its colour, never its opacity, so its focus in and focus out land exactly where it rests and never jump. While something is dragged over its folder, "Empty" racks out and "Drop here" pulls focus in gold in the same place.
 - **Depth is bounded by width, not by a number.**
   - A folder may nest to any depth. The tree indents while a name would still have about 90px, which is about six levels at the default width and fewer when the dock is narrow.
@@ -159,6 +162,12 @@ Motion is the heart of the UX: fidelity in the engine comes first.
   - Pull the sidebar's edge to resize it. The width is remembered.
   - Pull the edge far enough left and the sidebar docks shut.
   - Arrows walk the tree: right opens, left closes or climbs, F2 renames, and Delete deletes and undoes.
+- **Rearrange without dragging.**
+  - `…` › Rearrange lifts the row onto its own surface. The ‹ › buttons, turned upright as ˄ ˅, stand where the `…` was.
+  - Each press moves it one place within its group, and the rows glide on the one curve. A button dims at the end of its group, so a row never crosses from pins to unpinned or from folders to items.
+  - ↑ and ↓ do the same while arranging, and ⌥↑ and ⌥↓ work on any focused row without the menu. A click elsewhere, Escape or Enter sets it down.
+  - A level arranged by hand keeps that order. New arrivals go to the top of their group, and choosing a Sort hands the order back to the sort.
+  - A reorder never drops keyboard focus: the row that had it keeps it.
 
 ### 4.2 Motion: one curve, focus in and focus out
 - **One curve for everything**, entering and leaving alike: fast, then a long soft settle (`--sb-ease` `cubic-bezier(.19,1,.22,1)`). It supersedes the per-direction curves of §3 for EXPIRA surfaces.
@@ -276,6 +285,10 @@ They live in `bench/drafts/sidebar-next.css`, and the dark stack lives in `bench
 - **Tokens (v41):** every value comes from `src/tokens.css`. Spacing is a 4px scale with half steps (`--sp-half`, `--sp-1h` … `--sp-4h`) below 20px for dense chrome; a 1px nudge is optical and stays literal. Layers are named (`--z-side`, `--z-menu`, `--z-tip` …) in one stacking order. Dark tokens are written once in `@dark{}`.
 
 ## 6. Change log
+- **v45 rearrange and pin rules** (2026-09-26, Amadeus: "pins can only be adjusted inside pins locations … folders should always take priority at the top of the pins"):
+  - `…` › Rearrange with upright ˄ ˅ buttons in the ‹ › design, plus ↑/↓ and ⌥↑/⌥↓. It works within four groups: pinned folders, pinned items, folders, items. A hand order is kept per level until a Sort is chosen. One clock per press.
+  - A pin cannot be dragged or moved into a folder until it is unpinned.
+  - Fix: moving a row in the document dropped its keyboard focus, so a second arrow press did nothing. `sync` now gives focus back.
 - **v45 pins, Empty and deep nesting** (2026-09-26, Amadeus: "What happens when we have folders inside folders inside folders? … Will it then spawn the <> button?"):
   - Pins sort first within their own level, folders included, in the order they were pinned.
   - "Empty" is now an italic serif line in the muted colour, aligned with the child names. Its old `opacity:.6` fought the focus-in, which ends at 1, and made it jump. Measured: it only falls while its folder closes and only rises while it opens.

@@ -81,7 +81,7 @@
 .sb-card .sb-hl{left:5px;right:5px;border-radius:var(--sb-r-sm)}
 
 /* rows: one kind of row for everything; depth is an indent and a hairline guide under the parent's caret */
-.sb-row{--d:0;position:relative;z-index:1;display:flex;align-items:center;height:var(--sb-row);border-radius:var(--sb-r-sm);color:var(--text);font-size:var(--sb-fs);font-weight:400;letter-spacing:.002em}
+.sb-row{--d:0;position:relative;z-index:1;display:flex;align-items:center;height:var(--sb-row);border-radius:var(--sb-r-sm);color:var(--text);font-size:var(--sb-fs);font-weight:400;letter-spacing:.002em;transition:background var(--sb-out) var(--sb-ease),box-shadow var(--sb-out) var(--sb-ease)}
 .sb-row+.sb-row{margin-top:1px}
 .sb-row.on{background:color-mix(in srgb,var(--gold) 9%,var(--line-2))}  /* selection: a warm grey, the only colour a resting row carries */
 .sb-tree .sb-row.deep::before{content:"";position:absolute;left:calc(var(--sp-2) + (var(--d) - 1) * var(--sb-indent) + 4px);top:-1px;bottom:0;width:var(--rule-hair);background:var(--line-2)}
@@ -381,3 +381,12 @@ html.sb-theming,html.sb-theming *,html.sb-theming *::before,html.sb-theming *::a
 .sb-crumbs button:focus-visible{outline:var(--rule) solid var(--gold)}
 .sb-crumbs i{flex:none;font-style:normal;color:var(--line-3)}
 .sb-crumbs b{flex:none;padding:3px 4px;font-weight:500;color:var(--ink)}
+
+/* ---- rearrange: the row lifts onto its own surface, and the ‹ › buttons, turned upright, stand where the … was ---- */
+.sb-tree .sb-row.arranging{z-index:3;background:color-mix(in srgb,var(--panel) 86%,transparent);box-shadow:inset 0 0 0 var(--rule-hair) var(--line-3),0 1px 2px rgba(var(--sb-shc),calc(var(--sb-sha) * .35)),0 6px 16px -6px rgba(var(--sb-shc),calc(var(--sb-sha) * .6));transition-duration:var(--sb-in)}
+.sb-row.arranging .sb-hit{padding-right:54px}
+.sb-row.arranging .sb-more,.sb-row.arranging .sb-pinmark{opacity:0;filter:blur(2px);pointer-events:none}
+.sb-arr{position:absolute;right:3px;top:50%;margin-top:-9px;display:flex;gap:3px;z-index:2}
+.sb-arr.out{pointer-events:none}
+.sb-arr .sb-pbtn{width:22px;height:18px}
+.sb-arr .sb-pbtn svg{width:10px;height:10px}

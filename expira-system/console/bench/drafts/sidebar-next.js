@@ -46,7 +46,8 @@ const SB=(()=>{const side=$("#side"),scroll=$("#sbScroll");
   all:sv('<rect x="2" y="2" width="9" height="9" rx="2"/><path d="M5 13.8h7.2a1.6 1.6 0 001.6-1.6V5M4.6 6.6l1.5 1.5 2.8-3"/>'),
   sort:sv('<path d="M5 3v10M2.8 5.2 5 3l2.2 2.2M11 13V3M8.8 10.8 11 13l2.2-2.2"/>'),
   done:sv('<path d="M3.5 8.4l3 3 6-6.4"/>',1.3),
-  back:sv('<path d="M9.5 4 5.5 8l4 4"/>',1.3),fwd:sv('<path d="M6.5 4l4 4-4 4"/>',1.3)};
+  back:sv('<path d="M9.5 4 5.5 8l4 4"/>',1.3),fwd:sv('<path d="M6.5 4l4 4-4 4"/>',1.3),
+  up:sv('<path d="M4 9.5 8 5.5l4 4"/>',1.3),down:sv('<path d="M4 6.5l4 4 4-4"/>',1.3),arr:sv('<path d="M5.5 12.5v-9M3.3 5.7l2.2-2.2 2.2 2.2M10.5 3.5v9M8.3 10.3l2.2 2.2 2.2-2.2"/>')};
  /* the foot's markup names its icons as <!--name--> placeholders; fill them before anything binds to it */
  const foot=$(".sb-foot");foot.innerHTML=foot.innerHTML.replace(/<!--(\w+)-->/g,(m,k)=>IC[k]?IC[k].replace("<svg",k==="chev"?'<svg class="sb-chev"':"<svg"):m);
  /* macOS layout: the header row is a toolbar (New chat, New folder; the sidebar button sits at its right), a real search
@@ -95,23 +96,27 @@ const SB=(()=>{const side=$("#side"),scroll=$("#sbScroll");
   mk("doc","Board resolution draft",{ts:now-40*H,unread:true}),
   mk("chat","Warehouse lease terms",{ts:now-90*H}),
   mk("chat","Company profile refresh",{ts:now-300*H})]};
- let sel=ROOT.kids[7].id,query="",selMode=false,anchor=null;const picked=new Set();
+ let sel=ROOT.kids[7].id,query="",selMode=false,anchor=null,arr=null;const picked=new Set();
  const find=(id,list=ROOT.kids,parent=ROOT)=>{for(const n of list){if(n.id===id)return{n,parent};if(n.kids){const r=find(id,n.kids,n);if(r)return r}}return null};
  const within=(a,b)=>a===b||!!(a.kids&&a.kids.some(k=>within(k,b)));
- /* folders come first. By default folders keep the order you made them in and items put pins first, then the newest;
-    the selection bar's Sort offers oldest first, by name either way, and by kind (documents, then chats) */
+ /* order within a level: pinned folders, pinned items, folders, items. Pins keep the order they were pinned in, folders the order you made them in, items the newest first;
+    the selection bar's Sort offers oldest first, by name either way, and by kind (documents, then chats). A level arranged
+    by hand (Rearrange) keeps its own order within each group until a sort is chosen again; new arrivals go to the top */
  let sortBy="new";const KIND={folder:0,doc:1,chat:2};
  const byName=(a,b)=>a.t.localeCompare(b.t,undefined,{sensitivity:"base",numeric:true});
- const order=l=>[...l].sort((a,b)=>{if(!!a.pin!==!!b.pin)return a.pin?-1:1;if(a.pin)return (a.pinAt||0)-(b.pinAt||0);
-  const fa=a.kind==="folder",fb2=b.kind==="folder";if(fa!==fb2)return fa?-1:1;
+ /* four groups, always in this order: pinned folders, pinned items, folders, items. Rearranging stays inside a group */
+ const grp=n=>(n.pin?0:2)+(n.kind==="folder"?0:1);
+ const order=p=>[...p.kids].sort((a,b)=>{const ga=grp(a),gb=grp(b);if(ga!==gb)return ga-gb;
+  if(p.manual&&(a.ord!=null||b.ord!=null)){if(a.ord==null)return -1;if(b.ord==null)return 1;return a.ord-b.ord}
+  if(a.pin)return (a.pinAt||0)-(b.pinAt||0);const fa=a.kind==="folder";
   if(sortBy==="az")return byName(a,b);if(sortBy==="za")return byName(b,a);if(fa)return 0;
   return (sortBy==="kind"?(KIND[a.kind]-KIND[b.kind])||(b.ts-a.ts):sortBy==="old"?(a.ts-b.ts):(b.ts-a.ts))});
  let rootId=null,rhist=[null],rat=0;
  const rootNode=()=>{const f=rootId&&find(rootId);if(rootId&&!f){rootId=null}return f?f.n:ROOT};
  function flat(){const q=query.trim().toLowerCase(),out=[];const hit=n=>n.t.toLowerCase().includes(q),has=n=>hit(n)||(n.kids||[]).some(has);
-  const walk=(l,d,all)=>order(l).forEach(n=>{if(q&&!all&&!has(n))return;out.push({id:n.id,n,d});
-   if(n.kind==="folder"&&(q||n.open)){if(n.kids.length)walk(n.kids,d+1,all||(!!q&&hit(n)));else if(!q)out.push({id:n.id+":e",n:null,d:d+1,empty:true})}});
-  if(q)walk(ROOT.kids,0,false);else{const r=rootNode();walk(r.kids,0,false);if(r!==ROOT&&!r.kids.length)out.push({id:r.id+":e",n:null,d:0,empty:true})}return out}
+  const walk=(p,d,all)=>order(p).forEach(n=>{if(q&&!all&&!has(n))return;out.push({id:n.id,n,d});
+   if(n.kind==="folder"&&(q||n.open)){if(n.kids.length)walk(n,d+1,all||(!!q&&hit(n)));else if(!q)out.push({id:n.id+":e",n:null,d:d+1,empty:true})}});
+  if(q)walk(ROOT,0,false);else{const r=rootNode();walk(r,0,false);if(r!==ROOT&&!r.kids.length)out.push({id:r.id+":e",n:null,d:0,empty:true})}return out}
 
  /* ---- rows ---- */
  const glyph=n=>n.kind==="folder"?IC.folder:n.kind==="doc"?IC.doc:`<i class="sb-dot"></i>`;
@@ -120,7 +125,7 @@ const SB=(()=>{const side=$("#side"),scroll=$("#sbScroll");
   e.draggable=true;e.innerHTML=`<button class="sb-hit" type="button"><span class="sb-car">${w.n.kind==="folder"?IC.car:""}</span><span class="sb-ic"><span class="g"></span><span class="sb-ck" aria-hidden="true"><svg viewBox="0 0 12 12"><path d="M3.2 6.2l1.8 1.8 3.8-4"/></svg></span></span><span class="sb-t"></span></button>`+
    `<span class="sb-pinmark" aria-hidden="true">${IC.pin}</span><button class="sb-kill" type="button" aria-label="Delete now" tabindex="-1">${IC.kill}</button><button class="sb-more" type="button" aria-label="Actions" aria-haspopup="menu" aria-expanded="false"><span class="d">${IC.dots}</span><span class="u">${IC.undo}</span></button>`;return e}
  function update(e,w){e.style.setProperty("--d",w.d);e.classList.toggle("deep",w.d>0);if(w.empty)return;const n=w.n;
-  e.dataset.k=n.kind;e.classList.toggle("on",n.id===sel);e.classList.toggle("pinned",!!n.pin);e.classList.toggle("undo",!!n.del);e.classList.toggle("unread",!!n.unread);
+  e.dataset.k=n.kind;e.classList.toggle("on",n.id===sel);e.classList.toggle("pinned",!!n.pin);e.classList.toggle("undo",!!n.del);e.classList.toggle("unread",!!n.unread);e.draggable=!n.pin;
   if(n.kind==="folder")e.setAttribute("aria-expanded",String(!!(query.trim()||n.open)));
   e.querySelector(".sb-more").setAttribute("aria-label",n.del?"Undo delete":"Actions");e.querySelector(".sb-kill").tabIndex=n.del?0:-1;
   const ic=e.querySelector(".sb-ic .g"),g=glyph(n);if(ic._g!==g){ic.innerHTML=g;ic._g=g}
@@ -134,17 +139,19 @@ const SB=(()=>{const side=$("#side"),scroll=$("#sbScroll");
   const before=new Map(),bx=new Map(),tx=e=>e.querySelector(".sb-t")?.getBoundingClientRect().left||0;
   els.forEach((e,id)=>{if(e.isConnected&&!e.classList.contains("gone")){before.set(id,e.getBoundingClientRect().top);if(o.dir)bx.set(id,tx(e))}});
   if(pre)pre();
-  const want=flat(),keep=new Set(want.map(w=>w.id));
+  const want=flat(),keep=new Set(want.map(w=>w.id));if(arr&&!keep.has(arr))arrange(null);
   /* rows that leave are pinned where they are, out of the flow, so the rows below can rise over them */
   const leaving=[];els.forEach((e,id)=>{if(keep.has(id)||!e.isConnected||e.classList.contains("gone"))return;leaving.push({e,id,top:e.offsetTop,left:e.offsetLeft,w:e.offsetWidth,h:e.offsetHeight})});
   leaving.forEach(({e,top,left,w})=>{e.getAnimations().forEach(a=>a.cancel());e.classList.add("gone");Object.assign(e.style,{position:"absolute",top:top+"px",left:left+"px",width:w+"px"})});
   /* the rows that stay are reused and only moved when they are out of order */
   const isRow=x=>x&&x.nodeType===1&&x.classList.contains("sb-row")&&!x.classList.contains("gone");
-  const nxt=x=>{while(x&&!isRow(x))x=x.nextSibling;return x};let ref=nxt(tree.firstChild);const fresh=new Set();
+  const nxt=x=>{while(x&&!isRow(x))x=x.nextSibling;return x};let ref=nxt(tree.firstChild);const fresh=new Set(),had=tree.contains(document.activeElement)?document.activeElement:null;
   want.forEach(w=>{let e=els.get(w.id);
    if(e&&e.classList.contains("gone")){e.getAnimations().forEach(a=>a.cancel());e.classList.remove("gone");Object.assign(e.style,{position:"",top:"",left:"",width:""});fresh.add(e)}
    if(!e){e=make(w);els.set(w.id,e);fresh.add(e)}update(e,w);
    if(e===ref)ref=nxt(e.nextSibling);else tree.insertBefore(e,ref)});
+  /* moving a row in the document drops its focus; the row that had it keeps it */
+  if(had&&had!==document.activeElement&&had.isConnected&&!had.closest(".gone"))had.focus({preventScroll:true});
   const drop=()=>leaving.forEach(({e,id})=>{if(e.classList.contains("gone")){e.remove();els.delete(id)}});
   feather();edges(tree);
   if(reduce)return drop();
@@ -234,7 +241,8 @@ const SB=(()=>{const side=$("#side"),scroll=$("#sbScroll");
  pathBar().querySelector(".sb-crumbs").addEventListener("wheel",e=>{const c=e.currentTarget;if(Math.abs(e.deltaY)>Math.abs(e.deltaX)&&c.scrollWidth>c.clientWidth){e.preventDefault();c.scrollLeft+=e.deltaY}},{passive:false});
  scroll.addEventListener("click",e=>{const b=e.target.closest("#sbPath [data-rn]");if(b){e.stopPropagation();rnav(b.dataset.rn==="back"?-1:1);return}
   const c=e.target.closest("#sbPath [data-root]");if(c){e.stopPropagation();goRoot(c.dataset.root,-1)}});
- tree.addEventListener("click",e=>{const k=e.target.closest(".sb-kill");if(k){e.stopPropagation();const f=find(k.closest(".sb-row").dataset.id);if(f&&f.n.del)kill(f.n);return}
+ tree.addEventListener("click",e=>{const mv=e.target.closest(".sb-arr:not(.out) [data-mv]");if(mv){e.stopPropagation();const f=find(mv.closest(".sb-row").dataset.id);if(f)step(f.n,+mv.dataset.mv);return}
+  if(e.target.closest(".sb-arr"))return e.stopPropagation();const k=e.target.closest(".sb-kill");if(k){e.stopPropagation();const f=find(k.closest(".sb-row").dataset.id);if(f&&f.n.del)kill(f.n);return}
   const m=e.target.closest(".sb-more");if(m){e.stopPropagation();const r=m.closest(".sb-row"),f=find(r.dataset.id);
    if(f.n.del)return undoDel(f.n);pmFor===r&&pm.classList.contains("open")?pop(false):pop(true,r);return}
   const h=e.target.closest(".sb-hit");if(!h||h.querySelector("input"))return;const f=find(h.parentElement.dataset.id);if(!f||f.n.del)return;
@@ -291,8 +299,8 @@ const SB=(()=>{const side=$("#side"),scroll=$("#sbScroll");
  function page(name){const f=pmNode;
   if(!f)return item("chat",IC.plus,"New chat")+item("folder",IC.newf,"New folder");
   const n=f.n,isF=n.kind==="folder";
-  if(name==="main")return item("ren",IC.ren,"Rename")+item("pin",IC.pin,n.pin?"Unpin":"Pin")+item("p:folder",IC.folder,"Folder",0,true)+`<div class="sb-sep"></div>`+item("del",IC.del,"Delete");
-  if(name==="folder")return cap(isF?esc(n.t):"Folder")+item("p:move",IC.move,isF?"Move folder":"Move to",0,true)+item("folder",IC.newf,isF?"New folder inside":"New folder here")+
+  if(name==="main")return item("ren",IC.ren,"Rename")+item("pin",IC.pin,n.pin?"Unpin":"Pin")+(query.trim()?"":item("arr",IC.arr,"Rearrange"))+item("p:folder",IC.folder,"Folder",0,true)+`<div class="sb-sep"></div>`+item("del",IC.del,"Delete");
+  if(name==="folder")return cap(isF?esc(n.t):"Folder")+(n.pin?`<div class="sb-none">Pinned · unpin to move</div>`:item("p:move",IC.move,isF?"Move folder":"Move to",0,true))+item("folder",IC.newf,isF?"New folder inside":"New folder here")+
    (isF?item("chat",IC.plus,"New chat here")+item("root",IC.folder,"Show on its own"):"");
   if(name==="move"){const dest=folders().filter(x=>!within(n,x.n)&&x.n!==f.parent);
    return cap("Move to")+(f.parent!==ROOT?item("mv:",IC.top,"Top level"):"")+(dest.map(x=>item("mv:"+x.n.id,IC.folder,esc(x.n.t),x.d)).join("")||`<div class="sb-none">No other folders</div>`)}}
@@ -370,7 +378,7 @@ const SB=(()=>{const side=$("#side"),scroll=$("#sbScroll");
  const visibleItems=()=>flat().filter(w=>!w.empty&&!w.n.del).map(w=>w.n.id);
  function count(){const b=selbar.querySelector(".n b"),v=String(picked.size);if(b.textContent===v)return;b.textContent=v;if(!reduce)b.animate(focusIn(blurPx()*.4),{duration:ms("--sb-in"),easing:EZ()});
   selbar.querySelector('[data-s="del"]').disabled=!picked.size}
- function selectMode(on){on=on??!selMode;if(on===selMode)return;selMode=on;side.classList.toggle("selecting",on);selBtn.setAttribute("aria-pressed",String(on));
+ function selectMode(on){on=on??!selMode;if(on===selMode)return;if(on)arrange(null);selMode=on;side.classList.toggle("selecting",on);selBtn.setAttribute("aria-pressed",String(on));
   if(!on){picked.clear();anchor=null;sortOpen(false)}else{acct(false);pop(false)}selbar.classList.toggle("open",on);count();els.forEach((e,id)=>{const f=find(id);if(f)update(e,{n:f.n,d:+e.style.getPropertyValue("--d")||0})})}
  function pick(id,range){const ids=visibleItems();
   if(range&&anchor&&ids.includes(anchor)){const a=ids.indexOf(anchor),b=ids.indexOf(id);ids.slice(Math.min(a,b),Math.max(a,b)+1).forEach(x=>picked.add(x))}
@@ -387,7 +395,7 @@ const SB=(()=>{const side=$("#side"),scroll=$("#sbScroll");
  selBtn.addEventListener("click",e=>{e.stopPropagation();selectMode()});
  selbar.addEventListener("click",e=>{e.stopPropagation();const b=e.target.closest("[data-s]");if(!b)return;const a=b.dataset.s;
   if(a==="all")selectAll();if(a==="sort")sortOpen();if(a==="del")deletePicked();if(a==="done")selectMode(false)});
- sortc.addEventListener("click",e=>{e.stopPropagation();const b=e.target.closest("[data-sort]");if(!b)return;sortBy=b.dataset.sort;sortOpen(false);sync()});
+ sortc.addEventListener("click",e=>{e.stopPropagation();const b=e.target.closest("[data-sort]");if(!b)return;sortBy=b.dataset.sort;const plain=n=>{delete n.manual;delete n.ord;(n.kids||[]).forEach(plain)};plain(ROOT);sortOpen(false);sync()});
  addEventListener("click",e=>{if(!e.target.closest("#sbSort"))sortOpen(false)});
  addEventListener("keydown",e=>{if(!selMode)return;if(e.key==="Escape"){e.preventDefault();sortc.classList.contains("open")?sortOpen(false):selectMode(false)}
   if((e.metaKey||e.ctrlKey)&&e.key.toLowerCase()==="a"&&!/INPUT/.test(document.activeElement?.tagName)){e.preventDefault();selectAll()}
@@ -399,10 +407,28 @@ const SB=(()=>{const side=$("#side"),scroll=$("#sbScroll");
   const n=f.n;if(a==="chat")return newChat(n);if(a==="folder")return newFolder(n);
   if(a==="ren")return rename(els.get(n.id));
   if(a==="root")return goRoot(n.id,1);
-  if(a==="pin"){n.pin=!n.pin;n.pinAt=Date.now();return sync()}
+  if(a==="pin"){n.pin=!n.pin;n.pinAt=Date.now();delete n.ord;return sync()}
+  if(a==="arr")return arrange(n.id);
   if(a.startsWith("mv:"))return move(n,f.parent,a.slice(3)?find(a.slice(3)).n:ROOT);
   if(a==="del")return del(n)}
- function move(n,from,to){if(!to||within(n,to)||from===to)return;from.kids.splice(from.kids.indexOf(n),1);to.kids.push(n);sync();
+ /* ---- rearrange: the row lifts and two small frosted buttons (the ‹ › design, turned upright) step it up or down within
+    its own group (pinned folders, pinned items, folders, items). The level then keeps that order. The rows glide on the one curve as it goes. ---- */
+ const sibs=n=>{const f=find(n.id);const all=order(f.parent),l=all.filter(x=>!x.del&&grp(x)===grp(n));return{f,all,l,i:l.indexOf(n)}};
+ function arrange(id){const prev=arr&&els.get(arr);arr=id||null;
+  if(prev&&prev.dataset.id!==arr){prev.classList.remove("arranging");prev.querySelectorAll(".sb-arr:not(.out)").forEach(b=>{b.classList.add("out");
+   if(reduce)return b.remove();b.animate(focusOut(blurPx()*.4),{duration:ms("--sb-out"),easing:EZ(),fill:"forwards"}).finished.then(()=>b.remove(),()=>{})})}
+  if(!arr)return;const r=els.get(arr);if(!r)return void(arr=null);
+  if(!r.querySelector(".sb-arr:not(.out)")){r.insertAdjacentHTML("beforeend",`<span class="sb-arr"><button class="sb-pbtn" type="button" data-mv="-1" aria-label="Move up">${IC.up}</button><button class="sb-pbtn" type="button" data-mv="1" aria-label="Move down">${IC.down}</button></span>`);
+   if(!reduce)r.querySelector(".sb-arr:not(.out)").animate(focusIn(blurPx()*.4),{duration:ms("--sb-in"),easing:EZ()})}
+  r.classList.add("arranging");paintArr();r.querySelector(".sb-hit").focus({preventScroll:true})}
+ function paintArr(){const r=arr&&els.get(arr),f=arr&&find(arr);if(!r||!f)return;const {l,i}=sibs(f.n),b=r.querySelector(".sb-arr:not(.out)");if(!b)return;
+  b.querySelector('[data-mv="-1"]').disabled=i<=0;b.querySelector('[data-mv="1"]').disabled=i>=l.length-1}
+ function step(n,d){if(query.trim())return;const {f,all,l,i}=sibs(n),o=l[i+d];if(!o)return;all.forEach((x,k)=>x.ord=k);[n.ord,o.ord]=[o.ord,n.ord];f.parent.manual=true;sync();paintArr();
+  els.get(n.id)?.scrollIntoView({block:"nearest",behavior:reduce?"auto":"smooth"})}
+ addEventListener("click",e=>{if(arr&&!e.target.closest(".sb-arr"))arrange(null)});
+ addEventListener("keydown",e=>{if(arr&&(e.key==="Escape"||e.key==="Enter")&&!/INPUT/.test(document.activeElement?.tagName)){e.preventDefault();arrange(null)}});
+ /* a pin holds its place: it moves only among the pins, and is filed into a folder only once it is unpinned */
+ function move(n,from,to){if(!to||n.pin||within(n,to)||from===to)return;from.kids.splice(from.kids.indexOf(n),1);delete n.ord;to.kids.push(n);sync();
   if(to!==ROOT&&!to.open){const r=els.get(to.id);if(r){r.classList.remove("got");r.offsetWidth;r.classList.add("got")}}}
  function finish(n){if(!n||!n.live)return;n.live=false;n.unread=n.id!==sel;const e=els.get(n.id);if(!e)return;update(e,{n,d:+e.style.getPropertyValue("--d")||0});
   const dot=e.querySelector(".sb-dot");if(dot&&n.unread&&!reduce){dot.classList.remove("ping");dot.offsetWidth;dot.classList.add("ping");setTimeout(()=>dot.classList.remove("ping"),ms("--sb-move")*2.4)}}
@@ -421,7 +447,7 @@ const SB=(()=>{const side=$("#side"),scroll=$("#sbScroll");
  const target=e=>{const c=e.target.closest("#sbPath [data-root]");if(c){const id=c.dataset.root;return{t:id?find(id).n:ROOT,r:c}}
   const r=e.target.closest(".sb-tree .sb-row[data-k]");if(!r)return{t:rootNode(),r:null};const f=find(r.dataset.id);return f.n.kind==="folder"?{t:f.n,r}:{t:f.parent,r:f.parent===ROOT?null:els.get(f.parent.id)}};
  const clear=()=>{tree.classList.remove("drop-root");scroll.querySelectorAll(".drop").forEach(x=>x.classList.remove("drop"))};
- tree.addEventListener("dragstart",e=>{const r=e.target.closest(".sb-row[data-k]");if(!r)return;drag=find(r.dataset.id);r.classList.add("dragging");e.dataTransfer.effectAllowed="move";try{e.dataTransfer.setData("text/plain",drag.n.t)}catch(x){}hlS.off()});
+ tree.addEventListener("dragstart",e=>{const r=e.target.closest(".sb-row[data-k]");if(!r)return;if(find(r.dataset.id)?.n.pin)return e.preventDefault();drag=find(r.dataset.id);r.classList.add("dragging");e.dataTransfer.effectAllowed="move";try{e.dataTransfer.setData("text/plain",drag.n.t)}catch(x){}hlS.off()});
  tree.addEventListener("dragend",()=>{tree.querySelectorAll(".dragging").forEach(x=>x.classList.remove("dragging"));drag=null;clear();clearTimeout(spring)});
  scroll.addEventListener("dragover",e=>{if(!drag)return;const {t,r}=target(e);if(within(drag.n,t))return;e.preventDefault();clear();if(r)r.classList.add("drop");else tree.classList.add("drop-root");
   if(t!==ROOT&&!t.open&&springOn!==t){clearTimeout(spring);springOn=t;spring=setTimeout(()=>{if(drag&&springOn===t){t.open=true;sync()}},650)}});
@@ -432,6 +458,7 @@ const SB=(()=>{const side=$("#side"),scroll=$("#sbScroll");
  scroll.addEventListener("keydown",e=>{if(e.target.tagName==="INPUT")return;
   if(selMode&&e.key===" "){const r=e.target.closest(".sb-row[data-k]");if(r){e.preventDefault();pick(r.dataset.id,e.shiftKey)}return}const all=stops(),i=all.indexOf(e.target.closest(".sb-hit"));if(i<0)return;const row=all[i].closest(".sb-row"),f=row.dataset.id?find(row.dataset.id):null;
   const go=x=>{if(x){e.preventDefault();x.focus()}};
+  if(f&&(e.altKey||arr===f.n.id)&&(e.key==="ArrowUp"||e.key==="ArrowDown")){e.preventDefault();step(f.n,e.key==="ArrowUp"?-1:1);return}
   if(e.key==="ArrowDown")go(all[i+1]);else if(e.key==="ArrowUp")go(all[i-1]||inp);else if(e.key==="Home")go(all[0]);else if(e.key==="End")go(all[all.length-1]);
   else if(!f)return;
   else if(e.key==="ArrowRight"&&f.n.kind==="folder"){e.preventDefault();if(!f.n.open)toggle(f.n,true);else go(all[i+1])}
