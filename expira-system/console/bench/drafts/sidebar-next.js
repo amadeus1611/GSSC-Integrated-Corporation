@@ -213,7 +213,7 @@ const SB=(()=>{const side=$("#side"),scroll=$("#sbScroll");
     New folder, New chat here, Pin), and Move to goes one deeper (the folders). A small pill above the card carries
     browser-style back and forward arrows between the pages you have visited. Pages cross on the one curve: the old
     racks out as it slides a little away, the new pulls focus as it slides in, and the card eases to its new height. */
- const pm=$("#sbPop"),card=pm.querySelector(".sb-card"),nb=pm.querySelector("[data-nav=back]"),nf=pm.querySelector("[data-nav=fwd]"),hlP=glide(card,".sb-row");pull(pm,[card,pm.querySelector(".sb-nav")]);
+ const pm=$("#sbPop"),card=pm.querySelector(".sb-card"),nb=pm.querySelector("[data-nav=back]"),nf=pm.querySelector("[data-nav=fwd]"),hlP=glide(card,".sb-row");pull(pm,[card,...pm.querySelectorAll(".sb-nav button")]);
  nb.innerHTML=IC.back;nf.innerHTML=IC.fwd;
  let pmFor=null,pmNode=null;
  /* a card of pages: back and forward like a browser. Pages cross on the one curve: the old racks out as it slides a
@@ -264,7 +264,7 @@ const SB=(()=>{const side=$("#side"),scroll=$("#sbScroll");
     Calm motion, Compact rows) that acts in place; one column of icons for Settings, Library, Data and Help, the last two
     as pages of the same card with the back and forward pill; and a quiet system line, as About This Mac has. It pulls
     up from the account row and its indicator turns inward while it is open. */
- const menu=$("#sbMenu"),me=$("#sbMe"),acard=menu.querySelector(".sb-card"),hlM=glide(acard,".sb-row");pull(menu,[acard,menu.querySelector(".sb-nav")]);
+ const menu=$("#sbMenu"),me=$("#sbMe"),acard=menu.querySelector(".sb-card"),hlM=glide(acard,".sb-row");pull(menu,[acard,...menu.querySelectorAll(".sb-nav button")]);
  const anb=menu.querySelector("[data-nav=back]"),anf=menu.querySelector("[data-nav=fwd]");anb.innerHTML=IC.back;anf.innerHTML=IC.fwd;
  const PREF={calm:false,compact:true};
  const tile=(k,ic,t)=>`<button class="sb-tile${PREF[k]?" on":""}" type="button" data-tg="${k}" aria-pressed="${PREF[k]}"><span class="w">${ic}</span><span class="l"><b>${t}</b><small>${PREF[k]?"On":"Off"}</small></span></button>`;
@@ -423,14 +423,31 @@ const SB=(()=>{const side=$("#side"),scroll=$("#sbScroll");
     resets; arrows nudge; Enter docks. The width is remembered. ---- */
  const MIN=208,MAX=400,DEF=256,SHUT=150,RUB=64;let W=DEF,settling=0;
  try{W=Math.min(MAX,Math.max(MIN,+localStorage.getItem("bench.sbw")||DEF))}catch(x){}
- const setW=w=>{root.style.setProperty("--sb-w",Math.round(w)+"px");grip.setAttribute("aria-valuenow",String(Math.round(w)))};setW(W);
+ /* an open card follows the dock's width as it is resized. When its layout changes shape (the tiles stack, the switch
+    drops to icons), nothing jumps: each piece that moved glides from where it was on the curve with a motion blur,
+    labels that return pull focus, and the card eases to its new height. */
+ const openCards=()=>[[menu,acard],[sortc,scard]].filter(([f])=>f.classList.contains("open")).map(([,c])=>c);
+ function softly(apply){const cards=reduce?[]:openCards();if(!cards.length)return apply();
+  const snap=cards.map(c=>{const parts=[...c.querySelectorAll(".sb-page:last-child > *,.sb-tiles > *,.sb-seg button,.sb-seg button > *,.sb-tile .l")];
+   return{c,h:c.getBoundingClientRect().height,parts:parts.map(k=>[k,k.getBoundingClientRect(),k.getClientRects().length>0])}});
+  apply();
+  const T=ms("--sb-move"),Es=EZ();
+  snap.forEach(({c,h,parts})=>{const h1=c.getBoundingClientRect().height;
+   if(Math.abs(h1-h)>1&&!c._hFlight){c._hFlight=1;c.animate([{height:h+"px"},{height:h1+"px"}],{duration:T,easing:Es}).finished.finally(()=>c._hFlight=0)}
+   parts.forEach(([k,r0,was])=>{const now=k.getClientRects().length>0;if(!now)return;
+    if(!was){k.animate(focusIn(blurPx()*.4),{duration:ms("--sb-in"),easing:Es});return}
+    const r1=k.getBoundingClientRect(),dx=Math.round(r0.left-r1.left),dy=Math.round(r0.top-r1.top);
+    /* a width that simply grows moves things by a pixel or two; only a change of shape is animated */
+    if(Math.abs(dy)<3&&Math.abs(dx)<6)return;k.getAnimations().forEach(a=>{if(!(a instanceof CSSTransition))a.cancel()});
+    const M=Math.min(1.2,Math.hypot(dx,dy)/40);k.animate(sampled(T,Es,(p,v)=>({transform:`translate(${(dx*(1-p)).toFixed(2)}px,${(dy*(1-p)).toFixed(2)}px)`,filter:mb(v,M)})),{duration:T,easing:"linear"})})})}
+ const setW=w=>softly(()=>{root.style.setProperty("--sb-w",Math.round(w)+"px");grip.setAttribute("aria-valuenow",String(Math.round(w)))});setW(W);
  const store=w=>{W=w;try{localStorage.setItem("bench.sbw",String(Math.round(W)))}catch(x){}};
  function settleTo(to){to=Math.min(MAX,Math.max(MIN,to));cancelAnimationFrame(settling);const from=parseFloat(tok("--sb-w"))||W;store(to);
   if(reduce||Math.abs(to-from)<1)return setW(to);
   const D=ms("--sb-settle"),Es=tok("--sb-dock-close")||"cubic-bezier(.3,.85,.15,1)",E=easeFn(Es),t0=performance.now(),M=Math.min(1.2,Math.abs(to-from)/50);
   inner().forEach(el=>el.animate(sampled(D,Es,(p,k)=>({filter:mb(k,M)})),{duration:D,easing:"linear"}));
   const step=t=>{const u=Math.min(1,(t-t0)/D);setW(from+(to-from)*E(u));if(u<1)settling=requestAnimationFrame(step)};settling=requestAnimationFrame(step)}
- grip.addEventListener("pointerdown",e=>{if(e.button!==0)return;e.preventDefault();cancelAnimationFrame(settling);grip.setPointerCapture(e.pointerId);grip.classList.add("drag");document.body.classList.add("sb-resizing");hlS.off();
+ grip.addEventListener("pointerdown",e=>{if(e.button!==0)return;e.preventDefault();e.stopPropagation();cancelAnimationFrame(settling);pop(false);grip.setPointerCapture(e.pointerId);grip.classList.add("drag");document.body.classList.add("sb-resizing");hlS.off();
   const x0=side.getBoundingClientRect().left;let shutNow=false;
   const moveP=ev=>{const x=ev.clientX-x0;let w=x;
    if(x>MAX)w=MAX+RUB*(1-Math.exp(-(x-MAX)/RUB));else if(x<MIN)w=MIN-RUB*.7*(1-Math.exp(-(MIN-x)/(RUB*.7)));
@@ -445,7 +462,8 @@ const SB=(()=>{const side=$("#side"),scroll=$("#sbScroll");
      const els2=[side,$("#main .top")];els2.forEach(x=>x.style.transition="none");setW(W);side.offsetWidth;els2.forEach(x=>x.style.transition="")},dockTime(true)+40);return}
    settleTo(parseFloat(tok("--sb-w")))};
   grip.addEventListener("pointermove",moveP);grip.addEventListener("pointerup",up);grip.addEventListener("pointercancel",up)});
- grip.addEventListener("dblclick",()=>settleTo(DEF));
+ grip.addEventListener("click",e=>e.stopPropagation());
+ grip.addEventListener("dblclick",e=>{e.stopPropagation();settleTo(DEF)});
  grip.addEventListener("keydown",e=>{if(e.key==="ArrowLeft"||e.key==="ArrowRight"){e.preventDefault();settleTo(W+(e.key==="ArrowLeft"?-16:16))}if(e.key==="Enter"){e.preventDefault();dock(true)}});
 
  sync();

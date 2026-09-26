@@ -114,7 +114,8 @@ Motion is the heart of the UX: fidelity in the engine comes first.
 - **Actions are a card of pages.**
   - The row's `…` menu opens a card whose first page is short: Rename, Folder, Delete.
   - Deeper choices are further pages of the same card, not new pop-ups: Folder leads to Move to, New folder and Pin, and Move to leads to the folders.
-  - A small pill carries browser-style back and forward arrows between the visited pages. It sits between the card and what opened it, at the right, right under the `…` (or, for the account card, by the account row's chevrons).
+  - Back and forward are two separate small frosted buttons, each its own surface with the cards' corners and depth. A disabled one dims its glyph, not its surface.
+  - On the row menu they sit between the card and the row, at the right, under the `…`. On the account card they sit above the card, at its right.
   - Right-clicking empty space offers New chat and New folder.
 - **Fewer words, more detail. People are smarter than we think.**
   - There are no tooltips and no shortcut hints on rows.
@@ -136,6 +137,7 @@ Motion is the heart of the UX: fidelity in the engine comes first.
   - The card keeps its own type scale (the sidebar's density never reaches it) and lays itself out from its own width with container queries, so it stays whole and centred at any dock width.
   - Positions inside it are proportional, never measured: the appearance pill steps in its own width, so it is centred on its choice at every size.
   - Narrow, the switch keeps its icons and the tiles stack one per row with full names.
+  - Resizing the dock keeps an open card open, and its change of shape is animated. Each piece that moved glides from where it was on the curve with a motion blur, labels that return pull focus, and the card eases to its new height.
   - The identity row opens an Account page (name, organisation, storage).
   - The tiles act out their state: Calm's waves settle flat, and Compact's lines draw together. Their wells dip slightly under a press (the well, never the text).
 - **Direct manipulation.**
@@ -182,7 +184,11 @@ Motion is the heart of the UX: fidelity in the engine comes first.
 - **Depth moves with the card.** Every floating card and pill casts a soft, layered shadow (`--sb-depth`): an inner top highlight, a hairline, a near shadow and a long soft one. It grows in as the card arrives and eases away as it leaves, drawn from the same progress value.
 - **A theme change is one picture.** The page cross-fades between themes as a whole, and every CSS transition is held while it runs, so no element keeps fading on its own after the page has landed.
 - **Optical centring is measured, not judged.** Glyphs are block-level and centred in their boxes, and labels sit on a 1.0 line box. The bench checks the centres to within 0.01px.
-- **Concentric corners, after macOS.** Menus are 11px, inset 5px, with 6px rows inside. Tiles are 8px.
+- **Corners: just a little rounding** (Amadeus, v45, superseding the rounder macOS values).
+  - Floating cards and the selection bar: 6px (`--sb-r-lg`).
+  - Modules (tiles, the appearance switch, the search field, the account row, the back and forward buttons): 4px (`--sb-r`).
+  - Rows and small controls: 3px (`--sb-r-sm`).
+  - Circles stay circles: the monogram, status dots, the tiles' wells.
 - **Small surfaces "pull".** Menus and cards use opacity, a small drop and focus on one progress value, with no scale, each on its own layer. Reversal carries on from where it is.
 - **The dock.**
   - The dock slides out on the curve while its content racks out and drifts a little behind it (depth).
@@ -251,6 +257,11 @@ They live in `bench/drafts/sidebar-next.css`, and the dark stack lives in `bench
 - **Tokens (v41):** every value comes from `src/tokens.css`. Spacing is a 4px scale with half steps (`--sp-half`, `--sp-1h` … `--sp-4h`) below 20px for dense chrome; a 1px nudge is optical and stays literal. Layers are named (`--z-side`, `--z-menu`, `--z-tip` …) in one stacking order. Dark tokens are written once in `@dark{}`.
 
 ## 6. Change log
+- **v45 corners and resize** (2026-09-26, Amadeus):
+  - Corners are tightened to 6, 4 and 3px everywhere.
+  - Back and forward are two separate frosted buttons, placed above the account card.
+  - Resizing the dock no longer closes the pull-up: the click that ends a drag stops at the grip.
+  - An open card's reflow is animated as the dock compresses or widens.
 - **v45 system panel, second refinement** (2026-09-26, Amadeus):
   - The theme swap holds all transitions, so the tiles change with the page.
   - The feather applies only to overflowing text: the Account values and "Calm motion" were losing letters.

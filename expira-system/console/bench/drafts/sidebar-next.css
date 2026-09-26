@@ -16,6 +16,9 @@
      settle with no crawl (Amadeus, v45: "fast, smooth, then a really soft close") */
   --sb-dock-close:cubic-bezier(.3,.85,.15,1);--sb-dock-out:720ms;--sb-settle:760ms;
   --sb-w:256px;
+  /* corners: just a little rounding (Amadeus, v45). Floating cards 6px; modules 4px; rows and controls 3px.
+     Circles stay circles (the monogram, status dots, the tiles' wells). */
+  --sb-r-lg:6px;--sb-r:4px;--sb-r-sm:3px;
   /* depth: floating cards cast a soft, layered shadow that grows in with them (sidebar-next.js depth() at 1 equals this) */
   --sb-shc:11,26,63;--sb-sha:.34;--sb-hi:255,255,255;--sb-hia:.7;
   --sb-depth:inset 0 1px 0 rgba(var(--sb-hi),var(--sb-hia)),0 0 0 .5px rgba(var(--sb-shc),calc(var(--sb-sha) * .45)),0 6px 16px -3px rgba(var(--sb-shc),calc(var(--sb-sha) * .45)),0 22px 56px -10px rgba(var(--sb-shc),calc(var(--sb-sha) * .8));
@@ -31,13 +34,13 @@
 /* macOS layout: the header row is a toolbar (New chat, New folder; the sidebar button sits at its right), a search field
    sits under it and never scrolls, then the tree, then the account and the mark */
 .sb .brand{display:flex;align-items:center;gap:2px;height:34px;padding:0 var(--sp-1) 0 var(--sp-1);margin:0}
-.sb-tb{all:unset;width:28px;height:26px;display:grid;place-items:center;border-radius:var(--r-4);color:var(--soft);cursor:pointer;transition:background var(--sb-out) var(--sb-ease),color var(--sb-out) var(--sb-ease)}
+.sb-tb{all:unset;width:28px;height:26px;display:grid;place-items:center;border-radius:var(--sb-r-sm);color:var(--soft);cursor:pointer;transition:background var(--sb-out) var(--sb-ease),color var(--sb-out) var(--sb-ease)}
 .sb-tb svg{width:15px;height:15px}
 .sb-tb:hover{background:var(--line);color:var(--ink);transition-duration:calc(var(--sb-in) * .5)}
 .sb-tb:focus-visible{outline:var(--rule) solid var(--gold);outline-offset:-1px}
 #newChat svg path:last-child{transform-box:fill-box;transform-origin:30% 70%;transition:transform var(--sb-move) var(--sb-ease)}
 #newChat:hover svg path:last-child{transform:rotate(-8deg) translate(.4px,-.4px)}
-.sb-search{position:relative;display:flex;align-items:center;gap:var(--sp-1h);height:26px;margin:var(--sp-1h) 0 var(--sp-3);padding:0 var(--sp-1) 0 var(--sp-2);border-radius:var(--r-4);background:var(--line);box-shadow:inset 0 0 0 var(--rule-hair) var(--line-2);cursor:text;
+.sb-search{position:relative;display:flex;align-items:center;gap:var(--sp-1h);height:26px;margin:var(--sp-1h) 0 var(--sp-3);padding:0 var(--sp-1) 0 var(--sp-2);border-radius:var(--sb-r-sm);background:var(--line);box-shadow:inset 0 0 0 var(--rule-hair) var(--line-2);cursor:text;
  transition:box-shadow var(--sb-out) var(--sb-ease),background var(--sb-out) var(--sb-ease)}
 .sb-search:hover{box-shadow:inset 0 0 0 var(--rule-hair) var(--line-3)}
 .sb-search:focus-within{background:var(--well);box-shadow:inset 0 0 0 var(--rule-hair) color-mix(in srgb,var(--gold) 55%,transparent),0 0 0 3px var(--gold-wash);transition-duration:var(--sb-in)}
@@ -45,7 +48,7 @@
 .sb-search:focus-within .sb-ic{color:var(--ink)}
 .sb-search input{all:unset;flex:1;min-width:0;font-size:var(--sb-fs);color:var(--ink);caret-color:var(--gold)}
 .sb-search input::placeholder{color:var(--mute)}
-.sb-search .sb-clr{all:unset;width:18px;height:18px;display:grid;place-items:center;border-radius:var(--r-2);color:var(--mute);cursor:pointer;opacity:0;filter:blur(2px);pointer-events:none;
+.sb-search .sb-clr{all:unset;width:18px;height:18px;display:grid;place-items:center;border-radius:var(--sb-r-sm);color:var(--mute);cursor:pointer;opacity:0;filter:blur(2px);pointer-events:none;
  transition:opacity var(--sb-out) var(--sb-ease),filter var(--sb-out) var(--sb-ease),background var(--sb-out) var(--sb-ease)}
 .sb-search .sb-clr svg{width:10px;height:10px}
 .sb-search.has .sb-clr{opacity:1;filter:none;pointer-events:auto;transition-duration:var(--sb-in)}
@@ -74,11 +77,11 @@
 .sb-tree{position:relative}
 
 /* the gliding highlight: placed, stretched and faded by script */
-.sb-hl{position:absolute;left:var(--sp-2);right:var(--sp-2);top:0;height:var(--sb-row);border-radius:var(--r-3);background:var(--line);opacity:0;pointer-events:none;z-index:0;transform-origin:50% 50%}
-.sb-card .sb-hl{left:5px;right:5px;border-radius:6px}
+.sb-hl{position:absolute;left:var(--sp-2);right:var(--sp-2);top:0;height:var(--sb-row);border-radius:var(--sb-r-sm);background:var(--line);opacity:0;pointer-events:none;z-index:0;transform-origin:50% 50%}
+.sb-card .sb-hl{left:5px;right:5px;border-radius:var(--sb-r-sm)}
 
 /* rows: one kind of row for everything; depth is an indent and a hairline guide under the parent's caret */
-.sb-row{--d:0;position:relative;z-index:1;display:flex;align-items:center;height:var(--sb-row);border-radius:var(--r-3);color:var(--text);font-size:var(--sb-fs);font-weight:400;letter-spacing:.002em}
+.sb-row{--d:0;position:relative;z-index:1;display:flex;align-items:center;height:var(--sb-row);border-radius:var(--sb-r-sm);color:var(--text);font-size:var(--sb-fs);font-weight:400;letter-spacing:.002em}
 .sb-row+.sb-row{margin-top:1px}
 .sb-row.on{background:color-mix(in srgb,var(--gold) 9%,var(--line-2))}  /* selection: a warm grey, the only colour a resting row carries */
 .sb-tree .sb-row.deep::before{content:"";position:absolute;left:calc(var(--sp-2) + (var(--d) - 1) * var(--sb-indent) + 4px);top:-1px;bottom:0;width:var(--rule-hair);background:var(--line-2)}
@@ -104,7 +107,7 @@
 .sb-empty .sb-t{padding-left:calc(var(--sp-2) + var(--d) * var(--sb-indent) + 15px);-webkit-mask-image:none;mask-image:none}
 
 /* the row's action, and the new-folder action beside New chat: out of a light blur, and back into it */
-.sb-more{all:unset;position:absolute;right:2px;top:50%;width:20px;height:20px;margin-top:-10px;display:grid;place-items:center;border-radius:var(--r-2);color:var(--mute);cursor:pointer}
+.sb-more{all:unset;position:absolute;right:2px;top:50%;width:20px;height:20px;margin-top:-10px;display:grid;place-items:center;border-radius:var(--sb-r-sm);color:var(--mute);cursor:pointer}
 .sb-more svg{width:11px;height:11px}
 .sb-more:hover,.sb-more[aria-expanded="true"]{background:var(--line-2);color:var(--ink)}
 .sb-row:has(.sb-more) .sb-hit{padding-right:24px}
@@ -116,7 +119,7 @@
 .sb-row .sb-hit{transition:opacity var(--sb-out) var(--sb-ease),filter var(--sb-out) var(--sb-ease)}
 .sb-row.undo .sb-more .d{display:none}
 /* while it can still be undone, a second action deletes it now; it surfaces beside the undo arrow */
-.sb-kill{all:unset;position:absolute;right:24px;top:50%;width:20px;height:20px;margin-top:-10px;display:grid;place-items:center;border-radius:var(--r-2);color:var(--mute);cursor:pointer;opacity:0;filter:blur(2px);pointer-events:none;
+.sb-kill{all:unset;position:absolute;right:24px;top:50%;width:20px;height:20px;margin-top:-10px;display:grid;place-items:center;border-radius:var(--sb-r-sm);color:var(--mute);cursor:pointer;opacity:0;filter:blur(2px);pointer-events:none;
  transition:opacity var(--sb-out) var(--sb-ease),filter var(--sb-out) var(--sb-ease),background var(--sb-out) var(--sb-ease),color var(--sb-out) var(--sb-ease)}
 .sb-kill svg{width:12px;height:12px}
 .sb-row.undo .sb-kill{opacity:1;filter:none;pointer-events:auto;transition-duration:var(--sb-in)}
@@ -129,7 +132,7 @@
 /* drag and drop: onto a folder (a closed one springs open if you linger), or onto the open tree for the top level */
 .sb-row.dragging{opacity:.35}
 .sb-row.drop{background:var(--gold-wash);box-shadow:inset 0 0 0 var(--rule-hair) var(--gold)}
-.sb-tree.drop-root{box-shadow:inset 0 0 0 var(--rule-hair) var(--gold);border-radius:var(--r-3)}
+.sb-tree.drop-root{box-shadow:inset 0 0 0 var(--rule-hair) var(--gold);border-radius:var(--sb-r-sm)}
 .sb-row.got{animation:sbGot calc(var(--sb-in) * 2.2) var(--sb-ease)}
 @keyframes sbGot{from{background:var(--gold-wash);box-shadow:inset 0 0 0 var(--rule-hair) var(--gold)}}
 
@@ -150,7 +153,7 @@ body.sb-resizing,body.sb-resizing *{cursor:col-resize!important;user-select:none
 
 /* the foot: the account row (the pull-up; settings open from it), then the EXPIRA mark signing the bottom left */
 .sb-foot{position:relative;margin:var(--sp-1) calc(var(--sp-2) * -1) 0;padding:var(--sp-1h) var(--sp-2) 0;border-top:var(--rule-hair) solid var(--line)}
-.sb-me{all:unset;box-sizing:border-box;width:100%;height:40px;display:flex;align-items:center;gap:var(--sp-2);padding:0 var(--sp-2) 0 var(--sp-1h);border-radius:var(--r-5);cursor:pointer;transition:background var(--sb-out) var(--sb-ease)}
+.sb-me{all:unset;box-sizing:border-box;width:100%;height:40px;display:flex;align-items:center;gap:var(--sp-2);padding:0 var(--sp-2) 0 var(--sp-1h);border-radius:var(--sb-r);cursor:pointer;transition:background var(--sb-out) var(--sb-ease)}
 .sb-me:hover,.sb-me[aria-expanded="true"]{background:var(--line);transition-duration:calc(var(--sb-in) * .5)}
 .sb-me:focus-visible{outline:var(--rule) solid var(--gold);outline-offset:-1px}
 /* the monogram: the display italic on a quiet disc; its ring warms to gold when the row is hovered or open */
@@ -176,31 +179,35 @@ body.sb-resizing,body.sb-resizing *{cursor:col-resize!important;user-select:none
 .sb-sig .wm{width:50px;height:11px}
 
 /* the pull-up and the row menu: one surface, each on its own layer so its text is not re-rasterised as it moves */
-.sb-card,.sb-nav{will-change:transform,opacity,filter;opacity:0}
+.sb-card,.sb-nav button{will-change:transform,opacity,filter;opacity:0}
 .sb-menu,.sb-pop{visibility:hidden;pointer-events:none}
 /* the menus are frosted glass over the near-black, as macOS menus are over the desktop */
-.sb-menu,.sb-card,.sb-nav,.sb-selbar{background:color-mix(in srgb,var(--panel) 80%,transparent);-webkit-backdrop-filter:blur(22px) saturate(1.5);backdrop-filter:blur(22px) saturate(1.5);border:var(--rule-hair) solid var(--line-3);box-shadow:var(--sb-depth)}
-.sb-pop.open .sb-card,.sb-pop.open .sb-nav{opacity:1}
-.sb-menu{padding:4px;border-radius:var(--r-5)}
+.sb-menu,.sb-card,.sb-nav button,.sb-selbar{background:color-mix(in srgb,var(--panel) 80%,transparent);-webkit-backdrop-filter:blur(22px) saturate(1.5);backdrop-filter:blur(22px) saturate(1.5);border:var(--rule-hair) solid var(--line-3);box-shadow:var(--sb-depth)}
+.sb-pop.open .sb-card,.sb-pop.open .sb-nav button{opacity:1}
+.sb-menu{padding:4px;border-radius:var(--sb-r)}
 .sb-menu.open{opacity:1}
 .sb-menu.open,.sb-pop.open{visibility:visible;pointer-events:auto}
 .sb-menu{position:absolute;left:var(--sp-1h);right:var(--sp-1h);bottom:calc(100% + var(--sp-1h));z-index:var(--z-menu)}
 /* the row menu: a card of pages, with a small pill of back and forward arrows sitting above it, like a browser's */
 .sb-pop{position:fixed;left:0;top:0;width:196px;z-index:var(--z-menu)}
-.sb-card{position:relative;overflow:hidden;padding:5px;border-radius:11px;transition:height var(--sb-move) var(--sb-ease)}  /* height eases between pages: a small surface, so its layout move is cheap */
+.sb-card{position:relative;overflow:hidden;padding:5px;border-radius:var(--sb-r-lg);transition:height var(--sb-move) var(--sb-ease)}  /* height eases between pages: a small surface, so its layout move is cheap */
 .sb-page{position:relative}
-.sb-nav{position:absolute;right:0;bottom:calc(100% + 5px);display:flex;gap:1px;padding:2px;border-radius:var(--r-round)}
-.sb-nav button{all:unset;width:20px;height:20px;display:grid;place-items:center;border-radius:var(--r-round);color:var(--soft);cursor:pointer;transition:background var(--sb-out) var(--sb-ease),color var(--sb-out) var(--sb-ease),opacity var(--sb-out) var(--sb-ease)}
+/* back and forward: two separate small frosted buttons, each its own surface with the cards' corners and depth */
+.sb-nav{position:absolute;right:0;bottom:calc(100% + 5px);display:flex;gap:4px}
+.sb-nav button{all:unset;box-sizing:border-box;width:26px;height:22px;display:grid;place-items:center;border-radius:var(--sb-r);color:var(--soft);cursor:pointer;
+ background:color-mix(in srgb,var(--panel) 80%,transparent);-webkit-backdrop-filter:blur(22px) saturate(1.5);backdrop-filter:blur(22px) saturate(1.5);border:var(--rule-hair) solid var(--line-3);box-shadow:var(--sb-depth);
+ transition:background var(--sb-out) var(--sb-ease),color var(--sb-out) var(--sb-ease)}
 .sb-nav button svg{width:11px;height:11px;display:block}
-.sb-nav button:hover:not(:disabled){background:var(--line-2);color:var(--ink);transition-duration:calc(var(--sb-in) * .5)}
-.sb-nav button:disabled{opacity:.28;cursor:default}
+.sb-nav button:hover:not(:disabled){background:color-mix(in srgb,var(--panel) 80%,var(--line-3));color:var(--ink);transition-duration:calc(var(--sb-in) * .5)}
+/* a disabled arrow dims its glyph, not its surface, so the pair keeps one weight */
+.sb-nav button:disabled{color:var(--line-3);cursor:default}
 .sb-nav button:focus-visible{outline:var(--rule) solid var(--gold)}
-/* the pill sits between the card and what opened it, at the right, under the … (or the account row's chevrons) */
-.sb-pop[data-from="below"] .sb-nav,.sb-acct .sb-nav{bottom:auto;top:calc(100% + 5px)}
+/* the row menu's pill sits between the card and the row, at the right, under the …; the account card's sits above it */
+.sb-pop[data-from="below"] .sb-nav{bottom:auto;top:calc(100% + 5px)}
 .sb-go{width:10px;height:10px;flex:none;margin-left:auto;color:var(--mute)}
 .sb-go svg{width:10px;height:10px;display:block}
 .sb-pop .sb-none{padding:var(--sp-1h) var(--sp-2);font-size:var(--sb-fs-2);color:var(--mute)}
-.sb-card .sb-row{height:26px;border-radius:6px}  /* concentric: 11px card, 5px inset, 6px rows */
+.sb-card .sb-row{height:26px;border-radius:var(--sb-r-sm)}
 .sb-pop .sb-row .sb-hit{padding-left:calc(var(--sp-2) + var(--d) * 10px)}
 .sb-menu .sb-hl{left:4px;right:4px}
 .sb-mh{position:relative;z-index:1;display:flex;flex-direction:column;gap:1px;padding:var(--sp-1h) var(--sp-2) var(--sp-2)}
@@ -209,30 +216,30 @@ body.sb-resizing,body.sb-resizing *{cursor:col-resize!important;user-select:none
 .sb-card .sb-mh.plain{padding:var(--sp-1h) var(--sp-2) var(--sp-1);font-size:var(--fs-micro);letter-spacing:var(--tracked-tight);text-transform:uppercase;color:var(--soft);opacity:.85}
 .sb-sep{height:var(--rule-hair);background:var(--line-2);margin:4px var(--sp-1h)}
 .sb-row.danger .sb-hit,.sb-row.danger .sb-ic{color:var(--bad)}
-.sb-seg{position:relative;z-index:1;display:grid;grid-template-columns:repeat(3,1fr);margin:var(--sp-half) var(--sp-half) var(--sp-1);padding:2px;border-radius:var(--r-3);background:var(--well);box-shadow:inset 0 0 0 var(--rule-hair) var(--line-2)}
-.sb-seg .pill{position:absolute;top:2px;bottom:2px;left:2px;width:calc((100% - 4px) / 3);border-radius:var(--r-2);background:var(--panel);box-shadow:var(--e1),inset 0 0 0 var(--rule-hair) var(--line-3);transition:transform var(--sb-move) var(--sb-ease)}
-.sb-seg button{all:unset;position:relative;display:flex;align-items:center;justify-content:center;gap:5px;height:22px;border-radius:var(--r-2);font-size:var(--sb-fs-2);color:var(--soft);cursor:pointer;transition:color var(--sb-out) var(--sb-ease)}
+.sb-seg{position:relative;z-index:1;display:grid;grid-template-columns:repeat(3,1fr);margin:var(--sp-half) var(--sp-half) var(--sp-1);padding:2px;border-radius:var(--sb-r-sm);background:var(--well);box-shadow:inset 0 0 0 var(--rule-hair) var(--line-2)}
+.sb-seg .pill{position:absolute;top:2px;bottom:2px;left:2px;width:calc((100% - 4px) / 3);border-radius:var(--sb-r-sm);background:var(--panel);box-shadow:var(--e1),inset 0 0 0 var(--rule-hair) var(--line-3);transition:transform var(--sb-move) var(--sb-ease)}
+.sb-seg button{all:unset;position:relative;display:flex;align-items:center;justify-content:center;gap:5px;height:22px;border-radius:var(--sb-r-sm);font-size:var(--sb-fs-2);color:var(--soft);cursor:pointer;transition:color var(--sb-out) var(--sb-ease)}
 .sb-seg button svg{width:12px;height:12px}
 .sb-seg button:hover,.sb-seg button[aria-checked="true"]{color:var(--ink);transition-duration:calc(var(--sb-in) * .5)}
 .sb-seg button:focus-visible{outline:var(--rule) solid var(--gold)}
 /* rename in place: the field takes the title's exact box */
-.sb-ren{all:unset;box-sizing:border-box;width:100%;height:19px;margin:0 -4px;padding:0 4px;border-radius:var(--r-2);background:var(--well);box-shadow:inset 0 0 0 var(--rule-hair) var(--gold);color:var(--ink);font:inherit}
+.sb-ren{all:unset;box-sizing:border-box;width:100%;height:19px;margin:0 -4px;padding:0 4px;border-radius:var(--sb-r-sm);background:var(--well);box-shadow:inset 0 0 0 var(--rule-hair) var(--gold);color:var(--ink);font:inherit}
 .sb-t:has(.sb-ren){-webkit-mask-image:none;mask-image:none;overflow:visible}
 /* the list feathers at an edge only while more lies beyond it */
 .sb-scroll{--fs:0px;--fe:0px;transition:--fs var(--sb-out) var(--sb-ease),--fe var(--sb-out) var(--sb-ease);-webkit-mask-image:linear-gradient(to bottom,transparent 0,#000 var(--fs),#000 calc(100% - var(--fe)),transparent 100%);mask-image:linear-gradient(to bottom,transparent 0,#000 var(--fs),#000 calc(100% - var(--fe)),transparent 100%)}
 .sb-scroll.f-s{--fs:16px}
 .sb-scroll.f-e{--fe:20px}
 
-/* ---- the account card: a system panel. It sits above the account row, leaving room for its pill by the chevrons.
+/* ---- the account card: a system panel. It sits above the account row, with its back and forward pill above it, at its right.
    It keeps its own type scale (the sidebar's density does not reach it) and lays itself out from its own width
    (container queries), so it stays whole and centred at any dock width. Corners are concentric: an 11px card, a
    5px inset, 8px modules and 6px controls inside them. ---- */
-.sb-acct{position:absolute;left:var(--sp-1h);right:var(--sp-1h);bottom:calc(100% + 34px);z-index:var(--z-menu);visibility:hidden;pointer-events:none}
+.sb-acct{position:absolute;left:var(--sp-1h);right:var(--sp-1h);bottom:calc(100% + var(--sp-1h));z-index:var(--z-menu);visibility:hidden;pointer-events:none}
 .sb-acct.open{visibility:visible;pointer-events:auto}
-.sb-acct.open .sb-card,.sb-acct.open .sb-nav{opacity:1}
+.sb-acct.open .sb-card,.sb-acct.open .sb-nav button{opacity:1}
 .sb-acct .sb-card{--sb-fs:11.5px;--sb-fs-2:10px;--sb-ic:13px;container-type:inline-size}
 /* identity: a button that opens the Account page; its chevron surfaces on hover */
-.sb-id{all:unset;box-sizing:border-box;position:relative;z-index:1;display:flex;align-items:center;gap:var(--sp-2h);width:100%;padding:var(--sp-2) var(--sp-2) var(--sp-2) var(--sp-1h);border-radius:8px;cursor:pointer;
+.sb-id{all:unset;box-sizing:border-box;position:relative;z-index:1;display:flex;align-items:center;gap:var(--sp-2h);width:100%;padding:var(--sp-2) var(--sp-2) var(--sp-2) var(--sp-1h);border-radius:var(--sb-r);cursor:pointer;
  transition:background var(--sb-out) var(--sb-ease)}
 .sb-id:hover{background:var(--line);transition-duration:calc(var(--sb-in) * .5)}
 .sb-id:focus-visible{outline:var(--rule) solid var(--gold);outline-offset:-1px}
@@ -247,17 +254,17 @@ body.sb-resizing,body.sb-resizing *{cursor:col-resize!important;user-select:none
 .sb-id:hover .sb-go,.sb-id:focus-visible .sb-go{opacity:1;filter:none;transition-duration:var(--sb-in)}
 /* the Control Center strip: appearance, then two tiles, equal insets on both sides */
 .sb-cc{position:relative;z-index:1;display:flex;flex-direction:column;gap:5px;padding:2px 0 5px}
-.sb-cc .sb-seg{margin:0;padding:2px;border-radius:8px;display:grid;grid-template-columns:repeat(3,minmax(0,1fr))}
+.sb-cc .sb-seg{margin:0;padding:2px;border-radius:var(--sb-r);display:grid;grid-template-columns:repeat(3,minmax(0,1fr))}
 /* the pill is positioned proportionally (its own width per step), so it sits dead centre on its choice at any width */
-.sb-cc .sb-seg .pill{left:2px;top:2px;bottom:2px;width:calc((100% - 4px) / 3);border-radius:6px;transform:translateX(calc(var(--i,0) * 100%));transition:none;
+.sb-cc .sb-seg .pill{left:2px;top:2px;bottom:2px;width:calc((100% - 4px) / 3);border-radius:var(--sb-r-sm);transform:translateX(calc(var(--i,0) * 100%));transition:none;
  box-shadow:0 0 0 var(--rule-hair) var(--line-3),0 1px 2px rgba(var(--sb-shc),calc(var(--sb-sha) * .35)),0 3px 8px -4px rgba(var(--sb-shc),calc(var(--sb-sha) * .5))}
-.sb-cc .sb-seg button{flex-direction:row;align-items:center;justify-content:center;min-width:0;height:26px;border-radius:6px;gap:5px;font-size:10.5px;line-height:1}
+.sb-cc .sb-seg button{flex-direction:row;align-items:center;justify-content:center;min-width:0;height:26px;border-radius:var(--sb-r-sm);gap:5px;font-size:10.5px;line-height:1}
 .sb-cc .sb-seg button span{min-width:0;overflow:hidden;white-space:nowrap;line-height:1}
 .sb-cc .sb-seg button svg{display:block;width:12px;height:12px;flex:none;transition:transform var(--sb-move) var(--sb-ease)}
 .sb-cc .sb-seg button:hover svg{transform:rotate(-8deg)}
 .sb-cc .sb-seg button[data-th="system"]:hover svg{transform:none}
 .sb-tiles{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:5px}
-.sb-tile{all:unset;box-sizing:border-box;min-width:0;display:flex;align-items:center;gap:7px;height:42px;padding:0 7px;border-radius:8px;background:var(--well);box-shadow:inset 0 0 0 var(--rule-hair) var(--line-2);cursor:pointer;
+.sb-tile{all:unset;box-sizing:border-box;min-width:0;display:flex;align-items:center;gap:7px;height:42px;padding:0 7px;border-radius:var(--sb-r);background:var(--well);box-shadow:inset 0 0 0 var(--rule-hair) var(--line-2);cursor:pointer;
  transition:background var(--sb-out) var(--sb-ease),box-shadow var(--sb-out) var(--sb-ease)}
 .sb-tile:hover{box-shadow:inset 0 0 0 var(--rule-hair) var(--line-3);background:color-mix(in srgb,var(--well) 70%,var(--line-2));transition-duration:calc(var(--sb-in) * .5)}
 .sb-tile:focus-visible{outline:var(--rule) solid var(--gold);outline-offset:-1px}
@@ -317,12 +324,12 @@ body.sb-resizing,body.sb-resizing *{cursor:col-resize!important;user-select:none
 .selecting .sb-more{display:none}
 .selecting .sb-row .sb-hit{padding-right:var(--sp-2)}
 /* the selection bar: pulls up above the account row, one row of icons and the count */
-.sb-selbar{position:absolute;left:var(--sp-1h);right:var(--sp-1h);bottom:calc(100% + var(--sp-1h));z-index:var(--z-toast);display:flex;align-items:center;gap:2px;height:34px;padding:0 4px 0 var(--sp-2h);border-radius:11px;
+.sb-selbar{position:absolute;left:var(--sp-1h);right:var(--sp-1h);bottom:calc(100% + var(--sp-1h));z-index:var(--z-toast);display:flex;align-items:center;gap:2px;height:34px;padding:0 4px 0 var(--sp-2h);border-radius:var(--sb-r-lg);
  will-change:transform,opacity,filter;opacity:0;visibility:hidden;pointer-events:none}
 .sb-selbar.open{opacity:1;visibility:visible;pointer-events:auto}
 .sb-selbar .n{flex:1;display:flex;align-items:baseline;gap:4px;font-size:var(--sb-fs-2);color:var(--mute)}
 .sb-selbar .n b{font-weight:500;font-size:var(--sb-fs);color:var(--ink);font-variant-numeric:tabular-nums}
-.sb-selbar button{all:unset;width:26px;height:26px;display:grid;place-items:center;border-radius:6px;color:var(--soft);cursor:pointer;transition:background var(--sb-out) var(--sb-ease),color var(--sb-out) var(--sb-ease),opacity var(--sb-out) var(--sb-ease)}
+.sb-selbar button{all:unset;width:26px;height:26px;display:grid;place-items:center;border-radius:var(--sb-r-sm);color:var(--soft);cursor:pointer;transition:background var(--sb-out) var(--sb-ease),color var(--sb-out) var(--sb-ease),opacity var(--sb-out) var(--sb-ease)}
 .sb-selbar button svg{width:14px;height:14px}
 .sb-selbar button:hover:not(:disabled),.sb-selbar button[aria-expanded="true"]{background:var(--line-2);color:var(--ink);transition-duration:calc(var(--sb-in) * .5)}
 .sb-selbar button.danger:hover:not(:disabled){background:color-mix(in srgb,var(--bad) 14%,transparent);color:var(--bad)}
