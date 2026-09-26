@@ -12,6 +12,7 @@ Owner: Duke Y. Demayo. Working branch: `claude/wizardly-ptolemy-6q4ter`, PR amad
 - `expira-system/DESIGN_ENGINE.md` holds the design and motion canon. **Read it before any design or motion work**, and add to its change log after each iteration.
 - `expira-system/brand_assets/`, `logo_pack/` and `source/` hold the EXPIRA mark, the wordmark and the brand tokens.
 - `orchestrator/POLICY.md` and `.claude/agents/` define the sub-agent roster and when to escalate. `orchestrator/tier_log.csv` is the run log.
+- `orchestrator/GROUNDING.md`: LAYA is the default middleman for routing, delegation, evidence and the firewall (`orchestrator/laya/`). Every figure and quote is checked in code by `orchestrator/grounding/check.js`, which runs the same `src/core/ground.js` as the console.
 
 ## Console: how to change it
 - The source lives in `expira-system/console/src/`: `tokens.css`, `core/` (prelude, storage adapter, motion, pour, run, router, boot) and one folder per unit in `units/<unit>/` holding its own CSS, JS and markup. Change the unit that owns the behaviour, in place; do not append override blocks.
@@ -19,6 +20,7 @@ Owner: Duke Y. Demayo. Working branch: `claude/wizardly-ptolemy-6q4ter`, PR amad
 - **Test before shipping** (each with `NODE_PATH=/opt/node22/lib/node_modules`, run from `expira-system/console`):
   - `node qa/smoke.js` serves the console, runs the example chat and a mock brief in light and dark, and must report 0 errors;
   - `node qa/store.js` checks the storage adapter, the db mirror, import normalisation and that crafted imports stay text;
+  - `node qa/ground.js` checks the grounding gate: quotes, figures, arithmetic, voted decisions and the firewall;
   - `node qa/hovers.js [dark]` audits hover, press and focus on every control (`LIST=1` lists them);
   - `node qa/perf.js` traces a full mock run: no long tasks or rAF while settled, maps asleep;
   - `AXE=<path to axe.min.js> node qa/a11y.js` runs axe-core; install axe-core outside the repo, never commit it;

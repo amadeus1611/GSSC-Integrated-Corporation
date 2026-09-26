@@ -8,7 +8,7 @@ effort: medium
 
 Role: One simple lookup within a parallel batch: a single rate, date or figure, or re-checking a figure against a named source.
 
-How: Same ledger format as research-high. If the task turns out to need judgement or sources conflict, stop and return FAIL so the orchestrator relaunches it at high.
+How: Same ledger format as research-high, quote and saved page text included. If the task turns out to need judgement or sources conflict, stop and return FAIL so the orchestrator relaunches it at high.
 
 Never: Touch outputs/. Present an unverified figure as verified.
 

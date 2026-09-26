@@ -1,0 +1,147 @@
+{
+ "_about": "Hand-labelled EXPIRA-style cases for the LAYA gate. Re-run with eval.py after changing packs.json or the bars.",
+ "route": [
+  {
+   "brief": "What is the current price of hotel-grade blackout curtains in Iloilo?",
+   "lead": "research"
+  },
+  {
+   "brief": "Find three precedents of drapery suppliers for 5-star hotels in Cebu.",
+   "lead": "research"
+  },
+  {
+   "brief": "Who are the main textile importers in Western Visayas?",
+   "lead": "research"
+  },
+  {
+   "brief": "Build a line-by-line cost for 40 rooms of drapery with 8% contingency.",
+   "lead": "finance"
+  },
+  {
+   "brief": "What should our markup be to reach a 25% gross margin on this job?",
+   "lead": "finance"
+  },
+  {
+   "brief": "Project cash flow for a 3-month installation with 30% downpayment.",
+   "lead": "finance"
+  },
+  {
+   "brief": "Review the liquidated damages clause in this supply contract.",
+   "lead": "legal"
+  },
+  {
+   "brief": "Is a verbal purchase order enforceable under Philippine law?",
+   "lead": "legal"
+  },
+  {
+   "brief": "What permits do we need to install fire-rated curtains in a hotel?",
+   "lead": "legal"
+  },
+  {
+   "brief": "Draft a one-page company profile for GSSC.",
+   "lead": "builder"
+  },
+  {
+   "brief": "Write the outline of a quotation for the hotel renovation.",
+   "lead": "builder"
+  },
+  {
+   "brief": "Turn these notes into a clean table of rooms and window sizes.",
+   "lead": "builder"
+  }
+ ],
+ "firewall": [
+  {
+   "text": "Our proposal covers 40 rooms with hotel-grade blackout drapery, installed by December.",
+   "restricted": false
+  },
+  {
+   "text": "Total contract price: PHP 952,560, inclusive of installation and an 8% contingency.",
+   "restricted": false
+  },
+  {
+   "text": "We source the fabric from Lucky Textiles in Divisoria at PHP 310 per metre.",
+   "restricted": true
+  },
+  {
+   "text": "Our markup on this job is 35% over the supplier invoice.",
+   "restricted": true
+  },
+  {
+   "text": "Please deposit the downpayment to BDO account 0012-3456-7890, GSSC Integrated Corp.",
+   "restricted": true
+  },
+  {
+   "text": "Lead time is five to seven weeks from signed purchase order.",
+   "restricted": false
+  },
+  {
+   "text": "The warranty covers defects in workmanship for 12 months.",
+   "restricted": false
+  },
+  {
+   "text": "Cost basis per window is PHP 6,200; we sell at PHP 11,650.",
+   "restricted": true
+  },
+  {
+   "text": "Contact Mr. Tan at Sunrise Fabrics (0917 555 1234) for the swatches.",
+   "restricted": true
+  },
+  {
+   "text": "Payment terms: 50% on signing, 50% on completion.",
+   "restricted": false
+  }
+ ],
+ "support": [
+  {
+   "source": "Hotel-grade blackout drapery lists at PHP 9,500 to 13,800 per window in Iloilo City.",
+   "claim": "Blackout drapery costs PHP 9,500 to 13,800 per window in Iloilo.",
+   "stated": true
+  },
+  {
+   "source": "Hotel-grade blackout drapery lists at PHP 9,500 to 13,800 per window in Iloilo City.",
+   "claim": "Blackout drapery costs PHP 7,500 to 13,800 per window in Iloilo.",
+   "stated": false
+  },
+  {
+   "source": "Ceiling track runs PHP 2,100 to 2,900 per metre, installed.",
+   "claim": "Ceiling track costs PHP 2,100 to 2,900 per metre installed.",
+   "stated": true
+  },
+  {
+   "source": "Ceiling track runs PHP 2,100 to 2,900 per metre, installed.",
+   "claim": "Ceiling track costs PHP 2,100 to 2,900 per window.",
+   "stated": false
+  },
+  {
+   "source": "Suppliers quote five to seven weeks for orders above thirty rooms.",
+   "claim": "Lead time is 5 to 7 weeks for large orders.",
+   "stated": true
+  },
+  {
+   "source": "Suppliers quote five to seven weeks for orders above thirty rooms.",
+   "claim": "Lead time is 3 weeks for large orders.",
+   "stated": false
+  },
+  {
+   "source": "The Civil Code, Article 1170, makes those guilty of delay liable for damages.",
+   "claim": "Article 1170 of the Civil Code makes parties in delay liable for damages.",
+   "stated": true
+  },
+  {
+   "source": "The Civil Code, Article 1170, makes those guilty of delay liable for damages.",
+   "claim": "Liquidated damages are capped at 10% under the Civil Code.",
+   "stated": false
+  },
+  {
+   "source": "VAT in the Philippines is 12% on the sale of goods.",
+   "claim": "Philippine VAT is 12%.",
+   "stated": true
+  },
+  {
+   "source": "VAT in the Philippines is 12% on the sale of goods.",
+   "claim": "Philippine VAT is 15%.",
+   "stated": false
+  }
+ ]
+}

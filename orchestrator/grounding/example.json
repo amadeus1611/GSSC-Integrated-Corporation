@@ -1,0 +1,10 @@
+{
+ "user": "Price forty rooms of blackout drapery for Belmont hotel before December.",
+ "pages": [{"url": "https://example.ph/drapery", "title": "Drapery prices", "date": "2026-08-10", "text": "Hotel-grade blackout drapery lists at PHP 9,500 to 13,800 per window in Iloilo City."}],
+ "claims": [
+  {"id": 1, "text": "Blackout drapery costs PHP 9,500 to 13,800 per window.", "verdict": "supported", "urls": ["https://example.ph/drapery"], "quote": "blackout drapery lists at PHP 9,500 to 13,800 per window"},
+  {"id": 2, "text": "A mid-range window costs PHP 11,650.", "verdict": "derived", "calc": "(9500+13800)/2"},
+  {"id": 3, "text": "Installation adds PHP 2,400 per window.", "verdict": "supported", "urls": ["https://example.ph/drapery"], "quote": "installation adds PHP 2,400 per window"}
+ ],
+ "answer": "Forty rooms at the mid-range price come to PHP 466,000 [c2]. Installation adds PHP 2,400 per window [c3]."
+}
