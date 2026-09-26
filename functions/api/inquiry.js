@@ -7,22 +7,13 @@
 //   MAIL_TO               (optional)          defaults to management@gsscph.com
 //   MAIL_FROM             (optional)          defaults to "GSSC Website <inquiries@mail.gsscph.com>"
 
-const FIELDS = [
-  ["Full name", 120],
-  ["Company", 160],
-  ["Email", 200],
-  ["Phone", 60],
-  ["Inquiry type", 80],
-  ["Timeline", 80],
-  ["Requirement summary", 5000],
-  ["Documents needed", 3000],
-];
-
-const CHECKS = [
-  "Need supplier sourcing",
-  "Need quotation coordination",
-  "Need onboarding documents",
-  "Need management summary",
+const DISCIPLINES = [
+  "Sourcing & procurement",
+  "Site execution",
+  "Supply programmes",
+  "Management consultancy",
+  "Business support",
+  "Compliance & documentation",
 ];
 
 const EMAIL_RE = /^[^\s@<>]+@[^\s@<>]+\.[^\s@<>]+$/;
@@ -36,6 +27,10 @@ function json(status, body) {
 
 function clean(value, max) {
   return String(value == null ? "" : value).replace(/\r\n?/g, "\n").trim().slice(0, max);
+}
+
+function oneLine(value) {
+  return value.replace(/[\r\n]+/g, " ");
 }
 
 async function verifyTurnstile(secret, token, ip) {
@@ -72,37 +67,38 @@ export async function onRequestPost({ request, env }) {
     return json(403, { ok: false, error: "Verification failed. Please refresh the page and try again." });
   }
 
-  const f = {};
-  for (const [name, max] of FIELDS) f[name] = clean(data[name], max);
-  const selected = CHECKS.filter((c) => data[c] === true || data[c] === "on");
+  const f = {
+    disciplines: (Array.isArray(data.d) ? data.d : []).filter((d) => DISCIPLINES.includes(d)),
+    value: oneLine(clean(data.v, 40)),
+    start: oneLine(clean(data.t, 40)),
+    site: oneLine(clean(data.s, 200)),
+    name: oneLine(clean(data.n, 120)),
+    org: oneLine(clean(data.o, 160)),
+    email: clean(data.e, 200),
+    phone: oneLine(clean(data.p, 60)),
+    constraint: clean(data.c, 5000),
+  };
 
-  if (!f["Full name"] || !f["Requirement summary"] || !EMAIL_RE.test(f["Email"])) {
-    return json(400, { ok: false, error: "Please fill in your name, a valid email address and the requirement summary." });
+  if (!f.disciplines.length || !f.name || !EMAIL_RE.test(f.email)) {
+    return json(400, { ok: false, error: "Please choose at least one discipline and give your name and a valid email address." });
   }
 
   const text = [
-    "GSSC Integrated Corporation - Business Inquiry (sent from gsscph.com)",
+    "Inquiry to GSSC Integrated Corporation (sent from gsscph.com)",
     "",
-    "Full name: " + f["Full name"],
-    "Company / organization: " + (f["Company"] || "—"),
-    "Email: " + f["Email"],
-    "Phone / messaging: " + (f["Phone"] || "—"),
-    "Inquiry type: " + (f["Inquiry type"] || "—"),
-    "Target timeline: " + (f["Timeline"] || "—"),
+    "Disciplines: " + f.disciplines.join(", "),
+    "Programme value: " + (f.value || "-"),
+    "Start: " + (f.start || "-"),
+    "Site: " + (f.site || "-"),
+    "From: " + [f.name, f.org].filter(Boolean).join(", "),
+    "Reply to: " + [f.email, f.phone].filter(Boolean).join(" · "),
     "",
-    "Requirement summary:",
-    f["Requirement summary"],
+    "Constraint:",
+    f.constraint || "-",
     "",
-    "Documents or verification needed:",
-    f["Documents needed"] || "—",
-    "",
-    "Selected support items:",
-    selected.length ? selected.map((x) => "- " + x).join("\n") : "—",
-    "",
-    "Reply to this email to respond directly to " + f["Full name"] + ".",
+    "Reply to this email to respond directly to " + f.name + ".",
   ].join("\n");
 
-  const subjectName = (f["Company"] || f["Full name"]).replace(/[\r\n]+/g, " ");
   const res = await fetch("https://api.resend.com/emails", {
     method: "POST",
     headers: {
@@ -112,15 +108,15 @@ export async function onRequestPost({ request, env }) {
     body: JSON.stringify({
       from: env.MAIL_FROM || "GSSC Website <inquiries@mail.gsscph.com>",
       to: [env.MAIL_TO || "management@gsscph.com"],
-      reply_to: f["Full name"].replace(/[<>"\r\n]/g, "") + " <" + f["Email"] + ">",
-      subject: "Business Inquiry - " + subjectName,
+      reply_to: f.name.replace(/[<>"]/g, "") + " <" + f.email + ">",
+      subject: "Inquiry · " + f.disciplines.join(", ") + (f.org ? " · " + f.org : ""),
       text,
     }),
   });
 
   if (!res.ok) {
     console.error("Resend error", res.status, await res.text().catch(() => ""));
-    return json(502, { ok: false, error: "We couldn't send your inquiry right now. Please email management@gsscph.com directly." });
+    return json(502, { ok: false, error: "We couldn't send your inquiry right now." });
   }
 
   return json(200, { ok: true });
