@@ -26,7 +26,7 @@
 
 <div class="app has-chat" id="app">
   <nav class="side" aria-label="Chats" id="side">
-    <div class="brand"><svg class="mark" viewBox="0 0 1413 425" role="img" aria-label="EXPIRA mark"><polygon points="0,0 233,0 391,100 206,425 40,425 0,302" fill="var(--mark-a)"/><polygon points="233,0 728,0 391,100" fill="var(--gold)"/><polygon points="391,100 728,0 778,0 871,225 1166,425 1058,425" fill="var(--mark-a)"/><polygon points="391,100 1058,425 206,425" fill="var(--mark-b)"/><polygon points="918,0 1043,0 1408,425 1241,425 968,192" fill="var(--gold)"/><polygon points="1043,0 1340,0 1408,425" fill="var(--mark-b)"/></svg><span class="wm" role="img" aria-label="EXPIRA"></span><button class="ib fold" id="fold" data-tip="Close sidebar" aria-label="Close sidebar"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1"><rect x="1.5" y="2.5" width="13" height="11" rx="1.5"/><path d="M6 2.5v11"/></svg></button></div>
+    <div class="brand"><svg class="mark" viewBox="0 0 1413 425" role="img" aria-label="EXPIRA mark"><polygon points="0,0 233,0 391,100 206,425 40,425 0,302" fill="var(--mark-a)"/><polygon points="233,0 728,0 391,100" fill="var(--gold)"/><polygon points="391,100 728,0 778,0 871,225 1166,425 1058,425" fill="var(--mark-a)"/><polygon points="391,100 1058,425 206,425" fill="var(--mark-b)"/><polygon points="918,0 1043,0 1408,425 1241,425 968,192" fill="var(--gold)"/><polygon points="1043,0 1340,0 1408,425" fill="var(--mark-b)"/></svg><span class="wm" role="img" aria-label="EXPIRA"></span><button class="ib side-t" id="fold" aria-controls="side" aria-expanded="true" aria-label="Close sidebar" data-tip="Close sidebar"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1"><rect x="1.5" y="2.5" width="13" height="11" rx="1.5"/><path class="pane" d="M2.5 3h3.5v10h-3.5z"/><path class="dv" d="M6 2.5v11"/><path class="chev" d="M11 6.2 9.2 8l1.8 1.8"/></svg></button></div>
     <div class="nav">
       <button class="navb" id="newChat"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.1"><path d="M8 3v10M3 8h10"/></svg>New chat<span class="kb">⌥N</span></button>
       <button class="navb" id="findBtn"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.1"><circle cx="7" cy="7" r="4.5"/><path d="M10.5 10.5L14 14"/></svg>Search<span class="kb">/</span></button>
@@ -40,7 +40,6 @@
 
   <div class="main" id="main">
         <header class="top">
-      <button class="ib" id="unfold" aria-label="Open sidebar" data-tip="Open sidebar"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1"><rect x="1.5" y="2.5" width="13" height="11" rx="1.5"/><path d="M6 2.5v11"/></svg></button>
       <span class="crumb" id="crumb"></span><button class="ttl" id="ttl" data-tip="Rename  F2"></button>
       <div class="r">
         <button class="runpill" id="runPill" hidden><i></i><span id="runT">Working</span><span class="num" id="runE">00:00</span></button><button class="dsp-btn" id="dspBtn" data-tip="The Dispatch  ⌘L"><i aria-hidden="true"></i><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.1" aria-hidden="true"><rect x="1.5" y="2.5" width="13" height="11" rx="1.5"/><path class="pn" d="M10 2.5v11"/></svg><span>Dispatch</span></button>

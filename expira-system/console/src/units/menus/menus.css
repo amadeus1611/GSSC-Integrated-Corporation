@@ -8,8 +8,6 @@
 .seg{display:grid;grid-template-columns:repeat(3,1fr);gap:var(--sp-half);margin:var(--sp-half) var(--sp-1) var(--sp-1);padding:var(--sp-half);border-radius:var(--r-4);background:var(--well);border:var(--rule-hair) solid var(--line-2)}
 .menu .seg button{flex-direction:column;justify-content:center;gap:var(--sp-1);padding:var(--sp-2) var(--sp-1);font-size:var(--fs-chrome-2);color:var(--soft);border-radius:var(--r-2);text-align:center}
 .menu .seg button svg{width:15px;height:15px}
-.top{height:50px;flex:none;display:flex;align-items:center;gap:var(--sp-2h);padding:0 var(--sp-4)}
-.top .r{margin-left:auto;display:flex;align-items:center;gap:var(--sp-1h)}
 .menu.open{opacity:1;visibility:visible;transform:none;filter:none;pointer-events:auto;transition-delay:0s}
 .menu .mh{padding:var(--sp-2) var(--sp-2) var(--sp-1)}
 .menu .sep{height:var(--rule-hair);background:var(--line-2);margin:var(--sp-1h) var(--sp-1)}

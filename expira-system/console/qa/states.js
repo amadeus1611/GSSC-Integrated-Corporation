@@ -17,7 +17,7 @@ const STATES = [
   ...['appearance', 'briefs', 'map', 'kernel', 'files', 'library', 'about'].map(t => ['tab-' + t, async p => { await click(p, `[data-tab=${t}]`) }]),
   ['palette', async p => { await p.keyboard.press('Escape'); await wait(p, 400); await p.keyboard.press('Control+KeyK'); await wait(p) }],
   ['folded', async p => { await p.keyboard.press('Escape'); await wait(p, 400); await click(p, '#fold') }],
-  ['unfolded', async p => { await click(p, '#unfold') }],
+  ['unfolded', async p => { await click(p, '#fold') }],
   ['mockrun', async p => { await H.brief(p) }],
 ];
 module.exports = { wait, stable, click, STATES };

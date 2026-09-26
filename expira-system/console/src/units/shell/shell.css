@@ -1,10 +1,31 @@
+/* frame: the sidebar folds by easing its margin on --t-move; the main column takes the width as it goes */
+.side{width:256px;flex:none;background:var(--side);border-right:var(--rule-hair) solid var(--line-2);display:flex;flex-direction:column;padding:var(--sp-4) var(--sp-2h) var(--sp-3);transition:margin var(--t-move) var(--ease-inout),transform var(--t-move) var(--ease-inout)}
+.app.folded .side{margin-left:-256px}
+@media (max-width:760px){
+.side{position:fixed;inset:0 auto 0 0;z-index:var(--z-side);box-shadow:var(--e2)}
+.app.folded .side{margin-left:0;transform:translateX(-102%)}
+}
+.top{height:50px;flex:none;display:flex;align-items:center;gap:var(--sp-2h);padding:0 var(--sp-4)}
+.top .r{margin-left:auto;display:flex;align-items:center;gap:var(--sp-1h)}
+/* the sidebar button: one button that travels between the sidebar header and the main header (FLIP in shell.js).
+   Its icon morphs with the state: the pane narrows, the divider slides, the chevron turns. */
+.side-t{position:relative;z-index:var(--z-3)}
+.brand .side-t{margin-left:auto}
+.side-t svg .pane{fill:currentColor;fill-opacity:.14;stroke:none}
+.side-t svg .pane,.side-t svg .dv,.side-t svg .chev{transform-box:fill-box;transition:transform var(--t-move) var(--ease-inout)}
+.side-t svg .pane{transform-origin:left center}
+.side-t svg .chev{transform-origin:center;transition:transform var(--t-move) var(--ease-inout),translate var(--t-exit) var(--ease-soft-close)}
+/* hover nudges the chevron the way it will send the sidebar; on its own property, so a click mid-hover still morphs on --t-move */
+.side-t:hover svg .chev{translate:-1px 0;transition:transform var(--t-move) var(--ease-inout),translate var(--t-instant) var(--ease-out)}
+.app.folded .side-t svg .pane{transform:scaleX(.3)}
+.app.folded .side-t svg .dv{transform:translateX(-2.4px)}
+.app.folded .side-t svg .chev{transform:translateX(-1px) rotate(180deg)}
+.app.folded .side-t:hover svg .chev{translate:1px 0}
 /* main */
 .main{flex:1;min-width:0;display:flex;flex-direction:column;position:relative;transition:margin-right var(--t-move) var(--ease-soft-close)}
 @media (min-width:1100px){
 .app.dsp-open .main{margin-right:min(420px,100vw)}
 }
-#unfold{display:none}
-.app.folded #unfold{display:grid}
 .dsp-btn:hover{border-color:var(--line-3);color:var(--ink);transition-duration:var(--t-instant);transition-timing-function:var(--ease-out)}
 .app.busy .dsp-btn i{background:var(--gold);animation:breathe var(--t-loop) var(--ease-inout) infinite}
 @keyframes breathe{50%{opacity:.25}}

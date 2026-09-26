@@ -249,13 +249,34 @@ html.calm *,html.calm *::before,html.calm *::after{animation:none!important;tran
 @media (prefers-reduced-motion:reduce){
 .brand .mark polygon{transition:none}
 }
+/* frame: the sidebar folds by easing its margin on --t-move; the main column takes the width as it goes */
+.side{width:256px;flex:none;background:var(--side);border-right:var(--rule-hair) solid var(--line-2);display:flex;flex-direction:column;padding:var(--sp-4) var(--sp-2h) var(--sp-3);transition:margin var(--t-move) var(--ease-inout),transform var(--t-move) var(--ease-inout)}
+.app.folded .side{margin-left:-256px}
+@media (max-width:760px){
+.side{position:fixed;inset:0 auto 0 0;z-index:var(--z-side);box-shadow:var(--e2)}
+.app.folded .side{margin-left:0;transform:translateX(-102%)}
+}
+.top{height:50px;flex:none;display:flex;align-items:center;gap:var(--sp-2h);padding:0 var(--sp-4)}
+.top .r{margin-left:auto;display:flex;align-items:center;gap:var(--sp-1h)}
+/* the sidebar button: one button that travels between the sidebar header and the main header (FLIP in shell.js).
+   Its icon morphs with the state: the pane narrows, the divider slides, the chevron turns. */
+.side-t{position:relative;z-index:var(--z-3)}
+.brand .side-t{margin-left:auto}
+.side-t svg .pane{fill:currentColor;fill-opacity:.14;stroke:none}
+.side-t svg .pane,.side-t svg .dv,.side-t svg .chev{transform-box:fill-box;transition:transform var(--t-move) var(--ease-inout)}
+.side-t svg .pane{transform-origin:left center}
+.side-t svg .chev{transform-origin:center;transition:transform var(--t-move) var(--ease-inout),translate var(--t-exit) var(--ease-soft-close)}
+/* hover nudges the chevron the way it will send the sidebar; on its own property, so a click mid-hover still morphs on --t-move */
+.side-t:hover svg .chev{translate:-1px 0;transition:transform var(--t-move) var(--ease-inout),translate var(--t-instant) var(--ease-out)}
+.app.folded .side-t svg .pane{transform:scaleX(.3)}
+.app.folded .side-t svg .dv{transform:translateX(-2.4px)}
+.app.folded .side-t svg .chev{transform:translateX(-1px) rotate(180deg)}
+.app.folded .side-t:hover svg .chev{translate:1px 0}
 /* main */
 .main{flex:1;min-width:0;display:flex;flex-direction:column;position:relative;transition:margin-right var(--t-move) var(--ease-soft-close)}
 @media (min-width:1100px){
 .app.dsp-open .main{margin-right:min(420px,100vw)}
 }
-#unfold{display:none}
-.app.folded #unfold{display:grid}
 .dsp-btn:hover{border-color:var(--line-3);color:var(--ink);transition-duration:var(--t-instant);transition-timing-function:var(--ease-out)}
 .app.busy .dsp-btn i{background:var(--gold);animation:breathe var(--t-loop) var(--ease-inout) infinite}
 @keyframes breathe{50%{opacity:.25}}
@@ -1197,8 +1218,6 @@ html.calm *,html.calm *::before,html.calm *::after{animation:none!important;tran
 .seg{display:grid;grid-template-columns:repeat(3,1fr);gap:var(--sp-half);margin:var(--sp-half) var(--sp-1) var(--sp-1);padding:var(--sp-half);border-radius:var(--r-4);background:var(--well);border:var(--rule-hair) solid var(--line-2)}
 .menu .seg button{flex-direction:column;justify-content:center;gap:var(--sp-1);padding:var(--sp-2) var(--sp-1);font-size:var(--fs-chrome-2);color:var(--soft);border-radius:var(--r-2);text-align:center}
 .menu .seg button svg{width:15px;height:15px}
-.top{height:50px;flex:none;display:flex;align-items:center;gap:var(--sp-2h);padding:0 var(--sp-4)}
-.top .r{margin-left:auto;display:flex;align-items:center;gap:var(--sp-1h)}
 .menu.open{opacity:1;visibility:visible;transform:none;filter:none;pointer-events:auto;transition-delay:0s}
 .menu .mh{padding:var(--sp-2) var(--sp-2) var(--sp-1)}
 .menu .sep{height:var(--rule-hair);background:var(--line-2);margin:var(--sp-1h) var(--sp-1)}
@@ -1500,8 +1519,6 @@ html.tnone *,html.tnone *::before,html.tnone *::after{transition:none!important}
 .stg-n [role=tab]:hover{background:color-mix(in srgb,var(--line) 60%,transparent)}
 .stg-n [role=tab][aria-selected=true]:hover{background:transparent}
 /* sidebar */
-.side{width:256px;flex:none;background:var(--side);border-right:var(--rule-hair) solid var(--line-2);display:flex;flex-direction:column;padding:var(--sp-4) var(--sp-2h) var(--sp-3);transition:margin var(--t-move) var(--ease-soft-close),transform var(--t-move) var(--ease-soft-close)}
-.app.folded .side{margin-left:-256px}
 .side.searching .search{display:block}
 .side:hover .sh .ib.sm{opacity:1}
 .toast .ua{border:0;background:none;padding:0;cursor:pointer;color:var(--gold);font:italic 400 var(--fs-ui) var(--f-display)}
@@ -1534,10 +1551,6 @@ html.tnone *,html.tnone *::before,html.tnone *::after{transition:none!important}
 .jump{position:absolute;left:50%;bottom:calc(100% + 8px);transform:translate(-50%,6px);opacity:0;pointer-events:none;border:var(--rule-hair) solid var(--line-3);background:var(--panel);border-radius:var(--r-3);box-shadow:var(--e2);font-size:var(--fs-chrome-2);color:var(--soft);padding:var(--sp-1) var(--sp-2h);cursor:pointer;transition:opacity var(--t-exit) var(--ease-soft-close),transform var(--t-move) var(--ease-soft-close)}
 .app:not(.has-chat) .jump{display:none}
 .jump.show{opacity:1;transform:translate(-50%,0);pointer-events:auto}
-@media (max-width:760px){
-.side{position:fixed;inset:0 auto 0 0;z-index:var(--z-side);box-shadow:var(--e2)}
-.app.folded .side{margin-left:0;transform:translateX(-102%)}
-}
 @media (prefers-reduced-motion:reduce){
 /* !important: the motion kill switch must beat every unit's own motion */
 *,*::before,*::after{animation:none!important;transition:none!important}
@@ -1558,7 +1571,7 @@ html.tnone *,html.tnone *::before,html.tnone *::after{transition:none!important}
 
 <div class="app has-chat" id="app">
   <nav class="side" aria-label="Chats" id="side">
-    <div class="brand"><svg class="mark" viewBox="0 0 1413 425" role="img" aria-label="EXPIRA mark"><polygon points="0,0 233,0 391,100 206,425 40,425 0,302" fill="var(--mark-a)"/><polygon points="233,0 728,0 391,100" fill="var(--gold)"/><polygon points="391,100 728,0 778,0 871,225 1166,425 1058,425" fill="var(--mark-a)"/><polygon points="391,100 1058,425 206,425" fill="var(--mark-b)"/><polygon points="918,0 1043,0 1408,425 1241,425 968,192" fill="var(--gold)"/><polygon points="1043,0 1340,0 1408,425" fill="var(--mark-b)"/></svg><span class="wm" role="img" aria-label="EXPIRA"></span><button class="ib fold" id="fold" data-tip="Close sidebar" aria-label="Close sidebar"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1"><rect x="1.5" y="2.5" width="13" height="11" rx="1.5"/><path d="M6 2.5v11"/></svg></button></div>
+    <div class="brand"><svg class="mark" viewBox="0 0 1413 425" role="img" aria-label="EXPIRA mark"><polygon points="0,0 233,0 391,100 206,425 40,425 0,302" fill="var(--mark-a)"/><polygon points="233,0 728,0 391,100" fill="var(--gold)"/><polygon points="391,100 728,0 778,0 871,225 1166,425 1058,425" fill="var(--mark-a)"/><polygon points="391,100 1058,425 206,425" fill="var(--mark-b)"/><polygon points="918,0 1043,0 1408,425 1241,425 968,192" fill="var(--gold)"/><polygon points="1043,0 1340,0 1408,425" fill="var(--mark-b)"/></svg><span class="wm" role="img" aria-label="EXPIRA"></span><button class="ib side-t" id="fold" aria-controls="side" aria-expanded="true" aria-label="Close sidebar" data-tip="Close sidebar"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1"><rect x="1.5" y="2.5" width="13" height="11" rx="1.5"/><path class="pane" d="M2.5 3h3.5v10h-3.5z"/><path class="dv" d="M6 2.5v11"/><path class="chev" d="M11 6.2 9.2 8l1.8 1.8"/></svg></button></div>
     <div class="nav">
       <button class="navb" id="newChat"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.1"><path d="M8 3v10M3 8h10"/></svg>New chat<span class="kb">⌥N</span></button>
       <button class="navb" id="findBtn"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.1"><circle cx="7" cy="7" r="4.5"/><path d="M10.5 10.5L14 14"/></svg>Search<span class="kb">/</span></button>
@@ -1572,7 +1585,6 @@ html.tnone *,html.tnone *::before,html.tnone *::after{transition:none!important}
 
   <div class="main" id="main">
         <header class="top">
-      <button class="ib" id="unfold" aria-label="Open sidebar" data-tip="Open sidebar"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1"><rect x="1.5" y="2.5" width="13" height="11" rx="1.5"/><path d="M6 2.5v11"/></svg></button>
       <span class="crumb" id="crumb"></span><button class="ttl" id="ttl" data-tip="Rename  F2"></button>
       <div class="r">
         <button class="runpill" id="runPill" hidden><i></i><span id="runT">Working</span><span class="num" id="runE">00:00</span></button><button class="dsp-btn" id="dspBtn" data-tip="The Dispatch  ⌘L"><i aria-hidden="true"></i><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.1" aria-hidden="true"><rect x="1.5" y="2.5" width="13" height="11" rx="1.5"/><path class="pn" d="M10 2.5v11"/></svg><span>Dispatch</span></button>
@@ -1836,7 +1848,7 @@ $("#recents").addEventListener("click",e=>{
  const ft=e.target.closest("[data-ftoggle]");if(ft){const f=FOLDERS.find(x=>x.id===ft.dataset.ftoggle);f.open=!f.open;saveF();ft.closest(".fold").classList.toggle("open",f.open);return}
  const cm=e.target.closest("[data-cmenu]");if(cm){e.stopPropagation();chatMenu(cm.dataset.cmenu,cm);return}
  const fm=e.target.closest("[data-fmenu]");if(fm){e.stopPropagation();folderMenu(fm.dataset.fmenu,fm);return}
- const b=e.target.closest(".item");if(!b||busy||b.querySelector(".rn-in"))return;open(chats.find(c=>c.id===b.dataset.id));if(innerWidth<760)app.classList.add("folded")});
+ const b=e.target.closest(".item");if(!b||busy||b.querySelector(".rn-in"))return;open(chats.find(c=>c.id===b.dataset.id));if(innerWidth<760)setFold(true)});
 $("#recents").addEventListener("contextmenu",e=>{const r=e.target.closest(".row[data-id]");if(!r)return;e.preventDefault();chatMenu(r.dataset.id,{getBoundingClientRect:()=>({left:e.clientX,right:e.clientX,top:e.clientY,bottom:e.clientY}),setAttribute(){}})});
 /* drag a chat onto a folder, or back onto the recents */
 let dragId=null;
@@ -2029,7 +2041,18 @@ const hm=document.querySelector("#stage .mark");if(!reduce){$("#hero").addEventL
 
 /* chrome */
 const sc=$("#scroll");
-$("#fold").onclick=()=>app.classList.add("folded");$("#unfold").onclick=()=>app.classList.remove("folded");if(innerWidth<760)app.classList.add("folded");
+/* the sidebar button travels: it lives in the sidebar header while the sidebar is open and in the main header while it is
+   folded. FLIP: measure it, move it, then play it back from where it was, on the same curve and time as the sidebar. */
+function setFold(on,travel=true){const b=$("#fold"),to=on?$("#main .top"):$("#side .brand");if(app.classList.contains("folded")===on&&b.parentElement===to)return;
+ const f=b.getBoundingClientRect(),hd=[$("#crumb"),$("#ttl")],hf=hd.map(e=>e.getBoundingClientRect().left);on?to.prepend(b):to.append(b);
+ getComputedStyle(b.querySelector(".chev")).transform;/* moving a node drops its transitions: settle its style first, so the icon morph runs */
+ app.classList.toggle("folded",on);
+ const l=on?"Open sidebar":"Close sidebar";b.setAttribute("aria-expanded",String(!on));b.setAttribute("aria-label",l);b.dataset.tip=l;
+ if(!travel||reduce)return;const t=b.getBoundingClientRect(),dx=f.left-t.left,dy=f.top-t.top;
+ const o={duration:MO.move,easing:MO.inout};if(dx||dy)b.animate([{transform:`translate(${dx}px,${dy}px)`},{transform:"none"}],o);
+ /* the title makes room for the button, or takes its place, on the same move */
+ hd.forEach((e,i)=>{const d=hf[i]-e.getBoundingClientRect().left;if(d&&e.offsetWidth)e.animate([{transform:`translateX(${d}px)`},{transform:"none"}],o)})}
+$("#fold").onclick=()=>setFold(!app.classList.contains("folded"));if(innerWidth<760)setFold(true,false);
 const newChat=()=>{if(busy)return;open(null);promptEl.focus()};$("#newChat").onclick=newChat;
 $("#findBtn").onclick=()=>{$("#side").classList.toggle("searching");$("#find").focus()};
 /* appearance: system, light or dark; remembered per viewer, eased between palettes */
@@ -2177,7 +2200,7 @@ addEventListener("keydown",e=>{if(["PageUp","ArrowUp","Home"].includes(e.key)&&d
 $("#jump").onclick=()=>{stick=true;sc.scrollTo({top:1e9,behavior:reduce?"auto":"smooth"})};
 
 /* palette */
-const CMDS=[["Appearance: light","",()=>applyTheme("light",true)],["Appearance: dark","",()=>applyTheme("dark",true)],["Appearance: system","",()=>applyTheme("system",true)],["Settings","⌘,",()=>setTimeout(()=>setMenu(true),60)],["Settings: appearance","",()=>{STAB="appearance";setTimeout(()=>setMenu(true),60)}],["Settings: the map","",()=>{STAB="map";setTimeout(()=>setMenu(true),60)}],["Open a kernel template","",()=>{STAB="kernel";setTimeout(()=>setMenu(true),60)}],["Keyboard shortcuts","?",()=>setTimeout(()=>keys(true),30)],["New chat","⌥N",newChat],["Open the Dispatch","⌥L",()=>openLatest()],["Brief options","",()=>{STAB="briefs";setTimeout(()=>setMenu(true),60)}],["Toggle client-safe","",()=>{OPT.safe=!OPT.safe;saveOpt();drawOpt();toast(OPT.safe?"Client-safe on":"Client-safe off")}],["New folder","",()=>newFolder()],["Rename this chat","F2",()=>cur&&renameChat(cur)],["Archive this chat","",()=>cur&&!busy&&archiveChat(cur)],["Delete this chat","",()=>cur&&!busy&&deleteChat(cur)],["Search chats","/",()=>{app.classList.remove("folded");$("#side").classList.add("searching");$("#find").focus()}],["Stop the run","Esc",()=>ctl?.abort()],["Toggle sidebar","",()=>app.classList.toggle("folded")]];
+const CMDS=[["Appearance: light","",()=>applyTheme("light",true)],["Appearance: dark","",()=>applyTheme("dark",true)],["Appearance: system","",()=>applyTheme("system",true)],["Settings","⌘,",()=>setTimeout(()=>setMenu(true),60)],["Settings: appearance","",()=>{STAB="appearance";setTimeout(()=>setMenu(true),60)}],["Settings: the map","",()=>{STAB="map";setTimeout(()=>setMenu(true),60)}],["Open a kernel template","",()=>{STAB="kernel";setTimeout(()=>setMenu(true),60)}],["Keyboard shortcuts","?",()=>setTimeout(()=>keys(true),30)],["New chat","⌥N",newChat],["Open the Dispatch","⌥L",()=>openLatest()],["Brief options","",()=>{STAB="briefs";setTimeout(()=>setMenu(true),60)}],["Toggle client-safe","",()=>{OPT.safe=!OPT.safe;saveOpt();drawOpt();toast(OPT.safe?"Client-safe on":"Client-safe off")}],["New folder","",()=>newFolder()],["Rename this chat","F2",()=>cur&&renameChat(cur)],["Archive this chat","",()=>cur&&!busy&&archiveChat(cur)],["Delete this chat","",()=>cur&&!busy&&deleteChat(cur)],["Search chats","/",()=>{setFold(false);$("#side").classList.add("searching");$("#find").focus()}],["Stop the run","Esc",()=>ctl?.abort()],["Toggle sidebar","",()=>app.classList.toggle("folded")]];
 let ps=0;const pal=o=>{$("#pal").classList.toggle("open",o);$("#veil").classList.toggle("open",o);if(o){$("#palIn").value="";ps=0;drawPal();setTimeout(()=>$("#palIn").focus(),30)}};
 function drawPal(){const q=$("#palIn").value.toLowerCase(),L=CMDS.filter(c=>c[0].toLowerCase().includes(q));ps=Math.min(ps,Math.max(0,L.length-1));$("#palList").innerHTML=L.map((c,i)=>`<li class="${i===ps?"on":""}" data-i="${CMDS.indexOf(c)}">${c[0]}${c[1]?`<span class="kb">${c[1]}</span>`:""}</li>`).join("")||`<li class="empty">No command matches.</li>`}
 $("#palIn").addEventListener("input",()=>{ps=0;drawPal()});
@@ -2198,7 +2221,7 @@ addEventListener("keydown",e=>{const k=e.key.toLowerCase();if(k==="escape"&&$("#
  else if(k==="escape"&&$("#optMenu").classList.contains("open"))menu(false);
  else if(k==="escape"&&$("#keys").classList.contains("open"))keys(false);
  else if(k==="escape"){if($("#docMenu").classList.contains("open")){docMenu(false);return}if($("#pal").classList.contains("open"))pal(false);else if(busy&&promptEl.value.trim()){promptEl.value="";grow();sendSync()}else if($("#dsp").classList.contains("open"))showDsp(false);else if(document.querySelector("#mfs.open,#docv.open,#setMenu.open,.menu.open,#lbx:not([hidden])"))return;else if(busy)ctl?.abort()}
- else if(k==="/"&&document.activeElement===document.body){e.preventDefault();app.classList.remove("folded");$("#side").classList.add("searching");$("#find").focus()}});
+ else if(k==="/"&&document.activeElement===document.body){e.preventDefault();setFold(false);$("#side").classList.add("searching");$("#find").focus()}});
 
 /* ---------- The Dispatch: it fills in as the work unfolds ---------- */
 const dsp=$("#dsp");const showDsp=o=>{dsp.classList.toggle("open",o);$("#dspBtn")?.setAttribute("aria-expanded",String(!!o));app.classList.toggle("dsp-open",o);if(o)setTimeout(()=>FM.forEach(m=>m.go()),30)};

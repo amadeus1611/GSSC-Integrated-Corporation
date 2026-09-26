@@ -1,6 +1,4 @@
 /* sidebar */
-.side{width:256px;flex:none;background:var(--side);border-right:var(--rule-hair) solid var(--line-2);display:flex;flex-direction:column;padding:var(--sp-4) var(--sp-2h) var(--sp-3);transition:margin var(--t-move) var(--ease-soft-close),transform var(--t-move) var(--ease-soft-close)}
-.app.folded .side{margin-left:-256px}
 .side.searching .search{display:block}
 .side:hover .sh .ib.sm{opacity:1}
 .toast .ua{border:0;background:none;padding:0;cursor:pointer;color:var(--gold);font:italic 400 var(--fs-ui) var(--f-display)}
@@ -33,10 +31,6 @@
 .jump{position:absolute;left:50%;bottom:calc(100% + 8px);transform:translate(-50%,6px);opacity:0;pointer-events:none;border:var(--rule-hair) solid var(--line-3);background:var(--panel);border-radius:var(--r-3);box-shadow:var(--e2);font-size:var(--fs-chrome-2);color:var(--soft);padding:var(--sp-1) var(--sp-2h);cursor:pointer;transition:opacity var(--t-exit) var(--ease-soft-close),transform var(--t-move) var(--ease-soft-close)}
 .app:not(.has-chat) .jump{display:none}
 .jump.show{opacity:1;transform:translate(-50%,0);pointer-events:auto}
-@media (max-width:760px){
-.side{position:fixed;inset:0 auto 0 0;z-index:var(--z-side);box-shadow:var(--e2)}
-.app.folded .side{margin-left:0;transform:translateX(-102%)}
-}
 @media (prefers-reduced-motion:reduce){
 /* !important: the motion kill switch must beat every unit's own motion */
 *,*::before,*::after{animation:none!important;transition:none!important}
