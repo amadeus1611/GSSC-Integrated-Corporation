@@ -55,13 +55,32 @@ const SB=(()=>{const side=$("#side"),scroll=$("#sbScroll");
   `<div class="sb-body" data-body="recents">${D.recents.map(([k,v])=>`<div class="sb-grp"><div class="sb-sub">${k}</div>${v.map(chat).join("")}</div>`).join("")}</div>`+
   `<div class="sb-none" id="findNone" hidden>Nothing matches.</div>`;
 
- /* ---- the gliding highlight ---- */
+ /* ---- focus: how anything in the sidebar appears and leaves ----
+    Appearing, opacity leads and focus comes last, like a lens pulling focus; leaving, focus goes first and the fade
+    follows, like a lens racking out. Slow in (--sb-in), quick out (--sb-out). Only opacity and blur: text keeps its size. */
+ const focusIn=B=>[{opacity:0,filter:`blur(${B}px)`},{opacity:.82,filter:`blur(${(B*.45).toFixed(2)}px)`,offset:.45},{opacity:1,filter:"blur(0px)"}];
+ const focusOut=B=>[{opacity:1,filter:"blur(0px)"},{opacity:.6,filter:`blur(${(B*.7).toFixed(2)}px)`,offset:.4},{opacity:0,filter:`blur(${B}px)`}];
+
+ /* ---- the gliding highlight ----
+    One soft plate per list. It surfaces out of a blur under the first row you touch, then glides from row to row on
+    the spring, stretching along its path in proportion to its speed and settling back to the row's height as it
+    lands (the mercury bead's rule: shape follows speed). It defocuses away when the pointer leaves the list. */
  function glide(list,sel){const hl=document.createElement("i");hl.className="sb-hl";hl.setAttribute("aria-hidden","true");list.prepend(hl);
-  const place=(row,jump)=>{const y=row.getBoundingClientRect().top-list.getBoundingClientRect().top+list.scrollTop;hl.style.height=row.offsetHeight+"px";
-   if(jump){hl.style.transition="none";hl.style.transform=`translateY(${y}px)`;hl.offsetWidth;hl.style.transition=""}else hl.style.transform=`translateY(${y}px)`};
-  list.addEventListener("pointerover",e=>{const r=e.target.closest(sel);if(!r||!list.contains(r)||r.closest("[hidden]"))return;place(r,!hl.classList.contains("on"));hl.classList.add("on")});
-  list.addEventListener("pointerleave",()=>hl.classList.remove("on"));
-  return{el:hl,off:()=>hl.classList.remove("on")}}
+  let shown=false,y=0,fade=null,mv=null;
+  const curY=()=>{const m=/matrix\(([^)]+)\)/.exec(getComputedStyle(hl).transform);return m?+m[1].split(",")[5]:y};
+  function show(v){if(v===shown)return;shown=v;const op=+getComputedStyle(hl).opacity;fade?.cancel();
+   if(reduce){hl.style.opacity=v?"1":"0";return}hl.style.opacity=v?"1":"0";const B=blurPx()*.4;
+   fade=hl.animate(v?[{opacity:op,filter:`blur(${(B*(1-op)).toFixed(2)}px)`},{opacity:1,filter:"blur(0px)"}]:[{opacity:op,filter:"blur(0px)"},{opacity:.5*op,filter:`blur(${(B*.7).toFixed(2)}px)`,offset:.4},{opacity:0,filter:`blur(${B}px)`}],
+    {duration:v?ms("--sb-in")*.7:ms("--sb-out"),easing:v?MO.out:MO.soft})}
+  function place(row){const y1=Math.round(row.getBoundingClientRect().top-list.getBoundingClientRect().top+list.scrollTop),h=row.offsetHeight;hl.style.height=h+"px";
+   if(!shown||reduce){mv?.cancel();y=y1;hl.style.transform=`translateY(${y1}px)`;return}
+   const y0=curY();mv?.cancel();y=y1;hl.style.transform=`translateY(${y1}px)`;const d=y1-y0;if(Math.abs(d)<.5)return;
+   const T=MO.move,E=easeFn(MO.spring),N=Math.max(14,Math.ceil(T/1000*120)),k=Math.min(.45,Math.abs(d)/(h*5)),vel=[];
+   for(let i=0;i<=N;i++){const t=i/N;vel.push((E(Math.min(1,t+.01))-E(Math.max(0,t-.01)))/.02)}const vmax=Math.max(...vel)||1;
+   mv=hl.animate(vel.map((v,i)=>({transform:`translateY(${(y0+d*E(i/N)).toFixed(2)}px) scaleY(${(1+k*v/vmax).toFixed(3)})`})),{duration:T,easing:"linear"})}
+  list.addEventListener("pointerover",e=>{const r=e.target.closest(sel);if(!r||!list.contains(r)||r.closest("[hidden]")){if(!e.target.closest(".sb-hl"))show(false);return}place(r);show(true)});
+  list.addEventListener("pointerleave",()=>show(false));
+  return{el:hl,off:()=>show(false)}}
  const hlS=glide(scroll,".sb-row"),hlM=glide($("#sbMenu"),".sb-row");
 
  /* ---- disclosure: one continuous move ---- */
@@ -89,9 +108,9 @@ const SB=(()=>{const side=$("#side"),scroll=$("#sbScroll");
   kids.animate(open?[{transform:"scaleY(0)"},{transform:"none"}]:[{transform:"none"},{transform:"scaleY(0)"}],{pseudoElement:"::before",duration:T,easing:Es,delay:L,fill:open?"backwards":"forwards"});
   [...kids.children].forEach(c=>{const b=c.offsetTop+c.offsetHeight;
    if(open){const t=T*easeInv(E,Math.min(1,(c.offsetTop+c.offsetHeight*.5)/d));
-    c.animate([{opacity:0,filter:`blur(${B}px)`},{opacity:1,filter:"blur(0px)"}],{duration:IN,delay:t,easing:MO.out,fill:"backwards"});end=Math.max(end,t+IN)}
+    c.animate(focusIn(B),{duration:IN,delay:t,easing:MO.out,fill:"backwards"});end=Math.max(end,t+IN)}
    else{const e=L+T*easeInv(E,Math.max(0,1-b/d)),dur=Math.max(50,Math.min(OUT,e));
-    c.animate([{opacity:1,filter:"blur(0px)"},{opacity:0,filter:`blur(${B}px)`}],{duration:dur,delay:Math.max(0,e-dur),easing:MO.soft,fill:"forwards"})}});
+    c.animate(focusOut(B),{duration:dur,delay:Math.max(0,e-dur),easing:MO.soft,fill:"forwards"})}});
   setTimeout(done,end+20)}
  scroll.addEventListener("click",e=>{
   const f=e.target.closest("[data-fold]");if(f){const i=f.dataset.fold,row=f.closest(".sb-fold");disclose(row,scroll.querySelector(`[data-kids="${i}"]`),row.getAttribute("aria-expanded")!=="true");return}
@@ -103,7 +122,7 @@ const SB=(()=>{const side=$("#side"),scroll=$("#sbScroll");
  /* ---- search opens in place; the rows that stay glide to their new places, the ones that return resolve out of the blur ---- */
  function reflow(mutate){hlS.off();const rows=moving(document.createElement("i")),before=new Map(rows.map(e=>[e,e.getBoundingClientRect().top]));mutate();if(reduce)return;
   moving(document.createElement("i")).forEach(e=>{e.getAnimations().forEach(a=>a.cancel());const b=before.get(e);
-   if(b==null)e.animate([{opacity:0,filter:`blur(${blurPx()*.5}px)`},{opacity:1,filter:"blur(0px)"}],{duration:ms("--sb-in"),easing:MO.out});
+   if(b==null)e.animate(focusIn(blurPx()*.5),{duration:ms("--sb-in"),easing:MO.out});
    else{const dy=Math.round(b-e.getBoundingClientRect().top);if(dy)e.animate([{transform:`translateY(${dy}px)`},{transform:"none"}],{duration:MO.move,easing:MO.spring})}})}
  const inp=$("#find"),frow=$("#findRow");let findT=0;
  function search(on){if(on===frow.classList.contains("on"))return;clearTimeout(findT);
@@ -111,7 +130,7 @@ const SB=(()=>{const side=$("#side"),scroll=$("#sbScroll");
   /* closing: what was typed blurs away quickly, the well fades, and the rows come back in the same beat */
   frow.classList.remove("on");inp.tabIndex=-1;frow.querySelector(".sb-clr").tabIndex=-1;
   const typed=inp.value.trim();
-  if(typed&&!reduce)inp.animate([{opacity:1,filter:"blur(0px)"},{opacity:0,filter:`blur(${blurPx()*.5}px)`}],{duration:ms("--sb-out"),easing:MO.soft,fill:"forwards"});
+  if(typed&&!reduce)inp.animate(focusOut(blurPx()*.5),{duration:ms("--sb-out"),easing:MO.soft,fill:"forwards"});
   findT=setTimeout(()=>{inp.getAnimations().forEach(a=>a.cancel());inp.value="";frow.classList.remove("has")},typed?ms("--sb-out"):0);
   if(typed)reflow(()=>filter(""))}
  function filter(q){q=q.trim().toLowerCase();let any=false;
@@ -135,7 +154,9 @@ const SB=(()=>{const side=$("#side"),scroll=$("#sbScroll");
   const now=()=>{if(!cur)return rest;const u=Math.min(1,Math.max(0,(document.timeline.currentTime-cur.t0)/cur.T));return cur.p0+(cur.g-cur.p0)*cur.E(u)};
   function run(g){const p0=now();el.getAnimations().forEach(a=>a.cancel());if(reduce||!el.animate){cur=null;rest=g;return}
    const open=g===1,T=Math.max(50,(open?ms("--sb-in"):ms("--sb-out"))*Math.abs(g-p0)),E=easeFn(open?MO.out:MO.soft),N=Math.max(10,Math.ceil(T/1000*120)),B=blurPx()*.6,dy=el.dataset.from==="above"?-6:6;
-   const f=p=>({opacity:p,transform:`translateY(${((1-p)*dy).toFixed(2)}px)`,filter:p>.985?"blur(0px)":`blur(${(B*(1-p)).toFixed(2)}px)`,visibility:"visible"});
+   /* opacity runs ahead of the position and focus behind it: opening, the surface is visible early and sharpens last;
+      closing (the same map run backwards), focus goes first and the fade follows */
+   const f=p=>{const q=1-p;return{opacity:(1-q*q).toFixed(3),transform:`translateY(${(q*dy).toFixed(2)}px)`,filter:q<.01?"blur(0px)":`blur(${(B*Math.pow(q,.75)).toFixed(2)}px)`,visibility:"visible"}};
    const t0=document.timeline.currentTime,a=el.animate(Array.from({length:N+1},(_,i)=>f(p0+(g-p0)*E(i/N))),{duration:T,easing:"linear",fill:"forwards"});a.startTime=t0;
    const mine=cur={p0,g,T,E,t0};a.finished.then(()=>{if(cur!==mine)return;rest=g;cur=null;a.cancel()},()=>{})}
   new MutationObserver(()=>{const o=el.classList.contains("open")?1:0;if(o!==(cur?cur.g:rest))run(o)}).observe(el,{attributes:true,attributeFilter:["class"]})}
@@ -184,10 +205,10 @@ const SB=(()=>{const side=$("#side"),scroll=$("#sbScroll");
   if(a==="del"||a==="arch")return remove(row,a==="arch"?"Archived":"Deleted")}
  function remove(row,verb){const kids=row.classList.contains("sb-fold")?row.nextElementSibling:null,home={p:row.parentElement,n:(kids||row).nextSibling};
   const t=row.querySelector(".sb-t").textContent,up0=scroll.querySelector('[data-kids="4"]'),up=up0===kids?null:up0;/* a deleted folder's files go to Uploads */
-  const go=[row,kids].filter(Boolean);go.forEach(x=>x.animate([{opacity:1,filter:"blur(0px)"},{opacity:0,filter:`blur(${blurPx()*.5}px)`}],{duration:ms("--sb-out"),easing:MO.soft,fill:"forwards"}));
+  const go=[row,kids].filter(Boolean);go.forEach(x=>x.animate(focusOut(blurPx()*.5),{duration:ms("--sb-out"),easing:MO.soft,fill:"forwards"}));
   const moved=kids&&up?[...kids.querySelectorAll(".sb-row")]:[];
   setTimeout(()=>{reflow(()=>{go.forEach(x=>{x.getAnimations().forEach(a=>a.cancel());x.remove()});moved.forEach(m=>up.append(m));count();subs()});
-   toast(`${verb} <em>${esc(t)}</em>`,()=>reflow(()=>{home.p.insertBefore(row,home.n);if(kids){row.after(kids);moved.forEach(m=>kids.append(m))}count();subs()}))},ms("--sb-out"))}
+   toast(`${verb} <em>${esc(t)}</em>`,()=>reflow(()=>{home.p.insertBefore(row,home.n);if(kids){row.after(kids);moved.forEach(m=>kids.append(m))}count();subs()}))},ms("--sb-out")*.8)}
  function rename(row){const t=row.querySelector(".sb-t"),old=t.textContent,i=document.createElement("input");i.className="sb-ren";i.value=old;i.setAttribute("aria-label","Name");
   t.replaceChildren(i);i.focus();i.select();let done=false;
   const end=ok=>{if(done)return;done=true;const v=i.value.trim();t.textContent=ok&&v?v:old;row.dataset.q=t.textContent.toLowerCase();row.querySelector(".sb-hit").focus({preventScroll:true})};

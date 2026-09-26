@@ -130,6 +130,13 @@ Motion is the heart of the UX: fidelity in the engine comes first.
   - **blur timing reversed for the sidebar** (Amadeus, v45: "fast close, slow entry"):
     - entries resolve out of the blur over `--sb-in` 300 ms, and closes blur away over `--sb-out` 150 ms;
     - this reverses the console-wide v44 rule (a fast push and a slower soft close) for the sidebar only; decide at promotion whether it becomes the rule everywhere.
+  - **refinement pass** (Amadeus: "refine the hovers, blur and closes; move the logo to the bottom left; reduce the text; subtler categories"):
+    - **Type** is at chrome size: rows are 11px on 24px, meta 10px, labels at the 9.5px floor. The sizes are sidebar tokens (`--sb-fs`, `--sb-row`, `--sb-ic`).
+    - **The EXPIRA mark** signs the bottom left under the account row, at half strength until hovered. The top row keeps only the sidebar button, at the left.
+    - **Section headers are quieter.** The numeral and label are muted with no gold at rest. On hover the numeral warms to gold, a hairline draws out on the spring, and the caret and actions come out of a blur.
+    - **The hover plate** surfaces out of a blur, glides on the spring and stretches along its path in proportion to its speed (the mercury bead's rule), then defocuses away when the pointer leaves.
+    - **One focus curve for everything that appears or leaves.** Entering, opacity leads and focus comes last (a lens pulling focus, `--sb-in`). Leaving, focus goes first and the fade follows (racking out, `--sb-out`). The pull-up's surfaces use the same map.
+    - The plus in New chat turns a quarter on the spring when hovered.
   - fully featured:
     - a row menu (from `…` or a right-click): pin, rename, move to a folder, archive, delete with undo;
     - rename in place (F2);

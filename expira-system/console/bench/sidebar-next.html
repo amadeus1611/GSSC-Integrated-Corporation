@@ -33,7 +33,7 @@ BENCH.name="Sidebar · v45 draft";
 
 <div class="app has-chat" id="app">
   <nav class="side sb" aria-label="Sidebar" id="side">
-    <div class="brand"><svg class="mark" viewBox="0 0 1413 425" role="img" aria-label="EXPIRA mark"><polygon points="0,0 233,0 391,100 206,425 40,425 0,302" fill="var(--mark-a)"/><polygon points="233,0 728,0 391,100" fill="var(--gold)"/><polygon points="391,100 728,0 778,0 871,225 1166,425 1058,425" fill="var(--mark-a)"/><polygon points="391,100 1058,425 206,425" fill="var(--mark-b)"/><polygon points="918,0 1043,0 1408,425 1241,425 968,192" fill="var(--gold)"/><polygon points="1043,0 1340,0 1408,425" fill="var(--mark-b)"/></svg><span class="wm" role="img" aria-label="EXPIRA"></span><button class="ib side-t" id="fold" aria-controls="side" aria-expanded="true" aria-label="Close sidebar" data-tip="Close sidebar"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1"><rect x="1.5" y="2.5" width="13" height="11" rx="1.5"/><path class="pane" d="M2.5 3h3.5v10h-3.5z"/><path class="dv" d="M6 2.5v11"/><path class="chev" d="M11 6.2 9.2 8l1.8 1.8"/></svg></button></div>
+    <div class="brand"><button class="ib side-t" id="fold" aria-controls="side" aria-expanded="true" aria-label="Close sidebar" data-tip="Close sidebar"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1"><rect x="1.5" y="2.5" width="13" height="11" rx="1.5"/><path class="pane" d="M2.5 3h3.5v10h-3.5z"/><path class="dv" d="M6 2.5v11"/><path class="chev" d="M11 6.2 9.2 8l1.8 1.8"/></svg></button></div>
     <div class="sb-scroll" id="sbScroll"></div>
     <div class="sb-foot">
       <div class="sb-toast" id="sbToast" role="status" aria-live="polite"><span></span><button type="button">Undo</button></div>
@@ -52,6 +52,7 @@ BENCH.name="Sidebar · v45 draft";
         <div class="sb-row"><button class="sb-hit" type="button" role="menuitem"><span class="sb-ic"><!--info--></span><span class="sb-t">About EXPIRA</span></button></div>
       </div>
       <button class="sb-me" id="sbMe" type="button" aria-haspopup="menu" aria-expanded="false" aria-controls="sbMenu"><span class="sb-av">A</span><span class="sb-who"><b>Amadeus</b><small>· GSSC</small></span><!--chev--></button>
+      <div class="sb-sig"><svg class="mark" viewBox="0 0 1413 425" role="img" aria-label="EXPIRA mark"><polygon points="0,0 233,0 391,100 206,425 40,425 0,302" fill="var(--mark-a)"/><polygon points="233,0 728,0 391,100" fill="var(--gold)"/><polygon points="391,100 728,0 778,0 871,225 1166,425 1058,425" fill="var(--mark-a)"/><polygon points="391,100 1058,425 206,425" fill="var(--mark-b)"/><polygon points="918,0 1043,0 1408,425 1241,425 968,192" fill="var(--gold)"/><polygon points="1043,0 1340,0 1408,425" fill="var(--mark-b)"/></svg><span class="wm" role="img" aria-label="EXPIRA"></span></div>
     </div>
   </nav>
   <div class="sb-pop" id="sbPop" role="menu" aria-label="Actions"></div>

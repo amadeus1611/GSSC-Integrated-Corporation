@@ -1,87 +1,94 @@
 /* draft v45 sidebar (bench only until promoted into units/sidebar). Claude's structure, EXPIRA's hand:
-   two actions (New chat, Search), then the master template's Roman-numbered sections: I Files (folders), II Pinned,
-   III Recents. Rows are 28px, one hairline apart. No shortcut hints, no Dispatch; settings live in the account
-   pull-up at the foot. Motion: one highlight glides between rows on the spring; hovers arrive on --t-instant and
-   leave on the soft close; disclosures move the rows below as one FLIP while their children surface from a light
-   blur (sidebar-next.js). Only transform and opacity move, plus the sanctioned blur on small things. */
+   two actions (New chat, Search), then three quiet numbered sections after the master template: I Files (folders),
+   II Pinned, III Recents. The EXPIRA mark signs the foot, under the account row. Settings live in the account pull-up.
+   Motion (sidebar-next.js): one highlight glides between rows and stretches with its speed, like the mercury bead;
+   everything that appears resolves out of a blur, opacity first and focus last, slowly (--sb-in); everything that
+   leaves defocuses first and fades after, quickly (--sb-out). Text never scales or slides. */
 :root{
-  /* the sidebar's blur timing (Amadeus, v45): entries resolve slowly out of the blur, closes are quick.
-     Text never scales or slides: it only fades and blurs, so its size and place stay fixed from first frame to last. */
+  /* the sidebar's own scale: small, dense type on short rows */
+  --sb-fs:11px;--sb-fs-2:10px;--sb-row:24px;--sb-ic:13px;   /* chrome sizes (DESIGN_ENGINE §2: 10.5–11px) */
+  /* the sidebar's blur timing (Amadeus, v45): entries resolve slowly out of the blur, closes are quick */
   --sb-in:300ms;--sb-out:150ms;
 }
 @media (prefers-reduced-motion:reduce){:root{--sb-in:1ms;--sb-out:1ms}}
-.side.sb{padding:var(--sp-2h) var(--sp-2) var(--sp-2);gap:0}
-.sb .brand{display:flex;align-items:center;gap:var(--sp-2h);height:38px;padding:0 var(--sp-half) 0 var(--sp-2);margin-bottom:var(--sp-1h)}
-.sb .brand .mark{width:34px;flex:none}
-.sb .brand .side-t{margin-left:auto}
+
+.side.sb{padding:var(--sp-2) var(--sp-2) var(--sp-1h);gap:0}
+/* the top row keeps only the sidebar button, at the left where Claude keeps it */
+.sb .brand{display:flex;align-items:center;height:30px;padding:0 var(--sp-half);margin-bottom:var(--sp-1)}
+.sb .brand .side-t{margin-left:0;width:26px;height:26px}
 .ib svg{width:15px;height:15px}  /* today this lives in units/sidebar; it stays there on promotion */
 .sb-scroll{flex:1;min-height:0;overflow-y:auto;position:relative;margin:0 calc(var(--sp-2) * -1);padding:0 var(--sp-2) var(--sp-3);scrollbar-width:none}
 .sb-scroll::-webkit-scrollbar{display:none}
 
-/* the gliding highlight: one per list, placed by script, faded by class */
-.sb-hl{position:absolute;left:var(--sp-2);right:var(--sp-2);top:0;height:28px;border-radius:var(--r-4);background:var(--line);opacity:0;pointer-events:none;z-index:0;
- transition:transform var(--t-move) var(--spring),opacity var(--t-exit) var(--ease-soft-close)}
-.sb-hl.on{opacity:1;transition:transform var(--t-move) var(--spring),opacity var(--t-instant) var(--ease-out)}
-.sb-menu .sb-hl{left:5px;right:5px}
+/* the gliding highlight: placed, stretched and faded by script; transform-origin centre so the stretch is even */
+.sb-hl{position:absolute;left:var(--sp-2);right:var(--sp-2);top:0;height:var(--sb-row);border-radius:var(--r-3);background:var(--line);opacity:0;pointer-events:none;z-index:0;transform-origin:50% 50%}
+.sb-menu .sb-hl,.sb-pop .sb-hl{left:4px;right:4px}
 
 /* rows */
-.sb-row{position:relative;z-index:1;display:flex;align-items:center;height:28px;border-radius:var(--r-4);color:var(--text);font-size:var(--fs-body);font-weight:350;letter-spacing:-.003em}
+.sb-row{position:relative;z-index:1;display:flex;align-items:center;height:var(--sb-row);border-radius:var(--r-3);color:var(--text);font-size:var(--sb-fs);font-weight:400;letter-spacing:.002em}
 .sb-row+.sb-row,.sb-row+.sb-kids,.sb-kids+.sb-row{margin-top:1px}
 .sb-row.on{background:var(--line-2)}
-.sb-hit{all:unset;box-sizing:border-box;flex:1;min-width:0;height:100%;display:flex;align-items:center;gap:var(--sp-2h);padding:0 var(--sp-2);cursor:pointer;border-radius:inherit}
+.sb-hit{all:unset;box-sizing:border-box;flex:1;min-width:0;height:100%;display:flex;align-items:center;gap:var(--sp-2);padding:0 var(--sp-2);cursor:pointer;border-radius:inherit}
 .sb-hit:focus-visible{outline:var(--rule) solid var(--gold);outline-offset:-1px}
-.sb-ic{width:16px;height:16px;flex:none;color:var(--soft);transition:color var(--t-exit) var(--ease-soft-close)}
-.sb-row:hover .sb-ic,.sb-row.on .sb-ic{color:var(--ink);transition-duration:var(--t-instant);transition-timing-function:var(--ease-out)}
+.sb-ic{width:var(--sb-ic);height:var(--sb-ic);flex:none;color:var(--mute);transition:color var(--sb-out) var(--ease-soft-close)}
+.sb-ic svg{display:block;width:100%;height:100%}
+.sb-row:hover .sb-ic,.sb-row.on .sb-ic{color:var(--ink);transition:color var(--sb-in) var(--ease-out)}
 .sb-t{flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.sb-m{flex:none;font-size:var(--fs-chrome-2);color:var(--mute);font-variant-numeric:tabular-nums;transition:opacity var(--t-exit) var(--ease-soft-close)}
-/* New chat carries its plus in a small disc, as Claude does */
-.sb-new .sb-ic{width:18px;height:18px;margin:0 -1px;padding:3px;border-radius:var(--r-round);background:var(--line-2);color:var(--ink)}
-.sb-new:hover .sb-ic{background:var(--line-3)}
+.sb-m{flex:none;font-size:var(--sb-fs-2);color:var(--mute);font-variant-numeric:tabular-nums;transition:opacity var(--sb-out) var(--ease-soft-close),filter var(--sb-out) var(--ease-soft-close)}
+/* New chat: its plus sits in a small disc, and turns a quarter on the spring when the row is hovered */
+.sb-new .sb-ic{width:16px;height:16px;margin:0 -1px;padding:3px;border-radius:var(--r-round);background:var(--line-2);color:var(--ink);transition:background var(--sb-out) var(--ease-soft-close)}
+.sb-new .sb-ic svg{transition:transform var(--t-move) var(--spring)}
+.sb-new:hover .sb-ic{background:var(--line-3);transition:background var(--sb-in) var(--ease-out)}
+.sb-new:hover .sb-ic svg{transform:rotate(90deg)}
 
-/* the row's own actions: arrive fast, leave on the soft close */
-.sb-more{all:unset;position:absolute;right:3px;top:50%;width:22px;height:22px;margin-top:-11px;display:grid;place-items:center;border-radius:var(--r-2);color:var(--mute);cursor:pointer;opacity:0;
- transition:opacity var(--t-exit) var(--ease-soft-close),background var(--t-exit) var(--ease-soft-close),color var(--t-exit) var(--ease-soft-close)}
-.sb-more svg{width:12px;height:12px}
-.sb-row:hover .sb-more,.sb-more:focus-visible{opacity:1;transition-duration:var(--t-instant);transition-timing-function:var(--ease-out)}
-.sb-more:hover{background:var(--line-2);color:var(--ink)}
-.sb-row:hover .sb-m.hides{opacity:0}
-/* text stops short of the actions, and a count slides back under them */
-.sb-row:has(.sb-more) .sb-hit{padding-right:28px}
-.sb-row:has(.sb-more) .sb-m{margin-right:-20px}
+.sb-more{all:unset;position:absolute;right:2px;top:50%;width:20px;height:20px;margin-top:-10px;display:grid;place-items:center;border-radius:var(--r-2);color:var(--mute);cursor:pointer}
+.sb-more svg{width:11px;height:11px}
+.sb-more:hover,.sb-more[aria-expanded="true"]{background:var(--line-2);color:var(--ink)}
+.sb-row:has(.sb-more) .sb-hit{padding-right:24px}
+.sb-row:has(.sb-more) .sb-m{margin-right:-16px}
+
+/* what appears on hover comes out of a light blur (slow) and goes back into it (quick); after the resets above */
+.sb-more,.sb-ha,.sb-h .sb-car{opacity:0;filter:blur(2px);transition:opacity var(--sb-out) var(--ease-soft-close),filter var(--sb-out) var(--ease-soft-close)}
+.sb-row:hover .sb-more,.sb-more:focus-visible,.sb-more[aria-expanded="true"],.sb-h:hover .sb-ha,.sb-ha:focus-within,.sb-ha:has(.on),.sb-h:hover .sb-car,.sb-h[aria-expanded="false"] .sb-car,.sb-h:focus-visible .sb-car{opacity:1;filter:none;transition:opacity calc(var(--sb-in) * .6) var(--ease-out),filter var(--sb-in) var(--ease-out)}
+.sb-row:hover .sb-m.hides{opacity:0;filter:blur(2px)}
 
 /* status, as Claude marks its sessions: a ring when idle, a live gold dot while a run works, a page when it built a document */
-.sb-g{width:16px;height:16px;flex:none;display:grid;place-items:center;color:var(--mute)}
-.sb-g i{width:6px;height:6px;border-radius:var(--r-round);box-shadow:inset 0 0 0 1px currentColor}
+.sb-g{width:var(--sb-ic);height:var(--sb-ic);flex:none;display:grid;place-items:center;color:var(--mute)}
+.sb-g i{width:5px;height:5px;border-radius:var(--r-round);box-shadow:inset 0 0 0 1px currentColor}
 .sb-g.live i{background:var(--gold);box-shadow:none;animation:breathe var(--t-loop) var(--ease-inout) infinite}
-.sb-g svg{width:13px;height:13px}
+.sb-g svg{width:12px;height:12px}
 
-/* section headers, after the master template: a Roman numeral in the display italic, tracked small caps, and a
-   hairline that opens on a short gold lead-in */
-.sb-h{position:relative;z-index:1;display:flex;align-items:center;gap:var(--sp-1h);height:26px;margin-top:var(--sp-3h);padding:0 var(--sp-half) 0 var(--sp-2);cursor:pointer;user-select:none}
-.sb-n{min-width:14px;font:italic 400 11px/1 var(--f-display);color:var(--gold-ink)}
-.sb-l{font-size:var(--fs-micro);letter-spacing:var(--tracked-cap);text-transform:uppercase;color:var(--mute);transition:color var(--t-exit) var(--ease-soft-close)}
-.sb-h:hover .sb-l{color:var(--soft);transition-duration:var(--t-instant)}
-.sb-rule{flex:1;height:var(--rule-hair);margin:0 var(--sp-1) 0 var(--sp-1h);background:linear-gradient(90deg,var(--gold) 0 10px,var(--line-2) 10px);opacity:.9}
-.sb-car{width:10px;height:10px;flex:none;color:var(--mute);transition:transform var(--t-move) var(--ease-inout)}
-.sb-h[aria-expanded="false"] .sb-car,.sb-fold[aria-expanded="false"] .sb-car{transform:rotate(-90deg)}
-.sb-ha{display:flex;gap:1px;opacity:0;transition:opacity var(--t-exit) var(--ease-soft-close)}
-.sb-h:hover .sb-ha,.sb-ha:focus-within{opacity:1;transition-duration:var(--t-instant);transition-timing-function:var(--ease-out)}
-.sb-ib{all:unset;width:22px;height:22px;display:grid;place-items:center;border-radius:var(--r-2);color:var(--mute);cursor:pointer;transition:background var(--t-exit) var(--ease-soft-close),color var(--t-exit) var(--ease-soft-close)}
-.sb-ib svg{width:13px;height:13px}
-.sb-ib:hover{background:var(--line-2);color:var(--ink);transition-duration:var(--t-instant)}
+/* section headers, quietly after the master template: a small italic numeral and tracked small caps, both muted.
+   On hover the numeral warms to gold, a hairline draws out from the label, and the caret and actions surface. */
+.sb-h{position:relative;z-index:1;display:flex;align-items:center;gap:var(--sp-1h);height:22px;margin-top:var(--sp-3h);padding:0 var(--sp-half) 0 var(--sp-2);cursor:pointer;user-select:none;outline:none}
+.sb-n{min-width:10px;font:italic 400 10px/1 var(--f-display);color:var(--mute);opacity:.75;transition:color var(--sb-out) var(--ease-soft-close),opacity var(--sb-out) var(--ease-soft-close)}
+.sb-l{font-size:var(--fs-micro);letter-spacing:var(--tracked-tight);text-transform:uppercase;color:var(--mute);opacity:.85;transition:opacity var(--sb-out) var(--ease-soft-close)}
+.sb-rule{flex:1;height:var(--rule-hair);margin:0 var(--sp-1) 0 var(--sp-1);background:var(--line-2);opacity:0;transform:scaleX(.4);transform-origin:0 50%;
+ transition:opacity var(--sb-out) var(--ease-soft-close),transform var(--sb-out) var(--ease-soft-close)}
+.sb-h:hover .sb-n,.sb-h:focus-visible .sb-n{color:var(--gold-ink);opacity:1;transition:color var(--sb-in) var(--ease-out),opacity var(--sb-in) var(--ease-out)}
+.sb-h:hover .sb-l,.sb-h:focus-visible .sb-l{opacity:1;transition:opacity var(--sb-in) var(--ease-out)}
+.sb-h:hover .sb-rule,.sb-h:focus-visible .sb-rule{opacity:1;transform:none;transition:opacity var(--sb-in) var(--ease-out),transform var(--t-move) var(--spring)}
+.sb-car{width:9px;height:9px;flex:none;color:var(--mute)}
+.sb-car path{transform-box:fill-box;transform-origin:center;transition:transform var(--t-move) var(--ease-inout)}
+.sb-h[aria-expanded="false"] .sb-car path,.sb-fold[aria-expanded="false"] .sb-car path{transform:rotate(-90deg)}
+.sb-ha{display:flex;gap:1px}
+.sb-ib{all:unset;width:20px;height:20px;display:grid;place-items:center;border-radius:var(--r-2);color:var(--mute);cursor:pointer;transition:background var(--sb-out) var(--ease-soft-close),color var(--sb-out) var(--ease-soft-close)}
+.sb-ib svg{width:12px;height:12px}
+.sb-ib:hover{background:var(--line-2);color:var(--ink);transition:background var(--sb-in) var(--ease-out),color var(--sb-in) var(--ease-out)}
 .sb-ib:focus-visible{outline:var(--rule) solid var(--gold)}
+.sb-ib.on{color:var(--gold-ink);background:var(--gold-wash)}
 .sb-body,.sb-kids{position:relative}
-.sb-body{margin-top:var(--sp-1)}
-.sb-sub{position:relative;z-index:1;height:24px;display:flex;align-items:flex-end;padding:0 var(--sp-2) 5px;font-size:var(--fs-chrome);color:var(--mute)}
-.sb-sub:first-child{height:20px}
+.sb-body{margin-top:var(--sp-half)}
+.sb-sub{position:relative;z-index:1;height:20px;display:flex;align-items:flex-end;padding:0 var(--sp-2) 4px;font-size:var(--fs-micro);color:var(--mute);opacity:.8}
+.sb-sub:first-child{height:16px}
 
 /* the folder tree: children sit on a hairline guide under their folder's caret */
-.sb-fold .sb-car{margin:0 -4px 0 -1px}
-.sb-kids{padding-left:15px}
-.sb-kids::before{content:"";position:absolute;left:16px;top:2px;bottom:2px;width:var(--rule-hair);background:var(--line-2);transform-origin:50% 0}
-.sb-kids .sb-ic{width:14px;height:14px}
-.sb-empty{position:relative;z-index:1;height:26px;display:flex;align-items:center;padding:0 var(--sp-2) 0 var(--sp-3);font-size:var(--fs-ui);color:var(--mute)}
-.sb-kids[hidden],.sb-body[hidden],.sb-row[hidden],.sb-sub[hidden]{display:none}
+.sb-fold .sb-car{margin:0 -3px 0 -1px}
+.sb-kids{padding-left:13px}
+.sb-kids::before{content:"";position:absolute;left:14px;top:2px;bottom:2px;width:var(--rule-hair);background:var(--line-2);transform-origin:50% 0}
+.sb-kids .sb-ic{width:12px;height:12px}
+.sb-empty{position:relative;z-index:1;height:22px;display:flex;align-items:center;padding:0 var(--sp-2) 0 var(--sp-3);font-size:var(--sb-fs-2);color:var(--mute)}
+.sb-kids[hidden],.sb-body[hidden],.sb-row[hidden],.sb-sub[hidden],.sb-grp[hidden]{display:none}
 
 /* search: the row itself becomes the field. The icon and the word stay exactly where they are; only the field's
    well fades in around them (slow), the word dims to a placeholder, and the caret arrives. Closing is quick. */
@@ -91,76 +98,73 @@
 .sb-find .sb-ph{transition:color var(--sb-out) var(--ease-soft-close),opacity var(--sb-out) var(--ease-soft-close)}
 .sb-find.on .sb-ph{color:var(--mute);transition:color var(--sb-in) var(--ease-out),opacity var(--t-instant) var(--ease-out)}
 .sb-find.on.has .sb-ph{opacity:0}
-.sb-find input{all:unset;position:absolute;left:calc(var(--sp-2) + 16px + var(--sp-2h));right:28px;top:0;bottom:0;font-size:var(--fs-body);font-weight:350;letter-spacing:-.003em;color:var(--ink);caret-color:var(--gold);visibility:hidden}
+.sb-find input{all:unset;position:absolute;left:calc(var(--sp-2) + var(--sb-ic) + var(--sp-2));right:26px;top:0;bottom:0;font-size:var(--sb-fs);font-weight:400;letter-spacing:.002em;color:var(--ink);caret-color:var(--gold);visibility:hidden}
 .sb-find.on input{visibility:visible}
-.sb-find .sb-clr{all:unset;position:absolute;right:4px;top:50%;width:20px;height:20px;margin-top:-10px;display:grid;place-items:center;border-radius:var(--r-2);color:var(--mute);cursor:pointer;opacity:0;pointer-events:none;
- transition:opacity var(--sb-out) var(--ease-soft-close),background var(--t-exit) var(--ease-soft-close)}
-.sb-find .sb-clr svg{width:11px;height:11px}
-.sb-find.on.has .sb-clr{opacity:1;pointer-events:auto;transition:opacity var(--sb-in) var(--ease-out),background var(--t-instant)}
+.sb-find .sb-clr{all:unset;position:absolute;right:3px;top:50%;width:18px;height:18px;margin-top:-9px;display:grid;place-items:center;border-radius:var(--r-2);color:var(--mute);cursor:pointer;opacity:0;filter:blur(2px);pointer-events:none;
+ transition:opacity var(--sb-out) var(--ease-soft-close),filter var(--sb-out) var(--ease-soft-close),background var(--sb-out) var(--ease-soft-close)}
+.sb-find .sb-clr svg{width:10px;height:10px}
+.sb-find.on.has .sb-clr{opacity:1;filter:none;pointer-events:auto;transition:opacity var(--sb-in) var(--ease-out),filter var(--sb-in) var(--ease-out),background var(--sb-in)}
 .sb-find .sb-clr:hover{background:var(--line-2);color:var(--ink)}
 .sb-find.on .sb-hit{cursor:text}
-.sb-none{position:relative;z-index:1;padding:var(--sp-2) var(--sp-2);font-size:var(--fs-ui);color:var(--mute)}
+.sb-none{position:relative;z-index:1;padding:var(--sp-2);font-size:var(--sb-fs-2);color:var(--mute)}
 .sb-none[hidden]{display:none}
 
-/* the account row and its pull-up: the name is the button; settings open from it */
-.sb-foot{position:relative;margin:var(--sp-1h) calc(var(--sp-2) * -1) 0;padding:var(--sp-1h) var(--sp-2) 0;border-top:var(--rule-hair) solid var(--line)}
-.sb-me{all:unset;box-sizing:border-box;width:100%;height:44px;display:flex;align-items:center;gap:var(--sp-2h);padding:0 var(--sp-2) 0 var(--sp-1h);border-radius:var(--r-5);cursor:pointer;
- transition:background var(--t-exit) var(--ease-soft-close)}
-.sb-me:hover,.sb-me[aria-expanded="true"]{background:var(--line);transition-duration:var(--t-instant);transition-timing-function:var(--ease-out)}
+/* the foot: the account row (the pull-up; settings open from it), then the EXPIRA mark signing the bottom left */
+.sb-foot{position:relative;margin:var(--sp-1) calc(var(--sp-2) * -1) 0;padding:var(--sp-1h) var(--sp-2) 0;border-top:var(--rule-hair) solid var(--line)}
+.sb-me{all:unset;box-sizing:border-box;width:100%;height:36px;display:flex;align-items:center;gap:var(--sp-2);padding:0 var(--sp-2) 0 var(--sp-1h);border-radius:var(--r-4);cursor:pointer;
+ transition:background var(--sb-out) var(--ease-soft-close)}
+.sb-me:hover,.sb-me[aria-expanded="true"]{background:var(--line);transition:background var(--sb-in) var(--ease-out)}
 .sb-me:focus-visible{outline:var(--rule) solid var(--gold);outline-offset:-1px}
-.sb-av{width:28px;height:28px;flex:none;display:grid;place-items:center;border-radius:var(--r-round);background:var(--line-2);box-shadow:inset 0 0 0 var(--rule-hair) var(--line-3);color:var(--ink);font-size:var(--fs-ui);font-weight:500}
-.sb-who{flex:1;min-width:0;display:flex;align-items:baseline;gap:5px;white-space:nowrap;overflow:hidden}
-.sb-who b{font-weight:450;font-size:var(--fs-body);color:var(--ink);overflow:hidden;text-overflow:ellipsis}
-.sb-who small{font-size:var(--fs-chrome-2);color:var(--mute)}
-.sb-chev{width:12px;height:12px;flex:none;color:var(--mute);transition:transform var(--t-move) var(--ease-inout),color var(--t-exit) var(--ease-soft-close)}
-.sb-me:hover .sb-chev{color:var(--ink);transition-duration:var(--t-move),var(--t-instant)}
+.sb-av{width:22px;height:22px;flex:none;display:grid;place-items:center;border-radius:var(--r-round);background:var(--line-2);box-shadow:inset 0 0 0 var(--rule-hair) var(--line-3);color:var(--ink);font-size:var(--sb-fs-2);font-weight:500}
+.sb-who{flex:1;min-width:0;display:flex;align-items:baseline;gap:4px;white-space:nowrap;overflow:hidden}
+.sb-who b{font-weight:450;font-size:var(--sb-fs);color:var(--ink);overflow:hidden;text-overflow:ellipsis}
+.sb-who small{font-size:var(--sb-fs-2);color:var(--mute)}
+.sb-chev{width:11px;height:11px;flex:none;color:var(--mute);transition:transform var(--t-move) var(--ease-inout),color var(--sb-out) var(--ease-soft-close)}
+.sb-me:hover .sb-chev{color:var(--ink);transition:transform var(--t-move) var(--ease-inout),color var(--sb-in) var(--ease-out)}
 .sb-me[aria-expanded="true"] .sb-chev{transform:rotate(180deg)}
+.sb-sig{display:flex;align-items:center;gap:var(--sp-2);height:26px;padding:0 var(--sp-2);margin-top:var(--sp-half);opacity:.5;transition:opacity var(--sb-out) var(--ease-soft-close)}
+.sb-sig:hover{opacity:.95;transition:opacity var(--sb-in) var(--ease-out)}
+.sb-sig .mark{width:32px;flex:none}
+.sb-sig .wm{width:50px;height:11px}
 
-.sb-menu,.sb-pop,.sb-toast{will-change:transform,opacity,filter}  /* their own layer: text is not re-rasterised as they move */
-.sb-menu{position:absolute;left:var(--sp-1h);right:var(--sp-1h);bottom:calc(100% + var(--sp-1h));z-index:var(--z-menu);padding:5px;background:var(--panel);border:var(--rule-hair) solid var(--line-3);border-radius:var(--r-5);box-shadow:var(--e3);
- transform-origin:50% 100%;opacity:0;visibility:hidden;pointer-events:none}
-.sb-menu.open{opacity:1;visibility:visible;pointer-events:auto}
-.sb-menu .sb-row{height:30px}
-.sb-mh{position:relative;z-index:1;display:flex;flex-direction:column;gap:1px;padding:var(--sp-2) var(--sp-2) var(--sp-2h)}
-.sb-mh b{font-weight:450;font-size:var(--fs-ui);color:var(--ink)}
-.sb-mh small{font-size:var(--fs-chrome-2);color:var(--mute)}
-.sb-sep{height:var(--rule-hair);background:var(--line-2);margin:5px var(--sp-1h)}
-/* the theme switch: a pill that slides to the choice on the spring */
-.sb-seg{position:relative;z-index:1;display:grid;grid-template-columns:repeat(3,1fr);margin:var(--sp-half) var(--sp-half) var(--sp-1);padding:2px;border-radius:var(--r-4);background:var(--well);box-shadow:inset 0 0 0 var(--rule-hair) var(--line-2)}
-.sb-seg .pill{position:absolute;top:2px;bottom:2px;left:2px;width:calc((100% - 4px) / 3);border-radius:var(--r-3);background:var(--panel);box-shadow:var(--e1),inset 0 0 0 var(--rule-hair) var(--line-3);transition:transform var(--t-move) var(--spring)}
-.sb-seg button{all:unset;position:relative;display:flex;align-items:center;justify-content:center;gap:5px;height:26px;border-radius:var(--r-3);font-size:var(--fs-chrome-2);color:var(--soft);cursor:pointer;transition:color var(--t-exit) var(--ease-soft-close)}
-.sb-seg button svg{width:13px;height:13px}
-.sb-seg button:hover,.sb-seg button[aria-checked="true"]{color:var(--ink);transition-duration:var(--t-instant)}
-.sb-seg button:focus-visible{outline:var(--rule) solid var(--gold)}
-
-
-/* the row menu: fixed, beside its row; the same surface as the pull-up */
-.sb-pop{position:fixed;left:0;top:0;width:212px;z-index:var(--z-menu);padding:5px;background:var(--panel);border:var(--rule-hair) solid var(--line-3);border-radius:var(--r-5);box-shadow:var(--e3);opacity:0;visibility:hidden;pointer-events:none}
-.sb-pop.open{opacity:1;visibility:visible;pointer-events:auto}
-.sb-pop .sb-hl{left:5px;right:5px}
-.sb-pop .sb-row{height:28px}
-.sb-pop .sb-hit small{margin-left:auto;font-size:var(--fs-chrome);color:var(--mute)}
-.sb-pop .sb-mh.plain{padding:var(--sp-1h) var(--sp-2) var(--sp-1);font-size:var(--fs-micro);letter-spacing:var(--tracked-cap);text-transform:uppercase;color:var(--mute)}
+/* the pull-up, the row menu and the undo note: one surface. Each keeps its own layer, so its text is not
+   re-rasterised as it starts to move. */
+.sb-menu,.sb-pop,.sb-toast{will-change:transform,opacity,filter}
+.sb-menu,.sb-pop{padding:4px;background:var(--panel);border:var(--rule-hair) solid var(--line-3);border-radius:var(--r-5);box-shadow:var(--e3);opacity:0;visibility:hidden;pointer-events:none}
+.sb-menu.open,.sb-pop.open{opacity:1;visibility:visible;pointer-events:auto}
+.sb-menu{position:absolute;left:var(--sp-1h);right:var(--sp-1h);bottom:calc(100% + var(--sp-1h));z-index:var(--z-menu)}
+.sb-pop{position:fixed;left:0;top:0;width:200px;z-index:var(--z-menu)}
+.sb-menu .sb-row,.sb-pop .sb-row{height:26px}
+.sb-mh{position:relative;z-index:1;display:flex;flex-direction:column;gap:1px;padding:var(--sp-1h) var(--sp-2) var(--sp-2)}
+.sb-mh b{font-weight:450;font-size:var(--sb-fs);color:var(--ink)}
+.sb-mh small{font-size:var(--sb-fs-2);color:var(--mute)}
+.sb-pop .sb-mh.plain{padding:var(--sp-1h) var(--sp-2) var(--sp-1);font-size:var(--fs-micro);letter-spacing:var(--tracked-tight);text-transform:uppercase;color:var(--mute)}
+.sb-pop .sb-hit small{margin-left:auto;font-size:var(--fs-micro);color:var(--mute)}
+.sb-sep{height:var(--rule-hair);background:var(--line-2);margin:4px var(--sp-1h)}
 .sb-row.danger .sb-hit,.sb-row.danger .sb-ic{color:var(--bad)}
-.sb-more[aria-expanded="true"]{opacity:1;background:var(--line-2);color:var(--ink)}
+/* the theme switch: a pill that slides to the choice on the spring */
+.sb-seg{position:relative;z-index:1;display:grid;grid-template-columns:repeat(3,1fr);margin:var(--sp-half) var(--sp-half) var(--sp-1);padding:2px;border-radius:var(--r-3);background:var(--well);box-shadow:inset 0 0 0 var(--rule-hair) var(--line-2)}
+.sb-seg .pill{position:absolute;top:2px;bottom:2px;left:2px;width:calc((100% - 4px) / 3);border-radius:var(--r-2);background:var(--panel);box-shadow:var(--e1),inset 0 0 0 var(--rule-hair) var(--line-3);transition:transform var(--t-move) var(--spring)}
+.sb-seg button{all:unset;position:relative;display:flex;align-items:center;justify-content:center;gap:5px;height:22px;border-radius:var(--r-2);font-size:var(--sb-fs-2);color:var(--soft);cursor:pointer;transition:color var(--sb-out) var(--ease-soft-close)}
+.sb-seg button svg{width:12px;height:12px}
+.sb-seg button:hover,.sb-seg button[aria-checked="true"]{color:var(--ink);transition:color var(--sb-in) var(--ease-out)}
+.sb-seg button:focus-visible{outline:var(--rule) solid var(--gold)}
+.sb-more[aria-expanded="true"]{background:var(--line-2);color:var(--ink)}
 /* rename in place: the field takes the title's exact box */
-.sb-ren{all:unset;box-sizing:border-box;width:100%;height:22px;margin:0 -4px;padding:0 4px;border-radius:var(--r-2);background:var(--well);box-shadow:inset 0 0 0 var(--rule-hair) var(--gold);color:var(--ink);font:inherit}
+.sb-ren{all:unset;box-sizing:border-box;width:100%;height:19px;margin:0 -4px;padding:0 4px;border-radius:var(--r-2);background:var(--well);box-shadow:inset 0 0 0 var(--rule-hair) var(--gold);color:var(--ink);font:inherit}
 /* drag and drop onto a folder; a folder that just received something glows once, softly */
 .sb-row.dragging{opacity:.35}
-.sb-fold.drop,.sb-fold.got{background:var(--gold-wash);box-shadow:inset 0 0 0 var(--rule-hair) var(--gold)}
-.sb-fold.got{transition:background var(--t-exit) var(--ease-soft-close),box-shadow var(--t-exit) var(--ease-soft-close)}
 .sb-fold{transition:background calc(var(--t-exit) * 2) var(--ease-soft-close),box-shadow calc(var(--t-exit) * 2) var(--ease-soft-close)}
-.sb-ib.on{color:var(--gold-ink);background:var(--gold-wash)}
-.sb-h .sb-ha:has(.on){opacity:1}
-.sb-grp[hidden]{display:none}
+.sb-fold.drop,.sb-fold.got{background:var(--gold-wash);box-shadow:inset 0 0 0 var(--rule-hair) var(--gold)}
+.sb-fold.got{transition:background var(--sb-in) var(--ease-out),box-shadow var(--sb-in) var(--ease-out)}
 /* the undo note sits above the account row */
-.sb-toast{position:absolute;left:var(--sp-1h);right:var(--sp-1h);bottom:calc(100% + var(--sp-1h));z-index:var(--z-toast);display:flex;align-items:center;gap:var(--sp-2);height:34px;padding:0 var(--sp-1) 0 var(--sp-3);background:var(--panel);border:var(--rule-hair) solid var(--line-3);border-radius:var(--r-5);box-shadow:var(--e2);font-size:var(--fs-ui);color:var(--soft);opacity:0;visibility:hidden;pointer-events:none}
+.sb-toast{position:absolute;left:var(--sp-1h);right:var(--sp-1h);bottom:calc(100% + var(--sp-1h));z-index:var(--z-toast);display:flex;align-items:center;gap:var(--sp-2);height:30px;padding:0 var(--sp-1) 0 var(--sp-2h);background:var(--panel);border:var(--rule-hair) solid var(--line-3);border-radius:var(--r-4);box-shadow:var(--e2);font-size:var(--sb-fs-2);color:var(--soft);opacity:0;visibility:hidden;pointer-events:none}
 .sb-toast.open{opacity:1;visibility:visible;pointer-events:auto}
 .sb-toast span{flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .sb-toast em{font-style:normal;color:var(--ink)}
-.sb-toast button{all:unset;height:24px;padding:0 var(--sp-2);border-radius:var(--r-2);color:var(--gold-ink);font-weight:450;cursor:pointer;transition:background var(--t-exit) var(--ease-soft-close)}
-.sb-toast button:hover{background:var(--gold-wash);transition-duration:var(--t-instant)}
+.sb-toast button{all:unset;height:22px;padding:0 var(--sp-2);border-radius:var(--r-2);color:var(--gold-ink);font-weight:450;cursor:pointer;transition:background var(--sb-out) var(--ease-soft-close)}
+.sb-toast button:hover{background:var(--gold-wash);transition:background var(--sb-in) var(--ease-out)}
 /* the list feathers at an edge only while more lies beyond it */
 .sb-scroll{--fs:0px;--fe:0px;transition:--fs var(--t-exit) var(--ease-soft-close),--fe var(--t-exit) var(--ease-soft-close);-webkit-mask-image:linear-gradient(to bottom,transparent 0,#000 var(--fs),#000 calc(100% - var(--fe)),transparent 100%);mask-image:linear-gradient(to bottom,transparent 0,#000 var(--fs),#000 calc(100% - var(--fe)),transparent 100%)}
-.sb-scroll.f-s{--fs:18px}
-.sb-scroll.f-e{--fe:22px}
+.sb-scroll.f-s{--fs:16px}
+.sb-scroll.f-e{--fe:20px}
