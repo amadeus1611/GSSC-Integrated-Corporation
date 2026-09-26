@@ -25,3 +25,8 @@ confirm `index.html` matches `src/`).
 - `qa/tools/` holds the refactoring tools: `cssmodel.py` (parser, specificity, property families), `fold.py` (moves
   rules between units and merges repeats, refusing any reorder that could change the cascade; `fold_pins.json`
   records the few placements it had to pin) and `comatch.js` (which selector pairs really match one element).
+
+## Bench
+
+`bench/` builds one unit on its own page, read straight from `src/`, with a panel to tune its motion tokens at
+any speed in both themes. See `bench/README.md`.

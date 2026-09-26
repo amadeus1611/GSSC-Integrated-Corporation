@@ -1,0 +1,185 @@
+# v45 super plan: the sidebar, finished and promoted
+
+Asked for by Amadeus on 2026-09-26: take every recommendation from the sidebar review, think each one through, and plan the whole of it before anything is built. The v45 sidebar draft (`bench/sidebar-next.html`, `bench/drafts/`) already sets the look and the motion. This plan finishes its features, proves it at scale, on touch screens and with screen readers, and then moves it into the console. Nothing here is built until Amadeus says go.
+
+Every item follows DESIGN_ENGINE §4 (EXPIRA × macOS): one curve with focus in and focus out, motion blur, text that never scales, gold meaning "this needs you", fewer words, and no tooltips.
+
+## What was checked
+
+| # | Where | What is there now |
+|---|---|---|
+| 1 | Bench draft | Nested folders, pins in four groups (pinned folders, pinned items, folders, items), Rearrange, select many with sort and delete, undo in place, a path bar that appears only when the tree steps into a folder automatically at narrow widths, and search by name. The tree is kept in memory, so it resets on reload. |
+| 2 | Live console, `units/library/library.js` | Folders are flat: `FOLDERS=[{id,name,open}]`, saved under the KV key `folders`. A chat has `pinned`, `archived` and `folder` (a folder id). Pinned, Folders and Recents are separate sections. The menu offers Archive, and delete undoes through a toast. |
+| 3 | Storage, `core/prelude.js` | KV writes through to `localStorage` and mirrors each key, and each chat, to the viewer's private `data/users/<id>/`. Deletions are remembered in `gone`, so another device's copy does not bring them back. Imports are normalised by `clean()`. |
+| 4 | Documents | The draft shows documents as rows in the tree. In the console, documents live inside chats (exhibits) and in the Library; they have no ids of their own in the chat list. |
+
+## 1. Isolate, and a path bar that is always there
+
+The automatic step-in at narrow widths goes. The same click must always do the same thing.
+
+- **The bar** keeps its current design and sits under Search, where it stays put while the list scrolls. It holds ‹ ›, then the trail: "All / Quotations / Drafts".
+  - When the view is isolated, the trail is the isolated folder's path.
+  - Otherwise it is the path of the open chat, as a file explorer shows where the selected file lives. With no chat open, or a loose one, it reads "All".
+  - Every step of the trail isolates that folder. "All" is always the first step. Every step also accepts drops.
+  - ‹ › go back and forward through the folders you have isolated. A button dims, not its surface, when there is nowhere to go.
+  - While searching, the trail reads "All" and ‹ › dim, because search always looks everywhere.
+- **Isolate** goes on the first page of the `…` menu: Rename, Pin, Isolate, Rearrange, Folder ›, Delete.
+  - On a chat, Isolate focuses the folder it lives in. It is absent for a loose chat.
+  - Two-finger click opens the same menu. "Show on its own" is removed.
+- **Deep folders** keep indenting, with no limit and nothing automatic. Levels 1 to 5 indent 12px each. After that, each level indents 4px. The tree lines still show every level, and long names fade out at the edge.
+- **Keys:** ⌘↓ isolates the focused folder. ⌘↑, Escape, or ← at the top of the view goes up one level.
+- **Edge cases:**
+  - If the isolated folder is deleted, the view climbs to its nearest surviving parent, with the usual slide.
+  - If the open chat moves, the trail follows it.
+- **Removed:** `maxDepth`, the drill in `toggle()`, and the rule that hid the bar at the top level unless you could go forward.
+
+## 2. Closed folders show what needs you
+
+- A closed folder carries the strongest state of anything inside it, at any depth. A running chat inside gives a gold dot that breathes; an unread one gives a gold ring. It sits in the folder's pin-mark slot and gives way to the `…` on hover.
+- An open folder shows nothing, because its rows already show it.
+- The mark pulls focus in when it appears and racks out when it clears, on the same curve as everything else. When a run finishes inside a closed folder, the folder's mark plays the ring's one soft pulse.
+- It is computed in `sync()` from the model, never stored.
+
+## 3. Recently Deleted, and Archive
+
+A four-second undo is not enough for business records.
+
+- **Delete** works as now: the row defocuses in place with an undo arrow. When the four seconds pass, the item moves to Recently Deleted instead of vanishing. A folder goes as one entry, with everything inside it.
+- **The trash can** beside the undo arrow still means "delete now". It is the one permanent action in the row. It asks no question, because it is explicit and only appears for four seconds.
+- **Recently Deleted** is a page of the account card under Data ›, in the same card of pages:
+  - a list of deleted items, newest first, with the days left in muted text;
+  - Restore and Delete now per row, plus Empty at the foot;
+  - Restore puts an item back where it was. If that folder is gone, it goes to the top level.
+- **Retention:** 30 days, then items are purged when the console loads. Only a purge, a Delete now or an Empty adds the id to KV `gone`. Until then, the other devices keep the item in Recently Deleted too.
+- **Archive** (existing data) becomes a quiet page beside Recently Deleted: Data › Archive. Archive moves from the row menu's first page to the Folder › page. An archived chat keeps its folder and pin, and restores to them.
+- **Model:** each item gets `deletedAt` and `from` (its folder id); `archived` stays as it is.
+
+## 4. Move many
+
+- The selection bar gains **Move**, between Sort and Delete. It opens the Move to card (the same page as the row menu's) above the bar, where the Sort card opens.
+- Picked pins are skipped, because a pin holds its place. The card says so in one muted line: "2 pinned stay".
+- The picked rows glide into the folder on one clock, and a closed folder takes the gold "got" pulse. Selection mode ends after the move.
+- Undo is not needed, because nothing is lost; moving them back is one more Move.
+
+## 5. Touch and small screens
+
+- **Detection:** `(pointer: coarse)`, not screen width. A touch laptop gets the touch rules too.
+- **Rows:** at least 36px tall on touch, with the same type size. The `…` is always visible, at 60% of its hover colour. There is no hover plate.
+- **Long press** (450ms, cancelled by 8px of movement) opens the row menu at the finger, with the row lifting as it does for Rearrange.
+- **Dragging is off on touch.** Rearrange and Move to cover the same needs without fighting the scroll.
+- **Below 720px wide the dock becomes a drawer** over the chat:
+  - It opens from the dock button, or with a swipe from the left edge, on the dock's own curve.
+  - A near-black scrim fades in behind it at 40%.
+  - Swiping left, tapping the scrim or opening a chat closes it, softly.
+  - The resize grip is hidden, and the drawer is 86% of the screen, at most 320px.
+- **Checks:** 390×844 and 820×1180, in both themes, with shots of the drawer mid-motion.
+
+## 6. Search inside chats
+
+- Results match names first, then the text of the turns, both the question and the answer.
+- A name match shows as a normal row. A match in the text adds a second line: a short snippet with the match on a gold wash, fading out at both ends.
+- Ranking: name matches, then text matches, newest first within each, with at most 50. Typing is debounced by 120ms.
+- Opening a result opens the chat, scrolls to the matching turn and brushes it with the gold "got" pulse once.
+- **Index:** a lower-case copy of each chat's text, built lazily on the first search and rebuilt for a chat only when its turns change. Nothing is stored.
+
+## 7. Scale
+
+- **The target:** 2,000 chats and 200 folders, six levels deep. `sync()` under 8ms, and no long tasks in `qa/perf.js`.
+- **Only what is on screen moves.** The FLIP glide, focus in and focus out run only for rows within one screen of the viewport. Rows further away take their new place at once, where no one can see it.
+- **Off-screen rows skip layout:** `content-visibility: auto` with a 24px intrinsic size.
+- **`order()` is computed once per sync per level,** not once per row.
+- Full virtualisation (rendering only the visible rows) comes only if these measures miss the target. It would change how rows are reused, so it is a last resort.
+- **A stress specimen:** `bench/sidebar-next.html#stress` generates the large tree.
+
+## 8. Screen readers and keyboard
+
+- The tree uses `role=tree` and `treeitem`, with `aria-level`, `aria-setsize`, `aria-posinset`, `aria-selected` and `aria-expanded` (which is already there).
+- **One polite live region** says what happened, in the house voice: "Moved to Contracts", "Deleted. Undo is available", "Pinned", "Isolated Quotations", and while rearranging, "3 of 7".
+- The path bar is a `navigation` landmark named "Path", and the current step has `aria-current`.
+- Every action is reachable from the keyboard. Reduced motion keeps its instant paths.
+- `qa/a11y.js` (axe) must pass with the tree, the menus, the selection bar and the cards open.
+
+## 9. Saving, and moving it into the console
+
+Surveyed on 2026-09-26, after §1 to §8 were built in the bench. This is the one step that changes the shared page for every viewer and converts their stored data, so it follows `CLAUDE.md`'s rule for large changes: this plan first, then Amadeus's go.
+
+### What the live sidebar touches today
+
+| Unit | What changes |
+|---|---|
+| `shell.html` | The sidebar's markup: the brand row, the New chat / Search / Files / The Dispatch nav, `#find`, `#recents` and the foot become the v45 toolbar, search, path bar, tree and foot. |
+| `units/sidebar/sidebar.css` | About 90 lines of sidebar rules are replaced by the draft's. It also holds rules other units use (`.wm`, `.crumb`, `.ttl`, `.ro`, `.empty`, `.ib`, `.kb`), which stay. |
+| `units/library/library.js` | Replaced by the draft's tree (`units/sidebar/sidebar.js`), bound to the real records. |
+| `units/shell/shell.js` | `setFold` (v43: the sidebar, rail and Dispatch as one move, the chat on the panel's curve) and the draft's `dock()` (the button's travel, the dock's close curve, the drawer) are merged into one fold, with the v43 rail and Dispatch margins kept. `#findBtn` goes. |
+| `units/account/account.js` | The account menu becomes the draft's system panel. Its actions map to the real ones: Settings, Commands (the palette), Keyboard shortcuts, Library, About, theme; Calm to `PREF.motion`, Compact to `PREF.density`. |
+| `units/docs/docs.js`, `units/dispatch/dispatch.js` | Files and The Dispatch leave the sidebar. Files opens from the account card's Library; The Dispatch keeps its header button and ⌥L. |
+| `units/palette/palette.js` | `/` focuses the new search. The palette's chat commands read the same records. |
+| `core/boot.js`, `core/router.js`, `core/run.js`, `units/thread/cards.js` | `renderRecents()` becomes "refresh the tree from the records". A run marks its chat running; one that finishes while you are elsewhere marks it unread. The header's breadcrumb shows the folder path. |
+| `units/settings/panels.js` | Settings › Library keeps working on the same records, and learns about Recently Deleted. |
+| `core/prelude.js` | The storage adapter gains the `trash` key, mirrored one document per entry like chats (`t:<id>`), with the same 250KB limit per document. |
+| `qa/` | `smoke`, `hovers`, `a11y` and `perf` move to the new selectors; `store` gains the migration cases. |
+
+### Data
+
+- **Folders** gain `parent`, `pin`, `pinAt`, `ord`, `manual` and `archivedAt`.
+- **Chats** gain `ord`, `pinAt`, `unread` and `archivedAt`. `pinned`, `archived` and `folder` keep their names on disk.
+- **The top level's hand order** is a flag in the existing `opt` key.
+- **Recently Deleted is its own key, `trash`**, never a flag on a chat. A deleted chat, or a deleted folder with everything inside it, leaves `chats` and `folders` entirely, so no other part of the console can ever see it. Put back returns it (and lifts it from `gone`). Only Delete now, Empty or the 30-day purge add it to `gone`.
+- **Migration**, once and idempotent:
+  - today's flat folders become top-level folders;
+  - pinned chats keep their pins, with `pinAt` set from their current order;
+  - archived chats get an `archivedAt`;
+  - nothing is deleted.
+
+### The sidebar reads and writes the records
+
+The tree the draft works on is built from the records on load, and again whenever another unit or another device changes them (`renderRecents`). Every action edits the tree and writes the change straight back to the records it came from. Actions find their row again by id, so a refresh while a menu is open cannot act on a stale copy.
+
+### Release
+
+1. Build it on this branch, and run the whole suite in light and dark: `smoke`, `store`, `ground`, `hovers`, `perf`, `a11y` and the per-unit shots.
+2. Publish it first as a separate preview link. The live console stays as it is.
+3. Republish the live console (same link, same capabilities) only on Amadeus's go after the preview.
+
+## Not doing
+
+Colours or tags on folders, custom folder icons, emoji, and a separate command palette for the sidebar. Each adds noise without adding much.
+
+## Build order and checks
+
+Each step is one commit, first in the bench and then in `src/`. Each is tested in both themes, with no page errors, no text scaling during motion, and one clock per change.
+
+1. **§1 and §2:** Isolate, the always-on bar, deep indentation, and folders that show their state.
+2. **§4 and §3:** Move many; Recently Deleted and Archive in the bench (using the draft's in-memory model).
+3. **§6:** Search inside chats, with mock turns in the specimen.
+4. **§5:** Touch and the drawer, with shots at phone and tablet sizes.
+5. **§7 and §8:** The stress specimen and its measurements; roles, the live region, axe.
+6. **§9:** The model and migration (`qa/store.js` first), then the unit swap. Then `smoke`, `hovers`, `perf`, `a11y`, the reviewer pass, the DESIGN_ENGINE change log, and republishing the console.
+
+## Decisions
+
+- 2026-09-26, Amadeus: "a separate Recently Deleted, with dates", and "do all the recommendations yourself … very well designed, fully featured".
+  - **Archive and Recently Deleted became two quiet places at the foot of the tree**, not pages under Data ›. That is the macOS idiom (Notes, Photos, the Finder's Trash) and it makes them truly separate. They open in place or can be isolated, and they reuse the path bar and Isolate rather than adding a second way to browse. Items sit under date captions, newest first, and each deleted row counts down its days.
+  - **Retention is 30 days.**
+  - **The drawer starts below 760px**, the shell's own breakpoint, rather than 720px, so the console has one small-screen threshold.
+  - **Documents in the tree come later**, once they have their own ids.
+  - **Search keeps the tree's shape** (matches stay inside their folders) instead of ranking names above text. In a file system, where a match lives is part of the answer. Matches in the text grow a snippet line.
+  - **Scale: rows far from view are drawn as boxes** (`content-visibility: hidden` on those rows only). §7 had ruled out `content-visibility: auto` because its paint containment would clip visible shadows. Applying containment only to rows more than a screen away keeps the rule and gives the effect of virtualisation without taking rows out of the document.
+
+## Progress
+
+- [x] Rearrange, and the pin rules (2026-09-26, in the bench).
+- [x] §1 Isolate and the always-on path bar (2026-09-26, bench). Also ⌘[ and ⌘] for back and forward.
+- [x] §2 Folders show what needs you (2026-09-26, bench).
+- [x] §3 Recently Deleted and Archive, as places (2026-09-26, bench). Also dragging onto them, and Empty that asks once in place.
+- [x] §4 Move many (2026-09-26, bench).
+- [x] §5 Touch and the phone drawer (2026-09-26, bench). Checked with real touch events at 390×844: the edge pull follows the finger, the long press lifts the row and opens its menu, a tap opens a chat and puts the drawer away, and a swipe closes it.
+- [x] §6 Search inside chats (2026-09-26, bench).
+- [x] §7 Scale (2026-09-26, bench, `?stress`: 2,000 chats in 212 folders). Measured in this container, which runs JavaScript about 3× slower than a laptop:
+  - opening all 200 folders at once went from 2.5s to 0.2s, a search from 4.4s to 0.2s, and returning from an isolated folder from 2.5s to 0.3s;
+  - everyday moves take 60 to 90ms;
+  - scrolling holds about 23ms a frame at trackpad speeds (a normal tree holds the display's 16.7ms).
+
+  The 8ms target is met on a normal tree but not with 2,000 rows open, where most of the time is the browser laying out the rows' boxes. Full virtualisation is the remaining step if real use ever needs it.
+- [x] §8 Screen readers and keyboard (2026-09-26, bench). axe is clean with the tree, the two places, the row menu, select mode, search and the account card. The account card became a dialog, since it is a panel of controls.
+- [ ] §9 Saving and promotion: planned in detail above (2026-09-26); waiting on Amadeus's go.
