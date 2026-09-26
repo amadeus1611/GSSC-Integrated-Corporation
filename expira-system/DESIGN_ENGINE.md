@@ -306,19 +306,15 @@ They live in `bench/drafts/sidebar-next.css`, and the dark stack lives in `bench
 
 ### 4.5 The chat: no card, the page is the answer (v45 chat bench, Amadeus, 2026-09-26)
 The chat pane follows §4.1–§4.4 and the sidebar's colour logic. The old answer card, which boxed the log, the answer and the exhibits, is gone: the pane itself is the page. The draft is `bench/chat-next.html` (`drafts/chat-next.css`, `drafts/chat-next.js`).
-- **A new chat** is almost empty. It shows:
-  - the date in tracked caps;
-  - a small serif greeting that knows the hour ("Good morning", "Good afternoon", "Good evening", or "Working late" after 22:00), with the name in the display italic;
-  - a gold lead-in;
-  - the composer;
-  - three word-only starters.
-
-  The EXPIRA mark stays at the foot of the sidebar; the chat carries only the name.
-- **The composer** is one quiet field on the panel colour, edged with a hairline. It warms to gold on focus, as Search does. Its controls are the sidebar's small plates: attach, the Auto effort chip and the model in words. Send turns to ink once there is text.
-  - In a new chat the composer sits under the greeting. On send it glides straight down into the dock: it is measured before anything is hidden, so it never flies from a corner.
-  - The greeting clears with focus out, 20ms apart per part.
-  - The dock fades the thread into the background above it; nothing scrolls under a hard edge.
-- **The brief** is a tracked-caps kicker with the time, over the master template's pull quote: an italic serif with a 2px gold rule.
+- **A new chat** is almost empty: the composer alone in the middle of the page, and a signature in the bottom-left corner. There are no suggested prompts.
+  - The signature is the gold lead-in, a small serif greeting that knows the hour ("Good morning", "Good afternoon", "Good evening", or "Working late" after 22:00) with the name in the display italic, and the date in plain words ("Saturday 26 September"). There is no clock and no tracked caps.
+  - It is set against the sidebar's foot: the lead-in sits on the foot's hairline, the greeting is level with the account, and the date is level with the EXPIRA mark, so the two panes close on one line. The mark itself stays in the sidebar.
+  - It arrives as the lead-in draws from the left and the two lines focus in, 40ms apart.
+- **The composer** is a material, as macOS bars are: the panel colour at 62% (58% in dark) over a 16px backdrop blur with saturation, edged with a hairline, with a faint top light in dark. The thread passes under it softened; there is no veil above it, only a 16px feather at the pane's foot. It is opaque where the browser has no backdrop filter and when the system asks for reduced transparency.
+  - It warms to gold on focus, as Search does. Its controls are the sidebar's small plates: attach, the Auto effort chip and the model in words. Send turns to ink once there is text.
+  - On send it glides straight down from the middle into the dock: it is measured before anything is hidden, so it never flies from a corner. The signature clears with focus out, 20ms apart per part.
+  - Keep the blur at 16px. Headless software renderers drop larger radii altogether and leave a thin unblurred band at the edge at any radius, so judge the glass in a real browser, not in qa screenshots.
+- **The brief** is the master template's pull quote alone: an italic serif with a 2px gold rule. Its time is marginalia: it waits in the left margin, level with the first line, and shows on hover, fast in and soft out (hidden below 760px).
 - **The work** is one line, not a card:
   - while the desks run, a breathing dot, the four desks in tracked caps with the current one lit, a phrase in italics and a timer;
   - once settled, "Four desks · 1:25 · Firewall clear" and a "Show the work" word button.
@@ -345,6 +341,11 @@ The chat pane follows §4.1–§4.4 and the sidebar's colour logic. The old answ
 - **Tokens (v41):** every value comes from `src/tokens.css`. Spacing is a 4px scale with half steps (`--sp-half`, `--sp-1h` … `--sp-4h`) below 20px for dense chrome; a 1px nudge is optical and stays literal. Layers are named (`--z-side`, `--z-menu`, `--z-tip` …) in one stacking order. Dark tokens are written once in `@dark{}`.
 
 ## 6. Change log
+- **v45 chat bench, the signature and the glass** (2026-09-26, Amadeus: "remove the recommended prompts … move the intro text to the bottom left … editorial … clear up the time and date … should we make the text interface transparent too like macOS?"):
+  - The starters are gone.
+  - The greeting moved to a signature in the bottom-left corner, on the sidebar's foot line; the composer sits alone in the middle.
+  - The date is plain words, and the brief lost its "Brief 17:29" kicker, keeping its time as hover marginalia.
+  - The composer is now a translucent material with a 16px blur, and the veil above the dock is gone.
 - **v45 chat bench** (2026-09-26, Amadeus: "No more card now, let us utilize the big chat interface, redesign the output that follows the GSSC Template EXPIRA style MacOS … a small Good morning Duke … very subtle"): a separate bench for the chat pane, `bench/chat-next.html`, on the sidebar's colours and motion. See §4.5.
   - A new chat shows the date, the greeting, the composer and three starters.
   - The composer glides into the dock on send.

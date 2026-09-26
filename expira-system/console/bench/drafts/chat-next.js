@@ -1,6 +1,6 @@
 /* ---------- draft v45 chat (bench only until promoted into units/start, units/composer and units/thread) ----------
-   The pane is the document. A new chat is a quiet greeting over the composer. Sending the first brief carries the
-   composer down into its dock on the dock's own curve, while the greeting racks out and the brief pulls focus as a
+   The pane is the document. A new chat is the composer in the middle and a signature in the corner. Sending the first brief carries the
+   composer down into its dock on the dock's own curve, while the signature racks out and the brief pulls focus as a
    pull quote. The desks work in one quiet line (no run card); the answer then inks in, word by word, laid out as the
    master template lays out a page. A chat opened from the tree is shown settled, its blocks pulling focus in order.
    Reads MO, easeFn and easeInv from core/motion.js, and $, root and reduce from the prelude (the bench stubs them). */
@@ -21,21 +21,20 @@ const CH=(()=>{const ch=$("#ch"),scroll=$("#chScroll"),col=$("#chCol"),hero=$("#
   ok:'<svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><path d="M2.5 6.4 5 8.8 9.6 3.6"/></svg>'};
  send.innerHTML=IC.arrow;
 
- /* ---- the greeting: the time of day and your name, nothing else ---- */
+ /* ---- the signature: the time of day and your name, and the date in plain words ---- */
  const NAME="Duke";
  function greet(){const d=new Date(),h=d.getHours(),g=h<5?"Working late":h<12?"Good morning":h<17?"Good afternoon":h<22?"Good evening":"Working late";
-  $("#chDate").textContent=d.toLocaleDateString("en-GB",{weekday:"long"})+" · "+d.getDate()+" "+d.toLocaleDateString("en-GB",{month:"long"});
+  $("#chDate").textContent=d.toLocaleDateString("en-GB",{weekday:"long",day:"numeric",month:"long"}).replace(",","");
   $("#chHi").innerHTML=`${g}, <em>${esc(NAME)}</em>`}
 
  /* ---- the composer: grows with what you type (up to eight lines); Enter sends, Shift-Enter breaks the line ---- */
- const fit=()=>{ta.style.height="auto";ta.style.height=Math.min(220,ta.scrollHeight)+"px";comp.classList.toggle("has",!!ta.value.trim());$("#chStarters")?.classList.toggle("hush",!!ta.value)};
+ const fit=()=>{ta.style.height="auto";ta.style.height=Math.min(220,ta.scrollHeight)+"px";comp.classList.toggle("has",!!ta.value.trim())};
  ta.addEventListener("input",fit);
  ta.addEventListener("keydown",e=>{if(e.key==="Enter"&&!e.shiftKey&&!e.isComposing){e.preventDefault();go()}});
  send.addEventListener("click",()=>{if(running)return stopRun();go()});
- hero.addEventListener("click",e=>{const s=e.target.closest(".ch-st");if(!s)return;ta.value=s.dataset.brief;fit();ta.focus();ta.setSelectionRange(ta.value.length,ta.value.length)});
  comp.addEventListener("click",e=>{if(e.target===comp)ta.focus()});
 
- /* the composer travels between the greeting and its dock on the dock's own curve, blurring a little with its speed */
+ /* the composer travels between the middle of the page and its dock on the dock's own curve, blurring a little with its speed */
  function carry(to,between){const r0=comp.getBoundingClientRect();between&&between();(to==="dock"?dock:slot).appendChild(comp);if(reduce)return;const r1=comp.getBoundingClientRect(),dx=r0.left-r1.left,dy=r0.top-r1.top;if(Math.abs(dx)+Math.abs(dy)<1)return;
   const D=ms(to==="dock"?"--sb-dock":"--sb-move"),Es=EZ(),M=Math.min(1.6,Math.hypot(dx,dy)/160);
   comp.animate(sampled(D,Es,(p,k)=>({transform:`translate(${(dx*(1-p)).toFixed(2)}px,${(dy*(1-p)).toFixed(2)}px)`,filter:mb(k,M)})),{duration:D,easing:"linear"})}
@@ -43,27 +42,27 @@ const CH=(()=>{const ch=$("#ch"),scroll=$("#chScroll"),col=$("#chCol"),hero=$("#
  /* ---- a new chat ---- */
  let mode="start",running=null,cur=null;
  function start(){if(running)stopRun();cur=null;const was=mode;mode="start";ttl.innerHTML="";greet();
-  const heroParts=[$("#chDate"),$("#chHi"),$(".ch-lead"),$("#chStarters")];
+  const heroParts=[$(".ch-lead"),$("#chHi"),$("#chDate")];
   const show=()=>{ch.classList.add("start");col.replaceChildren();carry("hero");ta.value="";fit();
-   heroParts.forEach((x,i)=>{pull(x,i*40);if(i===2&&!reduce)x.animate([{transform:"scaleX(0)"},{transform:"none"}],{duration:ms("--sb-move"),delay:80,easing:EZ(),fill:"backwards"})});setTimeout(()=>ta.focus({preventScroll:true}),60)};
+   heroParts.forEach((x,i)=>{if(i===0){if(!reduce)x.animate([{transform:"scaleX(0)"},{transform:"none"}],{duration:ms("--sb-move"),delay:40,easing:EZ(),fill:"backwards"})}else pull(x,60+i*40)});setTimeout(()=>ta.focus({preventScroll:true}),60)};
   if(was==="thread"&&col.children.length&&!reduce){const a=col.animate(focusOut(B()*.6),{duration:ms("--sb-out"),easing:EZ(),fill:"forwards"});a.finished.then(()=>{a.cancel();show()},show)}else show()}
 
- /* ---- sending: the greeting racks out, the composer glides down into its dock, the brief pulls focus ---- */
+ /* ---- sending: the signature racks out, the composer glides down into its dock, the brief pulls focus ---- */
  function go(){const text=ta.value.trim();if(!text||running)return;
-  if(mode==="start"){mode="thread";const parts=[$("#chDate"),$("#chHi"),$(".ch-lead"),$("#chStarters")];
-   /* the greeting stays on screen while it racks out; the composer is measured where it is, then carried */
+  if(mode==="start"){mode="thread";const parts=[$("#chDate"),$("#chHi"),$(".ch-lead")];
+   /* the signature stays on screen while it racks out; the composer is measured where it is, then carried */
    ch.classList.add("leaving");carry("dock",()=>ch.classList.remove("start"));
    const an=reduce?[]:parts.map((x,i)=>x.animate(focusOut(B()*.6),{duration:ms("--sb-out"),delay:i*20,easing:EZ(),fill:"forwards"}));
    Promise.all(an.map(a=>a.finished)).then(()=>{an.forEach(a=>a.cancel());ch.classList.remove("leaving")},()=>ch.classList.remove("leaving"))}
   ta.value="";fit();const title=text.length>48?text.slice(0,46).replace(/\s+\S*$/,"")+"…":text;if(!cur){cur={t:title};setTitle(title)}
-  const turn=brief(text,new Date());col.appendChild(turn);pull(turn.querySelector(".ch-kick"),80);pull(turn.querySelector(".ch-quote"),130);
+  const turn=brief(text,new Date());col.appendChild(turn);pull(turn.querySelector(".ch-quote"),90);
   const a=answerShell(RICH.work,true);col.appendChild(a);pull(a.querySelector(".ch-proc"),220);scrollEnd(true);run(a,RICH)}
  function setTitle(t){ttl.innerHTML=`${esc(t)}`;if(!reduce)ttl.animate(focusIn(B()*.5),{duration:ms("--sb-in"),easing:EZ()})}
 
  /* ---- the thread ---- */
  const hhmm=d=>d.toLocaleTimeString("en-GB",{hour:"2-digit",minute:"2-digit"});
  function brief(text,d){const t=document.createElement("section");t.className="ch-turn ch-brief";
-  t.innerHTML=`<div class="ch-kick"><b>Brief</b><span>${hhmm(d)}</span></div><p class="ch-quote">${esc(text)}</p>`;return t}
+  t.innerHTML=`<p class="ch-quote">${esc(text)}</p><time class="ch-when" datetime="${d.toISOString()}">${hhmm(d)}</time>`;return t}
  const mmss=v=>{const s=Math.round(v/1000);return Math.floor(s/60)+":"+String(s%60).padStart(2,"0")};
  const ROLE={research:"Research",finance:"Finance",legal:"Legal",decision:"Decision",builder:"Builder"};
  const words=n=>["No desks","One desk","Two desks","Three desks","Four desks","Five desks","Six desks"][n]||n+" desks";
