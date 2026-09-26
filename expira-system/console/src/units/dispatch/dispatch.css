@@ -2,6 +2,8 @@
 /* a large surface: it slides and fades, and never blurs (Gate A keeps the blur for small surfaces) */
 .dsp{position:fixed;top:0;right:0;bottom:0;z-index:var(--z-dispatch);width:min(420px,100vw);background:var(--sheet);border-left:var(--rule-hair) solid var(--line-2);box-shadow:var(--e-side);display:flex;flex-direction:column;transform:translateX(24px);opacity:0;pointer-events:none;transition:transform var(--t-move) var(--ease-soft-close),opacity var(--t-exit) var(--ease-soft-close)}
 .dsp.open{transform:none;opacity:1;pointer-events:auto;transition:transform var(--t-move) var(--spring),opacity var(--t-enter) var(--ease-out)}
+/* docked on a wide window it comes in from past the edge, like the Details rail */
+@media (min-width:1100px){.dsp:not(.open){transform:translateX(100%)}}
 .dsp-h{display:flex;align-items:center;gap:var(--sp-2h);padding:var(--sp-3h) var(--sp-4) var(--sp-3) var(--sp-6);border-bottom:var(--rule-hair) solid var(--line-2)}
 .dsp-h .cap:first-child{color:var(--ink)}
 .dsp-h .ib{margin-left:auto}

@@ -56,6 +56,15 @@ async function send(q,re){if(busy)return;const docPre=DOCSEL||docIntent(q);setDo
   if(direct){work.docPlan=docPre?{type:docPre,second:null,brief:q}:null;plan={title:q.split(/\s+/).slice(0,6).join(" "),kind:"direct answer",rationale:"Desks are off; answering directly.",steps:[]}}
   else{P("plan","on");let rawN=0;const dps=[dlb.querySelector("p")];
    let thN=0;const paint=(th,partial)=>{if(th.length>thN&&th.length>1){thN=th.length;setNow(th[th.length-2])}th.forEach((t,i)=>{let el=dps[i];if(!el){el=document.createElement("p");dlb.append(el);dps[i]=el}if(el.textContent!==t)el.textContent=t;el.classList.toggle("typing",!!partial&&i===th.length-1)})};
+   /* a declined plan is asked once more in plain terms, at the default tier; declined again, the brief is answered directly.
+      Never a loop: the service says resending the same words gets the same answer, so the second ask changes the words. */
+   const planAgain=async e=>{if(!e||e.code!=="refused")throw e;F("Planning again","The planner declined the brief as worded; planning it again in plain terms.");
+    try{return await sample.json(`Plan how a small consulting team should handle this business request. ${todayLine()}
+Roles: research, finance, legal, builder. Use 0 to 4 steps, none for small talk or a simple fact.
+Reply with only JSON: {"title": string (3-6 words), "kind": string (under 8 words), "rationale": string (one sentence), "document": null, "steps": [{"role": string, "focus": string (2-3 words), "tier": "high", "task": string (short phrase), "why": string (under 12 words), "web": ${webOn?"boolean":"false"}, "after": []}]}
+
+Request: ${q}`,{modelTier:"default",cache:false,signal:ctl.signal})}
+    catch(e2){if(!e2||e2.code!=="refused")throw e2;F("Answering directly","The planner declined again; answering directly, without desks.");return{title:q.split(/\s+/).slice(0,6).join(" "),kind:"direct answer",rationale:"The planner declined the brief; answering directly.",steps:[]}}};
    plan=await sample.json(`You are the EXPIRA orchestrator (EXPIRA AI Systems, sister company of GSSC Integrated Corporation, Iloilo, Philippines). Think it through, then staff this brief. You are the decision-maker: you staff the desks, weigh their work and make the recommendation yourself.
 ${KL?`The GSSC kernel ${KL.kernel_version} is loaded, with templates for: quotation, company_profile, contract, secretary_certificate, board_resolution, notarial_acknowledgment. Second signatories (for contract, secretary_certificate, board_resolution) come from: ${(o=>Object.keys(o).filter(k=>k!==kPrimary(o)))(KL.kernel["02_governance"].active_officers).join(", ")}. If the user asks for one of these documents, set "document" and staff the desks that gather its facts.${docPre?` The user has asked for a ${DOCT[docPre]}: set "document" with type "${docPre}".`:""}`:""}
 ${todayLine()} When the brief depends on current facts (prices, rates, rules, news), plan for the newest figures.
@@ -67,7 +76,7 @@ Reply with only JSON, keys in this order:
  "title": string (3-6 words), "kind": string (what sort of brief, under 8 words), "rationale": string (one sentence),
  "document": null, or {"type": "quotation"|"company_profile"|"contract"|"secretary_certificate"|"board_resolution"|"notarial_acknowledgment", "second_signatory": string or null, "brief": string (what the document must contain)} when the user asks for a GSSC document to be produced,
  "steps": [{"role": string, "focus": string (2-3 words naming this desk's slice, e.g. "Supplier rates"), "tier": string, "task": string (short phrase, sentence case, no full stop), "why": string (under 12 words), "web": boolean, "after": [1-based step numbers it needs]}]}
-${history?`Conversation so far:\n${history}\n\n`:""}New message: ${q}`,{modelTier:"complex",cache:false,...IM,signal:ctl.signal,onText:({text})=>{const p=peekPlan(text);if(p.thinking.length){work.map.thinking=p.thinking;paint(p.thinking,p.partial)}for(;rawN<p.steps.length;rawN++)addStep(p.steps[rawN]);follow()}});
+${history?`Conversation so far:\n${history}\n\n`:""}New message: ${q}`,{modelTier:"complex",cache:false,...IM,signal:ctl.signal,onText:({text})=>{const p=peekPlan(text);if(p.thinking.length){work.map.thinking=p.thinking;paint(p.thinking,p.partial)}for(;rawN<p.steps.length;rawN++)addStep(p.steps[rawN]);follow()}}).catch(planAgain);
    const th=(Array.isArray(plan.thinking)&&plan.thinking.length?plan.thinking:work.map.thinking).map(String).filter(Boolean).slice(0,6);work.map.thinking=th;
    if(th.length)paint(th,false);else{dps[0].classList.remove("typing");dps[0].textContent=String(plan.rationale||"Planned the work.")}
    (Array.isArray(plan.steps)?plan.steps:[]).slice(rawN).forEach(addStep);
@@ -91,6 +100,8 @@ ${history?`Conversation so far:\n${history}\n\n`:""}New message: ${q}`,{modelTie
       onError:code=>{if(["server_not_connected","needs_reauth","not_in_manifest","blocked_by_policy","selection_required"].includes(code)){webOn=false;say(MCP_COPY[code]||"Web research is unavailable.","warn")}F(null,`Web research failed for desk ${ROMAN[i]}${code?` (${esc(code)})`:""}.`)}}):null;
     try{const r=await sample(brief(s,i)+steerNote(),{modelTier:TIERS[s.tier].m,cache:false,...IM,signal:ctl.signal,...(tools?{tools}:{}),onText:({text})=>{pend[key]=(pend[key]||0)+Math.max(0,text.length-len);len=text.length;s.out=text;if(!s._raf)s._raf=requestAnimationFrame(()=>{s._raf=0;out.textContent=s.out;if(out.parentElement.classList.contains("show"))toEnd(out);const q=$("#dq"+i),v=(s.searches?`${s.searches} search${s.searches>1?"es":""} · `:"")+ft(tok(s.out))+" tokens";if(q&&q.textContent!==v)q.textContent=v})}});
      outs[i]=r.text;s.out=r.text;return r.text}
+    /* a desk that declines files nothing; the run goes on without it and the Arbiter weighs it as empty */
+    catch(e){if(!e||e.code!=="refused")throw e;const t="(This desk declined its task and filed no notes.)";outs[i]=t;s.out=t;F(`Desk ${ROMAN[i]} declined`,`Desk ${ROMAN[i]} declined its task; the run goes on without it.`);return t}
     finally{s._live=false;think[key]=0;s.ms=performance.now()-s._t0;s.te=Math.round(now());$("#dm"+i).textContent=fmt(s.ms);stE.className="st";swap(stE,"Filed");mapSync()}};
    const done=[];steps.forEach((s,i)=>done[i]=(async()=>{for(const n of s.after)if(n-1<i&&done[n-1])await done[n-1];const r=await runOne(i);F(`Desk ${ROMAN[i]} filed its notes`,`Desk ${ROMAN[i]} filed ${ft(tok(r))} tokens of notes in ${fmt(s.ms)}.`);return r})());
    await Promise.all(done);P("desks","done");P("review","on");work._vd=1;mapSync();steps.forEach((_,k)=>setTimeout(()=>mapPulse("a"+k,"v"),120+k*110));

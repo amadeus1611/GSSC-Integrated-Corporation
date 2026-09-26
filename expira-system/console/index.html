@@ -840,6 +840,8 @@ html.calm *,html.calm *::before,html.calm *::after{animation:none!important;tran
 /* a large surface: it slides and fades, and never blurs (Gate A keeps the blur for small surfaces) */
 .dsp{position:fixed;top:0;right:0;bottom:0;z-index:var(--z-dispatch);width:min(420px,100vw);background:var(--sheet);border-left:var(--rule-hair) solid var(--line-2);box-shadow:var(--e-side);display:flex;flex-direction:column;transform:translateX(24px);opacity:0;pointer-events:none;transition:transform var(--t-move) var(--ease-soft-close),opacity var(--t-exit) var(--ease-soft-close)}
 .dsp.open{transform:none;opacity:1;pointer-events:auto;transition:transform var(--t-move) var(--spring),opacity var(--t-enter) var(--ease-out)}
+/* docked on a wide window it comes in from past the edge, like the Details rail */
+@media (min-width:1100px){.dsp:not(.open){transform:translateX(100%)}}
 .dsp-h{display:flex;align-items:center;gap:var(--sp-2h);padding:var(--sp-3h) var(--sp-4) var(--sp-3) var(--sp-6);border-bottom:var(--rule-hair) solid var(--line-2)}
 .dsp-h .cap:first-child{color:var(--ink)}
 .dsp-h .ib{margin-left:auto}
@@ -1156,6 +1158,8 @@ html.calm *,html.calm *::before,html.calm *::after{animation:none!important;tran
 .sheet.open{opacity:1;visibility:visible;pointer-events:auto;transform:none;transition:transform var(--t-move) var(--spring),opacity var(--t-enter) var(--ease-out),visibility 0s}
 @media (min-width:1100px){.app.ins-open .main{margin-right:var(--rail-w)}.app.dsp-open.ins-open .main{margin-right:min(420px,100vw)}}
 @media (max-width:1099px){.sheet{box-shadow:var(--e-side)}}
+/* docked on a wide window, the rail comes in from past the edge, so it never lies see-through over the column making room for it */
+@media (min-width:1100px){.sheet:not(.open),.app.dsp-open~.sheet.open{transform:translateX(100%)}}
 .app.dsp-open~.sheet.open{opacity:0;visibility:hidden;pointer-events:none;transform:translateX(24px)}
 .mfs.open~.sheet.open{z-index:var(--z-map);top:20px;right:20px;bottom:20px;border:var(--rule-hair) solid var(--line-3);border-radius:var(--r-5);box-shadow:var(--e3)}
 @media (min-width:1100px){.app.ins-open~.mfs{right:calc(var(--rail-w) + 32px)}}
@@ -2123,15 +2127,16 @@ const hm=document.querySelector("#stage .mark");if(!reduce){$("#hero").addEventL
 /* chrome */
 const sc=$("#scroll");
 /* v43 glide: a move that changes the main column's width (the sidebar fold, the Details rail, the Dispatch) snaps the layout
-   once and plays back on transforms. The centred column keeps the width it had for the move and re-wraps once, as it lands,
-   so no line reflows mid-move and nothing jumps before it travels. A glide that starts mid-glide measures where things are
-   drawn now, so a reversal carries on from there. */
+   once and plays back on transforms. While it moves, the centred column always has the narrower of its two widths: a column
+   that narrows re-wraps at once, as the panel starts to arrive, and one that widens keeps its width and re-wraps once as it
+   lands. So no line reflows mid-move and the column never passes under a panel. A glide that starts mid-glide measures where
+   things are drawn now, so a reversal carries on from there. */
 let glA=[];
 function glide(mutate,o){const cols=[$("#thread"),$("#dock"),$("#hero")].filter(e=>e&&e.offsetWidth),r0=cols.map(e=>e.getBoundingClientRect());
  glA.forEach(a=>a.cancel());glA=[];cols.forEach(e=>{e.style.width=e.style.maxWidth=""});mutate();
- if(reduce||!o)return;app.classList.add("gliding");const hold=[$("#thread"),$("#dock")];
- cols.forEach((e,i)=>{if(hold.includes(e)){e.style.width=r0[i].width+"px";e.style.maxWidth="none"}});
- cols.forEach((e,i)=>{const r=e.getBoundingClientRect(),dx=(r0[i].left+r0[i].width/2)-(r.left+r.width/2);
+ if(reduce||!o)return;const hold=[$("#thread"),$("#dock")],r1=cols.map(e=>e.getBoundingClientRect());app.classList.add("gliding");
+ cols.forEach((e,i)=>{if(hold.includes(e)&&r0[i].width<r1[i].width-.5){e.style.width=r0[i].width+"px";e.style.maxWidth="none"}});
+ cols.forEach((e,i)=>{const dx=(r0[i].left+r0[i].width/2)-(r1[i].left+r1[i].width/2);
   if(Math.abs(dx)>.5)glA.push(e.animate([{transform:`translateX(${dx}px)`},{transform:"none"}],o))});
  const mine=glA,done=()=>{if(mine!==glA||glA.some(a=>a.playState==="running"))return;cols.forEach(e=>{e.style.width=e.style.maxWidth=""});app.classList.remove("gliding")};
  glA.length?glA.forEach(a=>a.finished.then(done,()=>{})):done()}
@@ -3407,7 +3412,7 @@ function sendSync(){const s=$("#send");if(!busy)return;const v=promptEl.value.tr
 promptEl.addEventListener("input",sendSync);
 function setBusy(on){busy=on;app.classList.toggle("busy",on);$("#runPill").hidden=!on;const s=$("#send");s.setAttribute("aria-label",on?"Stop":"Send");s.dataset.tip=on?"Stop  Esc":"Send";
  s.classList.remove("steer");grow()}
-const COPY={not_granted:"EXPIRA needs permission to use Claude. Reload to be asked again.",rate_limited:"Too many requests. Wait a minute, then send again.",session_expired:"Your session expired. Sign in again.",refused:"That brief was declined. Rephrase it.",prompt_too_large:"That brief is too long. Shorten it.",invalid_json:"The plan came back unreadable. Send again."};
+const COPY={not_granted:"EXPIRA needs permission to use Claude. Reload to be asked again.",rate_limited:"Too many requests. Wait a minute, then send again.",session_expired:"Your session expired. Sign in again.",refused:"Claude declined the answer to this brief as worded. Rephrase it, or say more about what it is for.",prompt_too_large:"That brief is too long. Shorten it.",invalid_json:"The plan came back unreadable. Send again."};
 
 /* scroll requests collect and land once per frame */
 const ENDS=new Set();let endRaf=0;
@@ -3467,6 +3472,15 @@ async function send(q,re){if(busy)return;const docPre=DOCSEL||docIntent(q);setDo
   if(direct){work.docPlan=docPre?{type:docPre,second:null,brief:q}:null;plan={title:q.split(/\s+/).slice(0,6).join(" "),kind:"direct answer",rationale:"Desks are off; answering directly.",steps:[]}}
   else{P("plan","on");let rawN=0;const dps=[dlb.querySelector("p")];
    let thN=0;const paint=(th,partial)=>{if(th.length>thN&&th.length>1){thN=th.length;setNow(th[th.length-2])}th.forEach((t,i)=>{let el=dps[i];if(!el){el=document.createElement("p");dlb.append(el);dps[i]=el}if(el.textContent!==t)el.textContent=t;el.classList.toggle("typing",!!partial&&i===th.length-1)})};
+   /* a declined plan is asked once more in plain terms, at the default tier; declined again, the brief is answered directly.
+      Never a loop: the service says resending the same words gets the same answer, so the second ask changes the words. */
+   const planAgain=async e=>{if(!e||e.code!=="refused")throw e;F("Planning again","The planner declined the brief as worded; planning it again in plain terms.");
+    try{return await sample.json(`Plan how a small consulting team should handle this business request. ${todayLine()}
+Roles: research, finance, legal, builder. Use 0 to 4 steps, none for small talk or a simple fact.
+Reply with only JSON: {"title": string (3-6 words), "kind": string (under 8 words), "rationale": string (one sentence), "document": null, "steps": [{"role": string, "focus": string (2-3 words), "tier": "high", "task": string (short phrase), "why": string (under 12 words), "web": ${webOn?"boolean":"false"}, "after": []}]}
+
+Request: ${q}`,{modelTier:"default",cache:false,signal:ctl.signal})}
+    catch(e2){if(!e2||e2.code!=="refused")throw e2;F("Answering directly","The planner declined again; answering directly, without desks.");return{title:q.split(/\s+/).slice(0,6).join(" "),kind:"direct answer",rationale:"The planner declined the brief; answering directly.",steps:[]}}};
    plan=await sample.json(`You are the EXPIRA orchestrator (EXPIRA AI Systems, sister company of GSSC Integrated Corporation, Iloilo, Philippines). Think it through, then staff this brief. You are the decision-maker: you staff the desks, weigh their work and make the recommendation yourself.
 ${KL?`The GSSC kernel ${KL.kernel_version} is loaded, with templates for: quotation, company_profile, contract, secretary_certificate, board_resolution, notarial_acknowledgment. Second signatories (for contract, secretary_certificate, board_resolution) come from: ${(o=>Object.keys(o).filter(k=>k!==kPrimary(o)))(KL.kernel["02_governance"].active_officers).join(", ")}. If the user asks for one of these documents, set "document" and staff the desks that gather its facts.${docPre?` The user has asked for a ${DOCT[docPre]}: set "document" with type "${docPre}".`:""}`:""}
 ${todayLine()} When the brief depends on current facts (prices, rates, rules, news), plan for the newest figures.
@@ -3478,7 +3492,7 @@ Reply with only JSON, keys in this order:
  "title": string (3-6 words), "kind": string (what sort of brief, under 8 words), "rationale": string (one sentence),
  "document": null, or {"type": "quotation"|"company_profile"|"contract"|"secretary_certificate"|"board_resolution"|"notarial_acknowledgment", "second_signatory": string or null, "brief": string (what the document must contain)} when the user asks for a GSSC document to be produced,
  "steps": [{"role": string, "focus": string (2-3 words naming this desk's slice, e.g. "Supplier rates"), "tier": string, "task": string (short phrase, sentence case, no full stop), "why": string (under 12 words), "web": boolean, "after": [1-based step numbers it needs]}]}
-${history?`Conversation so far:\n${history}\n\n`:""}New message: ${q}`,{modelTier:"complex",cache:false,...IM,signal:ctl.signal,onText:({text})=>{const p=peekPlan(text);if(p.thinking.length){work.map.thinking=p.thinking;paint(p.thinking,p.partial)}for(;rawN<p.steps.length;rawN++)addStep(p.steps[rawN]);follow()}});
+${history?`Conversation so far:\n${history}\n\n`:""}New message: ${q}`,{modelTier:"complex",cache:false,...IM,signal:ctl.signal,onText:({text})=>{const p=peekPlan(text);if(p.thinking.length){work.map.thinking=p.thinking;paint(p.thinking,p.partial)}for(;rawN<p.steps.length;rawN++)addStep(p.steps[rawN]);follow()}}).catch(planAgain);
    const th=(Array.isArray(plan.thinking)&&plan.thinking.length?plan.thinking:work.map.thinking).map(String).filter(Boolean).slice(0,6);work.map.thinking=th;
    if(th.length)paint(th,false);else{dps[0].classList.remove("typing");dps[0].textContent=String(plan.rationale||"Planned the work.")}
    (Array.isArray(plan.steps)?plan.steps:[]).slice(rawN).forEach(addStep);
@@ -3502,6 +3516,8 @@ ${history?`Conversation so far:\n${history}\n\n`:""}New message: ${q}`,{modelTie
       onError:code=>{if(["server_not_connected","needs_reauth","not_in_manifest","blocked_by_policy","selection_required"].includes(code)){webOn=false;say(MCP_COPY[code]||"Web research is unavailable.","warn")}F(null,`Web research failed for desk ${ROMAN[i]}${code?` (${esc(code)})`:""}.`)}}):null;
     try{const r=await sample(brief(s,i)+steerNote(),{modelTier:TIERS[s.tier].m,cache:false,...IM,signal:ctl.signal,...(tools?{tools}:{}),onText:({text})=>{pend[key]=(pend[key]||0)+Math.max(0,text.length-len);len=text.length;s.out=text;if(!s._raf)s._raf=requestAnimationFrame(()=>{s._raf=0;out.textContent=s.out;if(out.parentElement.classList.contains("show"))toEnd(out);const q=$("#dq"+i),v=(s.searches?`${s.searches} search${s.searches>1?"es":""} · `:"")+ft(tok(s.out))+" tokens";if(q&&q.textContent!==v)q.textContent=v})}});
      outs[i]=r.text;s.out=r.text;return r.text}
+    /* a desk that declines files nothing; the run goes on without it and the Arbiter weighs it as empty */
+    catch(e){if(!e||e.code!=="refused")throw e;const t="(This desk declined its task and filed no notes.)";outs[i]=t;s.out=t;F(`Desk ${ROMAN[i]} declined`,`Desk ${ROMAN[i]} declined its task; the run goes on without it.`);return t}
     finally{s._live=false;think[key]=0;s.ms=performance.now()-s._t0;s.te=Math.round(now());$("#dm"+i).textContent=fmt(s.ms);stE.className="st";swap(stE,"Filed");mapSync()}};
    const done=[];steps.forEach((s,i)=>done[i]=(async()=>{for(const n of s.after)if(n-1<i&&done[n-1])await done[n-1];const r=await runOne(i);F(`Desk ${ROMAN[i]} filed its notes`,`Desk ${ROMAN[i]} filed ${ft(tok(r))} tokens of notes in ${fmt(s.ms)}.`);return r})());
    await Promise.all(done);P("desks","done");P("review","on");work._vd=1;mapSync();steps.forEach((_,k)=>setTimeout(()=>mapPulse("a"+k,"v"),120+k*110));

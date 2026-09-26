@@ -1,15 +1,16 @@
 /* chrome */
 const sc=$("#scroll");
 /* v43 glide: a move that changes the main column's width (the sidebar fold, the Details rail, the Dispatch) snaps the layout
-   once and plays back on transforms. The centred column keeps the width it had for the move and re-wraps once, as it lands,
-   so no line reflows mid-move and nothing jumps before it travels. A glide that starts mid-glide measures where things are
-   drawn now, so a reversal carries on from there. */
+   once and plays back on transforms. While it moves, the centred column always has the narrower of its two widths: a column
+   that narrows re-wraps at once, as the panel starts to arrive, and one that widens keeps its width and re-wraps once as it
+   lands. So no line reflows mid-move and the column never passes under a panel. A glide that starts mid-glide measures where
+   things are drawn now, so a reversal carries on from there. */
 let glA=[];
 function glide(mutate,o){const cols=[$("#thread"),$("#dock"),$("#hero")].filter(e=>e&&e.offsetWidth),r0=cols.map(e=>e.getBoundingClientRect());
  glA.forEach(a=>a.cancel());glA=[];cols.forEach(e=>{e.style.width=e.style.maxWidth=""});mutate();
- if(reduce||!o)return;app.classList.add("gliding");const hold=[$("#thread"),$("#dock")];
- cols.forEach((e,i)=>{if(hold.includes(e)){e.style.width=r0[i].width+"px";e.style.maxWidth="none"}});
- cols.forEach((e,i)=>{const r=e.getBoundingClientRect(),dx=(r0[i].left+r0[i].width/2)-(r.left+r.width/2);
+ if(reduce||!o)return;const hold=[$("#thread"),$("#dock")],r1=cols.map(e=>e.getBoundingClientRect());app.classList.add("gliding");
+ cols.forEach((e,i)=>{if(hold.includes(e)&&r0[i].width<r1[i].width-.5){e.style.width=r0[i].width+"px";e.style.maxWidth="none"}});
+ cols.forEach((e,i)=>{const dx=(r0[i].left+r0[i].width/2)-(r1[i].left+r1[i].width/2);
   if(Math.abs(dx)>.5)glA.push(e.animate([{transform:`translateX(${dx}px)`},{transform:"none"}],o))});
  const mine=glA,done=()=>{if(mine!==glA||glA.some(a=>a.playState==="running"))return;cols.forEach(e=>{e.style.width=e.style.maxWidth=""});app.classList.remove("gliding")};
  glA.length?glA.forEach(a=>a.finished.then(done,()=>{})):done()}
