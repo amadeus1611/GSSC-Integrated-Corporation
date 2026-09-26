@@ -1,4 +1,4 @@
-.menu.ctx{width:224px;transform-origin:0 0}
+.menu.ctx{width:224px}
 .menu .sub{display:none;border-left:var(--rule-hair) solid var(--line-2);margin:var(--sp-half) 0 var(--sp-half) var(--sp-3);padding-left:var(--sp-1)}
 .menu .sub.open{display:block;animation:evIn var(--t-enter) var(--ease-out) both}
 .menu button .ic{width:14px;height:14px;color:var(--soft);flex:none}
@@ -8,7 +8,8 @@
 .seg{display:grid;grid-template-columns:repeat(3,1fr);gap:var(--sp-half);margin:var(--sp-half) var(--sp-1) var(--sp-1);padding:var(--sp-half);border-radius:var(--r-4);background:var(--well);border:var(--rule-hair) solid var(--line-2)}
 .menu .seg button{flex-direction:column;justify-content:center;gap:var(--sp-1);padding:var(--sp-2) var(--sp-1);font-size:var(--fs-chrome-2);color:var(--soft);border-radius:var(--r-2);text-align:center}
 .menu .seg button svg{width:15px;height:15px}
-.menu.open{opacity:1;visibility:visible;transform:none;filter:none;pointer-events:auto;transition-delay:0s}
+/* menus open and close with the pour (core/pour.js); at rest they are simply shown or hidden */
+.menu.open{opacity:1;visibility:visible;pointer-events:auto}
 .menu .mh{padding:var(--sp-2) var(--sp-2) var(--sp-1)}
 .menu .sep{height:var(--rule-hair);background:var(--line-2);margin:var(--sp-1h) var(--sp-1)}
 .menu button{display:flex;align-items:center;gap:var(--sp-2h);width:100%;border:0;background:transparent;border-radius:var(--r-3);padding:var(--sp-2) var(--sp-2);cursor:pointer;text-align:left;color:var(--text);font-size:var(--fs-ui);transition:background var(--t-exit) var(--ease-soft-close)}
@@ -37,7 +38,7 @@
 .seg3 button{border:0;background:none;padding:var(--sp-half) var(--sp-2);border-radius:var(--r-1);cursor:pointer;font-size:var(--fs-micro);letter-spacing:var(--tracked-tight);text-transform:uppercase;color:var(--mute);transition:background var(--t-exit) var(--ease-soft-close),color var(--t-exit) var(--ease-soft-close)}
 .seg3 button:hover{color:var(--ink)}
 .seg3 button[aria-checked="true"]{background:var(--panel);color:var(--ink);box-shadow:var(--e1)}
-.menu.acct{width:248px;transform-origin:0 100%}
+.menu.acct{width:248px}
 .acct-h small{display:block;font-size:var(--fs-chrome-2);color:var(--mute)}
 .menu.acct .seg{margin:var(--sp-half) var(--sp-half) var(--sp-1)}
 .seg2.s3{grid-template-columns:repeat(3,1fr)}
@@ -55,6 +56,8 @@
 /* claim cards, open threads, documents that drip in */
 .cpop{position:fixed;z-index:var(--z-pop);width:300px;padding:var(--sp-2) var(--sp-3) var(--sp-2);background:var(--panel);border:var(--rule-hair) solid var(--line-3);border-radius:var(--r-4);box-shadow:var(--e2);pointer-events:auto}
 .cpop[hidden]{display:none}
+#cpop{visibility:hidden;opacity:0;pointer-events:none}
+#cpop.open{visibility:visible;opacity:1;pointer-events:auto}
 .cpop::after{content:"";position:absolute;left:var(--ax,50%);top:100%;width:6px;height:6px;margin:calc(var(--sp-1) * -1) 0 0 calc(var(--sp-1) * -1);background:var(--panel);border:solid var(--line-3);border-width:0 var(--rule-hair) var(--rule-hair) 0;transform:rotate(45deg)}
 .cpop.below::after{top:0;transform:rotate(-135deg)}
 .cpop .ch{display:flex;align-items:center;gap:var(--sp-2);font-size:var(--fs-micro);letter-spacing:.14em;text-transform:uppercase;color:var(--mute)}
@@ -72,16 +75,9 @@
 .cpop .cs em{font:italic 400 var(--fs-chrome-2)/1.45 var(--f-display);color:var(--soft)}
 .cpop .cx{display:block;font:italic 400 var(--fs-chrome-2) var(--f-display);color:var(--gold)}
 .moving>[aria-selected="true"]{background:transparent}
-/* !important: holds the v39 CSS entrance off while the JS pour runs (replaced in Phase 3.3) */
-.menu,.menu.open{filter:none!important}
-/* !important: holds the v39 CSS entrance off while the JS pour runs (replaced in Phase 3.3) */
-.menu{position:fixed;left:0;top:0;z-index:var(--z-menu);width:268px;background:var(--panel);border:var(--rule-hair) solid var(--line-3);border-radius:var(--r-5);box-shadow:var(--e2);padding:var(--sp-1h);opacity:0;visibility:hidden;transform:translateY(6px) scale(.985);filter:blur(4px);pointer-events:none;transform-origin:100% 100%;transition:opacity var(--t-exit) var(--ease-soft-close),transform var(--t-move) var(--ease-soft-close),filter var(--t-exit) var(--ease-soft-close),visibility 0s calc(var(--stagger) * 18);transition-property:opacity,transform,visibility,box-shadow!important}
+.menu{position:fixed;left:0;top:0;z-index:var(--z-menu);width:268px;background:var(--panel);border:var(--rule-hair) solid var(--line-3);border-radius:var(--r-5);box-shadow:var(--e2);padding:var(--sp-1h);opacity:0;visibility:hidden;pointer-events:none}
 .chov{width:280px;opacity:0;transform:translateX(-4px);transition:opacity var(--t-enter) var(--ease-soft-close),transform var(--t-move) var(--spring);pointer-events:none}
 .chov.in{opacity:1;transform:none}
 .chov .ct{margin:var(--sp-1h) 0 var(--sp-1);font:400 var(--fs-body)/1.4 var(--f-display);color:var(--ink);text-wrap:balance}
 .chov .cq{margin:0 0 var(--sp-2);font-size:var(--fs-chrome-2);line-height:1.5;color:var(--soft)}
 .chov::after{display:none}
-.menu.opt{transform-origin:0 100%}
-/* menus pour: meniscus light (own rules) */
-/* !important: holds the v39 CSS entrance off while the JS pour runs (replaced in Phase 3.3) */
-.menu.open{transition-duration:var(--t-enter)!important;transition-delay:0s!important;transition-timing-function:var(--ease-out)}

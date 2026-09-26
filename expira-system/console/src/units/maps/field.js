@@ -76,6 +76,7 @@ class FieldMap{
  pulse(a,b){const id=`${a}>${b}`;if(reduce||!this.links.has(id))return;const c=sv("circle",{class:"pl",r:2.2,opacity:0});this.gP.append(c);this.pl.push({c,id,t0:performance.now(),dur:900});this.go()}
 }
 /* full screen: the same run, with room to read it, and its ledger beside it */
+POUR.attach($("#mfs"));
 function mapFS(btn){const host=btn.closest(".mapw"),m=[...FM].find(x=>x.host===host);if(!m)return;const w=m.get(),o=$("#mfs");closeSheet();acctMenu(false);
  $("#mfsT").textContent=cur?cur.title:"";$("#mfsL").innerHTML=ledgerHTML(w,true)||`<p class="empty2">This run has no claims ledger.</p>`;FM.forEach(x=>{if(x.opt.fs)x.kill()});$("#mfsMap").innerHTML="";
  o.classList.add("open");$("#veil").classList.add("open");setTimeout(()=>{mkMap($("#mfsMap"),()=>w,{replay:true,fs:true});$("#mfsX").focus({preventScroll:true})},60)}

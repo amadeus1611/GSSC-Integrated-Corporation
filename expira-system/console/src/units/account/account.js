@@ -1,4 +1,5 @@
 /* the name row opens a small account menu, upward; a second click closes it */
+POUR.attach($("#acct"),{blur:true});
 function acctMenu(o){const a=$("#acct"),b=$("#me");if(!a)return;o=o??!a.classList.contains("open");
  if(o){closeCtx();menu(false);closeSheet();const r=b.getBoundingClientRect();a.style.left=Math.max(8,Math.min(innerWidth-256,r.left-4))+"px";a.style.top="0px";a.classList.add("open");a.style.top=Math.max(8,r.top-a.offsetHeight-8)+"px";
   const n=chats.filter(c=>c.archived).length,l=chats.filter(c=>!c.archived&&!c.example).length;$("#archN2").textContent=`${l} chat${l===1?"":"s"}${n?` · ${n} archived`:""}`;setTimeout(()=>a.querySelector('[aria-checked="true"]')?.focus({preventScroll:true}),60)}

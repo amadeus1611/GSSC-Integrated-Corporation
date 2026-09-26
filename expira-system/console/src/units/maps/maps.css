@@ -92,8 +92,8 @@
 .field .k-ans .core{fill:var(--n-hollow);stroke:var(--ok);stroke-width:1.8}
 .map .k-arb .bx{stroke:var(--gold)}
 .map .k-ans .bx{stroke:var(--ok)}
-.mfs{position:fixed;inset:20px;z-index:var(--z-map);display:flex;flex-direction:column;background:var(--sheet);border:var(--rule-hair) solid var(--line-3);border-radius:var(--r-5);box-shadow:var(--e3);overflow:hidden;opacity:0;visibility:hidden;transform:scale(.985);filter:blur(4px);transition:opacity var(--t-exit) var(--ease-soft-close),transform var(--t-move) var(--ease-soft-close),filter var(--t-exit) var(--ease-soft-close),visibility 0s linear calc(var(--stagger) * 11)}
-.mfs.open{opacity:1;visibility:visible;transform:none;filter:none;transition-delay:0s}
+.mfs{position:fixed;inset:20px;z-index:var(--z-map);display:flex;flex-direction:column;background:var(--sheet);border:var(--rule-hair) solid var(--line-3);border-radius:var(--r-5);box-shadow:var(--e3);overflow:hidden;opacity:0;visibility:hidden}
+.mfs.open{opacity:1;visibility:visible}
 .mfs-h{display:flex;align-items:center;gap:var(--sp-3);padding:var(--sp-3) var(--sp-3h) var(--sp-2h) var(--sp-5);border-bottom:var(--rule-hair) solid var(--line-2)}
 .mfs-h .cap{color:var(--ink)}
 .mfs-h .mt{font:italic 400 var(--fs-ui) var(--f-display);color:var(--soft);flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
@@ -170,9 +170,3 @@
 .mini .me.ne{stroke-dasharray:1;stroke-dashoffset:1;animation:fgDraw var(--t-draw) var(--ease-out) calc(var(--stagger) * 8) forwards}
 .mini .me.dep.ne{stroke-dasharray:none;stroke-dashoffset:0;opacity:0;animation:ink var(--t-enter) calc(var(--stagger) * 12) forwards}
 .mini .mn.nb .halo{animation:mnb var(--t-move) var(--spring) both,halo var(--t-loop) var(--ease-inout) calc(var(--stagger) * 15) infinite}
-/* !important: holds the v39 CSS entrance off while the JS pour runs (replaced in Phase 3.3) */
-.mfs,.mfs.open{filter:none!important}
-/* !important: holds the v39 CSS entrance off while the JS pour runs (replaced in Phase 3.3) */
-#mfs.open{transition-duration:var(--t-enter)!important;transition-delay:0s!important;transition-timing-function:var(--ease-out)}
-.mnsc{position:absolute;left:0;right:0;top:0;height:34px;pointer-events:none;z-index:var(--z-3);background:linear-gradient(180deg,transparent,color-mix(in srgb,var(--gold) 16%,transparent) 55%,transparent);border-radius:inherit}
-.mnsc.up{background:linear-gradient(0deg,transparent,color-mix(in srgb,var(--gold) 16%,transparent) 55%,transparent)}

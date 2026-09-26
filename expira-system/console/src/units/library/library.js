@@ -38,7 +38,7 @@ $("#recents").addEventListener("dragend",()=>{dragId=null;document.querySelector
 $("#recents").addEventListener("dragover",e=>{if(!dragId)return;const t=e.target.closest(".fold,[data-unfile]");document.querySelectorAll(".drop").forEach(x=>x!==t&&x.classList.remove("drop"));if(t){e.preventDefault();t.classList.add("drop")}});
 $("#recents").addEventListener("drop",e=>{const t=e.target.closest(".fold,[data-unfile]");if(!t||!dragId)return;e.preventDefault();const c=chats.find(x=>x.id===dragId);if(!c)return;const fid=t.dataset.fid||null;if(c.folder===fid)return;c.folder=fid;if(fid){const f=FOLDERS.find(x=>x.id===fid);f.open=true;saveF();toast(`Moved to <em>${esc(f.name)}</em>`)}else toast("Moved to recents");save();renderRecents();crumb()});
 /* context menus */
-const ctx=$("#ctx");let ctxBtn=null;
+const ctx=$("#ctx");let ctxBtn=null;POUR.attach(ctx,{blur:true});
 function placeMenu(m,anchor,w){const r=anchor.getBoundingClientRect();m.style.left=Math.max(8,Math.min(innerWidth-w-8,r.left))+"px";m.style.top="0px";m.classList.add("open");const hh=m.offsetHeight;let y=r.bottom+4;if(y+hh>innerHeight-8)y=Math.max(8,r.top-hh-4);m.style.top=y+"px"}
 function closeCtx(){ctx.classList.remove("open");if(ctxBtn&&ctxBtn.setAttribute)ctxBtn.setAttribute("aria-expanded","false");ctxBtn=null}
 function chatMenu(id,btn){const c=chats.find(x=>x.id===id);if(!c)return;if(ctx.classList.contains("open")&&ctxBtn===btn){closeCtx();return}closeCtx();menu(false);setMenu(false);acctMenu(false);closeSheet();ctxBtn=btn;

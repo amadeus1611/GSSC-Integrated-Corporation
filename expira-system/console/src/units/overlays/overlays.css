@@ -11,13 +11,13 @@
 .ctip i{width:7px;height:7px;border-radius:var(--r-1)}
 /* palette, toasts, tips, jump */
 .veil{position:fixed;inset:0;z-index:var(--z-veil);background:var(--veil);opacity:0;pointer-events:none;transition:opacity var(--t-exit) var(--ease-soft-close)}
-.veil.open{opacity:1;pointer-events:auto}
+.veil.open{opacity:1;pointer-events:auto;transition-duration:var(--t-enter);transition-timing-function:var(--ease-out)}
 .keys{position:fixed;left:50%;top:22vh;z-index:var(--z-dialog);width:min(300px,calc(100vw - 32px));background:var(--panel);border:var(--rule-hair) solid var(--line-3);border-radius:var(--r-5);box-shadow:var(--e2);padding:var(--sp-3h) var(--sp-4);transform:translate(-50%,-6px) scale(.985);opacity:0;filter:blur(5px);pointer-events:none;transition:transform var(--t-move) var(--ease-soft-close),opacity var(--t-exit) var(--ease-soft-close),filter var(--t-exit) var(--ease-soft-close)}
 .keys.open{transform:translate(-50%,0);opacity:1;filter:none;pointer-events:auto}
 .keys dl{display:grid;grid-template-columns:auto 1fr;gap:var(--sp-2) var(--sp-3h);margin:var(--sp-2h) 0 0;font-size:var(--fs-ui);color:var(--text)}
 .keys dt{text-align:right}
 .keys dd{margin:0}
-.pal.open{transform:translate(-50%,0);opacity:1;filter:none;pointer-events:auto}
+.pal.open{opacity:1;pointer-events:auto}
 .pal input{width:100%;border:0;border-bottom:var(--rule-hair) solid var(--line-2);background:transparent;padding:var(--sp-3h) var(--sp-4);outline:none;font-size:var(--fs-lead)}
 .pal ul{list-style:none;margin:0;padding:var(--sp-1h);max-height:320px;overflow:auto}
 .pal li{display:flex;align-items:center;gap:var(--sp-2h);padding:var(--sp-2) var(--sp-2h);border-radius:var(--r-3);cursor:pointer;font-size:var(--fs-body);color:var(--text)}
@@ -43,7 +43,4 @@
 .lbx[hidden]{display:none}
 .lbx img{min-width:120px;max-width:min(92vw,1100px);max-height:80vh;border-radius:var(--r-2);box-shadow:var(--e2);transform-origin:center}
 .lbx p{margin:0;font-size:var(--fs-chrome);letter-spacing:.04em;color:var(--soft)}
-/* !important: holds the v39 CSS entrance off while the JS pour runs (replaced in Phase 3.3) */
-.pal,.pal.open{filter:none!important}
-/* !important: holds the v39 CSS entrance off while the JS pour runs (replaced in Phase 3.3) */
-.pal{position:fixed;left:50%;top:16vh;z-index:var(--z-dialog);width:min(540px,calc(100vw - 32px));background:var(--panel);border:var(--rule-hair) solid var(--line-3);border-radius:var(--r-5);box-shadow:var(--e2);transform:translate(-50%,-6px) scale(.985);opacity:0;filter:blur(5px);pointer-events:none;transition:transform var(--t-move) var(--ease-soft-close),opacity var(--t-exit) var(--ease-soft-close),filter var(--t-exit) var(--ease-soft-close);transition-property:opacity,transform,visibility,box-shadow!important}
+.pal{position:fixed;left:50%;top:16vh;z-index:var(--z-dialog);width:min(540px,calc(100vw - 32px));background:var(--panel);border:var(--rule-hair) solid var(--line-3);border-radius:var(--r-5);box-shadow:var(--e2);transform:translate(-50%,0);opacity:0;pointer-events:none}

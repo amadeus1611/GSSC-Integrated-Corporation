@@ -6,7 +6,7 @@
 .speek{display:flex;flex-direction:column;flex:none}
 .speek:empty{display:none}
 .sheet.deep #sheetB{border-top:var(--rule-hair) solid var(--line-2);border-radius:var(--r-4) var(--r-4) 0 0;margin:0 var(--sp-1)}
-/* the sheet: spreads open from whatever was selected */
+/* the sheet: pours open from whatever was selected (core/pour.js) */
 /* side card reveal (own rules) */
-.sheet{position:fixed;z-index:var(--z-pop);left:0;top:0;width:min(380px,calc(100vw - 24px));max-height:min(72vh,560px);display:flex;flex-direction:column;background:var(--panel);border:var(--rule-hair) solid var(--line-3);border-radius:var(--r-5);box-shadow:var(--e2);visibility:hidden;--ox:0px;--oy:0px;clip-path:circle(0px at var(--ox) var(--oy));transition:clip-path var(--t-exit) var(--ease-soft-close),visibility 0s linear calc(var(--stagger) * 10)}
-.sheet.open{visibility:visible;clip-path:circle(calc(150% + 80px) at var(--ox) var(--oy));transition:clip-path var(--t-exit) var(--ease-out),visibility 0s}
+.sheet{position:fixed;z-index:var(--z-pop);left:0;top:0;width:min(380px,calc(100vw - 24px));max-height:min(72vh,560px);display:flex;flex-direction:column;background:var(--panel);border:var(--rule-hair) solid var(--line-3);border-radius:var(--r-5);box-shadow:var(--e2);visibility:hidden}
+.sheet.open{visibility:visible}

@@ -14,8 +14,8 @@
 .docc .ck li::before{content:"";width:6px;height:6px;border-radius:var(--r-round);background:var(--ok);flex:none;transform:translateY(-1px)}
 .docc .ck li.bad::before{background:var(--bad)}
 .docc.failed{border-color:var(--bad)}
-.docv{position:fixed;inset:16px;z-index:var(--z-doc);display:flex;flex-direction:column;background:var(--sheet);border:var(--rule-hair) solid var(--line-3);border-radius:var(--r-5);box-shadow:var(--e3);overflow:hidden;opacity:0;visibility:hidden;transform:scale(.985);filter:blur(4px);transition:opacity var(--t-exit) var(--ease-soft-close),transform var(--t-move) var(--ease-soft-close),filter var(--t-exit) var(--ease-soft-close),visibility 0s linear calc(var(--stagger) * 11)}
-.docv.open{opacity:1;visibility:visible;transform:none;filter:none;transition-delay:0s}
+.docv{position:fixed;inset:16px;z-index:var(--z-doc);display:flex;flex-direction:column;background:var(--sheet);border:var(--rule-hair) solid var(--line-3);border-radius:var(--r-5);box-shadow:var(--e3);overflow:hidden;opacity:0;visibility:hidden}
+.docv.open{opacity:1;visibility:visible}
 .docv-h{display:flex;align-items:center;gap:var(--sp-3);padding:var(--sp-2h) var(--sp-3) var(--sp-2h) var(--sp-5);border-bottom:var(--rule-hair) solid var(--line-2);flex-wrap:wrap}
 .docv-h .cap{color:var(--gold)}
 .docv-h .dt{font:400 var(--fs-body) var(--f-display);color:var(--ink);min-width:0;flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
@@ -56,7 +56,3 @@
 .dpn span{letter-spacing:.14em;text-transform:uppercase;color:var(--mute);margin-left:var(--sp-1);transition:color var(--t-exit);font-size:var(--fs-micro)}
 /* cards in cards, a quieter composer, reversible hovers, smooth shadows */
 .docc .ac{display:flex;flex-wrap:wrap;gap:var(--sp-1h);width:auto;height:auto;padding:0;margin:0;border:0;background:none;box-shadow:none;animation:none;transform:none}
-/* !important: holds the v39 CSS entrance off while the JS pour runs (replaced in Phase 3.3) */
-.docv,.docv.open{filter:none!important}
-/* !important: holds the v39 CSS entrance off while the JS pour runs (replaced in Phase 3.3) */
-#docv.open{transition-duration:var(--t-enter)!important;transition-delay:0s!important;transition-timing-function:var(--ease-out)}

@@ -7,6 +7,7 @@ async function saveDoc(d){const r=await kBuild(d.type,d.src,d.second).catch(e=>(
  try{await navigator.clipboard.writeText(r.html);toast("Downloads are off here; the HTML is on your clipboard");return true}catch(e){toast("Downloads are off here. Open the document and use Copy HTML.");return false}}
 /* the document viewer */
 let DOCV=null;
+POUR.attach($("#docv"));
 async function openDoc(d,title){const v=$("#docv");$("#docvT").textContent=title||d.title||"Document";$("#docvM").textContent="Building…";$("#docvL").innerHTML="";$("#docvF").srcdoc="";v.classList.add("open");$("#veil").classList.add("open");closeSheet();
  try{const r=await kBuild(d.type,d.src,d.second);if(!r.ok){$("#docvM").textContent="Held";$("#docvL").innerHTML=`<h5>Hard stop</h5><p>${esc(r.error)}</p>`;return}
   DOCV={html:r.html,file:r.file};$("#docvF").srcdoc=r.html;$("#docvM").textContent=`Kernel ${r.kernel} · ${r.pages} page${r.pages===1?"":"s"} · verified`;

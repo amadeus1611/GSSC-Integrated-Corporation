@@ -1118,8 +1118,8 @@ html.calm *,html.calm *::before,html.calm *::after{animation:none!important;tran
 .field .k-ans .core{fill:var(--n-hollow);stroke:var(--ok);stroke-width:1.8}
 .map .k-arb .bx{stroke:var(--gold)}
 .map .k-ans .bx{stroke:var(--ok)}
-.mfs{position:fixed;inset:20px;z-index:var(--z-map);display:flex;flex-direction:column;background:var(--sheet);border:var(--rule-hair) solid var(--line-3);border-radius:var(--r-5);box-shadow:var(--e3);overflow:hidden;opacity:0;visibility:hidden;transform:scale(.985);filter:blur(4px);transition:opacity var(--t-exit) var(--ease-soft-close),transform var(--t-move) var(--ease-soft-close),filter var(--t-exit) var(--ease-soft-close),visibility 0s linear calc(var(--stagger) * 11)}
-.mfs.open{opacity:1;visibility:visible;transform:none;filter:none;transition-delay:0s}
+.mfs{position:fixed;inset:20px;z-index:var(--z-map);display:flex;flex-direction:column;background:var(--sheet);border:var(--rule-hair) solid var(--line-3);border-radius:var(--r-5);box-shadow:var(--e3);overflow:hidden;opacity:0;visibility:hidden}
+.mfs.open{opacity:1;visibility:visible}
 .mfs-h{display:flex;align-items:center;gap:var(--sp-3);padding:var(--sp-3) var(--sp-3h) var(--sp-2h) var(--sp-5);border-bottom:var(--rule-hair) solid var(--line-2)}
 .mfs-h .cap{color:var(--ink)}
 .mfs-h .mt{font:italic 400 var(--fs-ui) var(--f-display);color:var(--soft);flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
@@ -1196,12 +1196,6 @@ html.calm *,html.calm *::before,html.calm *::after{animation:none!important;tran
 .mini .me.ne{stroke-dasharray:1;stroke-dashoffset:1;animation:fgDraw var(--t-draw) var(--ease-out) calc(var(--stagger) * 8) forwards}
 .mini .me.dep.ne{stroke-dasharray:none;stroke-dashoffset:0;opacity:0;animation:ink var(--t-enter) calc(var(--stagger) * 12) forwards}
 .mini .mn.nb .halo{animation:mnb var(--t-move) var(--spring) both,halo var(--t-loop) var(--ease-inout) calc(var(--stagger) * 15) infinite}
-/* !important: holds the v39 CSS entrance off while the JS pour runs (replaced in Phase 3.3) */
-.mfs,.mfs.open{filter:none!important}
-/* !important: holds the v39 CSS entrance off while the JS pour runs (replaced in Phase 3.3) */
-#mfs.open{transition-duration:var(--t-enter)!important;transition-delay:0s!important;transition-timing-function:var(--ease-out)}
-.mnsc{position:absolute;left:0;right:0;top:0;height:34px;pointer-events:none;z-index:var(--z-3);background:linear-gradient(180deg,transparent,color-mix(in srgb,var(--gold) 16%,transparent) 55%,transparent);border-radius:inherit}
-.mnsc.up{background:linear-gradient(0deg,transparent,color-mix(in srgb,var(--gold) 16%,transparent) 55%,transparent)}
 .sh{display:flex;align-items:center;gap:var(--sp-1h);padding:var(--sp-3) var(--sp-2) var(--sp-1)}
 .sh .cap{flex:1}
 .sh .ib.sm{opacity:0;transition:opacity var(--t-exit) var(--ease-soft-close)}
@@ -1210,11 +1204,11 @@ html.calm *,html.calm *::before,html.calm *::after{animation:none!important;tran
 .speek{display:flex;flex-direction:column;flex:none}
 .speek:empty{display:none}
 .sheet.deep #sheetB{border-top:var(--rule-hair) solid var(--line-2);border-radius:var(--r-4) var(--r-4) 0 0;margin:0 var(--sp-1)}
-/* the sheet: spreads open from whatever was selected */
+/* the sheet: pours open from whatever was selected (core/pour.js) */
 /* side card reveal (own rules) */
-.sheet{position:fixed;z-index:var(--z-pop);left:0;top:0;width:min(380px,calc(100vw - 24px));max-height:min(72vh,560px);display:flex;flex-direction:column;background:var(--panel);border:var(--rule-hair) solid var(--line-3);border-radius:var(--r-5);box-shadow:var(--e2);visibility:hidden;--ox:0px;--oy:0px;clip-path:circle(0px at var(--ox) var(--oy));transition:clip-path var(--t-exit) var(--ease-soft-close),visibility 0s linear calc(var(--stagger) * 10)}
-.sheet.open{visibility:visible;clip-path:circle(calc(150% + 80px) at var(--ox) var(--oy));transition:clip-path var(--t-exit) var(--ease-out),visibility 0s}
-.menu.ctx{width:224px;transform-origin:0 0}
+.sheet{position:fixed;z-index:var(--z-pop);left:0;top:0;width:min(380px,calc(100vw - 24px));max-height:min(72vh,560px);display:flex;flex-direction:column;background:var(--panel);border:var(--rule-hair) solid var(--line-3);border-radius:var(--r-5);box-shadow:var(--e2);visibility:hidden}
+.sheet.open{visibility:visible}
+.menu.ctx{width:224px}
 .menu .sub{display:none;border-left:var(--rule-hair) solid var(--line-2);margin:var(--sp-half) 0 var(--sp-half) var(--sp-3);padding-left:var(--sp-1)}
 .menu .sub.open{display:block;animation:evIn var(--t-enter) var(--ease-out) both}
 .menu button .ic{width:14px;height:14px;color:var(--soft);flex:none}
@@ -1224,7 +1218,8 @@ html.calm *,html.calm *::before,html.calm *::after{animation:none!important;tran
 .seg{display:grid;grid-template-columns:repeat(3,1fr);gap:var(--sp-half);margin:var(--sp-half) var(--sp-1) var(--sp-1);padding:var(--sp-half);border-radius:var(--r-4);background:var(--well);border:var(--rule-hair) solid var(--line-2)}
 .menu .seg button{flex-direction:column;justify-content:center;gap:var(--sp-1);padding:var(--sp-2) var(--sp-1);font-size:var(--fs-chrome-2);color:var(--soft);border-radius:var(--r-2);text-align:center}
 .menu .seg button svg{width:15px;height:15px}
-.menu.open{opacity:1;visibility:visible;transform:none;filter:none;pointer-events:auto;transition-delay:0s}
+/* menus open and close with the pour (core/pour.js); at rest they are simply shown or hidden */
+.menu.open{opacity:1;visibility:visible;pointer-events:auto}
 .menu .mh{padding:var(--sp-2) var(--sp-2) var(--sp-1)}
 .menu .sep{height:var(--rule-hair);background:var(--line-2);margin:var(--sp-1h) var(--sp-1)}
 .menu button{display:flex;align-items:center;gap:var(--sp-2h);width:100%;border:0;background:transparent;border-radius:var(--r-3);padding:var(--sp-2) var(--sp-2);cursor:pointer;text-align:left;color:var(--text);font-size:var(--fs-ui);transition:background var(--t-exit) var(--ease-soft-close)}
@@ -1253,7 +1248,7 @@ html.calm *,html.calm *::before,html.calm *::after{animation:none!important;tran
 .seg3 button{border:0;background:none;padding:var(--sp-half) var(--sp-2);border-radius:var(--r-1);cursor:pointer;font-size:var(--fs-micro);letter-spacing:var(--tracked-tight);text-transform:uppercase;color:var(--mute);transition:background var(--t-exit) var(--ease-soft-close),color var(--t-exit) var(--ease-soft-close)}
 .seg3 button:hover{color:var(--ink)}
 .seg3 button[aria-checked="true"]{background:var(--panel);color:var(--ink);box-shadow:var(--e1)}
-.menu.acct{width:248px;transform-origin:0 100%}
+.menu.acct{width:248px}
 .acct-h small{display:block;font-size:var(--fs-chrome-2);color:var(--mute)}
 .menu.acct .seg{margin:var(--sp-half) var(--sp-half) var(--sp-1)}
 .seg2.s3{grid-template-columns:repeat(3,1fr)}
@@ -1271,6 +1266,8 @@ html.calm *,html.calm *::before,html.calm *::after{animation:none!important;tran
 /* claim cards, open threads, documents that drip in */
 .cpop{position:fixed;z-index:var(--z-pop);width:300px;padding:var(--sp-2) var(--sp-3) var(--sp-2);background:var(--panel);border:var(--rule-hair) solid var(--line-3);border-radius:var(--r-4);box-shadow:var(--e2);pointer-events:auto}
 .cpop[hidden]{display:none}
+#cpop{visibility:hidden;opacity:0;pointer-events:none}
+#cpop.open{visibility:visible;opacity:1;pointer-events:auto}
 .cpop::after{content:"";position:absolute;left:var(--ax,50%);top:100%;width:6px;height:6px;margin:calc(var(--sp-1) * -1) 0 0 calc(var(--sp-1) * -1);background:var(--panel);border:solid var(--line-3);border-width:0 var(--rule-hair) var(--rule-hair) 0;transform:rotate(45deg)}
 .cpop.below::after{top:0;transform:rotate(-135deg)}
 .cpop .ch{display:flex;align-items:center;gap:var(--sp-2);font-size:var(--fs-micro);letter-spacing:.14em;text-transform:uppercase;color:var(--mute)}
@@ -1288,19 +1285,12 @@ html.calm *,html.calm *::before,html.calm *::after{animation:none!important;tran
 .cpop .cs em{font:italic 400 var(--fs-chrome-2)/1.45 var(--f-display);color:var(--soft)}
 .cpop .cx{display:block;font:italic 400 var(--fs-chrome-2) var(--f-display);color:var(--gold)}
 .moving>[aria-selected="true"]{background:transparent}
-/* !important: holds the v39 CSS entrance off while the JS pour runs (replaced in Phase 3.3) */
-.menu,.menu.open{filter:none!important}
-/* !important: holds the v39 CSS entrance off while the JS pour runs (replaced in Phase 3.3) */
-.menu{position:fixed;left:0;top:0;z-index:var(--z-menu);width:268px;background:var(--panel);border:var(--rule-hair) solid var(--line-3);border-radius:var(--r-5);box-shadow:var(--e2);padding:var(--sp-1h);opacity:0;visibility:hidden;transform:translateY(6px) scale(.985);filter:blur(4px);pointer-events:none;transform-origin:100% 100%;transition:opacity var(--t-exit) var(--ease-soft-close),transform var(--t-move) var(--ease-soft-close),filter var(--t-exit) var(--ease-soft-close),visibility 0s calc(var(--stagger) * 18);transition-property:opacity,transform,visibility,box-shadow!important}
+.menu{position:fixed;left:0;top:0;z-index:var(--z-menu);width:268px;background:var(--panel);border:var(--rule-hair) solid var(--line-3);border-radius:var(--r-5);box-shadow:var(--e2);padding:var(--sp-1h);opacity:0;visibility:hidden;pointer-events:none}
 .chov{width:280px;opacity:0;transform:translateX(-4px);transition:opacity var(--t-enter) var(--ease-soft-close),transform var(--t-move) var(--spring);pointer-events:none}
 .chov.in{opacity:1;transform:none}
 .chov .ct{margin:var(--sp-1h) 0 var(--sp-1);font:400 var(--fs-body)/1.4 var(--f-display);color:var(--ink);text-wrap:balance}
 .chov .cq{margin:0 0 var(--sp-2);font-size:var(--fs-chrome-2);line-height:1.5;color:var(--soft)}
 .chov::after{display:none}
-.menu.opt{transform-origin:0 100%}
-/* menus pour: meniscus light (own rules) */
-/* !important: holds the v39 CSS entrance off while the JS pour runs (replaced in Phase 3.3) */
-.menu.open{transition-duration:var(--t-enter)!important;transition-delay:0s!important;transition-timing-function:var(--ease-out)}
 .selbar{position:fixed;left:0;top:0;z-index:var(--z-tip-2);display:flex;align-items:center;gap:1px;padding:var(--sp-1);border-radius:var(--r-5);background:var(--ink);color:var(--bg);box-shadow:var(--e2);opacity:0;visibility:hidden;transform:translateY(4px) scale(.98);filter:blur(2px);transition:opacity var(--t-enter) var(--ease-soft-close),transform var(--t-move) var(--ease-soft-close),filter var(--t-exit) var(--ease-soft-close),visibility 0s linear calc(var(--stagger) * 5);pointer-events:none}
 .selbar.open{opacity:1;visibility:visible;transform:none;filter:none;pointer-events:auto;transition-delay:0s}
 .selbar::after{content:"";position:absolute;left:var(--cx,50%);top:100%;width:8px;height:8px;margin:calc(var(--sp-1) * -1) 0 0 calc(var(--sp-1) * -1);background:var(--ink);transform:rotate(45deg);border-radius:var(--r-1)}
@@ -1332,8 +1322,8 @@ html.calm *,html.calm *::before,html.calm *::after{animation:none!important;tran
 .docc .ck li::before{content:"";width:6px;height:6px;border-radius:var(--r-round);background:var(--ok);flex:none;transform:translateY(-1px)}
 .docc .ck li.bad::before{background:var(--bad)}
 .docc.failed{border-color:var(--bad)}
-.docv{position:fixed;inset:16px;z-index:var(--z-doc);display:flex;flex-direction:column;background:var(--sheet);border:var(--rule-hair) solid var(--line-3);border-radius:var(--r-5);box-shadow:var(--e3);overflow:hidden;opacity:0;visibility:hidden;transform:scale(.985);filter:blur(4px);transition:opacity var(--t-exit) var(--ease-soft-close),transform var(--t-move) var(--ease-soft-close),filter var(--t-exit) var(--ease-soft-close),visibility 0s linear calc(var(--stagger) * 11)}
-.docv.open{opacity:1;visibility:visible;transform:none;filter:none;transition-delay:0s}
+.docv{position:fixed;inset:16px;z-index:var(--z-doc);display:flex;flex-direction:column;background:var(--sheet);border:var(--rule-hair) solid var(--line-3);border-radius:var(--r-5);box-shadow:var(--e3);overflow:hidden;opacity:0;visibility:hidden}
+.docv.open{opacity:1;visibility:visible}
 .docv-h{display:flex;align-items:center;gap:var(--sp-3);padding:var(--sp-2h) var(--sp-3) var(--sp-2h) var(--sp-5);border-bottom:var(--rule-hair) solid var(--line-2);flex-wrap:wrap}
 .docv-h .cap{color:var(--gold)}
 .docv-h .dt{font:400 var(--fs-body) var(--f-display);color:var(--ink);min-width:0;flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
@@ -1374,14 +1364,10 @@ html.calm *,html.calm *::before,html.calm *::after{animation:none!important;tran
 .dpn span{letter-spacing:.14em;text-transform:uppercase;color:var(--mute);margin-left:var(--sp-1);transition:color var(--t-exit);font-size:var(--fs-micro)}
 /* cards in cards, a quieter composer, reversible hovers, smooth shadows */
 .docc .ac{display:flex;flex-wrap:wrap;gap:var(--sp-1h);width:auto;height:auto;padding:0;margin:0;border:0;background:none;box-shadow:none;animation:none;transform:none}
-/* !important: holds the v39 CSS entrance off while the JS pour runs (replaced in Phase 3.3) */
-.docv,.docv.open{filter:none!important}
-/* !important: holds the v39 CSS entrance off while the JS pour runs (replaced in Phase 3.3) */
-#docv.open{transition-duration:var(--t-enter)!important;transition-delay:0s!important;transition-timing-function:var(--ease-out)}
 .grp{padding:var(--sp-3) var(--sp-2) var(--sp-1)}
 /* the settings window */
-.stg{position:fixed;left:50%;top:50%;z-index:var(--z-settings);width:min(840px,calc(100vw - 32px));height:min(620px,calc(100vh - 48px));display:grid;grid-template-columns:200px minmax(0,1fr);background:var(--panel);border:var(--rule-hair) solid var(--line-3);border-radius:var(--r-5);box-shadow:var(--e3);overflow:hidden;opacity:0;visibility:hidden;transform:translate(-50%,-48.5%) scale(.985);filter:blur(4px);transition:opacity var(--t-exit) var(--ease-soft-close),transform var(--t-move) var(--ease-soft-close),filter var(--t-exit) var(--ease-soft-close),visibility 0s linear calc(var(--stagger) * 11)}
-.stg.open{opacity:1;visibility:visible;transform:translate(-50%,-50%);filter:none;transition-delay:0s}
+.stg{position:fixed;left:50%;top:50%;z-index:var(--z-settings);width:min(840px,calc(100vw - 32px));height:min(620px,calc(100vh - 48px));display:grid;grid-template-columns:200px minmax(0,1fr);background:var(--panel);border:var(--rule-hair) solid var(--line-3);border-radius:var(--r-5);box-shadow:var(--e3);overflow:hidden;opacity:0;visibility:hidden;transform:translate(-50%,-50%)}
+.stg.open{opacity:1;visibility:visible}
 /* !important: a closed or off-screen surface rests; beats each unit's animation shorthand */
 .stg:not(.open) *{animation-play-state:paused!important}
 .stg-n{background:var(--side);border-right:var(--rule-hair) solid var(--line-2);padding:var(--sp-6) var(--sp-2h) var(--sp-4);display:flex;flex-direction:column;min-height:0}
@@ -1505,17 +1491,11 @@ html.calm *,html.calm *::before,html.calm *::after{animation:none!important;tran
 .rdx svg{width:10px;height:10px}
 /* !important: the motion kill switch must beat every unit's own motion */
 html.tnone *,html.tnone *::before,html.tnone *::after{transition:none!important}
-/* !important: holds the v39 CSS entrance off while the JS pour runs (replaced in Phase 3.3) */
-.stg,.stg.open,#setMenu,#setMenu.open{filter:none!important}
-/* !important: holds the v39 CSS entrance off while the JS pour runs (replaced in Phase 3.3) */
-.stg,#setMenu{transition-property:opacity,transform,visibility,box-shadow!important}
 @media (max-width:560px){
 .chs{overflow-x:auto;scrollbar-width:none}
 .chs::-webkit-scrollbar{display:none}
 }
 .chs{position:relative}
-/* !important: holds the v39 CSS entrance off while the JS pour runs (replaced in Phase 3.3) */
-#setMenu.open{transition-duration:var(--t-enter)!important;transition-delay:0s!important;transition-timing-function:var(--ease-out)}
 /* settings nav indicator (own rules) */
 .stg-n nav{position:relative}
 .stg-n nav>.merc{border-radius:var(--r-3);background:var(--line-2);box-shadow:none;display:none}
@@ -1543,7 +1523,7 @@ html.tnone *,html.tnone *::before,html.tnone *::after{transition:none!important}
 .keys dl{display:grid;grid-template-columns:auto 1fr;gap:var(--sp-2) var(--sp-3h);margin:var(--sp-2h) 0 0;font-size:var(--fs-ui);color:var(--text)}
 .keys dt{text-align:right}
 .keys dd{margin:0}
-.pal.open{transform:translate(-50%,0);opacity:1;filter:none;pointer-events:auto}
+.pal.open{opacity:1;pointer-events:auto}
 .pal input{width:100%;border:0;border-bottom:var(--rule-hair) solid var(--line-2);background:transparent;padding:var(--sp-3h) var(--sp-4);outline:none;font-size:var(--fs-lead)}
 .pal ul{list-style:none;margin:0;padding:var(--sp-1h);max-height:320px;overflow:auto}
 .pal li{display:flex;align-items:center;gap:var(--sp-2h);padding:var(--sp-2) var(--sp-2h);border-radius:var(--r-3);cursor:pointer;font-size:var(--fs-body);color:var(--text)}
@@ -1569,10 +1549,11 @@ html.tnone *,html.tnone *::before,html.tnone *::after{transition:none!important}
 .lbx[hidden]{display:none}
 .lbx img{min-width:120px;max-width:min(92vw,1100px);max-height:80vh;border-radius:var(--r-2);box-shadow:var(--e2);transform-origin:center}
 .lbx p{margin:0;font-size:var(--fs-chrome);letter-spacing:.04em;color:var(--soft)}
-/* !important: holds the v39 CSS entrance off while the JS pour runs (replaced in Phase 3.3) */
-.pal,.pal.open{filter:none!important}
-/* !important: holds the v39 CSS entrance off while the JS pour runs (replaced in Phase 3.3) */
-.pal{position:fixed;left:50%;top:16vh;z-index:var(--z-dialog);width:min(540px,calc(100vw - 32px));background:var(--panel);border:var(--rule-hair) solid var(--line-3);border-radius:var(--r-5);box-shadow:var(--e2);transform:translate(-50%,-6px) scale(.985);opacity:0;filter:blur(5px);pointer-events:none;transition:transform var(--t-move) var(--ease-soft-close),opacity var(--t-exit) var(--ease-soft-close),filter var(--t-exit) var(--ease-soft-close);transition-property:opacity,transform,visibility,box-shadow!important}
+.pal{position:fixed;left:50%;top:16vh;z-index:var(--z-dialog);width:min(540px,calc(100vw - 32px));background:var(--panel);border:var(--rule-hair) solid var(--line-3);border-radius:var(--r-5);box-shadow:var(--e2);transform:translate(-50%,0);opacity:0;pointer-events:none}
+/* the pour's own layers (core/pour.js): the shadow plate and the bead exist only while a surface is moving */
+.pour-plate,.pour-bead{position:fixed;pointer-events:none;display:block}
+.pour-plate{background:transparent}
+.pour-bead{width:18px;height:18px;border-radius:var(--r-round);box-shadow:var(--e1);opacity:0}
 </style>
 
 <div class="app has-chat" id="app">
@@ -1627,7 +1608,7 @@ html.tnone *,html.tnone *::before,html.tnone *::after{transition:none!important}
   </div>
 </div>
 
-<div class="cpop" id="cpop" role="tooltip" hidden></div>
+<div class="cpop" id="cpop" role="tooltip"></div>
 <div class="cpop chov" id="chov" role="tooltip" hidden></div>
 <div class="lbx" id="lbx" hidden><img alt=""><p></p></div>
 <aside class="dsp" id="dsp" aria-label="The Dispatch">
@@ -1722,6 +1703,48 @@ function toast(h){const box=$("#toasts");box.innerHTML="";const e=document.creat
  document.addEventListener("pointerdown",()=>{clearTimeout(tm);tip.classList.remove("on");cur=null});
  addEventListener("scroll",()=>tip.classList.remove("on"),true)})();
 
+/* ---------- the pour (Gate A: the surface-tension droplet; reference qa/lab/pours.js, candidate A) ----------
+   A bead leaves the point that opened a surface and spreads into it, width leading and height following, and drains
+   back to the same point when it closes. One critically damped spring drives every layer on one clock: the surface
+   (scale and opacity), its shadow on a plate of its own (so nothing is clipped), the bead, and the content, which
+   surfaces only after the shell has formed and un-blurs as it arrives (small surfaces only). A reversal mid-flight
+   carries position and speed. Only transform, opacity and that content blur move; reduced motion is a state change.
+   Each unit attaches its own surface: POUR.attach(el,{blur,origin}); the pour follows the surface's open state
+   ("open" class), so whatever opens or closes it, the motion is the same. */
+const POUR=(()=>{const W_OPEN=42,W_CLOSE=26,BEAD=18;/* rad/s: open settles in ~220 ms, close in ~360 ms, no overshoot */
+ const c01=x=>x<0?0:x>1?1:x,lerp=(a,b,t)=>a+(b-a)*t,smooth=(a,b,x)=>{const t=c01((x-a)/(b-a));return t*t*(3-2*t)};
+ const at=(s,t)=>{const A=s.p0-s.g,B=s.v0+s.w*A,e=Math.exp(-s.w*t);return{p:s.g+(A+B*t)*e,v:(s.v0-s.w*B*t)*e}};
+ const settle=s=>{let t=0;while(t<1.5){const k=at(s,t);if(Math.abs(k.p-s.g)<1e-3&&Math.abs(k.v)<.05)break;t+=1/240}return t};
+ /* where the surface pours from: the pointer that opened it, else the focused control, else the caller's anchor, else its centre */
+ let px=0,py=0,pt=-1e9;document.addEventListener("pointerdown",e=>{px=e.clientX;py=e.clientY;pt=performance.now()},true);
+ const mid=r=>({x:r.left+r.width/2,y:r.top+r.height/2});
+ function from(el,r,origin){const o=origin&&origin();if(o)return o;if(performance.now()-pt<700)return{x:px,y:py};
+  const a=document.activeElement;if(a&&a!==document.body&&!el.contains(a)){const q=a.getBoundingClientRect();if(q.width)return mid(q)}return mid(r)}
+ function attach(el,{blur=false,origin}={}){let s=null,t0=0,anims=[],rest=el.classList.contains("open")?1:0,g=null,plate=null,bead=null;
+  const clean=()=>{anims.forEach(a=>a.cancel());anims=[];plate&&plate.remove();bead&&bead.remove();plate=bead=null;el.style.boxShadow="";el.style.transformOrigin=""};
+  let back=null;function geom(goal){const r=el.getBoundingClientRect();if(!r.width||!r.height)return null;const cs=getComputedStyle(el),m=new DOMMatrixReadOnly(cs.transform==="none"?undefined:cs.transform),c=!goal&&back||from(el,r,origin);back=goal?c:null;
+   /* the surface keeps its own transform (a centring translate); scale about the origin in its untransformed box */
+   return{r,cs,c,ox:c.x-r.left+m.e,oy:c.y-r.top+m.f,px:c.x-r.left,py:c.y-r.top,sx0:BEAD/r.width,sy0:BEAD/r.height}}
+  function layers(){const {r,cs}=g;clean();
+   plate=document.createElement("i");plate.className="pour-plate";plate.setAttribute("aria-hidden","true");
+   Object.assign(plate.style,{left:r.left+"px",top:r.top+"px",width:r.width+"px",height:r.height+"px",borderRadius:cs.borderRadius,boxShadow:cs.boxShadow,zIndex:cs.zIndex,transformOrigin:`${g.px}px ${g.py}px`});
+   bead=document.createElement("i");bead.className="pour-bead";bead.setAttribute("aria-hidden","true");
+   Object.assign(bead.style,{left:g.c.x-BEAD/2+"px",top:g.c.y-BEAD/2+"px",background:cs.backgroundColor,zIndex:cs.zIndex});
+   el.before(plate);el.after(bead);el.style.boxShadow="none";el.style.transformOrigin=`${g.ox}px ${g.oy}px`}
+  const sc=p=>`${lerp(g.sx0,1,p**.85)} ${lerp(g.sy0,1,p**1.15)}`,cf=p=>{const q=smooth(.86,1,p);return blur?{opacity:q,filter:`blur(${((1-q)*4).toFixed(2)}px)`}:{opacity:q}};
+  const frames=()=>[[el,p=>({scale:sc(p),opacity:smooth(0,.12,p),visibility:"visible"})],[plate,p=>({scale:sc(p),opacity:smooth(.05,.7,p)})],
+   [bead,p=>({scale:String(lerp(.7,1.3,smooth(0,.2,p))),opacity:smooth(0,.03,p)*(1-smooth(.08,.2,p))})],...[...el.children].slice(0,24).map(k=>[k,cf])];
+  function run(goal){const now=document.timeline.currentTime;let p0=rest,v0=0;if(s)({p:p0,v:v0}=at(s,(now-t0)/1000));
+   if(reduce||!document.timeline){s=null;rest=goal;clean();return}
+   if(!s){g=geom(goal);if(!g){rest=goal;return}layers()}else anims.forEach(a=>a.cancel());
+   s={p0:c01(p0),v0,g:goal,w:goal?W_OPEN:W_CLOSE};t0=now;const T=settle(s),N=Math.max(12,Math.ceil(T*120));
+   const ps=Array.from({length:N+1},(_,i)=>c01(at(s,T*i/N).p));ps[N]=goal;
+   anims=frames().map(([e,fr])=>{const a=e.animate(ps.map(fr),{duration:T*1000,easing:"linear",fill:"forwards"});a.startTime=now;return a});
+   const mine=s;Promise.all(anims.map(a=>a.finished)).then(()=>{if(s!==mine)return;s=null;rest=goal;clean()},()=>{})}
+  new MutationObserver(()=>{const o=el.classList.contains("open");if(o!==(s?s.g===1:rest===1))run(o?1:0)}).observe(el,{attributes:true,attributeFilter:["class"]});
+  /* snap: settle at once, without motion (a surface that re-opens on a new anchor pours again from there) */
+  return{get moving(){return!!s},snap(o){s=null;rest=o?1:0;clean()}}}
+ return{attach}})();
 /* policy: orchestrator/POLICY.md (low=quick, medium=default, high=complex) */
 const TIERS={low:{n:1,m:"quick",w:"light"},medium:{n:2,m:"default",w:"considered"},high:{n:3,m:"complex",w:"deep"}};
 const ROSTER={
@@ -1863,7 +1886,7 @@ $("#recents").addEventListener("dragend",()=>{dragId=null;document.querySelector
 $("#recents").addEventListener("dragover",e=>{if(!dragId)return;const t=e.target.closest(".fold,[data-unfile]");document.querySelectorAll(".drop").forEach(x=>x!==t&&x.classList.remove("drop"));if(t){e.preventDefault();t.classList.add("drop")}});
 $("#recents").addEventListener("drop",e=>{const t=e.target.closest(".fold,[data-unfile]");if(!t||!dragId)return;e.preventDefault();const c=chats.find(x=>x.id===dragId);if(!c)return;const fid=t.dataset.fid||null;if(c.folder===fid)return;c.folder=fid;if(fid){const f=FOLDERS.find(x=>x.id===fid);f.open=true;saveF();toast(`Moved to <em>${esc(f.name)}</em>`)}else toast("Moved to recents");save();renderRecents();crumb()});
 /* context menus */
-const ctx=$("#ctx");let ctxBtn=null;
+const ctx=$("#ctx");let ctxBtn=null;POUR.attach(ctx,{blur:true});
 function placeMenu(m,anchor,w){const r=anchor.getBoundingClientRect();m.style.left=Math.max(8,Math.min(innerWidth-w-8,r.left))+"px";m.style.top="0px";m.classList.add("open");const hh=m.offsetHeight;let y=r.bottom+4;if(y+hh>innerHeight-8)y=Math.max(8,r.top-hh-4);m.style.top=y+"px"}
 function closeCtx(){ctx.classList.remove("open");if(ctxBtn&&ctxBtn.setAttribute)ctxBtn.setAttribute("aria-expanded","false");ctxBtn=null}
 function chatMenu(id,btn){const c=chats.find(x=>x.id===id);if(!c)return;if(ctx.classList.contains("open")&&ctxBtn===btn){closeCtx();return}closeCtx();menu(false);setMenu(false);acctMenu(false);closeSheet();ctxBtn=btn;
@@ -2068,12 +2091,14 @@ function applyTheme(v,soft){if(soft&&!reduce&&document.startViewTransition&&!app
  THEME=v;try{localStorage.setItem("expira.theme",v)}catch(e){}document.querySelectorAll("[data-th]").forEach(b=>b.setAttribute("aria-checked",String(b.dataset.th===v)))}
 applyTheme(THEME,false);
 let STAB="general";
+POUR.attach($("#setMenu"));
 function setMenu(o){const m=$("#setMenu"),b=$("#me");o=o??!m.classList.contains("open");
  if(o){if(!m.classList.contains("open")){closeCtx();menu(false);closeSheet();acctMenu(false);pal(false);keys(false);m.classList.add("open");$("#veil").classList.add("open");stab(STAB);FM.forEach(x=>x.go());setTimeout(()=>m.querySelector('[role=tab][aria-selected="true"]')?.focus({preventScroll:true}),90)}}
  else if(m.classList.contains("open")){m.classList.remove("open");$("#veil").classList.remove("open");FM.forEach(x=>{if(x.opt.pv)x.kill()})}
  }
 $("#stgX").onclick=()=>setMenu(false);
 /* the name row opens a small account menu, upward; a second click closes it */
+POUR.attach($("#acct"),{blur:true});
 function acctMenu(o){const a=$("#acct"),b=$("#me");if(!a)return;o=o??!a.classList.contains("open");
  if(o){closeCtx();menu(false);closeSheet();const r=b.getBoundingClientRect();a.style.left=Math.max(8,Math.min(innerWidth-256,r.left-4))+"px";a.style.top="0px";a.classList.add("open");a.style.top=Math.max(8,r.top-a.offsetHeight-8)+"px";
   const n=chats.filter(c=>c.archived).length,l=chats.filter(c=>!c.archived&&!c.example).length;$("#archN2").textContent=`${l} chat${l===1?"":"s"}${n?` · ${n} archived`:""}`;setTimeout(()=>a.querySelector('[aria-checked="true"]')?.focus({preventScroll:true}),60)}
@@ -2181,6 +2206,7 @@ const saveOpt=()=>{try{localStorage.setItem("expira.opt",JSON.stringify(OPT))}ca
 function drawOpt(){$("#optMenu").querySelectorAll("[data-opt]").forEach(b=>{const k=b.dataset.opt;b.setAttribute("aria-checked",k==="safe"?String(OPT.safe):k==="web"?String(!!(OPT.web&&WEB.ok)):String(OPT[k]===b.dataset.v))});
  $("#optSum").textContent=[{auto:"Auto",always:"Thorough",off:"Direct"}[OPT.desks],OPT.depth==="deep"?"Deep":"",OPT.safe?"":"Internal",OPT.web&&WEB.ok?"Web":""].filter(Boolean).join(" · ");
  const n={off:1,auto:2,always:3}[OPT.desks];$("#optBtn").querySelectorAll(".ic i").forEach((i,k)=>i.classList.toggle("on",k<n));readyUpd()}
+POUR.attach($("#optMenu"),{blur:true});POUR.attach($("#docMenu"),{blur:true});
 function menu(o){const m=$("#optMenu"),b=$("#optBtn");o=o??!m.classList.contains("open");if(o){closeCtx();setMenu(false);acctMenu(false);closeSheet();hint(null,true);const r=b.getBoundingClientRect(),w=212;m.style.left=Math.max(8,Math.min(innerWidth-w-8,r.left))+"px";const hgt=m.offsetHeight;let y=r.top-hgt-8;if(y<8)y=Math.min(innerHeight-hgt-8,r.bottom+8);m.style.top=y+"px";m.classList.add("open");setTimeout(()=>m.querySelector('[aria-checked="true"]')?.focus(),60)}else m.classList.remove("open");b.setAttribute("aria-expanded",o)}
 $("#optBtn").onclick=e=>{e.stopPropagation();menu()};
 $("#optMenu").addEventListener("click",e=>{const b=e.target.closest("[data-opt]");if(!b||b.getAttribute("aria-disabled")==="true")return;const k=b.dataset.opt;if(k==="safe")OPT.safe=!OPT.safe;else if(k==="web")OPT.web=!OPT.web;else OPT[k]=b.dataset.v;saveOpt();drawOpt();});
@@ -2209,6 +2235,7 @@ $("#jump").onclick=()=>{stick=true;sc.scrollTo({top:1e9,behavior:reduce?"auto":"
 
 /* palette */
 const CMDS=[["Appearance: light","",()=>applyTheme("light",true)],["Appearance: dark","",()=>applyTheme("dark",true)],["Appearance: system","",()=>applyTheme("system",true)],["Settings","⌘,",()=>setTimeout(()=>setMenu(true),60)],["Settings: appearance","",()=>{STAB="appearance";setTimeout(()=>setMenu(true),60)}],["Settings: the map","",()=>{STAB="map";setTimeout(()=>setMenu(true),60)}],["Open a kernel template","",()=>{STAB="kernel";setTimeout(()=>setMenu(true),60)}],["Keyboard shortcuts","?",()=>setTimeout(()=>keys(true),30)],["New chat","⌥N",newChat],["Open the Dispatch","⌥L",()=>openLatest()],["Brief options","",()=>{STAB="briefs";setTimeout(()=>setMenu(true),60)}],["Toggle client-safe","",()=>{OPT.safe=!OPT.safe;saveOpt();drawOpt();toast(OPT.safe?"Client-safe on":"Client-safe off")}],["New folder","",()=>newFolder()],["Rename this chat","F2",()=>cur&&renameChat(cur)],["Archive this chat","",()=>cur&&!busy&&archiveChat(cur)],["Delete this chat","",()=>cur&&!busy&&deleteChat(cur)],["Search chats","/",()=>{setFold(false);$("#side").classList.add("searching");$("#find").focus()}],["Stop the run","Esc",()=>ctl?.abort()],["Toggle sidebar","",()=>app.classList.toggle("folded")]];
+POUR.attach($("#pal"),{blur:true});
 let ps=0;const pal=o=>{$("#pal").classList.toggle("open",o);$("#veil").classList.toggle("open",o);if(o){$("#palIn").value="";ps=0;drawPal();setTimeout(()=>$("#palIn").focus(),30)}};
 function drawPal(){const q=$("#palIn").value.toLowerCase(),L=CMDS.filter(c=>c[0].toLowerCase().includes(q));ps=Math.min(ps,Math.max(0,L.length-1));$("#palList").innerHTML=L.map((c,i)=>`<li class="${i===ps?"on":""}" data-i="${CMDS.indexOf(c)}">${c[0]}${c[1]?`<span class="kb">${c[1]}</span>`:""}</li>`).join("")||`<li class="empty">No command matches.</li>`}
 $("#palIn").addEventListener("input",()=>{ps=0;drawPal()});
@@ -2534,6 +2561,7 @@ class FieldMap{
  pulse(a,b){const id=`${a}>${b}`;if(reduce||!this.links.has(id))return;const c=sv("circle",{class:"pl",r:2.2,opacity:0});this.gP.append(c);this.pl.push({c,id,t0:performance.now(),dur:900});this.go()}
 }
 /* full screen: the same run, with room to read it, and its ledger beside it */
+POUR.attach($("#mfs"));
 function mapFS(btn){const host=btn.closest(".mapw"),m=[...FM].find(x=>x.host===host);if(!m)return;const w=m.get(),o=$("#mfs");closeSheet();acctMenu(false);
  $("#mfsT").textContent=cur?cur.title:"";$("#mfsL").innerHTML=ledgerHTML(w,true)||`<p class="empty2">This run has no claims ledger.</p>`;FM.forEach(x=>{if(x.opt.fs)x.kill()});$("#mfsMap").innerHTML="";
  o.classList.add("open");$("#veil").classList.add("open");setTimeout(()=>{mkMap($("#mfsMap"),()=>w,{replay:true,fs:true});$("#mfsX").focus({preventScroll:true})},60)}
@@ -2580,13 +2608,13 @@ function sheetPush(w,id){const sh=$("#sheet"),B=$("#sheetB"),st=sh._stack=sh._st
  st.push({id:sh._id,html:B.innerHTML,top:B.scrollTop,title:sheetTitle(B)});if(st.length>4)st.shift();sh._id=id;sheetPeek();sheetSwap(html,1)}
 function sheetPop(to){const sh=$("#sheet"),st=sh._stack||[];if(!st.length)return false;const i=to==null?st.length-1:to,x=st[i];st.length=i;sh._id=x.id;sheetPeek();sheetSwap(x.html,-1);$("#sheetB").scrollTop=x.top;return true}
 document.addEventListener("click",e=>{const p=e.target.closest("[data-spop]");if(p){e.stopPropagation();sheetPop(+p.dataset.spop)}},true);
+const SHP=POUR.attach($("#sheet"));
 function openSheet(w,id,anchor){const sh=$("#sheet");if(!w||!anchor)return;if(sh.classList.contains("open")&&anchor.closest&&anchor.closest("#sheet")){sheetPush(w,id);return}if(sh._stack&&sh._stack.length){sh._stack=[];sheetPeek();if(sh._id!==id)sh._id=null}else{sh._stack=[];sheetPeek()}if(sh.classList.contains("open")&&sh._id===id&&sh._w===w){closeSheet();return}acctMenu(false);const html=sheetHTML(w,id);if(!html)return;closeCtx();menu(false);setMenu(false);
  document.querySelectorAll(".map .sel").forEach(x=>x.classList.remove("sel"));if(anchor.closest&&anchor.closest(".map"))anchor.classList.add("sel");
- sh._w=w;sh._id=id;sh.style.transition="none";sh.classList.remove("open");$("#sheetB").innerHTML=html;$("#sheetB").scrollTop=0;$("#sheetB").querySelectorAll(".si").forEach((x,i)=>x.style.animationDelay=(.1+i*.06).toFixed(2)+"s");
+ sh._w=w;sh._id=id;SHP.snap(false);sh.classList.remove("open");$("#sheetB").innerHTML=html;$("#sheetB").scrollTop=0;$("#sheetB").querySelectorAll(".si").forEach((x,i)=>x.style.animationDelay=(.1+i*.06).toFixed(2)+"s");
  const r=anchor.getBoundingClientRect(),sw=Math.min(380,innerWidth-24);sh.style.width=sw+"px";const hh=sh.offsetHeight;
  let x=r.right+12+sw<=innerWidth-12?r.right+12:r.left-12-sw>=12?r.left-12-sw:(innerWidth-sw)/2,y=Math.max(12,Math.min(innerHeight-hh-12,r.top+r.height/2-90));
- sh.style.left=x+"px";sh.style.top=y+"px";sh.style.setProperty("--ox",(r.left+r.width/2-x).toFixed(0)+"px");sh.style.setProperty("--oy",(r.top+r.height/2-y).toFixed(0)+"px");
- void sh.offsetWidth;sh.style.transition="";requestAnimationFrame(()=>sh.classList.add("open"));setTimeout(()=>$("#sheetX").focus({preventScroll:true}),80)}
+ sh.style.left=x+"px";sh.style.top=y+"px";sh.classList.add("open");setTimeout(()=>$("#sheetX").focus({preventScroll:true}),80)}
 function closeSheet(){const sh=$("#sheet");if(!sh||!sh.classList.contains("open"))return;sh._stack=[];setTimeout(sheetPeek,450);sh._id=null;sh.classList.remove("open");document.querySelectorAll(".map .sel").forEach(x=>x.classList.remove("sel"))}
 $("#sheetX").onclick=closeSheet;
 document.addEventListener("pointerdown",e=>{if($("#sheet").classList.contains("open")&&!e.target.closest("#sheet,[data-node],[data-sheet],a[data-src],[data-claim]"))closeSheet()});
@@ -2707,6 +2735,7 @@ async function saveDoc(d){const r=await kBuild(d.type,d.src,d.second).catch(e=>(
  try{await navigator.clipboard.writeText(r.html);toast("Downloads are off here; the HTML is on your clipboard");return true}catch(e){toast("Downloads are off here. Open the document and use Copy HTML.");return false}}
 /* the document viewer */
 let DOCV=null;
+POUR.attach($("#docv"));
 async function openDoc(d,title){const v=$("#docv");$("#docvT").textContent=title||d.title||"Document";$("#docvM").textContent="Building…";$("#docvL").innerHTML="";$("#docvF").srcdoc="";v.classList.add("open");$("#veil").classList.add("open");closeSheet();
  try{const r=await kBuild(d.type,d.src,d.second);if(!r.ok){$("#docvM").textContent="Held";$("#docvL").innerHTML=`<h5>Hard stop</h5><p>${esc(r.error)}</p>`;return}
   DOCV={html:r.html,file:r.file};$("#docvF").srcdoc=r.html;$("#docvM").textContent=`Kernel ${r.kernel} · ${r.pages} page${r.pages===1?"":"s"} · verified`;
@@ -2733,13 +2762,6 @@ let sample=null,db=null,ctl=null,busy=false;
  if(!sample)$("#phx").textContent="Open this page in Claude to brief EXPIRA";grow();attInit();db=await window.claude?.use?.("db")??null;webInit()})();
 open(chats.find(c=>!c.example)||chats[0]);
 
-/* liquid menus: every popover pours out of the control that opened it and drains back into it */
-{let lastBtn=null;document.addEventListener("pointerdown",e=>{lastBtn=e.target.closest("button,[role=button]")},true);document.addEventListener("keydown",e=>{if(e.key==="Enter"||e.key===" ")lastBtn=document.activeElement},true);
- const pour=(m,open)=>{if(reduce)return;const b=m._from;if(!b||!b.isConnected||m.contains(b))return;const r=b.getBoundingClientRect(),q=m.getBoundingClientRect();if(!q.width||!r.width)return;
-  const cl=(v,mx)=>Math.max(0,Math.min(v,mx)),from=`inset(${cl(r.top-q.top,q.height-6)}px ${cl(q.right-r.right,q.width-24)}px ${cl(q.bottom-r.bottom,q.height-6)}px ${cl(r.left-q.left,q.width-24)}px round 12px)`;
-  const big=q.width*q.height>250000,rOut="inset(-14px -30px -48px -30px round 26px)";if(open){const n=from.match(/-?[\d.]+/g).map(Number),D=big?920:820,up=r.top>q.top+q.height/2,ez="cubic-bezier(.45,.05,.2,1)";/* 1 · the pour: a pill leaves the button, spreads sideways, then rises with a domed leading edge (liquid meniscus) and settles past the shadow */const W=q.width,Hh=q.height,cl2=v=>Math.max(0,Math.min(W,v)),bx0=cl2(r.left-q.left),bx1=Math.max(bx0+24,cl2(r.right-q.left)),L2=(a,b,t)=>a+(b-a)*t,eo=t=>1-Math.pow(1-Math.max(0,Math.min(1,t)),3);const shape=(x0,x1,top,bot,A,B,cr,ph)=>{const Y=v=>up?v:Hh-v;let t0=up?top:Hh-bot,b0=up?bot:Hh-top;const mid=(t0+b0)/2,S=16;let d=`M${(x0+cr).toFixed(1)} ${Y(b0).toFixed(1)}L${(x1-cr).toFixed(1)} ${Y(b0).toFixed(1)}Q${x1.toFixed(1)} ${Y(b0).toFixed(1)} ${x1.toFixed(1)} ${Y(b0-cr).toFixed(1)}Q${(x1+B).toFixed(1)} ${Y(mid).toFixed(1)} ${x1.toFixed(1)} ${Y(t0+cr).toFixed(1)}Q${x1.toFixed(1)} ${Y(t0).toFixed(1)} ${(x1-cr).toFixed(1)} ${Y(t0).toFixed(1)}`;for(let k=1;k<S;k++){const f=k/S,x=L2(x1-cr,x0+cr,f),y=t0+A*Math.sin(f*Math.PI*2.4+ph)*Math.sin(f*Math.PI);d+=`L${x.toFixed(1)} ${Y(y).toFixed(1)}`}d+=`L${(x0+cr).toFixed(1)} ${Y(t0).toFixed(1)}Q${x0.toFixed(1)} ${Y(t0).toFixed(1)} ${x0.toFixed(1)} ${Y(t0+cr).toFixed(1)}Q${(x0-B).toFixed(1)} ${Y(mid).toFixed(1)} ${x0.toFixed(1)} ${Y(b0-cr).toFixed(1)}Q${x0.toFixed(1)} ${Y(b0).toFixed(1)} ${(x0+cr).toFixed(1)} ${Y(b0).toFixed(1)}Z`;return `path("${d}")`};const NF=26,kf=[];for(let i=0;i<NF;i++){const u=i/(NF-1),s=eo(u/.42),rise=eo((u-.14)/.86),x0=L2(bx0,0,s),x1=L2(bx1,W,s),hv=L2(Math.min(16,Hh),Hh,rise),amp=Math.min(20,W*.075)*Math.pow(1-rise,1.3)*Math.min(1,u/.12),bul=8*Math.pow(1-rise,1.5),cr=Math.min(L2(8,9,rise),hv/2,(x1-x0)/2);kf.push({clipPath:i===NF-1?shape(-30,W+30,-14,Hh+48,0,0,26,0):shape(x0,x1,Hh-hv,Hh,amp,bul,cr,u*7.5),offset:u})}m.animate(kf,{duration:D,easing:"linear"});m.animate([{backgroundColor:"color-mix(in srgb,var(--panel) 80%,var(--ink))"},{backgroundColor:"color-mix(in srgb,var(--panel) 90%,var(--ink))",offset:.55},{backgroundColor:"var(--panel)"}],{duration:D*1.1,easing:"cubic-bezier(.22,1,.36,1)"});/* 2 · surface tension: the body settles from a slight squeeze toward the button */m.style.transformOrigin=`${(r.left+r.width/2-q.left).toFixed(0)}px ${up?q.height:0}px`;m.animate([{transform:"scale(.985,.955)"},{transform:"scale(1,.99)",offset:.6},{transform:"none"}],{duration:D,easing:"cubic-bezier(.22,1,.36,1)",composite:"add"});/* 3 · meniscus light: a faint gold band rides the rising edge, then dissolves */const mn=document.createElement("i");mn.className="mnsc"+(up?" up":"");m.append(mn);mn.animate([{transform:`translateY(${up?q.height:-40}px)`,opacity:0},{opacity:.9,offset:.35},{transform:`translateY(${up?-10:q.height-30}px)`,opacity:0}],{duration:D*.8,delay:D*.22,easing:ez,fill:"both"}).onfinish=()=>mn.remove();/* 4 · the content surfaces in the wake of the edge: each line when the liquid reaches it */[...m.children].filter(k=>k!==mn).slice(0,14).forEach(k=>{const kr=k.getBoundingClientRect(),f=Math.max(0,Math.min(1,up?(q.bottom-kr.bottom)/q.height:(kr.top-q.top)/q.height));k.animate([{opacity:0,transform:`translateY(${up?5:-5}px)`,filter:"blur(0px)"},{opacity:1,transform:"none",filter:"blur(0px)"}],{duration:440,delay:D*(.3+.42*f),easing:"cubic-bezier(.22,1,.36,1)",fill:"backwards"})})}else m.animate([{clipPath:rOut},{clipPath:from}],{duration:300,easing:"cubic-bezier(.55,0,.75,.25)"})};
- const mo=new MutationObserver(ms=>ms.forEach(x=>{const m=x.target,o=m.classList.contains("open");if(o===!!m._o)return;m._o=o;if(o){m._from=lastBtn;requestAnimationFrame(()=>pour(m,true))}else pour(m,false)}));
- document.querySelectorAll(".menu,#mfs,#setMenu,#docv").forEach(m=>mo.observe(m,{attributes:true,attributeFilter:["class"]}))}
 /* mercury: the selected segment or tab slides across, stretching between the two */
 {const SEL='[aria-checked="true"],[aria-selected="true"]';
 document.addEventListener("click",e=>{const b=e.target.closest(".seg2 button,.menu .seg button,[role=tablist]>[role=tab]");if(!b||reduce||b.closest(".stg-n"))return;const g=b.parentElement,o=g.querySelector(":scope>"+SEL.split(",").join(",:scope>"));if(!o||o===b)return;const gr=g.getBoundingClientRect(),a=o.getBoundingClientRect();
@@ -2748,8 +2770,10 @@ document.addEventListener("click",e=>{const b=e.target.closest(".seg2 button,.me
   const mid=hz?{left:Math.min(L(a),L(c))+"px",width:Math.max(L(a)+a.width,L(c)+c.width)-Math.min(L(a),L(c))+"px",top:(T(a)+T(c))/2+1.5+"px",height:Math.min(a.height,c.height)-3+"px"}
              :{top:Math.min(T(a),T(c))+"px",height:Math.max(T(a)+a.height,T(c)+c.height)-Math.min(T(a),T(c))+"px",left:(L(a)+L(c))/2+2+"px",width:Math.min(a.width,c.width)-4+"px"};
   const an=m.animate([{left:L(a)+"px",top:T(a)+"px",width:a.width+"px",height:a.height+"px"},{...mid,offset:.42},{left:L(c)+"px",top:T(c)+"px",width:c.width+"px",height:c.height+"px"}],{duration:MO.move,easing:MO.spring});an.onfinish=an.oncancel=()=>g2.classList.remove("moving")})},true)}
+/* the latest run from the keyboard: "." opens or folds it, "m" switches it between the log and the map */
 document.addEventListener("keydown",e=>{if(e.metaKey||e.ctrlKey||e.altKey||e.target.closest?.("input,textarea,[contenteditable]"))return;const r=[...document.querySelectorAll("#thread .run")].pop();if(!r)return;
  if(e.key==="."){e.preventDefault();r.querySelector(".run-h").click()}else if(e.key==="m"){if(!r.querySelector(".vs"))return;e.preventDefault();if(!r.classList.contains("open")){r.classList.add("open","pinned");r.querySelector(".run-h").setAttribute("aria-expanded","true")}runView(r,r.dataset.view==="map"?"log":"map",true)}});
+/* the Dispatch rests while it is closed: its running animations pause and resume where they were */
 {const D=$("#dsp");let held=[];new MutationObserver(()=>{if(D.classList.contains("open")){held.forEach(a=>{try{a.play()}catch(e){}});held=[]}else{held=D.getAnimations({subtree:true}).filter(a=>a.playState==="running"&&a.effect&&a.effect.target!==D&&!(typeof CSSTransition!=="undefined"&&a instanceof CSSTransition)&&!(a instanceof CSSAnimation&&/^(blurIn|evIn)$/.test(a.animationName)));held.forEach(a=>a.pause())}}).observe(D,{attributes:true,attributeFilter:["class"]})}
 /* motion for script-driven animation (WAAPI): the Gate A vocabulary, read once from tokens.css so JS and CSS
    never drift. There is one spring, critically damped; nothing overshoots. */
@@ -2826,14 +2850,12 @@ function feather(el,axis){if(!el||FZ.has(el))return;FZ.add(el);const x=axis==="x
 function featherAll(){["#scroll","#dspB","#sheetB","#stgP","#olog"].forEach(k=>feather(document.querySelector(k)));const sd=[...($("#side")?.querySelectorAll("*")||[])].find(e=>/(auto|scroll)/.test(getComputedStyle(e).overflowY)&&e.scrollHeight>0);feather(sd);feather($("#att"),"x");armFigs()}
 setTimeout(featherAll,300);new MutationObserver(()=>setTimeout(()=>feather(document.querySelector("#olog")),60)).observe($("#dsp"),{attributes:true,attributeFilter:["class"]});
 /* claim cards: hovering a citation draws its claim out of the marker */
-{const P=$("#cpop");let tm=0,on=null;const host=u=>{try{return new URL(u).hostname.replace(/^www\./,"")}catch(e){return String(u)}};
+{const P=$("#cpop");let tm=0,on=null;const CP=POUR.attach(P,{blur:true,origin:()=>{if(!on)return null;const r=on.getBoundingClientRect();return{x:r.left+r.width/2,y:r.top+r.height/2}}});const host=u=>{try{return new URL(u).hostname.replace(/^www\./,"")}catch(e){return String(u)}};
  const show=el=>{const w=workOf(el),c=w?.ledger?.claims?.find(x=>String(x.id)===el.dataset.claim);if(!c)return;on=el;
   P.innerHTML=`<div class="ch"><span class="vd v-${c.v}"><i></i>${VL[c.v]||c.v}</span><b class="num">c${c.id}</b>${c.conf?`<span class="cf num">${Math.round(c.conf*100)}% sure</span>`:""}</div><p>${esc(c.text)}</p>${(c.urls||[]).length?`<div class="cs">${c.urls.slice(0,3).map(u=>`<span>${esc(host(u))}</span>`).join("")}</div>`:c.note?`<div class="cs"><em>${esc(c.note)}</em></div>`:""}<span class="cx">Click for the evidence</span>`;
-  P.hidden=false;const r=el.getBoundingClientRect(),q=P.getBoundingClientRect();const x=Math.max(12,Math.min(innerWidth-q.width-12,r.left+r.width/2-q.width/2));let y=r.top-q.height-9,below=false;if(y<12){y=r.bottom+9;below=true}
-  P.style.left=x+"px";P.style.top=y+"px";const ox=Math.max(8,Math.min(q.width-8,r.left+r.width/2-x));P.style.setProperty("--ax",ox+"px");P.classList.toggle("below",below);
-  if(!reduce){const a=Math.max(0,ox-6),b=Math.max(0,q.width-ox-6),from=below?`inset(0px ${b}px ${q.height-6}px ${a}px round 8px)`:`inset(${q.height-6}px ${b}px 0px ${a}px round 8px)`;
-   P.animate([{clipPath:from.replace("round 8px","round 18px")},{clipPath:"inset(0px 0px 0px 0px round 14px)",offset:.55},{clipPath:"inset(-12px -26px -40px -26px round 22px)"}],{duration:MO.move,easing:MO.out})}};
- const hide=()=>{on=null;P.hidden=true};
+  if(P.classList.contains("open")){CP.snap(false);P.classList.remove("open")}const r=el.getBoundingClientRect(),q=P.getBoundingClientRect();const x=Math.max(12,Math.min(innerWidth-q.width-12,r.left+r.width/2-q.width/2));let y=r.top-q.height-9,below=false;if(y<12){y=r.bottom+9;below=true}
+  P.style.left=x+"px";P.style.top=y+"px";const ox=Math.max(8,Math.min(q.width-8,r.left+r.width/2-x));P.style.setProperty("--ax",ox+"px");P.classList.toggle("below",below);P.classList.add("open");};
+ const hide=()=>{on=null;P.classList.remove("open")};
  document.addEventListener("pointerover",e=>{const c=e.target.closest?.(".cite");if(c){clearTimeout(tm);if(c!==on)tm=setTimeout(()=>show(c),130)}else if(on&&!e.target.closest?.("#cpop")){clearTimeout(tm);tm=setTimeout(hide,140)}});
  document.addEventListener("focusin",e=>{const c=e.target.closest?.(".cite");if(c)show(c)});document.addEventListener("click",e=>{if(e.target.closest(".cite"))hide();const f=e.target.closest(".fu,.dpn");if(f){promptEl.value=f.dataset.fu;grow();phSync&&phSync();promptEl.focus()}},true);addEventListener("scroll",hide,true)}
 /* attachments: images the viewer picks, pastes or drops ride along with the brief */

@@ -26,13 +26,13 @@ function sheetPush(w,id){const sh=$("#sheet"),B=$("#sheetB"),st=sh._stack=sh._st
  st.push({id:sh._id,html:B.innerHTML,top:B.scrollTop,title:sheetTitle(B)});if(st.length>4)st.shift();sh._id=id;sheetPeek();sheetSwap(html,1)}
 function sheetPop(to){const sh=$("#sheet"),st=sh._stack||[];if(!st.length)return false;const i=to==null?st.length-1:to,x=st[i];st.length=i;sh._id=x.id;sheetPeek();sheetSwap(x.html,-1);$("#sheetB").scrollTop=x.top;return true}
 document.addEventListener("click",e=>{const p=e.target.closest("[data-spop]");if(p){e.stopPropagation();sheetPop(+p.dataset.spop)}},true);
+const SHP=POUR.attach($("#sheet"));
 function openSheet(w,id,anchor){const sh=$("#sheet");if(!w||!anchor)return;if(sh.classList.contains("open")&&anchor.closest&&anchor.closest("#sheet")){sheetPush(w,id);return}if(sh._stack&&sh._stack.length){sh._stack=[];sheetPeek();if(sh._id!==id)sh._id=null}else{sh._stack=[];sheetPeek()}if(sh.classList.contains("open")&&sh._id===id&&sh._w===w){closeSheet();return}acctMenu(false);const html=sheetHTML(w,id);if(!html)return;closeCtx();menu(false);setMenu(false);
  document.querySelectorAll(".map .sel").forEach(x=>x.classList.remove("sel"));if(anchor.closest&&anchor.closest(".map"))anchor.classList.add("sel");
- sh._w=w;sh._id=id;sh.style.transition="none";sh.classList.remove("open");$("#sheetB").innerHTML=html;$("#sheetB").scrollTop=0;$("#sheetB").querySelectorAll(".si").forEach((x,i)=>x.style.animationDelay=(.1+i*.06).toFixed(2)+"s");
+ sh._w=w;sh._id=id;SHP.snap(false);sh.classList.remove("open");$("#sheetB").innerHTML=html;$("#sheetB").scrollTop=0;$("#sheetB").querySelectorAll(".si").forEach((x,i)=>x.style.animationDelay=(.1+i*.06).toFixed(2)+"s");
  const r=anchor.getBoundingClientRect(),sw=Math.min(380,innerWidth-24);sh.style.width=sw+"px";const hh=sh.offsetHeight;
  let x=r.right+12+sw<=innerWidth-12?r.right+12:r.left-12-sw>=12?r.left-12-sw:(innerWidth-sw)/2,y=Math.max(12,Math.min(innerHeight-hh-12,r.top+r.height/2-90));
- sh.style.left=x+"px";sh.style.top=y+"px";sh.style.setProperty("--ox",(r.left+r.width/2-x).toFixed(0)+"px");sh.style.setProperty("--oy",(r.top+r.height/2-y).toFixed(0)+"px");
- void sh.offsetWidth;sh.style.transition="";requestAnimationFrame(()=>sh.classList.add("open"));setTimeout(()=>$("#sheetX").focus({preventScroll:true}),80)}
+ sh.style.left=x+"px";sh.style.top=y+"px";sh.classList.add("open");setTimeout(()=>$("#sheetX").focus({preventScroll:true}),80)}
 function closeSheet(){const sh=$("#sheet");if(!sh||!sh.classList.contains("open"))return;sh._stack=[];setTimeout(sheetPeek,450);sh._id=null;sh.classList.remove("open");document.querySelectorAll(".map .sel").forEach(x=>x.classList.remove("sel"))}
 $("#sheetX").onclick=closeSheet;
 document.addEventListener("pointerdown",e=>{if($("#sheet").classList.contains("open")&&!e.target.closest("#sheet,[data-node],[data-sheet],a[data-src],[data-claim]"))closeSheet()});
