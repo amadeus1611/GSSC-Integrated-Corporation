@@ -25,6 +25,7 @@ const SB=(()=>{const side=$("#side"),scroll=$("#sbScroll");
   pin:sv('<path d="M9.8 2.2l4 4-2.4.9-2.6 2.6.3 2.7-1.2 1.2-2.4-2.4-2.9 2.9M4.8 6.3l2.6-2.6.9-2.4"/><path d="M3.5 7.6l4.9 4.9"/>'),
   del:sv('<path d="M2.5 4.5h11M6 4.5V3h4v1.5M4 4.5l.7 9h6.6l.7-9"/>'),
   out:sv('<path d="M6.5 4 2.5 8l4 4M2.5 8h8a3 3 0 010 6H9"/>'),
+  x:sv('<path d="M4 4l8 8M12 4l-8 8"/>',1.3),
   moon:sv('<path d="M13 9.6A5.2 5.2 0 016.4 3a5.2 5.2 0 106.6 6.6z"/>')};
  /* the foot's markup names its icons as <!--name--> placeholders; fill them before anything binds to it */
  const foot=$(".sb-foot");foot.innerHTML=foot.innerHTML.replace(/<!--(\w+)-->/g,(m,k)=>IC[k]?IC[k].replace("<svg",k==="chev"?'<svg class="sb-chev"':"<svg"):m);
@@ -47,8 +48,7 @@ const SB=(()=>{const side=$("#side"),scroll=$("#sbScroll");
  const head=(n,l,id,acts="")=>`<div class="sb-h" role="button" tabindex="0" aria-expanded="true" data-sec="${id}"><span class="sb-n">${n}</span><span class="sb-l">${l}</span><i class="sb-rule"></i><span class="sb-ha">${acts}</span><svg class="sb-car" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.3" aria-hidden="true"><path d="M4 6l4 4 4-4"/></svg></div>`;
  scroll.innerHTML=
   `<div class="sb-row sb-new" id="newChat"><button class="sb-hit" type="button"><span class="sb-ic">${IC.plus}</span><span class="sb-t">New chat</span></button></div>`+
-  `<div class="sb-row" id="findRow"><button class="sb-hit" type="button" id="findBtn"><span class="sb-ic">${IC.search}</span><span class="sb-t">Search</span></button></div>`+
-  `<div class="sb-find" id="findBox" hidden><span class="sb-ic">${IC.search}</span><label for="find" class="sr">Search chats and files</label><input id="find" placeholder="Search chats and files" autocomplete="off"></div>`+
+  `<div class="sb-row sb-find" id="findRow"><button class="sb-hit" type="button" id="findBtn"><span class="sb-ic">${IC.search}</span><span class="sb-t sb-ph">Search</span></button><label for="find" class="sr">Search chats and files</label><input id="find" autocomplete="off" spellcheck="false" tabindex="-1"><button class="sb-clr" type="button" aria-label="Clear the search" tabindex="-1">${IC.x}</button></div>`+
   head("I","Files","files",`<button class="sb-ib" type="button" aria-label="New folder" data-tip="New folder" data-newf>${IC.newf}</button>`)+`<div class="sb-body" data-body="files">${D.folders.map(folder).join("")}</div>`+
   head("II","Pinned","pinned")+`<div class="sb-body" data-body="pinned">${D.pinned.map(chat).join("")}</div>`+
   head("III","Recents","recents",`<button class="sb-ib" type="button" aria-label="Filter" data-tip="Filter" data-filter>${IC.filter}</button>`)+
@@ -65,7 +65,8 @@ const SB=(()=>{const side=$("#side"),scroll=$("#sbScroll");
  const hlS=glide(scroll,".sb-row"),hlM=glide($("#sbMenu"),".sb-row");
 
  /* ---- disclosure: one continuous move ---- */
- const moving=el=>[...side.querySelectorAll(".sb-row,.sb-h,.sb-sub,.sb-find,.sb-empty,.sb-none,.sb-foot")].filter(e=>!el.contains(e)&&e.getClientRects().length);
+ const moving=el=>[...side.querySelectorAll(".sb-row,.sb-h,.sb-sub,.sb-empty,.sb-none,.sb-foot")].filter(e=>!el.contains(e)&&e.getClientRects().length);
+ const ms=n=>{const v=getComputedStyle(root).getPropertyValue(n).trim();return parseFloat(v)*(/ms$/.test(v)?1:1000)||1};
  const blurPx=()=>parseFloat(getComputedStyle(root).getPropertyValue("--blur-enter"))||0;
  function disclose(host,kids,open){hlS.off();const tok=kids._t=(kids._t||0)+1;
   const rows=moving(kids),before=new Map(rows.map(e=>[e,e.getBoundingClientRect().top]));
@@ -78,18 +79,19 @@ const SB=(()=>{const side=$("#side"),scroll=$("#sbScroll");
   else{const box={left:kids.offsetLeft+"px",top:kids.offsetTop+"px",width:kids.getBoundingClientRect().width+"px"};Object.assign(kids.style,{position:"absolute",...box})}
   const done=()=>{if(kids._t!==tok)return;if(!open){kids.hidden=true;Object.assign(kids.style,clear)}};
   if(reduce)return done();
-  const d=kids.offsetHeight||1,T=open?MO.move:MO.exit,Es=open?MO.spring:MO.soft,E=easeFn(Es),L=open?0:Math.min(90,MO.exit*.3),B=blurPx()*.45;
-  rows.forEach(e=>{const dy=before.get(e)-e.getBoundingClientRect().top;if(Math.abs(dy)>.5)e.animate([{transform:`translateY(${dy}px)`},{transform:"none"}],{duration:T,easing:Es,delay:L,fill:"backwards"})});
+  /* the rows below move on the spring as it opens and on the soft close as it shuts (quicker); the children never
+     slide or scale: each resolves out of the blur, slowly, the moment it is uncovered, and blurs away quickly just
+     before it is covered again */
+  const IN=ms("--sb-in"),OUT=ms("--sb-out"),d=kids.offsetHeight||1,T=open?MO.move:Math.max(OUT+60,MO.move*.7),Es=open?MO.spring:MO.soft,E=easeFn(Es),L=open?0:Math.min(40,OUT*.3),B=blurPx()*.5;
+  rows.forEach(e=>{const dy=Math.round(before.get(e)-e.getBoundingClientRect().top);if(dy)e.animate([{transform:`translateY(${dy}px)`},{transform:"none"}],{duration:T,easing:Es,delay:L,fill:"backwards"})});
   let end=L+T;
   /* the guide draws down with the rows as they open, and draws back up as they close */
   kids.animate(open?[{transform:"scaleY(0)"},{transform:"none"}]:[{transform:"none"},{transform:"scaleY(0)"}],{pseudoElement:"::before",duration:T,easing:Es,delay:L,fill:open?"backwards":"forwards"});
   [...kids.children].forEach(c=>{const b=c.offsetTop+c.offsetHeight;
-   if(open){/* each child surfaces the moment the rows below have uncovered it */
-    const t=T*easeInv(E,Math.min(1,(c.offsetTop+c.offsetHeight*.5)/d));
-    c.animate([{opacity:0,filter:`blur(${B}px)`,transform:"translateY(-3px)"},{opacity:1,filter:"blur(0px)",transform:"none"}],{duration:MO.enter,delay:t,easing:MO.out,fill:"backwards"})}
-   else{/* and is gone just before they cover it again */
-    const e=L+T*easeInv(E,Math.max(0,1-b/d)),dur=Math.max(70,Math.min(MO.exit*.5,e));
-    c.animate([{opacity:1},{opacity:0,filter:`blur(${B*.8}px)`,transform:"translateY(-2px)"}],{duration:dur,delay:Math.max(0,e-dur),easing:MO.soft,fill:"forwards"})}});
+   if(open){const t=T*easeInv(E,Math.min(1,(c.offsetTop+c.offsetHeight*.5)/d));
+    c.animate([{opacity:0,filter:`blur(${B}px)`},{opacity:1,filter:"blur(0px)"}],{duration:IN,delay:t,easing:MO.out,fill:"backwards"});end=Math.max(end,t+IN)}
+   else{const e=L+T*easeInv(E,Math.max(0,1-b/d)),dur=Math.max(50,Math.min(OUT,e));
+    c.animate([{opacity:1,filter:"blur(0px)"},{opacity:0,filter:`blur(${B}px)`}],{duration:dur,delay:Math.max(0,e-dur),easing:MO.soft,fill:"forwards"})}});
   setTimeout(done,end+20)}
  scroll.addEventListener("click",e=>{
   const f=e.target.closest("[data-fold]");if(f){const i=f.dataset.fold,row=f.closest(".sb-fold");disclose(row,scroll.querySelector(`[data-kids="${i}"]`),row.getAttribute("aria-expanded")!=="true");return}
@@ -98,14 +100,20 @@ const SB=(()=>{const side=$("#side"),scroll=$("#sbScroll");
  scroll.addEventListener("keydown",e=>{const h=e.target.closest(".sb-h");if(h&&e.target===h&&(e.key==="Enter"||e.key===" ")){e.preventDefault();h.click()}});
 
  /* ---- search opens in place; the rows that stay glide to their new places ---- */
- const box=$("#findBox"),inp=$("#find"),frow=$("#findRow");
+ /* ---- search opens in place; the rows that stay glide to their new places, the ones that return resolve out of the blur ---- */
  function reflow(mutate){hlS.off();const rows=moving(document.createElement("i")),before=new Map(rows.map(e=>[e,e.getBoundingClientRect().top]));mutate();if(reduce)return;
   moving(document.createElement("i")).forEach(e=>{e.getAnimations().forEach(a=>a.cancel());const b=before.get(e);
-   if(b==null)e.animate([{opacity:0,filter:`blur(${blurPx()*.45}px)`},{opacity:1,filter:"blur(0px)"}],{duration:MO.enter,easing:MO.out});
-   else{const dy=b-e.getBoundingClientRect().top;if(Math.abs(dy)>.5)e.animate([{transform:`translateY(${dy}px)`},{transform:"none"}],{duration:MO.move,easing:MO.spring})}})}
- function search(on){if(on===!box.hidden)return;
-  if(on){frow.hidden=true;box.hidden=false;box.classList.remove("in");box.offsetWidth;box.classList.add("in");inp.focus()}
-  else reflow(()=>{inp.value="";filter("");box.hidden=true;frow.hidden=false})}
+   if(b==null)e.animate([{opacity:0,filter:`blur(${blurPx()*.5}px)`},{opacity:1,filter:"blur(0px)"}],{duration:ms("--sb-in"),easing:MO.out});
+   else{const dy=Math.round(b-e.getBoundingClientRect().top);if(dy)e.animate([{transform:`translateY(${dy}px)`},{transform:"none"}],{duration:MO.move,easing:MO.spring})}})}
+ const inp=$("#find"),frow=$("#findRow");let findT=0;
+ function search(on){if(on===frow.classList.contains("on"))return;clearTimeout(findT);
+  if(on){inp.getAnimations().forEach(a=>a.cancel());frow.classList.add("on");inp.tabIndex=0;frow.querySelector(".sb-clr").tabIndex=0;inp.focus({preventScroll:true});return}
+  /* closing: what was typed blurs away quickly, the well fades, and the rows come back in the same beat */
+  frow.classList.remove("on");inp.tabIndex=-1;frow.querySelector(".sb-clr").tabIndex=-1;
+  const typed=inp.value.trim();
+  if(typed&&!reduce)inp.animate([{opacity:1,filter:"blur(0px)"},{opacity:0,filter:`blur(${blurPx()*.5}px)`}],{duration:ms("--sb-out"),easing:MO.soft,fill:"forwards"});
+  findT=setTimeout(()=>{inp.getAnimations().forEach(a=>a.cancel());inp.value="";frow.classList.remove("has")},typed?ms("--sb-out"):0);
+  if(typed)reflow(()=>filter(""))}
  function filter(q){q=q.trim().toLowerCase();let any=false;
   scroll.querySelectorAll(".sb-body .sb-row").forEach(r=>{const hit=!q||r.dataset.q.includes(q)||[...(r.nextElementSibling?.classList.contains("sb-kids")?r.nextElementSibling.querySelectorAll(".sb-row"):[])].some(k=>k.dataset.q.includes(q));r.hidden=!hit;any=any||hit});
   scroll.querySelectorAll(".sb-kids").forEach(k=>{const f=k.previousElementSibling,all=q&&f.dataset.q.includes(q);if(all)k.querySelectorAll(".sb-row").forEach(r=>r.hidden=false);
@@ -113,9 +121,10 @@ const SB=(()=>{const side=$("#side"),scroll=$("#sbScroll");
   scroll.querySelectorAll(".sb-sub").forEach(s=>s.hidden=![...s.parentElement.querySelectorAll(".sb-row")].some(r=>!r.hidden));
   $("#findNone").hidden=any}
  frow.querySelector(".sb-hit").addEventListener("click",()=>search(true));
- inp.addEventListener("input",()=>reflow(()=>filter(inp.value)));
+ frow.querySelector(".sb-clr").addEventListener("click",e=>{e.stopPropagation();inp.value="";frow.classList.remove("has");reflow(()=>filter(""));inp.focus()});
+ inp.addEventListener("input",()=>{frow.classList.toggle("has",!!inp.value);reflow(()=>filter(inp.value))});
  inp.addEventListener("keydown",e=>{if(e.key==="Escape"){e.stopPropagation();search(false)}});
- inp.addEventListener("blur",()=>{if(!inp.value.trim())setTimeout(()=>search(false),0)});
+ inp.addEventListener("blur",()=>setTimeout(()=>{if(!inp.value.trim()&&!frow.contains(document.activeElement))search(false)},0));
 
  /* ---- pull: the motion for the sidebar's own small surfaces (the account pull-up, the row menus) ----
     Opacity, a 6px drop and the blur ride one progress value on one curve, so nothing changes size and nothing leads:
@@ -125,7 +134,7 @@ const SB=(()=>{const side=$("#side"),scroll=$("#sbScroll");
  function pull(el){let cur=null,rest=el.classList.contains("open")?1:0;
   const now=()=>{if(!cur)return rest;const u=Math.min(1,Math.max(0,(document.timeline.currentTime-cur.t0)/cur.T));return cur.p0+(cur.g-cur.p0)*cur.E(u)};
   function run(g){const p0=now();el.getAnimations().forEach(a=>a.cancel());if(reduce||!el.animate){cur=null;rest=g;return}
-   const open=g===1,T=Math.max(60,(open?MO.enter:MO.exit)*Math.abs(g-p0)),E=easeFn(open?MO.out:MO.soft),N=Math.max(10,Math.ceil(T/1000*120)),B=blurPx()*.6,dy=el.dataset.from==="above"?-6:6;
+   const open=g===1,T=Math.max(50,(open?ms("--sb-in"):ms("--sb-out"))*Math.abs(g-p0)),E=easeFn(open?MO.out:MO.soft),N=Math.max(10,Math.ceil(T/1000*120)),B=blurPx()*.6,dy=el.dataset.from==="above"?-6:6;
    const f=p=>({opacity:p,transform:`translateY(${((1-p)*dy).toFixed(2)}px)`,filter:p>.985?"blur(0px)":`blur(${(B*(1-p)).toFixed(2)}px)`,visibility:"visible"});
    const t0=document.timeline.currentTime,a=el.animate(Array.from({length:N+1},(_,i)=>f(p0+(g-p0)*E(i/N))),{duration:T,easing:"linear",fill:"forwards"});a.startTime=t0;
    const mine=cur={p0,g,T,E,t0};a.finished.then(()=>{if(cur!==mine)return;rest=g;cur=null;a.cancel()},()=>{})}
@@ -175,10 +184,10 @@ const SB=(()=>{const side=$("#side"),scroll=$("#sbScroll");
   if(a==="del"||a==="arch")return remove(row,a==="arch"?"Archived":"Deleted")}
  function remove(row,verb){const kids=row.classList.contains("sb-fold")?row.nextElementSibling:null,home={p:row.parentElement,n:(kids||row).nextSibling};
   const t=row.querySelector(".sb-t").textContent,up0=scroll.querySelector('[data-kids="4"]'),up=up0===kids?null:up0;/* a deleted folder's files go to Uploads */
-  const go=[row,kids].filter(Boolean);go.forEach(x=>x.animate([{opacity:1},{opacity:0,filter:`blur(${blurPx()*.4}px)`}],{duration:MO.exit*.45,easing:MO.soft,fill:"forwards"}));
+  const go=[row,kids].filter(Boolean);go.forEach(x=>x.animate([{opacity:1,filter:"blur(0px)"},{opacity:0,filter:`blur(${blurPx()*.5}px)`}],{duration:ms("--sb-out"),easing:MO.soft,fill:"forwards"}));
   const moved=kids&&up?[...kids.querySelectorAll(".sb-row")]:[];
   setTimeout(()=>{reflow(()=>{go.forEach(x=>{x.getAnimations().forEach(a=>a.cancel());x.remove()});moved.forEach(m=>up.append(m));count();subs()});
-   toast(`${verb} <em>${esc(t)}</em>`,()=>reflow(()=>{home.p.insertBefore(row,home.n);if(kids){row.after(kids);moved.forEach(m=>kids.append(m))}count();subs()}))},MO.exit*.35)}
+   toast(`${verb} <em>${esc(t)}</em>`,()=>reflow(()=>{home.p.insertBefore(row,home.n);if(kids){row.after(kids);moved.forEach(m=>kids.append(m))}count();subs()}))},ms("--sb-out"))}
  function rename(row){const t=row.querySelector(".sb-t"),old=t.textContent,i=document.createElement("input");i.className="sb-ren";i.value=old;i.setAttribute("aria-label","Name");
   t.replaceChildren(i);i.focus();i.select();let done=false;
   const end=ok=>{if(done)return;done=true;const v=i.value.trim();t.textContent=ok&&v?v:old;row.dataset.q=t.textContent.toLowerCase();row.querySelector(".sb-hit").focus({preventScroll:true})};

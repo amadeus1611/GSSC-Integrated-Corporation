@@ -122,6 +122,14 @@ Motion is the heart of the UX: fidelity in the engine comes first.
     - Opacity, a 6px drop and the blur ride one progress value on one curve, so the text never shrinks while it is still readable.
     - Each surface keeps its own layer, so its text is not re-rasterised as it starts to move.
     - The shared bloom in `core/pour.js` still scales, text and all; review the other surfaces when this is promoted.
+  - **text never scales or slides** (Amadeus: "they look jumpy, like their original size is not linked"):
+    - the pressed-row shrink is gone;
+    - search no longer swaps in a box that grows: the row itself becomes the field, with the icon and the word fixed in place while the well fades in around them and the word dims to a placeholder;
+    - text that closes only fades and blurs;
+    - rows that move do so by whole-pixel distances on the compositor.
+  - **blur timing reversed for the sidebar** (Amadeus, v45: "fast close, slow entry"):
+    - entries resolve out of the blur over `--sb-in` 300 ms, and closes blur away over `--sb-out` 150 ms;
+    - this reverses the console-wide v44 rule (a fast push and a slower soft close) for the sidebar only; decide at promotion whether it becomes the rule everywhere.
   - fully featured:
     - a row menu (from `…` or a right-click): pin, rename, move to a folder, archive, delete with undo;
     - rename in place (F2);

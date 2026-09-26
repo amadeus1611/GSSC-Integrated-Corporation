@@ -4,6 +4,12 @@
    pull-up at the foot. Motion: one highlight glides between rows on the spring; hovers arrive on --t-instant and
    leave on the soft close; disclosures move the rows below as one FLIP while their children surface from a light
    blur (sidebar-next.js). Only transform and opacity move, plus the sanctioned blur on small things. */
+:root{
+  /* the sidebar's blur timing (Amadeus, v45): entries resolve slowly out of the blur, closes are quick.
+     Text never scales or slides: it only fades and blurs, so its size and place stay fixed from first frame to last. */
+  --sb-in:300ms;--sb-out:150ms;
+}
+@media (prefers-reduced-motion:reduce){:root{--sb-in:1ms;--sb-out:1ms}}
 .side.sb{padding:var(--sp-2h) var(--sp-2) var(--sp-2);gap:0}
 .sb .brand{display:flex;align-items:center;gap:var(--sp-2h);height:38px;padding:0 var(--sp-half) 0 var(--sp-2);margin-bottom:var(--sp-1h)}
 .sb .brand .mark{width:34px;flex:none}
@@ -22,9 +28,8 @@
 .sb-row{position:relative;z-index:1;display:flex;align-items:center;height:28px;border-radius:var(--r-4);color:var(--text);font-size:var(--fs-body);font-weight:350;letter-spacing:-.003em}
 .sb-row+.sb-row,.sb-row+.sb-kids,.sb-kids+.sb-row{margin-top:1px}
 .sb-row.on{background:var(--line-2)}
-.sb-hit{all:unset;box-sizing:border-box;flex:1;min-width:0;height:100%;display:flex;align-items:center;gap:var(--sp-2h);padding:0 var(--sp-2);cursor:pointer;border-radius:inherit;transition:transform var(--t-exit) var(--ease-soft-close)}
+.sb-hit{all:unset;box-sizing:border-box;flex:1;min-width:0;height:100%;display:flex;align-items:center;gap:var(--sp-2h);padding:0 var(--sp-2);cursor:pointer;border-radius:inherit}
 .sb-hit:focus-visible{outline:var(--rule) solid var(--gold);outline-offset:-1px}
-.sb-hit:active{transform:scale(.985);transition:transform var(--t-instant) var(--ease-out)}
 .sb-ic{width:16px;height:16px;flex:none;color:var(--soft);transition:color var(--t-exit) var(--ease-soft-close)}
 .sb-row:hover .sb-ic,.sb-row.on .sb-ic{color:var(--ink);transition-duration:var(--t-instant);transition-timing-function:var(--ease-out)}
 .sb-t{flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
@@ -78,20 +83,30 @@
 .sb-empty{position:relative;z-index:1;height:26px;display:flex;align-items:center;padding:0 var(--sp-2) 0 var(--sp-3);font-size:var(--fs-ui);color:var(--mute)}
 .sb-kids[hidden],.sb-body[hidden],.sb-row[hidden],.sb-sub[hidden]{display:none}
 
-/* search opens in place of its row */
-.sb-find{position:relative;z-index:1;display:flex;align-items:center;gap:var(--sp-2h);height:28px;padding:0 var(--sp-1) 0 var(--sp-2);border-radius:var(--r-4);background:var(--line);box-shadow:inset 0 0 0 var(--rule-hair) var(--line-3)}
-.sb-find[hidden]{display:none}
-.sb-find input{all:unset;flex:1;min-width:0;font-size:var(--fs-body);color:var(--ink)}
-.sb-find input::placeholder{color:var(--mute)}
+/* search: the row itself becomes the field. The icon and the word stay exactly where they are; only the field's
+   well fades in around them (slow), the word dims to a placeholder, and the caret arrives. Closing is quick. */
+.sb-find::before{content:"";position:absolute;inset:0;border-radius:inherit;background:var(--line);box-shadow:inset 0 0 0 var(--rule-hair) var(--line-3);opacity:0;pointer-events:none;
+ transition:opacity var(--sb-out) var(--ease-soft-close)}
+.sb-find.on::before{opacity:1;transition:opacity var(--sb-in) var(--ease-out)}
+.sb-find .sb-ph{transition:color var(--sb-out) var(--ease-soft-close),opacity var(--sb-out) var(--ease-soft-close)}
+.sb-find.on .sb-ph{color:var(--mute);transition:color var(--sb-in) var(--ease-out),opacity var(--t-instant) var(--ease-out)}
+.sb-find.on.has .sb-ph{opacity:0}
+.sb-find input{all:unset;position:absolute;left:calc(var(--sp-2) + 16px + var(--sp-2h));right:28px;top:0;bottom:0;font-size:var(--fs-body);font-weight:350;letter-spacing:-.003em;color:var(--ink);caret-color:var(--gold);visibility:hidden}
+.sb-find.on input{visibility:visible}
+.sb-find .sb-clr{all:unset;position:absolute;right:4px;top:50%;width:20px;height:20px;margin-top:-10px;display:grid;place-items:center;border-radius:var(--r-2);color:var(--mute);cursor:pointer;opacity:0;pointer-events:none;
+ transition:opacity var(--sb-out) var(--ease-soft-close),background var(--t-exit) var(--ease-soft-close)}
+.sb-find .sb-clr svg{width:11px;height:11px}
+.sb-find.on.has .sb-clr{opacity:1;pointer-events:auto;transition:opacity var(--sb-in) var(--ease-out),background var(--t-instant)}
+.sb-find .sb-clr:hover{background:var(--line-2);color:var(--ink)}
+.sb-find.on .sb-hit{cursor:text}
 .sb-none{position:relative;z-index:1;padding:var(--sp-2) var(--sp-2);font-size:var(--fs-ui);color:var(--mute)}
 .sb-none[hidden]{display:none}
 
 /* the account row and its pull-up: the name is the button; settings open from it */
 .sb-foot{position:relative;margin:var(--sp-1h) calc(var(--sp-2) * -1) 0;padding:var(--sp-1h) var(--sp-2) 0;border-top:var(--rule-hair) solid var(--line)}
 .sb-me{all:unset;box-sizing:border-box;width:100%;height:44px;display:flex;align-items:center;gap:var(--sp-2h);padding:0 var(--sp-2) 0 var(--sp-1h);border-radius:var(--r-5);cursor:pointer;
- transition:background var(--t-exit) var(--ease-soft-close),transform var(--t-exit) var(--ease-soft-close)}
+ transition:background var(--t-exit) var(--ease-soft-close)}
 .sb-me:hover,.sb-me[aria-expanded="true"]{background:var(--line);transition-duration:var(--t-instant);transition-timing-function:var(--ease-out)}
-.sb-me:active{transform:scale(.99);transition:transform var(--t-instant) var(--ease-out)}
 .sb-me:focus-visible{outline:var(--rule) solid var(--gold);outline-offset:-1px}
 .sb-av{width:28px;height:28px;flex:none;display:grid;place-items:center;border-radius:var(--r-round);background:var(--line-2);box-shadow:inset 0 0 0 var(--rule-hair) var(--line-3);color:var(--ink);font-size:var(--fs-ui);font-weight:500}
 .sb-who{flex:1;min-width:0;display:flex;align-items:baseline;gap:5px;white-space:nowrap;overflow:hidden}
@@ -118,8 +133,6 @@
 .sb-seg button:hover,.sb-seg button[aria-checked="true"]{color:var(--ink);transition-duration:var(--t-instant)}
 .sb-seg button:focus-visible{outline:var(--rule) solid var(--gold)}
 
-@keyframes sbIn{from{opacity:0;filter:blur(var(--blur-exit));transform:scale(.975)}to{opacity:1;filter:none;transform:none}}
-.sb-find.in{animation:sbIn var(--t-enter) var(--ease-out) both}
 
 /* the row menu: fixed, beside its row; the same surface as the pull-up */
 .sb-pop{position:fixed;left:0;top:0;width:212px;z-index:var(--z-menu);padding:5px;background:var(--panel);border:var(--rule-hair) solid var(--line-3);border-radius:var(--r-5);box-shadow:var(--e3);opacity:0;visibility:hidden;pointer-events:none}
