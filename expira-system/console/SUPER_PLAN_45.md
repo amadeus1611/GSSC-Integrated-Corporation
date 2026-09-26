@@ -141,6 +141,65 @@ The tree the draft works on is built from the records on load, and again wheneve
 2. Publish it first as a separate preview link. The live console stays as it is.
 3. Republish the live console (same link, same capabilities) only on Amadeus's go after the preview.
 
+## 10. The chat pane: what is left (planned 2026-09-26, not started)
+The chat bench (`bench/chat-next.html`, DESIGN_ENGINE §4.5) was approved on look and motion: "it looks like a work of art". Five steps are left, in this order. Each one fits a short session.
+
+### 10.1 Make the glass truly frosted (first)
+**Finding (Amadeus, real browser):** the sheet blurs shapes behind it, but not text: the text of the thread reads through the glass, so it is not truly frosted. Headless Chromium shows the same thing, so it can be reproduced and tested here:
+- the bars of the chart blur behind the sheet, but text stays crisp, most of all near its edges;
+- a full-pane overlay with a backdrop blur did blur the same text in an earlier probe.
+
+**Try first:** move the blur onto the veil.
+- The veil covers the whole pane and gets a static `backdrop-filter: blur(10–14px)`.
+- Only its opacity animates, which keeps within Gate A.
+- The page behind is then already soft wherever the sheet sits, and the sheet keeps its tint, sheen and lit edge over it.
+
+**If that is not enough:**
+- **Bisect the cause.** Test in turn:
+  - with no `mask-image` on `.ch-scroll`;
+  - without the per-word `.ch-w` spans left by the ink;
+  - blur radii 12, 16, 20 and 24px;
+  - `will-change: transform` on the scroll.
+- **Fallback:** raise the sheet's tint until text under it cannot be read (about 84% in light, 80% in dark), and keep the blur for colour only.
+
+**Test:** add a probe to `qa/` that places the densest text under the sheet in the middle and at each edge, and checks that it is unreadable. It can compare the pixel variance under the sheet against the same region with the sheet hidden. Check light, dark and reduced transparency.
+
+### 10.2 The settings drive the answer
+Effort, Desks, Output and Client-facing are recorded (`SET` in `chat-next.js`) but do not change the mock yet.
+- **Desks:** only the chosen desks appear in the work line and the ledger, and "Four desks" counts them.
+- **Output:** Quotation lays the page out on the master quotation's order (scope, the budget table, exclusions, validity); Contract, Resolution and Memo each get their own section order.
+- **Client-facing:** the settled line says "Firewall checked", and the colophon names the module 04 check.
+- **Effort:** it shows in the settled line (for example "Deep · 1:25").
+- **Remember per chat:** the settings are kept per chat, and so is a draft brief, so switching chats keeps what you were typing.
+
+### 10.3 Phones and touch for the pull tab
+- **Pull versus scroll:** the tab and the grabber use `touch-action: none`, the thread keeps its own scroll, and the phone drawer's edge swipe must not start a pull.
+- **Safe area:** the tab and a sheet rising from the foot sit above `env(safe-area-inset-bottom)`.
+- **The on-screen keyboard:** the sheet stays above it by listening to `visualViewport` resize and lifting the sheet by the covered height.
+- **Target:** the tab's hit area is at least 44 by 44px.
+- **Test:** run the drag test with touch input (the sidebar tests already do this) at 390 by 760.
+
+### 10.4 Small leftovers
+- **Attach** opens a file picker and shows the files as quiet lines under the brief.
+- **The model word** opens a small card, the same card as the sidebar's.
+- **↑ in an empty sheet** recalls the last brief.
+- **Arrow keys** move between the settings rows.
+
+### 10.5 Promotion together with the sidebar (joins §9)
+- **Units:**
+  - `units/start` gets the signature;
+  - `units/composer` gets the tab, the sheet and the settings;
+  - `units/thread` gets the brief, the work line, the ledger and the master-template page.
+- **Tokens:** `--ch-*` moves into `src/tokens.css`.
+- **The real engine:**
+  - the sheet's send calls `core/run.js` with the settings: effort, desks, output, and client-facing mapped to the grounding firewall;
+  - the work line reads the run's live desks;
+  - the page renders the run's real exhibits.
+- **Tests:** add `qa/pulltab.js` (the interactions: click, pull, flick, Esc, veil, type-to-open, send, reopen) and the glass probe from 10.1. `smoke`, `hovers`, `perf` and `a11y` must stay clean, with no rAF while settled: the sheet's tween stops when it lands.
+- **Release:** a preview link first, and the live console only on Amadeus's go, as in §9.
+
+**Effort:** 10.1 and 10.3 are investigations, so run them at high. 10.2 and 10.4 are exact change lists, so they can run at medium (CLAUDE.md, "Effort and delegation").
+
 ## Not doing
 
 Colours or tags on folders, custom folder icons, emoji, and a separate command palette for the sidebar. Each adds noise without adding much.
@@ -183,3 +242,4 @@ Each step is one commit, first in the bench and then in `src/`. Each is tested i
   The 8ms target is met on a normal tree but not with 2,000 rows open, where most of the time is the browser laying out the rows' boxes. Full virtualisation is the remaining step if real use ever needs it.
 - [x] §8 Screen readers and keyboard (2026-09-26, bench). axe is clean with the tree, the two places, the row menu, select mode, search and the account card. The account card became a dialog, since it is a panel of controls.
 - [ ] §9 Saving and promotion: planned in detail above (2026-09-26); waiting on Amadeus's go.
+- [ ] §10 The chat pane: planned above (2026-09-26). The bench is done and approved; next comes 10.1, the glass.
