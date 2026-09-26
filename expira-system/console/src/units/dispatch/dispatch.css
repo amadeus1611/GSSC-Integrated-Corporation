@@ -1,22 +1,26 @@
 /* The Dispatch: the log, set like a magazine */
-.dsp{position:fixed;top:0;right:0;bottom:0;z-index:var(--z-dispatch);width:min(420px,100vw);background:var(--sheet);border-left:var(--rule-hair) solid var(--line-2);box-shadow:var(--e-side);display:flex;flex-direction:column;transform:translateX(24px);opacity:0;filter:blur(6px);pointer-events:none;transition:transform var(--t-move) var(--ease-soft-close),opacity var(--t-exit) var(--ease-soft-close),filter var(--t-exit) var(--ease-soft-close)}
-.dsp.open{transform:none;opacity:1;filter:none;pointer-events:auto}
+/* a large surface: it slides and fades, and never blurs (Gate A keeps the blur for small surfaces) */
+.dsp{position:fixed;top:0;right:0;bottom:0;z-index:var(--z-dispatch);width:min(420px,100vw);background:var(--sheet);border-left:var(--rule-hair) solid var(--line-2);box-shadow:var(--e-side);display:flex;flex-direction:column;transform:translateX(24px);opacity:0;pointer-events:none;transition:transform var(--t-move) var(--ease-soft-close),opacity var(--t-exit) var(--ease-soft-close)}
+.dsp.open{transform:none;opacity:1;pointer-events:auto;transition:transform var(--t-move) var(--spring),opacity var(--t-enter) var(--ease-out)}
 .dsp-h{display:flex;align-items:center;gap:var(--sp-2h);padding:var(--sp-3h) var(--sp-4) var(--sp-3) var(--sp-6);border-bottom:var(--rule-hair) solid var(--line-2)}
 .dsp-h .cap:first-child{color:var(--ink)}
 .dsp-h .ib{margin-left:auto}
-.dsp-b{flex:1;overflow:auto;padding:var(--sp-5) var(--sp-6) var(--sp-8)}
+.dsp-b{flex:1;overflow:auto;padding:var(--sp-5) var(--sp-6) var(--sp-8);counter-reset:dsec}
 .kicker{display:flex;align-items:center;gap:var(--sp-2h);margin-bottom:var(--sp-2h)}
 .kicker .cap{color:var(--gold)}
 .dsp h2{font:400 var(--fs-h3)/1.3 var(--f-display);color:var(--ink);margin:0 0 var(--sp-2);text-wrap:balance}
-.standfirst{font:italic 400 var(--fs-body)/1.6 var(--f-display);color:var(--text);margin:0 0 var(--sp-4);padding-bottom:var(--sp-3h);border-bottom:var(--rule-hair) solid var(--line-2)}
+.standfirst{font:italic 400 var(--fs-body)/1.6 var(--f-display);color:var(--text);margin:0 0 var(--sp-4);padding-bottom:var(--sp-3h);border-bottom:var(--rule-hair) solid var(--line-2);text-wrap:pretty}
 .stats{display:grid;grid-template-columns:repeat(3,1fr);margin:0 0 var(--sp-6);border-bottom:var(--rule-hair) solid var(--line-2)}
 .stat{padding:0 0 var(--sp-3h)}
 .stat+.stat{padding-left:var(--sp-3h);border-left:var(--rule-hair) solid var(--line-2)}
 .stat .v{font:400 var(--fs-h3)/1.2 var(--f-display);color:var(--ink);display:block;margin-bottom:var(--sp-half);font-variant-numeric:tabular-nums}
-.dsp h3{margin:0 0 var(--sp-3);display:flex;align-items:center;gap:var(--sp-2h)}
-.dsp h3::after{content:"";flex:1;height:var(--rule-hair);background:var(--line-2)}
-.desk{display:grid;grid-template-columns:24px 1fr;gap:0 var(--sp-2);padding:0 0 var(--sp-3);margin-bottom:var(--sp-3);border-bottom:var(--rule-hair) solid var(--line);animation:open var(--t-enter) var(--ease-out) both}
-@keyframes open{from{clip-path:inset(0 0 100% 0);opacity:0;transform:translateY(-4px)}to{clip-path:inset(0 0 -2px 0);opacity:1;transform:none}}
+/* the master template's section head: a gold Roman numeral, the serif title, a hairline with a 34px gold lead-in.
+   Hidden sections are not displayed, so they take no number: the numbering always runs I, II, III as the work arrives */
+.dsec>h3{counter-increment:dsec;position:relative;margin:0 0 var(--sp-3h);padding-bottom:var(--sp-2);border-bottom:var(--rule-hair) solid var(--line-2);font:400 var(--fs-h3)/1.15 var(--f-display);letter-spacing:-.012em;color:var(--ink)}
+.dsec>h3::before{content:counter(dsec,upper-roman);display:block;margin-bottom:var(--sp-1h);font:400 var(--fs-ui)/1 var(--f-display);letter-spacing:var(--tracked-tight);color:var(--gold-ink)}
+.dsec>h3::after{content:"";position:absolute;left:0;bottom:calc(var(--rule-hair)*-1);width:var(--lead-in);height:var(--rule-hair);background:var(--gold)}
+.dsec h4{margin:var(--sp-4) 0 var(--sp-2);color:var(--mute)}
+.desk{display:grid;grid-template-columns:24px 1fr;gap:0 var(--sp-2);padding:0 0 var(--sp-3);margin-bottom:var(--sp-3);border-bottom:var(--rule-hair) solid var(--line);animation:evIn var(--t-enter) var(--ease-out) both}
 .desk .mini{grid-column:2;display:block;width:100%;height:26px;border-radius:var(--r-1);background:var(--well);border:var(--rule-hair) solid var(--line)}
 .desk:last-child{border-bottom:0;margin-bottom:var(--sp-1h)}
 .desk .rn{font:400 var(--fs-body)/1.3 var(--f-display);color:var(--gold)}
@@ -29,13 +33,13 @@
 .desk .st{margin-left:auto;font-size:var(--fs-micro);letter-spacing:var(--tracked-tight);text-transform:uppercase;color:var(--mute)}
 .desk .st.pass{color:var(--ok)}
 .desk .st.fail{color:var(--bad)}
-.desk .st.live{background:linear-gradient(90deg,var(--mute) 0 35%,var(--gold) 50%,var(--mute) 65% 100%);background-size:250% 100%;-webkit-background-clip:text;background-clip:text;animation:shim var(--t-loop) linear infinite;color:var(--gold)}
+.desk .st.live{color:var(--gold-ink);animation:breathe var(--t-loop) var(--ease-inout) infinite}
 .desk .st.esc{color:var(--warn)}
 .desk .task{grid-column:2;font:italic 400 var(--fs-ui)/1.5 var(--f-display);color:var(--text);margin:var(--sp-1) 0 var(--sp-2)}
 .desk .mt{grid-column:2;display:flex;gap:var(--sp-3);align-items:center;margin-top:var(--sp-1h);font-size:var(--fs-chrome-2);color:var(--mute)}
 .desk .mt .rd{margin-left:auto;border:0;background:none;padding:0;cursor:pointer;font:italic 400 var(--fs-ui) var(--f-display);color:var(--gold)}
-.notes{grid-column:2;margin:var(--sp-2h) 0 0;padding:0 0 0 var(--sp-3);border-left:var(--rule-hair) solid var(--gold);font-size:var(--fs-ui);line-height:1.65;color:var(--soft);white-space:pre-wrap;word-break:break-word;max-height:0;overflow:hidden;opacity:0;transition:max-height var(--t-move) var(--ease-soft-close),opacity var(--t-exit) var(--ease-soft-close)}
-.desk.show .notes{max-height:260px;overflow:auto;opacity:1}
+.notes{grid-column:2;display:none;margin:var(--sp-2h) 0 0;padding:0 0 0 var(--sp-3);border-left:var(--rule-hair) solid var(--gold);font-size:var(--fs-ui);line-height:1.65;color:var(--soft);white-space:pre-wrap;word-break:break-word;max-height:260px;overflow:auto}
+.desk.show .notes{display:block;animation:evIn var(--t-enter) var(--ease-out) both}
 .pull{margin:var(--sp-1) 0 var(--sp-5);padding:var(--sp-3) 0;border-top:var(--rule) solid var(--ink);border-bottom:var(--rule-hair) solid var(--line-2);font:italic 400 var(--fs-lead)/1.5 var(--f-display);color:var(--ink);text-wrap:balance}
 .late{animation:evIn var(--t-enter) var(--ease-out) both}
 .plate-h{display:flex;align-items:center;gap:var(--sp-3);margin-bottom:var(--sp-1h);font-size:var(--fs-micro);letter-spacing:var(--tracked-tight);text-transform:uppercase;color:var(--mute)}
@@ -44,12 +48,11 @@
 .lv.on{color:var(--ink)}
 .lv.on i{background:var(--gold);animation:breathe var(--t-loop) var(--ease-inout) infinite}
 .lvN{margin-left:auto}
-.dsec{margin-bottom:var(--sp-4h)}
+.dsec{margin-bottom:var(--sp-7)}
+.dx-mast{margin-bottom:var(--sp-2)}
 .olog li{display:grid;grid-template-columns:40px 1fr;gap:var(--sp-2h);padding:var(--sp-1) 0;font-size:var(--fs-ui);line-height:1.55;color:var(--text);animation:evIn var(--t-enter) var(--ease-out) both}
 .olog .ts{font-size:var(--fs-micro);color:var(--mute);padding-top:var(--sp-half)}
-.olog .tx{animation:reveal var(--t-draw) var(--ease-out) both}
 .olog em{font-family:var(--f-display);color:var(--gold)}
-@keyframes reveal{from{clip-path:inset(0 100% 0 0);opacity:.3}to{clip-path:inset(0 0 0 0);opacity:1}}
 @media (max-width:760px){
 .dsp{width:100vw}
 }

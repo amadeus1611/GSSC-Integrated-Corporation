@@ -804,24 +804,28 @@ html.calm *,html.calm *::before,html.calm *::after{animation:none!important;tran
 /* exhibits under an answer */
 .exh{margin-top:var(--sp-4);padding-top:var(--sp-half);-webkit-user-select:text;user-select:text}
 /* The Dispatch: the log, set like a magazine */
-.dsp{position:fixed;top:0;right:0;bottom:0;z-index:var(--z-dispatch);width:min(420px,100vw);background:var(--sheet);border-left:var(--rule-hair) solid var(--line-2);box-shadow:var(--e-side);display:flex;flex-direction:column;transform:translateX(24px);opacity:0;filter:blur(6px);pointer-events:none;transition:transform var(--t-move) var(--ease-soft-close),opacity var(--t-exit) var(--ease-soft-close),filter var(--t-exit) var(--ease-soft-close)}
-.dsp.open{transform:none;opacity:1;filter:none;pointer-events:auto}
+/* a large surface: it slides and fades, and never blurs (Gate A keeps the blur for small surfaces) */
+.dsp{position:fixed;top:0;right:0;bottom:0;z-index:var(--z-dispatch);width:min(420px,100vw);background:var(--sheet);border-left:var(--rule-hair) solid var(--line-2);box-shadow:var(--e-side);display:flex;flex-direction:column;transform:translateX(24px);opacity:0;pointer-events:none;transition:transform var(--t-move) var(--ease-soft-close),opacity var(--t-exit) var(--ease-soft-close)}
+.dsp.open{transform:none;opacity:1;pointer-events:auto;transition:transform var(--t-move) var(--spring),opacity var(--t-enter) var(--ease-out)}
 .dsp-h{display:flex;align-items:center;gap:var(--sp-2h);padding:var(--sp-3h) var(--sp-4) var(--sp-3) var(--sp-6);border-bottom:var(--rule-hair) solid var(--line-2)}
 .dsp-h .cap:first-child{color:var(--ink)}
 .dsp-h .ib{margin-left:auto}
-.dsp-b{flex:1;overflow:auto;padding:var(--sp-5) var(--sp-6) var(--sp-8)}
+.dsp-b{flex:1;overflow:auto;padding:var(--sp-5) var(--sp-6) var(--sp-8);counter-reset:dsec}
 .kicker{display:flex;align-items:center;gap:var(--sp-2h);margin-bottom:var(--sp-2h)}
 .kicker .cap{color:var(--gold)}
 .dsp h2{font:400 var(--fs-h3)/1.3 var(--f-display);color:var(--ink);margin:0 0 var(--sp-2);text-wrap:balance}
-.standfirst{font:italic 400 var(--fs-body)/1.6 var(--f-display);color:var(--text);margin:0 0 var(--sp-4);padding-bottom:var(--sp-3h);border-bottom:var(--rule-hair) solid var(--line-2)}
+.standfirst{font:italic 400 var(--fs-body)/1.6 var(--f-display);color:var(--text);margin:0 0 var(--sp-4);padding-bottom:var(--sp-3h);border-bottom:var(--rule-hair) solid var(--line-2);text-wrap:pretty}
 .stats{display:grid;grid-template-columns:repeat(3,1fr);margin:0 0 var(--sp-6);border-bottom:var(--rule-hair) solid var(--line-2)}
 .stat{padding:0 0 var(--sp-3h)}
 .stat+.stat{padding-left:var(--sp-3h);border-left:var(--rule-hair) solid var(--line-2)}
 .stat .v{font:400 var(--fs-h3)/1.2 var(--f-display);color:var(--ink);display:block;margin-bottom:var(--sp-half);font-variant-numeric:tabular-nums}
-.dsp h3{margin:0 0 var(--sp-3);display:flex;align-items:center;gap:var(--sp-2h)}
-.dsp h3::after{content:"";flex:1;height:var(--rule-hair);background:var(--line-2)}
-.desk{display:grid;grid-template-columns:24px 1fr;gap:0 var(--sp-2);padding:0 0 var(--sp-3);margin-bottom:var(--sp-3);border-bottom:var(--rule-hair) solid var(--line);animation:open var(--t-enter) var(--ease-out) both}
-@keyframes open{from{clip-path:inset(0 0 100% 0);opacity:0;transform:translateY(-4px)}to{clip-path:inset(0 0 -2px 0);opacity:1;transform:none}}
+/* the master template's section head: a gold Roman numeral, the serif title, a hairline with a 34px gold lead-in.
+   Hidden sections are not displayed, so they take no number: the numbering always runs I, II, III as the work arrives */
+.dsec>h3{counter-increment:dsec;position:relative;margin:0 0 var(--sp-3h);padding-bottom:var(--sp-2);border-bottom:var(--rule-hair) solid var(--line-2);font:400 var(--fs-h3)/1.15 var(--f-display);letter-spacing:-.012em;color:var(--ink)}
+.dsec>h3::before{content:counter(dsec,upper-roman);display:block;margin-bottom:var(--sp-1h);font:400 var(--fs-ui)/1 var(--f-display);letter-spacing:var(--tracked-tight);color:var(--gold-ink)}
+.dsec>h3::after{content:"";position:absolute;left:0;bottom:calc(var(--rule-hair)*-1);width:var(--lead-in);height:var(--rule-hair);background:var(--gold)}
+.dsec h4{margin:var(--sp-4) 0 var(--sp-2);color:var(--mute)}
+.desk{display:grid;grid-template-columns:24px 1fr;gap:0 var(--sp-2);padding:0 0 var(--sp-3);margin-bottom:var(--sp-3);border-bottom:var(--rule-hair) solid var(--line);animation:evIn var(--t-enter) var(--ease-out) both}
 .desk .mini{grid-column:2;display:block;width:100%;height:26px;border-radius:var(--r-1);background:var(--well);border:var(--rule-hair) solid var(--line)}
 .desk:last-child{border-bottom:0;margin-bottom:var(--sp-1h)}
 .desk .rn{font:400 var(--fs-body)/1.3 var(--f-display);color:var(--gold)}
@@ -834,13 +838,13 @@ html.calm *,html.calm *::before,html.calm *::after{animation:none!important;tran
 .desk .st{margin-left:auto;font-size:var(--fs-micro);letter-spacing:var(--tracked-tight);text-transform:uppercase;color:var(--mute)}
 .desk .st.pass{color:var(--ok)}
 .desk .st.fail{color:var(--bad)}
-.desk .st.live{background:linear-gradient(90deg,var(--mute) 0 35%,var(--gold) 50%,var(--mute) 65% 100%);background-size:250% 100%;-webkit-background-clip:text;background-clip:text;animation:shim var(--t-loop) linear infinite;color:var(--gold)}
+.desk .st.live{color:var(--gold-ink);animation:breathe var(--t-loop) var(--ease-inout) infinite}
 .desk .st.esc{color:var(--warn)}
 .desk .task{grid-column:2;font:italic 400 var(--fs-ui)/1.5 var(--f-display);color:var(--text);margin:var(--sp-1) 0 var(--sp-2)}
 .desk .mt{grid-column:2;display:flex;gap:var(--sp-3);align-items:center;margin-top:var(--sp-1h);font-size:var(--fs-chrome-2);color:var(--mute)}
 .desk .mt .rd{margin-left:auto;border:0;background:none;padding:0;cursor:pointer;font:italic 400 var(--fs-ui) var(--f-display);color:var(--gold)}
-.notes{grid-column:2;margin:var(--sp-2h) 0 0;padding:0 0 0 var(--sp-3);border-left:var(--rule-hair) solid var(--gold);font-size:var(--fs-ui);line-height:1.65;color:var(--soft);white-space:pre-wrap;word-break:break-word;max-height:0;overflow:hidden;opacity:0;transition:max-height var(--t-move) var(--ease-soft-close),opacity var(--t-exit) var(--ease-soft-close)}
-.desk.show .notes{max-height:260px;overflow:auto;opacity:1}
+.notes{grid-column:2;display:none;margin:var(--sp-2h) 0 0;padding:0 0 0 var(--sp-3);border-left:var(--rule-hair) solid var(--gold);font-size:var(--fs-ui);line-height:1.65;color:var(--soft);white-space:pre-wrap;word-break:break-word;max-height:260px;overflow:auto}
+.desk.show .notes{display:block;animation:evIn var(--t-enter) var(--ease-out) both}
 .pull{margin:var(--sp-1) 0 var(--sp-5);padding:var(--sp-3) 0;border-top:var(--rule) solid var(--ink);border-bottom:var(--rule-hair) solid var(--line-2);font:italic 400 var(--fs-lead)/1.5 var(--f-display);color:var(--ink);text-wrap:balance}
 .late{animation:evIn var(--t-enter) var(--ease-out) both}
 .plate-h{display:flex;align-items:center;gap:var(--sp-3);margin-bottom:var(--sp-1h);font-size:var(--fs-micro);letter-spacing:var(--tracked-tight);text-transform:uppercase;color:var(--mute)}
@@ -849,12 +853,11 @@ html.calm *,html.calm *::before,html.calm *::after{animation:none!important;tran
 .lv.on{color:var(--ink)}
 .lv.on i{background:var(--gold);animation:breathe var(--t-loop) var(--ease-inout) infinite}
 .lvN{margin-left:auto}
-.dsec{margin-bottom:var(--sp-4h)}
+.dsec{margin-bottom:var(--sp-7)}
+.dx-mast{margin-bottom:var(--sp-2)}
 .olog li{display:grid;grid-template-columns:40px 1fr;gap:var(--sp-2h);padding:var(--sp-1) 0;font-size:var(--fs-ui);line-height:1.55;color:var(--text);animation:evIn var(--t-enter) var(--ease-out) both}
 .olog .ts{font-size:var(--fs-micro);color:var(--mute);padding-top:var(--sp-half)}
-.olog .tx{animation:reveal var(--t-draw) var(--ease-out) both}
 .olog em{font-family:var(--f-display);color:var(--gold)}
-@keyframes reveal{from{clip-path:inset(0 100% 0 0);opacity:.3}to{clip-path:inset(0 0 0 0);opacity:1}}
 @media (max-width:760px){
 .dsp{width:100vw}
 }
@@ -2156,27 +2159,34 @@ function standfirst(w){const s=w.steps||[];if(!s.length)return "EXPIRA answered 
  const list=o=>{const u=Object.entries(o).map(([r,n])=>(n>1?words(n).toLowerCase()+" ":"")+ROLE[r].toLowerCase());return u.length<2?u[0]:u.slice(0,-1).join(", ")+" and "+u[u.length-1]};
  const p=(w.map&&w.map.pages||[]).length;
  return `The orchestrator staffed ${words(s.length).toLowerCase()} desk${s.length>1?"s":""}: ${Object.entries(by).map(([k,v])=>`${list(v)} at ${k} effort`).join("; ")}.${p?` They read ${p} page${p>1?"s":""} on the web.`:""}${s.some(x=>x.redo)?" One piece was sent back and deepened.":""}`}
+/* the Dispatch is set on the master template: a masthead, then Roman-numbered sections that appear in the order
+   the work reaches them (the run, the desks, the map, the ledger), a pull quote and the colophon */
 function shell(c,ts,live){$("#dspNo").textContent=`No. ${pad(c.no||0,3)}`;
- $("#dspB").innerHTML=`<div class="kicker bi"><span class="cap">Filed from Iloilo</span></div><h2 class="bi" id="dxT" style="animation-delay:.05s">${esc(c.title)}</h2><p class="dl bi" style="animation-delay:.1s">${esc(longDate(ts))}</p>
- <div id="dxTop"></div>
- <figure class="plate late" style="animation-delay:.14s"><div class="plate-h"><span class="lv ${live?"on":""}"><i></i><span id="lvT">${live?"Live":"Recorded"}</span></span><span class="num" id="lvE">00:00</span><span class="lvN" id="lvN"></span></div>
+ $("#dspB").innerHTML=`<header class="dx-mast"><div class="kicker bi"><span class="cap">Filed from Iloilo</span></div><h2 class="bi" id="dxT" style="animation-delay:.04s">${esc(c.title)}</h2><p class="dl bi" style="animation-delay:.08s">${esc(longDate(ts))}</p>
+ <div id="dxTop" class="late" style="animation-delay:.1s">${topHTML(null)}</div></header>
+ <section class="dsec late" id="dxRun" style="animation-delay:.14s"><h3>The run</h3><figure class="plate"><div class="plate-h"><span class="lv ${live?"on":""}"><i></i><span id="lvT">${live?"Live":"Recorded"}</span></span><span class="num" id="lvE">00:00</span><span class="lvN" id="lvN"></span></div>
  <div class="frame"><canvas id="spec"></canvas><canvas id="specO" class="ovl"></canvas><div class="gut" id="specG"></div></div>
  <figcaption><b>Fig. 1</b><span>The run as a spectrum. O is the orchestrator, A the answer; each desk opens its own band. A thread is thinking; a burst is writing.</span></figcaption></figure>
- <figure class="plate late" id="dxMapF" style="animation-delay:.17s"><div class="plate-h"><span>The map</span><span class="lvN" id="mapN"></span></div><div class="mapw dmap" id="dxMap"></div><figcaption><b>Fig. 2</b><span>Who worked with what: the orchestrator, the desks it staffed, the connector they called and the sites it read.</span></figcaption></figure>
- <section class="dsec late" style="animation-delay:.2s"><h3 class="cap">The orchestrator’s log</h3><ol class="olog num" id="olog"></ol></section>
- <section class="dsec" id="dxDesks" hidden><h3 class="cap late">Desks</h3><div id="desks"></div></section><div id="dxEnd"></div>`}
+ <h4 class="cap">The orchestrator’s log</h4><ol class="olog num" id="olog"></ol></section>
+ <section class="dsec late" id="dxDesks" hidden><h3>The desks</h3><div id="desks"></div></section>
+ <section class="dsec late" id="dxMapF" hidden><h3>The map</h3><figure class="plate"><div class="plate-h"><span>Who worked with what</span><span class="lvN" id="mapN"></span></div><div class="mapw dmap" id="dxMap"></div><figcaption><b>Fig. 2</b><span>The orchestrator, the desks it staffed, the connector they called and the sites it read, in the order they joined.</span></figcaption></figure></section>
+ <div id="dxEnd"></div>`}
+/* the masthead's standfirst and figures: set at once, then kept current while the run is live */
+function topHTML(w){const s=w?w.steps||[]:[],lt=ledgerStats(w&&w.ledger),tokens=s.reduce((a,x)=>a+tok(x.out),0);
+ return `<p class="standfirst" id="dxSF">${esc(w?standfirst(w):"The orchestrator is reading the brief.")}</p><div class="stats${lt.n?" four":""}"><div class="stat"><span class="v num" id="dxS0">${mmss(w?w.ms||0:0)}</span><span class="cap">Elapsed</span></div><div class="stat"><span class="v num" id="dxS1">${s.length}</span><span class="cap">Desks</span></div><div class="stat"><span class="v num" id="dxS2">${ft(tokens)}</span><span class="cap">Tokens</span></div>${lt.n?`<div class="stat"><span class="v num">${lt.g}/${lt.n}</span><span class="cap">Grounded</span></div>`:""}</div>`}
+function dxLive(ms,n,tk){const S=(q,v)=>{const e=$(q);if(e&&e.textContent!==v)e.textContent=v};S("#dxS0",mmss(ms));S("#dxS1",String(n));S("#dxS2",ft(tk))}
+function dxStand(w){const e=$("#dxSF"),t=standfirst(w);if(e&&e.textContent!==t)e.textContent=t}
 function deskHTML(s,i,d=0){const st=s.v?(s.v==="pass"?(s.redo?"Passed, deepened":"Passed"):"Returned"):"Opening";
  return `<article class="desk" id="dk${i}" style="animation-delay:${d}s"><span class="rn">${ROMAN[i]}.</span><div class="hd"><b>${ROLE[s.role]}</b>${s.focus?`<span class="fc">${esc(s.focus)}</span>`:""}<span class="eff">${meter(s.tier)}<span id="ef${i}">${TIERS[s.tier].w}</span></span><span class="st ${s.v||""}" id="ds${i}">${st}</span></div>
  <p class="task">${esc(s.task)}</p><canvas class="mini" id="mn${i}"></canvas><div class="mt num"><span id="dm${i}">${s.ms?fmt(s.ms):"—"}</span><span id="dq${i}">${s.searches?`${s.searches} search${s.searches>1?"es":""} · `:""}${s.out?ft(tok(s.out))+" tokens":""}</span><button class="rd" data-notes>Read notes</button></div><div class="notes" id="dn${i}">${esc(s.out||"")}</div></article>`}
 const logLi=(f,d)=>`<li style="${d!=null?`animation-delay:${d}s`:""}"><span class="ts">${mmss(f[0])}</span><span class="tx">${f[2]||f[1]}</span></li>`;
-function finishTop(w){const tokens=(w.steps||[]).reduce((a,x)=>a+tok(x.out),0);
- $("#dxTop").innerHTML=`<p class="standfirst late">${esc(standfirst(w))}</p><div class="stats late${ledgerStats(w.ledger).n?" four":""}" style="animation-delay:.08s"><div class="stat"><span class="v num">${mmss(w.ms||0)}</span><span class="cap">Elapsed</span></div><div class="stat"><span class="v num">${(w.steps||[]).length}</span><span class="cap">Desks</span></div><div class="stat"><span class="v num">${ft(tokens)}</span><span class="cap">Tokens</span></div>${ledgerStats(w.ledger).n?`<div class="stat"><span class="v num">${ledgerStats(w.ledger).g}/${ledgerStats(w.ledger).n}</span><span class="cap">Grounded</span></div>`:""}</div>`;
- $("#dxEnd").innerHTML=(ledgerStats(w.ledger).n?`<section class="dsec late" style="animation-delay:.12s"><h3 class="cap">The ledger</h3>${ledgerHTML(w,true)}</section>`:"")+(w.firewall&&w.firewall!=="off"?`<blockquote class="pull late" style="animation-delay:.16s">${w.firewall==="clear"?"“Firewall clear. Nothing restricted leaves with this answer.”":"“Held for internal use. Restricted details were found.”"}</blockquote>`:"")+`<p class="colophon late" style="animation-delay:.22s">Set in Libre Baskerville and Inter. Orchestrated by Opus 5.5 at high effort; desks at the effort each brief required. EXPIRA recommends; a person approves.</p>`}
+function finishTop(w){$("#dxTop").innerHTML=topHTML(w);const lt=ledgerStats(w.ledger);
+ $("#dxEnd").innerHTML=(lt.n?`<section class="dsec late" style="animation-delay:.12s"><h3>The ledger</h3>${ledgerHTML(w,true)}</section>`:"")+(w.firewall&&w.firewall!=="off"?`<blockquote class="pull late" style="animation-delay:.16s">${w.firewall==="clear"?"“Firewall clear. Nothing restricted leaves with this answer.”":"“Held for internal use. Restricted details were found.”"}</blockquote>`:"")+`<p class="colophon late" style="animation-delay:.22s">Set in Libre Baskerville and Inter. Orchestrated by Opus 5.5 at high effort; desks at the effort each brief required. EXPIRA recommends; a person approves.</p>`}
 function recordedDispatch(w,c,ts){shell(c,ts,false);const s=w.steps||[];
- if(s.length){$("#dxDesks").hidden=false;$("#desks").innerHTML=s.map((x,i)=>deskHTML(x,i,.12+i*.06)).join("")}
- $("#olog").innerHTML=(w.feed||[]).map((f,i)=>logLi(f,.24+i*.035)).join("");
+ $("#olog").innerHTML=(w.feed||[]).map((f,i)=>logLi(f,.2+Math.min(i,12)*.03)).join("");
+ if(s.length){$("#dxDesks").hidden=false;$("#dxDesks").style.animationDelay=".22s";$("#desks").innerHTML=s.map((x,i)=>deskHTML(x,i,.26+i*.06)).join("");$("#dxMapF").hidden=false;$("#dxMapF").style.animationDelay=(.3+s.length*.06).toFixed(2)+"s"}
  $("#lvE").textContent=mmss(w.ms||0);$("#lvN").textContent=s.length?`${words(s.length)} desk${s.length>1?"s":""}`:"Direct";
- finishTop(w);if(s.length)mkMap($("#dxMap"),()=>w,{replay:true});else $("#dxMapF").hidden=true;requestAnimationFrame(()=>replayPlates(w))}
+ finishTop(w);if(s.length)mkMap($("#dxMap"),()=>w,{replay:true});requestAnimationFrame(()=>replayPlates(w))}
 
 /* ---------- spectra: a compiled plate with a band per voice, and a strip per desk ---------- */
 const bandLabel=k=>k==="O"?"O":k==="A"?"A":ROMAN[+k.slice(1)]||"·";
@@ -3061,7 +3071,7 @@ async function send(q,re){const KL=await KLIB.load().catch(()=>null),docPre=DOCS
  const sigIv=setInterval(()=>{const keys=work.sigKeys;work.sig.push([...keys.map(k=>Math.round((acc[k]||0)/4)),keys.reduce((m,k,j)=>m|(think[k]?1<<j:0),0)]);for(const k in acc)acc[k]=0},250);
  const openBand=key=>{if(!work.sigKeys.includes(key)){work.sigKeys.push(key);work.sig.forEach(fr=>fr.splice(work.sigKeys.length-1,0,0))}plates.main&&plates.main.addBand(key)};
  let aText="",tickN=0;const totTok=()=>work.steps.reduce((a,s)=>a+tok(s.out),0)+tok(aText);
- const setT=(el,v)=>{if(el&&el._t!==v){el._t=v;el.textContent=v}};const tick=setInterval(()=>{const e=now();setT(tEl,mmss(e));setT($("#runE"),mmss(e));if(lbl.textContent!==$("#runT").textContent&&!lbl.classList.contains("swap"))$("#runT").textContent=lbl.textContent;const tt=totTok();setT(rk,tt?ft(tt)+" tokens":"");
+ const setT=(el,v)=>{if(el&&el._t!==v){el._t=v;el.textContent=v}};const tick=setInterval(()=>{const e=now();setT(tEl,mmss(e));setT($("#runE"),mmss(e));if(lbl.textContent!==$("#runT").textContent&&!lbl.classList.contains("swap"))$("#runT").textContent=lbl.textContent;const tt=totTok();setT(rk,tt?ft(tt)+" tokens":"");dxLive(e,work.steps.length,tt);
   work.steps.forEach((s,i)=>{if(s._t0&&s._live)setT($("#dm"+i),fmt(performance.now()-s._t0))});if(++tickN%4===0){mapSync();if(run.dataset.view==="map")miniDraw(run,work,true)}},250);
  const follow=()=>{if(stick)sc.scrollTop=1e9};
  /* F(short line for the card's log, fuller line for the Dispatch's log) */
@@ -3071,7 +3081,7 @@ async function send(q,re){const KL=await KLIB.load().catch(()=>null),docPre=DOCS
   return{role:r.role,tier,focus:clip(r.focus||"",42),task:String(r.task||""),why:String(r.why||""),after:(Array.isArray(r.after)?r.after:[]).map(Number).filter(n=>n>0&&n<=8),redo:0,web:!!(webOn&&WEB_ROLES.has(r.role)&&r.web!==false)}};
  const staffUp=()=>{const g={};work.steps.forEach(s=>g[s.role]=(g[s.role]||0)+1);Object.entries(g).forEach(([r,n])=>{const c=stf.querySelector(`[data-r="${r}"]`);if(!c)stf.insertAdjacentHTML("beforeend",chipHTML(r,n));else c.querySelector("b").textContent=n>1?"×"+n:""})};
  const addStep=r=>{if(!work._vs){work._vs=1;F(null,"Handed the plan to the Arbiter to staff.")}if(work.steps.length>=8)return;const s=normStep(r);if(!s)return;s.tb=Math.round(now());const i=work.steps.length;work.steps.push(s);
-  $("#dxDesks").hidden=false;$("#desks").insertAdjacentHTML("beforeend",deskHTML(s,i));openBand("d"+i);requestAnimationFrame(()=>miniPlate(i,"d"+i));staffUp();
+  $("#dxDesks").hidden=false;$("#dxMapF").hidden=false;$("#desks").insertAdjacentHTML("beforeend",deskHTML(s,i));openBand("d"+i);requestAnimationFrame(()=>miniPlate(i,"d"+i));staffUp();
   F(null,`Staffed desk ${ROMAN[i]}: ${ROLE[s.role].toLowerCase()}${s.focus?`, <em>${esc(s.focus.toLowerCase())}</em>,`:""} at ${TIERS[s.tier].w} effort${s.web?" with the web":""}${s.why?`; ${esc(s.why.charAt(0).toLowerCase()+s.why.slice(1).replace(/\.$/,""))}`:""}.`);
   if(s.after.length)F(null,`Desk ${ROMAN[i]} waits for ${s.after.map(n=>"desk "+ROMAN[n-1]).join(" and ")}.`);
   $("#lvN").textContent=`${words(i+1)} desk${i?"s":""}`;mapSync();setTimeout(()=>mapPulse("v","a"+i),80)};
@@ -3100,7 +3110,7 @@ ${history?`Conversation so far:\n${history}\n\n`:""}New message: ${q}`,{modelTie
   if(cur.turns.length===1&&plan.title){cur.title=String(plan.title).slice(0,60);crumb();renderRecents();swap($("#dxT"),cur.title)}
   const steps=work.steps,outs=[];think.O=0;work._o=false;
   if(!direct){work._vs=0;work.docPlan=(plan.document&&DOCT[plan.document.type]&&(!docPre||plan.document.type===docPre))?{type:plan.document.type,second:plan.document.second_signatory||null,brief:String(plan.document.brief||"")}:docPre?{type:docPre,second:null,brief:q}:null;if(work.docPlan)F(`Planned a ${DOCT[work.docPlan.type].toLowerCase()}`,`Planned a document from the kernel: ${DOCT[work.docPlan.type].toLowerCase()}.`);P("plan","done");F(null,`Classified the brief: <em>${esc(plan.kind||"general enquiry")}</em>.`);if(plan.rationale)F(null,esc(plan.rationale))}
-  $("#lvN").textContent=steps.length?`${words(steps.length)} desk${steps.length>1?"s":""}`:"Direct";mapSync();
+  $("#lvN").textContent=steps.length?`${words(steps.length)} desk${steps.length>1?"s":""}`:"Direct";mapSync();dxStand(work);
   if(steps.length){
    P("desks","on");const by={};steps.forEach(s=>by[s.role]=(by[s.role]||0)+1);
    F(`Staffed <em>${words(steps.length).toLowerCase()} desk${steps.length>1?"s":""}</em>`,`Staffed ${words(steps.length).toLowerCase()} desk${steps.length>1?"s":""}: ${Object.entries(by).map(([r,n])=>`${n>1?words(n).toLowerCase()+" ":""}${ROLE[r].toLowerCase()}`).join(", ")}.`);

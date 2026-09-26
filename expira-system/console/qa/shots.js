@@ -48,6 +48,16 @@ const UNITS = {
     ['live-done', async p => { await p.waitForFunction(() => !document.querySelector('.app').classList.contains('busy'), null, { timeout: 150000 }); await wait(p, 2500) }],
     ['live-field-done', async p => { await p.click('#dsp [data-mv=field]'); await wait(p, 3500); console.log('rest', await p.evaluate(() => [...window.__FM].map(m => `${m.constructor.name} raf ${!!m.raf} light ${m.lt.id}`).join(' | '))) }],
   ],
+  dispatch: [
+    ['recorded-mid', async p => { await H.example(p); await p.keyboard.press('Alt+KeyL'); await wait(p, 260) }],
+    ['recorded', async p => { await wait(p, 1500) }],
+    ['recorded-desks', async p => { await p.evaluate(() => { const b = document.querySelector('#dspB'); b.scrollTop = document.querySelector('#dxDesks').offsetTop - 20 }); await wait(p, 900) }],
+    ['recorded-end', async p => { await p.evaluate(() => { const b = document.querySelector('#dspB'); b.scrollTop = b.scrollHeight }); await wait(p, 700) }],
+    ['notes', async p => { await p.evaluate(() => { const b = document.querySelector('#dspB'); b.scrollTop = document.querySelector('#dxDesks').offsetTop - 20 }); await click(p, '#dk0 [data-notes]'); await wait(p, 500) }],
+    ['live-early', async p => { await H.brief(p, H.BRIEF, { noWait: true }); await wait(p, 400); await p.keyboard.press('Alt+KeyL'); await wait(p, 1200) }],
+    ['live-desks', async p => { await wait(p, 2600); await p.evaluate(() => { const b = document.querySelector('#dspB'); b.scrollTop = 420 }) ; await wait(p, 300) }],
+    ['live-done', async p => { await p.waitForFunction(() => !document.querySelector('.app').classList.contains('busy'), null, { timeout: 150000 }); await wait(p, 1800); await p.evaluate(() => { document.querySelector('#dspB').scrollTop = 0 }); await wait(p, 300); console.log('sections', await p.evaluate(() => [...document.querySelectorAll('#dspB .dsec')].filter(e => !e.hidden).map(e => e.querySelector('h3').textContent).join(' / '))) }],
+  ],
   composer: [
     ['idle', async p => { await click(p, '#newChat'); await p.mouse.move(900, 800); await wait(p, 600) }],
     ['focus', async p => { await p.focus('#prompt'); await wait(p, 500) }],
