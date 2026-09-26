@@ -48,7 +48,7 @@ which it was.
 | Weighing options for a decision memo | the orchestrator's memo, then `laya_gate.py weigh` over the evidence | if LAYA acts on a different option, reviewer-high challenges the memo |
 | Client-facing firewall | the pattern scan in `check.js`'s engine, `laya_gate.py firewall`, then firewall-medium | a hold from any of the three holds it; only firewall-medium can clear |
 
-**The EXPIRA Console** cannot run LAYA: an artifact page can't download a 1 GB model or reach a local server. It applies
+**The EXPIRA Console** does not run LAYA. The smallest browser builds are still about 500 MB (community q8 and WebGPU ports that need cross-origin isolation headers), too heavy to load in an artifact page, and the page can't reach a local server. It applies
 the same rules with Claude as the voter and code as the judge (`src/core/ground.js`):
 - **Typed, voted decisions.** `GROUND.decide` asks Claude for option keys only. An answer off the list is a spoiled
   vote, confidence is the share of agreeing votes, and anything short of unanimous escalates. The firewall runs this
