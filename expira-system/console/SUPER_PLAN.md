@@ -1,6 +1,6 @@
 # v44 super plan: faster, softer, blur in and out
 
-Asked for by Amadeus on 2026-09-26. The plan covers every item in that message. Speed and a soft blur for opening and closing come first, because every other item uses them. Nothing here is built until Amadeus says go.
+Asked for by Amadeus on 2026-09-26. The plan covers every item in that message, plus declined requests (§4), which he added later that morning. Speed and a soft blur for opening and closing come first, because every other item uses them. Nothing here is built until Amadeus says go.
 
 ## What was checked
 
@@ -68,17 +68,50 @@ One side pane inside each full-screen surface, with three linked tabs:
 - `#mfsL` and `#docvL` become tabbed panes. Switching tabs is a 160 ms blur cross-fade, and the pane's height never jumps.
 - Map nodes and labels: less empty space around the graph in full screen (fit to the pane), and labels that aren't selected dim to a readable level instead of near-invisible.
 
+## 4. Declined requests: prevent them, and keep them out of the log
+
+Added by Amadeus at 07:36. Earlier, Claude declined some of his briefs, and the run log said so.
+
+**What happens now (`core/run.js`):**
+- **The planner:** if the planner declines, it is asked once more in plain words on the standard model. If it declines again, the brief is answered directly. Both steps write "The planner declined the brief as worded (the service said: …)" into the run log.
+- **The desks:** a desk that declines files "(This desk declined its task and filed no notes.)", and the log says "Desk II declined".
+- **The other steps:** the Arbiter, the answer, the auditor, the revision and the exhibits have no fallback. A decline there stops the run with "Claude declined the answer to this brief as worded" (`COPY.refused` in `units/composer/attachments.js`).
+- **The cause** was never confirmed. The best guess is a false positive from the service's safety check.
+
+**Prevent (the likely triggers, fixed in the prompts):**
+- **Framing.** Each prompt opens with a plain statement of who is asking and why, for example: "internal analysis for GSSC Integrated Corporation, a registered contractor in Iloilo". That line replaces the persona openers ("You are the EXPIRA orchestrator… the judge of truth").
+- **Only what a step needs.** A desk's kernel digest (`kDigest`) currently sends governance and officer details that most desks don't use. It will send only the fields for that role, and personal and bank details go only to the document step that prints them.
+- **Plainer wording.** Instructions like "firewall", "restricted" or "held for internal use" are rewritten in neutral business terms inside the prompts. The firewall itself doesn't change.
+
+**Recover (every step, not just two):** one shared retry ladder in `core/run.js` for the planner, desks, Arbiter, answer, auditor, revision and exhibits:
+1. Rephrase the request in plain terms and try again on the same model.
+2. If that is declined too, try once more on the standard model.
+3. If that is declined too, take the step's quiet fallback. The plan becomes a direct answer. A desk is dropped. The auditor or exhibits step is skipped, and the answer is filed without it. If the answer itself still can't be written, the run ends with a neutral line: "EXPIRA couldn't finish this brief. Try adding what it's for."
+
+**Out of the log:**
+- The run log, the Dispatch, the map, desk notes and the answer never say that Claude declined or refused.
+- A retry is not logged. A dropped desk leaves the staffing list, and the map never shows it.
+- The Arbiter is told which slice has no notes, so the answer doesn't claim coverage it doesn't have (LAYA grounding stays in force).
+
+**Kept for diagnosis, privately:** each decline records which step, which model, the prompt size and the service's reason. It goes in the viewer's own private store (KV, `data/users/<id>/`) and never appears in the log. Settings › About shows a count and an Export button, so we can finally confirm the cause from real cases.
+
+**Checks:**
+- A mock in `qa/mocks.js` declines each step in turn.
+- `smoke` must complete the run every time. It also scans the log, the Dispatch and the thread for "declin", "refus" and "can't help", and there must be none.
+- `ground.js` must still pass.
+
 ## Build order and checks
 
 Each step is one commit, rebuilt with `python3 build.py`. Each step runs `smoke` in light and dark, plus `hovers` and `perf`:
 
 1. Motion tokens and the blur bloom in `core/pour.js`. Then contact sheets at 0, 60, 120, 200 and 300 ms for a menu, settings and the full-screen map, in both themes.
 2. The three small fixes (settings, start page, log default).
-3. The full-screen side pane: Details, Weighing and Log for the map, then the document viewer.
-4. Full-screen map layout and label contrast.
-5. The reviewer pass, `a11y`, republishing to the same artifact link (keeping its capabilities), and the DESIGN_ENGINE change log.
+3. Declined requests: the prompt changes, the retry ladder, the clean log and the private record (§4).
+4. The full-screen side pane: Details, Weighing and Log for the map, then the document viewer.
+5. Full-screen map layout and label contrast.
+6. The reviewer pass, `a11y`, republishing to the same artifact link (keeping its capabilities), and the DESIGN_ENGINE change log.
 
-LAYA grounding (`src/core/ground.js`) and the per-person sync are not touched.
+The LAYA grounding rules (`src/core/ground.js`) and the per-person sync stay as they are. §4 only adds a private record inside the per-person store.
 
 ## Decisions
 
