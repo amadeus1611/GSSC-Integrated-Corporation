@@ -4,24 +4,31 @@ Owner: Duke Y. Demayo. Working branch: `claude/wizardly-ptolemy-6q4ter`, PR amad
 
 ## Map
 - `README.md` is the GSSC company site: one self-contained HTML page.
-- `expira-system/console/index.html` is the EXPIRA Console, a single-file artifact. It is live at https://claude.ai/artifact/LcLXJASXhWZ56g74sHVRxt and currently at v39.
+- `expira-system/console/index.html` is the EXPIRA Console, a single-file artifact. It is live at https://claude.ai/artifact/LcLXJASXhWZ56g74sHVRxt and currently at v41. It is built from `src/`; never edit it by hand.
   - `lib/gssc-kernel.json` is the GSSC kernel. It is published beside the page and read at run time.
   - `kernel_builder.js` is the JavaScript port of `build_derivative.py`.
   - See `console/README.md` for more.
-- `expira-system/console/REBUILD_PLAN.md` is the active plan for the v41 clean rebuild. Its Progress section says where to resume.
+- `expira-system/console/REBUILD_PLAN.md` is the v41 clean rebuild plan (shipped; waiting on Duke's Gate B review). Its Progress section records what was done.
 - `expira-system/DESIGN_ENGINE.md` holds the design and motion canon. **Read it before any design or motion work**, and add to its change log after each iteration.
 - `expira-system/brand_assets/`, `logo_pack/` and `source/` hold the EXPIRA mark, the wordmark and the brand tokens.
 - `orchestrator/POLICY.md` and `.claude/agents/` define the sub-agent roster and when to escalate. `orchestrator/tier_log.csv` is the run log.
 
 ## Console: how to change it
-- The page is one inline `<style>` and one inline `<script>`. Later CSS rules override earlier ones, so append a labelled block (`/* v40 · … */`) instead of rewriting old rules.
-- Edit `index.html` directly with anchored, minimal replacements.
-- **Test before shipping:** `NODE_PATH=/opt/node22/lib/node_modules node expira-system/console/qa/smoke.js`. It serves the console itself, runs the example chat and a mock brief in light and dark, and must report 0 errors. Screenshots go to `qa/out/` (git-ignored). Use `qa/harness.js` (`serve`, `open`, `brief`, `example`, `cast`) for custom checks.
-- **Test hooks:** `window.__FM` for the map instances and `window.__ex(ex)` for the exhibits HTML.
+- The source lives in `expira-system/console/src/`: `tokens.css`, `core/` (prelude, storage adapter, motion, pour, run, router, boot) and one folder per unit in `units/<unit>/` holding its own CSS, JS and markup. Change the unit that owns the behaviour, in place; do not append override blocks.
+- **Build:** `cd expira-system/console && python3 build.py` writes `index.html` and fails on a duplicated selector across units (`--check` verifies without writing). Commit `src/` and the built `index.html` together.
+- **Test before shipping** (each with `NODE_PATH=/opt/node22/lib/node_modules`, run from `expira-system/console`):
+  - `node qa/smoke.js` serves the console, runs the example chat and a mock brief in light and dark, and must report 0 errors;
+  - `node qa/store.js` checks the storage adapter, the db mirror, import normalisation and that crafted imports stay text;
+  - `node qa/hovers.js [dark]` audits hover, press and focus on every control (`LIST=1` lists them);
+  - `node qa/perf.js` traces a full mock run: no long tasks or rAF while settled, maps asleep;
+  - `AXE=<path to axe.min.js> node qa/a11y.js` runs axe-core; install axe-core outside the repo, never commit it;
+  - `node qa/shots.js <unit>` takes screenshots per unit (shell, pour, maps, dispatch, raster, thread, composer, rest).
+  Screenshots go to `qa/out/` (git-ignored). Use `qa/harness.js` (`serve`, `open`, `brief`, `example`, `cast`) for custom checks.
+- **Test hooks:** `window.__FM` for the map instances, `window.__ex(ex)` for the exhibits HTML, `window.__KV` for the storage adapter and `window.__RX` for the raster.
 - **Republishing:**
   - Use the Artifact tool with the `url` above, and read the live artifact first.
   - Omit `capabilities` so the page keeps the ones it has: mcp Exa (`web_search_exa`, `web_fetch_exa`), sample, db and downloads.
-  - Commit and push the same `index.html`.
+  - Commit and push the same built `index.html`.
 
 ## Standing preferences
 - **Research before building**, by default. Use Exa for web search, not Parallel.

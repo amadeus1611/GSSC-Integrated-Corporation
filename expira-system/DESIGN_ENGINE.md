@@ -98,6 +98,11 @@ Motion is the heart of the UX: fidelity in the engine comes first.
 - **Tokens (v41):** every value comes from `src/tokens.css`. Spacing is a 4px scale with half steps (`--sp-half`, `--sp-1h` … `--sp-4h`) below 20px for dense chrome; a 1px nudge is optical and stays literal. Layers are named (`--z-side`, `--z-menu`, `--z-tip` …) in one stacking order. Dark tokens are written once in `@dark{}`.
 
 ## 5. Change log
+- **v41 shipped** (2026-09-26, Phase 4 review and republish):
+  - every disclosure (run card, log, exhibits, folders) opens by showing the body as it rises and closes by fading it on `--t-exit` with the soft close; in both directions what sits below glides to its new place with FLIP, transform only;
+  - the mercury slide, the lightbox, the greeting, the thumbnails and the composer's focus lift move only transform and opacity; the composer's lift is its own shadow plate fading in;
+  - the ready light breathes three times and rests, and nothing loops while the page is settled (`qa/perf.js`);
+  - small gold text uses `--gold-ink`, which clears AA; quiet text on hovered or chosen rows uses `--soft`; message actions are no longer dimmed.
 - **v41 Phase 3** (2026-09-26, the build):
   - the maps are one canvas plate each, drawn from one timed graph, with the numbers, focus and tooltips in the DOM; one rAF loop per map that sleeps when idle;
   - the token raster replaces the spectrogram: five fixed token classes per quarter second, thinking drawn as dotted cells, painted only when a frame arrives;
