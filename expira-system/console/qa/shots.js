@@ -6,6 +6,15 @@ const { wait, click } = require('./states');
 // the centre of a node on the Dispatch map, in page coordinates
 const hoverNode = async (p, id) => { const pt = await p.evaluate(id => { const m = [...window.__FM].find(m => m.host.id === 'dxMap'); const a = m && m.anchorOf(id); if (!a) return null; const r = m.box.getBoundingClientRect(); return [r.left + a.x + a.w / 2, r.top + a.y + a.h / 2] }, id); if (pt) await p.mouse.move(pt[0], pt[1]); else console.log('no node', id) };
 const UNITS = {
+  rest: [
+    ['start-neutral', async p => { await click(p, '#newChat'); await wait(p, 900) }],
+    ['palette-hover', async p => { await p.keyboard.press('Control+k'); await wait(p, 500); await p.hover('#pc3'); await wait(p, 300) }],
+    ['search', async p => { await p.keyboard.press('Escape'); await wait(p, 400); await p.click('#findBtn'); await p.keyboard.type('bel'); await wait(p, 500) }],
+    ['general', async p => { await p.keyboard.press('Escape'); await wait(p, 400); await p.keyboard.press('Control+Comma'); await wait(p, 600); await p.click('#setMenu [data-tab="general"]'); await p.fill('[data-name]', 'Rosa'); await p.fill('[data-pf="full"]', 'Rosa Villanueva'); await p.fill('[data-pf="org"]', 'Iloilo Works'); await wait(p, 400) }],
+    ['library', async p => { await p.click('#setMenu [data-tab="library"]'); await wait(p, 500); await p.hover('[data-import]'); await wait(p, 300) }],
+    ['account', async p => { await p.keyboard.press('Escape'); await wait(p, 500); await p.click('#me'); await wait(p, 600) }],
+    ['toast', async p => { await p.keyboard.press('Escape'); await wait(p, 400); await H.example(p); await p.evaluate(() => document.querySelector('.row .dots')?.click()); await wait(p, 400); await p.click('[data-a="pin"]').catch(() => {}); await wait(p, 350) }],
+  ],
   shell: [
     ['start', async p => { await click(p, '#newChat') }],
     ['example', async p => { await H.example(p) }],

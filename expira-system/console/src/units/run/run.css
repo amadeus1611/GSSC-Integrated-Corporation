@@ -18,6 +18,7 @@
 .run.running .run-h .lbl::after{content:"";position:absolute;inset:0;background:linear-gradient(90deg,transparent 30%,color-mix(in srgb,var(--panel) 62%,transparent) 50%,transparent 70%);transform:translateX(-100%);animation:shim var(--t-loop) linear infinite;pointer-events:none}
 .run-h .t,.run-h .rk{font-size:var(--fs-chrome);color:var(--mute)}
 .run.open>.run-h .chev{transform:rotate(90deg)}
+.run-h:hover .chev,.run-h:hover .t{color:var(--ink)}
 .run:not(.running) .sheen::before{opacity:0;animation-play-state:paused}
 .run.settled .sheen::after{transform:scaleX(1)}
 .running .glyph .f1{animation:fct var(--t-loop) var(--ease-inout) infinite}

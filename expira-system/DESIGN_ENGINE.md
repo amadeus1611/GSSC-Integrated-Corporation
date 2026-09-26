@@ -98,6 +98,13 @@ Motion is the heart of the UX: fidelity in the engine comes first.
 - **Tokens (v41):** every value comes from `src/tokens.css`. Spacing is a 4px scale with half steps (`--sp-half`, `--sp-1h` … `--sp-4h`) below 20px for dense chrome; a 1px nudge is optical and stays literal. Layers are named (`--z-side`, `--z-menu`, `--z-tip` …) in one stacking order. Dark tokens are written once in `@dark{}`.
 
 ## 5. Change log
+- **v41 Phase 3** (2026-09-26, the build):
+  - the maps are one canvas plate each, drawn from one timed graph, with the numbers, focus and tooltips in the DOM; one rAF loop per map that sleeps when idle;
+  - the token raster replaces the spectrogram: five fixed token classes per quarter second, thinking drawn as dotted cells, painted only when a frame arrives;
+  - blur is kept to small surfaces (menus, cards, toasts, tips); streamed words, headings, exhibits and the ledger rise with transform and opacity;
+  - nothing overshoots: the document sheet and caret settle on the critically damped spring; the live-label sheen, swell and caret are transform or opacity only;
+  - the palette highlight follows the pointer and the keys without redrawing, and every control audited (`qa/hovers.js`) has hover, press and focus states;
+  - storage goes through one adapter, with export and import of the whole library, and no built-in name.
 - **v41 Gate A** (2026-09-25; decisions only, the build follows):
   - the pour is the surface-tension droplet, with no meniscus rim;
   - exits are a luxury soft close with a light blur transition;

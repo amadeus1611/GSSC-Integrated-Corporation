@@ -44,6 +44,8 @@
 .seg2.s3{grid-template-columns:repeat(3,1fr)}
 .menu .seg button[aria-checked="true"]{background:var(--panel);box-shadow:inset 0 0 0 var(--rule-hair) var(--gold),var(--e1);color:var(--ink)}
 .menu .seg button[aria-checked="true"] svg{color:var(--gold)}
+/* a chosen segment already carries the panel fill, so keyboard focus draws the gold ring instead */
+.menu .seg button[aria-checked="true"]:focus-visible,.menu .seg2 button[aria-checked="true"]:focus-visible,.seg3 button[aria-checked="true"]:focus-visible{outline:var(--rule) solid var(--gold);outline-offset:1px}
 .menu.opt#optMenu{width:232px}
 .menu .seg2 button{justify-content:center;font-size:var(--fs-chrome-2);color:var(--soft);border-radius:var(--r-1);white-space:nowrap;padding:var(--sp-1) var(--sp-1)}
 /* mercury segments and poured menus */

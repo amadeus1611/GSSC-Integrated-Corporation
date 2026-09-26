@@ -503,6 +503,7 @@ html.calm *,html.calm *::before,html.calm *::after{animation:none!important;tran
 .run.running .run-h .lbl::after{content:"";position:absolute;inset:0;background:linear-gradient(90deg,transparent 30%,color-mix(in srgb,var(--panel) 62%,transparent) 50%,transparent 70%);transform:translateX(-100%);animation:shim var(--t-loop) linear infinite;pointer-events:none}
 .run-h .t,.run-h .rk{font-size:var(--fs-chrome);color:var(--mute)}
 .run.open>.run-h .chev{transform:rotate(90deg)}
+.run-h:hover .chev,.run-h:hover .t{color:var(--ink)}
 .run:not(.running) .sheen::before{opacity:0;animation-play-state:paused}
 .run.settled .sheen::after{transform:scaleX(1)}
 .running .glyph .f1{animation:fct var(--t-loop) var(--ease-inout) infinite}
@@ -778,8 +779,10 @@ html.calm *,html.calm *::before,html.calm *::after{animation:none!important;tran
 .exh-h{display:flex;align-items:center;gap:var(--sp-2h);margin-bottom:var(--sp-2h);width:100%;border:0;background:none;padding:0;cursor:pointer;text-align:left}
 .exh-h .cnt{font-size:var(--fs-chrome);color:var(--mute)}
 .exh-h .ln{flex:1;height:var(--rule-hair);background:var(--line-3)}
-.exh-h .chev{transform:rotate(90deg);transition:transform var(--t-move) var(--ease-soft-close)}
+.exh-h .chev{transform:rotate(90deg);transition:transform var(--t-move) var(--ease-soft-close),color var(--t-instant) var(--ease-out)}
 .exh.folded .exh-h .chev{transform:none}
+.exh-h .cnt{transition:color var(--t-instant) var(--ease-out)}
+.exh-h:hover .cnt,.exh-h:hover .chev{color:var(--ink)}
 .exb{display:grid;grid-template-rows:1fr;transition:grid-template-rows var(--t-move) var(--ease-soft-close)}
 .exb>div{overflow:hidden}
 .exh.folded .exb{grid-template-rows:0fr}
@@ -1171,6 +1174,8 @@ html.calm *,html.calm *::before,html.calm *::after{animation:none!important;tran
 .seg2.s3{grid-template-columns:repeat(3,1fr)}
 .menu .seg button[aria-checked="true"]{background:var(--panel);box-shadow:inset 0 0 0 var(--rule-hair) var(--gold),var(--e1);color:var(--ink)}
 .menu .seg button[aria-checked="true"] svg{color:var(--gold)}
+/* a chosen segment already carries the panel fill, so keyboard focus draws the gold ring instead */
+.menu .seg button[aria-checked="true"]:focus-visible,.menu .seg2 button[aria-checked="true"]:focus-visible,.seg3 button[aria-checked="true"]:focus-visible{outline:var(--rule) solid var(--gold);outline-offset:1px}
 .menu.opt#optMenu{width:232px}
 .menu .seg2 button{justify-content:center;font-size:var(--fs-chrome-2);color:var(--soft);border-radius:var(--r-1);white-space:nowrap;padding:var(--sp-1) var(--sp-1)}
 /* mercury segments and poured menus */
@@ -1345,6 +1350,7 @@ html.calm *,html.calm *::before,html.calm *::after{animation:none!important;tran
 .pvbox .gp em{font-style:italic;color:var(--gold)}
 .pvbox .ans{margin:0}
 .tin{width:220px;border:var(--rule-hair) solid var(--line-3);border-radius:var(--r-3);background:var(--panel);padding:var(--sp-2) var(--sp-2h);font:inherit;font-size:var(--fs-body);color:var(--ink);outline:none;transition:border-color var(--t-exit)}
+.tin:hover{border-color:var(--soft)}
 .tin:focus{border-color:var(--gold)}
 .tin2{display:flex;flex-direction:column;gap:var(--sp-1h)}
 .tin::placeholder{color:var(--mute)}
@@ -1403,8 +1409,6 @@ html.calm *,html.calm *::before,html.calm *::after{animation:none!important;tran
 .kver span::before{content:"";display:inline-block;width:6px;height:6px;border-radius:var(--r-round);background:var(--mute);margin-right:var(--sp-1h);transform:translateY(-1px)}
 .kver .ok::before{background:var(--ok)}
 .kver .bad::before{background:var(--bad)}
-.stg-n nav{position:relative}
-.stg-n nav>[role=tab]{position:relative;z-index:var(--z-1)}
 .rdx{width:20px;height:20px;display:grid;place-items:center;border:var(--rule-hair) solid var(--line-2);border-radius:var(--r-2);background:none;color:var(--mute);cursor:pointer;padding:0;transition:color var(--t-exit),border-color var(--t-exit)}
 .rdx:hover{color:var(--gold);border-color:var(--line-3)}
 .rdx svg{width:10px;height:10px}
@@ -1445,8 +1449,10 @@ html.tnone *,html.tnone *::before,html.tnone *::after{transition:none!important}
 .pal.open{opacity:1;pointer-events:auto}
 .pal input{width:100%;border:0;border-bottom:var(--rule-hair) solid var(--line-2);background:transparent;padding:var(--sp-3h) var(--sp-4);outline:none;font-size:var(--fs-lead)}
 .pal ul{list-style:none;margin:0;padding:var(--sp-1h);max-height:320px;overflow:auto}
-.pal li{display:flex;align-items:center;gap:var(--sp-2h);padding:var(--sp-2) var(--sp-2h);border-radius:var(--r-3);cursor:pointer;font-size:var(--fs-body);color:var(--text)}
-.pal li.on{background:var(--line)}
+.pal li{display:flex;align-items:center;gap:var(--sp-2h);padding:var(--sp-2) var(--sp-2h);border-radius:var(--r-3);cursor:pointer;font-size:var(--fs-body);color:var(--text);transition:background-color var(--t-instant) var(--ease-out),color var(--t-instant) var(--ease-out)}
+.pal li.on{background:var(--line);color:var(--ink)}
+.pal li:active{background:var(--line-2)}
+.pal li.empty{cursor:default;color:var(--mute)}
 .pal li .kb{margin-left:auto}
 .toast{display:flex;align-items:center;gap:var(--sp-3);pointer-events:auto;background:var(--panel);border:var(--rule-hair) solid var(--line-3);border-radius:var(--r-3);box-shadow:var(--e2);font-size:var(--fs-ui);color:var(--text);padding:var(--sp-1h) var(--sp-3);animation:toast var(--t-enter) var(--ease-out) both}
 .toast em{font-family:var(--f-display);color:var(--gold)}
@@ -1580,7 +1586,7 @@ html.tnone *,html.tnone *::before,html.tnone *::after{transition:none!important}
 <div class="menu ctx" id="ctx" role="menu" aria-label="Actions"></div>
 <div class="veil" id="veil"></div>
 <div class="keys" id="keys" role="dialog" aria-label="Keyboard shortcuts"><div class="cap">Keyboard</div><dl><dt><span class="kb">⌘K</span></dt><dd>Commands</dd><dt><span class="kb">⌘,</span></dt><dd>Settings</dd><dt><span class="kb">⌥N</span></dt><dd>New chat</dd><dt><span class="kb">⌥L</span></dt><dd>The Dispatch</dd><dt><span class="kb">/</span></dt><dd>Search chats</dd><dt><span class="kb">Enter</span></dt><dd>Send</dd><dt><span class="kb">⇧ Enter</span></dt><dd>New line</dd><dt><span class="kb">Esc</span></dt><dd>Stop or close</dd><dt><span class="kb">?</span></dt><dd>This card</dd></dl></div>
-<div class="pal" id="pal" role="dialog" aria-label="Commands"><label for="palIn" class="sr">Command</label><input id="palIn" placeholder="Type a command…"><ul id="palList"></ul></div>
+<div class="pal" id="pal" role="dialog" aria-label="Commands"><label for="palIn" class="sr">Command</label><input id="palIn" placeholder="Type a command…" role="combobox" aria-expanded="true" aria-controls="palList" aria-autocomplete="list" autocomplete="off" spellcheck="false"><ul id="palList" role="listbox" aria-label="Commands"></ul></div>
 <div class="toasts" id="toasts" aria-live="polite"></div>
 <div class="selbar" id="selbar" role="toolbar" aria-label="Selection"><button type="button" data-sa="ask"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.1" aria-hidden="true"><path d="M2.5 3.5h11v7h-6l-3 2.5v-2.5h-2z"/></svg><span>Ask EXPIRA</span></button><button type="button" data-sa="explain"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.1" aria-hidden="true"><circle cx="8" cy="8" r="5.5"/><path d="M6.4 6.4a1.7 1.7 0 113 1c-.6.4-1.4.8-1.4 1.6M8 11v.3"/></svg><span>Explain</span></button><button type="button" data-sa="define"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.1" aria-hidden="true"><path d="M3 2.5h7.5L13 5v8.5H3z"/><path d="M5.5 7h5M5.5 9.5h5M5.5 12h3"/></svg><span>Define</span></button><i class="sep"></i><button type="button" data-sa="copy"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.1" aria-hidden="true"><rect x="5.5" y="5.5" width="8" height="8" rx="1"/><path d="M10.5 5.5v-2a1 1 0 00-1-1h-6a1 1 0 00-1 1v6a1 1 0 001 1h2"/></svg><span>Copy</span></button><button type="button" data-sa="newchat"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.1" aria-hidden="true"><path d="M8 3v10M3 8h10"/></svg><span>New chat</span></button></div>
 <div class="defc" id="defc" role="dialog" aria-label="Definition"><div class="dk cap">Define</div><div class="dt" id="defT"></div><p class="dd" id="defD"></p><div class="da"><button type="button" class="ab" data-sa="ask">Ask more</button><button type="button" class="ab" data-dclose>Close</button></div></div>
@@ -2042,7 +2048,7 @@ $("#stgX").onclick=()=>setMenu(false);
 /* the account row shows the viewer's own name from settings, never a built-in one */
 function meR(){const n=PREF.full||PREF.name,ini=n?n.split(/\s+/).filter(Boolean).map(w=>w[0]).filter(c=>/\p{L}/u.test(c)).slice(0,2).join("").toUpperCase():"";
  document.querySelectorAll('[data-me="av"]').forEach(x=>x.innerHTML=ini?esc(ini):`<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.1" aria-hidden="true"><circle cx="8" cy="6" r="2.6"/><path d="M3.2 13.2c.8-2.4 2.6-3.6 4.8-3.6s4 1.2 4.8 3.6"/></svg>`);
- document.querySelectorAll('[data-me="n"]').forEach(x=>x.textContent=n||"Your account");document.querySelectorAll('[data-me="o"]').forEach(x=>x.textContent=PREF.org||(n?"":"Add your name in Settings"))}
+ document.querySelectorAll('[data-me="n"]').forEach(x=>x.textContent=n||"Your account");document.querySelectorAll('[data-me="o"]').forEach(x=>x.textContent=PREF.org||(n?"":"Add your name"))}
 meR();
 /* the name row opens a small account menu, upward; a second click closes it */
 POUR.attach($("#acct"),{blur:true});
@@ -2194,9 +2200,12 @@ $("#jump").onclick=()=>{stick=true;sc.scrollTo({top:1e9,behavior:reduce?"auto":"
 const CMDS=[["Appearance: light","",()=>applyTheme("light",true)],["Appearance: dark","",()=>applyTheme("dark",true)],["Appearance: system","",()=>applyTheme("system",true)],["Settings","⌘,",()=>setTimeout(()=>setMenu(true),60)],["Settings: appearance","",()=>{STAB="appearance";setTimeout(()=>setMenu(true),60)}],["Settings: the map","",()=>{STAB="map";setTimeout(()=>setMenu(true),60)}],["Open a kernel template","",()=>{STAB="kernel";setTimeout(()=>setMenu(true),60)}],["Keyboard shortcuts","?",()=>setTimeout(()=>keys(true),30)],["New chat","⌥N",newChat],["Open the Dispatch","⌥L",()=>openLatest()],["Brief options","",()=>{STAB="briefs";setTimeout(()=>setMenu(true),60)}],["Toggle client-safe","",()=>{OPT.safe=!OPT.safe;saveOpt();drawOpt();toast(OPT.safe?"Client-safe on":"Client-safe off")}],["New folder","",()=>newFolder()],["Rename this chat","F2",()=>cur&&renameChat(cur)],["Archive this chat","",()=>cur&&!busy&&archiveChat(cur)],["Delete this chat","",()=>cur&&!busy&&deleteChat(cur)],["Search chats","/",()=>{setFold(false);$("#side").classList.add("searching");$("#find").focus()}],["Stop the run","Esc",()=>ctl?.abort()],["Toggle sidebar","",()=>app.classList.toggle("folded")]];
 POUR.attach($("#pal"),{blur:true});
 let ps=0;const pal=o=>{$("#pal").classList.toggle("open",o);$("#veil").classList.toggle("open",o);if(o){$("#palIn").value="";ps=0;drawPal();setTimeout(()=>$("#palIn").focus(),30)}};
-function drawPal(){const q=$("#palIn").value.toLowerCase(),L=CMDS.filter(c=>c[0].toLowerCase().includes(q));ps=Math.min(ps,Math.max(0,L.length-1));$("#palList").innerHTML=L.map((c,i)=>`<li class="${i===ps?"on":""}" data-i="${CMDS.indexOf(c)}">${c[0]}${c[1]?`<span class="kb">${c[1]}</span>`:""}</li>`).join("")||`<li class="empty">No command matches.</li>`}
+function drawPal(){const q=$("#palIn").value.toLowerCase(),L=CMDS.filter(c=>c[0].toLowerCase().includes(q));ps=Math.min(ps,Math.max(0,L.length-1));$("#palList").innerHTML=L.map((c,i)=>`<li role="option" id="pc${i}" aria-selected="${i===ps}" class="${i===ps?"on":""}" data-i="${CMDS.indexOf(c)}">${c[0]}${c[1]?`<span class="kb" aria-hidden="true">${c[1]}</span>`:""}</li>`).join("")||`<li class="empty" role="presentation">No command matches.</li>`;palOn()}
+/* one highlighted row, moved by the keys or by the pointer, without redrawing the list */
+function palOn(){const I=$("#palIn"),li=[...$("#palList").querySelectorAll("[data-i]")];li.forEach((x,i)=>{x.classList.toggle("on",i===ps);x.setAttribute("aria-selected",String(i===ps))});const a=li[ps];if(a){I.setAttribute("aria-activedescendant",a.id);a.scrollIntoView({block:"nearest"})}else I.removeAttribute("aria-activedescendant")}
+$("#palList").addEventListener("pointermove",e=>{const li=e.target.closest("[data-i]");if(!li)return;const i=[...$("#palList").querySelectorAll("[data-i]")].indexOf(li);if(i!==ps){ps=i;palOn()}});
 $("#palIn").addEventListener("input",()=>{ps=0;drawPal()});
-$("#palIn").addEventListener("keydown",e=>{const n=$("#palList").querySelectorAll("[data-i]").length;if(!n)return;if(e.key==="ArrowDown"){ps=(ps+1)%n;drawPal();e.preventDefault()}if(e.key==="ArrowUp"){ps=(ps-1+n)%n;drawPal();e.preventDefault()}if(e.key==="Enter"){const li=$("#palList").children[ps];if(li?.dataset.i){pal(false);CMDS[+li.dataset.i][2]()}}});
+$("#palIn").addEventListener("keydown",e=>{const n=$("#palList").querySelectorAll("[data-i]").length;if(!n)return;if(e.key==="ArrowDown"){ps=(ps+1)%n;palOn();e.preventDefault()}if(e.key==="ArrowUp"){ps=(ps-1+n)%n;palOn();e.preventDefault()}if(e.key==="Enter"){const li=$("#palList").children[ps];if(li?.dataset.i){pal(false);CMDS[+li.dataset.i][2]()}}});
 $("#palList").addEventListener("click",e=>{const li=e.target.closest("[data-i]");if(li){pal(false);CMDS[+li.dataset.i][2]()}});
 const keys=o=>{$("#keys").classList.toggle("open",o);$("#veil").classList.toggle("open",o)};
 $("#veil").onclick=()=>{pal(false);keys(false);setMenu(false);closeFS();closeDoc()};$("#palBtn").onclick=()=>setMenu(true);
