@@ -1,0 +1,16 @@
+date,request_id,step,agent,tier,reason_for_tier,result,redo_count,notes
+2026-09-24,v38-console,D1 routing and budget memo,decision,medium,floor; routine routing decision,DONE (45k tokens),0,internal build of the EXPIRA Console v38
+2026-09-24,v38-console,R1 motion engine research,research,medium,floor; no conflicting sources yet,superseded (v38 reverted),0,emergence from the click point; shadow-safe reveals; springs; physics displacement; metaball budding
+2026-09-24,v38-console,R2 trace and footer research,research,medium,floor,DONE (143k tokens),0,execution-trace flow charts; footer action patterns
+2026-09-24,v38-console,Q0 test-first acceptance QA,reviewer,medium,floor,superseded (v38 reverted),0,acceptance tests for M1-M4 run red on v37 first
+2026-09-24,v38-console,P0 performance baseline,reviewer,medium,floor; optimiser role mapped to reviewer (Bash for profiling; no edits),superseded (v38 reverted),0,perf script and ranked hot spots
+2026-09-24,v38-console,M1a emerge engine,builder,medium,only builder tier (per D1),superseded (v38 reverted),0,shadow-safe openings from the click point; all surfaces; budget 350k
+2026-09-24,v38-console,M2 footer,builder,medium,only builder tier (per D1),superseded (v38 reverted),0,separate buttons and status stamp; budget 180k
+2026-09-24,v38-console,M3a trace data and mini map,builder,medium,only builder tier (per D1),superseded (v38 reverted),0,execution order data and swimlane mini map; budget 300k
+2026-09-24,v38-console,M4 buffered Field births,builder,medium,only builder tier (per D1),superseded (v38 reverted),0,queue plus swell/neck/release budding; budget 220k
+2026-09-24,v38-console,M3b Dispatch Flow redesign,builder,medium,only builder tier (per D1),superseded (v38 reverted),0,TraceMap engine (full + mini presets) per trace.md; budget 400k
+2026-09-24,v38-console,request,orchestrator,,,REJECTED: v38 reverted to v37,1,whole-iteration redo; modules split across five builders became fragile at the seams
+2026-09-25,v41-rebuild,R1 pour research,research,high,parallel independent research (plan Phase 1); run as general-purpose with the research-high brief because the repo agents were not loaded at session start,DONE (307k tokens),0,droplet 32 / inset bloom 30 / seven-slice 30; one spring drives every layer
+2026-09-25,v41-rebuild,R2 execution maps research,research,high,parallel independent research (plan Phase 1); same note as R1,DONE (264k tokens),0,canvas-first hybrid; event-sourced graph model; confirmed map defects D-M1 to D-M4
+2026-09-25,v41-rebuild,R3 spectrogram research,research,high,parallel independent research (plan Phase 1); same note as R1,DONE (274k tokens),0,recommends a token raster over an FFT; plan 3.6 change goes to Duke at Gate A
+2026-09-26,laya-grounding,request,orchestrator,high,design and build across console and orchestrator,DONE,0,LAYA as the default middleman; grounding gate in the console; no agents launched

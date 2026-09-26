@@ -1,0 +1,85 @@
+.menu.ctx{width:224px}
+.menu .sub{display:none;border-left:var(--rule-hair) solid var(--line-2);margin:var(--sp-half) 0 var(--sp-half) var(--sp-3);padding-left:var(--sp-1)}
+.menu .sub.open{display:block;animation:evIn var(--t-enter) var(--ease-out) both}
+.menu button .ic{width:14px;height:14px;color:var(--soft);flex:none}
+.menu button.danger{color:var(--bad)}
+.menu button.danger .ic{color:var(--bad)}
+.menu .mh.plain{text-transform:none;letter-spacing:0;font-size:var(--fs-chrome-2)}
+.seg{display:grid;grid-template-columns:repeat(3,1fr);gap:var(--sp-half);margin:var(--sp-half) var(--sp-1) var(--sp-1);padding:var(--sp-half);border-radius:var(--r-4);background:var(--well);border:var(--rule-hair) solid var(--line-2)}
+.menu .seg button{flex-direction:column;justify-content:center;gap:var(--sp-1);padding:var(--sp-2) var(--sp-1);font-size:var(--fs-chrome-2);color:var(--soft);border-radius:var(--r-2);text-align:center}
+.menu .seg button svg{width:15px;height:15px}
+/* menus open and close with the pour (core/pour.js); at rest they are simply shown or hidden */
+.menu.open{opacity:1;visibility:visible;pointer-events:auto}
+.menu .mh{padding:var(--sp-2) var(--sp-2) var(--sp-1)}
+.menu .sep{height:var(--rule-hair);background:var(--line-2);margin:var(--sp-1h) var(--sp-1)}
+.menu button{display:flex;align-items:center;gap:var(--sp-2h);width:100%;border:0;background:transparent;border-radius:var(--r-3);padding:var(--sp-2) var(--sp-2);cursor:pointer;text-align:left;color:var(--text);font-size:var(--fs-ui);transition:background var(--t-exit) var(--ease-soft-close)}
+.menu button:hover,.menu button:focus-visible{background:var(--line);outline:none}
+.menu .t{flex:1;display:flex;flex-direction:column;gap:1px}
+.menu small{font-size:var(--fs-chrome-2);color:var(--mute);line-height:1.35}
+.menu .ck{width:12px;height:12px;flex:none;position:relative}
+.menu [aria-checked="true"] .ck::after{content:"";position:absolute;left:3px;top:0;width:4px;height:8px;border:solid var(--gold);border-width:0 1.2px 1.2px 0;transform:rotate(45deg);animation:tick var(--t-enter) var(--ease-out) both}
+.menu .sw{width:24px;height:14px;flex:none;border-radius:var(--r-5);background:var(--line-3);position:relative;transition:background var(--t-exit) var(--ease-soft-close)}
+.menu .sw::after{content:"";position:absolute;left:2px;top:2px;width:10px;height:10px;border-radius:var(--r-round);background:var(--panel);transition:transform var(--t-move) var(--ease-soft-close)}
+.menu [aria-checked="true"] .sw{background:var(--gold)}
+.menu [aria-checked="true"] .sw::after{transform:translateX(10px)}
+.menu [aria-disabled="true"]{opacity:.55;cursor:default}
+/* options: small, like a model list */
+.menu.opt{width:212px;padding:var(--sp-1)}
+.menu.opt .mh{padding:var(--sp-2) var(--sp-2) var(--sp-1)}
+.menu.opt>button{padding:var(--sp-1) var(--sp-2);font-size:var(--fs-ui);gap:var(--sp-2);border-radius:var(--r-2)}
+.menu.opt .ck,.menu.opt .sw{margin-left:auto}
+.menu.opt .sw{width:22px;height:12px}
+.menu.opt .sw::after{width:8px;height:8px}
+.seg2{display:grid;grid-template-columns:1fr 1fr;gap:var(--sp-half);margin:var(--sp-half) var(--sp-1) var(--sp-1);padding:var(--sp-half);border-radius:var(--r-3);background:var(--well);border:var(--rule-hair) solid var(--line-2)}
+.menu .seg2 button[aria-checked="true"]{background:var(--panel);color:var(--ink);box-shadow:var(--e1)}
+.menu .hint{margin:var(--sp-1) var(--sp-1) 0;padding:var(--sp-2) var(--sp-1) var(--sp-1);border-top:var(--rule-hair) solid var(--line);font:italic 400 var(--fs-chrome-2)/1.45 var(--f-display);color:var(--mute);min-height:34px;transition:opacity var(--t-enter) var(--ease-soft-close)}
+.menu .hint.swap{opacity:0}
+.seg3{display:inline-flex;flex:none;padding:var(--sp-half);border-radius:var(--r-2);background:var(--well);border:var(--rule-hair) solid var(--line-2)}
+.seg3 button{border:0;background:none;padding:var(--sp-half) var(--sp-2);border-radius:var(--r-1);cursor:pointer;font-size:var(--fs-micro);letter-spacing:var(--tracked-tight);text-transform:uppercase;color:var(--mute);transition:background var(--t-exit) var(--ease-soft-close),color var(--t-exit) var(--ease-soft-close)}
+.seg3 button:hover{color:var(--ink)}
+.seg3 button[aria-checked="true"]{background:var(--panel);color:var(--ink);box-shadow:var(--e1)}
+.menu.acct{width:248px}
+.acct-h small{display:block;font-size:var(--fs-chrome-2);color:var(--mute)}
+.menu.acct .seg{margin:var(--sp-half) var(--sp-half) var(--sp-1)}
+.seg2.s3{grid-template-columns:repeat(3,1fr)}
+.menu .seg button[aria-checked="true"]{background:var(--panel);box-shadow:inset 0 0 0 var(--rule-hair) var(--gold),var(--e1);color:var(--ink)}
+.menu .seg button[aria-checked="true"] svg{color:var(--gold)}
+/* a chosen segment already carries the panel fill, so keyboard focus draws the gold ring instead */
+.menu .seg button[aria-checked="true"]:focus-visible,.menu .seg2 button[aria-checked="true"]:focus-visible,.seg3 button[aria-checked="true"]:focus-visible{outline:var(--rule) solid var(--gold);outline-offset:1px}
+.menu.opt#optMenu{width:232px}
+.menu .seg2 button{justify-content:center;font-size:var(--fs-chrome-2);color:var(--soft);border-radius:var(--r-1);white-space:nowrap;padding:var(--sp-1) var(--sp-1)}
+/* mercury segments and poured menus */
+.seg2,.menu .seg{position:relative}
+.seg2>button,.menu .seg>button{position:relative;z-index:var(--z-1)}
+.merc{position:absolute;z-index:var(--z-0);border-radius:var(--r-1);background:var(--panel);box-shadow:var(--e1);pointer-events:none;opacity:0}
+.moving>.merc{opacity:1}
+.moving>button[aria-checked="true"]{background:transparent;box-shadow:none}
+.menu .seg .merc{border-radius:var(--r-2)}
+/* claim cards, open threads, documents that drip in */
+.cpop{position:fixed;z-index:var(--z-pop);width:300px;padding:var(--sp-2) var(--sp-3) var(--sp-2);background:var(--panel);border:var(--rule-hair) solid var(--line-3);border-radius:var(--r-4);box-shadow:var(--e2);pointer-events:auto}
+.cpop[hidden]{display:none}
+#cpop{visibility:hidden;opacity:0;pointer-events:none}
+#cpop.open{visibility:visible;opacity:1;pointer-events:auto}
+.cpop::after{content:"";position:absolute;left:var(--ax,50%);top:100%;width:6px;height:6px;margin:calc(var(--sp-1) * -1) 0 0 calc(var(--sp-1) * -1);background:var(--panel);border:solid var(--line-3);border-width:0 var(--rule-hair) var(--rule-hair) 0;transform:rotate(45deg)}
+.cpop.below::after{top:0;transform:rotate(-135deg)}
+:is(.cpop,.cpv) .ch{display:flex;align-items:center;gap:var(--sp-2);font-size:var(--fs-micro);letter-spacing:.14em;text-transform:uppercase;color:var(--mute)}
+:is(.cpop,.cpv) .ch b{font-weight:500;letter-spacing:0;text-transform:none;color:var(--gold-ink);font-size:var(--fs-micro)}
+:is(.cpop,.cpv) .ch .cf{margin-left:auto;letter-spacing:.02em;text-transform:none;font-size:var(--fs-micro)}
+:is(.cpop,.cpv) .vd{display:inline-flex;align-items:center;gap:var(--sp-1)}
+:is(.cpop,.cpv) .vd i{width:5px;height:5px;border-radius:var(--r-round);background:var(--mute)}
+:is(.cpop,.cpv) .v-supported i{background:var(--ok)}
+:is(.cpop,.cpv) .v-derived i{background:none;border:1px solid var(--ok);box-sizing:border-box}
+:is(.cpop,.cpv) .v-partial i{background:var(--gold)}
+:is(.cpop,.cpv) .v-conflict i,.cpop .v-unsupported i{background:var(--bad)}
+:is(.cpop,.cpv) p{margin:var(--sp-1h) 0 var(--sp-1h);font-size:var(--fs-ui);line-height:1.5;color:var(--ink)}
+:is(.cpop,.cpv) .cs{display:flex;flex-wrap:wrap;gap:var(--sp-1);margin-bottom:var(--sp-1h)}
+:is(.cpop,.cpv) .cs span{font-size:var(--fs-chrome);color:var(--soft);border:var(--rule-hair) solid var(--line-2);border-radius:var(--r-1);padding:0 var(--sp-1)}
+:is(.cpop,.cpv) .cs em{font:italic 400 var(--fs-chrome-2)/1.45 var(--f-display);color:var(--soft)}
+:is(.cpop,.cpv) .cx{display:block;font:italic 400 var(--fs-chrome-2) var(--f-display);color:var(--gold-ink)}
+.moving>[aria-selected="true"]{background:transparent}
+.menu{position:fixed;left:0;top:0;z-index:var(--z-menu);width:268px;background:var(--panel);border:var(--rule-hair) solid var(--line-3);border-radius:var(--r-5);box-shadow:var(--e2);padding:var(--sp-1h);opacity:0;visibility:hidden;pointer-events:none}
+.chov{width:280px;opacity:0;transform:translateX(-4px);transition:opacity var(--t-enter) var(--ease-soft-close),transform var(--t-move) var(--spring);pointer-events:none}
+.chov.in{opacity:1;transform:none}
+:is(.chov,.cpv) .ct{margin:var(--sp-1h) 0 var(--sp-1);font:400 var(--fs-body)/1.4 var(--f-display);color:var(--ink);text-wrap:balance}
+:is(.chov,.cpv) .cq{margin:0 0 var(--sp-2);font-size:var(--fs-chrome-2);line-height:1.5;color:var(--soft)}
+.chov::after{display:none}

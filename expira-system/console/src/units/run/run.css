@@ -1,0 +1,194 @@
+/* working block: Claude's thinking row, set in EXPIRA type */
+@keyframes shim{to{transform:translateX(100%)}}
+.chev{width:12px;height:12px;color:var(--mute);transition:transform var(--t-move) var(--ease-soft-close)}
+/* the sheen: one hairline, one continuous glide, then it settles */
+.sheen{height:var(--rule-hair);background:var(--line-2);position:relative;overflow:hidden;margin-bottom:var(--sp-half)}
+.sheen::before{content:"";position:absolute;top:0;bottom:0;left:0;width:34%;background:linear-gradient(90deg,transparent,var(--gold-hi),transparent);transform:translateX(-100%);animation:sheen var(--t-loop) var(--ease-inout) infinite;opacity:1;transition:opacity var(--t-exit) var(--ease-soft-close)}
+@keyframes sheen{to{transform:translateX(300%)}}
+.sheen::after{content:"";position:absolute;inset:0;background:linear-gradient(90deg,transparent,color-mix(in srgb,var(--gold) 70%,transparent));transform:scaleX(0);transform-origin:left;transition:transform var(--t-move) var(--ease-soft-close)}
+@keyframes evIn{from{opacity:0;transform:translateY(3px)}to{opacity:1;transform:none}}
+.glyph{width:17px;height:6px;flex:none}
+.glyph polygon{fill:var(--gold);opacity:.25}
+@keyframes fct{0%,100%{opacity:.2}35%{opacity:1}}
+@media (prefers-reduced-motion:reduce){
+.sheen::before{display:none}
+}
+/* the live label: a soft sheen passes over the words, moved by transform (the words themselves never repaint) */
+.run.running .run-h .lbl{position:relative;color:var(--ink)}
+.run.running .run-h .lbl::after{content:"";position:absolute;inset:0;background:linear-gradient(90deg,transparent 30%,color-mix(in srgb,var(--panel) 62%,transparent) 50%,transparent 70%);transform:translateX(-100%);animation:shim var(--t-loop) linear infinite;pointer-events:none}
+.run-h .t,.run-h .rk{font-size:var(--fs-chrome);color:var(--mute)}
+.run.open>.run-h .chev{transform:rotate(90deg)}
+.run-h:hover .chev,.run-h:hover .t{color:var(--ink)}
+.run:not(.running) .sheen::before{opacity:0;animation-play-state:paused}
+.run.settled .sheen::after{transform:scaleX(1)}
+.running .glyph .f1{animation:fct var(--t-loop) var(--ease-inout) infinite}
+.running .glyph .f2{animation:fct var(--t-loop) var(--ease-inout) calc(var(--stagger) * 6) infinite}
+.running .glyph .f3{animation:fct var(--t-loop) var(--ease-inout) calc(var(--stagger) * 13) infinite}
+.running .glyph .f4{animation:fct var(--t-loop) var(--ease-inout) calc(var(--stagger) * 20) infinite}
+.running .glyph .f5{animation:fct var(--t-loop) var(--ease-inout) calc(var(--stagger) * 26) infinite}
+.running .glyph .f6{animation:fct var(--t-loop) var(--ease-inout) calc(var(--stagger) * 33) infinite}
+.run:not(.running) .glyph polygon{opacity:.85}
+.rail li{display:flex;align-items:center;gap:var(--sp-1h);font-size:var(--fs-micro);letter-spacing:var(--tracked-tight);text-transform:uppercase;color:var(--mute);transition:color var(--t-exit) var(--ease-soft-close),opacity var(--t-exit) var(--ease-soft-close)}
+.rail li i{width:5px;height:5px;border-radius:var(--r-round);border:var(--rule) solid var(--line-3);transition:background var(--t-exit) var(--ease-soft-close),border-color var(--t-exit) var(--ease-soft-close);flex:none}
+.rail li .num{letter-spacing:0;text-transform:none;font-size:var(--fs-micro);color:var(--mute)}
+.rail li.on{color:var(--ink)}
+.rail li.on i{border-color:var(--gold);background:var(--gold);animation:breathe var(--t-loop) var(--ease-inout) infinite}
+.rail li.done{color:var(--soft)}
+.rail li.done i{background:var(--soft);border-color:var(--soft)}
+.rail li.skip{opacity:.4}
+.rail li.skip span:first-of-type{text-decoration:line-through;text-decoration-color:var(--line-3)}
+.rail li.stop i,.rail li.bad i{background:var(--bad);border-color:var(--bad)}
+/* disclosures open in place and their content rises in (Gate A: no animated height); closed content leaves the tab order */
+.run-b{display:none}
+.run.open .run-b{display:block}
+.run.open .run-b>div{animation:rise var(--t-enter) var(--ease-out) both}
+.delib{margin:var(--sp-3) 0 0;padding:0 0 0 var(--sp-3);border-left:var(--rule-hair) solid var(--gold)}
+.delib .cap{display:block;margin-bottom:var(--sp-1);color:var(--gold-ink)}
+.delib p{margin:0 0 var(--sp-1);font:italic 400 var(--fs-ui)/1.55 var(--f-display);color:var(--soft);animation:evIn var(--t-enter) var(--ease-out) both}
+.delib p.typing::after{content:"";display:inline-block;width:1px;height:.95em;background:var(--gold);margin-left:var(--sp-half);vertical-align:-.12em;animation:blink var(--t-beat) steps(1) infinite}
+.staff{display:flex;flex-wrap:wrap;gap:var(--sp-1);margin:var(--sp-2h) 0 0}
+.staff:empty{display:none}
+.chip{display:inline-flex;align-items:baseline;gap:var(--sp-1);border:var(--rule-hair) solid var(--line-2);border-radius:var(--r-1);padding:var(--sp-half) var(--sp-2);font-size:var(--fs-chrome);color:var(--soft);animation:evIn var(--t-enter) var(--ease-out) both}
+.chip b{font:400 var(--fs-chrome) var(--f-display);color:var(--gold-ink)}
+.chip b:empty{display:none}
+.logw{margin-top:var(--sp-2h);border-top:var(--rule-hair) solid var(--line)}
+.logt{display:flex;align-items:center;gap:var(--sp-2);border:0;background:none;padding:var(--sp-2) 0 0;cursor:pointer;width:100%;text-align:left}
+.logt .n{font-size:var(--fs-micro);color:var(--mute)}
+.logt .chev{margin-left:auto}
+.logw.open .logt .chev{transform:rotate(90deg)}
+.logb{display:none}
+.logw.open .logb{display:block}
+.logw.open .logb>div{animation:rise var(--t-enter) var(--ease-out) both}
+.run .rd{margin:var(--sp-1h) 0 0 var(--sp-3h);border:0;background:none;padding:0;cursor:pointer;font:italic 400 var(--fs-ui) var(--f-display);color:var(--gold)}
+.rnote{margin:var(--sp-2) 0 0;font:italic 400 var(--fs-ui)/1.5 var(--f-display);color:var(--bad)}
+.rnote.warn{color:var(--warn)}
+.sb{overflow:auto;padding:var(--sp-4) var(--sp-4h) var(--sp-4h);scrollbar-width:thin}
+.sb .si{animation:blurIn var(--t-enter) var(--ease-out) both}
+.sb .k{color:var(--gold)}
+.sb .k2{display:block;margin:var(--sp-3h) 0 var(--sp-half)}
+.sb h4{font:400 var(--fs-h3)/1.35 var(--f-display);color:var(--ink);margin:var(--sp-1) var(--sp-8) var(--sp-1h) 0;text-wrap:balance}
+.sb h5{font:400 var(--fs-body)/1.4 var(--f-display);color:var(--ink);margin:0 0 var(--sp-1)}
+.sb .mt{display:flex;flex-wrap:wrap;gap:var(--sp-1) var(--sp-3);font-size:var(--fs-chrome);color:var(--mute)}
+.sb .mt .pass{color:var(--ok)}
+.sb .mt .fail{color:var(--bad)}
+.sb .tk{font:italic 400 var(--fs-ui)/1.55 var(--f-display);color:var(--text);margin:var(--sp-1h) 0 var(--sp-2)}
+.sb .pg{padding:var(--sp-3) 0;border-top:var(--rule-hair) solid var(--line-2);margin-top:var(--sp-3)}
+.sb .ex{list-style:none;margin:var(--sp-2h) 0 var(--sp-2);padding:0}
+.sb .ex li{position:relative;padding:0 0 0 var(--sp-4);margin:0 0 var(--sp-2);font-size:var(--fs-ui);line-height:1.62;color:var(--text)}
+.sb .ex li::before{content:"¶";position:absolute;left:0;top:0;color:var(--gold);font-family:var(--f-display);font-size:var(--fs-chrome-2)}
+.sb a.go{font:italic 400 var(--fs-ui) var(--f-display);color:var(--gold-ink);text-decoration:none}
+.sb a.go:hover{color:var(--ink)}
+.sb .nt2{white-space:pre-wrap;word-break:break-word;font-size:var(--fs-ui);line-height:1.62;color:var(--text);border-left:var(--rule-hair) solid var(--gold);padding-left:var(--sp-3);margin-top:var(--sp-1h)}
+.sb .dl2 p{margin:0 0 var(--sp-1);font:italic 400 var(--fs-ui)/1.55 var(--f-display);color:var(--soft)}
+.sb .ql{list-style:none;margin:var(--sp-1) 0 0;padding:0}
+.sb .ql li{display:grid;grid-template-columns:34px 1fr;gap:var(--sp-2h);padding:var(--sp-1) 0;border-top:var(--rule-hair) solid var(--line);font-size:var(--fs-ui);color:var(--text)}
+.sb .ql .num{font-size:var(--fs-chrome);color:var(--mute);padding-top:1px}
+.sb .ql b.dk{font:400 var(--fs-chrome-2) var(--f-display);color:var(--gold-ink)}
+.sb .lnk{border:0;background:none;padding:0;cursor:pointer;color:var(--ink);text-align:left;text-decoration:underline;text-decoration-color:var(--gold);text-underline-offset:3px;font:inherit}
+.rail{list-style:none;margin:var(--sp-2) 0 0;padding:0;display:flex;flex-wrap:wrap;align-items:center;row-gap:var(--sp-1h);column-gap:var(--sp-4)}
+.rail li+li::before{content:"";width:12px;height:var(--rule-hair);background:var(--line-3);margin:0 var(--sp-2) 0 var(--sp-2);display:none}
+.run .ev{max-height:150px;overflow:auto;margin:var(--sp-2) 0 var(--sp-half);scrollbar-width:thin;-webkit-mask-image:linear-gradient(transparent,#000 16px);mask-image:linear-gradient(transparent,#000 16px);padding-top:var(--sp-2h);padding-right:var(--sp-4);scrollbar-gutter:stable}
+:root[data-density="compact"] .run{padding:var(--sp-2) var(--sp-3) var(--sp-2)}
+.sb .age{color:var(--mute)}
+.sb .age.old{color:var(--warn)}
+.sb,.delib{-webkit-user-select:text;user-select:text}
+.sb .vchip{display:inline-flex;align-items:center;gap:var(--sp-1)}
+.sb .vchip i{width:6px;height:6px;border-radius:var(--r-round)}
+/* the thinking line: one live sentence, a stream beneath it that drips in, moments that swell and settle */
+.run .rail,.run .staff,.run .logw{display:none}
+.run-h{display:flex;align-items:center;gap:var(--sp-2h);border:0;background:none;cursor:pointer;text-align:left;color:var(--soft);width:100%;padding:1px 0 var(--sp-1);font-size:var(--fs-ui)}
+.run-h .lbl{flex:1;min-width:0;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;letter-spacing:.005em;transition:opacity var(--t-exit) var(--ease-soft-close),filter var(--t-exit) var(--ease-soft-close)}
+.run-h .lbl.swap{opacity:0;filter:blur(var(--blur-exit))}
+.run.settled .run-h .t{display:none}
+.run.running .now:not(:empty){display:block}
+.run .now.ink{animation:ink var(--t-enter) var(--ease-out) both}
+.run .delib{margin:0 0 var(--sp-half);padding:0;border:0}
+.run .delib .cap{display:none}
+.run .delib p::before,.strm .se::before{content:"";position:absolute;left:-17px;top:.72em;width:7px;height:7px;border-radius:var(--r-round);background:var(--sheet);border:1px solid var(--line-3);box-sizing:border-box}
+.run .delib p::before{border-color:var(--gold)}
+.strm{list-style:none;margin:0;padding:0}
+.strm li{position:relative}
+.strm .se{display:flex;gap:var(--sp-3);align-items:baseline;margin:0 0 0 calc(var(--sp-2) * -1);padding:var(--sp-half) var(--sp-2);border-radius:var(--r-3);font-size:var(--fs-ui);line-height:1.5;color:var(--soft)}
+.strm .se::before{left:-10px}
+.strm .se .sx{flex:1;min-width:0}
+.strm .se em{font-style:italic;color:var(--text)}
+.strm .se.k-desk::before{background:var(--line-3)}
+.strm .se.mo{color:var(--text)}
+.strm .se.mo::before{border-color:var(--gold);background:var(--gold)}
+.strm .se.k-end::before{background:var(--ink);border-color:var(--ink)}
+.strm .sb:first-child{padding-top:var(--sp-1)}
+.strm .old{display:none}
+.strm .fold{padding:1px 0 var(--sp-1)}
+.fbtn:hover{border-color:var(--line-3);color:var(--ink)}
+.fbtn i{width:14px;height:1px;background:var(--line-3);box-shadow:0 -3px 0 var(--line-2),0 3px 0 var(--line-2)}
+/* a moment swells: a gold wash under the line comes up and settles, on its own layer (opacity only) */
+.strm .se.mo{position:relative}
+.strm .se .sw{position:absolute;inset:0;border-radius:inherit;background:var(--gold-wash);box-shadow:inset 1px 0 0 0 var(--gold);opacity:0;pointer-events:none}
+.strm .se.mo.new .sw{animation:swell calc(var(--t-exit) * 2) calc(var(--stagger) * 5) var(--ease-inout) both}
+@keyframes drip{0%{transform:translateY(-8px) scaleY(1.7);opacity:0}25%{opacity:.9}82%{transform:translateY(13px) scaleY(1.25);opacity:.9}100%{transform:translateY(15px) scale(2.2,.35);opacity:0}}
+@keyframes swell{30%,60%{opacity:1}}
+@media (prefers-reduced-motion:reduce){
+.strm li.new::after{display:none}
+}
+@media (max-width:560px){
+.run-h .rk{display:none}
+.run.settled .run-h .lbl{white-space:normal;line-height:1.4}
+}
+[data-docsave].drip::after{content:"";position:absolute;left:50%;top:-10px;width:4px;height:8px;margin-left:calc(var(--sp-half) * -1);border-radius:50% 50% 50% 50%/62% 62% 38% 38%;background:var(--gold);pointer-events:none;animation:drip var(--t-enter) var(--ease-soft-close) both}
+@media (prefers-reduced-motion:reduce){
+[data-docsave].drip::after{display:none}
+}
+.cost .cl .tk{margin-left:auto}
+.cost .dp{display:flex;flex-wrap:wrap;gap:var(--sp-1)}
+/* the run card: stays in place, only ever adds */
+.run{display:flex;flex-direction:column;border:var(--rule-hair) solid var(--line-2);background:var(--sheet);padding:var(--sp-2) var(--sp-3) var(--sp-2);border-radius:var(--r-5);position:relative;--fr-bg:var(--sheet);--fr-line:var(--line-2);--fr-r:var(--r-5)}
+/* once it has opened or closed, the card is drawn by its frame (base.css .dfr) so the frame can follow the edge */
+.run:has(>.dfr){border-color:transparent;background:transparent;isolation:isolate}
+.run .rv{position:absolute;right:36px;top:6px;display:flex;align-items:center;gap:var(--sp-1h);opacity:0;pointer-events:none;transform:translateY(-2px);transition:opacity var(--t-exit) var(--ease-soft-close),transform var(--t-move) var(--ease-soft-close)}
+.run.open .rv{opacity:1;pointer-events:auto;transform:none}
+.run.running .rv{right:84px}
+.run.open .run-h .rk{visibility:hidden}
+.run.settled.open .run-h .lbl{padding-right:118px}
+.run.running.open .run-h .lbl{padding-right:150px}
+.vs{position:relative;display:inline-grid;grid-auto-flow:column;gap:0;height:20px;padding:1px;border:var(--rule-hair) solid var(--line-2);border-radius:var(--r-2);background:var(--well)}
+.vs button{position:relative;z-index:var(--z-1);border:0;background:none;padding:0 var(--sp-2);border-radius:var(--r-1);font-size:var(--fs-micro);letter-spacing:.14em;text-transform:uppercase;color:var(--mute);cursor:pointer;transition:color var(--t-exit)}
+.vs button[aria-pressed="true"]{color:var(--ink);background:var(--panel);box-shadow:0 0 0 var(--rule-hair) var(--line-2)}
+.vs button:hover{color:var(--ink)}
+/* the map sits behind a toggle and pours open from it */
+.run[data-view="log"] .mini{display:none}
+.run[data-view="map"] .flow,.run[data-view="map"] .cost,.run[data-view="map"] .ledw{display:none}
+.run .mini{position:relative;margin:var(--sp-1h) 0 var(--sp-half);min-height:96px;animation:ink var(--t-enter) var(--ease-out) both}
+.run .mini:empty::before{content:"The map fills in as desks are staffed.";display:block;padding:var(--sp-9) 0;text-align:center;font:italic 400 var(--fs-ui) var(--f-display);color:var(--mute)}
+/* !important: a closed or off-screen surface rests; beats each unit's animation shorthand */
+.run[data-off] *,.run[data-off] *::before,.run[data-off] *::after{animation-play-state:paused!important}
+/* a denser, quieter log */
+.run .flow{position:relative;margin:var(--sp-1h) 0 0;padding-left:var(--sp-4)}
+.run .flow::before{content:"";position:absolute;bottom:10px;width:1px;left:3px;top:7px;background:linear-gradient(var(--line-2),var(--line) 70%,transparent)}
+.run .delib p{position:relative;margin:0;font-size:var(--fs-ui);line-height:1.5;padding:1px 0}
+.run .delib p::before,.strm .se::before{width:5px;height:5px;top:.66em;left:-15px}
+.strm .se::before{left:-8px}
+.strm .se{font-size:var(--fs-chrome-2);line-height:1.45;padding:1px var(--sp-1h);margin-left:calc(var(--sp-1h) * -1);gap:var(--sp-2h)}
+.strm .se .x{color:var(--mute);flex:none;letter-spacing:.02em;font-size:var(--fs-micro)}
+.strm .sb{text-transform:uppercase;color:var(--mute);padding:var(--sp-1h) 0 1px;font-size:var(--fs-micro);letter-spacing:.18em}
+/* liquid: a drop runs down the stem, lands, and the dot jellies; the words ink in */
+.strm li.new::after{content:"";position:absolute;top:-6px;border-radius:50% 50% 50% 50%/62% 62% 38% 38%;background:var(--gold);pointer-events:none;animation:drip var(--t-enter) var(--ease-soft-close) both;left:-13.5px;width:2.5px;height:6px}
+.fbtn{display:inline-flex;align-items:center;gap:var(--sp-2);border:var(--rule-hair) solid var(--line-2);background:none;border-radius:var(--r-2);cursor:pointer;color:var(--soft);transition:border-color var(--t-exit),color var(--t-exit);font-size:var(--fs-micro);height:18px;padding:0 var(--sp-2) 0 var(--sp-1h)}
+.cost{display:flex;flex-direction:column;margin:var(--sp-1h) 0 0 var(--sp-4);gap:var(--sp-1)}
+.cost .cl{display:flex;flex-wrap:wrap;letter-spacing:.14em;text-transform:uppercase;color:var(--mute);font-size:var(--fs-micro);gap:var(--sp-half) var(--sp-3)}
+.cost .cl b{font-weight:400;letter-spacing:.02em;text-transform:none;color:var(--soft);margin-left:var(--sp-1h);font-size:var(--fs-micro)}
+.run .now{display:none;margin:-1px 0 var(--sp-1) var(--sp-7);font:italic 400 var(--fs-ui)/1.45 var(--f-display);color:var(--soft);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-size:var(--fs-ui);margin-left:var(--sp-6)}
+@media (max-width:560px){
+.run .rv{right:44px}
+.run.open .rv{position:static;margin:var(--sp-half) 0 var(--sp-1h) var(--sp-7)}
+.run.open .run-h .lbl{padding-right:0;white-space:normal}
+}
+.strm .se::before{left:-9px}
+.strm .se.k-web::before{border-style:solid}
+.strm .se.new::after{left:-7.75px}
+.strm .sb.new::after{top:0;left:-13.75px}
+.strm .sb::before{content:"";position:absolute;top:50%;margin-top:var(--sp-1);height:1px;background:var(--line-3);left:-12px;width:5px}
+/* nothing arrives before its parent */
+.strm .se.new::before{animation:mnb var(--t-move) var(--spring) both calc(var(--stagger) * 3);animation-delay:calc(var(--stagger) * 8)}
+.strm li.new>span,.strm li.new .sx{animation:ink var(--t-enter) calc(var(--stagger) * 3) var(--ease-out) both;animation-delay:calc(var(--stagger) * 9)}
+.run .rk{transition:opacity var(--t-exit) var(--ease-soft-close)}
+.run:hover .rk,.run.open .rk{opacity:0}

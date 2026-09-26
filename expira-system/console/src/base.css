@@ -1,0 +1,36 @@
+html,body{height:100%}
+body{margin:0;background:var(--bg);color:var(--text);font:300 var(--fs-body)/1.6 var(--f-body);-webkit-font-smoothing:antialiased;overflow:hidden}
+button,input,textarea{font:inherit;color:inherit}
+:focus-visible{outline:var(--rule) solid var(--gold);outline-offset:2px;border-radius:var(--r-1)}
+.sr{position:absolute;left:-9999px}
+.num{font-variant-numeric:tabular-nums;letter-spacing:var(--tracked-num)}
+.cap{font-size:var(--fs-micro);font-weight:400;letter-spacing:var(--tracked);text-transform:uppercase;color:var(--mute)}
+.capt{font-size:var(--fs-micro);font-weight:400;letter-spacing:var(--tracked-tight);text-transform:uppercase;color:var(--mute)}
+.serif{font-family:var(--f-display);font-weight:400}
+/* the shared entrance: fade with a soft blur, soft close */
+/* blurIn is for small surfaces only (Gate A); large blocks and streamed words rise without a filter */
+@keyframes blurIn{from{opacity:.001;filter:blur(var(--blur-enter));transform:translateY(6px)}to{opacity:1;filter:none;transform:none}}
+@keyframes rise{from{opacity:.001;transform:translateY(6px)}to{opacity:1;transform:none}}
+.bi{animation:rise var(--t-enter) var(--ease-out) both}
+/* a disclosure's drawn frame (core/ui.js disclose): a top cap, a band that scales on Y, a bottom cap that travels with the edge.
+   At rest the three pieces draw exactly the card's own hairline and fill; the host sets --fr-bg, --fr-line and --fr-r */
+.dfr{position:absolute;inset:calc(var(--rule-hair) * -1);z-index:-1;pointer-events:none}
+.dfr>b{position:absolute;left:0;right:0;background:var(--fr-bg);border:var(--rule-hair) solid var(--fr-line)}
+.dfr>b:nth-child(1){top:0;height:var(--fr-r);border-bottom:0;border-radius:var(--fr-r) var(--fr-r) 0 0}
+.dfr>b:nth-child(2){top:calc(var(--fr-r) - 1px);bottom:calc(var(--fr-r) - 1px);border-top:0;border-bottom:0;border-radius:0;transform-origin:top}
+.dfr>b:nth-child(3){bottom:0;height:var(--fr-r);border-top:0;border-radius:0 0 var(--fr-r) var(--fr-r)}
+.grain{position:relative;isolation:isolate}
+.grain::after{content:"";position:absolute;inset:0;pointer-events:none;background-image:var(--grain);background-size:150px;mix-blend-mode:soft-light;opacity:.6;-webkit-mask:var(--gmask) center/contain no-repeat;mask:var(--gmask) center/contain no-repeat}
+.app{display:flex;height:100%}
+/* scrollbars: thin, quiet, and never against the text */
+*{box-sizing:border-box;scrollbar-width:thin;scrollbar-color:var(--line-3) transparent}
+/* !important: the motion kill switch must beat every unit's own motion */
+html.calm *,html.calm *::before,html.calm *::after{animation:none!important;transition:none!important}
+::selection{background:var(--sel);color:inherit}
+.ib{width:30px;height:30px;display:grid;place-items:center;border:0;background:transparent;border-radius:var(--r-3);cursor:pointer;color:var(--soft);transition:background var(--t-exit) var(--ease-soft-close),color var(--t-exit) var(--ease-soft-close);padding:0}
+/* ink, steer, costs, beads, the liquid field */
+.w{animation:inkw var(--t-enter) var(--ease-out) both}
+@keyframes inkw{from{opacity:0;transform:translateY(1.5px)}to{opacity:1;transform:none}}
+::view-transition-old(root),::view-transition-new(root){animation-duration:var(--t-move);animation-timing-function:var(--ease-inout)}
+@property --fs{syntax:"<length>";inherits:false;initial-value:0px}
+@property --fe{syntax:"<length>";inherits:false;initial-value:0px}
