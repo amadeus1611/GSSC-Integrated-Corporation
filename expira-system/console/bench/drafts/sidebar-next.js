@@ -241,8 +241,6 @@ const SB=(()=>{const side=$("#side"),scroll=$("#sbScroll");
 
  /* ---- sync: the one move ---- */
  function sync(pre,o={}){const t00=performance.now();if(o.field&&o.field!=="filter")hlS.hold(ms("--sb-move"));else hlS.off();
-  /* where the path bar's steps are, so a row can hand over to it or come back from it */
-  const cr0=o.field?new Map([...crumbs.children].map(x=>[x.dataset.k,x.getBoundingClientRect()])):null;
   /* read: where every row is (one layout), and where the names start for the rows on or near the screen */
   const v0=scroll.getBoundingClientRect(),near0=y=>y>=v0.top-v0.height&&y<=v0.bottom+v0.height;
   const before=new Map(),bx=new Map(),tx=e=>e.querySelector(".sb-t")?.getBoundingClientRect().left||0;
@@ -254,7 +252,9 @@ const SB=(()=>{const side=$("#side"),scroll=$("#sbScroll");
   if(rootId&&!SYS[rootId]&&!find(rootId)){const was=rootAnc;rootId=[...was].reverse().find(id=>find(id))||null;const i=rootId?was.indexOf(rootId):-1;o={...o,field:"out",chain:was.slice(i+1)};hlS.hold(ms("--sb-move"))}
   IND=parseFloat(tok("--sb-indent"))||12;rollup();
   const want=flat(),keep=new Set(want.map(w=>w.id));if(arr&&!keep.has(arr))arrange(null);
-  if(o.chain)o={...o,anchor:[...o.chain].reverse().find(id=>keep.has(id))||null};
+  /* stepping out, the anchor is the deepest folder of the path the new list shows; stepping in, the shallowest one the
+     old list showed (the row you went through) */
+  if(o.chain)o={...o,anchor:o.field==="out"?[...o.chain].reverse().find(id=>keep.has(id))||null:o.chain.find(id=>before.has(id))||null};
   /* rows that leave: on or near the screen, they are pinned where they are, out of the flow, so the rows below can rise
      over them as they rack out; further away they simply go. All the reads come first, then the writes. */
   const leaving=[],far=[];els.forEach((e,id)=>{if(keep.has(id)||!e.isConnected||e.classList.contains("gone"))return;const y=before.get(id);
@@ -289,7 +289,7 @@ const SB=(()=>{const side=$("#side"),scroll=$("#sbScroll");
   const T=ms("--sb-move"),IN=ms("--sb-in"),OUT=ms("--sb-out"),Es=EZ(),E=easeFn(Es),B=blurPx()*.5,L=leaving.length?Math.round(OUT*.25):0;
   const slide=({dx,dy})=>{const M=Math.min(1.1,Math.hypot(dx,dy)/70);return sampled(T,Es,(p,k)=>({transform:`translate(${(dx*(1-p)).toFixed(2)}px,${(dy*(1-p)).toFixed(2)}px)`,filter:mb(k,M)}))};
   /* the moves that change the whole list (stepping into a folder, out of one, searching) run as one field */
-  if(o.field){field(o,{moved,born,leaving,before,cr0,vr,slide,T,IN,OUT,Es,B,drop});SB_T.last=performance.now()-t00;return}
+  if(o.field){field(o,{moved,born,leaving,before,vr,slide,T,IN,OUT,Es,B,drop});SB_T.last=performance.now()-t00;return}
   /* the rows that stay glide by whole pixels (re-indenting if their depth changed); rising ones wait a beat so what
      leaves can rack out first */
   moved.forEach(m=>m.e.animate(slide(m),{duration:T,easing:"linear",delay:m.dy>0?L:0,fill:"backwards"}));
@@ -309,36 +309,34 @@ const SB=(()=>{const side=$("#side"),scroll=$("#sbScroll");
     stay glide to their new place. Rows that go rack out first, nearest the anchor first, so the space clears; rows that
     arrive then pull focus in order of their distance from the anchor (16ms a row, at most 150ms), so the list unfolds
     from it. Depth, not sideways travel, says "into" and "out of": a
-    lateral slide would say the two lists are peers. Stepping into a folder, its row hands over to the path bar; stepping
-    out, it comes back down from there with its contents. In a search, a row that would cross a long way leaves a ghost
-    where it was and surfaces where it lands, rather than flying across the list. */
- function field(o,{moved,born,leaving,before,cr0,vr,slide,T,IN,OUT,Es,B,drop}){
+    lateral slide would say the two lists are peers. The anchor itself is the still point: stepping out, the folder you
+    left surfaces first, in its place. No row flies a long way: one that would cross more than five rows leaves a ghost
+    where it was and surfaces where it lands. */
+ function field(o,{moved,born,leaving,before,vr,slide,T,IN,OUT,Es,B,drop}){
   const t0=document.timeline.currentTime,go=(el,kf,dur,delay,fill)=>{const a=el.animate(kf,{duration:dur,easing:"linear",delay:delay||0,fill:fill||"none"});a.startTime=t0;return a};
-  const RH=parseFloat(tok("--sb-row"))||24,aRow=o.anchor&&els.get(o.anchor);
-  let ay=vr.top+4;if(o.field==="in"&&o.anchor&&before.has(o.anchor))ay=before.get(o.anchor);else if(o.field==="out"&&aRow&&!aRow.classList.contains("gone"))ay=aRow.getBoundingClientRect().top;
-  const dist=y=>Math.abs(y-ay)/RH;
-  /* one direction per move, so nothing crosses: stepping in, everything rises; stepping out, everything settles down;
-     a search pours its results down out of the field and draws what goes back up into it */
+  const RH=parseFloat(tok("--sb-row"))||24,aRow=o.anchor&&els.get(o.anchor),top=vr.top+4;
+  /* where each half of the move is measured from: stepping in, what leaves folds towards the folder you went through
+     and what arrives unfolds from the top, where the new list begins; stepping out, the reverse */
+  const ayOut=o.field==="in"&&o.anchor&&before.has(o.anchor)?before.get(o.anchor):top;
+  const ayIn=o.field==="out"&&aRow&&!aRow.classList.contains("gone")?aRow.getBoundingClientRect().top:top;
   const up=o.field==="in",sIn=up?-1:1,sOut=o.field==="out"?1:-1;
   const kIn=sampled(IN,Es,p=>({opacity:Math.min(1,p*1.6).toFixed(3),transform:`translateY(${(-sIn*6*(1-p)).toFixed(2)}px)`,filter:fb(p,B,.55)}));
   const kOut=sampled(OUT,Es,p=>{const q=Math.min(1,p*1.8);return{opacity:(1-q).toFixed(3),transform:`translateY(${(sOut*5*p).toFixed(2)}px)`,filter:`blur(${(B*q).toFixed(2)}px)`}});
-  /* arrivals wait for their space: after what leaves has cleared it (a search, stepping in), or after the returning
-     folder and its contents have passed (the rows above it, stepping out) */
-  const wait=y=>o.field==="filter"?70:up?40:y<ay-2?100:0;
-  const handoff=(e,from,to,fin)=>{/* the anchor's row travels between its place and the path bar's step, its name onto the step's */
-   const t=e.querySelector(".sb-t").getBoundingClientRect(),r=e.getBoundingClientRect(),c=to||from;if(!c)return false;
-   const dx=Math.round(c.left-t.left),dy=Math.round(c.top+c.height/2-(r.top+r.height/2));
-   go(e,sampled(T,Es,(p,k)=>{const q=fin?1-p:p;return{transform:`translate(${(dx*q).toFixed(2)}px,${(dy*q).toFixed(2)}px)`,opacity:(fin?Math.min(1,.15+p*1.7):Math.max(0,1-p*1.5)).toFixed(3),filter:mb(k,Math.min(1.4,Math.hypot(dx,dy)/60))}}),T,0,fin?"backwards":"forwards");return true};
-  /* in a search, long crossings become a ghost and an arrival */
-  const LONG=RH*5;moved.forEach(m=>{if(o.field!=="filter"||Math.abs(m.dy)<=LONG)return;m.skip=true;
+  /* no row flies a long way: one that would cross more than five rows leaves a ghost where it was and surfaces where it
+     lands, unfolding with the rest from the anchor */
+  const LONG=RH*5;moved.forEach(m=>{if(Math.abs(m.dy)<=LONG)return;m.skip=true;
    const g=m.e.cloneNode(true);g.classList.add("gone");g.removeAttribute("role");g.setAttribute("aria-hidden","true");Object.assign(g.style,{position:"absolute",top:(m.e.offsetTop+m.dy)+"px",left:m.e.offsetLeft+"px",width:m.e.offsetWidth+"px"});tree.appendChild(g);
    leaving.push({e:g,id:"ghost:"+m.id,ghost:true,y:m.y0});born.push({e:m.e,id:m.id,y:m.y1})});
   moved.forEach(m=>{if(!m.skip)go(m.e,slide(m),T)});
-  born.forEach(x=>{if(o.field==="out"&&x.id===o.anchor&&cr0&&handoff(x.e,cr0.get(o.anchor),null,true))return;
-   go(x.e,kIn,IN,wait(x.y)+Math.min(150,dist(x.y)*16),"backwards")});
-  const yOf=x=>x.y??before.get(x.id)??ay;
-  leaving.forEach(x=>{if(o.field==="in"&&x.id===o.anchor){const c=crumbs.querySelector(`[data-k="${o.anchor}"]`);if(c&&handoff(x.e,null,c.getBoundingClientRect(),false))return}
-   go(x.e,kOut,OUT,Math.min(60,dist(yOf(x))*5),"forwards")});
+  /* the rows that glide sweep a band of the list; nothing arrives inside it until they have passed, and anything still
+     leaving inside it goes at once */
+  const gl=moved.filter(m=>!m.skip);let b0=Infinity,b1=-Infinity;gl.forEach(m=>{b0=Math.min(b0,m.y0,m.y1);b1=Math.max(b1,m.y0+RH,m.y1+RH)});
+  const inBand=y=>y+RH>b0&&y<b1;
+  /* arrivals: the anchor first, in its place; the rest in order of distance, after their space has cleared */
+  const wait=y=>(inBand(y)?130:0)+(o.field==="filter"?70:up?40:0);
+  born.forEach(x=>go(x.e,kIn,IN,x.id===o.anchor?(inBand(x.y)?130:0):wait(x.y)+Math.min(150,Math.abs(x.y-ayIn)/RH*16),"backwards"));
+  const yOf=x=>x.y??before.get(x.id)??ayOut;
+  leaving.forEach(x=>{const y=yOf(x);go(x.e,kOut,OUT,inBand(y)?0:Math.min(60,Math.abs(y-ayOut)/RH*5),"forwards")});
   setTimeout(drop,Math.max(T,OUT+90)+40)}
 
  /* ---- the gliding highlight: surfaces out of a blur, glides on the curve and stretches with its speed, racks out ---- */
@@ -389,8 +387,12 @@ const SB=(()=>{const side=$("#side"),scroll=$("#sbScroll");
   /* the anchor: stepping in, the folder you enter; stepping out, the folder on your way back that is now in view */
   /* stepping out, the whole path from where you land down to where you were: the list anchors on the deepest folder of
      it that it can show, which is the folder you came out of whenever its parents are open */
-  let anchor=null,chain=null;if(dir>0)anchor=id;else{const ch=SYS[rootId]?[rootId]:rootId?chainOf(rootId).map(n=>n.id):[],i=id?ch.indexOf(id):-1;chain=ch.slice(i+1)}
-  sync(()=>{rootId=id},{field:dir>0?"in":"out",anchor,chain});say(id?"Showing "+(SYS[id]||f.n).t:"Showing all");
+  /* the move's direction comes from the tree, not from history: deeper is in, shallower is out, anything else is a
+     plain change of view (back and forward can go either way) */
+  const path=x=>!x?[]:SYS[x]?[x]:chainOf(x).map(n=>n.id),from=path(rootId),to=path(id);
+  const inward=to.length>from.length&&from.every((x,i)=>to[i]===x),outward=from.length>to.length&&to.every((x,i)=>from[i]===x);
+  let field="filter",anchor=null,chain=null;if(inward){field="in";chain=to.slice(from.length)}else if(outward){field="out";chain=from.slice(to.length)}
+  sync(()=>{rootId=id},{field,anchor,chain,dir});say(id?"Showing "+(SYS[id]||f.n).t:"Showing all");
   if(hadFocus&&(!side.contains(document.activeElement)||document.activeElement.closest(".gone")))tree.querySelector(".sb-row:not(.gone) .sb-hit")?.focus({preventScroll:true})}
  function rnav(d){let i=rat+d;while(i>=0&&i<rhist.length&&rhist[i]&&!SYS[rhist[i]]&&!find(rhist[i]))i+=d;if(i<0||i>=rhist.length)return;rat=i;goRoot(rhist[i],d,false)}
  const climb=()=>{if(!rootId)return;if(SYS[rootId])return goRoot(null,-1);const up=find(rootId);goRoot(up&&up.parent!==ROOT?up.parent.id:null,-1)};
