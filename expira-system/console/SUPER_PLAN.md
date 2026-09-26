@@ -115,4 +115,4 @@ The LAYA grounding rules (`src/core/ground.js`) and the per-person sync stay as 
 
 ## Decisions
 
-- (waiting) Blur on large surfaces: A or B.
+- 2026-09-26: Amadeus chose **A, blur everywhere**. Large surfaces blur on the content layer only, capped at 6 px, on entry and exit. Any surface that fails `qa/perf.js` falls back to fade and scale. The DESIGN_ENGINE §3 canon gets updated in step 6.
