@@ -1,6 +1,6 @@
 /* options: desks, depth, client-safe, web; remembered per viewer */
-const OPT=Object.assign({desks:"auto",depth:"standard",safe:true,web:true,fresh:"12"},(()=>{try{return JSON.parse(localStorage.getItem("expira.opt")||"{}")}catch(e){return {}}})());
-const saveOpt=()=>{try{localStorage.setItem("expira.opt",JSON.stringify(OPT))}catch(e){}};
+const OPT=Object.assign({desks:"auto",depth:"standard",safe:true,web:true,fresh:"12"},KV.get("opt",{}));
+const saveOpt=()=>KV.put("opt",OPT);
 function drawOpt(){$("#optMenu").querySelectorAll("[data-opt]").forEach(b=>{const k=b.dataset.opt;b.setAttribute("aria-checked",k==="safe"?String(OPT.safe):k==="web"?String(!!(OPT.web&&WEB.ok)):String(OPT[k]===b.dataset.v))});
  $("#optSum").textContent=[{auto:"Auto",always:"Thorough",off:"Direct"}[OPT.desks],OPT.depth==="deep"?"Deep":"",OPT.safe?"":"Internal",OPT.web&&WEB.ok?"Web":""].filter(Boolean).join(" · ");
  const n={off:1,auto:2,always:3}[OPT.desks];$("#optBtn").querySelectorAll(".ic i").forEach((i,k)=>i.classList.toggle("on",k<n));readyUpd()}

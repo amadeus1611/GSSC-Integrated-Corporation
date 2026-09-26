@@ -71,6 +71,7 @@
 .acct-h{display:flex;align-items:center;gap:var(--sp-2h);padding:var(--sp-2) var(--sp-2) var(--sp-2h)}
 .acct-h b{display:block;font-weight:400;font-size:var(--fs-ui);color:var(--ink)}
 .acct-h .av{width:26px;height:26px;font-size:var(--fs-micro)}
+.av svg{width:14px;height:14px}
 .brand .mark polygon{transition:transform var(--t-move) var(--spring),opacity var(--t-exit) var(--ease-soft-close);transform-box:view-box}
 .brand:hover .mark polygon:nth-child(1){transform:translate(-26px,-10px)}
 .brand:hover .mark polygon:nth-child(2){transform:translate(0,-26px)}

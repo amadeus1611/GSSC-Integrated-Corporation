@@ -239,6 +239,7 @@ html.calm *,html.calm *::before,html.calm *::after{animation:none!important;tran
 .acct-h{display:flex;align-items:center;gap:var(--sp-2h);padding:var(--sp-2) var(--sp-2) var(--sp-2h)}
 .acct-h b{display:block;font-weight:400;font-size:var(--fs-ui);color:var(--ink)}
 .acct-h .av{width:26px;height:26px;font-size:var(--fs-micro)}
+.av svg{width:14px;height:14px}
 .brand .mark polygon{transition:transform var(--t-move) var(--spring),opacity var(--t-exit) var(--ease-soft-close);transform-box:view-box}
 .brand:hover .mark polygon:nth-child(1){transform:translate(-26px,-10px)}
 .brand:hover .mark polygon:nth-child(2){transform:translate(0,-26px)}
@@ -1345,6 +1346,8 @@ html.calm *,html.calm *::before,html.calm *::after{animation:none!important;tran
 .pvbox .ans{margin:0}
 .tin{width:220px;border:var(--rule-hair) solid var(--line-3);border-radius:var(--r-3);background:var(--panel);padding:var(--sp-2) var(--sp-2h);font:inherit;font-size:var(--fs-body);color:var(--ink);outline:none;transition:border-color var(--t-exit)}
 .tin:focus{border-color:var(--gold)}
+.tin2{display:flex;flex-direction:column;gap:var(--sp-1h)}
+.tin::placeholder{color:var(--mute)}
 .frc{display:grid;grid-template-columns:118px minmax(0,1fr) 46px;align-items:center;gap:var(--sp-1h) var(--sp-3h);margin:0 0 var(--sp-3h)}
 .frc label{font-size:var(--fs-ui);color:var(--text)}
 .frc output{font-size:var(--fs-chrome-2);color:var(--mute);text-align:right}
@@ -1483,7 +1486,7 @@ html.tnone *,html.tnone *::before,html.tnone *::after{transition:none!important}
     </div>
     <div class="search"><label for="find" class="sr">Search chats</label><input id="find" placeholder="Search chats"></div>
     <div class="recents" id="recents"></div>
-    <div class="foot"><button class="me" id="me" aria-haspopup="menu" aria-expanded="false" aria-controls="acct"><span class="av">DD</span><span class="who">Duke Y. Demayo<small>EXPIRA AI Systems</small></span><svg class="mech" viewBox="0 0 10 10" fill="none" stroke="currentColor" stroke-width="1.1" aria-hidden="true"><path d="M3 4.2L5 2.4 7 4.2M3 5.8L5 7.6 7 5.8"/></svg></button><button class="ib" id="palBtn" style="margin-left:auto" data-tip="Settings  ⌘," aria-label="Settings"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1"><circle cx="8" cy="8" r="2.1"/><path d="M8 1.8l1.1 1.6 1.9-.4.5 1.9 1.8.8-.6 1.8 1.1 1.6-1.6 1.1.2 1.9-1.9.3-.8 1.8-1.8-.7L8 14.2l-1.1-1.6-1.9.4-.5-1.9-1.8-.8.6-1.8L2.2 7l1.6-1.1-.2-1.9 1.9-.3.8-1.8 1.8.7z"/></svg></button></div>
+    <div class="foot"><button class="me" id="me" aria-haspopup="menu" aria-expanded="false" aria-controls="acct"><span class="av" data-me="av"></span><span class="who"><span data-me="n"></span><small data-me="o"></small></span><svg class="mech" viewBox="0 0 10 10" fill="none" stroke="currentColor" stroke-width="1.1" aria-hidden="true"><path d="M3 4.2L5 2.4 7 4.2M3 5.8L5 7.6 7 5.8"/></svg></button><button class="ib" id="palBtn" style="margin-left:auto" data-tip="Settings  ⌘," aria-label="Settings"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1"><circle cx="8" cy="8" r="2.1"/><path d="M8 1.8l1.1 1.6 1.9-.4.5 1.9 1.8.8-.6 1.8 1.1 1.6-1.6 1.1.2 1.9-1.9.3-.8 1.8-1.8-.7L8 14.2l-1.1-1.6-1.9.4-.5-1.9-1.8-.8.6-1.8L2.2 7l1.6-1.1-.2-1.9 1.9-.3.8-1.8 1.8.7z"/></svg></button></div>
   </nav>
 
   <div class="main" id="main">
@@ -1497,7 +1500,7 @@ html.tnone *,html.tnone *::before,html.tnone *::after{transition:none!important}
     <section class="hero" id="hero">
       <div class="dateline cap" id="dateline"></div>
       <div class="mark-w grain" id="stage"><svg class="mark" viewBox="0 0 1413 425" role="img" aria-label="EXPIRA mark"><polygon points="0,0 233,0 391,100 206,425 40,425 0,302" fill="var(--mark-a)"/><polygon points="233,0 728,0 391,100" fill="var(--gold)"/><polygon points="391,100 728,0 778,0 871,225 1166,425 1058,425" fill="var(--mark-a)"/><polygon points="391,100 1058,425 206,425" fill="var(--mark-b)"/><polygon points="918,0 1043,0 1408,425 1241,425 968,192" fill="var(--gold)"/><polygon points="1043,0 1340,0 1408,425" fill="var(--mark-b)"/></svg></div>
-      <h1 class="greet" id="greet">Good evening, <em>Duke</em></h1>
+      <h1 class="greet" id="greet"></h1>
       <p class="ready capt" id="ready"><i></i><span id="readyT">Orchestrator ready</span></p>
       <div id="heroDock" style="width:100%;display:flex;justify-content:center"></div>
       <div class="contents"><h2 class="cap">In this issue</h2><ol class="toc" id="toc"></ol></div>
@@ -1564,7 +1567,7 @@ html.tnone *,html.tnone *::before,html.tnone *::after{transition:none!important}
   <button class="ib stg-x" id="stgX" aria-label="Close settings" data-tip="Close  Esc"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.1"><path d="M4 4l8 8M12 4l-8 8"/></svg></button>
 </div>
 <div class="menu acct" id="acct" role="menu" aria-label="Account">
-  <div class="acct-h"><span class="av">DD</span><span><b>Duke Y. Demayo</b><small>EXPIRA AI Systems</small></span></div>
+  <div class="acct-h"><span class="av" data-me="av"></span><span><b data-me="n"></b><small data-me="o"></small></span></div>
   <div class="seg" role="radiogroup" aria-label="Theme"><button role="radio" data-th="system"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1"><rect x="2" y="3" width="12" height="8.5" rx="1"/><path d="M6 13.5h4"/></svg>System</button><button role="radio" data-th="light"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1"><circle cx="8" cy="8" r="3"/><path d="M8 1.5v1.5M8 13v1.5M1.5 8H3M13 8h1.5M3.4 3.4l1 1M11.6 11.6l1 1M3.4 12.6l1-1M11.6 4.4l1-1"/></svg>Light</button><button role="radio" data-th="dark"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1"><path d="M13 9.5A5.5 5.5 0 116.5 3a4.5 4.5 0 006.5 6.5z"/></svg>Dark</button></div>
   <div class="sep"></div>
   <button role="menuitem" data-ac="settings"><svg class="ic" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1"><circle cx="8" cy="8" r="2.1"/><path d="M8 1.8l1.1 1.6 1.9-.4.5 1.9 1.8.8-.6 1.8 1.1 1.6-1.6 1.1.2 1.9-1.9.3-.8 1.8-1.8-.7L8 14.2l-1.1-1.6-1.9.4-.5-1.9-1.8-.8.6-1.8L2.2 7l1.6-1.1-.2-1.9 1.9-.3.8-1.8 1.8.7z"/></svg><span class="t">Settings</span><span class="kb">⌘,</span></button>
@@ -1591,9 +1594,42 @@ html.tnone *,html.tnone *::before,html.tnone *::after{transition:none!important}
 (() => {
 const $=s=>document.querySelector(s),app=$("#app"),root=document.documentElement;
 const esc=s=>String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
-const PREF=Object.assign({name:"Duke",text:"m",density:"comfortable",motion:"full",grain:true},(()=>{try{return JSON.parse(localStorage.getItem("expira.prefs")||"{}")}catch(e){return {}}})());
+/* storage adapter (plan §3.4). Every unit reads and writes through KV; none touches localStorage or db.
+   localStorage is always the write-through cache under the v6 key names, so the console works offline and a
+   rollback still reads it. When this viewer has a private db subtree (the page declares `user` beside `db`),
+   each key and each chat is mirrored to data/users/<id>/ and read back on load; otherwise the browser is the store. */
+const KV=(()=>{const P="expira.",AL={chats:"v6"},KEYS=["chats","prefs","opt","folders","theme","runview","mapView","noExample"],subs=new Set(),seen=new Map(),q=new Map();
+ let R=null,run=false,full=false;
+ const lk=k=>P+(AL[k]||k);
+ const get=(k,d)=>{let v=null;try{v=localStorage.getItem(lk(k));if(v==null&&k==="chats")v=localStorage.getItem(P+"v5")}catch(e){}if(v==null)return d;try{return JSON.parse(v)}catch(e){return v}};
+ const local=(k,v)=>{try{if(v==null)localStorage.removeItem(lk(k));else localStorage.setItem(lk(k),typeof v==="string"?v:JSON.stringify(v));full=false;return true}catch(e){if(!full){full=true;subs.forEach(f=>f("!full"))}return false}};
+ /* one db document per key, and one per chat, so a write sends only what changed */
+ const docs=(k,v)=>k==="chats"?(v||[]).filter(c=>c&&!c.example).map(c=>["c:"+c.id,{v:c}]):[["k:"+k,{v:v??null}]];
+ const flush=async()=>{if(run||!R)return;run=true;try{while(q.size){const [id,b]=q.entries().next().value;q.delete(id);try{b?await R.doc(id).set(b):await R.doc(id).delete()}catch(e){if(e&&e.code==="invalid_argument")continue;if(!q.has(id))q.set(id,b);setTimeout(flush,4000);break}}}finally{run=false}};
+ const mirror=(k,v)=>{if(!R)return;const cur=new Set();for(const [id,b] of docs(k,v)){cur.add(id);const j=JSON.stringify(b);if(j.length>250000)continue;if(seen.get(id)!==j){seen.set(id,j);q.set(id,b)}}
+  if(k==="chats")for(const id of [...seen.keys()])if(id.startsWith("c:")&&!cur.has(id)){seen.delete(id);q.set(id,null)}clearTimeout(mirror.t);mirror.t=setTimeout(flush,400)};
+ const put=(k,v)=>{const ok=local(k,v);mirror(k,v);return ok};
+ /* hydrate: the db copy wins for what it holds; what only this browser holds is sent up */
+ const ready=(async()=>{try{const C=window.claude;const u=await C?.use?.("user"),id=u&&typeof u.id==="function"?await u.id():null;if(!id)return"local";const d=await C.use("db");if(!d)return"local";
+  const col=d.collection("data/users/"+id),s=await col.get();R=col;const got={},dc=[];
+  for(const x of s.docs){const b=x.data();if(!b)continue;seen.set(x.id,JSON.stringify(b));if(x.id.startsWith("c:"))dc.push(b.v);else got[x.id.slice(2)]=b.v}
+  for(const k of KEYS){if(k==="chats")continue;if(k in got){const j=JSON.stringify(got[k]);if(j!==JSON.stringify(get(k,null))){local(k,got[k]);subs.forEach(f=>f(k,got[k]))}}else{const v=get(k,null);if(v!=null)mirror(k,v)}}
+  const lc=get("chats",[])||[],ids=new Set(dc.map(c=>c.id)),merged=[...dc,...lc.filter(c=>!ids.has(c.id))];
+  local("chats",merged);mirror("chats",merged);if(dc.length)subs.forEach(f=>f("chats",merged));return"db"}catch(e){R=null;return"local"}})();
+ /* the whole library as one file, for moving devices or owners */
+ const exportAll=()=>{const o={format:"expira.library",version:1,exported:new Date().toISOString()};for(const k of KEYS)if(k!=="noExample"){let v=get(k,null);if(k==="chats")v=(v||[]).filter(c=>!c.example);if(v!=null)o[k]=v}return o};
+ const importAll=o=>{if(!o||typeof o!=="object"||(o.format&&o.format!=="expira.library"))throw new Error("Not an EXPIRA library file");
+  const ch=Array.isArray(o.chats)?o.chats.filter(c=>c&&typeof c.id==="string"&&Array.isArray(c.turns)):[],fo=Array.isArray(o.folders)?o.folders.filter(f=>f&&typeof f.id==="string"):[];
+  if(!ch.length&&!fo.length&&!o.prefs&&!o.opt)throw new Error("Nothing to import");
+  const byId=(a,b)=>{const m=new Map(a.map(x=>[x.id,x]));b.forEach(x=>m.set(x.id,x));return[...m.values()]};
+  const n={chats:byId(get("chats",[])||[],ch),folders:byId(get("folders",[])||[],fo)};
+  if(o.prefs&&typeof o.prefs==="object")n.prefs=Object.assign({},get("prefs",{}),o.prefs);if(o.opt&&typeof o.opt==="object")n.opt=Object.assign({},get("opt",{}),o.opt);
+  for(const k in n){put(k,n[k]);subs.forEach(f=>f(k,n[k]))}return{chats:ch.length,folders:fo.length}};
+ return{get,put,remove:k=>put(k,null),list:()=>KEYS.filter(k=>get(k,null)!=null),subscribe:f=>(subs.add(f),()=>subs.delete(f)),ready,where:()=>R?"db":"local",exportAll,importAll}})();
+window.__KV=KV;
+const PREF=Object.assign({name:"",full:"",org:"",text:"m",density:"comfortable",motion:"full",grain:true},KV.get("prefs",{}));
 const FORCES=Object.assign({center:1,repel:1,link:1,dist:1},PREF.forces||{});
-const savePref=()=>{try{localStorage.setItem("expira.prefs",JSON.stringify(Object.assign({},PREF,{forces:FORCES})))}catch(e){}};
+const savePref=()=>KV.put("prefs",Object.assign({},PREF,{forces:FORCES}));
 const MQR=matchMedia("(prefers-reduced-motion: reduce)");let reduce=MQR.matches||PREF.motion==="calm";let QUOTE="";
 root.dataset.text=PREF.text;root.dataset.density=PREF.density;root.classList.toggle("calm",PREF.motion==="calm");
 
@@ -1750,21 +1786,20 @@ function streamInto(el,text,st){const tmp=document.createElement("div");tmp.inne
  el.replaceChildren(...tmp.childNodes);let last=el.lastElementChild||el;if(/^(UL|OL)$/.test(last.tagName))last=last.lastElementChild||last;if(last.classList?.contains("tw")||last.tagName==="FIGURE"||last.classList?.contains("code"))last=el;const c=document.createElement("span");c.className="caret";last.append(c)}
 
 /* chats (per viewer, this browser) */
-const store={get(){try{return JSON.parse(localStorage.getItem("expira.v6")||localStorage.getItem("expira.v5")||"null")}catch(e){return null}},set(v){try{localStorage.setItem("expira.v6",JSON.stringify(v))}catch(e){}}};
 const T0=Date.now()-864e5;
 const EX={id:"example",no:13,title:"Belmont drapery refit",example:true,ts:T0,turns:[
  {role:"user",ts:T0,content:"Belmont Hotel wants 40 guest rooms refitted with blackout drapery and ceiling track before December. Scope it, price it roughly, flag contract risks, and recommend how we proceed."},
  {role:"assistant",ts:T0+94000,content:"### Recommendation\nRun it as a **phased programme**: two floors in November, the remaining rooms in December once samples are approved. A single December push leaves no room for a late sample sign-off.\n\n### Indicative budget\n| Line | Per room | 40 rooms |\n|---|---|---|\n| Drapery, track, installation | PHP 22,050 | PHP 882,000 |\n| Contingency 8% | | PHP 70,560 |\n| **Indicative total, before VAT** | | **PHP 952,560** |\n\n### Before we quote\n- Guaranteed room blocks from Belmont, in writing\n- Delay clause wording agreed with counsel\n- Your approval of the phased schedule and contingency",
   ex:{facts:[{label:"Indicative total",value:"PHP 952,560",note:"Before VAT"},{label:"Per room",value:"PHP 22,050"},{label:"Lead time",value:"5–7 weeks",note:"Unverified canvass"}],charts:[{type:"bar",title:"Cost per room, by line",unit:"PHP",labels:["Drapery","Ceiling track","Installation"],series:[{name:"Per room",values:[11650,8000,2400]}],note:"Mid-range rates; drapery is more than half of every room."}],matrix:{title:"Three ways to schedule it",columns:["Risk","Disruption","Finish"],rows:[{name:"Full December push",cells:[2,4,"Dec 20"]},{name:"Phased (recommended)",cells:[4,3,"Dec 12"]},{name:"January start",cells:[5,2,"Feb 6"]}],note:"Ratings out of five; higher is better."},sources:[{title:"Visayas fit-out rate cards, 2026 Q3",note:"verified"},{title:"Staff canvass, Iloilo",note:"unverified"}]},
-  work:{ms:94000,firewall:"clear",steps:[{role:"research",tier:"medium",focus:"Local rates",task:"Iloilo rates and lead times for drapery and track",v:"pass",ms:14000,out:"Blackout drapery, hotel grade: PHP 9,500–13,800 per window (verified).\nCeiling track: PHP 2,100–2,900 per metre (verified).\nLead time 5–7 weeks (staff canvass, unverified).\nCONFIDENCE: medium"},{role:"finance",tier:"high",focus:"Forty-room budget",after:[1],task:"An indicative budget for forty rooms",v:"pass",ms:38000,out:"Per room PHP 22,050. 40 rooms PHP 882,000. Contingency 8% PHP 70,560. Total PHP 952,560 before VAT.\nCONFIDENCE: medium"},{role:"legal",tier:"high",focus:"Deadline exposure",task:"Contract risks behind a December deadline",v:"pass",ms:33000,out:"Cap liquidated damages at 10%; exclude delay from late sample approval; variations by signed order only. Counsel: LD wording.\nCONFIDENCE: high"},{role:"decision",tier:"medium",focus:"Schedule choice",after:[2,3],task:"How the company should proceed",v:"pass",ms:21000,out:"Recommend phased. Options: full push, phased, January start. Duke decides schedule and contingency.\nCONFIDENCE: high"}],
+  work:{ms:94000,firewall:"clear",steps:[{role:"research",tier:"medium",focus:"Local rates",task:"Iloilo rates and lead times for drapery and track",v:"pass",ms:14000,out:"Blackout drapery, hotel grade: PHP 9,500–13,800 per window (verified).\nCeiling track: PHP 2,100–2,900 per metre (verified).\nLead time 5–7 weeks (staff canvass, unverified).\nCONFIDENCE: medium"},{role:"finance",tier:"high",focus:"Forty-room budget",after:[1],task:"An indicative budget for forty rooms",v:"pass",ms:38000,out:"Per room PHP 22,050. 40 rooms PHP 882,000. Contingency 8% PHP 70,560. Total PHP 952,560 before VAT.\nCONFIDENCE: medium"},{role:"legal",tier:"high",focus:"Deadline exposure",task:"Contract risks behind a December deadline",v:"pass",ms:33000,out:"Cap liquidated damages at 10%; exclude delay from late sample approval; variations by signed order only. Counsel: LD wording.\nCONFIDENCE: high"},{role:"decision",tier:"medium",focus:"Schedule choice",after:[2,3],task:"How the company should proceed",v:"pass",ms:21000,out:"Recommend phased. Options: full push, phased, January start. You decide the schedule and contingency.\nCONFIDENCE: high"}],
   map:{kind:"hotel fit-out, scope and price",rationale:"Rates, a budget, contract risk and a recommendation each need their own desk.",thinking:["Forty rooms before December: nothing can be priced until local rates are in.","The budget will clear PHP 500,000, so finance works at deep effort.","A hard deadline brings delay exposure; legal can read it in parallel.","Once the budget and the risks are known, an arbiter desk weighs the schedule."],calls:[],pages:[]},
   flow:[0,2,6,9,7,4,8,12,15,11,9,6,10,14,9,5,3,6,8,4,2,1],
   feed:[[400,null,"Received the brief: about 45 tokens."],[1600,null,"Classified the brief: <em>hotel fit-out, scope and price</em>."],[1700,null,"Rates, a budget, contract risk and a recommendation each need their own desk."],[1800,"Commissioned <em>four desks</em>","Commissioned four desks."],[2000,null,"Opened desk I: research desk at <em>considered</em> effort, local rates and lead times."],[2240,null,"Opened desk II: finance desk at <em>deep</em> effort, budget over PHP 500,000."],[2480,null,"Desk II waits for desk I."],[2720,null,"Opened desk III: legal desk at <em>deep</em> effort, deadline exposure."],[2960,null,"Opened desk IV: arbiter desk at <em>considered</em> effort, choose a schedule."],[16200,"The research desk filed its notes","Desk I filed 48 tokens of notes in 14 s."],[38400,"The finance desk filed its notes","Desk II filed 30 tokens of notes in 38 s."],[39800,"The legal desk filed its notes","Desk III filed 36 tokens of notes in 33 s."],[41000,"All four passed review","Review: all four pieces pass."],[88000,"Set the exhibits","Set the exhibits: three figures, one chart, a comparison, sources."],[91200,"Firewall clear","Firewall: clear. Nothing restricted leaves with this answer."],[94000,"Delivered","Delivered in 1 min 34 s."]]}}]};
-let chats=store.get()||[];if(!chats.find(c=>c.id==="example")&&!(()=>{try{return localStorage.getItem("expira.noExample")}catch(e){return null}})())chats.push(EX);let cur=null;
-const save=()=>store.set(chats);const nextNo=()=>Math.max(13,...chats.map(c=>c.no||0))+1;
+let chats=KV.get("chats",null)||[];const withEx=()=>{if(!chats.find(c=>c.id==="example")&&!KV.get("noExample",null))chats.push(EX)};withEx();let cur=null;
+const save=()=>KV.put("chats",chats);const nextNo=()=>Math.max(13,...chats.map(c=>c.no||0))+1;
 /* ---------- chat library: pins, folders, archive, rename, delete with undo ---------- */
-let FOLDERS=(()=>{try{return JSON.parse(localStorage.getItem("expira.folders")||"[]")}catch(e){return []}})();
-const saveF=()=>{try{localStorage.setItem("expira.folders",JSON.stringify(FOLDERS))}catch(e){}};
+let FOLDERS=KV.get("folders",[])||[];
+const saveF=()=>KV.put("folders",FOLDERS);
 const I={dots:`<svg viewBox="0 0 12 12" fill="currentColor"><circle cx="2.5" cy="6" r="1"/><circle cx="6" cy="6" r="1"/><circle cx="9.5" cy="6" r="1"/></svg>`,
  car:`<svg class="car" viewBox="0 0 10 10" fill="none" stroke="currentColor" stroke-width="1.2"><path d="M3.5 2L6.5 5 3.5 8"/></svg>`,
  fold:`<svg class="fi" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1"><path d="M1.5 4.5a1 1 0 011-1h3.6l1.5 1.5h5.9a1 1 0 011 1v6.5a1 1 0 01-1 1h-11a1 1 0 01-1-1z"/></svg>`,
@@ -1834,8 +1869,8 @@ function newFolder(moveChat){const f={id:"f"+Date.now().toString(36),name:"New f
 function deleteFolder(f){const moved=chats.filter(c=>c.folder===f.id);const idx=FOLDERS.indexOf(f);FOLDERS.splice(idx,1);moved.forEach(c=>c.folder=null);saveF();save();renderRecents();crumb();
  toastUndo(`Deleted <em>${esc(f.name)}</em>`,()=>{FOLDERS.splice(idx,0,f);moved.forEach(c=>c.folder=f.id);saveF();save();renderRecents();crumb()})}
 function archiveChat(c){c.archived=true;save();if(cur===c)open(null);renderRecents();toastUndo("Archived",()=>{c.archived=false;save();renderRecents()})}
-function deleteChat(c){const idx=chats.indexOf(c);chats.splice(idx,1);save();if(c.example)try{localStorage.setItem("expira.noExample","1")}catch(e){}if(cur===c)open(null);renderRecents();
- toastUndo(`Deleted <em>${esc(c.title.length>28?c.title.slice(0,27)+"…":c.title)}</em>`,()=>{chats.splice(idx,0,c);if(c.example)try{localStorage.removeItem("expira.noExample")}catch(e){}save();renderRecents()})}
+function deleteChat(c){const idx=chats.indexOf(c);chats.splice(idx,1);save();if(c.example)KV.put("noExample","1");if(cur===c)open(null);renderRecents();
+ toastUndo(`Deleted <em>${esc(c.title.length>28?c.title.slice(0,27)+"…":c.title)}</em>`,()=>{chats.splice(idx,0,c);if(c.example)KV.remove("noExample");save();renderRecents()})}
 function toastUndo(h,undo){const box=$("#toasts");box.innerHTML="";const e=document.createElement("div");e.className="toast";e.style.animationDuration="5.2s";e.innerHTML=`<span>${h}</span><button class="ua">Undo</button>`;e.querySelector(".ua").onclick=()=>{undo();e.remove();toast("Restored")};box.append(e);clearTimeout(box._t);box._t=setTimeout(()=>e.remove(),5300)}
 function crumb(){const f=cur&&folderOf(cur);$("#crumb").textContent=f?f.name:"";if(cur)$("#ttl").innerHTML=`${esc(cur.title)} <span class="ttl-ref">· No. ${pad(cur.no||0,3)}</span>`}
 $("#ttl").onclick=()=>{if(cur&&!$("#ttl").querySelector(".rn-in"))inlineEdit($("#ttl"),cur.title,v=>{cur.title=v;save();renderRecents();crumb();toast("Renamed")})};
@@ -1876,8 +1911,8 @@ function costHTML(w){const ph=w.ph||{},ks=Object.keys(PHB).filter(k=>ph[k]&&!ph[
 /* the run card's map: the same map class, inline, one instance per card. Later calls only hand it the newest record:
    the live run while it works, then the saved turn, so the card settles in place instead of being redrawn. */
 function miniDraw(run,w,live){const m=run.querySelector(".mini");if(!m)return;m._w=w;const inst=[...FM].find(x=>x.host===m);if(inst){inst.sync();return}mkMap(m,()=>m._w,{card:true,live})}
-function runView(run,v,remember){if(!run.querySelector(".vs"))v="log";run.dataset.view=v;run.querySelectorAll(".vs [data-view]").forEach(b=>b.setAttribute("aria-pressed",b.dataset.view===v));if(v==="map"){const b=run.closest(".bot"),w=b&&(b._work||cur?.turns[+b.dataset.k]?.work);if(w)miniDraw(run,w,run.classList.contains("running"))}if(remember)try{localStorage.setItem("expira.runview",v)}catch(e){}}
-const viewDefault=()=>{try{return localStorage.getItem("expira.runview")||"log"}catch(e){return "log"}};
+function runView(run,v,remember){if(!run.querySelector(".vs"))v="log";run.dataset.view=v;run.querySelectorAll(".vs [data-view]").forEach(b=>b.setAttribute("aria-pressed",b.dataset.view===v));if(v==="map"){const b=run.closest(".bot"),w=b&&(b._work||cur?.turns[+b.dataset.k]?.work);if(w)miniDraw(run,w,run.classList.contains("running"))}if(remember)KV.put("runview",v);}
+const viewDefault=()=>KV.get("runview","log")||"log";
 function runHTML(w,k,live,o={}){const M=w.map||{},th=M.thinking||[],n=(w.feed||[]).filter(f=>f[1]).length,op=live||o.open;
  const dl=live?(o.direct?"":`<div class="delib"><span class="cap">Deliberation</span><p class="typing">Reading the brief</p></div>`):th.length?`<div class="delib"><span class="cap">Deliberation</span>${th.map(t=>`<p>${esc(t)}</p>`).join("")}</div>`:"";
  return `<div class="run ${live?"running":"settled"}${op?" open":""}" data-view="${(live&&!o.direct)||(w.steps||[]).length?viewDefault():"log"}"><button class="run-h" type="button" aria-expanded="${!!op}">${GLYPH}<span class="lbl">${live?(o.direct?"Considering":"Deliberating"):esc(summary(w))}</span><span class="rk num">${live?"":tokLine(w)}</span><span class="t num">${mmss(w.ms||0)}</span>${CHEV}</button>${(live&&!o.direct)||(w.steps||[]).length?`<div class="rv" role="group" aria-label="View"><span class="vs"><button type="button" data-view="log" aria-pressed="true">Log</button><button type="button" data-view="map" aria-pressed="false">Map</button></span><button type="button" class="rdx" data-read="${live?"live":k}" aria-label="Open the Dispatch" data-tip="The Dispatch"><svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.1"><path d="M4.5 3h4.5v4.5M9 3 3.5 8.5"/></svg></button></div>`:`<div class="rv"><button type="button" class="rdx" data-read="${live?"live":k}" aria-label="Open the Dispatch" data-tip="The Dispatch"><svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.1"><path d="M4.5 3h4.5v4.5M9 3 3.5 8.5"/></svg></button></div>`}<div class="sheen"></div>${railHTML(w,live,o)}
@@ -1964,10 +1999,11 @@ document.addEventListener("click",e=>{const yc=e.target.closest("[data-ycopy]");
 /* start page */
 const now=new Date(),hr=now.getHours();
 const dl=()=>{const d=new Date();$("#dateline").innerHTML=`Vol. I · No. ${pad(nextNo(),3)} · ${esc(d.toLocaleDateString("en-PH",{weekday:"long",day:"numeric",month:"long"}))} · <span class="tm">${pad(d.getHours())}<span class="colon">:</span>${pad(d.getMinutes())}</span>`};dl();setInterval(dl,15000);
-const greetText=()=>(hr<12?"Good morning":hr<18?"Good afternoon":"Good evening")+", "+(PREF.name||"Duke");
+const greetText=()=>(hr<12?"Good morning":hr<18?"Good afternoon":"Good evening")+(PREF.name?", "+PREF.name:"");
 const GREETS=(()=>{const d=new Date(),day=d.getDay(),t=hr<5?["Still up","Late one"]:hr<12?["Good morning","Morning"]:hr<18?["Good afternoon","Afternoon"]:["Good evening","Evening"];return [...t,...(day===1?["Happy Monday"]:day===5?["Happy Friday"]:[]),"Welcome back"]})();
 const greetPick=GREETS[Math.floor(Math.random()*GREETS.length)];
-function greetR(){const g=greetPick+", ";$("#greet").innerHTML=[...g].map((c,i)=>`<span class="ch" style="animation-delay:${.04+i*.028}s;--k:${i}">${esc(c)}</span>`).join("")+`<em class="ch" style="animation-delay:${.04+g.length*.028+.05}s">${esc(PREF.name||"Duke")}</em>`}greetR();
+/* the name comes from settings; with none set the greeting stands alone */
+function greetR(){const g=greetPick+(PREF.name?", ":"");$("#greet").innerHTML=[...g].map((c,i)=>`<span class="ch" style="animation-delay:${.04+i*.028}s;--k:${i}">${esc(c)}</span>`).join("")+(PREF.name?`<em class="ch" style="animation-delay:${.04+g.length*.028+.05}s">${esc(PREF.name)}</em>`:"")}greetR();
 function readyUpd(){swap($("#readyT"),`Orchestrator ready · ${OPT.desks==="off"?"answering directly":OPT.desks==="always"?"staffing generously":"staffs each brief itself"} · ${OPT.safe?"client-safe":"internal"}${OPT.depth==="deep"?" · deep":""}${OPT.web&&WEB.ok?" · web on":""}`)}
 const TOC=[["Price a twelve-room hotel repaint in Iloilo","Finance"],["Review the delay clause in a supply contract","Legal"],["Compare three ERP options for GSSC","Arbiter"],["Canvass office fit-out rates in Iloilo","Research"]];
 $("#toc").innerHTML=TOC.map(([t,s],i)=>`<li class="bi" style="animation-delay:${.15+i*.07}s"><button><span class="n">${i+1}</span><span class="t">${esc(t)}</span><span class="lead"></span><span class="sec">${s}</span></button></li>`).join("");
@@ -1991,10 +2027,10 @@ $("#fold").onclick=()=>setFold(!app.classList.contains("folded"));if(innerWidth<
 const newChat=()=>{if(busy)return;open(null);promptEl.focus()};$("#newChat").onclick=newChat;
 $("#findBtn").onclick=()=>{$("#side").classList.toggle("searching");$("#find").focus()};
 /* appearance: system, light or dark; remembered per viewer, eased between palettes */
-const HOST_THEME=root.getAttribute("data-theme");let THEME=(()=>{try{return localStorage.getItem("expira.theme")||"system"}catch(e){return "system"}})();
+const HOST_THEME=root.getAttribute("data-theme");let THEME=KV.get("theme","system")||"system";
 function applyTheme(v,soft){if(soft&&!reduce&&document.startViewTransition&&!applyTheme.vt){applyTheme.vt=1;try{const t=document.startViewTransition(()=>applyTheme(v,false));t.finished.finally(()=>applyTheme.vt=0)}catch(e){applyTheme.vt=0;applyTheme(v,false)}return}root.classList.add("tnone");requestAnimationFrame(()=>requestAnimationFrame(()=>root.classList.remove("tnone")));setTimeout(()=>{try{plates.main&&plates.main.recolor();plates.minis.forEach(m=>m&&m.recolor())}catch(e){}},0);
  if(v==="system"){if(HOST_THEME)root.setAttribute("data-theme",HOST_THEME);else root.removeAttribute("data-theme")}else root.setAttribute("data-theme",v);
- THEME=v;try{localStorage.setItem("expira.theme",v)}catch(e){}document.querySelectorAll("[data-th]").forEach(b=>b.setAttribute("aria-checked",String(b.dataset.th===v)))}
+ THEME=v;KV.put("theme",v);document.querySelectorAll("[data-th]").forEach(b=>b.setAttribute("aria-checked",String(b.dataset.th===v)))}
 applyTheme(THEME,false);
 let STAB="general";
 POUR.attach($("#setMenu"));
@@ -2003,6 +2039,11 @@ function setMenu(o){const m=$("#setMenu"),b=$("#me");o=o??!m.classList.contains(
  else if(m.classList.contains("open")){m.classList.remove("open");$("#veil").classList.remove("open");FM.forEach(x=>{if(x.opt.pv)x.kill()})}
  }
 $("#stgX").onclick=()=>setMenu(false);
+/* the account row shows the viewer's own name from settings, never a built-in one */
+function meR(){const n=PREF.full||PREF.name,ini=n?n.split(/\s+/).filter(Boolean).map(w=>w[0]).filter(c=>/\p{L}/u.test(c)).slice(0,2).join("").toUpperCase():"";
+ document.querySelectorAll('[data-me="av"]').forEach(x=>x.innerHTML=ini?esc(ini):`<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.1" aria-hidden="true"><circle cx="8" cy="6" r="2.6"/><path d="M3.2 13.2c.8-2.4 2.6-3.6 4.8-3.6s4 1.2 4.8 3.6"/></svg>`);
+ document.querySelectorAll('[data-me="n"]').forEach(x=>x.textContent=n||"Your account");document.querySelectorAll('[data-me="o"]').forEach(x=>x.textContent=PREF.org||(n?"":"Add your name in Settings"))}
+meR();
 /* the name row opens a small account menu, upward; a second click closes it */
 POUR.attach($("#acct"),{blur:true});
 function acctMenu(o){const a=$("#acct"),b=$("#me");if(!a)return;o=o??!a.classList.contains("open");
@@ -2027,6 +2068,7 @@ const SAMPLE=`<div class="ans"><h3>Recommendation</h3><p>Run it as a <strong>pha
 function paneHTML(t){
  if(t==="general")return `<h3>General</h3><p class="lede">How EXPIRA addresses you, and the keys that move you around.</p>
   <div class="grp"><div class="gh"><span><b>Your name</b><small>Used in the greeting on the start page.</small></span><input class="tin" data-name maxlength="24" value="${esc(PREF.name)}" aria-label="Your name" spellcheck="false"></div>
+  <div class="gh"><span><b>On your account</b><small>Your full name and organisation, shown in the sidebar.</small></span><span class="tin2"><input class="tin" data-pf="full" maxlength="40" value="${esc(PREF.full)}" placeholder="Full name" aria-label="Full name" spellcheck="false"><input class="tin" data-pf="org" maxlength="40" value="${esc(PREF.org)}" placeholder="Organisation" aria-label="Organisation" spellcheck="false"></span></div>
   <div class="pvbox"><span class="cap">Preview</span><p class="gp" id="pvGreet"></p></div></div>
   <div class="grp"><div class="gh"><span><b>Keyboard</b><small>Everything also lives in the command palette, ⌘K.</small></span></div><dl class="kbl">${[["⌘K","Commands"],["⌘,","Settings"],["⌥N","New chat"],["⌥L","The Dispatch"],["F2","Rename this chat"],["/","Search chats"],["Esc","Stop the run, or close"],["?","Shortcut sheet"]].map(([k,d])=>`<dt><span class="kb">${k}</span></dt><dd>${d}</dd>`).join("")}</dl></div>`;
  if(t==="appearance")return `<h3>Appearance</h3><p class="lede">Palette, type and pace. Changes apply as you choose them.</p>
@@ -2063,10 +2105,11 @@ function paneHTML(t){
   <div class="grp"><div class="gh"><span><b>Templates</b><small>Open any template hydrated, exactly as the builder makes it. Ask for a document in a brief and the console fills one from these.</small></span></div><ul class="ktpl">${K?K.derivatives.map(d=>`<li><span>${esc(DOCT[d.type]||d.type)}<small>${esc(d.file)}${d.governing?` · ${esc(d.governing)}`:""}</small></span><button type="button" class="btn2" data-ktpl="${esc(d.file)}">Open</button></li>`).join(""):""}</ul></div>
   <div class="grp"><div class="gh"><span><b>Modules</b><small>What each desk reads: finance reads 06 and 14; legal reads 09 and 02; the firewall reads 04; documents follow 08, 10 and 17.</small></span></div><ul class="kmods">${K?Object.entries(K.kernel).map(([id,m])=>`<li><b><span class="num">${esc(id.slice(0,2))}</span>${esc(id.slice(3).replace(/_/g," "))}</b>${esc(String(m.purpose||m.role||"").slice(0,110))}</li>`).join(""):""}</ul></div>`}
  if(t==="library"){const A=chats.filter(c=>c.archived),L=chats.filter(c=>!c.archived&&!c.example);
-  return `<h3>Library</h3><p class="lede">Chats and folders are kept in this browser only.</p>
+  return `<h3>Library</h3><p class="lede">Chats and folders are kept ${KV.where()==="db"?"in your own private space on this page, and cached in this browser":"in this browser only"}.</p>
   <div class="stats3"><div><b class="num">${L.length}</b><span class="cap">Chats</span></div><div><b class="num">${FOLDERS.length}</b><span class="cap">Folders</span></div><div><b class="num">${A.length}</b><span class="cap">Archived</span></div></div>
   <div class="grp"><div class="gh"><span><b>Archived chats</b><small>Restore one to bring it back to the sidebar.</small></span></div>${A.length?`<ul class="alist">${A.map(c=>`<li><span>${esc(c.title)}<small class="num">${esc(new Date(c.ts||Date.now()).toLocaleDateString("en-PH",{day:"numeric",month:"short"}))}</small></span><button class="ab" data-unarch="${esc(c.id)}">Restore</button><button class="ab danger" data-purge="${esc(c.id)}">Delete</button></li>`).join("")}</ul>`:`<p class="empty2">Nothing archived.</p>`}</div>
-  <div class="srow" style="cursor:default"><span class="l"><b>Copy the library</b><small>Every chat, as JSON, to your clipboard.</small></span><button class="btn2" data-export>Copy JSON</button></div>
+  <div class="srow" style="cursor:default"><span class="l"><b>Export the library</b><small>Every chat, folder and setting as one JSON file, for another device or another owner.</small></span><button class="btn2" data-export>Export</button></div>
+  <div class="srow" style="cursor:default"><span class="l"><b>Import a library</b><small>Adds the chats and folders from an export. A chat already here is replaced by its exported copy.</small></span><button class="btn2" data-import>Import</button></div>
   <div class="srow" style="cursor:default"><span class="l"><b>Clear the library</b><small>Deletes every chat and folder in this browser. This cannot be undone.</small></span><button class="btn2 danger" data-clear>Clear</button></div>`}
  return `<h3>About</h3><p class="lede">EXPIRA Console, version 41. Built on Claude for EXPIRA AI Systems and GSSC Integrated Corporation.</p>
   <dl class="about"><dt>Orchestrator</dt><dd>Opus 5.5 at high effort; plans, staffs and decides at the complex tier</dd><dt>Desks</dt><dd>Deep effort at the complex tier by default; considered at the default tier for low-level work only</dd>
@@ -2074,13 +2117,19 @@ function paneHTML(t){
   <dt>Truth</dt><dd>The Arbiter staffs the desks, then weighs every claim they file against the pages read; the answer cites the ledger; an auditor checks each factual line before filing</dd><dt>Kernel</dt><dd>The GSSC kernel ships inside the console; desks read the doctrine that governs them, and documents are built by a port of the kernel's own builder, checked byte for byte against it</dd><dt>Freshness</dt><dd>Every prompt carries today's date; web results are sorted newest first and anything older than the window is flagged</dd><dt>Policy</dt><dd>Escalates above PHP 500,000; at most two redos; a firewall on client-facing answers</dd><dt>Storage</dt><dd>Chats in this browser; run summaries in the runs log</dd></dl>
   <p class="credit legal">Claude and Anthropic are trademarks of Anthropic, PBC. EXPIRA Console runs on Claude through the Claude app; it is built by EXPIRA AI Systems and is not affiliated with or endorsed by Anthropic.</p>
   <p class="credit">The field view follows Obsidian's graph forces on a d3-force style integrator. Nodes are born as liquid after Hiroyuki Sato's metaball, as Varun Vachhar explains it.</p>`}
+/* library export and import: one JSON file through downloads, else the clipboard */
+async function libExport(){const t=JSON.stringify(KV.exportAll(),null,1),fn=`expira-library-${new Date().toISOString().slice(0,10)}.json`,dl=await window.claude?.use?.("downloads")??null;
+ if(dl){try{await dl.save({filename:fn,data:new Blob([t],{type:"application/json"})});return"Saved"}catch(e){return e&&e.code==="declined"?"Declined":"Not saved"}}
+ try{await navigator.clipboard.writeText(t);return"Copied"}catch(e){return"Not allowed"}}
+function libImport(){if(busy){toast("Wait for the run to finish, then import");return}const i=document.createElement("input");i.type="file";i.accept=".json,application/json";
+ i.onchange=async()=>{const f=i.files&&i.files[0];if(!f)return;try{const r=KV.importAll(JSON.parse(await f.text()));toast(`Imported ${r.chats} chat${r.chats===1?"":"s"} and ${r.folders} folder${r.folders===1?"":"s"}`);if(STAB==="library")stab("library")}catch(x){toast(esc(x&&x.message&&!/JSON/.test(x.message)?x.message:"That file is not an EXPIRA library"))}};i.click()}
 function syncStg(){const m=$("#setMenu");
  m.querySelectorAll("[data-th]").forEach(b=>b.setAttribute("aria-checked",String(b.dataset.th===THEME)));
  m.querySelectorAll("[data-pk]").forEach(b=>b.setAttribute("aria-checked",String(PREF[b.dataset.pk]===b.dataset.v)));
  m.querySelectorAll("[data-so]").forEach(b=>b.setAttribute("aria-checked",String(OPT[b.dataset.so]===b.dataset.v)));
  m.querySelectorAll("[data-mvd]").forEach(b=>b.setAttribute("aria-checked",String(VIEW===b.dataset.mvd)));
  m.querySelectorAll("[data-sw]").forEach(b=>{const k=b.dataset.sw;b.setAttribute("aria-checked",String(k==="grain"?!!PREF.grain:k==="safe"?!!OPT.safe:!!(OPT.web&&WEB.ok)));if(k==="web")b.setAttribute("aria-disabled",String(!WEB.ok))});
- const g=$("#pvGreet");if(g)g.innerHTML=esc(greetText().replace(/, [^,]*$/,", "))+`<em>${esc(PREF.name||"Duke")}</em>`;
+ const g=$("#pvGreet");if(g)g.innerHTML=PREF.name?esc(greetText().slice(0,-PREF.name.length))+`<em>${esc(PREF.name)}</em>`:esc(greetText());
  m.querySelectorAll(".pv-in").forEach(x=>x.classList.toggle("full",!reduce));m.querySelectorAll(".pv-in .mo").forEach(x=>x.style.setProperty("--w",x.clientWidth+"px"))}
 function stab(t){STAB=t;const m=$("#setMenu");m.querySelectorAll("[role=tab]").forEach(b=>b.setAttribute("aria-selected",String(b.dataset.tab===t)));
  FM.forEach(x=>{if(x.opt.pv)x.kill()});const p=$("#stgP");p.innerHTML=`<div class="sp">${paneHTML(t)}</div>`;p.scrollTop=0;syncStg();
@@ -2099,16 +2148,18 @@ $("#setMenu").addEventListener("click",e=>{
  if(e.target.closest("[data-reset-forces]")){Object.assign(FORCES,{center:1,repel:1,link:1,dist:1});savePref();$("#setMenu").querySelectorAll("[data-force]").forEach(r=>{r.value=1;r.style.setProperty("--p",(.7/1.7*100).toFixed(1)+"%");r.nextElementSibling.textContent="1.00×"});reheat();return}
  const ua=e.target.closest("[data-unarch]");if(ua){const c=chats.find(x=>x.id===ua.dataset.unarch);if(c){c.archived=false;save();renderRecents();stab("library")}return}
  const pg=e.target.closest("[data-purge]");if(pg){sure(pg,"Confirm",()=>{const i=chats.findIndex(x=>x.id===pg.dataset.purge);if(i>=0){chats.splice(i,1);save();renderRecents();stab("library")}});return}
- const ex=e.target.closest("[data-export]");if(ex){const t=JSON.stringify({chats:chats.filter(c=>!c.example),folders:FOLDERS},null,1);const done=m=>{ex.textContent=m;clearTimeout(ex._t);ex._t=setTimeout(()=>ex.textContent="Copy JSON",1800)};navigator.clipboard?navigator.clipboard.writeText(t).then(()=>done("Copied"),()=>done("Not allowed")):done("Not allowed");return}
+ const ex=e.target.closest("[data-export]");if(ex){const done=m=>{ex.textContent=m;clearTimeout(ex._t);ex._t=setTimeout(()=>ex.textContent="Export",1800)};libExport().then(done);return}
+ const im=e.target.closest("[data-import]");if(im){libImport();return}
  const cl=e.target.closest("[data-clear]");if(cl){sure(cl,"Clear everything",()=>{chats.splice(0,chats.length,...chats.filter(c=>c.example));FOLDERS.splice(0,FOLDERS.length);save();saveF();open(null);stab("library")});return}});
-$("#setMenu").addEventListener("input",e=>{const n=e.target.closest("[data-name]");if(n){PREF.name=n.value.trim().slice(0,24)||"";savePref();greetR();syncStg();return}
+$("#setMenu").addEventListener("input",e=>{const n=e.target.closest("[data-name]");if(n){PREF.name=n.value.trim().slice(0,24)||"";savePref();greetR();meR();syncStg();return}
+ const pf=e.target.closest("[data-pf]");if(pf){PREF[pf.dataset.pf]=pf.value.trim().slice(0,40);savePref();meR();return}
  const f=e.target.closest("[data-force]");if(f){FORCES[f.dataset.force]=+f.value;f.style.setProperty("--p",((f.value-.3)/1.7*100).toFixed(1)+"%");f.nextElementSibling.textContent=(+f.value).toFixed(2)+"×";savePref();reheat()}});
 $("#setMenu").addEventListener("keydown",e=>{const m=$("#setMenu");
  if(e.target.getAttribute("role")==="tab"&&(e.key==="ArrowDown"||e.key==="ArrowUp"||e.key==="ArrowRight"||e.key==="ArrowLeft")){const T=[...m.querySelectorAll("[role=tab]")],i=T.indexOf(e.target),n=T[(i+(e.key==="ArrowDown"||e.key==="ArrowRight"?1:-1)+T.length)%T.length];e.preventDefault();n.focus();stab(n.dataset.tab);return}
  if(e.key==="Tab"){const F=[...m.querySelectorAll('button:not([disabled]),input,[tabindex="0"]')].filter(x=>x.offsetParent);if(!F.length)return;const a=F[0],z=F[F.length-1];if(e.shiftKey&&document.activeElement===a){e.preventDefault();z.focus()}else if(!e.shiftKey&&document.activeElement===z){e.preventDefault();a.focus()}}});
 /* options: desks, depth, client-safe, web; remembered per viewer */
-const OPT=Object.assign({desks:"auto",depth:"standard",safe:true,web:true,fresh:"12"},(()=>{try{return JSON.parse(localStorage.getItem("expira.opt")||"{}")}catch(e){return {}}})());
-const saveOpt=()=>{try{localStorage.setItem("expira.opt",JSON.stringify(OPT))}catch(e){}};
+const OPT=Object.assign({desks:"auto",depth:"standard",safe:true,web:true,fresh:"12"},KV.get("opt",{}));
+const saveOpt=()=>KV.put("opt",OPT);
 function drawOpt(){$("#optMenu").querySelectorAll("[data-opt]").forEach(b=>{const k=b.dataset.opt;b.setAttribute("aria-checked",k==="safe"?String(OPT.safe):k==="web"?String(!!(OPT.web&&WEB.ok)):String(OPT[k]===b.dataset.v))});
  $("#optSum").textContent=[{auto:"Auto",always:"Thorough",off:"Direct"}[OPT.desks],OPT.depth==="deep"?"Deep":"",OPT.safe?"":"Internal",OPT.web&&WEB.ok?"Web":""].filter(Boolean).join(" · ");
  const n={off:1,auto:2,always:3}[OPT.desks];$("#optBtn").querySelectorAll(".ic i").forEach((i,k)=>i.classList.toggle("on",k<n));readyUpd()}
@@ -2317,12 +2368,12 @@ function nodeInfo(w,id){if(!w)return "";const S=w.steps||[],M=w.map||{},P=M.page
  if(id.startsWith("s:")){const hh=id.slice(2),L=P.filter(p=>hostOf(p.url)===hh);return `${hh} · ${L.length} page${L.length===1?"":"s"} · ${ft(L.reduce((a,p)=>a+tok(p.ex),0))} tokens pulled`}
  const i=+id.slice(1),s=S[i];if(!s)return "";return `Desk ${ROMAN[i]} · ${ROLE[s.role]}${s.focus?" · "+s.focus:""} · ${ft(tok(s.out))} tokens${s.searches?` · ${s.searches} search${s.searches>1?"es":""}`:""}`}
 const RC={research:"var(--s1)",finance:"var(--s2)",legal:"var(--s4)",decision:"var(--s5)",builder:"var(--s3)"};
-let VIEW=(()=>{try{return localStorage.getItem("expira.mapView")||"field"}catch(e){return "field"}})();
+let VIEW=KV.get("mapView","field")==="flow"?"flow":"field";
 const HINT={flow:"Time runs left to right · select a bar to read it",field:"Size is tokens · order is left to right · drag to rearrange"};
 function barHTML(v,w,o){const fsb=o&&(o.fs||o.pv)?"":`<button type="button" class="ib sm mvx" data-mfs aria-label="Full screen" data-tip="Full screen"><svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.1"><path d="M1.5 4.5v-3h3M7.5 1.5h3v3M10.5 7.5v3h-3M4.5 10.5h-3v-3"/></svg></button>`;const roles=[...new Set(((w&&w.steps)||[]).map(s=>s.role))];
  return `<div class="mvb"><span class="seg3" role="radiogroup" aria-label="Map view"><button type="button" role="radio" data-mv="flow" aria-checked="${v==="flow"}">Flow</button><button type="button" role="radio" data-mv="field" aria-checked="${v==="field"}">Field</button></span><span class="mvr">${HINT[v]}</span>${v==="field"?`<span class="mvk">${roles.map(r=>`<span><i style="background:${RC[r]}"></i>${ROLE[r]}</span>`).join("")}</span>`:""}${fsb}</div>`}
 function mkMap(host,get,opt){FM.forEach(m=>{if(m.host===host||!m.host.isConnected){try{m.kill()}catch(e){}}});host.replaceChildren();return new (VIEW==="field"?FieldMap:FlowMap)(host,get,opt)}
-function setView(v){if(v===VIEW)return;VIEW=v;try{localStorage.setItem("expira.mapView",VIEW)}catch(x){}
+function setView(v){if(v===VIEW)return;VIEW=v;KV.put("mapView",VIEW);
  [...FM].forEach(m=>{if(m.opt.pv)return;const hst=m.host,g=m.get,o=Object.assign({},m.opt,{replay:true});m.kill();mkMap(hst,g,o)})}
 document.addEventListener("click",e=>{const b=e.target.closest("[data-mv]");if(b)setView(b.dataset.mv)});
 document.addEventListener("visibilitychange",()=>{if(!document.hidden)FM.forEach(m=>m.go())});
@@ -2939,6 +2990,13 @@ let sample=null,db=null,ctl=null,busy=false;
  if(!sample)$("#phx").textContent="Open this page in Claude to brief EXPIRA";grow();attInit();db=await window.claude?.use?.("db")??null;webInit()})();
 open(chats.find(c=>!c.example)||chats[0]);
 
+/* storage: apply what the durable copy or an import brings in */
+KV.subscribe((k,v)=>{if(k==="!full"){toast("This browser's storage is full. Export the library from Settings to keep it safe.");return}
+ if(k==="chats"){const id=cur?.id;chats.splice(0,chats.length,...(v||[]).filter(c=>c&&!c.example));withEx();renderRecents();if(id&&!busy)open(chats.find(c=>c.id===id)||null);return}
+ if(k==="folders"){FOLDERS.splice(0,FOLDERS.length,...(v||[]));renderRecents();return}
+ if(k==="prefs"){Object.assign(PREF,v||{});Object.assign(FORCES,PREF.forces||{});root.dataset.text=PREF.text;root.dataset.density=PREF.density;root.classList.toggle("calm",PREF.motion==="calm");reduce=MQR.matches||PREF.motion==="calm";greetR();meR();return}
+ if(k==="opt"){Object.assign(OPT,v||{});drawOpt();readyUpd();return}
+ if(k==="theme"&&v)applyTheme(v)});
 /* mercury: the selected segment or tab slides across, stretching between the two */
 {const SEL='[aria-checked="true"],[aria-selected="true"]';
 document.addEventListener("click",e=>{const b=e.target.closest(".seg2 button,.menu .seg button,[role=tablist]>[role=tab]");if(!b||reduce||b.closest(".stg-n"))return;const g=b.parentElement,o=g.querySelector(":scope>"+SEL.split(",").join(",:scope>"));if(!o||o===b)return;const gr=g.getBoundingClientRect(),a=o.getBoundingClientRect();

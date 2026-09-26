@@ -36,7 +36,7 @@
     </div>
     <div class="search"><label for="find" class="sr">Search chats</label><input id="find" placeholder="Search chats"></div>
     <div class="recents" id="recents"></div>
-    <div class="foot"><button class="me" id="me" aria-haspopup="menu" aria-expanded="false" aria-controls="acct"><span class="av">DD</span><span class="who">Duke Y. Demayo<small>EXPIRA AI Systems</small></span><svg class="mech" viewBox="0 0 10 10" fill="none" stroke="currentColor" stroke-width="1.1" aria-hidden="true"><path d="M3 4.2L5 2.4 7 4.2M3 5.8L5 7.6 7 5.8"/></svg></button><button class="ib" id="palBtn" style="margin-left:auto" data-tip="Settings  ⌘," aria-label="Settings"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1"><circle cx="8" cy="8" r="2.1"/><path d="M8 1.8l1.1 1.6 1.9-.4.5 1.9 1.8.8-.6 1.8 1.1 1.6-1.6 1.1.2 1.9-1.9.3-.8 1.8-1.8-.7L8 14.2l-1.1-1.6-1.9.4-.5-1.9-1.8-.8.6-1.8L2.2 7l1.6-1.1-.2-1.9 1.9-.3.8-1.8 1.8.7z"/></svg></button></div>
+    <div class="foot"><button class="me" id="me" aria-haspopup="menu" aria-expanded="false" aria-controls="acct"><span class="av" data-me="av"></span><span class="who"><span data-me="n"></span><small data-me="o"></small></span><svg class="mech" viewBox="0 0 10 10" fill="none" stroke="currentColor" stroke-width="1.1" aria-hidden="true"><path d="M3 4.2L5 2.4 7 4.2M3 5.8L5 7.6 7 5.8"/></svg></button><button class="ib" id="palBtn" style="margin-left:auto" data-tip="Settings  ⌘," aria-label="Settings"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1"><circle cx="8" cy="8" r="2.1"/><path d="M8 1.8l1.1 1.6 1.9-.4.5 1.9 1.8.8-.6 1.8 1.1 1.6-1.6 1.1.2 1.9-1.9.3-.8 1.8-1.8-.7L8 14.2l-1.1-1.6-1.9.4-.5-1.9-1.8-.8.6-1.8L2.2 7l1.6-1.1-.2-1.9 1.9-.3.8-1.8 1.8.7z"/></svg></button></div>
   </nav>
 
   <div class="main" id="main">
@@ -50,7 +50,7 @@
     <section class="hero" id="hero">
       <div class="dateline cap" id="dateline"></div>
       <div class="mark-w grain" id="stage"><svg class="mark" viewBox="0 0 1413 425" role="img" aria-label="EXPIRA mark"><polygon points="0,0 233,0 391,100 206,425 40,425 0,302" fill="var(--mark-a)"/><polygon points="233,0 728,0 391,100" fill="var(--gold)"/><polygon points="391,100 728,0 778,0 871,225 1166,425 1058,425" fill="var(--mark-a)"/><polygon points="391,100 1058,425 206,425" fill="var(--mark-b)"/><polygon points="918,0 1043,0 1408,425 1241,425 968,192" fill="var(--gold)"/><polygon points="1043,0 1340,0 1408,425" fill="var(--mark-b)"/></svg></div>
-      <h1 class="greet" id="greet">Good evening, <em>Duke</em></h1>
+      <h1 class="greet" id="greet"></h1>
       <p class="ready capt" id="ready"><i></i><span id="readyT">Orchestrator ready</span></p>
       <div id="heroDock" style="width:100%;display:flex;justify-content:center"></div>
       <div class="contents"><h2 class="cap">In this issue</h2><ol class="toc" id="toc"></ol></div>
@@ -117,7 +117,7 @@
   <button class="ib stg-x" id="stgX" aria-label="Close settings" data-tip="Close  Esc"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.1"><path d="M4 4l8 8M12 4l-8 8"/></svg></button>
 </div>
 <div class="menu acct" id="acct" role="menu" aria-label="Account">
-  <div class="acct-h"><span class="av">DD</span><span><b>Duke Y. Demayo</b><small>EXPIRA AI Systems</small></span></div>
+  <div class="acct-h"><span class="av" data-me="av"></span><span><b data-me="n"></b><small data-me="o"></small></span></div>
   <div class="seg" role="radiogroup" aria-label="Theme"><button role="radio" data-th="system"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1"><rect x="2" y="3" width="12" height="8.5" rx="1"/><path d="M6 13.5h4"/></svg>System</button><button role="radio" data-th="light"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1"><circle cx="8" cy="8" r="3"/><path d="M8 1.5v1.5M8 13v1.5M1.5 8H3M13 8h1.5M3.4 3.4l1 1M11.6 11.6l1 1M3.4 12.6l1-1M11.6 4.4l1-1"/></svg>Light</button><button role="radio" data-th="dark"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1"><path d="M13 9.5A5.5 5.5 0 116.5 3a4.5 4.5 0 006.5 6.5z"/></svg>Dark</button></div>
   <div class="sep"></div>
   <button role="menuitem" data-ac="settings"><svg class="ic" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1"><circle cx="8" cy="8" r="2.1"/><path d="M8 1.8l1.1 1.6 1.9-.4.5 1.9 1.8.8-.6 1.8 1.1 1.6-1.6 1.1.2 1.9-1.9.3-.8 1.8-1.8-.7L8 14.2l-1.1-1.6-1.9.4-.5-1.9-1.8-.8.6-1.8L2.2 7l1.6-1.1-.2-1.9 1.9-.3.8-1.8 1.8.7z"/></svg><span class="t">Settings</span><span class="kb">⌘,</span></button>

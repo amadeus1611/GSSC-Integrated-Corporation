@@ -1,6 +1,6 @@
 /* ---------- chat library: pins, folders, archive, rename, delete with undo ---------- */
-let FOLDERS=(()=>{try{return JSON.parse(localStorage.getItem("expira.folders")||"[]")}catch(e){return []}})();
-const saveF=()=>{try{localStorage.setItem("expira.folders",JSON.stringify(FOLDERS))}catch(e){}};
+let FOLDERS=KV.get("folders",[])||[];
+const saveF=()=>KV.put("folders",FOLDERS);
 const I={dots:`<svg viewBox="0 0 12 12" fill="currentColor"><circle cx="2.5" cy="6" r="1"/><circle cx="6" cy="6" r="1"/><circle cx="9.5" cy="6" r="1"/></svg>`,
  car:`<svg class="car" viewBox="0 0 10 10" fill="none" stroke="currentColor" stroke-width="1.2"><path d="M3.5 2L6.5 5 3.5 8"/></svg>`,
  fold:`<svg class="fi" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1"><path d="M1.5 4.5a1 1 0 011-1h3.6l1.5 1.5h5.9a1 1 0 011 1v6.5a1 1 0 01-1 1h-11a1 1 0 01-1-1z"/></svg>`,
@@ -70,6 +70,6 @@ function newFolder(moveChat){const f={id:"f"+Date.now().toString(36),name:"New f
 function deleteFolder(f){const moved=chats.filter(c=>c.folder===f.id);const idx=FOLDERS.indexOf(f);FOLDERS.splice(idx,1);moved.forEach(c=>c.folder=null);saveF();save();renderRecents();crumb();
  toastUndo(`Deleted <em>${esc(f.name)}</em>`,()=>{FOLDERS.splice(idx,0,f);moved.forEach(c=>c.folder=f.id);saveF();save();renderRecents();crumb()})}
 function archiveChat(c){c.archived=true;save();if(cur===c)open(null);renderRecents();toastUndo("Archived",()=>{c.archived=false;save();renderRecents()})}
-function deleteChat(c){const idx=chats.indexOf(c);chats.splice(idx,1);save();if(c.example)try{localStorage.setItem("expira.noExample","1")}catch(e){}if(cur===c)open(null);renderRecents();
- toastUndo(`Deleted <em>${esc(c.title.length>28?c.title.slice(0,27)+"…":c.title)}</em>`,()=>{chats.splice(idx,0,c);if(c.example)try{localStorage.removeItem("expira.noExample")}catch(e){}save();renderRecents()})}
+function deleteChat(c){const idx=chats.indexOf(c);chats.splice(idx,1);save();if(c.example)KV.put("noExample","1");if(cur===c)open(null);renderRecents();
+ toastUndo(`Deleted <em>${esc(c.title.length>28?c.title.slice(0,27)+"…":c.title)}</em>`,()=>{chats.splice(idx,0,c);if(c.example)KV.remove("noExample");save();renderRecents()})}
 function toastUndo(h,undo){const box=$("#toasts");box.innerHTML="";const e=document.createElement("div");e.className="toast";e.style.animationDuration="5.2s";e.innerHTML=`<span>${h}</span><button class="ua">Undo</button>`;e.querySelector(".ua").onclick=()=>{undo();e.remove();toast("Restored")};box.append(e);clearTimeout(box._t);box._t=setTimeout(()=>e.remove(),5300)}

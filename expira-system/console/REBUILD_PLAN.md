@@ -107,6 +107,7 @@ Duke's brief: other people will run this repo and publish the console on their o
   2. Otherwise `localStorage`, which is per browser and private.
   - **Before building, load the `artifact-capabilities` skill and confirm the db's access model** (shared or per-viewer, identity, limits). Record the finding here.
   - `localStorage` is always a write-through cache, so the console works offline and when `db` is absent.
+  - **Finding (2026-09-26, runtime contract 0.2.60):** `db` is shared by default; each viewer's `data/users/<id>/` subtree is private, the owner included, but the id comes only from the `user` capability's `id()`, which resolves null unless the page declares `user`. The live page declares mcp, sample, db and downloads, not `user`, so today the adapter runs on `localStorage`. The db path is built and tested (`qa/store.js`, with a fake per-viewer db) and turns on by itself once `user` is declared; declaring it is Duke's call at Gate B. Limits: 256 KiB per document (larger chats stay local), 5,000 documents per artifact. Only Contributors and up can write their own subtree.
 - **Migration:** on first load, import `expira.v6` (and `v5`) chats, prefs, folders and options into the adapter. Never delete the old keys in the same release.
 - **Export and import:** the whole library as one JSON file, through `downloads`, for moving devices or owners.
 - **Portability:**

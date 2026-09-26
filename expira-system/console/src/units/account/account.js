@@ -1,3 +1,8 @@
+/* the account row shows the viewer's own name from settings, never a built-in one */
+function meR(){const n=PREF.full||PREF.name,ini=n?n.split(/\s+/).filter(Boolean).map(w=>w[0]).filter(c=>/\p{L}/u.test(c)).slice(0,2).join("").toUpperCase():"";
+ document.querySelectorAll('[data-me="av"]').forEach(x=>x.innerHTML=ini?esc(ini):`<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.1" aria-hidden="true"><circle cx="8" cy="6" r="2.6"/><path d="M3.2 13.2c.8-2.4 2.6-3.6 4.8-3.6s4 1.2 4.8 3.6"/></svg>`);
+ document.querySelectorAll('[data-me="n"]').forEach(x=>x.textContent=n||"Your account");document.querySelectorAll('[data-me="o"]').forEach(x=>x.textContent=PREF.org||(n?"":"Add your name in Settings"))}
+meR();
 /* the name row opens a small account menu, upward; a second click closes it */
 POUR.attach($("#acct"),{blur:true});
 function acctMenu(o){const a=$("#acct"),b=$("#me");if(!a)return;o=o??!a.classList.contains("open");
