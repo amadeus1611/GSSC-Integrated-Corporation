@@ -107,7 +107,8 @@ Motion is the heart of the UX: fidelity in the engine comes first.
 
 ### 4.1 Logic: a place people shape, not a form they fill in
 - **Structure.**
-  - Show the fewest fixed things, then let the person's own structure carry the rest. The sidebar is New chat, Search, and then one tree: folders the person makes (they nest, and they hold chats and documents), then loose chats, newest first.
+  - Show the fewest fixed things, then let the person's own structure carry the rest.
+  - Layout, as in macOS: a toolbar row (New chat and New folder as icons, with the sidebar button at its right), then a real search field that never scrolls, then one tree: folders the person makes (they nest, and they hold chats and documents), then loose chats, newest first. Last come the account and the mark.
   - Don't add fixed categories, date headings or counts where order already says it.
 - **State is a property, not a place.** A pinned item stays where it lives and floats to the top of its level with a small gold ring. A running chat breathes a gold dot, and a document shows a page glyph.
 - **Actions are a card of pages.**
@@ -118,8 +119,9 @@ Motion is the heart of the UX: fidelity in the engine comes first.
 - **Fewer words, more detail. People are smarter than we think.**
   - There are no tooltips and no shortcut hints on rows.
   - Long names feather into the surface; they never end in "…".
-  - Undo happens in place: a deleted row defocuses and its action becomes an undo arrow for a few seconds. There is no toast.
+  - Undo happens in place: a deleted row defocuses and its action becomes an undo arrow for a few seconds, with a trash can beside it to delete it at once. There is no toast.
   - Only an action menu may use words for its choices.
+- **Rubber bands tighten.** Stretched past its limit, a surface resists more the further it is pulled, up to a fixed amount (the sidebar: 64px past its maximum). Released, it settles back very softly.
 - **Direct manipulation.**
   - Drag onto a folder; a closed folder springs open if you linger, as in Finder.
   - Pull the sidebar's edge to resize it. The width is remembered.
@@ -128,6 +130,16 @@ Motion is the heart of the UX: fidelity in the engine comes first.
 
 ### 4.2 Motion: one curve, focus in and focus out
 - **One curve for everything**, entering and leaving alike: fast, then a long soft settle (`--sb-ease` `cubic-bezier(.19,1,.22,1)`). It supersedes the per-direction curves of §3 for EXPIRA surfaces.
+- **Large moves get a travel curve.** A curve that is right for a menu is wrong for a whole panel: it covers most of the distance in the first 100 ms and then crawls the last pixels, which reads as "instant, then a stop". The dock closing and a resize settling therefore use `--sb-dock-close` `cubic-bezier(.3,.85,.15,1)` over 720 ms and 760 ms. It still leaves quickly, but it spreads the travel so the eye can follow it, then settles very softly.
+- **A large surface dissolves as it slows.** Closing, the dock stays solid through the fast part and fades and blurs over its settle, so its last pixels melt away rather than stop and vanish.
+- **Everything that moves has a slight motion blur**, in proportion to its speed and sharp at rest:
+  - the dock, up to 1.6px;
+  - the sidebar button, up to 2.4px;
+  - moving rows, up to 1.1px;
+  - the hover plate, up to 1.4px;
+  - a resize settling, up to 1.2px.
+  
+  Moves are sampled from their curve so the blur can follow the speed.
 - **Timing:**
 
   | Token | Duration | Used for |
@@ -193,9 +205,14 @@ The full palette is in `brand_assets/palette.json`, and §2 lists the ten colour
 - Labels are 9.5px (the floor, §2), in Inter at 400.
 - The display serif appears only as an accent.
 
+**The account row** is a macOS popup button in EXPIRA dress.
+- The monogram is set in the display italic on a quiet disc, and its ring warms to gold when the row is hovered or open.
+- The name and org sit on two lines.
+- The indicator is macOS's pair of up and down chevrons. Hovered, they part a little; open, they turn inward and meet, so the same mark reads as "close".
+
 ### 4.4 Tokens
 The sidebar's tokens are:
-- motion: `--sb-ease`, `--sb-in`, `--sb-out`, `--sb-move`, `--sb-dock`;
+- motion: `--sb-ease`, `--sb-in`, `--sb-out`, `--sb-move`, `--sb-dock`, `--sb-dock-close`, `--sb-dock-out`, `--sb-settle`;
 - scale: `--sb-fs`, `--sb-fs-2`, `--sb-row`, `--sb-ic`, `--sb-indent`;
 - width: `--sb-w`.
 
@@ -213,6 +230,13 @@ They live in `bench/drafts/sidebar-next.css`, and the dark stack lives in `bench
 - **Tokens (v41):** every value comes from `src/tokens.css`. Spacing is a 4px scale with half steps (`--sp-half`, `--sp-1h` … `--sp-4h`) below 20px for dense chrome; a 1px nudge is optical and stays literal. Layers are named (`--z-side`, `--z-menu`, `--z-tip` …) in one stacking order. Dark tokens are written once in `@dark{}`.
 
 ## 6. Change log
+- **v45 dock and layout** (2026-09-26, Amadeus):
+  - The dock's close no longer rushes and then stalls. It now has its own travel curve, and it dissolves as it slows.
+  - Opening keeps its feel and gains motion blur.
+  - Everything that moves blurs slightly with its speed.
+  - The resize rubber band tightens to 64px past its maximum and settles back softly.
+  - A deleted row offers a trash can beside undo, to delete it at once.
+  - The layout follows macOS: a toolbar row, a real search field, the tree, and the account as a popup button (a serif monogram and the up-and-down chevrons).
 - **v45 concept** (2026-09-26, Amadeus): §4 EXPIRA × macOS is added as the global house style for the Console and its derivatives.
   - It covers the file-system logic, one curve with focus in and focus out, and the improved near-black stack.
   - The GSSC kernel templates keep their own look.

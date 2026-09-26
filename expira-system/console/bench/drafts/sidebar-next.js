@@ -31,21 +31,28 @@ const SB=(()=>{const side=$("#side"),scroll=$("#sbScroll");
   top:sv('<path d="M3 3h10M8 13V6M5 9l3-3 3 3"/>'),
   x:sv('<path d="M4 4l8 8M12 4l-8 8"/>',1.3),
   move:sv('<path d="M2 4.6c0-.6.4-1.1 1-1.1h3.3l1.4 1.5H13c.6 0 1 .4 1 1v6.4c0 .6-.4 1.1-1 1.1H3c-.6 0-1-.5-1-1.1z"/><path d="M6 9.5h4.5M8.8 7.8l1.7 1.7-1.7 1.7"/>'),
+  compose:sv('<path d="M8.5 2.5H4a1.5 1.5 0 00-1.5 1.5v8A1.5 1.5 0 004 13.5h8a1.5 1.5 0 001.5-1.5V7.5"/><path d="M12.2 2.3l1.5 1.5-5.6 5.6-2.1.6.6-2.1z"/>'),
+  kill:sv('<path d="M3 4.5h10M6.2 4.5V3.2h3.6v1.3M4.4 4.5l.6 8.3h6l.6-8.3M6.8 7l2.4 3.6M9.2 7l-2.4 3.6"/>'),
+  updown:`<svg class="sb-ud" viewBox="0 0 12 16" fill="none" stroke="currentColor" stroke-width="1.15" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path class="u" d="M3.4 6.2 6 3.6l2.6 2.6"/><path class="d" d="M3.4 9.8 6 12.4l2.6-2.6"/></svg>`,
   back:sv('<path d="M9.5 4 5.5 8l4 4"/>',1.3),fwd:sv('<path d="M6.5 4l4 4-4 4"/>',1.3)};
  /* the foot's markup names its icons as <!--name--> placeholders; fill them before anything binds to it */
  const foot=$(".sb-foot");foot.innerHTML=foot.innerHTML.replace(/<!--(\w+)-->/g,(m,k)=>IC[k]?IC[k].replace("<svg",k==="chev"?'<svg class="sb-chev"':"<svg"):m);
- /* the top rows (New chat, with New folder beside it; Search, which becomes its own field) and the tree */
- scroll.innerHTML=`<div class="sb-top"><div class="sb-row sb-new" id="newChat"><button class="sb-hit" type="button"><span class="sb-ic">${IC.plus}</span><span class="sb-t">New chat</span></button>`+
-  `<button class="sb-more" type="button" data-newf aria-label="New folder">${IC.newf}</button></div>`+
-  `<div class="sb-row sb-find" id="findRow"><button class="sb-hit" type="button" id="findBtn"><span class="sb-ic">${IC.search}</span><span class="sb-t sb-ph">Search</span></button>`+
-  `<label for="find" class="sr">Search chats and files</label><input id="find" autocomplete="off" spellcheck="false" tabindex="-1"><button class="sb-clr" type="button" aria-label="Clear the search" tabindex="-1">${IC.x}</button></div></div>`+
-  `<div class="sb-tree" id="sbTree" role="tree" aria-label="Chats and folders"></div>`;
+ /* macOS layout: the header row is a toolbar (New chat, New folder; the sidebar button sits at its right), a real search
+    field sits under it and never scrolls, and the tree fills the rest */
+ const bar=side.querySelector(".brand");bar.removeAttribute("aria-hidden");
+ bar.innerHTML=`<button class="sb-tb" type="button" id="newChat" aria-label="New chat">${IC.compose}</button><button class="sb-tb" type="button" data-newf aria-label="New folder">${IC.newf}</button>`;
+ bar.insertAdjacentHTML("afterend",`<label class="sb-search" id="findRow"><span class="sb-ic">${IC.search}</span><span class="sr">Search chats and files</span><input id="find" placeholder="Search" autocomplete="off" spellcheck="false"><button class="sb-clr" type="button" aria-label="Clear the search">${IC.x}</button></label>`);
+ scroll.innerHTML=`<div class="sb-tree" id="sbTree" role="tree" aria-label="Chats and folders"></div>`;
  const tree=$("#sbTree");
  const esc=s=>String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
  const tok=n=>getComputedStyle(root).getPropertyValue(n).trim();
  const ms=n=>{const v=tok(n);return parseFloat(v)*(/ms$/.test(v)?1:1000)||1};
  const blurPx=()=>parseFloat(tok("--blur-enter"))||0;
  const EZ=()=>tok("--sb-ease")||"cubic-bezier(.19,1,.22,1)";
+ /* motion blur: every move is sampled from its curve, and blurs in proportion to its speed, sharp at rest */
+ function sampled(D,Es,frame){const E=easeFn(Es),N=Math.max(16,Math.ceil(D/1000*120)),v=[];for(let i=0;i<=N;i++){const t=i/N;v.push((E(Math.min(1,t+.008))-E(Math.max(0,t-.008)))/.016)}
+  const vm=Math.max(...v)||1;return v.map((x,i)=>frame(E(i/N),x/vm,i/N))}
+ const mb=(k,max)=>k*max<.06?"blur(0px)":`blur(${(k*max).toFixed(2)}px)`;
  /* entering pulls focus (opacity first, focus last); leaving racks out (focus first, fade after). Only opacity and blur. */
  const focusIn=B=>[{opacity:0,filter:`blur(${B}px)`},{opacity:.85,filter:`blur(${(B*.4).toFixed(2)}px)`,offset:.35},{opacity:1,filter:"blur(0px)"}];
  const focusOut=B=>[{opacity:1,filter:"blur(0px)"},{opacity:.55,filter:`blur(${(B*.75).toFixed(2)}px)`,offset:.35},{opacity:0,filter:`blur(${B}px)`}];
@@ -80,11 +87,11 @@ const SB=(()=>{const side=$("#side"),scroll=$("#sbScroll");
  function make(w){const e=document.createElement("div");e.className="sb-row";e.dataset.id=w.id;
   if(w.empty){e.classList.add("sb-empty");e.innerHTML=`<span class="sb-t">Empty</span>`;return e}
   e.draggable=true;e.innerHTML=`<button class="sb-hit" type="button"><span class="sb-car">${w.n.kind==="folder"?IC.car:""}</span><span class="sb-ic"></span><span class="sb-t"></span></button>`+
-   `<button class="sb-more" type="button" aria-label="Actions" aria-haspopup="menu" aria-expanded="false"><span class="d">${IC.dots}</span><span class="u">${IC.undo}</span></button>`;return e}
+   `<button class="sb-kill" type="button" aria-label="Delete now" tabindex="-1">${IC.kill}</button><button class="sb-more" type="button" aria-label="Actions" aria-haspopup="menu" aria-expanded="false"><span class="d">${IC.dots}</span><span class="u">${IC.undo}</span></button>`;return e}
  function update(e,w){e.style.setProperty("--d",w.d);e.classList.toggle("deep",w.d>0);if(w.empty)return;const n=w.n;
   e.dataset.k=n.kind;e.classList.toggle("on",n.id===sel);e.classList.toggle("pinned",!!n.pin);e.classList.toggle("undo",!!n.del);
   if(n.kind==="folder")e.setAttribute("aria-expanded",String(!!(query.trim()||n.open)));
-  e.querySelector(".sb-more").setAttribute("aria-label",n.del?"Undo delete":"Actions");
+  e.querySelector(".sb-more").setAttribute("aria-label",n.del?"Undo delete":"Actions");e.querySelector(".sb-kill").tabIndex=n.del?0:-1;
   const ic=e.querySelector(".sb-ic"),g=glyph(n);if(ic._g!==g){ic.innerHTML=g;ic._g=g}
   const t=e.querySelector(".sb-t");if(!t.querySelector("input")&&t.textContent!==n.t)t.textContent=n.t}
  const els=new Map();
@@ -109,7 +116,8 @@ const SB=(()=>{const side=$("#side"),scroll=$("#sbScroll");
   const T=ms("--sb-move"),IN=ms("--sb-in"),OUT=ms("--sb-out"),Es=EZ(),E=easeFn(Es),B=blurPx()*.5,L=leaving.length?Math.round(OUT*.25):0;
   /* the rows that stay glide by whole pixels; rising ones wait a beat so what leaves can rack out first */
   want.forEach(w=>{const e=els.get(w.id),b=before.get(w.id);if(b==null)return;e.getAnimations().forEach(a=>{if(!(a instanceof CSSTransition)&&!(a instanceof CSSAnimation))a.cancel()});
-   const dy=Math.round(b-e.getBoundingClientRect().top);if(dy)e.animate([{transform:`translateY(${dy}px)`},{transform:"none"}],{duration:T,easing:Es,delay:dy>0?L:0,fill:"backwards"})});
+   const dy=Math.round(b-e.getBoundingClientRect().top);if(!dy)return;const M=Math.min(1.1,Math.abs(dy)/70);
+   e.animate(sampled(T,Es,(p,k)=>({transform:`translateY(${(dy*(1-p)).toFixed(2)}px)`,filter:mb(k,M)})),{duration:T,easing:"linear",delay:dy>0?L:0,fill:"backwards"})});
   /* new rows pull focus the moment the rows below have uncovered them */
   const blocks=(list,top,h)=>{const bs=[];list.sort((a,b)=>top(a)-top(b)).forEach(x=>{const l=bs[bs.length-1];if(l&&top(x)<=l.end+2){l.items.push(x);l.end=top(x)+h(x)}else bs.push({start:top(x),end:top(x)+h(x),items:[x]})});return bs};
   blocks([...fresh].filter(e=>!before.has(e.dataset.id)||true),e=>e.offsetTop,e=>e.offsetHeight).forEach(bk=>{const d=Math.max(1,bk.end-bk.start);
@@ -132,7 +140,7 @@ const SB=(()=>{const side=$("#side"),scroll=$("#sbScroll");
    const y0=curY();mv?.cancel();y=y1;hl.style.transform=`translateY(${y1}px)`;const d=y1-y0;if(Math.abs(d)<.5)return;
    const T=ms("--sb-move")*.8,E=easeFn(EZ()),N=Math.max(14,Math.ceil(T/1000*120)),k=Math.min(.45,Math.abs(d)/(h*5)),vel=[];
    for(let i=0;i<=N;i++){const t=i/N;vel.push((E(Math.min(1,t+.01))-E(Math.max(0,t-.01)))/.02)}const vmax=Math.max(...vel)||1;
-   mv=hl.animate(vel.map((v,i)=>({transform:`translateY(${(y0+d*E(i/N)).toFixed(2)}px) scaleY(${(1+k*v/vmax).toFixed(3)})`})),{duration:T,easing:"linear"})}
+   const M=Math.min(1.4,Math.abs(d)/60);mv=hl.animate(vel.map((v,i)=>({transform:`translateY(${(y0+d*E(i/N)).toFixed(2)}px) scaleY(${(1+k*v/vmax).toFixed(3)})`,filter:mb(v/vmax,M)})),{duration:T,easing:"linear"})}
   list.addEventListener("pointerover",e=>{const r=e.target.closest(sel);if(!r||!list.contains(r)||r.classList.contains("gone")||r.classList.contains("sb-empty")){if(!e.target.closest(".sb-hl"))show(false);return}place(r);show(true)});
   list.addEventListener("pointerleave",()=>show(false));
   return{el:hl,off:()=>show(false)}}
@@ -141,24 +149,21 @@ const SB=(()=>{const side=$("#side"),scroll=$("#sbScroll");
  /* ---- the top rows: New chat (with New folder beside it) and Search ---- */
  function newChat(parent=ROOT){const n=mk("chat","New chat",{ts:Date.now()});parent.kids.push(n);if(parent!==ROOT)parent.open=true;sel=n.id;sync();return n}
  function newFolder(parent=ROOT){const n=mk("folder","New folder");parent.kids.push(n);if(parent!==ROOT)parent.open=true;sync();rename(els.get(n.id));return n}
- $("#newChat").addEventListener("click",e=>{if(e.target.closest("[data-newf]"))return;newChat()});
- $("#newChat [data-newf]").addEventListener("click",e=>{e.stopPropagation();newFolder()});
- const inp=$("#find"),frow=$("#findRow");let findT=0;
- function search(on){if(on===frow.classList.contains("on"))return;clearTimeout(findT);
-  if(on){inp.getAnimations().forEach(a=>a.cancel());frow.classList.add("on");inp.tabIndex=0;frow.querySelector(".sb-clr").tabIndex=0;inp.focus({preventScroll:true});return}
-  frow.classList.remove("on");inp.tabIndex=-1;frow.querySelector(".sb-clr").tabIndex=-1;const typed=inp.value.trim();
-  if(typed&&!reduce)inp.animate(focusOut(blurPx()*.5),{duration:ms("--sb-out"),easing:EZ(),fill:"forwards"});
-  findT=setTimeout(()=>{inp.getAnimations().forEach(a=>a.cancel());inp.value="";frow.classList.remove("has")},typed?ms("--sb-out"):0);
-  if(typed){query="";sync()}}
- frow.querySelector(".sb-hit").addEventListener("click",()=>search(true));
- frow.querySelector(".sb-clr").addEventListener("click",e=>{e.stopPropagation();inp.value="";frow.classList.remove("has");query="";sync();inp.focus()});
+ $("#newChat").addEventListener("click",()=>newChat());
+ bar.querySelector("[data-newf]").addEventListener("click",e=>{e.stopPropagation();newFolder()});
+ /* the search field: typing filters the tree in place; Esc clears, and a second Esc leaves the field; arrow down steps into the tree */
+ const inp=$("#find"),frow=$("#findRow");
+ const clearQ=()=>{if(!inp.value)return;const typed=inp.value;inp.value="";frow.classList.remove("has");query="";sync()};
+ function search(on){if(on){inp.focus({preventScroll:true});return}clearQ();inp.blur()}
+ frow.querySelector(".sb-clr").addEventListener("click",e=>{e.preventDefault();e.stopPropagation();clearQ();inp.focus()});
  inp.addEventListener("input",()=>{frow.classList.toggle("has",!!inp.value);query=inp.value;sync()});
- inp.addEventListener("keydown",e=>{if(e.key==="Escape"){e.stopPropagation();search(false)}});
- inp.addEventListener("blur",()=>setTimeout(()=>{if(!inp.value.trim()&&!frow.contains(document.activeElement))search(false)},0));
+ inp.addEventListener("keydown",e=>{if(e.key==="Escape"){e.stopPropagation();inp.value?clearQ():inp.blur()}
+  if(e.key==="ArrowDown"){e.preventDefault();tree.querySelector(".sb-row:not(.gone) .sb-hit")?.focus()}});
 
  /* ---- clicks in the tree: a folder opens or closes, anything else is selected ---- */
  function toggle(n,open){n.open=open??!n.open;sync()}
- tree.addEventListener("click",e=>{const m=e.target.closest(".sb-more");if(m){e.stopPropagation();const r=m.closest(".sb-row"),f=find(r.dataset.id);
+ tree.addEventListener("click",e=>{const k=e.target.closest(".sb-kill");if(k){e.stopPropagation();const f=find(k.closest(".sb-row").dataset.id);if(f&&f.n.del)kill(f.n);return}
+  const m=e.target.closest(".sb-more");if(m){e.stopPropagation();const r=m.closest(".sb-row"),f=find(r.dataset.id);
    if(f.n.del)return undoDel(f.n);pmFor===r&&pm.classList.contains("open")?pop(false):pop(true,r);return}
   const h=e.target.closest(".sb-hit");if(!h||h.querySelector("input"))return;const f=find(h.parentElement.dataset.id);if(!f||f.n.del)return;
   if(f.n.kind==="folder")return toggle(f.n);sel=f.n.id;tree.querySelectorAll(".sb-row.on").forEach(x=>x.classList.remove("on"));h.parentElement.classList.add("on")},true);
@@ -245,6 +250,8 @@ const SB=(()=>{const side=$("#side"),scroll=$("#sbScroll");
  /* delete: the row defocuses in place and offers undo for a few seconds, then leaves */
  function del(n){n.del=true;sync();n._t=setTimeout(()=>{const f=find(n.id);if(f&&n.del){f.parent.kids.splice(f.parent.kids.indexOf(n),1);if(sel===n.id)sel=null;sync()}},4200)}
  function undoDel(n){clearTimeout(n._t);n.del=false;sync()}
+ /* delete now: skip the grace period */
+ function kill(n){clearTimeout(n._t);const f=find(n.id);if(!f)return;f.parent.kids.splice(f.parent.kids.indexOf(n),1);if(sel===n.id)sel=null;sync()}
  function rename(row){if(!row)return;const n=find(row.dataset.id)?.n;if(!n)return;const t=row.querySelector(".sb-t"),old=n.t,i=document.createElement("input");i.className="sb-ren";i.value=old;i.setAttribute("aria-label","Name");
   t.replaceChildren(i);i.focus();i.select();let done=false;
   const end=ok=>{if(done)return;done=true;const v=i.value.trim();n.t=ok&&v?v:old;t.textContent=n.t;row.querySelector(".sb-hit").focus({preventScroll:true})};
@@ -261,10 +268,10 @@ const SB=(()=>{const side=$("#side"),scroll=$("#sbScroll");
  scroll.addEventListener("drop",e=>{if(!drag)return;const {t}=target(e);e.preventDefault();clear();clearTimeout(spring);springOn=null;move(drag.n,drag.parent,t)});
 
  /* ---- keys: arrows walk what is visible; right opens or steps in, left closes or climbs; F2 renames; Delete deletes ---- */
- const stops=()=>[...scroll.querySelectorAll(".sb-hit")].filter(x=>x.getClientRects().length&&!x.closest(".gone,.sb-find.on"));
+ const stops=()=>[...scroll.querySelectorAll(".sb-hit")].filter(x=>x.getClientRects().length&&!x.closest(".gone"));
  scroll.addEventListener("keydown",e=>{if(e.target.tagName==="INPUT")return;const all=stops(),i=all.indexOf(e.target.closest(".sb-hit"));if(i<0)return;const row=all[i].closest(".sb-row"),f=row.dataset.id?find(row.dataset.id):null;
   const go=x=>{if(x){e.preventDefault();x.focus()}};
-  if(e.key==="ArrowDown")go(all[i+1]);else if(e.key==="ArrowUp")go(all[i-1]);else if(e.key==="Home")go(all[0]);else if(e.key==="End")go(all[all.length-1]);
+  if(e.key==="ArrowDown")go(all[i+1]);else if(e.key==="ArrowUp")go(all[i-1]||inp);else if(e.key==="Home")go(all[0]);else if(e.key==="End")go(all[all.length-1]);
   else if(!f)return;
   else if(e.key==="ArrowRight"&&f.n.kind==="folder"){e.preventDefault();if(!f.n.open)toggle(f.n,true);else go(all[i+1])}
   else if(e.key==="ArrowLeft"){e.preventDefault();if(f.n.kind==="folder"&&f.n.open)toggle(f.n,false);else if(f.parent!==ROOT)els.get(f.parent.id)?.querySelector(".sb-hit").focus()}
@@ -276,48 +283,60 @@ const SB=(()=>{const side=$("#side"),scroll=$("#sbScroll");
  function feather(){scroll.classList.toggle("f-s",scroll.scrollTop>2);scroll.classList.toggle("f-e",scroll.scrollTop+scroll.clientHeight<scroll.scrollHeight-2)}
  scroll.addEventListener("scroll",feather,{passive:true});new ResizeObserver(feather).observe(scroll);
 
- /* ---- the dock. The dock slides out on the one curve, its content racking out as it goes and drifting a little behind
-    (depth). The sidebar button travels with it: from the dock's top right, across the dock, into the head of the chat,
-    on the same curve and time, so it lands as the dock leaves whatever the dock's width. While it moves fast it blurs
-    and stretches a little along its path, and it is sharp again as it settles. Opening sends it back the same way. ---- */
+ /* ---- the dock ----
+    Opening keeps the one curve. Closing has its own (--sb-dock-close over --sb-dock-out): it leaves quickly, spreads its
+    travel so you can follow it, and settles very softly. The dock stays solid through the fast part and dissolves as it
+    slows, so its last pixels melt away rather than stop and vanish. Everything that moves blurs with its speed: the dock,
+    its content (which drifts a little behind it, for depth), and the sidebar button, which travels from the dock's top
+    right, across the dock, into the head of the chat on the dock's own curve and time, landing as the dock leaves at
+    any width. Opening sends it all back. ---- */
  const fold=$("#fold"),grip=$("#sbGrip"),app=$("#app");
- const inner=()=>[side.querySelector(".brand"),scroll,foot];let flight=null;
+ const inner=()=>[bar,frow,scroll,foot];let flight=null,panel=[];
+ const dockCurve=shut=>shut?(tok("--sb-dock-close")||"cubic-bezier(.3,.85,.15,1)"):EZ();
+ const dockTime=shut=>ms(shut?"--sb-dock-out":"--sb-dock");
  function travel(x0,D,Es){const x1=fold.getBoundingClientRect().left,d=x0-x1;if(Math.abs(d)<1)return;
-  const E=easeFn(Es),N=Math.max(16,Math.ceil(D/1000*120)),vel=[];for(let i=0;i<=N;i++){const t=i/N;vel.push((E(Math.min(1,t+.01))-E(Math.max(0,t-.01)))/.02)}
-  const vmax=Math.max(...vel)||1,B=Math.min(2.4,Math.abs(d)/110),S=Math.min(.22,Math.abs(d)/1400);
-  flight=fold.animate(vel.map((v,i)=>{const k=v/vmax;return{transform:`translateX(${(d*(1-E(i/N))).toFixed(2)}px) scaleX(${(1+S*k).toFixed(3)})`,filter:k<.04?"blur(0px)":`blur(${(B*k).toFixed(2)}px)`}}),{duration:D,easing:"linear"})}
+  const B=Math.min(2.4,Math.abs(d)/110),S=Math.min(.22,Math.abs(d)/1400);
+  flight=fold.animate(sampled(D,Es,(p,k)=>({transform:`translateX(${(d*(1-p)).toFixed(2)}px) scaleX(${(1+S*k).toFixed(3)})`,filter:mb(k,B)})),{duration:D,easing:"linear"})}
  function dock(shut){shut=shut??!app.classList.contains("folded");if(shut===app.classList.contains("folded"))return;hlS.off();acct(false);pop(false);
-  const x0=fold.getBoundingClientRect().left;flight?.cancel();
+  const x0=fold.getBoundingClientRect().left;flight?.cancel();panel.forEach(a=>a.cancel());panel=[];
   app.classList.toggle("folded",shut);const l=shut?"Open sidebar":"Close sidebar";fold.setAttribute("aria-expanded",String(!shut));fold.setAttribute("aria-label",l);fold.dataset.tip=l;
-  if(reduce)return;const D=ms("--sb-dock"),Es=EZ(),B=blurPx()*.6;travel(x0,D,Es);
-  inner().forEach(el=>{el.getAnimations().forEach(a=>a.cancel());
-   el.animate(shut?[{opacity:1,filter:"blur(0px)",transform:"none"},{opacity:.4,filter:`blur(${(B*.6).toFixed(2)}px)`,transform:"translateX(10px)",offset:.3},{opacity:0,filter:`blur(${B}px)`,transform:"translateX(22px)"}]
-    :[{opacity:0,filter:`blur(${B}px)`,transform:"translateX(22px)"},{opacity:.8,filter:`blur(${(B*.35).toFixed(2)}px)`,transform:"translateX(6px)",offset:.4},{opacity:1,filter:"blur(0px)",transform:"none"}],
-    {duration:shut?D*.7:D,easing:Es,fill:shut?"forwards":"none"})})}
+  if(reduce)return;const D=dockTime(shut),Es=dockCurve(shut),B=blurPx()*.6;travel(x0,D,Es);
+  panel.push(side.animate(sampled(D,Es,(p,k)=>shut?{opacity:p<.45?1:Math.max(0,1-Math.pow((p-.45)/.53,1.3)).toFixed(3),filter:mb(k,1.6)}:{filter:mb(k,1.2)}),
+   {duration:D,easing:"linear",fill:shut?"forwards":"none"}));
+  inner().forEach(el=>{el.getAnimations().forEach(a=>{if(!(a instanceof CSSTransition))a.cancel()});
+   panel.push(el.animate(sampled(D,Es,p=>shut?{transform:`translateX(${(p*20).toFixed(2)}px)`,opacity:(1-p*.55).toFixed(3),filter:`blur(${(p*B).toFixed(2)}px)`}
+    :{transform:`translateX(${((1-p)*20).toFixed(2)}px)`,opacity:(.2+.8*Math.min(1,p*1.25)).toFixed(3),filter:`blur(${((1-p)*B).toFixed(2)}px)`}),{duration:D,easing:"linear",fill:shut?"forwards":"none"}))})}
  fold.addEventListener("click",()=>dock());
 
- /* ---- the resize grip: drag to set the width between MIN and MAX; past MIN the dock resists, and pulled below SHUT it
-    docks on release. Double-click resets; arrows nudge; Enter docks. The width is remembered. ---- */
- const MIN=208,MAX=400,DEF=256,SHUT=150;let W=DEF;
+ /* ---- the resize grip ----
+    Drag to set the width between MIN and MAX. Past either end the dock stretches with rising resistance (a rubber band
+    that tightens, so it can never run away), and pulled below SHUT it docks on release. On release it settles back
+    within its range very softly (--sb-dock-close over --sb-settle), blurring a little with its speed. Double-click
+    resets; arrows nudge; Enter docks. The width is remembered. ---- */
+ const MIN=208,MAX=400,DEF=256,SHUT=150,RUB=64;let W=DEF,settling=0;
  try{W=Math.min(MAX,Math.max(MIN,+localStorage.getItem("bench.sbw")||DEF))}catch(x){}
  const setW=w=>{root.style.setProperty("--sb-w",Math.round(w)+"px");grip.setAttribute("aria-valuenow",String(Math.round(w)))};setW(W);
- const keepW=w=>{W=Math.min(MAX,Math.max(MIN,w));setW(W);try{localStorage.setItem("bench.sbw",String(Math.round(W)))}catch(x){}};
- grip.addEventListener("pointerdown",e=>{if(e.button!==0)return;e.preventDefault();grip.setPointerCapture(e.pointerId);grip.classList.add("drag");document.body.classList.add("sb-resizing");hlS.off();
+ const store=w=>{W=w;try{localStorage.setItem("bench.sbw",String(Math.round(W)))}catch(x){}};
+ function settleTo(to){to=Math.min(MAX,Math.max(MIN,to));cancelAnimationFrame(settling);const from=parseFloat(tok("--sb-w"))||W;store(to);
+  if(reduce||Math.abs(to-from)<1)return setW(to);
+  const D=ms("--sb-settle"),Es=tok("--sb-dock-close")||"cubic-bezier(.3,.85,.15,1)",E=easeFn(Es),t0=performance.now(),M=Math.min(1.2,Math.abs(to-from)/50);
+  inner().forEach(el=>el.animate(sampled(D,Es,(p,k)=>({filter:mb(k,M)})),{duration:D,easing:"linear"}));
+  const step=t=>{const u=Math.min(1,(t-t0)/D);setW(from+(to-from)*E(u));if(u<1)settling=requestAnimationFrame(step)};settling=requestAnimationFrame(step)}
+ grip.addEventListener("pointerdown",e=>{if(e.button!==0)return;e.preventDefault();cancelAnimationFrame(settling);grip.setPointerCapture(e.pointerId);grip.classList.add("drag");document.body.classList.add("sb-resizing");hlS.off();
   const x0=side.getBoundingClientRect().left;let shutNow=false;
   const moveP=ev=>{const x=ev.clientX-x0;let w=x;
-   if(x<MIN)w=MIN-(MIN-x)*.35;else if(x>MAX)w=MAX+(x-MAX)*.2;
+   if(x>MAX)w=MAX+RUB*(1-Math.exp(-(x-MAX)/RUB));else if(x<MIN)w=MIN-RUB*.7*(1-Math.exp(-(MIN-x)/(RUB*.7)));
    shutNow=x<SHUT;grip.classList.toggle("shut",shutNow);
    /* below the minimum the content fades with the pull, so the dock visibly lets go */
    const k=x<MIN?Math.max(0,1-(MIN-x)/(MIN-SHUT+40)):1;inner().forEach(el=>{el.style.opacity=k<1?(.35+.65*k).toFixed(3):""});setW(w)};
   const up=()=>{grip.removeEventListener("pointermove",moveP);grip.removeEventListener("pointerup",up);grip.removeEventListener("pointercancel",up);grip.classList.remove("drag","shut");document.body.classList.remove("sb-resizing");
    inner().forEach(el=>el.style.opacity="");
-   if(shutNow){dock(true);setTimeout(()=>{if(app.classList.contains("folded"))setW(W)},ms("--sb-dock")+40);return}
-   const w=parseFloat(tok("--sb-w"));if(w<MIN||w>MAX&&!reduce){/* spring back from the stretch on the curve */const from=w,to=Math.min(MAX,Math.max(MIN,w)),t0=performance.now(),D=ms("--sb-move"),E=easeFn(EZ());
-    const step=t=>{const u=Math.min(1,(t-t0)/D);setW(from+(to-from)*E(u));if(u<1)requestAnimationFrame(step);else keepW(to)};requestAnimationFrame(step)}else keepW(w)};
+   if(shutNow){dock(true);setTimeout(()=>{if(app.classList.contains("folded"))setW(W)},dockTime(true)+40);return}
+   settleTo(parseFloat(tok("--sb-w")))};
   grip.addEventListener("pointermove",moveP);grip.addEventListener("pointerup",up);grip.addEventListener("pointercancel",up)});
- grip.addEventListener("dblclick",()=>keepW(DEF));
- grip.addEventListener("keydown",e=>{if(e.key==="ArrowLeft"||e.key==="ArrowRight"){e.preventDefault();keepW(W+(e.key==="ArrowLeft"?-16:16))}if(e.key==="Enter"){e.preventDefault();dock(true)}});
+ grip.addEventListener("dblclick",()=>settleTo(DEF));
+ grip.addEventListener("keydown",e=>{if(e.key==="ArrowLeft"||e.key==="ArrowRight"){e.preventDefault();settleTo(W+(e.key==="ArrowLeft"?-16:16))}if(e.key==="Enter"){e.preventDefault();dock(true)}});
 
  sync();
  return{acct,search,dock,IC,sync,newChat,folder:(i=0)=>toggle(ROOT.kids.filter(n=>n.kind==="folder")[i]),
-  pop:(o,i=0)=>pop(o,[...tree.querySelectorAll(".sb-row[data-k]:not(.gone)")][i]),go,nav,setWidth:keepW,get width(){return W},model:ROOT}})();
+  pop:(o,i=0)=>pop(o,[...tree.querySelectorAll(".sb-row[data-k]:not(.gone)")][i]),go,nav,setWidth:settleTo,get width(){return W},model:ROOT}})();

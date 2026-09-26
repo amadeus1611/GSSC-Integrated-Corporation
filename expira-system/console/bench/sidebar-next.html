@@ -26,7 +26,7 @@
 .bn-col h2{margin:0;font:400 var(--fs-h3)/1.3 var(--f-display);color:var(--ink)}
 </style>
 <script>
-var BENCH_EXTRA={time:["--sb-in","--sb-out","--sb-move","--sb-dock"],curve:["--sb-ease"]};  /* the sidebar's own motion: one curve, fast then a long soft settle */
+var BENCH_EXTRA={time:["--sb-in","--sb-out","--sb-move","--sb-dock","--sb-dock-out","--sb-settle"],curve:["--sb-ease","--sb-dock-close"]};  /* the sidebar's own motion: one curve, fast then a long soft settle */
 <!--@bench early.js-->
 BENCH.name="Sidebar · v45 draft";
 </script>
@@ -52,7 +52,7 @@ BENCH.name="Sidebar · v45 draft";
         <div class="sb-sep"></div>
         <div class="sb-row"><button class="sb-hit" type="button" role="menuitem"><span class="sb-ic"><!--info--></span><span class="sb-t">About EXPIRA</span></button></div>
       </div>
-      <button class="sb-me" id="sbMe" type="button" aria-haspopup="menu" aria-expanded="false" aria-controls="sbMenu"><span class="sb-av">A</span><span class="sb-who"><b>Amadeus</b><small>· GSSC</small></span><!--chev--></button>
+      <button class="sb-me" id="sbMe" type="button" aria-haspopup="menu" aria-expanded="false" aria-controls="sbMenu"><span class="sb-av">A</span><span class="sb-who"><b>Amadeus</b><small>GSSC Integrated</small></span><!--updown--></button>
       <div class="sb-sig"><svg class="mark" viewBox="0 0 1413 425" role="img" aria-label="EXPIRA mark"><polygon points="0,0 233,0 391,100 206,425 40,425 0,302" fill="var(--mark-a)"/><polygon points="233,0 728,0 391,100" fill="var(--gold)"/><polygon points="391,100 728,0 778,0 871,225 1166,425 1058,425" fill="var(--mark-a)"/><polygon points="391,100 1058,425 206,425" fill="var(--mark-b)"/><polygon points="918,0 1043,0 1408,425 1241,425 968,192" fill="var(--gold)"/><polygon points="1043,0 1340,0 1408,425" fill="var(--mark-b)"/></svg><span class="wm" role="img" aria-label="EXPIRA"></span></div>
     </div>
   </nav>
@@ -64,7 +64,7 @@ BENCH.name="Sidebar · v45 draft";
       <h2>Phase two, at a glance</h2>
       <p>This column stands in for the chat, so the fold has something to push. The sidebar on the left is the v45 draft: hover down the rows, open the folders and the sections, search, and pull the account menu up from the foot.</p>
       <p>The sidebar is a small file system now: folders you make, chats and documents inside them, loose chats below, newest first. Drag anything onto a folder (linger and a closed one springs open), or onto open space for the top level. The folder icon beside New chat makes a folder; right-click empty space for the same. Pull the sidebar's edge to resize it; pull it far enough left and it docks.</p>
-      <p>Keys: F dock, N new chat, S search, D a folder, M a row menu, A account, L loops the dock. With a row focused: arrows walk, right opens, left closes, F2 renames, Delete deletes (and undoes).</p>
+      <p>Keys: F dock, N new chat, S search, D a folder, M a row menu, A account, L loops the dock. With a row focused: arrows walk, right opens, left closes, F2 renames, Delete deletes (and undoes). A deleted row offers undo, and a trash can to delete it now.</p>
     </div></div>
   </main>
 </div>
