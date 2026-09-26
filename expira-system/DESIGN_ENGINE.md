@@ -120,15 +120,28 @@ Motion is the heart of the UX: fidelity in the engine comes first.
   - A pin holds its place. It moves only among the pins, and it cannot be dragged or moved into a folder; the Folder page says "Pinned · unpin to move". A pinned folder already brings everything inside it forward, while a pinned file stands on its own, so filing a pin into a folder would blur the two.
   - Unpinned items are filed freely: drag, Move to, or drop on a folder or a step in the path bar.
 - **An empty folder still holds one row of space.** It shows a quiet italic "Empty" where a child's name would begin. Its dimness is its colour, never its opacity, so its focus in and focus out land exactly where it rests and never jump. While something is dragged over its folder, "Empty" racks out and "Drop here" pulls focus in gold in the same place.
-- **Depth is bounded by width, not by a number.**
-  - A folder may nest to any depth. The tree indents while a name would still have about 90px, which is about six levels at the default width and fewer when the dock is narrow.
-  - Opening a folder past that point steps into it instead: the folder becomes the root of the view, and the list slides one way while the new one slides in from the other, on one clock. Rows that appear in both views travel to their new place.
-  - While the view is rooted in a folder, a path bar sits at the top of the list and stays put while the list scrolls: back and forward (the same two small frosted buttons as the cards), then the trail "All / … / current". A trail longer than the bar scrolls sideways and feathers only on the side that is cut off. Any step in the trail is a way back and a drop target.
-  - Every folder's `…` › Folder page also offers "Show on its own", so a person can step in at any depth.
-  - Left arrow at the top of a rooted view climbs out one level. Search always looks through everything, so it hides the bar while it runs.
-  - The bar follows browser rules: it stays while there is somewhere to go forward, and working the top level again drops that forward trail and the bar with it.
+- **The path bar is always there, and it says where you are.** It sits under Search and never scrolls: back and forward (the same two small frosted buttons as the cards), then the trail.
+  - The trail is the path of the open item, as a file explorer's path bar shows the selected file: "All / Quotations / Drafts / *Q-2026-015*", with the item itself in the display italic. When a folder is isolated, its step reads in ink. With nothing open it reads "All".
+  - "All" always comes first. Any step isolates that folder and accepts drops.
+  - Back and forward walk the roots you have isolated, as a browser does; ⌘[ and ⌘] do the same.
+  - While you search, the trail reads "All / 4 results" and the arrows dim, because search looks everywhere.
+  - A trail longer than the bar scrolls sideways and feathers only on the side that is cut off. Steps that stay glide to their new place, new ones pull focus, and ones that go rack out, on one clock.
+- **Isolate is a choice, never automatic.** The same click always does the same thing: one click on a folder opens or closes it, and one click on a chat opens it.
+  - `…` › Isolate (on the first page, after Pin) makes a folder the root of the view: the list slides one way while the new one slides in from the other, and rows seen in both travel to their new place. On a chat, Isolate folder focuses the folder it lives in. Two-finger click opens the same menu.
+  - ⌘↓ isolates the focused folder; ⌘↑, Escape, or ← at the top of the view climbs out one level.
+  - New chats and folders made while isolated go into the isolated folder.
+  - If the isolated folder is deleted or moved away, the view climbs to its nearest surviving parent.
+- **Depth has no limit, and stays readable.** Folders nest to any depth. The first five levels indent 12px each; each level after that indents 4px. The tree lines still mark every level, and long names feather at the edge.
+- **Closed folders carry what needs you inside them.** A closed folder shows the strongest state of anything within it, at any depth: a breathing gold dot while something runs, a gold ring while something is unread. It sits at the glyph's shoulder and surfaces out of a blur. When a run finishes inside a closed folder, the folder's mark gives the ring's one soft pulse. An open folder shows nothing, because its rows already do.
+- **Two quiet places at the foot of the tree: Archive, and Recently Deleted.** They sit under a hairline, below everything you made, and appear only when they hold something. They open in place like folders, or can be isolated.
+  - Inside, items sit under small date captions (Today, Yesterday, the weekday, then "16 Sep"), newest first.
+  - Recently Deleted keeps things for 30 days. Each row counts down its days at its end, in red once three or fewer are left. It leads with a quiet "Kept for 30 days" and an Empty action.
+  - Delete is still in place first: the row defocuses with its undo arrow for four seconds, then glides into Recently Deleted (the place pulses if it is closed). The trash can beside the undo arrow still deletes at once and for good.
+  - A deleted item's menu offers Put back (to the folder it came from, or the top level if that folder has gone) and Delete now. An archived item's offers Unarchive and Delete. Archive is on the Folder page.
+  - What cannot be undone asks once, in place: the choice turns red and reads "Empty 4 items?", and turns back if it is left alone for three seconds.
+  - Dragging onto Recently Deleted deletes; onto Archive archives. Search does not look inside the two places.
 - **Actions are a card of pages.**
-  - The row's `…` menu opens a card whose first page is short: Rename, Pin, Folder, Delete.
+  - The row's `…` menu opens a card whose first page is short: Rename, Pin, Isolate, Rearrange, Folder, Delete.
   - Deeper choices are further pages of the same card, not new pop-ups: Folder leads to Move to, New folder and Pin, and Move to leads to the folders.
   - Back and forward are two separate small frosted buttons, each its own surface with the cards' corners and depth. A disabled one dims its glyph, not its surface.
   - On the row menu they sit between the card and the row, at the right, under the `…`. On the account card they sit above the card, at its right.
@@ -143,9 +156,12 @@ Motion is the heart of the UX: fidelity in the engine comes first.
 - **Rubber bands tighten.** Stretched past its limit, a surface resists more the further it is pulled, up to a fixed amount (the sidebar: 64px past its maximum). Released, it settles back very softly.
 - **Select many.** The toolbar's Select puts a round check where each row's glyph sits, so nothing moves.
   - Click picks and Shift-click picks a run; Space, ⌘A and Delete work too.
-  - A frosted selection bar pulls up above the account row with the count, Select all, Sort, Delete and Done.
+  - A frosted selection bar pulls up above the account row with the count, Select all, Sort, Move, Delete and Done.
   - Sort opens its own small card: newest, oldest, by name either way, by kind. Folders stay first, and the rows glide into the new order.
   - A mass delete puts every picked row into its own in-place undo.
+  - Move opens a Move to card in the same place as Sort (asking for the other one turns the card's page). The picked rows glide into the folder together, on one clock. Picked pins stay, and the card says so in one line: "1 pinned stays".
+  - The two places, and what is in them, are never picked; they keep their glyphs.
+- **Search reads inside chats and documents.** The tree filters in place and keeps its shape. A name that matches shows its words on a soft gold wash. An item that matches in its text grows a second line: a short snippet that starts a few words before the match, feathered where it is cut, pulling focus as it arrives. Opening a result opens the chat at the matching turn and brushes it once in gold. Typing settles for 120ms before the tree follows.
 - **The account card is a system panel, not an app menu.**
   - Identity comes first: the monogram, the name, the organisation and where the data lives ("Synced").
   - Then a Control Center strip that acts in place: Appearance (Auto, Light, Dark; the page cross-fades), Calm motion, and Compact rows (the rows reflow in one move).
@@ -168,6 +184,10 @@ Motion is the heart of the UX: fidelity in the engine comes first.
   - ↑ and ↓ do the same while arranging, and ⌥↑ and ⌥↓ work on any focused row without the menu. A click elsewhere, Escape or Enter sets it down.
   - A level arranged by hand keeps that order. New arrivals go to the top of their group, and choosing a Sort hands the order back to the sort.
   - A reorder never drops keyboard focus: the row that had it keeps it.
+- **Touch is a first-class pointer.** On a touch screen (`pointer: coarse`, whatever the width) rows are 36px tall at the same type size, the `…` is always there at low contrast, and there is no hover plate. A long press (450ms, broken by 8px of movement) lifts the row onto its own surface and opens its menu at the finger; the tap that follows is swallowed. Dragging is off on touch: Rearrange and Move to cover it.
+- **On a phone the dock is a drawer.** Below 760px wide (the shell's own breakpoint) the sidebar slides over the chat, at most 86% of the screen, over a soft scrim. It opens from the sidebar button or a pull from the left edge, follows the finger, and lets go on the dock's own curves from exactly where the finger left it, towards whichever way it was heading. A swipe left, a tap on the scrim, opening a chat, or Escape puts it away. It starts put away.
+- **A big tree stays light.** Rows more than a screen from view keep only their box (`content-visibility: hidden`) and are filled in as they come near; containment clips, so it is never applied to a row that can be seen. Each change reads every position once and writes once, animates only what is on or near the screen, and shares one sampled curve between the rows that move. While the list scrolls, positions come from a cache and only the rows crossing the edge change; the hover plate steps aside until the pointer itself moves.
+- **Screen readers hear the same calm.** Rows are tree items with their level, position and set size, selection and expansion. One polite voice says what just happened, in the house's words: "Pinned", "Showing Quotations", "Deleted. Undo is available", "Moved 3 to Contracts", "4 results". The path bar is a navigation landmark with the current step marked. The account card is a panel of controls (a dialog), not a menu.
 
 ### 4.2 Motion: one curve, focus in and focus out
 - **One curve for everything**, entering and leaving alike: fast, then a long soft settle (`--sb-ease` `cubic-bezier(.19,1,.22,1)`). It supersedes the per-direction curves of §3 for EXPIRA surfaces.
@@ -285,6 +305,14 @@ They live in `bench/drafts/sidebar-next.css`, and the dark stack lives in `bench
 - **Tokens (v41):** every value comes from `src/tokens.css`. Spacing is a 4px scale with half steps (`--sp-half`, `--sp-1h` … `--sp-4h`) below 20px for dense chrome; a 1px nudge is optical and stays literal. Layers are named (`--z-side`, `--z-menu`, `--z-tip` …) in one stacking order. Dark tokens are written once in `@dark{}`.
 
 ## 6. Change log
+- **v45 sidebar, finished in the bench** (2026-09-26, Amadeus: "do all the recommendations … very well designed, fully featured, animations, premium … subtle"): see `console/SUPER_PLAN_45.md`.
+  - The path bar is always on under Search, and Isolate is a menu choice; the automatic step-in by width is gone. Depth indents 12px for five levels, then 4px.
+  - Closed folders roll up running and unread.
+  - Archive and Recently Deleted are two quiet places at the foot of the tree (not pages of the account card): date captions, a 30-day countdown, Put back, Delete now, and Empty that asks once in place.
+  - Move many from the selection bar. Search inside chats with snippets.
+  - Touch rows and long press; the phone drawer with an edge pull and swipe.
+  - Scale: 2,000 chats in 212 folders. Measured in this container (about 3× slower than a laptop): opening all 200 folders at once went from 2.5s to 0.2s and a search from 4.4s to 0.2s; everyday moves take 60 to 90ms; scrolling holds about 23ms a frame at trackpad speeds (16.7ms on a normal tree). The fixes: one read pass and one write pass (a class toggled between reads had forced a layout per row), tokens read once per task, no `:has()` on rows, and far rows drawn as boxes.
+  - Accessibility: axe is clean in every state (tree, places, menus, select, search, account card).
 - **v45 rearrange and pin rules** (2026-09-26, Amadeus: "pins can only be adjusted inside pins locations … folders should always take priority at the top of the pins"):
   - `…` › Rearrange with upright ˄ ˅ buttons in the ‹ › design, plus ↑/↓ and ⌥↑/⌥↓. It works within four groups: pinned folders, pinned items, folders, items. A hand order is kept per level until a Sort is chosen. One clock per press.
   - A pin cannot be dragged or moved into a folder until it is unpinned.

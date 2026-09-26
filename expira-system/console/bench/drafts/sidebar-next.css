@@ -21,16 +21,27 @@
   --sb-r-lg:6px;--sb-r:4px;--sb-r-sm:3px;
   /* depth: floating cards cast a soft, layered shadow that grows in with them (sidebar-next.js depth() at 1 equals this) */
   --sb-shc:11,26,63;--sb-sha:.34;--sb-hi:255,255,255;--sb-hia:.7;
+  --sb-scrim:rgba(11,26,63,.2);
   --sb-depth:inset 0 1px 0 rgba(var(--sb-hi),var(--sb-hia)),0 0 0 .5px rgba(var(--sb-shc),calc(var(--sb-sha) * .45)),0 6px 16px -3px rgba(var(--sb-shc),calc(var(--sb-sha) * .45)),0 22px 56px -10px rgba(var(--sb-shc),calc(var(--sb-sha) * .8));
 }
-@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--sb-shc:0,0,0;--sb-sha:.8;--sb-hia:.05}}
-:root[data-theme="dark"]{--sb-shc:0,0,0;--sb-sha:.8;--sb-hia:.05}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--sb-shc:0,0,0;--sb-sha:.8;--sb-hia:.05;--sb-scrim:rgba(0,0,0,.5)}}
+:root[data-theme="dark"]{--sb-shc:0,0,0;--sb-sha:.8;--sb-hia:.05;--sb-scrim:rgba(0,0,0,.5)}
 @media (prefers-reduced-motion:reduce){:root{--sb-in:1ms;--sb-out:1ms;--sb-move:1ms;--sb-dock:1ms;--sb-dock-out:1ms;--sb-settle:1ms}}
 
 /* the dock: width is the viewer's; folding slides it out on the one curve */
 .side.sb{width:var(--sb-w);padding:var(--sp-2) var(--sp-2) var(--sp-1h);gap:0;transition:margin-left var(--sb-dock) var(--sb-ease)}
 .app.folded .side.sb{margin-left:calc(var(--sb-w) * -1);transition:margin-left var(--sb-dock-out) var(--sb-dock-close)}
-@media (max-width:760px){.app.folded .side.sb{margin-left:0}}
+/* a phone: the dock is a drawer over the chat, over a soft scrim; sidebar-next.js slides it on the dock's curves */
+@media (max-width:760px){
+ .side.sb{position:fixed;inset:0 auto 0 0;width:min(86vw,var(--sb-w));margin-left:0;z-index:var(--z-side);box-shadow:var(--sb-depth);touch-action:pan-y;transition:none}
+ .app.folded .side.sb{margin-left:0;transform:translateX(-102%);transition:none}
+ .sb-grip{display:none}
+ .sb-dockbtn{left:calc(min(86vw,var(--sb-w)) - var(--sp-2) - 32px)}
+ .app.folded .sb-dockbtn{left:var(--sp-4)}
+ .top,.app.folded .top{padding-left:calc(var(--sp-4) + 30px + var(--sp-2));transition:none}
+ .app:not(.folded) .sb-scrim{opacity:1;visibility:visible;pointer-events:auto}
+ .app{touch-action:pan-y}  /* sideways swipes belong to the drawer; the page still scrolls up and down */
+}
 /* macOS layout: the header row is a toolbar (New chat, New folder; the sidebar button sits at its right), a search field
    sits under it and never scrolls, then the tree, then the account and the mark */
 .sb .brand{display:flex;align-items:center;gap:2px;height:34px;padding:0 var(--sp-1) 0 var(--sp-1);margin:0}
@@ -40,7 +51,7 @@
 .sb-tb:focus-visible{outline:var(--rule) solid var(--gold);outline-offset:-1px}
 #newChat svg path:last-child{transform-box:fill-box;transform-origin:30% 70%;transition:transform var(--sb-move) var(--sb-ease)}
 #newChat:hover svg path:last-child{transform:rotate(-8deg) translate(.4px,-.4px)}
-.sb-search{position:relative;display:flex;align-items:center;gap:var(--sp-1h);height:26px;margin:var(--sp-1h) 0 var(--sp-3);padding:0 var(--sp-1) 0 var(--sp-2);border-radius:var(--sb-r-sm);background:var(--line);box-shadow:inset 0 0 0 var(--rule-hair) var(--line-2);cursor:text;
+.sb-search{position:relative;display:flex;align-items:center;gap:var(--sp-1h);height:26px;margin:var(--sp-1h) 0 var(--sp-1h);padding:0 var(--sp-1) 0 var(--sp-2);border-radius:var(--sb-r-sm);background:var(--line);box-shadow:inset 0 0 0 var(--rule-hair) var(--line-2);cursor:text;
  transition:box-shadow var(--sb-out) var(--sb-ease),background var(--sb-out) var(--sb-ease)}
 .sb-search:hover{box-shadow:inset 0 0 0 var(--rule-hair) var(--line-3)}
 .sb-search:focus-within{background:var(--well);box-shadow:inset 0 0 0 var(--rule-hair) color-mix(in srgb,var(--gold) 55%,transparent),0 0 0 3px var(--gold-wash);transition-duration:var(--sb-in)}
@@ -81,12 +92,12 @@
 .sb-card .sb-hl{left:5px;right:5px;border-radius:var(--sb-r-sm)}
 
 /* rows: one kind of row for everything; depth is an indent and a hairline guide under the parent's caret */
-.sb-row{--d:0;position:relative;z-index:1;display:flex;align-items:center;height:var(--sb-row);border-radius:var(--sb-r-sm);color:var(--text);font-size:var(--sb-fs);font-weight:400;letter-spacing:.002em;transition:background var(--sb-out) var(--sb-ease),box-shadow var(--sb-out) var(--sb-ease)}
+.sb-row{--dx:0px;--dp:0px;position:relative;z-index:1;display:flex;align-items:center;height:var(--sb-row);border-radius:var(--sb-r-sm);color:var(--text);font-size:var(--sb-fs);font-weight:400;letter-spacing:.002em;transition:background var(--sb-out) var(--sb-ease),box-shadow var(--sb-out) var(--sb-ease)}
 .sb-row+.sb-row{margin-top:1px}
 .sb-row.on{background:color-mix(in srgb,var(--gold) 9%,var(--line-2))}  /* selection: a warm grey, the only colour a resting row carries */
-.sb-tree .sb-row.deep::before{content:"";position:absolute;left:calc(var(--sp-2) + (var(--d) - 1) * var(--sb-indent) + 4px);top:-1px;bottom:0;width:var(--rule-hair);background:var(--line-2)}
+.sb-tree .sb-row.deep::before{content:"";position:absolute;left:calc(var(--sp-2) + var(--dp) + 4px);top:-1px;bottom:0;width:var(--rule-hair);background:var(--line-2)}
 .sb-row.gone{pointer-events:none;z-index:0}
-.sb-hit{all:unset;box-sizing:border-box;flex:1;min-width:0;height:100%;display:flex;align-items:center;gap:var(--sp-1h);padding:0 var(--sp-2) 0 calc(var(--sp-2) + var(--d) * var(--sb-indent));cursor:pointer;border-radius:inherit}
+.sb-hit{all:unset;box-sizing:border-box;flex:1;min-width:0;height:100%;display:flex;align-items:center;gap:var(--sp-1h);padding:0 var(--sp-2) 0 calc(var(--sp-2) + var(--dx));cursor:pointer;border-radius:inherit}
 .sb-hit:focus-visible{outline:var(--rule) solid var(--gold);outline-offset:-1px}
 .sb-car{width:9px;height:9px;flex:none;color:var(--mute);display:grid;place-items:center}
 .sb-car svg{width:9px;height:9px;display:block}
@@ -117,9 +128,9 @@
    is its colour, never its opacity, so the fade in and out lands exactly where it rests. While something is dragged
    over its folder it answers "Drop here" in gold. */
 .sb-empty{pointer-events:none}
-.sb-empty .sb-t{position:relative;padding-left:calc(var(--sp-2) + var(--d) * var(--sb-indent) + 9px + var(--sp-1h) + var(--sb-ic) + var(--sp-1h));font:italic 400 var(--sb-fs-2)/1 var(--f-display);color:var(--mute);-webkit-mask-image:none;mask-image:none;overflow:visible}
+.sb-empty .sb-t{position:relative;padding-left:calc(var(--sp-2) + var(--dx) + 9px + var(--sp-1h) + var(--sb-ic) + var(--sp-1h));font:italic 400 var(--sb-fs-2)/1 var(--f-display);color:var(--mute);-webkit-mask-image:none;mask-image:none;overflow:visible}
 .sb-empty .e1,.sb-empty .e2{transition:opacity var(--sb-move) var(--sb-ease),filter var(--sb-move) var(--sb-ease)}
-.sb-empty .e2{position:absolute;left:calc(var(--sp-2) + var(--d) * var(--sb-indent) + 9px + var(--sp-1h) + var(--sb-ic) + var(--sp-1h));color:var(--gold-ink);opacity:0;filter:blur(2px)}
+.sb-empty .e2{position:absolute;left:calc(var(--sp-2) + var(--dx) + 9px + var(--sp-1h) + var(--sb-ic) + var(--sp-1h));color:var(--gold-ink);opacity:0;filter:blur(2px)}
 .sb-row.drop + .sb-empty .e1,.sb-tree.drop-root > .sb-empty .e1{opacity:0;filter:blur(2px)}
 .sb-row.drop + .sb-empty .e2,.sb-tree.drop-root > .sb-empty .e2{opacity:1;filter:none}
 
@@ -127,7 +138,7 @@
 .sb-more{all:unset;position:absolute;right:2px;top:50%;width:20px;height:20px;margin-top:-10px;display:grid;place-items:center;border-radius:var(--sb-r-sm);color:var(--mute);cursor:pointer}
 .sb-more svg{width:11px;height:11px}
 .sb-more:hover,.sb-more[aria-expanded="true"]{background:var(--line-2);color:var(--ink)}
-.sb-row:has(.sb-more) .sb-hit{padding-right:24px}
+:where(.sb-tree .sb-row[role="treeitem"]) .sb-hit{padding-right:24px}
 .sb-more{opacity:0;filter:blur(2px);transition:opacity var(--sb-out) var(--sb-ease),filter var(--sb-out) var(--sb-ease),background var(--sb-out) var(--sb-ease),color var(--sb-out) var(--sb-ease)}
 .sb-row:hover .sb-more,.sb-more:focus-visible,.sb-more[aria-expanded="true"],.sb-row.undo .sb-more{opacity:1;filter:none;transition-duration:calc(var(--sb-in) * .5)}
 .sb-more .u{display:none}
@@ -225,7 +236,7 @@ body.sb-resizing,body.sb-resizing *{cursor:col-resize!important;user-select:none
 .sb-go svg{width:10px;height:10px;display:block}
 .sb-pop .sb-none{padding:var(--sp-1h) var(--sp-2);font-size:var(--sb-fs-2);color:var(--mute)}
 .sb-card .sb-row{height:26px;border-radius:var(--sb-r-sm)}
-.sb-pop .sb-row .sb-hit{padding-left:calc(var(--sp-2) + var(--d) * 10px)}
+.sb-pop .sb-row .sb-hit,.sb-sortc .sb-row .sb-hit{padding-left:calc(var(--sp-2) + var(--d,0) * 10px)}
 .sb-menu .sb-hl{left:4px;right:4px}
 .sb-mh{position:relative;z-index:1;display:flex;flex-direction:column;gap:1px;padding:var(--sp-1h) var(--sp-2) var(--sp-2)}
 .sb-mh b{font-weight:450;font-size:var(--sb-fs);color:var(--ink)}
@@ -241,7 +252,7 @@ body.sb-resizing,body.sb-resizing *{cursor:col-resize!important;user-select:none
 .sb-seg button:focus-visible{outline:var(--rule) solid var(--gold)}
 /* rename in place: the field takes the title's exact box */
 .sb-ren{all:unset;box-sizing:border-box;width:100%;height:19px;margin:0 -4px;padding:0 4px;border-radius:var(--sb-r-sm);background:var(--well);box-shadow:inset 0 0 0 var(--rule-hair) var(--gold);color:var(--ink);font:inherit}
-.sb-t:has(.sb-ren){-webkit-mask-image:none;mask-image:none;overflow:visible}
+.sb-t.renaming{-webkit-mask-image:none;mask-image:none;overflow:visible}
 /* the list feathers at an edge only while more lies beyond it */
 .sb-scroll{--fs:0px;--fe:0px;transition:--fs var(--sb-out) var(--sb-ease),--fe var(--sb-out) var(--sb-ease);-webkit-mask-image:linear-gradient(to bottom,transparent 0,#000 var(--fs),#000 calc(100% - var(--fe)),transparent 100%);mask-image:linear-gradient(to bottom,transparent 0,#000 var(--fs),#000 calc(100% - var(--fe)),transparent 100%)}
 .sb-scroll.f-s{--fs:16px}
@@ -320,7 +331,6 @@ body.sb-resizing,body.sb-resizing *{cursor:col-resize!important;user-select:none
 .sb-field b{min-width:0;font-weight:450;color:var(--ink);text-align:right;overflow-wrap:anywhere}
 .sb-sysline{position:relative;z-index:1;display:flex;justify-content:space-between;gap:var(--sp-2);margin:4px 3px 0;padding:var(--sp-1h) var(--sp-1h) 3px;border-top:var(--rule-hair) solid var(--line-2);font-size:var(--fs-micro);letter-spacing:.02em;color:var(--mute);font-variant-numeric:tabular-nums}
 .sb-sysline span{white-space:nowrap}
-.sb-sysline span:last-child{opacity:.8}
 .sb-card .sb-m{font-size:10px;color:var(--mute);font-variant-numeric:tabular-nums}
 /* Compact off: roomier rows (macOS's medium sidebar size) */
 :root[data-sb-density="roomy"]{--sb-row:28px;--sb-fs:12px;--sb-ic:14px}
@@ -336,6 +346,9 @@ body.sb-resizing,body.sb-resizing *{cursor:col-resize!important;user-select:none
  transition:opacity var(--sb-out) var(--sb-ease),filter var(--sb-out) var(--sb-ease),background var(--sb-out) var(--sb-ease),box-shadow var(--sb-out) var(--sb-ease)}
 .sb-ck svg{width:9px;height:9px;fill:none;stroke:var(--bg);stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:10;stroke-dashoffset:10;transition:stroke-dashoffset var(--sb-move) var(--sb-ease)}
 .selecting .sb-tree .sb-ic .g{opacity:0;filter:blur(2px)}
+/* the two places, and what is in them, are not picked: they keep their glyphs */
+.selecting .sb-tree .sb-row:is([data-k="sys"],.in-sys) .sb-ic .g{opacity:1;filter:none}
+.selecting .sb-tree .sb-row:is([data-k="sys"],.in-sys) .sb-ck{opacity:0;filter:blur(2px)}
 .selecting .sb-tree .sb-ck{opacity:1;filter:none;transition-duration:var(--sb-in)}
 .sb-row.picked .sb-ck{background:var(--gold);box-shadow:inset 0 0 0 1px var(--gold)}
 .sb-row.picked .sb-ck svg{stroke-dashoffset:0}
@@ -359,7 +372,10 @@ body.sb-resizing,body.sb-resizing *{cursor:col-resize!important;user-select:none
 .sb-sortc{position:absolute;right:var(--sp-1h);width:176px;bottom:calc(100% + var(--sp-1h) + 34px + 6px);z-index:calc(var(--z-toast) + 1);visibility:hidden;pointer-events:none}
 .sb-sortc.open{visibility:visible;pointer-events:auto}
 .sb-sortc.open .sb-card{opacity:1}
-.sb-sortc .sb-ic{color:var(--gold-ink)}
+.sb-sortc [aria-checked="true"] .sb-ic{color:var(--gold-ink)}
+/* a long list of folders scrolls inside the card rather than running off the screen */
+.sb-sortc .sb-card{max-height:min(56vh,420px);overflow-y:auto;scrollbar-width:none}
+.sb-sortc .sb-card::-webkit-scrollbar{display:none}
 
 /* !important: while the theme cross-fades, every transition is held so the whole page changes as one picture */
 html.sb-theming,html.sb-theming *,html.sb-theming *::before,html.sb-theming *::after{transition:none!important}
@@ -367,11 +383,10 @@ html.sb-theming,html.sb-theming *,html.sb-theming *::before,html.sb-theming *::a
    (sidebar-next.js edges() marks overflowing text .ov as widths change) */
 .sb-t:not(.ov),.sb-tile b:not(.ov),.sb-idt b:not(.ov),.sb-idt small:not(.ov),.sb-who:not(.ov){-webkit-mask-image:none;mask-image:none}
 
-/* ---- the path bar: when the tree is rooted on a folder (drilled in because nesting outgrew the width, or on purpose),
-   its trail sits at the top of the list with its own back and forward. It stays put while the list scrolls. ---- */
-.sb-path{position:sticky;top:0;z-index:3;left:0;right:0;display:flex;align-items:center;gap:4px;height:28px;margin:0 0 var(--sp-1);background:var(--side)}
-.sb-path[hidden]{display:none}
-.sb-crumbs{flex:1;min-width:0;display:flex;align-items:center;gap:2px;overflow-x:auto;overflow-y:hidden;overscroll-behavior-x:contain;white-space:nowrap;scrollbar-width:none;font-size:var(--sb-fs-2);color:var(--soft);--fl:0px;--fr:0px;
+/* ---- the path bar: always under Search, never scrolling. It says where you are (the open chat's path, or the isolated
+   folder's), "All" first; any step isolates that folder. Back and forward walk the roots you have visited. ---- */
+.sb-path{display:flex;align-items:center;gap:4px;height:26px;margin:0 0 var(--sp-2);padding:0 0 0 1px}
+.sb-crumbs{position:relative;flex:1;min-width:0;height:100%;padding-left:2px;display:flex;align-items:center;gap:2px;overflow-x:auto;overflow-y:hidden;overscroll-behavior-x:contain;white-space:nowrap;scrollbar-width:none;font-size:var(--sb-fs-2);color:var(--soft);--fl:0px;--fr:0px;
  -webkit-mask-image:linear-gradient(90deg,transparent,#000 var(--fl),#000 calc(100% - var(--fr)),transparent);mask-image:linear-gradient(90deg,transparent,#000 var(--fl),#000 calc(100% - var(--fr)),transparent)}
 .sb-crumbs::-webkit-scrollbar{display:none}
 .sb-crumbs.ovl{--fl:18px}.sb-crumbs.ovr{--fr:18px}
@@ -380,7 +395,11 @@ html.sb-theming,html.sb-theming *,html.sb-theming *::before,html.sb-theming *::a
 .sb-crumbs button.drop{background:var(--gold-wash);color:var(--gold-ink)}
 .sb-crumbs button:focus-visible{outline:var(--rule) solid var(--gold)}
 .sb-crumbs i{flex:none;font-style:normal;color:var(--line-3)}
-.sb-crumbs b{flex:none;padding:3px 4px;font-weight:500;color:var(--ink)}
+.sb-crumbs button.here{color:var(--ink);font-weight:500}
+.sb-crumbs b{flex:none;padding:3px 4px;font-weight:400}
+.sb-crumbs b.item{font:italic 400 10.5px/1 var(--f-display);color:var(--soft)}  /* the open item, in the display italic */
+.sb-crumbs b.meta{color:var(--mute);font-variant-numeric:tabular-nums}
+.sb-crumbs .out{pointer-events:none}
 
 /* ---- rearrange: the row lifts onto its own surface, and the ‹ › buttons, turned upright, stand where the … was ---- */
 .sb-tree .sb-row.arranging{z-index:3;background:color-mix(in srgb,var(--panel) 86%,transparent);box-shadow:inset 0 0 0 var(--rule-hair) var(--line-3),0 1px 2px rgba(var(--sb-shc),calc(var(--sb-sha) * .35)),0 6px 16px -6px rgba(var(--sb-shc),calc(var(--sb-sha) * .6));transition-duration:var(--sb-in)}
@@ -390,3 +409,77 @@ html.sb-theming,html.sb-theming *,html.sb-theming *::before,html.sb-theming *::a
 .sb-arr.out{pointer-events:none}
 .sb-arr .sb-pbtn{width:22px;height:18px}
 .sb-arr .sb-pbtn svg{width:10px;height:10px}
+
+/* ---- a closed folder carries what needs you inside it: a gold dot while something runs, a gold ring while something is
+   unread. It sits at the glyph's shoulder and surfaces out of a blur; an open folder's rows speak for themselves. ---- */
+.sb-badge{position:absolute;right:-2.5px;top:-1.5px;width:5px;height:5px;border-radius:var(--r-round);opacity:0;filter:blur(1.5px);transform:scale(.6);pointer-events:none;
+ transition:opacity var(--sb-out) var(--sb-ease),filter var(--sb-out) var(--sb-ease),transform var(--sb-move) var(--sb-ease)}
+.sb-badge.live,.sb-badge.unread{opacity:1;filter:none;transform:none;transition-duration:var(--sb-in),var(--sb-in),var(--sb-move)}
+.sb-badge.live{background:var(--gold);animation:breathe var(--t-loop) var(--ease-inout) infinite}
+.sb-badge.unread{background:var(--side);box-shadow:inset 0 0 0 1.2px var(--gold)}
+.sb-badge.ping::after{content:"";position:absolute;inset:-1px;border-radius:inherit;box-shadow:0 0 0 1px var(--gold);animation:sbPing calc(var(--sb-move) * 2.2) var(--sb-ease) both}
+
+/* ---- the two places at the foot of the tree, under a hairline: Archive, and Recently Deleted. Quieter than your own
+   folders; they open in place or on their own. Inside, items sit under small date captions, newest first, and each
+   deleted one counts down the days it has left. ---- */
+.sb-sepr{height:11px;pointer-events:none}
+.sb-sepr::after{content:"";position:absolute;left:var(--sp-2);right:var(--sp-2);top:5px;height:var(--rule-hair);background:var(--line-2)}
+.sb-row[data-k="sys"] .sb-t{color:var(--soft)}
+.sb-row[data-k="sys"]:hover .sb-t,.sb-row[data-k="sys"].on .sb-t{color:var(--ink)}
+.sb-row.in-sys .sb-t{color:var(--soft)}
+.sb-row.in-sys:hover .sb-t,.sb-row.in-sys.on .sb-t{color:var(--text)}
+.sb-cap{height:20px;pointer-events:none}
+.sb-cap .sb-t{padding:6px 0 0 calc(var(--sp-2) + var(--dx) + 9px + var(--sp-1h));font-size:var(--fs-micro);letter-spacing:var(--tracked-tight);text-transform:uppercase;color:var(--mute);-webkit-mask-image:none;mask-image:none}
+.sb-noter{height:22px;padding-right:3px}
+.sb-noter .sb-t{padding-left:calc(var(--sp-2) + var(--dx) + 9px + var(--sp-1h));font:italic 400 var(--sb-fs-2)/1 var(--f-display);color:var(--mute);-webkit-mask-image:none;mask-image:none}
+.sb-empt{all:unset;flex:none;padding:3px 6px;border-radius:var(--sb-r-sm);font-size:var(--sb-fs-2);color:var(--soft);cursor:pointer;transition:background var(--sb-out) var(--sb-ease),color var(--sb-out) var(--sb-ease)}
+.sb-empt:hover{background:var(--line);color:var(--ink);transition-duration:calc(var(--sb-in) * .5)}
+.sb-empt:focus-visible{outline:var(--rule) solid var(--gold)}
+/* asking before what cannot be undone: the choice turns red in place, and turns back if left alone */
+.sb-empt.sure,.sb-card .sb-hit.sure{color:var(--bad);background:color-mix(in srgb,var(--bad) 12%,transparent)}
+.sb-card .sb-hit.sure .sb-ic{color:var(--bad)}
+/* the quiet figure at a row's end: a place's count, or the days left; it gives way to the … on hover */
+.sb-meta{position:absolute;right:8px;top:50%;transform:translateY(-50%);font-size:var(--sb-fs-2);color:var(--mute);font-variant-numeric:tabular-nums;pointer-events:none;white-space:nowrap;
+ transition:opacity var(--sb-out) var(--sb-ease),filter var(--sb-out) var(--sb-ease)}
+.sb-meta:empty{display:none}
+.sb-meta.soon{color:color-mix(in srgb,var(--bad) 70%,var(--mute))}
+.sb-row.has-meta .sb-hit{padding-right:52px}
+.sb-row:hover .sb-meta,.sb-row:focus-within .sb-meta,.selecting .sb-meta{opacity:0;filter:blur(1.5px)}
+
+/* ---- search inside chats: a name that matches shows its words on a gold wash; a chat that matches in its text grows a
+   second line, a short snippet around the words, feathered where it is cut. The snippet pulls focus as it arrives. ---- */
+.sb-sn{display:none}
+.sb-row.snip{height:calc(var(--sb-row) + 14px)}
+.sb-row.snip .sb-hit{display:grid;grid-template-columns:9px var(--sb-ic) minmax(0,1fr);grid-template-rows:auto auto;column-gap:var(--sp-1h);row-gap:3px;align-content:center}
+.sb-row.snip .sb-car{grid-area:1/1}
+.sb-row.snip .sb-ic{grid-area:1/2}
+.sb-row.snip .sb-t{grid-area:1/3}
+.sb-row.snip .sb-sn{display:block;grid-area:2/3;min-width:0;white-space:nowrap;overflow:hidden;font-size:var(--sb-fs-2);line-height:1.15;color:var(--mute);
+ -webkit-mask-image:linear-gradient(90deg,#000 calc(100% - 22px),transparent);mask-image:linear-gradient(90deg,#000 calc(100% - 22px),transparent)}
+.sb-row.snip .sb-sn.cut{-webkit-mask-image:linear-gradient(90deg,transparent,#000 14px,#000 calc(100% - 22px),transparent);mask-image:linear-gradient(90deg,transparent,#000 14px,#000 calc(100% - 22px),transparent)}
+.sb-t mark,.sb-sn mark{background:color-mix(in srgb,var(--gold) 20%,transparent);color:var(--ink);border-radius:2px;padding:0 1px;margin:0 -1px}
+.sb-row.snip .sb-sn mark{color:var(--text)}
+
+.sb-scrim{position:fixed;inset:0;z-index:calc(var(--z-side) - 1);background:var(--sb-scrim);opacity:0;visibility:hidden;pointer-events:none}
+
+/* ---- touch: taller rows at the same type size; the … is always there, quietly; no hover plate; a long press lifts the
+   row onto its own surface as its menu opens ---- */
+@media (pointer:coarse){
+ :root,:root[data-sb-density]{--sb-row:36px}
+ .sb-hl{display:none}
+ .sb-more{width:28px;height:28px;margin-top:-14px;opacity:.42;filter:none}
+ :where(.sb-tree .sb-row[role="treeitem"]) .sb-hit{padding-right:32px}
+ .sb-row.pinned .sb-pinmark{right:32px}
+ .sb-row.has-meta .sb-hit{padding-right:72px}
+ .sb-meta{right:32px}
+ .sb-row:hover .sb-meta{opacity:1;filter:none}
+ .sb-card .sb-row{height:36px}
+ .sb-tb{width:36px;height:34px}
+ .sb-pbtn,.sb-nav button{width:34px;height:28px}
+ .sb-row{-webkit-touch-callout:none;-webkit-user-select:none;user-select:none}
+ .sb-tree .sb-row.lift{z-index:3;background:color-mix(in srgb,var(--panel) 86%,transparent);box-shadow:inset 0 0 0 var(--rule-hair) var(--line-3),0 1px 2px rgba(var(--sb-shc),calc(var(--sb-sha) * .35)),0 6px 16px -6px rgba(var(--sb-shc),calc(var(--sb-sha) * .6));transition-duration:var(--sb-in)}
+}
+
+/* ---- a big tree stays light: rows more than a screen from view keep only their box, and are filled in as they come near
+   (sidebar-next.js refar). Containment clips, so it is never applied to a row that can be seen. ---- */
+.sb-tree .sb-row.far{content-visibility:hidden}

@@ -132,22 +132,30 @@ Each step is one commit, first in the bench and then in `src/`. Each is tested i
 5. **§7 and §8:** The stress specimen and its measurements; roles, the live region, axe.
 6. **§9:** The model and migration (`qa/store.js` first), then the unit swap. Then `smoke`, `hovers`, `perf`, `a11y`, the reviewer pass, the DESIGN_ENGINE change log, and republishing the console.
 
-## Decisions (open, for Amadeus)
+## Decisions
 
-- **Archive:** keep it as a page under Data ›, with the action on the Folder › page (recommended), or fold it into Recently Deleted?
-- **Retention:** 30 days in Recently Deleted (recommended)?
-- **Drawer:** below 720px wide (recommended)?
-- **Documents in the tree:** later, once they have their own ids (recommended), or build that into this plan?
+- 2026-09-26, Amadeus: "a separate Recently Deleted, with dates", and "do all the recommendations yourself … very well designed, fully featured".
+  - **Archive and Recently Deleted became two quiet places at the foot of the tree**, not pages under Data ›. That is the macOS idiom (Notes, Photos, the Finder's Trash) and it makes them truly separate. They open in place or can be isolated, and they reuse the path bar and Isolate rather than adding a second way to browse. Items sit under date captions, newest first, and each deleted row counts down its days.
+  - **Retention is 30 days.**
+  - **The drawer starts below 760px**, the shell's own breakpoint, rather than 720px, so the console has one small-screen threshold.
+  - **Documents in the tree come later**, once they have their own ids.
+  - **Search keeps the tree's shape** (matches stay inside their folders) instead of ranking names above text. In a file system, where a match lives is part of the answer. Matches in the text grow a snippet line.
+  - **Scale: rows far from view are drawn as boxes** (`content-visibility: hidden` on those rows only). §7 had ruled out `content-visibility: auto` because its paint containment would clip visible shadows. Applying containment only to rows more than a screen away keeps the rule and gives the effect of virtualisation without taking rows out of the document.
 
 ## Progress
 
 - [x] Rearrange, and the pin rules (2026-09-26, in the bench).
-- [ ] §1 Isolate and the path bar
-- [ ] §2 Folders show what needs you
-- [ ] §3 Recently Deleted and Archive
-- [ ] §4 Move many
-- [ ] §5 Touch and small screens
-- [ ] §6 Search inside chats
-- [ ] §7 Scale
-- [ ] §8 Screen readers and keyboard
+- [x] §1 Isolate and the always-on path bar (2026-09-26, bench). Also ⌘[ and ⌘] for back and forward.
+- [x] §2 Folders show what needs you (2026-09-26, bench).
+- [x] §3 Recently Deleted and Archive, as places (2026-09-26, bench). Also dragging onto them, and Empty that asks once in place.
+- [x] §4 Move many (2026-09-26, bench).
+- [x] §5 Touch and the phone drawer (2026-09-26, bench). Checked with real touch events at 390×844: the edge pull follows the finger, the long press lifts the row and opens its menu, a tap opens a chat and puts the drawer away, and a swipe closes it.
+- [x] §6 Search inside chats (2026-09-26, bench).
+- [x] §7 Scale (2026-09-26, bench, `?stress`: 2,000 chats in 212 folders). Measured in this container, which runs JavaScript about 3× slower than a laptop:
+  - opening all 200 folders at once went from 2.5s to 0.2s, a search from 4.4s to 0.2s, and returning from an isolated folder from 2.5s to 0.3s;
+  - everyday moves take 60 to 90ms;
+  - scrolling holds about 23ms a frame at trackpad speeds (a normal tree holds the display's 16.7ms).
+
+  The 8ms target is met on a normal tree but not with 2,000 rows open, where most of the time is the browser laying out the rows' boxes. Full virtualisation is the remaining step if real use ever needs it.
+- [x] §8 Screen readers and keyboard (2026-09-26, bench). axe is clean with the tree, the two places, the row menu, select mode, search and the account card. The account card became a dialog, since it is a panel of controls.
 - [ ] §9 Saving and promotion
