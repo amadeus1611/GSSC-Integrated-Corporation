@@ -26,14 +26,42 @@ function sheetPush(w,id){const sh=$("#sheet"),B=$("#sheetB"),st=sh._stack=sh._st
  st.push({id:sh._id,html:B.innerHTML,top:B.scrollTop,title:sheetTitle(B)});if(st.length>4)st.shift();sh._id=id;sheetPeek();sheetSwap(html,1)}
 function sheetPop(to){const sh=$("#sheet"),st=sh._stack||[];if(!st.length)return false;const i=to==null?st.length-1:to,x=st[i];st.length=i;sh._id=x.id;sheetPeek();sheetSwap(x.html,-1);$("#sheetB").scrollTop=x.top;return true}
 document.addEventListener("click",e=>{const p=e.target.closest("[data-spop]");if(p){e.stopPropagation();sheetPop(+p.dataset.spop)}},true);
-const SHP=POUR.attach($("#sheet"));
-function openSheet(w,id,anchor){const sh=$("#sheet");if(!w||!anchor)return;if(sh.classList.contains("open")&&anchor.closest&&anchor.closest("#sheet")){sheetPush(w,id);return}if(sh._stack&&sh._stack.length){sh._stack=[];sheetPeek();if(sh._id!==id)sh._id=null}else{sh._stack=[];sheetPeek()}if(sh.classList.contains("open")&&sh._id===id&&sh._w===w){closeSheet();return}acctMenu(false);const html=sheetHTML(w,id);if(!html)return;closeCtx();menu(false);setMenu(false);
- document.querySelectorAll(".map .sel").forEach(x=>x.classList.remove("sel"));if(anchor.closest&&anchor.closest(".map"))anchor.classList.add("sel");
- sh._w=w;sh._id=id;SHP.snap(false);sh.classList.remove("open");$("#sheetB").innerHTML=html;$("#sheetB").scrollTop=0;$("#sheetB").querySelectorAll(".si").forEach((x,i)=>x.style.animationDelay=(.1+i*.06).toFixed(2)+"s");
- const r=anchor.getBoundingClientRect(),sw=Math.min(380,innerWidth-24);sh.style.width=sw+"px";const hh=sh.offsetHeight;
- let x=r.right+12+sw<=innerWidth-12?r.right+12:r.left-12-sw>=12?r.left-12-sw:(innerWidth-sw)/2,y=Math.max(12,Math.min(innerHeight-hh-12,r.top+r.height/2-90));
- sh.style.left=x+"px";sh.style.top=y+"px";sh.classList.add("open");setTimeout(()=>$("#sheetX").focus({preventScroll:true}),80)}
-function closeSheet(){const sh=$("#sheet");if(!sh||!sh.classList.contains("open"))return;sh._stack=[];setTimeout(sheetPeek,450);sh._id=null;sh.classList.remove("open");document.querySelectorAll(".map .sel").forEach(x=>x.classList.remove("sel"))}
-$("#sheetX").onclick=closeSheet;
-document.addEventListener("pointerdown",e=>{if($("#sheet").classList.contains("open")&&!e.target.closest("#sheet,[data-node],[data-sheet],a[data-src],[data-claim]"))closeSheet()});
+/* the details rail (v42): one fixed place for what a hover previews and a click keeps. A click pins (the stack above lets it
+   go deeper and back); a hover previews over the pinned one and hands back when the pointer leaves; with nothing pinned, the
+   last preview stays so it can be read and its links followed. On a narrow window hovers keep their own cards and only a
+   click opens the rail. */
+const INS=(()=>{const sh=$("#sheet"),B=$("#sheetB"),V=$("#insV"),P=$("#sheetP"),st=$("#insSt"),un=$("#insUn"),btn=$("#insBtn");let pin=false,vk=null,pk=null,back=0;
+ const wide=()=>innerWidth>=1100,isOpen=()=>sh.classList.contains("open");
+ const mode=m=>{sh.dataset.mode=m;st.textContent=m==="pin"?"Pinned":m==="view"?"Preview":"";un.hidden=m!=="pin"};
+ const land=el=>{if(!reduce)el.animate([{opacity:0,transform:"translateY(4px)"},{opacity:1,transform:"none"}],{duration:MO.enter,easing:MO.out})};
+ const open=(o,keep)=>{sh.classList.toggle("open",o);app.classList.toggle("ins-open",o);btn&&btn.setAttribute("aria-expanded",String(o));if(!keep&&wide())KV.put("rail",o)};
+ const showPinned=()=>{V.hidden=true;B.hidden=false;P.hidden=false;mode("pin")};
+ const api={isOpen,wide,pinned:()=>pin,open,
+  /* a click: keep this in the rail */
+  pin(html){if(!isOpen())open(true,!wide());clearTimeout(back);pk=vk;vk=null;pin=true;B.innerHTML=html;B.scrollTop=0;showPinned();land(B)},
+  /* a hover or focus: preview it, unless the rail is closed or the window is narrow (the caller keeps its own card then) */
+  view(key,html,w){if(!isOpen()||!wide())return false;if(pin&&key===pk)return true;clearTimeout(back);if(w)sh._vw=w;if(vk===key){if(V._h!==html){V._h=html;V.innerHTML=html}return true}
+   vk=key;V._h=html;V.innerHTML=html;V.scrollTop=0;V.hidden=false;B.hidden=true;P.hidden=true;mode("view");land(V);return true},
+  leave(key){if(key!=null&&vk!==key)return;clearTimeout(back);back=setTimeout(()=>{if(!pin)return;vk=null;showPinned();land(B)},260)},
+  unpin(){pin=false;clearTimeout(back);vk=pk=null;B.innerHTML="";V.innerHTML="";V._h="";sh._id=null;sh._stack=[];sheetPeek();V.hidden=true;B.hidden=false;mode("");document.querySelectorAll(".map .sel").forEach(x=>x.classList.remove("sel"))},
+  viewing:()=>vk};
+ mode("");
+ const saved=KV.get("rail",null);if(wide()&&(saved==null||saved))open(true,true);
+ /* the rail steps aside for the Dispatch; asking for it brings it back */
+ const toggle=()=>{if(app.classList.contains("dsp-open")){showDsp(false);open(true)}else open(!isOpen())};
+ btn&&btn.addEventListener("click",toggle);
+ un.addEventListener("click",()=>api.unpin());
+ $("#sheetX").addEventListener("click",()=>open(false));
+ addEventListener("keydown",e=>{if(e.altKey&&e.code==="KeyI"){e.preventDefault();toggle()}});
+ /* the pointer can move into the rail without the preview leaving */
+ sh.addEventListener("pointerenter",()=>clearTimeout(back));
+ return api})();
+function openSheet(w,id,anchor){const sh=$("#sheet");if(!w)return;
+ if(INS.pinned()&&!INS.viewing()&&anchor&&anchor.closest&&anchor.closest("#sheet")){sheetPush(w,id);return}
+ if(INS.pinned()&&sh._id===id&&sh._w===w&&!(anchor&&anchor.closest&&anchor.closest("#sheet"))){closeSheet();return}
+ const html=sheetHTML(w,id);if(!html)return;sh._stack=[];sheetPeek();
+ document.querySelectorAll(".map .sel").forEach(x=>x.classList.remove("sel"));if(anchor&&anchor.closest&&anchor.closest(".map"))anchor.classList.add("sel");
+ sh._w=w;sh._id=id;INS.pin(html)}
+/* unpin and clear; the rail itself stays where it is */
+function closeSheet(){if(INS.pinned()||INS.viewing())INS.unpin()}
 

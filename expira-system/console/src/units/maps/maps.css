@@ -46,19 +46,20 @@
 .mnb:focus{outline:none}
 /* the tooltip: anchored to the node, moved only by transform; numbers in tabular figures */
 .map-tip{position:absolute;left:0;top:0;z-index:var(--z-2);max-width:280px;padding:var(--sp-2) var(--sp-2h);background:var(--panel);border:var(--rule-hair) solid var(--line-2);border-radius:var(--r-2);box-shadow:var(--e1);font-size:var(--fs-chrome-2);color:var(--text);pointer-events:none;opacity:0;visibility:hidden;transition:opacity var(--t-exit) var(--ease-soft-close),visibility 0s linear var(--t-exit)}
+.mtr{font-size:var(--fs-chrome-2);color:var(--text)}
 .map-tip.on{opacity:1;visibility:visible;transition:opacity var(--t-enter) var(--ease-out),visibility 0s}
-.map-tip .mt-h{display:flex;align-items:baseline;gap:var(--sp-3);justify-content:space-between}
-.map-tip .mt-h b{font-weight:500;font-size:var(--fs-chrome);letter-spacing:var(--tracked-cap);text-transform:uppercase;color:var(--ink)}
-.map-tip .mt-s{display:inline-flex;align-items:center;gap:var(--sp-1);font-size:var(--fs-micro);letter-spacing:var(--tracked-tight);text-transform:uppercase;color:var(--mute)}
-.map-tip .mt-s i{width:5px;height:5px;border-radius:var(--r-round);border:var(--rule) solid currentColor}
-.map-tip .st-running,.map-tip .st-thinking{color:var(--gold-ink)}
-.map-tip .st-running i{background:currentColor}
-.map-tip .st-done i{background:currentColor}
-.map-tip .st-failed{color:var(--bad)}
-.map-tip p{margin:var(--sp-half) 0 var(--sp-1h);font:italic 400 var(--fs-chrome-2) var(--f-display);color:var(--soft)}
-.map-tip dl{display:grid;grid-template-columns:auto 1fr;gap:var(--sp-half) var(--sp-3);margin:0}
-.map-tip dt{font-size:var(--fs-micro);letter-spacing:var(--tracked-tight);text-transform:uppercase;color:var(--mute);line-height:1.6}
-.map-tip dd{margin:0;line-height:1.5}
+:is(.map-tip,.mtr) .mt-h{display:flex;align-items:baseline;gap:var(--sp-3);justify-content:space-between}
+:is(.map-tip,.mtr) .mt-h b{font-weight:500;font-size:var(--fs-chrome);letter-spacing:var(--tracked-cap);text-transform:uppercase;color:var(--ink)}
+:is(.map-tip,.mtr) .mt-s{display:inline-flex;align-items:center;gap:var(--sp-1);font-size:var(--fs-micro);letter-spacing:var(--tracked-tight);text-transform:uppercase;color:var(--mute)}
+:is(.map-tip,.mtr) .mt-s i{width:5px;height:5px;border-radius:var(--r-round);border:var(--rule) solid currentColor}
+:is(.map-tip,.mtr) .st-running,.map-tip .st-thinking{color:var(--gold-ink)}
+:is(.map-tip,.mtr) .st-running i{background:currentColor}
+:is(.map-tip,.mtr) .st-done i{background:currentColor}
+:is(.map-tip,.mtr) .st-failed{color:var(--bad)}
+:is(.map-tip,.mtr) p{margin:var(--sp-half) 0 var(--sp-1h);font:italic 400 var(--fs-chrome-2) var(--f-display);color:var(--soft)}
+:is(.map-tip,.mtr) dl{display:grid;grid-template-columns:auto 1fr;gap:var(--sp-half) var(--sp-3);margin:0}
+:is(.map-tip,.mtr) dt{font-size:var(--fs-micro);letter-spacing:var(--tracked-tight);text-transform:uppercase;color:var(--mute);line-height:1.6}
+:is(.map-tip,.mtr) dd{margin:0;line-height:1.5}
 /* the flow's DOM: lane names in the gutter, tick labels on the axis, the now tag */
 .map-lanes,.map-axis{position:absolute;left:0;top:0;pointer-events:none}
 .map-lanes span{position:absolute;left:var(--sp-1);top:0;white-space:nowrap;font-size:var(--fs-micro);letter-spacing:var(--tracked-tight);text-transform:uppercase;color:var(--mute);line-height:12px}

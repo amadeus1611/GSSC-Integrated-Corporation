@@ -62,24 +62,24 @@
 #cpop.open{visibility:visible;opacity:1;pointer-events:auto}
 .cpop::after{content:"";position:absolute;left:var(--ax,50%);top:100%;width:6px;height:6px;margin:calc(var(--sp-1) * -1) 0 0 calc(var(--sp-1) * -1);background:var(--panel);border:solid var(--line-3);border-width:0 var(--rule-hair) var(--rule-hair) 0;transform:rotate(45deg)}
 .cpop.below::after{top:0;transform:rotate(-135deg)}
-.cpop .ch{display:flex;align-items:center;gap:var(--sp-2);font-size:var(--fs-micro);letter-spacing:.14em;text-transform:uppercase;color:var(--mute)}
-.cpop .ch b{font-weight:500;letter-spacing:0;text-transform:none;color:var(--gold-ink);font-size:var(--fs-micro)}
-.cpop .ch .cf{margin-left:auto;letter-spacing:.02em;text-transform:none;font-size:var(--fs-micro)}
-.cpop .vd{display:inline-flex;align-items:center;gap:var(--sp-1)}
-.cpop .vd i{width:5px;height:5px;border-radius:var(--r-round);background:var(--mute)}
-.cpop .v-supported i{background:var(--ok)}
-.cpop .v-derived i{background:none;border:1px solid var(--ok);box-sizing:border-box}
-.cpop .v-partial i{background:var(--gold)}
-.cpop .v-conflict i,.cpop .v-unsupported i{background:var(--bad)}
-.cpop p{margin:var(--sp-1h) 0 var(--sp-1h);font-size:var(--fs-ui);line-height:1.5;color:var(--ink)}
-.cpop .cs{display:flex;flex-wrap:wrap;gap:var(--sp-1);margin-bottom:var(--sp-1h)}
-.cpop .cs span{font-size:var(--fs-chrome);color:var(--soft);border:var(--rule-hair) solid var(--line-2);border-radius:var(--r-1);padding:0 var(--sp-1)}
-.cpop .cs em{font:italic 400 var(--fs-chrome-2)/1.45 var(--f-display);color:var(--soft)}
-.cpop .cx{display:block;font:italic 400 var(--fs-chrome-2) var(--f-display);color:var(--gold-ink)}
+:is(.cpop,.cpv) .ch{display:flex;align-items:center;gap:var(--sp-2);font-size:var(--fs-micro);letter-spacing:.14em;text-transform:uppercase;color:var(--mute)}
+:is(.cpop,.cpv) .ch b{font-weight:500;letter-spacing:0;text-transform:none;color:var(--gold-ink);font-size:var(--fs-micro)}
+:is(.cpop,.cpv) .ch .cf{margin-left:auto;letter-spacing:.02em;text-transform:none;font-size:var(--fs-micro)}
+:is(.cpop,.cpv) .vd{display:inline-flex;align-items:center;gap:var(--sp-1)}
+:is(.cpop,.cpv) .vd i{width:5px;height:5px;border-radius:var(--r-round);background:var(--mute)}
+:is(.cpop,.cpv) .v-supported i{background:var(--ok)}
+:is(.cpop,.cpv) .v-derived i{background:none;border:1px solid var(--ok);box-sizing:border-box}
+:is(.cpop,.cpv) .v-partial i{background:var(--gold)}
+:is(.cpop,.cpv) .v-conflict i,.cpop .v-unsupported i{background:var(--bad)}
+:is(.cpop,.cpv) p{margin:var(--sp-1h) 0 var(--sp-1h);font-size:var(--fs-ui);line-height:1.5;color:var(--ink)}
+:is(.cpop,.cpv) .cs{display:flex;flex-wrap:wrap;gap:var(--sp-1);margin-bottom:var(--sp-1h)}
+:is(.cpop,.cpv) .cs span{font-size:var(--fs-chrome);color:var(--soft);border:var(--rule-hair) solid var(--line-2);border-radius:var(--r-1);padding:0 var(--sp-1)}
+:is(.cpop,.cpv) .cs em{font:italic 400 var(--fs-chrome-2)/1.45 var(--f-display);color:var(--soft)}
+:is(.cpop,.cpv) .cx{display:block;font:italic 400 var(--fs-chrome-2) var(--f-display);color:var(--gold-ink)}
 .moving>[aria-selected="true"]{background:transparent}
 .menu{position:fixed;left:0;top:0;z-index:var(--z-menu);width:268px;background:var(--panel);border:var(--rule-hair) solid var(--line-3);border-radius:var(--r-5);box-shadow:var(--e2);padding:var(--sp-1h);opacity:0;visibility:hidden;pointer-events:none}
 .chov{width:280px;opacity:0;transform:translateX(-4px);transition:opacity var(--t-enter) var(--ease-soft-close),transform var(--t-move) var(--spring);pointer-events:none}
 .chov.in{opacity:1;transform:none}
-.chov .ct{margin:var(--sp-1h) 0 var(--sp-1);font:400 var(--fs-body)/1.4 var(--f-display);color:var(--ink);text-wrap:balance}
-.chov .cq{margin:0 0 var(--sp-2);font-size:var(--fs-chrome-2);line-height:1.5;color:var(--soft)}
+:is(.chov,.cpv) .ct{margin:var(--sp-1h) 0 var(--sp-1);font:400 var(--fs-body)/1.4 var(--f-display);color:var(--ink);text-wrap:balance}
+:is(.chov,.cpv) .cq{margin:0 0 var(--sp-2);font-size:var(--fs-chrome-2);line-height:1.5;color:var(--soft)}
 .chov::after{display:none}

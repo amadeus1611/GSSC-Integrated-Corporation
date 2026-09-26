@@ -65,3 +65,8 @@ After that: the reviewer pass, republish, and the DESIGN_ENGINE change log.
 ## Decisions
 
 - 2026-09-26: Amadeus chose the **right rail** for the thread's Inspector (over a panel floating above the composer).
+
+## Progress
+
+- [x] §1 synced disclosures (2026-09-26): `disclose()` in `core/ui.js`, the `.dfr` frame in `base.css`, `easeFn`/`easeInv` in `core/motion.js`.
+- [x] §2 the Details rail (2026-09-26): the node sheet became the rail (`units/sheet/`, `INS` API: `view(key, html, work)`, `leave(key)`, `pin(html)`, `unpin()`), with a Details button (⌥I) in the header. Map nodes go to the rail as well (the rail never covers the map, so the separate strip under the map was not needed); in full screen the rail sits beside the map. Claim cards, ledger rows, sources, the raster readout and sidebar chat previews preview in it. Charts have no hover values today, so there was nothing to move.

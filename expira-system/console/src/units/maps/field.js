@@ -114,7 +114,7 @@ function metaball(r1,r2,c1,c2,hs=2.4,v=.5){const HP=Math.PI/2,d=Math.hypot(c2[0]
 const fitS=(t,n)=>{t=String(t||"");return t.length>n?t.slice(0,n-1).trimEnd()+"…":t};
 /* full screen: the same run, with room to read it, and its ledger beside it */
 POUR.attach($("#mfs"));
-function mapFS(btn){const host=btn.closest(".mapw,.mini"),m=[...FM].find(x=>x.host===host);if(!m)return;const w=m.get(),o=$("#mfs");closeSheet();acctMenu(false);
+function mapFS(btn){const host=btn.closest(".mapw,.mini"),m=[...FM].find(x=>x.host===host);if(!m)return;const w=m.get(),o=$("#mfs");acctMenu(false);
  $("#mfsT").textContent=cur?cur.title:"";$("#mfsL").innerHTML=ledgerHTML(w,true)||`<p class="empty2">This run has no claims ledger.</p>`;FM.forEach(x=>{if(x.opt.fs)x.kill()});$("#mfsMap").innerHTML="";
  o.classList.add("open");$("#veil").classList.add("open");setTimeout(()=>{mkMap($("#mfsMap"),()=>w,{replay:true,fs:true});$("#mfsX").focus({preventScroll:true})},60)}
 function closeFS(){const o=$("#mfs");if(!o.classList.contains("open"))return;o.classList.remove("open");$("#veil").classList.remove("open");FM.forEach(x=>{if(x.opt.fs)x.kill()})}

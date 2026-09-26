@@ -2,11 +2,33 @@
 .sh .cap{flex:1}
 .sh .ib.sm{opacity:0;transition:opacity var(--t-exit) var(--ease-soft-close)}
 .sh .ib.sm:focus-visible{opacity:1}
-.sheet .sx{position:absolute;right:8px;top:8px;z-index:var(--z-1);width:26px;height:26px}
 .speek{display:flex;flex-direction:column;flex:none}
 .speek:empty{display:none}
 .sheet.deep #sheetB{border-top:var(--rule-hair) solid var(--line-2);border-radius:var(--r-4) var(--r-4) 0 0;margin:0 var(--sp-1)}
-/* the sheet: pours open from whatever was selected (core/pour.js) */
-/* side card reveal (own rules) */
-.sheet{position:fixed;z-index:var(--z-pop);left:0;top:0;width:min(380px,calc(100vw - 24px));max-height:min(72vh,560px);display:flex;flex-direction:column;background:var(--panel);border:var(--rule-hair) solid var(--line-3);border-radius:var(--r-5);box-shadow:var(--e2);visibility:hidden}
-.sheet.open{visibility:visible}
+/* the details rail (v42): the one fixed place where hovers and clicks show their details, so nothing covers what it describes.
+   Docked on the right; on a wide window the chat makes room for it (the same move as the Dispatch), on a narrow one it lies over
+   the chat and only a click opens it. It steps aside while the Dispatch is open and sits beside the map in full screen. */
+.sheet{position:fixed;top:0;right:0;bottom:0;z-index:var(--z-dispatch);width:var(--rail-w);display:flex;flex-direction:column;background:var(--sheet);border-left:var(--rule-hair) solid var(--line-2);opacity:0;visibility:hidden;pointer-events:none;transform:translateX(24px);transition:transform var(--t-exit) var(--ease-soft-close),opacity var(--t-exit) var(--ease-soft-close),visibility 0s linear var(--t-exit)}
+.sheet.open{opacity:1;visibility:visible;pointer-events:auto;transform:none;transition:transform var(--t-move) var(--spring),opacity var(--t-enter) var(--ease-out),visibility 0s}
+@media (min-width:1100px){.app.ins-open .main{margin-right:var(--rail-w)}.app.dsp-open.ins-open .main{margin-right:min(420px,100vw)}}
+@media (max-width:1099px){.sheet{box-shadow:var(--e-side)}}
+.app.dsp-open~.sheet.open{opacity:0;visibility:hidden;pointer-events:none;transform:translateX(24px)}
+.mfs.open~.sheet.open{z-index:var(--z-map);top:20px;right:20px;bottom:20px;border:var(--rule-hair) solid var(--line-3);border-radius:var(--r-5);box-shadow:var(--e3)}
+@media (min-width:1100px){.app.ins-open~.mfs{right:calc(var(--rail-w) + 32px)}}
+.ins-h{display:flex;align-items:center;gap:var(--sp-2);flex:none;padding:var(--sp-3h) var(--sp-3) var(--sp-3) var(--sp-4h);border-bottom:var(--rule-hair) solid var(--line-2)}
+.ins-h>.cap:first-child{color:var(--ink)}
+.ins-st{color:var(--mute)}
+.sheet[data-mode="pin"] .ins-st{color:var(--gold-ink)}
+.ins-un{margin-left:auto;border:0;background:none;padding:var(--sp-half) var(--sp-1);border-radius:var(--r-2);font-size:var(--fs-chrome);color:var(--soft);cursor:pointer;transition:color var(--t-exit) var(--ease-soft-close),background-color var(--t-exit) var(--ease-soft-close)}
+.ins-un:hover{color:var(--ink);background:var(--well);transition-duration:var(--t-instant);transition-timing-function:var(--ease-out)}
+.ins-un:focus-visible{outline:var(--rule) solid var(--gold);outline-offset:1px}
+.ins-un[hidden]+.sx{margin-left:auto}
+.sheet .sx{flex:none;width:26px;height:26px}
+.sheet .sb{flex:1;min-height:0}
+.sheet .sb[hidden],.sheet .sb:empty{display:none}
+.sheet .sb .si{animation:rise var(--t-enter) var(--ease-out) both}
+.ins-e{margin:0;padding:var(--sp-4) var(--sp-4h);font:italic 400 var(--fs-ui)/1.55 var(--f-display);color:var(--mute)}
+.sheet[data-mode="pin"] .ins-e,.sheet[data-mode="view"] .ins-e{display:none}
+.ins-v{-webkit-user-select:text;user-select:text}
+.ins-v::after{content:"Click it to keep it here.";display:block;margin-top:var(--sp-3);font:italic 400 var(--fs-chrome-2) var(--f-display);color:var(--mute)}
+.app:not(.dsp-open) .ins-btn[aria-expanded="true"]{border-color:var(--line-3);color:var(--ink);background:var(--well)}

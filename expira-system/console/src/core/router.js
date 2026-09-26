@@ -5,7 +5,7 @@ function open(c){setTimeout(()=>armFigs(),60);if(c!==cur&&$("#att"))attClear();w
 document.addEventListener("click",e=>{
  const rh=e.target.closest(".run-h");if(rh){const t=rh.closest(".run");if(t.dataset.view==="map")requestAnimationFrame(()=>runView(t,"map"));t.classList.add("pinned");const o=discToggle(t,"open",t.querySelector(".run-b"));rh.setAttribute("aria-expanded",String(o));if(o)return}
  const lt=e.target.closest(".logt");if(lt){const w=lt.closest(".logw");discToggle(w,"open",w.querySelector(".logb"));return}
- const shb=e.target.closest("[data-sheet]");if(shb){openSheet($("#sheet")._w,shb.dataset.sheet,shb);return}
+ const shb=e.target.closest("[data-sheet]");if(shb){const sh=$("#sheet");openSheet(INS.viewing()?sh._vw:sh._w,shb.dataset.sheet,shb);return}
  const dso=e.target.closest("[data-docopen-sheet]");if(dso){const w=$("#sheet")._w;if(w&&w.doc)openDoc(w.doc);return}
  const ck=e.target.closest("[data-claim]");if(ck){openSheet(workOf(ck)||$("#sheet")._w,"k:"+ck.dataset.claim,ck);return}
  const sa=e.target.closest("a[data-src]");if(sa){const w=workOf(sa);if(w&&((w.map||{}).pages||[]).some(p=>p.url===sa.dataset.src)){e.preventDefault();openSheet(w,"u:"+sa.dataset.src,sa)}return}

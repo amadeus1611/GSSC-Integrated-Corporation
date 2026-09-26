@@ -12,7 +12,7 @@ $("#palIn").addEventListener("keydown",e=>{const n=$("#palList").querySelectorAl
 $("#palList").addEventListener("click",e=>{const li=e.target.closest("[data-i]");if(li){pal(false);CMDS[+li.dataset.i][2]()}});
 const keys=o=>{$("#keys").classList.toggle("open",o);$("#veil").classList.toggle("open",o)};
 $("#veil").onclick=()=>{pal(false);keys(false);setMenu(false);closeFS();closeDoc()};$("#palBtn").onclick=()=>setMenu(true);
-addEventListener("keydown",e=>{const k=e.key.toLowerCase();if(k==="escape"&&$("#sheet").classList.contains("open")){if(!sheetPop())closeSheet();return}if(k==="escape"&&$("#mfs").classList.contains("open")){closeFS();return}if(k==="escape"&&$("#docv").classList.contains("open")){closeDoc();return}
+addEventListener("keydown",e=>{const k=e.key.toLowerCase();if(k==="escape"&&INS.pinned()&&document.activeElement?.closest?.("#sheet,[data-node],[data-claim],a[data-src]")){if(!sheetPop())closeSheet();return}if(k==="escape"&&$("#mfs").classList.contains("open")){closeFS();return}if(k==="escape"&&$("#docv").classList.contains("open")){closeDoc();return}
  if((e.metaKey||e.ctrlKey)&&k==="k"){e.preventDefault();pal(!$("#pal").classList.contains("open"))}
  else if(e.altKey&&e.code==="KeyN"){e.preventDefault();newChat()}
  else if(e.altKey&&e.code==="KeyL"){e.preventDefault();openLatest()}

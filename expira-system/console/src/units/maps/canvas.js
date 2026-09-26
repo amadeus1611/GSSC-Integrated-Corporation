@@ -68,7 +68,7 @@ class MapBase{
  speak(t){const now=performance.now();if(now-this.ann<2000)return;this.ann=now;this.say.textContent=t}
  /* hover and keyboard focus: the neighbourhood stays, the rest dims; the tooltip opens after 120 ms, at once on focus */
  hover(id,kb){if(this.hov===id&&!kb)return;this.hov=id;const nb=new Set();if(id&&this.g){nb.add(id);this.g.E.forEach(e=>{if(e.a===id)nb.add(e.b);if(e.b===id)nb.add(e.a)})}this.nb=id?nb:null;
-  clearTimeout(this.tipTo);if(id){this.tipTo=setTimeout(()=>{this.tipId=id;this.tipAt=0;this.go()},kb?0:120)}else this.tipTo=setTimeout(()=>{this.tipId=null;this.tip.classList.remove("on");this.cv.removeAttribute("aria-describedby")},80);this.go()}
+  clearTimeout(this.tipTo);if(id){this.tipTo=setTimeout(()=>{this.tipId=id;this.tipAt=0;this.go()},kb?0:120)}else this.tipTo=setTimeout(()=>{if(this.tipRail){INS.leave(this.tip.id+":"+this.tipRail);this.tipRail=null}this.tipId=null;this.tip.classList.remove("on");this.cv.removeAttribute("aria-describedby")},80);this.go()}
  dim(id){const f=this.lens||this.hov;if(!f)return 1;const on=this.lens?this.lensSet().has(id):this.nb&&this.nb.has(id);return on?1:this.lens?.2:.35}
  lensSet(){if(this._lk===this.lens)return this._ls;const s=new Set([this.lens]);this.g&&this.g.E.forEach(e=>{if(e.a===this.lens)s.add(e.b);if(e.b===this.lens)s.add(e.a)});this._lk=this.lens;this._ls=s;return s}
  /* the light: the running node with the highest rate holds it; a new start takes it at once; a challenger needs 1.5× for 400 ms */
@@ -88,6 +88,7 @@ class MapBase{
   return mv||on}
  tipTick(t){const id=this.tipId;if(!id)return;const n=this.g&&this.g.by[id],a=n&&this.anchorOf(id);if(!a){this.tip.classList.remove("on");return}
   if(t-this.tipAt>250){this.tipAt=t;const h=this.tipHTML(n);if(this.tip._h!==h){this.tip._h=h;this.tip.innerHTML=h}}
+  if(INS.view(this.tip.id+":"+id,`<div class="si mtr">${this.tip._h}</div>`,this.get())){this.tip.classList.remove("on");this.tipRail=id;return}
   const r=a.x+a.w+8+this.tw>this.W-4,x=r?a.x-8-this.tw:a.x+a.w+8,y=Math.max(0,Math.min(this.Hc-this.th,a.y+a.h/2-this.th/2)),k=`${x|0},${y|0}`;
   if(this.tip._p!==k){this.tip._p=k;this.tip.style.transform=`translate(${Math.max(0,x).toFixed(0)}px,${y.toFixed(0)}px)`}
   if(!this.tip.classList.contains("on")){this.tip.classList.add("on");const b=this.btn(id);b&&b.setAttribute("aria-describedby",this.tip.id)}}

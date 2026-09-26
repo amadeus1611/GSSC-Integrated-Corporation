@@ -52,12 +52,13 @@ class TokenRaster{
  /* the cursor: one hairline across every band at the hovered moment, and a readout of the data there */
  point(c,row){this.cur=c;this.row=row??-1;this.overlay()}
  overlay(){const o=this.ov&&this.ov.getContext("2d");if(!o)return;const d=this.dpr||1;o.setTransform(d,0,0,d,0,0);o.clearRect(0,0,this.cw,this.ch);const c=this.cur,tip=this.tip;
-  if(c<0||c>=this.cols){tip.classList.remove("on");return}const X=this.x0+c*this.cwp+this.cwp/2;o.globalAlpha=.4;o.fillStyle=this.C.ink;o.fillRect(Math.round(X),0,1,this.bh*this.keys().length);o.globalAlpha=1;
+  if(c<0||c>=this.cols){tip.classList.remove("on");if(this.onRail){INS.leave(this.rk);this.onRail=false}return}const X=this.x0+c*this.cwp+this.cwp/2;o.globalAlpha=.4;o.fillStyle=this.C.ink;o.fillRect(Math.round(X),0,1,this.bh*this.keys().length);o.globalAlpha=1;
   const K=this.keys(),b=Math.max(0,Math.min(K.length-1,this.row)),k=K[b],{fr,off}=this.data(),j=K.indexOf(k),nk=K.length,f0=c*this.fpc,f1=f0+this.fpc,t=f=>{const ms=f*250;return`${Math.floor(ms/60000)}:${pad(Math.floor(ms/1000)%60)}.${pad(Math.floor(ms%1000/10))}`};
   let s=0,m=0,th=0,got=0,S=0,wr=0,tk=0;for(let f=f0;f<f1;f++){const i=f-off;if(i<0||i>=fr.length)continue;got++;const v=fr[i][j]||0;s+=v;m=Math.max(m,v);if((fr[i][nk]>>j)&1)th++}
   fr.forEach(r=>{const v=r[j]||0;S+=v;if(v)wr++;else if((r[nk]>>j)&1)tk++});
   const what=!got?"no frame recorded":!s?(th*2>=got?"thinking":"idle"):this.fpc>1?`mean ${(s/got).toFixed(1)} tokens per ¼ s · max ${m}`:`${s} tokens · writing`;
   tip.innerHTML=`<b>${esc(bandName(k,this.w))}</b><span class="num">${t(f0)}–${t(f1)}${this.fpc>1?` · ${this.fpc} frames`:""}</span><span class="num">${what}</span><span class="num">${ft(S)} tokens · writing ${fr.length?Math.round(wr/fr.length*100):0}% · thinking ${fr.length?Math.round(tk/fr.length*100):0}% of the time</span>`;
+  this.rk=this.rk||"rx:"+Math.random().toString(36).slice(2);if(INS.view(this.rk,`<div class="si rxv">${tip.innerHTML}</div>`)){tip.classList.remove("on");this.onRail=true;return}
   const tw=tip.offsetWidth,L=X+10+tw>this.cw?X-10-tw:X+10;tip.style.transform=`translate(${Math.max(0,L).toFixed(0)}px,${(b*this.bh).toFixed(0)}px)`;tip.classList.add("on")}
  /* settle: the live edge goes, the level markers clear, one last paint, and nothing moves after that */
  settle(){if(!this.live)return;this.live=false;this.lvl={};this.paint(true);if(this.o.main&&this.o.say){const w=this.w,S=w.sig||[],K=w.sigKeys||[],busy=K.map((k,j)=>[k,S.reduce((a,r)=>a+(r[j]?1:0),0)]).filter(x=>x[0][0]==="d").sort((a,b)=>b[1]-a[1])[0];
