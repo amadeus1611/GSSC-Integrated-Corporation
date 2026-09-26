@@ -1,8 +1,10 @@
 # GSSC Integrated Corporation website
 
-Static, single-file website for GSSC Integrated Corporation (gsscph.com).
+Static website for GSSC Integrated Corporation (gsscph.com).
 
-- `index.html` is the entire site, with inline CSS, JS and images. There's no build step.
+- `index.html` is the site, with inline CSS and JS. The compass animation frames live in `compass/` (`d/` desktop, `m/` mobile) and the share image is `og.jpg`. There's no build step.
+- `functions/api/inquiry.js` sends the inquiry form (see below).
+- `robots.txt`, `sitemap.xml`, `site.webmanifest`, the favicon files and `404.html` support search engines, browsers and link previews. `_headers` sets browser caching for the images.
 - Hosted on Cloudflare Pages. Every push to `main` deploys to production automatically.
 
 ## Cloudflare Pages settings
