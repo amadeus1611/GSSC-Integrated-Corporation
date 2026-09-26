@@ -63,7 +63,7 @@
 .cpop::after{content:"";position:absolute;left:var(--ax,50%);top:100%;width:6px;height:6px;margin:calc(var(--sp-1) * -1) 0 0 calc(var(--sp-1) * -1);background:var(--panel);border:solid var(--line-3);border-width:0 var(--rule-hair) var(--rule-hair) 0;transform:rotate(45deg)}
 .cpop.below::after{top:0;transform:rotate(-135deg)}
 .cpop .ch{display:flex;align-items:center;gap:var(--sp-2);font-size:var(--fs-micro);letter-spacing:.14em;text-transform:uppercase;color:var(--mute)}
-.cpop .ch b{font-weight:500;letter-spacing:0;text-transform:none;color:var(--gold);font-size:var(--fs-micro)}
+.cpop .ch b{font-weight:500;letter-spacing:0;text-transform:none;color:var(--gold-ink);font-size:var(--fs-micro)}
 .cpop .ch .cf{margin-left:auto;letter-spacing:.02em;text-transform:none;font-size:var(--fs-micro)}
 .cpop .vd{display:inline-flex;align-items:center;gap:var(--sp-1)}
 .cpop .vd i{width:5px;height:5px;border-radius:var(--r-round);background:var(--mute)}
@@ -75,7 +75,7 @@
 .cpop .cs{display:flex;flex-wrap:wrap;gap:var(--sp-1);margin-bottom:var(--sp-1h)}
 .cpop .cs span{font-size:var(--fs-chrome);color:var(--soft);border:var(--rule-hair) solid var(--line-2);border-radius:var(--r-1);padding:0 var(--sp-1)}
 .cpop .cs em{font:italic 400 var(--fs-chrome-2)/1.45 var(--f-display);color:var(--soft)}
-.cpop .cx{display:block;font:italic 400 var(--fs-chrome-2) var(--f-display);color:var(--gold)}
+.cpop .cx{display:block;font:italic 400 var(--fs-chrome-2) var(--f-display);color:var(--gold-ink)}
 .moving>[aria-selected="true"]{background:transparent}
 .menu{position:fixed;left:0;top:0;z-index:var(--z-menu);width:268px;background:var(--panel);border:var(--rule-hair) solid var(--line-3);border-radius:var(--r-5);box-shadow:var(--e2);padding:var(--sp-1h);opacity:0;visibility:hidden;pointer-events:none}
 .chov{width:280px;opacity:0;transform:translateX(-4px);transition:opacity var(--t-enter) var(--ease-soft-close),transform var(--t-move) var(--spring);pointer-events:none}

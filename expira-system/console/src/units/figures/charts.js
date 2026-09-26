@@ -26,7 +26,7 @@ function chartFig(json,no){let sp;try{sp=JSON.parse(json)}catch(e){try{sp=JSON.p
  const hit=`<rect class="hit" x="${m.l}" y="${m.t}" width="${pw}" height="${ph}" fill="transparent"/>`;
  const id="f"+(++figSeq);FIGS.set(id,{labels,S,unit,line,n,W,m,pw,band});
  const legend=S.length>=2?`<div class="lg">${S.map((x,j)=>`<span><i style="background:var(--s${j+1})"></i>${esc(x.name)}</span>`).join("")}</div>`:"";
- const table=`<div class="tw tv" hidden><table><thead><tr><th></th>${S.map(x=>`<th>${esc(x.name||title)}</th>`).join("")}</tr></thead><tbody>${labels.map((lb,i)=>`<tr><td>${esc(lb)}</td>${S.map(x=>`<td>${esc(fmtV(x.values[i],unit))}</td>`).join("")}</tr>`).join("")}</tbody></table></div>`;
+ const table=`<div class="tw tv" hidden><table><thead><tr><th><span class="sr">Label</span></th>${S.map(x=>`<th>${esc(x.name||title)}</th>`).join("")}</tr></thead><tbody>${labels.map((lb,i)=>`<tr><td>${esc(lb)}</td>${S.map(x=>`<td>${esc(fmtV(x.values[i],unit))}</td>`).join("")}</tr>`).join("")}</tbody></table></div>`;
  return `<figure class="fig pre fx-${line?type:"bar"}"><div class="fig-h"><span class="no">Fig. ${no}</span><span class="tt">${esc(title)}</span>${unit?`<span class="capt">${esc(unit)}</span>`:""}<button class="tb" data-tv>Table</button><button class="tb" data-png aria-label="Save as PNG">PNG</button></div>${legend}<div class="ro">${RO0}</div><svg class="ch" data-fig="${id}" viewBox="0 0 ${W} ${H}" role="img" aria-label="${esc(title)}">${g}${marks}${hit}</svg>${table}${sp.note?`<p class="note">${esc(sp.note)}</p>`:""}</figure>`}
 /* chart hover: a crosshair, and the values read out inside the figure; nothing floats over the chat */
 const RO0=`<span class="ro-h">Point at the plate to read values</span>`;

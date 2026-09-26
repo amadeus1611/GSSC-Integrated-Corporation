@@ -7,7 +7,7 @@
 .dsp-h .ib{margin-left:auto}
 .dsp-b{flex:1;overflow:auto;padding:var(--sp-5) var(--sp-6) var(--sp-8);counter-reset:dsec}
 .kicker{display:flex;align-items:center;gap:var(--sp-2h);margin-bottom:var(--sp-2h)}
-.kicker .cap{color:var(--gold)}
+.kicker .cap{color:var(--gold-ink)}
 .dsp h2{font:400 var(--fs-h3)/1.3 var(--f-display);color:var(--ink);margin:0 0 var(--sp-2);text-wrap:balance}
 .standfirst{font:italic 400 var(--fs-body)/1.6 var(--f-display);color:var(--text);margin:0 0 var(--sp-4);padding-bottom:var(--sp-3h);border-bottom:var(--rule-hair) solid var(--line-2);text-wrap:pretty}
 .stats{display:grid;grid-template-columns:repeat(3,1fr);margin:0 0 var(--sp-6);border-bottom:var(--rule-hair) solid var(--line-2)}
@@ -23,7 +23,7 @@
 .desk{display:grid;grid-template-columns:24px 1fr;gap:0 var(--sp-2);padding:0 0 var(--sp-3);margin-bottom:var(--sp-3);border-bottom:var(--rule-hair) solid var(--line);animation:evIn var(--t-enter) var(--ease-out) both}
 .desk .mini{grid-column:2;display:block;width:100%;height:26px;border-radius:var(--r-1);background:var(--well);border:var(--rule-hair) solid var(--line)}
 .desk:last-child{border-bottom:0;margin-bottom:var(--sp-1h)}
-.desk .rn{font:400 var(--fs-body)/1.3 var(--f-display);color:var(--gold)}
+.desk .rn{font:400 var(--fs-body)/1.3 var(--f-display);color:var(--gold-ink)}
 .desk .hd{display:flex;align-items:baseline;gap:var(--sp-2h);flex-wrap:wrap}
 .desk .hd b{font-weight:400;font-size:var(--fs-chrome);letter-spacing:var(--tracked);text-transform:uppercase;color:var(--ink)}
 .desk .eff{display:inline-flex;align-items:center;gap:var(--sp-1h);font:italic 400 var(--fs-ui) var(--f-display);color:var(--soft)}
@@ -52,7 +52,7 @@
 .dx-mast{margin-bottom:var(--sp-2)}
 .olog li{display:grid;grid-template-columns:40px 1fr;gap:var(--sp-2h);padding:var(--sp-1) 0;font-size:var(--fs-ui);line-height:1.55;color:var(--text);animation:evIn var(--t-enter) var(--ease-out) both}
 .olog .ts{font-size:var(--fs-micro);color:var(--mute);padding-top:var(--sp-half)}
-.olog em{font-family:var(--f-display);color:var(--gold)}
+.olog em{font-family:var(--f-display);color:var(--gold-ink)}
 @media (max-width:760px){
 .dsp{width:100vw}
 }

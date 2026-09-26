@@ -12,7 +12,7 @@ class TokenRaster{
  constructor(cv,o){Object.assign(this,{cv,o,ov:o.ov||null,gut:o.gut||null,x:cv.getContext("2d"),live:!!o.live,dirty:true,vis:true,cur:-1,fpc:1,lvl:{}});
   this.io=new IntersectionObserver(es=>{this.vis=es[es.length-1].isIntersecting;if(this.vis&&this.dirty)this.paint()});this.io.observe(cv);
   this.ro=new ResizeObserver(()=>{if(cv.clientWidth&&cv.clientWidth!==this.cw)this.paint(true)});this.ro.observe(cv);
-  if(o.main){const fr=cv.parentElement;this.ax=document.createElement("div");this.ax.className="rx-ax";this.tip=document.createElement("div");this.tip.className="rx-tip";this.tip.setAttribute("role","tooltip");fr.append(this.ax,this.tip);
+  if(o.main){const fr=cv.parentElement;this.ax=document.createElement("div");this.ax.className="rx-ax";this.tip=document.createElement("div");this.tip.className="rx-tip";this.tip.setAttribute("aria-hidden","true");fr.append(this.ax,this.tip);
    fr.tabIndex=0;fr.setAttribute("role","img");fr.setAttribute("aria-label","Activity: who was writing, when, and how much");
    const at=e=>{const r=cv.getBoundingClientRect();return[e.clientX-r.left,e.clientY-r.top]};
    fr.addEventListener("pointermove",e=>{const[px,py]=at(e);this.point(this.colAt(px),Math.floor((py)/this.bh))});fr.addEventListener("pointerleave",()=>this.point(-1));

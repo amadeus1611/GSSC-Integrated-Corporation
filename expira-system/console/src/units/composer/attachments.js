@@ -24,12 +24,12 @@ document.addEventListener("paste",e=>{if(!IMGCAP)return;const fs=[...(e.clipboar
 /* the lightbox: the image stretches out of its thumbnail and back */
 {const L=$("#lbx"),im=L.querySelector("img");let from=null;
  const close=()=>{if(L.hidden)return;const r=from&&from.isConnected?from.getBoundingClientRect():null,f=im.getBoundingClientRect();
-  const a=r&&!reduce?im.animate([{transform:"none"},{transform:`translate(${r.left+r.width/2-(f.left+f.width/2)}px,${r.top+r.height/2-(f.top+f.height/2)}px) scale(${r.width/f.width},${r.height/f.height})`,borderRadius:"12px"}],{duration:MO.move,easing:MO.soft}):null;
-  L.animate([{opacity:1},{opacity:0}],{duration:reduce?0:360,easing:"ease-in"}).onfinish=()=>{L.hidden=true}};
+  const a=r&&!reduce?im.animate([{transform:"none"},{transform:`translate(${r.left+r.width/2-(f.left+f.width/2)}px,${r.top+r.height/2-(f.top+f.height/2)}px) scale(${r.width/f.width},${r.height/f.height})`}],{duration:MO.move,easing:MO.soft}):null;
+  L.animate([{opacity:1},{opacity:0}],{duration:reduce?0:MO.exit,easing:MO.soft}).onfinish=()=>{L.hidden=true}};
  document.addEventListener("click",e=>{const b=e.target.closest(".yi");if(b){const k=+b.closest(".yw").dataset.k,m=cur?.turns[k]?.imgs?.[+b.dataset.lbx];if(!m)return;from=b;
    im.onerror=()=>{im.onerror=null;im.src=m.thumb};im.src=m.url||m.thumb;L.querySelector("p").textContent=`${m.name} · ${m.w}×${m.h}`;L.hidden=false;
-   const r=b.getBoundingClientRect();requestAnimationFrame(()=>{const f=im.getBoundingClientRect();if(!reduce&&f.width)im.animate([{transform:`translate(${r.left+r.width/2-(f.left+f.width/2)}px,${r.top+r.height/2-(f.top+f.height/2)}px) scale(${r.width/f.width},${r.height/f.height})`,borderRadius:"12px"},{transform:"none",borderRadius:"4px"}],{duration:MO.move,easing:MO.spring})});
-   L.animate([{opacity:0},{opacity:1}],{duration:reduce?0:280});return}
+   const r=b.getBoundingClientRect();requestAnimationFrame(()=>{const f=im.getBoundingClientRect();if(!reduce&&f.width)im.animate([{transform:`translate(${r.left+r.width/2-(f.left+f.width/2)}px,${r.top+r.height/2-(f.top+f.height/2)}px) scale(${r.width/f.width},${r.height/f.height})`},{transform:"none"}],{duration:MO.move,easing:MO.spring})});
+   L.animate([{opacity:0},{opacity:1}],{duration:reduce?0:MO.enter,easing:MO.out});return}
   if(e.target.closest("#lbx"))close()});
  document.addEventListener("keydown",e=>{if(e.key==="Escape"&&!L.hidden){e.stopPropagation();close()}},true)}
 $("#form").addEventListener("submit",e=>{e.preventDefault();if(busy){const v=promptEl.value.trim();if(v&&STEERF){STEER.push(v);STEERF(v);promptEl.value="";grow();sendSync();phSync&&phSync();return}ctl?.abort();return}let q=promptEl.value.trim();if((!q&&!QUOTE&&!ATT.length)||!sample)return;if(!q&&!QUOTE)q=ATT.length>1?"Take a look at these images.":"Take a look at this image.";if(QUOTE){q=quoteMd(QUOTE)+"\n\n"+(q||"Tell me more about this.");setQuote("")}send(q)});

@@ -1,14 +1,8 @@
 /* sidebar */
 .side.searching .search{display:block}
 .side:hover .sh .ib.sm{opacity:1}
-.toast .ua{border:0;background:none;padding:0;cursor:pointer;color:var(--gold);font:italic 400 var(--fs-ui) var(--f-display)}
+.toast .ua{border:0;background:none;padding:0;cursor:pointer;color:var(--gold-ink);font:italic 400 var(--fs-ui) var(--f-display)}
 .toast .ua:hover{color:var(--ink)}
-.ctip{position:fixed;z-index:var(--z-tip-2);pointer-events:none;background:var(--panel);border:var(--rule-hair) solid var(--line-3);border-radius:var(--r-3);box-shadow:var(--e2);padding:var(--sp-2) var(--sp-2h);font-size:var(--fs-chrome-2);color:var(--text);opacity:0;transition:opacity var(--t-enter) var(--ease-soft-close);min-width:120px}
-.ctip.on{opacity:1}
-.ctip b{display:block;font:400 var(--fs-ui) var(--f-display);color:var(--ink);margin-bottom:var(--sp-1)}
-.ctip div{display:flex;align-items:center;gap:var(--sp-2);justify-content:space-between}
-.ctip div span:first-child{display:flex;align-items:center;gap:var(--sp-1h);color:var(--soft)}
-.ctip i{width:7px;height:7px;border-radius:var(--r-1)}
 /* palette, toasts, tips, jump */
 .veil{position:fixed;inset:0;z-index:var(--z-veil);background:var(--veil);opacity:0;pointer-events:none;transition:opacity var(--t-exit) var(--ease-soft-close)}
 .veil.open{opacity:1;pointer-events:auto;transition-duration:var(--t-enter);transition-timing-function:var(--ease-out)}
@@ -26,7 +20,7 @@
 .pal li.empty{cursor:default;color:var(--mute)}
 .pal li .kb{margin-left:auto}
 .toast{display:flex;align-items:center;gap:var(--sp-3);pointer-events:auto;background:var(--panel);border:var(--rule-hair) solid var(--line-3);border-radius:var(--r-3);box-shadow:var(--e2);font-size:var(--fs-ui);color:var(--text);padding:var(--sp-1h) var(--sp-3);animation:toast var(--t-enter) var(--ease-out) both}
-.toast em{font-family:var(--f-display);color:var(--gold)}
+.toast em{font-family:var(--f-display);color:var(--gold-ink)}
 @keyframes toast{0%{opacity:0;transform:translateY(4px)}12%{opacity:1;transform:none}85%{opacity:1}100%{opacity:0}}
 .tip{position:fixed;left:0;top:0;z-index:var(--z-tip);background:var(--ink);color:var(--bg);font:400 var(--fs-chrome-2) var(--f-body);padding:var(--sp-1) var(--sp-2);border-radius:var(--r-2);white-space:nowrap;pointer-events:none;opacity:0;transform:translateY(2px);transition:opacity var(--t-enter) var(--ease-soft-close),transform var(--t-move) var(--ease-soft-close)}
 .tip.on{opacity:1;transform:none}

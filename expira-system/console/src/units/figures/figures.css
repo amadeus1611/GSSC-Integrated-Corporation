@@ -25,7 +25,7 @@
 .setting{font:italic 400 var(--fs-ui) var(--f-display);color:var(--mute);margin:0 0 var(--sp-3h)}
 @keyframes blink{50%{opacity:0}}
 .fig-h .tt{font:400 var(--fs-body) var(--f-display);color:var(--ink);font-size:var(--fs-body)}
-.fig-h .no{font:italic 400 var(--fs-ui) var(--f-display);color:var(--gold);font-size:var(--fs-chrome-2)}
+.fig-h .no{font:italic 400 var(--fs-ui) var(--f-display);color:var(--gold-ink);font-size:var(--fs-chrome-2)}
 @keyframes ink{from{opacity:0;transform:translateY(-2px)}to{opacity:1;transform:none}}
 /* dots on the stem, one-step theme change, charts that pour in */
 .fig-h .tb+.tb{margin-left:var(--sp-3h)}
@@ -41,7 +41,7 @@
 .ch .mk{transition:opacity var(--t-enter)}
 .ch.hov:has(.mk.on) .mk:not(.on){opacity:.45}
 .ch .mk.on .lbl,.ch .mk.on .vl{fill:var(--ink)}
-.ch .dn{transition:stroke-width var(--t-enter) var(--ease-soft-close)}
+/* a donut segment thickens as a state change, not an animation (Gate A) */
 .ch .dn.on{stroke-width:22}
 .fig .bar,.fig .sg,.fig .wb,.fig .ar{transform-box:fill-box;transform-origin:50% 100%}
 .fig .hb,.fig .tb2{transform-box:fill-box;transform-origin:0 50%}

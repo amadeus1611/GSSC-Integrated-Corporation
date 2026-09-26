@@ -8,7 +8,9 @@
 .navb .kb{margin-left:auto}
 .kb{font:400 var(--fs-micro) var(--f-body);letter-spacing:.06em;color:var(--mute);border:var(--rule-hair) solid var(--line-2);border-radius:var(--r-1);padding:1px var(--sp-1)}
 .search{display:none;padding:0 var(--sp-2) var(--sp-2h)}
-.search input{width:100%;border:0;border-bottom:var(--rule-hair) solid var(--line-3);background:transparent;padding:var(--sp-1h) 0;outline:none;font-size:var(--fs-body)}
+.search input{width:100%;border:0;border-bottom:var(--rule-hair) solid var(--line-3);background:transparent;padding:var(--sp-1h) 0;outline:none;font-size:var(--fs-body);transition:border-color var(--t-exit) var(--ease-soft-close)}
+.search input:hover{border-bottom-color:var(--soft);transition-duration:var(--t-instant)}
+.search input:focus{border-bottom-color:var(--gold);transition-duration:var(--t-enter)}
 .recents{flex:1;overflow:auto;margin:0 calc(var(--sp-1) * -1);padding:0 var(--sp-1) var(--sp-2)}
 .ib.sm{width:20px;height:20px;border-radius:var(--r-2)}
 .ib.sm svg{width:11px;height:11px}
@@ -32,9 +34,11 @@
 .fold .fh .fi{width:13px;height:13px;color:var(--gold);flex:none}
 .fold .fh .fn{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .fold .fh .fc{font-size:var(--fs-chrome);color:var(--mute)}
-.fold .fb{display:grid;grid-template-rows:0fr;transition:grid-template-rows var(--t-move) var(--ease-soft-close)}
-.fold.open .fb{grid-template-rows:1fr}
-.fold .fb>div{overflow:hidden;padding-left:var(--sp-3h)}
+/* disclosures open in place and their content rises in (Gate A: no animated height); closed content leaves the tab order */
+.fold .fb{display:none}
+.fold.open .fb{display:block}
+.fold .fb>div{padding-left:var(--sp-3h)}
+.fold.open .fb>div{animation:rise var(--t-enter) var(--ease-out) both}
 .fold .fb .empty{padding:var(--sp-1) var(--sp-2) var(--sp-1h);font-size:var(--fs-ui)}
 .fold.drop>.row,.fold.drop .fh,.dropzone.drop{background:var(--gold-wash);box-shadow:inset 0 0 0 var(--rule-hair) var(--gold)}
 .crumb{font:400 var(--fs-ui) var(--f-body);color:var(--mute);white-space:nowrap;display:flex;align-items:center;gap:var(--sp-1h)}
@@ -46,9 +50,11 @@
 .item:hover{background:var(--line);color:var(--text);transition-duration:var(--t-instant);transition-timing-function:var(--ease-out)}
 .item.on{background:var(--line-2);color:var(--ink)}
 .item .it-t{display:block;overflow:hidden;text-overflow:ellipsis}
-.item .it-m{display:block;font-size:var(--fs-chrome);color:var(--mute);max-height:0;opacity:0;transition:max-height var(--t-move) var(--ease-soft-close),opacity var(--t-exit) var(--ease-soft-close)}
-.item:hover .it-m,.item.on .it-m{max-height:16px;opacity:1}
-.item i{font-style:italic;font-family:var(--f-display);font-size:var(--fs-chrome-2);color:var(--mute)}
+/* the chosen row shows its detail line; it rises in rather than growing the row under the pointer */
+.item .it-m{display:none;font-size:var(--fs-chrome);color:var(--soft)}
+.item.on .it-m{display:block;animation:rise var(--t-enter) var(--ease-out) both}
+.item i{font-style:italic;font-family:var(--f-display);font-size:var(--fs-chrome-2);color:var(--soft)}
+.navb:hover .kb,.me:hover .who small,.me[aria-expanded="true"] .who small{color:var(--soft)}
 .foot{display:flex;align-items:center;gap:var(--sp-2h);padding:var(--sp-3) var(--sp-2) 0;border-top:var(--rule-hair) solid var(--line-2)}
 .av{width:28px;height:28px;border-radius:var(--r-round);background:var(--ink);color:var(--bg);display:grid;place-items:center;font:500 var(--fs-chrome) var(--f-body);letter-spacing:.04em;flex:none}
 .me{display:flex;align-items:center;gap:var(--sp-2h);flex:1;min-width:0;border:0;background:transparent;border-radius:var(--r-4);padding:var(--sp-1) var(--sp-1h);margin:calc(var(--sp-1) * -1) calc(var(--sp-1h) * -1);cursor:pointer;text-align:left;transition:background var(--t-exit) var(--ease-soft-close)}

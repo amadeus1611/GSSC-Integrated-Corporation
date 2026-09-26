@@ -3,7 +3,8 @@
    and a new <body> written in the master's component vocabulary; brand assets hydrate from the package,
    hash-verified, byte-identical to the master's. Any failed check is a hard stop: nothing is delivered. */
 const K_STYLE_RE=/<style\b[^>]*>[\s\S]*?<\/style>/g;
-const K_PRIMARY="duke_y_demayo";
+/* the primary signatory is whoever the kernel's 02_governance names President; nothing about a person is built in */
+const kPrimary=officers=>Object.keys(officers).find(k=>(officers[k].titles||[]).includes("President"));
 function kB64(b64){if(typeof atob==="function"){const s=atob(b64),u=new Uint8Array(s.length);for(let i=0;i<s.length;i++)u[i]=s.charCodeAt(i);return u}return new Uint8Array(Buffer.from(b64,"base64"))}
 async function kSha(u){if(typeof crypto!=="undefined"&&crypto.subtle){const h=await crypto.subtle.digest("SHA-256",u);return [...new Uint8Array(h)].map(b=>b.toString(16).padStart(2,"0")).join("")}return require("crypto").createHash("sha256").update(u).digest("hex")}
 async function kAssemble(K,src,opt={}){
@@ -18,7 +19,7 @@ async function kAssemble(K,src,opt={}){
  if(dstyles.length>1)return fail("A derivative may append ONE style element (Module 10 additive rule).");
  if(dstyles.length&&dstyles[0].includes(":root"))return fail("Derivative tokens belong on a scoped class, not :root (Module 10 additive rule).");
  checks.push(["One derivative style at most",true]);
- const officers=K.kernel["02_governance"].active_officers;
+ const officers=K.kernel["02_governance"].active_officers,K_PRIMARY=kPrimary(officers);
  if(src.includes("{{GSSC_SIGNATORY_2:")){const key=opt.second;
   if(!officers[key])return fail(`This document needs a second signatory: one of ${Object.keys(officers).filter(k=>k!==K_PRIMARY).join(", ")}.`);
   if(key===K_PRIMARY)return fail("The second signatory must be someone other than the President.");

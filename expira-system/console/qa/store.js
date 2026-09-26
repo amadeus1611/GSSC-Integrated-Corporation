@@ -47,6 +47,25 @@ const FAKE = ({ seed, uid }) => {
   await p.evaluate(() => { const c = JSON.parse(localStorage.getItem('expira.v6')).filter(c => c.id !== 'l1'); __KV.put('chats', c) }); await p.waitForTimeout(800);
   D = await p.evaluate(() => Object.keys(__FDB)); ok(!D.includes('c:l1'), 'db: delete mirrored');
   ok(errs.length === 0, 'db errors: ' + errs); await p.close();
+  // 5. db: the newer copy wins, a deleted chat stays deleted, an oversized chat stays local
+  const old = chat('n1', 'Newer here'), newer = Object.assign(chat('n1', 'Newer here'), { turns: [...old.turns, { role: 'assistant', ts: Date.now() + 5000, content: 'later' }] });
+  const big = Object.assign(chat('b1', 'Big chat'), { turns: [{ role: 'user', ts: Date.now() + 9000, content: 'é'.repeat(140000) }] });
+  ({ p, errs } = await page({ 'expira.v6': JSON.stringify([newer, chat('z1', 'Deleted elsewhere'), big]) }, { uid: 'u7', seed: { 'c:n1': { v: old }, 'k:gone': { v: ['z1'] }, 'c:b1': { v: chat('b1', 'Big chat') } } }));
+  await p.waitForTimeout(900);
+  const L = await p.evaluate(() => JSON.parse(localStorage.getItem('expira.v6')));
+  ok(L.find(c => c.id === 'n1').turns.length === 2, 'db: newer local copy kept');
+  ok(!L.find(c => c.id === 'z1'), 'db: chat deleted elsewhere stays deleted');
+  ok(L.find(c => c.id === 'b1').turns[0].content.length === 140000, 'db: oversized local chat kept');
+  D = await p.evaluate(() => __FDB);
+  ok(D['c:n1'].v.turns.length === 2 && !D['c:b1'] && !D['c:z1'], 'db: newer copy sent up, oversized copy removed from db');
+  // 6. import: an older export does not roll back a newer chat, and a crafted feed stays text
+  const evil = Object.assign(chat('x1', 'Crafted'), { turns: [{ role: 'user', ts: 1, content: 'q' }, { role: 'assistant', ts: 2, content: 'a', work: { ms: 1, steps: [], feed: [[1, '<img src=x onerror="window.__pwn=1">', '<img src=x onerror="window.__pwn=1">']] } }] });
+  await p.evaluate(e => __KV.importAll({ format: 'expira.library', chats: e }), [old, evil]); await p.waitForTimeout(300);
+  ok(await p.evaluate(() => JSON.parse(localStorage.getItem('expira.v6')).find(c => c.id === 'n1').turns.length) === 2, 'import: older copy does not roll back');
+  await p.click('text=Crafted').catch(() => {}); await p.waitForTimeout(800); await p.click('#dspBtn').catch(() => {}); await p.waitForTimeout(1500);
+  ok(!(await p.evaluate(() => window.__pwn)), 'import: crafted feed does not run');
+  ok(await p.evaluate(() => document.body.innerHTML.includes('&lt;img src=x')), 'import: crafted feed is shown as text');
+  ok(errs.length === 0, 'db2 errors: ' + errs); await p.close();
   await b.close(); srv.close();
   console.log(fails.length ? 'FAIL\n - ' + fails.join('\n - ') : 'store: all checks pass'); process.exit(fails.length ? 1 : 0);
 })();

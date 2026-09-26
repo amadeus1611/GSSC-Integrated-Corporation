@@ -5,9 +5,9 @@
 .exh.folded .exh-h .chev{transform:none}
 .exh-h .cnt{transition:color var(--t-instant) var(--ease-out)}
 .exh-h:hover .cnt,.exh-h:hover .chev{color:var(--ink)}
-.exb{display:grid;grid-template-rows:1fr;transition:grid-template-rows var(--t-move) var(--ease-soft-close)}
-.exb>div{overflow:hidden}
-.exh.folded .exb{grid-template-rows:0fr}
+/* disclosures open in place and their content rises in (Gate A: no animated height); closed content leaves the tab order */
+.exb>div{animation:rise var(--t-enter) var(--ease-out) both}
+.exh.folded .exb{display:none}
 .exi{animation:rise var(--t-enter) var(--ease-out) both}
 .facts{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));margin:0 0 var(--sp-4);border-top:var(--rule) solid var(--ink)}
 .fact{padding:var(--sp-2h) var(--sp-3) var(--sp-2h) 0;display:flex;flex-direction:column;gap:var(--sp-half)}

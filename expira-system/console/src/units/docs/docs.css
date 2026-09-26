@@ -46,9 +46,9 @@
 @media (max-width:560px){
 #docSum{display:none}
 }
-.docc .th iframe{position:absolute;left:0;top:0;width:794px;height:1123px;border:0;transform:scale(.1662);transform-origin:0 0;pointer-events:none;background:var(--paper);animation:fillup var(--t-draw) var(--ease-out) both}
+.docc .th iframe{position:absolute;left:0;top:0;width:794px;height:1123px;border:0;transform:scale(.1662);transform-origin:0 0;pointer-events:none;background:var(--paper);animation:tick var(--t-draw) var(--ease-out) both}
 [data-docsave]{position:relative}
-.dpn b{font-weight:500;font-size:var(--fs-micro);color:var(--gold)}
+.dpn b{font-weight:500;font-size:var(--fs-micro);color:var(--gold-ink)}
 .dpn i{font-style:normal;color:var(--mute);max-width:140px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .dpn:hover{border-color:var(--line-3);background:var(--well)}
 .dpn:hover span{color:var(--gold)}

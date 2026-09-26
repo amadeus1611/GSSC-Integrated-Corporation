@@ -1,35 +1,46 @@
 (() => {
 const $=s=>document.querySelector(s),app=$("#app"),root=document.documentElement;
+if(!root.lang)root.lang="en";
 const esc=s=>String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+/* feed lines are escaped HTML whose only tag is <em>: any other tag, from an imported file or a stored chat, is shown as text */
+const feedH=s=>String(s??"").replace(/<(?!\/?em>)/g,"&lt;");
 /* storage adapter (plan §3.4). Every unit reads and writes through KV; none touches localStorage or db.
    localStorage is always the write-through cache under the v6 key names, so the console works offline and a
    rollback still reads it. When this viewer has a private db subtree (the page declares `user` beside `db`),
    each key and each chat is mirrored to data/users/<id>/ and read back on load; otherwise the browser is the store. */
-const KV=(()=>{const P="expira.",AL={chats:"v6"},KEYS=["chats","prefs","opt","folders","theme","runview","mapView","noExample"],subs=new Set(),seen=new Map(),q=new Map();
- let R=null,run=false,full=false;
+const KV=(()=>{const P="expira.",AL={chats:"v6"},KEYS=["chats","prefs","opt","folders","theme","runview","mapView","noExample"],subs=new Set(),seen=new Map(),q=new Map(),TE=new TextEncoder();
+ let R=null,run=false,full=false,back=4000;
  const lk=k=>P+(AL[k]||k);
  const get=(k,d)=>{let v=null;try{v=localStorage.getItem(lk(k));if(v==null&&k==="chats")v=localStorage.getItem(P+"v5")}catch(e){}if(v==null)return d;try{return JSON.parse(v)}catch(e){return v}};
  const local=(k,v)=>{try{if(v==null)localStorage.removeItem(lk(k));else localStorage.setItem(lk(k),typeof v==="string"?v:JSON.stringify(v));full=false;return true}catch(e){if(!full){full=true;subs.forEach(f=>f("!full"))}return false}};
+ /* the newer of two copies of one chat: the later last turn, then the longer thread */
+ const stamp=c=>Math.max(c.ts||0,...(c.turns||[]).map(t=>t&&t.ts||0));
+ const pick=(a,b)=>!a?b:!b?a:stamp(b)!==stamp(a)?(stamp(b)>stamp(a)?b:a):((b.turns||[]).length>(a.turns||[]).length?b:a);
+ /* chats deleted while the durable copy is on, so another device's copy does not bring them back */
+ const gone=new Set(get("gone",[])||[]);const saveGone=()=>{const g=[...gone].slice(-500);local("gone",g);if(R)send("k:gone",{v:g})};
  /* one db document per key, and one per chat, so a write sends only what changed */
  const docs=(k,v)=>k==="chats"?(v||[]).filter(c=>c&&!c.example).map(c=>["c:"+c.id,{v:c}]):[["k:"+k,{v:v??null}]];
- const flush=async()=>{if(run||!R)return;run=true;try{while(q.size){const [id,b]=q.entries().next().value;q.delete(id);try{b?await R.doc(id).set(b):await R.doc(id).delete()}catch(e){if(e&&e.code==="invalid_argument")continue;if(!q.has(id))q.set(id,b);setTimeout(flush,4000);break}}}finally{run=false}};
- const mirror=(k,v)=>{if(!R)return;const cur=new Set();for(const [id,b] of docs(k,v)){cur.add(id);const j=JSON.stringify(b);if(j.length>250000)continue;if(seen.get(id)!==j){seen.set(id,j);q.set(id,b)}}
-  if(k==="chats")for(const id of [...seen.keys()])if(id.startsWith("c:")&&!cur.has(id)){seen.delete(id);q.set(id,null)}clearTimeout(mirror.t);mirror.t=setTimeout(flush,400)};
+ const flush=async()=>{if(run||!R)return;run=true;try{while(q.size){const [id,b]=q.entries().next().value;q.delete(id);try{b?await R.doc(id).set(b):await R.doc(id).delete();back=4000}catch(e){if(e&&e.code==="invalid_argument")continue;if(!q.has(id))q.set(id,b);setTimeout(flush,back);back=Math.min(60000,back*2);break}}}finally{run=false}};
+ const send=(id,b)=>{const j=b?JSON.stringify(b):null;if(j&&TE.encode(j).length>250000){if(seen.has(id)){seen.delete(id);q.set(id,null)}return false}if(seen.get(id)===j)return true;if(j)seen.set(id,j);else seen.delete(id);q.set(id,b);clearTimeout(send.t);send.t=setTimeout(flush,400);return true};
+ const mirror=(k,v)=>{if(!R)return;const cur=new Set();for(const [id,b] of docs(k,v)){cur.add(id);send(id,b)}
+  if(k==="chats"){let ch=false;for(const id of [...seen.keys()])if(id.startsWith("c:")&&!cur.has(id)){send(id,null);gone.add(id.slice(2));ch=true}for(const id of cur)if(gone.delete(id.slice(2)))ch=true;if(ch)saveGone()}};
  const put=(k,v)=>{const ok=local(k,v);mirror(k,v);return ok};
- /* hydrate: the db copy wins for what it holds; what only this browser holds is sent up */
+ /* hydrate: for each chat the newer copy wins; deletions on either side hold; what only this browser holds is sent up */
  const ready=(async()=>{try{const C=window.claude;const u=await C?.use?.("user"),id=u&&typeof u.id==="function"?await u.id():null;if(!id)return"local";const d=await C.use("db");if(!d)return"local";
-  const col=d.collection("data/users/"+id),s=await col.get();R=col;const got={},dc=[];
-  for(const x of s.docs){const b=x.data();if(!b)continue;seen.set(x.id,JSON.stringify(b));if(x.id.startsWith("c:"))dc.push(b.v);else got[x.id.slice(2)]=b.v}
+  const col=d.collection("data/users/"+id),s=await col.get();R=col;const got={},dc=new Map();
+  for(const x of s.docs){const b=x.data();if(!b)continue;seen.set(x.id,JSON.stringify(b));if(x.id.startsWith("c:"))dc.set(b.v&&b.v.id,b.v);else got[x.id.slice(2)]=b.v}
+  (got.gone||[]).forEach(g=>gone.add(g));
   for(const k of KEYS){if(k==="chats")continue;if(k in got){const j=JSON.stringify(got[k]);if(j!==JSON.stringify(get(k,null))){local(k,got[k]);subs.forEach(f=>f(k,got[k]))}}else{const v=get(k,null);if(v!=null)mirror(k,v)}}
-  const lc=get("chats",[])||[],ids=new Set(dc.map(c=>c.id)),merged=[...dc,...lc.filter(c=>!ids.has(c.id))];
-  local("chats",merged);mirror("chats",merged);if(dc.length)subs.forEach(f=>f("chats",merged));return"db"}catch(e){R=null;return"local"}})();
+  const lc=get("chats",[])||[],m=new Map();for(const c of lc)if(c&&!gone.has(c.id))m.set(c.id,c);for(const [cid,c] of dc)if(c){if(gone.has(cid))send("c:"+cid,null);else m.set(cid,c.example?c:pick(m.get(cid),c))}
+  const merged=[...m.values()],was=JSON.stringify(lc);local("chats",merged);mirror("chats",merged);saveGone();if(JSON.stringify(merged)!==was)subs.forEach(f=>f("chats",merged));return"db"}catch(e){R=null;return"local"}})();
  /* the whole library as one file, for moving devices or owners */
  const exportAll=()=>{const o={format:"expira.library",version:1,exported:new Date().toISOString()};for(const k of KEYS)if(k!=="noExample"){let v=get(k,null);if(k==="chats")v=(v||[]).filter(c=>!c.example);if(v!=null)o[k]=v}return o};
  const importAll=o=>{if(!o||typeof o!=="object"||(o.format&&o.format!=="expira.library"))throw new Error("Not an EXPIRA library file");
-  const ch=Array.isArray(o.chats)?o.chats.filter(c=>c&&typeof c.id==="string"&&Array.isArray(c.turns)):[],fo=Array.isArray(o.folders)?o.folders.filter(f=>f&&typeof f.id==="string"):[];
+  const ch=Array.isArray(o.chats)?o.chats.filter(c=>c&&typeof c.id==="string"&&!c.example&&Array.isArray(c.turns)):[],fo=Array.isArray(o.folders)?o.folders.filter(f=>f&&typeof f.id==="string"&&typeof f.name==="string"):[];
   if(!ch.length&&!fo.length&&!o.prefs&&!o.opt)throw new Error("Nothing to import");
-  const byId=(a,b)=>{const m=new Map(a.map(x=>[x.id,x]));b.forEach(x=>m.set(x.id,x));return[...m.values()]};
-  const n={chats:byId(get("chats",[])||[],ch),folders:byId(get("folders",[])||[],fo)};
+  const mc=new Map((get("chats",[])||[]).map(c=>[c.id,c]));ch.forEach(c=>mc.set(c.id,pick(mc.get(c.id),c)));
+  const mf=new Map((get("folders",[])||[]).map(f=>[f.id,f]));fo.forEach(f=>mf.set(f.id,f));
+  const n={chats:[...mc.values()],folders:[...mf.values()]};
   if(o.prefs&&typeof o.prefs==="object")n.prefs=Object.assign({},get("prefs",{}),o.prefs);if(o.opt&&typeof o.opt==="object")n.opt=Object.assign({},get("opt",{}),o.opt);
   for(const k in n){put(k,n[k]);subs.forEach(f=>f(k,n[k]))}return{chats:ch.length,folders:fo.length}};
  return{get,put,remove:k=>put(k,null),list:()=>KEYS.filter(k=>get(k,null)!=null),subscribe:f=>(subs.add(f),()=>subs.delete(f)),ready,where:()=>R?"db":"local",exportAll,importAll}})();

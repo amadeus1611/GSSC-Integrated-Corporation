@@ -21,6 +21,8 @@ class MapBase{
   this.cv=document.createElement("canvas");this.cv.setAttribute("aria-hidden","true");this.ctx=this.cv.getContext("2d");
   this.ax=document.createElement("ol");this.ax.className="map-ax";this.ax.setAttribute("aria-label",view==="flow"?"The run in time order":"The run, node by node");
   this.tip=document.createElement("div");this.tip.className="map-tip";this.tip.setAttribute("role","tooltip");this.tip.id="mtip"+(++MapBase.n);
+  /* the tooltip's size is read by an observer after layout, never inside the draw loop */
+  this.tro=new ResizeObserver(e=>{const b=e[0].borderBoxSize&&e[0].borderBoxSize[0];this.tw=b?b.inlineSize:this.tip.offsetWidth;this.th=b?b.blockSize:this.tip.offsetHeight;if(this.tipId)this.go()});this.tro.observe(this.tip);this.tw=this.th=0;
   this.say=document.createElement("p");this.say.className="sr";this.say.setAttribute("aria-live","polite");
   box.append(this.cv,this.ax,this.tip,this.say);host.append(box);
   /* pointer: the canvas hit-tests; the buttons take keyboard focus and anchor the sheet */
@@ -40,7 +42,7 @@ class MapBase{
   this.ro=new ResizeObserver(()=>{const cw=Math.round(this.box.clientWidth),hh=Math.round(host.clientHeight);if(cw&&(cw!==this.W||this.opt.fs&&hh!==this.hh)){this.W=cw;this.hh=hh;this.resized=true;this.sync()}});this.ro.observe(this.box);if(opt.fs)this.ro.observe(host);
   this.io=new IntersectionObserver(es=>{this.vis=es[es.length-1].isIntersecting;if(this.vis)this.go()});this.io.observe(host);
   this.rng=seeded(runKey(get()||{}));FM.add(this)}
- kill(){this.ro.disconnect();this.io.disconnect();cancelAnimationFrame(this.raf);this.raf=0;clearTimeout(this.tipTo);FM.delete(this)}
+ kill(){this.ro.disconnect();this.tro.disconnect();this.io.disconnect();cancelAnimationFrame(this.raf);this.raf=0;clearTimeout(this.tipTo);FM.delete(this)}
  get alpha(){return this.al||0}set alpha(v){this.al=v}
  open(id){const b=this.btn(id);if(b)openSheet(this.get(),id,b)}
  btn(id){return this.ax.querySelector(`[data-node="${CSS.escape(id)}"]`)}
@@ -85,7 +87,7 @@ class MapBase{
   const P=this.path;if(P.ids.length&&L.p>=1&&P.a<1&&on){P.a=reduce?1:Math.min(1,P.a+dt/.4);mv=true}if(P.oa>0){P.oa=reduce?0:Math.max(0,P.oa-dt/.6);mv=true}if(!on&&P.a>0){P.a=Math.max(0,P.a-dt/.6);mv=true}
   return mv||on}
  tipTick(t){const id=this.tipId;if(!id)return;const n=this.g&&this.g.by[id],a=n&&this.anchorOf(id);if(!a){this.tip.classList.remove("on");return}
-  if(t-this.tipAt>250){this.tipAt=t;const h=this.tipHTML(n);if(this.tip._h!==h){this.tip._h=h;this.tip.innerHTML=h;this.tw=this.tip.offsetWidth;this.th=this.tip.offsetHeight}}
+  if(t-this.tipAt>250){this.tipAt=t;const h=this.tipHTML(n);if(this.tip._h!==h){this.tip._h=h;this.tip.innerHTML=h}}
   const r=a.x+a.w+8+this.tw>this.W-4,x=r?a.x-8-this.tw:a.x+a.w+8,y=Math.max(0,Math.min(this.Hc-this.th,a.y+a.h/2-this.th/2)),k=`${x|0},${y|0}`;
   if(this.tip._p!==k){this.tip._p=k;this.tip.style.transform=`translate(${Math.max(0,x).toFixed(0)}px,${y.toFixed(0)}px)`}
   if(!this.tip.classList.contains("on")){this.tip.classList.add("on");const b=this.btn(id);b&&b.setAttribute("aria-describedby",this.tip.id)}}
