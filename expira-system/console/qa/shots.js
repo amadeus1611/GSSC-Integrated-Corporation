@@ -13,6 +13,17 @@ const UNITS = {
     ['unfold-mid', async p => { await p.click('#fold'); await wait(p, 170) }],
     ['unfolded', async p => { await p.mouse.move(900, 600); await wait(p, 700) }],
   ],
+  composer: [
+    ['idle', async p => { await click(p, '#newChat'); await p.mouse.move(900, 800); await wait(p, 600) }],
+    ['focus', async p => { await p.focus('#prompt'); await wait(p, 500) }],
+    ['ready', async p => { await p.keyboard.type('Price forty rooms'); await wait(p, 400) }],
+    ['grow-mid', async p => { await p.keyboard.press('Shift+Enter'); await p.keyboard.press('Shift+Enter'); await p.keyboard.press('Shift+Enter'); await wait(p, 120) }],
+    ['grown', async p => { await wait(p, 600) }],
+    ['sending', async p => { await p.fill('#prompt', H.BRIEF); await p.keyboard.press('Enter'); await wait(p, 140) }],
+    ['stop', async p => { await wait(p, 900) }],
+    ['steer', async p => { await p.focus('#prompt'); await p.keyboard.type('Also check Cebu'); await wait(p, 700) }],
+    ['settled', async p => { await p.fill('#prompt', ''); await p.waitForFunction(() => !document.querySelector('.app').classList.contains('busy'), null, { timeout: 150000 }); await wait(p, 900) }],
+  ],
 };
 (async () => {
   const unit = process.argv[2], page = process.argv[3] || 'index.html';

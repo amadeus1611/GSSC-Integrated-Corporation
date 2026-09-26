@@ -1,5 +1,7 @@
 const promptEl=$("#prompt");function phSync(){$("#phx").classList.toggle("gone",!!promptEl.value)}
-function grow(){phSync();promptEl.style.height="auto";const mx=21*7+12;promptEl.style.height=Math.min(promptEl.scrollHeight,mx)+"px";promptEl.style.overflowY=promptEl.scrollHeight>mx?"auto":"hidden";const n=promptEl.value.trim().length;$("#count").textContent=n?`~${ft(tok(promptEl.value))} tokens`:"";$("#count").classList.toggle("on",n>0);$("#send").disabled=busy?false:(!n&&!QUOTE)||!sample}
+/* the prompt grows on the spring: measure at auto, put back the height it has now, then set the new one so it transitions */
+function grow(){phSync();const h0=promptEl.getBoundingClientRect().height;promptEl.style.transition="none";promptEl.style.height="auto";const mx=21*7+12,h1=Math.min(promptEl.scrollHeight,mx);
+ promptEl.style.height=(h0||h1)+"px";promptEl.offsetHeight;promptEl.style.transition="";promptEl.style.height=h1+"px";promptEl.style.overflowY=promptEl.scrollHeight>mx?"auto":"hidden";const n=promptEl.value.trim().length;$("#count").textContent=n?`~${ft(tok(promptEl.value))} tokens`:"";$("#count").classList.toggle("on",n>0);$("#send").disabled=busy?false:(!n&&!QUOTE)||!sample}
 promptEl.addEventListener("input",grow);
 const PH=["Brief EXPIRA…","Compare lead times from three suppliers…","Draft a scope for an office fit-out…","Check a clause for delay exposure…","Price forty rooms of blackout drapery…"];let phI=0;
 promptEl.addEventListener("input",phSync);
