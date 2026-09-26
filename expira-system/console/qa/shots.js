@@ -58,6 +58,14 @@ const UNITS = {
     ['live-desks', async p => { await wait(p, 2600); await p.evaluate(() => { const b = document.querySelector('#dspB'); b.scrollTop = 420 }) ; await wait(p, 300) }],
     ['live-done', async p => { await p.waitForFunction(() => !document.querySelector('.app').classList.contains('busy'), null, { timeout: 150000 }); await wait(p, 1800); await p.evaluate(() => { document.querySelector('#dspB').scrollTop = 0 }); await wait(p, 300); console.log('sections', await p.evaluate(() => [...document.querySelectorAll('#dspB .dsec')].filter(e => !e.hidden).map(e => e.querySelector('h3').textContent).join(' / '))) }],
   ],
+  raster: [
+    ['recorded', async p => { await H.example(p); await p.keyboard.press('Alt+KeyL'); await wait(p, 900) }],
+    ['hover', async p => { const b = await (await p.$('#spec')).boundingBox(); await p.mouse.move(b.x + b.width * .3, b.y + 50); await wait(p, 400) }],
+    ['desk-strips', async p => { await p.mouse.move(5, 5); await p.evaluate(() => { const b = document.querySelector('#dspB'); b.scrollTop = document.querySelector('#dxDesks').offsetTop - 20 }); await wait(p, 500) }],
+    ['live', async p => { await H.brief(p, H.BRIEF, { noWait: true }); await wait(p, 300); await p.keyboard.press('Alt+KeyL'); await wait(p, 4500); console.log('raster', await p.evaluate(() => { const m = window.__RX().main; return `fpc ${m.fpc} cols ${m.cols} bh ${m.bh} live ${m.live}` })) }],
+    ['live-done', async p => { await p.waitForFunction(() => !document.querySelector('.app').classList.contains('busy'), null, { timeout: 150000 }); await wait(p, 2500); console.log('settled', await p.evaluate(() => { const m = window.__RX().main; return `fpc ${m.fpc} cols ${m.cols} live ${m.live} say "${document.querySelector('#specS').textContent}"` })) }],
+    ['live-hover', async p => { const b = await (await p.$('#spec')).boundingBox(); await p.mouse.move(b.x + b.width * .6, b.y + 70); await wait(p, 400) }],
+  ],
   composer: [
     ['idle', async p => { await click(p, '#newChat'); await p.mouse.move(900, 800); await wait(p, 600) }],
     ['focus', async p => { await p.focus('#prompt'); await wait(p, 500) }],

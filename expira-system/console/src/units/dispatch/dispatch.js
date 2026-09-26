@@ -13,8 +13,8 @@ function shell(c,ts,live){$("#dspNo").textContent=`No. ${pad(c.no||0,3)}`;
  $("#dspB").innerHTML=`<header class="dx-mast"><div class="kicker bi"><span class="cap">Filed from Iloilo</span></div><h2 class="bi" id="dxT" style="animation-delay:.04s">${esc(c.title)}</h2><p class="dl bi" style="animation-delay:.08s">${esc(longDate(ts))}</p>
  <div id="dxTop" class="late" style="animation-delay:.1s">${topHTML(null)}</div></header>
  <section class="dsec late" id="dxRun" style="animation-delay:.14s"><h3>The run</h3><figure class="plate"><div class="plate-h"><span class="lv ${live?"on":""}"><i></i><span id="lvT">${live?"Live":"Recorded"}</span></span><span class="num" id="lvE">00:00</span><span class="lvN" id="lvN"></span></div>
- <div class="frame"><canvas id="spec"></canvas><canvas id="specO" class="ovl"></canvas><div class="gut" id="specG"></div></div>
- <figcaption><b>Fig. 1</b><span>The run as a spectrum. O is the orchestrator, A the answer; each desk opens its own band. A thread is thinking; a burst is writing.</span></figcaption></figure>
+ <div class="frame"><canvas id="spec"></canvas><canvas id="specO" class="ovl"></canvas><div class="gut" id="specG"></div></div><div class="rx-lg" id="specL"></div><p class="sr" id="specS" aria-live="polite"></p>
+ <figcaption><b>Fig. 1</b><span>Activity. Each row is one member of the team: O the orchestrator, A the answer, then each desk. Time runs left to right, a quarter second a step; a shaded cell is writing, darker is more; a dotted line is thinking. It shows who was busy, not how good the work is.</span></figcaption></figure>
  <h4 class="cap">The orchestrator’s log</h4><ol class="olog num" id="olog"></ol></section>
  <section class="dsec late" id="dxDesks" hidden><h3>The desks</h3><div id="desks"></div></section>
  <section class="dsec late" id="dxMapF" hidden><h3>The map</h3><figure class="plate"><div class="plate-h"><span>Who worked with what</span><span class="lvN" id="mapN"></span></div><div class="mapw dmap" id="dxMap"></div><figcaption><b>Fig. 2</b><span>The orchestrator, the desks it staffed, the connector they called and the sites it read, in the order they joined.</span></figcaption></figure></section>
@@ -34,5 +34,5 @@ function recordedDispatch(w,c,ts){shell(c,ts,false);const s=w.steps||[];
  $("#olog").innerHTML=(w.feed||[]).map((f,i)=>logLi(f,.2+Math.min(i,12)*.03)).join("");
  if(s.length){$("#dxDesks").hidden=false;$("#dxDesks").style.animationDelay=".22s";$("#desks").innerHTML=s.map((x,i)=>deskHTML(x,i,.26+i*.06)).join("");$("#dxMapF").hidden=false;$("#dxMapF").style.animationDelay=(.3+s.length*.06).toFixed(2)+"s"}
  $("#lvE").textContent=mmss(w.ms||0);$("#lvN").textContent=s.length?`${words(s.length)} desk${s.length>1?"s":""}`:"Direct";
- finishTop(w);if(s.length)mkMap($("#dxMap"),()=>w,{replay:true});requestAnimationFrame(()=>replayPlates(w))}
+ finishTop(w);if(s.length)mkMap($("#dxMap"),()=>w,{replay:true});requestAnimationFrame(()=>replayPlates(w,c&&c.id==="example"))}
 

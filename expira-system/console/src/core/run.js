@@ -29,12 +29,11 @@ async function send(q,re){const KL=await KLIB.load().catch(()=>null),docPre=DOCS
   else if(st==="skip"){ph.skip=1;if(li)li.classList.add("skip")}};
  /* the signal hub: every voice (orchestrator, answer, each desk) feeds the plates */
  const pend={},think={O:1},acc={};const sec=()=>now()/1000;
- requestAnimationFrame(()=>{const m=mainPlate();if(!m)return;m.addBand("O");m.addBand("A");let last=0;
-  const loop=t=>{if(t-last>=41.67){last=t;const amp={};for(const k in pend){amp[k]=Math.min(1,pend[k]/4*.6);acc[k]=(acc[k]||0)+pend[k];pend[k]=0}if(dsp.classList.contains("open")){m.step({amp,think},sec());plates.minis.forEach(mm=>mm&&mm.step({amp,think},null))}else{m.evolve({amp,think});plates.minis.forEach(mm=>mm&&mm.evolve({amp,think}))}const e=$("#lvE"),mt=mmss(now());if(e&&e._t!==mt){e._t=mt;e.textContent=mt}}plates.raf=requestAnimationFrame(loop)};plates.raf=requestAnimationFrame(loop)});
- const sigIv=setInterval(()=>{const keys=work.sigKeys;work.sig.push([...keys.map(k=>Math.round((acc[k]||0)/4)),keys.reduce((m,k,j)=>m|(think[k]?1<<j:0),0)]);for(const k in acc)acc[k]=0},250);
+ requestAnimationFrame(()=>mainPlate(work,true));
+ const sigIv=setInterval(()=>{for(const k in pend){acc[k]=(acc[k]||0)+pend[k];pend[k]=0}const keys=work.sigKeys;work.sig.push([...keys.map(k=>Math.round((acc[k]||0)/4)),keys.reduce((m,k,j)=>m|(think[k]?1<<j:0),0)]);for(const k in acc)acc[k]=0;plates.main&&plates.main.paint();plates.minis.forEach(m=>m&&m.paint())},250);
  const openBand=key=>{if(!work.sigKeys.includes(key)){work.sigKeys.push(key);work.sig.forEach(fr=>fr.splice(work.sigKeys.length-1,0,0))}plates.main&&plates.main.addBand(key)};
  let aText="",tickN=0;const totTok=()=>work.steps.reduce((a,s)=>a+tok(s.out),0)+tok(aText);
- const setT=(el,v)=>{if(el&&el._t!==v){el._t=v;el.textContent=v}};const tick=setInterval(()=>{const e=now();setT(tEl,mmss(e));setT($("#runE"),mmss(e));if(lbl.textContent!==$("#runT").textContent&&!lbl.classList.contains("swap"))$("#runT").textContent=lbl.textContent;const tt=totTok();setT(rk,tt?ft(tt)+" tokens":"");dxLive(e,work.steps.length,tt);
+ const setT=(el,v)=>{if(el&&el._t!==v){el._t=v;el.textContent=v}};const tick=setInterval(()=>{const e=now();setT(tEl,mmss(e));setT($("#runE"),mmss(e));if(lbl.textContent!==$("#runT").textContent&&!lbl.classList.contains("swap"))$("#runT").textContent=lbl.textContent;const tt=totTok();setT(rk,tt?ft(tt)+" tokens":"");dxLive(e,work.steps.length,tt);setT($("#lvE"),mmss(e));
   work.steps.forEach((s,i)=>{if(s._t0&&s._live)setT($("#dm"+i),fmt(performance.now()-s._t0))});if(++tickN%4===0){mapSync();if(run.dataset.view==="map")miniDraw(run,work,true)}},250);
  const follow=()=>{if(stick)sc.scrollTop=1e9};
  /* F(short line for the card's log, fuller line for the Dispatch's log) */

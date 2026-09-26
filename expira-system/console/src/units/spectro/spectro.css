@@ -4,12 +4,12 @@
 .ev li .x{font-size:var(--fs-chrome);color:var(--mute)}
 .ev li em{font-family:var(--f-display);color:var(--text)}
 .plate{margin:0 0 var(--sp-5)}
-.plate .frame{position:relative;border-radius:var(--r-1);overflow:hidden;background:var(--well);border:var(--rule-hair) solid var(--line-2)}
+.plate .frame{position:relative;border-radius:var(--r-1);overflow:visible;background:var(--well);border:var(--rule-hair) solid var(--line-2)}
 .plate canvas.ovl{position:absolute;inset:0;height:100%}
-.plate .gut{position:absolute;left:0;top:0;bottom:0;width:20px;display:flex;flex-direction:column;pointer-events:none;border-right:var(--rule-hair) solid var(--line-2);background:color-mix(in srgb,var(--well) 72%,transparent)}
-.plate .gut span{flex:1;display:grid;place-items:center;font:400 var(--fs-micro) var(--f-display);color:var(--mute);border-bottom:var(--rule-hair) solid var(--line);transition:color var(--t-exit) var(--ease-soft-close);animation:evIn var(--t-enter) var(--ease-out) both;min-height:0;overflow:hidden}
-.plate .gut span:last-child{border-bottom:0}
-.plate .gut span.on{color:var(--gold)}
+.plate .gut{position:absolute;left:0;top:0;bottom:12px;width:20px;display:flex;flex-direction:column;pointer-events:none;border-right:var(--rule-hair) solid var(--line-2);background:color-mix(in srgb,var(--well) 72%,transparent)}
+.plate .gut span{position:relative;flex:none;height:var(--bh,12px);display:grid;place-items:center;font:400 var(--fs-micro) var(--f-display);color:var(--mute);animation:evIn var(--t-enter) var(--ease-out) both;min-height:0;overflow:hidden}
+/* the level marker: the current rate at the end of each band label; attack instant, release 1.5 s, still at zero */
+.plate .gut .lvl{position:absolute;right:2px;top:2px;bottom:2px;width:2px;background:var(--gold);transform:scaleY(0);transform-origin:bottom;transition:transform var(--t-move) var(--ease-soft-close)}
 .plate figcaption{display:flex;gap:var(--sp-2);margin-top:var(--sp-1h);font:italic 400 var(--fs-chrome-2)/1.5 var(--f-display);color:var(--soft)}
 .plate figcaption b{font-style:normal;font-weight:400;color:var(--gold);white-space:nowrap}
 .plate canvas{display:block;width:100%;height:132px;contain:layout paint}
@@ -19,3 +19,16 @@
 .sp .gh{display:flex;align-items:baseline;justify-content:space-between;gap:var(--sp-4);margin-bottom:var(--sp-3)}
 .sp .gh b{font-weight:400;font-size:var(--fs-body);color:var(--ink)}
 .sp .gh small{display:block;font-size:var(--fs-chrome-2);color:var(--mute);margin-top:var(--sp-half);line-height:1.45}
+/* the token raster's DOM: the time axis, the readout, the legend */
+.plate .frame:focus-visible{outline:var(--rule) solid var(--gold);outline-offset:2px}
+.plate .frame.empty::after{content:"No activity was recorded for this run.";position:absolute;inset:0 0 12px 20px;display:grid;place-items:center;font:italic 400 var(--fs-ui) var(--f-display);color:var(--mute)}
+.rx-ax{position:absolute;left:0;right:0;bottom:0;height:12px;border-top:var(--rule-hair) solid var(--line-2);pointer-events:none}
+.rx-ax i{position:absolute;left:0;top:1px;font-style:normal;font-size:var(--fs-micro);line-height:10px;color:var(--mute);margin-left:-12px}
+.rx-tip{position:absolute;left:0;top:0;z-index:var(--z-2);display:flex;flex-direction:column;gap:var(--sp-half);max-width:260px;padding:var(--sp-1h) var(--sp-2);background:var(--panel);border:var(--rule-hair) solid var(--line-2);border-radius:var(--r-2);box-shadow:var(--e1);font-size:var(--fs-chrome);color:var(--text);pointer-events:none;opacity:0;transition:opacity var(--t-exit) var(--ease-soft-close)}
+.rx-tip.on{opacity:1;transition:opacity var(--t-enter) var(--ease-out)}
+.rx-tip b{font-weight:500;font-size:var(--fs-micro);letter-spacing:var(--tracked-tight);text-transform:uppercase;color:var(--ink)}
+.rx-lg{display:flex;flex-wrap:wrap;justify-content:flex-end;gap:var(--sp-1h) var(--sp-3);margin-top:var(--sp-1h);font-size:var(--fs-micro);color:var(--soft)}
+.rx-lg span{display:inline-flex;align-items:center;gap:var(--sp-1)}
+.rx-lg i{width:10px;height:7px;border:var(--rule-hair) solid var(--line-2);box-sizing:border-box}
+.rx-lg i.th{border:0;height:1px;background:repeating-linear-gradient(90deg,var(--mute) 0 1px,transparent 1px 3px)}
+.rx-lg i.id{background:var(--well)}

@@ -877,12 +877,12 @@ html.calm *,html.calm *::before,html.calm *::after{animation:none!important;tran
 .ev li .x{font-size:var(--fs-chrome);color:var(--mute)}
 .ev li em{font-family:var(--f-display);color:var(--text)}
 .plate{margin:0 0 var(--sp-5)}
-.plate .frame{position:relative;border-radius:var(--r-1);overflow:hidden;background:var(--well);border:var(--rule-hair) solid var(--line-2)}
+.plate .frame{position:relative;border-radius:var(--r-1);overflow:visible;background:var(--well);border:var(--rule-hair) solid var(--line-2)}
 .plate canvas.ovl{position:absolute;inset:0;height:100%}
-.plate .gut{position:absolute;left:0;top:0;bottom:0;width:20px;display:flex;flex-direction:column;pointer-events:none;border-right:var(--rule-hair) solid var(--line-2);background:color-mix(in srgb,var(--well) 72%,transparent)}
-.plate .gut span{flex:1;display:grid;place-items:center;font:400 var(--fs-micro) var(--f-display);color:var(--mute);border-bottom:var(--rule-hair) solid var(--line);transition:color var(--t-exit) var(--ease-soft-close);animation:evIn var(--t-enter) var(--ease-out) both;min-height:0;overflow:hidden}
-.plate .gut span:last-child{border-bottom:0}
-.plate .gut span.on{color:var(--gold)}
+.plate .gut{position:absolute;left:0;top:0;bottom:12px;width:20px;display:flex;flex-direction:column;pointer-events:none;border-right:var(--rule-hair) solid var(--line-2);background:color-mix(in srgb,var(--well) 72%,transparent)}
+.plate .gut span{position:relative;flex:none;height:var(--bh,12px);display:grid;place-items:center;font:400 var(--fs-micro) var(--f-display);color:var(--mute);animation:evIn var(--t-enter) var(--ease-out) both;min-height:0;overflow:hidden}
+/* the level marker: the current rate at the end of each band label; attack instant, release 1.5 s, still at zero */
+.plate .gut .lvl{position:absolute;right:2px;top:2px;bottom:2px;width:2px;background:var(--gold);transform:scaleY(0);transform-origin:bottom;transition:transform var(--t-move) var(--ease-soft-close)}
 .plate figcaption{display:flex;gap:var(--sp-2);margin-top:var(--sp-1h);font:italic 400 var(--fs-chrome-2)/1.5 var(--f-display);color:var(--soft)}
 .plate figcaption b{font-style:normal;font-weight:400;color:var(--gold);white-space:nowrap}
 .plate canvas{display:block;width:100%;height:132px;contain:layout paint}
@@ -892,6 +892,19 @@ html.calm *,html.calm *::before,html.calm *::after{animation:none!important;tran
 .sp .gh{display:flex;align-items:baseline;justify-content:space-between;gap:var(--sp-4);margin-bottom:var(--sp-3)}
 .sp .gh b{font-weight:400;font-size:var(--fs-body);color:var(--ink)}
 .sp .gh small{display:block;font-size:var(--fs-chrome-2);color:var(--mute);margin-top:var(--sp-half);line-height:1.45}
+/* the token raster's DOM: the time axis, the readout, the legend */
+.plate .frame:focus-visible{outline:var(--rule) solid var(--gold);outline-offset:2px}
+.plate .frame.empty::after{content:"No activity was recorded for this run.";position:absolute;inset:0 0 12px 20px;display:grid;place-items:center;font:italic 400 var(--fs-ui) var(--f-display);color:var(--mute)}
+.rx-ax{position:absolute;left:0;right:0;bottom:0;height:12px;border-top:var(--rule-hair) solid var(--line-2);pointer-events:none}
+.rx-ax i{position:absolute;left:0;top:1px;font-style:normal;font-size:var(--fs-micro);line-height:10px;color:var(--mute);margin-left:-12px}
+.rx-tip{position:absolute;left:0;top:0;z-index:var(--z-2);display:flex;flex-direction:column;gap:var(--sp-half);max-width:260px;padding:var(--sp-1h) var(--sp-2);background:var(--panel);border:var(--rule-hair) solid var(--line-2);border-radius:var(--r-2);box-shadow:var(--e1);font-size:var(--fs-chrome);color:var(--text);pointer-events:none;opacity:0;transition:opacity var(--t-exit) var(--ease-soft-close)}
+.rx-tip.on{opacity:1;transition:opacity var(--t-enter) var(--ease-out)}
+.rx-tip b{font-weight:500;font-size:var(--fs-micro);letter-spacing:var(--tracked-tight);text-transform:uppercase;color:var(--ink)}
+.rx-lg{display:flex;flex-wrap:wrap;justify-content:flex-end;gap:var(--sp-1h) var(--sp-3);margin-top:var(--sp-1h);font-size:var(--fs-micro);color:var(--soft)}
+.rx-lg span{display:inline-flex;align-items:center;gap:var(--sp-1)}
+.rx-lg i{width:10px;height:7px;border:var(--rule-hair) solid var(--line-2);box-sizing:border-box}
+.rx-lg i.th{border:0;height:1px;background:repeating-linear-gradient(90deg,var(--mute) 0 1px,transparent 1px 3px)}
+.rx-lg i.id{background:var(--well)}
 .nav{display:flex;flex-direction:column;gap:1px;margin-bottom:var(--sp-3h)}
 .who{font-size:var(--fs-ui);line-height:1.3;color:var(--text)}
 .who small{display:block;color:var(--mute);font-size:var(--fs-chrome-2)}
@@ -1978,7 +1991,7 @@ const newChat=()=>{if(busy)return;open(null);promptEl.focus()};$("#newChat").onc
 $("#findBtn").onclick=()=>{$("#side").classList.toggle("searching");$("#find").focus()};
 /* appearance: system, light or dark; remembered per viewer, eased between palettes */
 const HOST_THEME=root.getAttribute("data-theme");let THEME=(()=>{try{return localStorage.getItem("expira.theme")||"system"}catch(e){return "system"}})();
-function applyTheme(v,soft){if(soft&&!reduce&&document.startViewTransition&&!applyTheme.vt){applyTheme.vt=1;try{const t=document.startViewTransition(()=>applyTheme(v,false));t.finished.finally(()=>applyTheme.vt=0)}catch(e){applyTheme.vt=0;applyTheme(v,false)}return}root.classList.add("tnone");requestAnimationFrame(()=>requestAnimationFrame(()=>root.classList.remove("tnone")));try{GOO.recolor()}catch(e){}setTimeout(()=>{try{plates.main&&plates.main.recolor();plates.minis.forEach(m=>m&&m.recolor())}catch(e){}},0);
+function applyTheme(v,soft){if(soft&&!reduce&&document.startViewTransition&&!applyTheme.vt){applyTheme.vt=1;try{const t=document.startViewTransition(()=>applyTheme(v,false));t.finished.finally(()=>applyTheme.vt=0)}catch(e){applyTheme.vt=0;applyTheme(v,false)}return}root.classList.add("tnone");requestAnimationFrame(()=>requestAnimationFrame(()=>root.classList.remove("tnone")));setTimeout(()=>{try{plates.main&&plates.main.recolor();plates.minis.forEach(m=>m&&m.recolor())}catch(e){}},0);
  if(v==="system"){if(HOST_THEME)root.setAttribute("data-theme",HOST_THEME);else root.removeAttribute("data-theme")}else root.setAttribute("data-theme",v);
  THEME=v;try{localStorage.setItem("expira.theme",v)}catch(e){}document.querySelectorAll("[data-th]").forEach(b=>b.setAttribute("aria-checked",String(b.dataset.th===v)))}
 applyTheme(THEME,false);
@@ -2165,8 +2178,8 @@ function shell(c,ts,live){$("#dspNo").textContent=`No. ${pad(c.no||0,3)}`;
  $("#dspB").innerHTML=`<header class="dx-mast"><div class="kicker bi"><span class="cap">Filed from Iloilo</span></div><h2 class="bi" id="dxT" style="animation-delay:.04s">${esc(c.title)}</h2><p class="dl bi" style="animation-delay:.08s">${esc(longDate(ts))}</p>
  <div id="dxTop" class="late" style="animation-delay:.1s">${topHTML(null)}</div></header>
  <section class="dsec late" id="dxRun" style="animation-delay:.14s"><h3>The run</h3><figure class="plate"><div class="plate-h"><span class="lv ${live?"on":""}"><i></i><span id="lvT">${live?"Live":"Recorded"}</span></span><span class="num" id="lvE">00:00</span><span class="lvN" id="lvN"></span></div>
- <div class="frame"><canvas id="spec"></canvas><canvas id="specO" class="ovl"></canvas><div class="gut" id="specG"></div></div>
- <figcaption><b>Fig. 1</b><span>The run as a spectrum. O is the orchestrator, A the answer; each desk opens its own band. A thread is thinking; a burst is writing.</span></figcaption></figure>
+ <div class="frame"><canvas id="spec"></canvas><canvas id="specO" class="ovl"></canvas><div class="gut" id="specG"></div></div><div class="rx-lg" id="specL"></div><p class="sr" id="specS" aria-live="polite"></p>
+ <figcaption><b>Fig. 1</b><span>Activity. Each row is one member of the team: O the orchestrator, A the answer, then each desk. Time runs left to right, a quarter second a step; a shaded cell is writing, darker is more; a dotted line is thinking. It shows who was busy, not how good the work is.</span></figcaption></figure>
  <h4 class="cap">The orchestrator’s log</h4><ol class="olog num" id="olog"></ol></section>
  <section class="dsec late" id="dxDesks" hidden><h3>The desks</h3><div id="desks"></div></section>
  <section class="dsec late" id="dxMapF" hidden><h3>The map</h3><figure class="plate"><div class="plate-h"><span>Who worked with what</span><span class="lvN" id="mapN"></span></div><div class="mapw dmap" id="dxMap"></div><figcaption><b>Fig. 2</b><span>The orchestrator, the desks it staffed, the connector they called and the sites it read, in the order they joined.</span></figcaption></figure></section>
@@ -2186,63 +2199,91 @@ function recordedDispatch(w,c,ts){shell(c,ts,false);const s=w.steps||[];
  $("#olog").innerHTML=(w.feed||[]).map((f,i)=>logLi(f,.2+Math.min(i,12)*.03)).join("");
  if(s.length){$("#dxDesks").hidden=false;$("#dxDesks").style.animationDelay=".22s";$("#desks").innerHTML=s.map((x,i)=>deskHTML(x,i,.26+i*.06)).join("");$("#dxMapF").hidden=false;$("#dxMapF").style.animationDelay=(.3+s.length*.06).toFixed(2)+"s"}
  $("#lvE").textContent=mmss(w.ms||0);$("#lvN").textContent=s.length?`${words(s.length)} desk${s.length>1?"s":""}`:"Direct";
- finishTop(w);if(s.length)mkMap($("#dxMap"),()=>w,{replay:true});requestAnimationFrame(()=>replayPlates(w))}
+ finishTop(w);if(s.length)mkMap($("#dxMap"),()=>w,{replay:true});requestAnimationFrame(()=>replayPlates(w,c&&c.id==="example"))}
 
-/* ---------- spectra: a compiled plate with a band per voice, and a strip per desk ---------- */
+/* ---------- the token raster (R3): who was writing, when, and how much ----------
+   One row per voice (O the orchestrator, A the answer, then each desk), time left to right from the start of the run,
+   one cell per ¼ s frame. A cell is shaded by the tokens that voice streamed in that frame, in five fixed classes on an
+   absolute scale (the same in every run), so a heavy desk looks heavy every time. Thinking without writing is a dotted
+   hairline, so colour never carries it alone. Nothing is invented: a frame that was not recorded stays blank. It paints
+   only when a frame arrives (or on resize and theme), from data, so the same run always paints the same image. */
+const RX_CUT=[1,6,13,25],RX_LAB=["1–5","6–12","13–24","25+"];/* tokens per ¼ s; ~25 is a fast stream (100 tok/s). Re-tune from real runs, then freeze */
+const rxClass=v=>v<=0?0:v<RX_CUT[1]?1:v<RX_CUT[2]?2:v<RX_CUT[3]?3:4;
 const bandLabel=k=>k==="O"?"O":k==="A"?"A":ROMAN[+k.slice(1)]||"·";
-class Spectro{
- recolor(){const old=this.lut;if(!old||!this.x)return;const cs=getComputedStyle(root),hx=v=>{v=v.trim();const m=v.match(/^#([0-9a-f]{6})$/i);return m?[0,2,4].map(k=>parseInt(m[1].substr(k,2),16)):[128,128,128]};
-  const W0=hx(cs.getPropertyValue("--well")),B1=hx(cs.getPropertyValue("--s1")),dim=W0.map((c,i)=>Math.round(c+(B1[i]-c)*.38)),stops=[W0,dim,hx(cs.getPropertyValue("--gold")),hx(cs.getPropertyValue("--ink"))],P=[0,.4,.78,1],lut=new Uint8ClampedArray(768);
-  for(let k=0;k<256;k++){const v=k/255;let a=0;while(a<2&&v>P[a+1])a++;const f=(v-P[a])/(P[a+1]-P[a]),e=f*f*(3-2*f);for(let c=0;c<3;c++)lut[k*3+c]=stops[a][c]+(stops[a+1][c]-stops[a][c])*e}
-  const img=this.x.getImageData(0,0,this.w,this.h),D=img.data,cache=new Map();
-  for(let i=0;i<D.length;i+=4){const key=D[i]<<16|D[i+1]<<8|D[i+2];let k=cache.get(key);if(k===undefined){let best=1e9;k=0;for(let j=0;j<256;j++){const dr=D[i]-old[j*3],dg=D[i+1]-old[j*3+1],db=D[i+2]-old[j*3+2],dd=dr*dr+dg*dg+db*db;if(dd<best){best=dd;k=j;if(!dd)break}}cache.set(key,k)}D[i]=lut[k*3];D[i+1]=lut[k*3+1];D[i+2]=lut[k*3+2]}
-  this.x.putImageData(img,0,0);this.lut=lut;this.bg=W0;this.gold=cs.getPropertyValue("--gold").trim();this.mute=cs.getPropertyValue("--mute").trim();this.over&&this.over()}
- constructor(cv,ov,opt){this.cv=cv;this.ov=ov;this.H=opt.h;this.BIN=opt.bin||22;this.ticks=opt.ticks;this.an=opt.analyser;this.gut=opt.gut;this.bands=[];this.ph=Math.random()*9;
-  const cs=getComputedStyle(root),hx=v=>{v=v.trim();const m=v.match(/^#([0-9a-f]{6})$/i);return m?[0,2,4].map(k=>parseInt(m[1].substr(k,2),16)):[128,128,128]};
-  const W0=hx(cs.getPropertyValue("--well")),B1=hx(cs.getPropertyValue("--s1")),dim=W0.map((c,i)=>Math.round(c+(B1[i]-c)*.38)),stops=[W0,dim,hx(cs.getPropertyValue("--gold")),hx(cs.getPropertyValue("--ink"))],P=[0,.4,.78,1];
-  this.lut=new Uint8ClampedArray(768);for(let k=0;k<256;k++){const v=k/255;let a=0;while(a<2&&v>P[a+1])a++;const f=(v-P[a])/(P[a+1]-P[a]),e=f*f*(3-2*f);for(let c=0;c<3;c++)this.lut[k*3+c]=stops[a][c]+(stops[a+1][c]-stops[a][c])*e}
-  this.bg=W0;this.gold=cs.getPropertyValue("--gold").trim();this.mute=cs.getPropertyValue("--mute").trim();
-  const d=devicePixelRatio||1;this.d=d;this.w=Math.max(10,Math.round(cv.clientWidth*d));this.h=Math.round(this.H*d);cv.width=this.w;cv.height=this.h;if(ov){ov.width=this.w;ov.height=this.h;this.o=ov.getContext("2d")}
-  this.x=cv.getContext("2d");this.x.fillStyle=`rgb(${W0.join(",")})`;this.x.fillRect(0,0,this.w,this.h);this.cw=Math.max(1,Math.round(d))}
- addBand(key){if(this.bands.find(b=>b.key===key))return;const n=this.bands.length;
-  if(n){const t=document.createElement("canvas");t.width=this.w;t.height=this.h;t.getContext("2d").drawImage(this.cv,0,0);this.x.fillStyle=`rgb(${this.bg.join(",")})`;this.x.fillRect(0,0,this.w,this.h);this.x.drawImage(t,0,0,this.w,this.h*n/(n+1))}
-  this.bands.push({key,val:new Float32Array(this.BIN),par:[Math.random(),Math.random(),Math.random()]});
-  if(this.gut){const s=document.createElement("span");s.textContent=bandLabel(key);s.dataset.k=key;this.gut.append(s)}}
- evolve(fr){const{BIN}=this;this.ph+=.045;
-  this.bands.forEach((B,b)=>{const v=B.val,a=Math.min(1,fr.amp[B.key]||0),th=fr.think[B.key]&&!a;
-   for(let k=0;k<BIN;k++)v[k]=v[k]*(a>0?.78:.86)+Math.random()*.012;
-   const P=B.par;for(let p=0;p<3;p++)P[p]=Math.min(.97,Math.max(.03,P[p]+(Math.random()-.5)*(.05+a*.12)));
-   if(a>0)P.forEach((c,p)=>{const mu=c*(BIN-1),sg=.7+a*1.6+p*.3,e=a*(.42-p*.1)*(.55+Math.random()*.6);for(let k=0;k<BIN;k++){const z=(k-mu)/sg;v[k]+=e*Math.exp(-z*z*.5)}const h2=Math.min(BIN-1,mu*1.9+2);for(let k=0;k<BIN;k++){const z=(k-h2)/1.1;v[k]+=e*.3*Math.exp(-z*z*.5)}});
-   if(th){const mu=(.5+.34*Math.sin(this.ph*1.3+b*1.7)+.1*Math.sin(this.ph*3.1+b))*(BIN-1);for(let k=0;k<BIN;k++){const z=(k-mu)/.6;v[k]+=.3*Math.exp(-z*z*.5)}}
-   for(let k=0;k<BIN;k++)v[k]=Math.min(1,v[k])})}
- step(fr,sec){this.evolve(fr);if(this.gut)for(const el of this.gut.children){const on=!!(fr.amp[el.dataset.k]||fr.think[el.dataset.k]);if(el._on!==on){el._on=on;el.classList.toggle("on",on)}}this.draw(sec)}
- /* one column of pixels into a buffer bw pixels wide, at x0 */
- col(D,bw,x0){const{h,cw,BIN,d,lut,bg}=this,NB=Math.max(1,this.bands.length),rb=h/NB;
-  for(let py=0;py<h;py++){const B=this.bands[Math.min(NB-1,Math.floor(py/rb))];let v=0;if(B){const f=(1-((py%rb)/rb))*(BIN-1),k0=Math.floor(f),k1=Math.min(BIN-1,k0+1),t=f-k0;v=B.val[k0]*(1-t)+B.val[k1]*t;v=Math.min(1,Math.pow(Math.max(0,v),1.25)*(.82+Math.random()*.3))}
-   const L=Math.round(v*255)*3,e=NB>1&&(py%rb)<d?.55:1,r=lut[L]*e+bg[0]*(1-e),g=lut[L+1]*e+bg[1]*(1-e),b=lut[L+2]*e+bg[2]*(1-e);
-   for(let px=0;px<cw;px++){const i=(py*bw+x0+px)*4;D[i]=r;D[i+1]=g;D[i+2]=b;D[i+3]=255}}}
- tickAt(px,ts){const{x,h,cw,d}=this;x.fillStyle=this.mute;x.globalAlpha=.8;x.fillRect(px,h-4*d,cw,4*d);x.font=`${8.5*d}px Inter,system-ui`;x.textAlign="right";x.fillText(`${Math.floor(ts/60)}:${pad(ts%60)}`,px-3*d,h-6*d);x.globalAlpha=1}
- draw(sec){const{x,w,h,cw}=this;x.drawImage(this.cv,-cw,0);const img=x.createImageData(cw,h);this.col(img.data,cw,0);x.putImageData(img,w-cw,0);
-  const ev=this.every||5;if(this.ticks&&sec!=null&&this.lastSec!=null&&Math.floor(sec/ev)!==Math.floor(this.lastSec/ev))this.tickAt(w-cw,Math.floor(sec/ev)*ev);this.lastSec=sec;this.over()}
- over(){if(!this.o)return;const{w,h,d,BIN}=this,o=this.o,NB=Math.max(1,this.bands.length),rb=h/NB;o.clearRect(0,0,w,h);if(!this.an||!this.bands.length)return;o.strokeStyle=this.gold;o.lineWidth=d*.9;o.globalAlpha=.85;o.beginPath();
-  for(let py=0;py<h;py+=2){const b=Math.min(NB-1,Math.floor(py/rb)),f=(1-((py%rb)/rb))*(BIN-1),vv=Math.min(1,this.bands[b].val[Math.round(f)]),px=w-2*d-vv*30*d;py?o.lineTo(px,py):o.moveTo(px,py)}o.stroke();o.globalAlpha=1}
- replay(keys,sig,ms){keys.forEach(k=>this.addBand(k));const{w,h,cw}=this,cols=Math.floor(w/cw),spp=(ms/1000)/(cols*cw/this.d);this.every=[5,10,15,30,60,120,300].find(v=>v/spp>=80)||600;const ev=this.every;
-  const img=this.x.createImageData(w,h),T=[];let ls=null;
-  for(let c=0;c<cols;c++){const fr=sig.length?sig[Math.min(sig.length-1,Math.floor(c/cols*sig.length))]:[];const amp={},think={},mask=fr[keys.length]||0;keys.forEach((k,j)=>{amp[k]=Math.min(1,(fr[j]||0)/7);think[k]=(mask>>j)&1});
-   this.evolve({amp,think});const x0=w-(cols-c)*cw;this.col(img.data,w,x0);const s=(c/cols)*(ms/1000);if(this.ticks&&ls!=null&&Math.floor(s/ev)!==Math.floor(ls/ev))T.push([x0,Math.floor(s/ev)*ev]);ls=s}
-  this.x.putImageData(img,0,0);T.forEach(([px,ts])=>this.tickAt(px,ts));this.over();if(this.gut)[...this.gut.children].forEach(el=>el.classList.remove("on"))}
+const bandName=(k,w)=>k==="O"?"O · Orchestrator":k==="A"?"A · Answer":`${bandLabel(k)} · ${ROLE[((w&&w.steps||[])[+k.slice(1)]||{}).role]||"Desk"} desk`;
+class TokenRaster{
+ constructor(cv,o){Object.assign(this,{cv,o,ov:o.ov||null,gut:o.gut||null,x:cv.getContext("2d"),live:!!o.live,dirty:true,vis:true,cur:-1,fpc:1,lvl:{}});
+  this.io=new IntersectionObserver(es=>{this.vis=es[es.length-1].isIntersecting;if(this.vis&&this.dirty)this.paint()});this.io.observe(cv);
+  this.ro=new ResizeObserver(()=>{if(cv.clientWidth&&cv.clientWidth!==this.cw)this.paint(true)});this.ro.observe(cv);
+  if(o.main){const fr=cv.parentElement;this.ax=document.createElement("div");this.ax.className="rx-ax";this.tip=document.createElement("div");this.tip.className="rx-tip";this.tip.setAttribute("role","tooltip");fr.append(this.ax,this.tip);
+   fr.tabIndex=0;fr.setAttribute("role","img");fr.setAttribute("aria-label","Activity: who was writing, when, and how much");
+   const at=e=>{const r=cv.getBoundingClientRect();return[e.clientX-r.left,e.clientY-r.top]};
+   fr.addEventListener("pointermove",e=>{const[px,py]=at(e);this.point(this.colAt(px),Math.floor((py)/this.bh))});fr.addEventListener("pointerleave",()=>this.point(-1));
+   fr.addEventListener("keydown",e=>{const d={ArrowLeft:-1,ArrowRight:1}[e.key];if(!d)return;e.preventDefault();const n=this.cols||0;this.point(Math.max(0,Math.min(n-1,(this.cur<0?n-1:this.cur)+d)),this.row>=0?this.row:0)});
+   fr.addEventListener("blur",()=>this.point(-1))}}
+ get w(){return this.o.src()}
+ keys(){const w=this.w;return this.o.only?[this.o.only]:(w&&w.sigKeys)||[]}
+ /* frame i covers [(off+i)·250, +250) ms of the run; a saved run keeps its last 600 frames, so the start may be blank */
+ data(){const w=this.w||{},fr=this.o.frames?this.o.frames():(w.sig||[]),ms=this.live?fr.length*250:w.ms||fr.length*250,off=this.live?0:Math.max(0,Math.round(ms/250)-fr.length);return{fr,off,n:Math.max(1,off+fr.length),keys:(w.sigKeys||[])}}
+ cols0(){return this.cv.clientWidth-(this.o.main?20:0)-(this.o.main?4:0)}
+ colAt(px){return Math.floor((px-(this.o.main?20:0))/this.cwp)}
+ recolor(){this.C=null;this.paint(true)}
+ addBand(){this.paint(true)}
+ paint(force){if(!this.vis&&!force){this.dirty=true;return}this.dirty=false;const cv=this.cv,W=cv.clientWidth;if(!W)return;const d=devicePixelRatio||1,H=this.o.main?132:cv.clientHeight||26;
+  if(this.cw!==W||this.ch!==H||this.dpr!==d){this.cw=W;this.ch=H;this.dpr=d;cv.width=Math.round(W*d);cv.height=Math.round(H*d);if(this.ov){this.ov.width=cv.width;this.ov.height=cv.height}}
+  if(!this.C){const cs=getComputedStyle(cv.parentElement||cv),g=k=>cs.getPropertyValue(k).trim();this.C={q:[1,2,3,4].map(i=>g("--seq-"+i)),mute:g("--mute"),ink:g("--ink"),line:g("--line"),gold:g("--gold")}}
+  const {fr,off,n}=this.data(),K=this.keys(),ALL=this.o.only?(this.w&&this.w.sigKeys)||[this.o.only]:K,J=K.map(k=>ALL.indexOf(k)),x0=this.o.main?20:0,AXH=this.o.main?12:0,pw=Math.max(10,W-x0-(this.o.main?4:0));
+  /* time is linear from the start; when the plate is full the scale halves (2, 4, 8 … frames per column) and repaints from data */
+  /* live, each frame is a 2px column and the plate fills from the left; settled, the run is stretched across the plate */
+  const px1=this.live?2:1;let fpc=1;while(Math.ceil(n/fpc)*px1>pw&&fpc<4096)fpc*=2;const cwp=this.live?2:pw/Math.ceil(n/fpc),rescale=this.painted&&(this.fpc!==fpc||Math.abs((this.cwp||0)-cwp)>.01);this.fpc=fpc;this.cwp=cwp;
+  const cols=Math.ceil(n/fpc),NB=Math.max(1,K.length),bh=Math.max(8,Math.floor((H-AXH)/NB));this.bh=bh;this.cols=cols;this.x0=x0;
+  const x=this.x;x.setTransform(d,0,0,d,0,0);x.clearRect(0,0,W,H);
+  K.forEach((k,b)=>{const j=J[b],y=b*bh;if(j<0)return;const nk=ALL.length;
+   for(let c=0;c<cols;c++){let s=0,m=0,th=0,got=0;for(let f=c*fpc;f<Math.min(n,(c+1)*fpc);f++){const i=f-off;if(i<0||i>=fr.length)continue;got++;const v=fr[i][j]||0;s+=v;m=Math.max(m,v);if((fr[i][nk]>>j)&1)th++}
+    if(!got)continue;const mean=s/got,cl=mean>0?Math.max(1,rxClass(mean)):0,X=Math.floor(x0+c*cwp),Wc=Math.max(1,Math.floor(x0+(c+1)*cwp)-X);
+    if(cl){x.fillStyle=this.C.q[cl-1];x.fillRect(X,y+1,Wc,bh-2)}else if(th*2>=got){x.fillStyle=this.C.mute;for(let q=X;q<X+Wc;q++)if(q%3===0)x.fillRect(q,Math.round(y+bh/2)-.5,1,1)}}
+   if(b<NB-1){x.fillStyle=this.C.line;x.fillRect(x0,y+bh-.5,W-x0,.5)}});
+  /* the live edge */
+  if(this.live){const X=x0+cols*cwp;x.globalAlpha=.4;x.fillStyle=this.C.ink;x.fillRect(Math.min(W-1,X),0,1,NB*bh);x.globalAlpha=1}
+  if(rescale&&!reduce)cv.animate([{opacity:.55},{opacity:1}],{duration:160,easing:"ease-out"});this.painted=true;
+  if(this.o.main){this.axis(cols,cwp,x0,fpc,n);this.gutter(K,fr,J,ALL.length);this.overlay()}}
+ axis(cols,cwp,x0,fpc,n){const span=n*250/1000,px=s=>x0+s*4/fpc*cwp,ev=[5,10,30,60,120,300,600].find(v=>px(v)-px(0)>=48)||900,T=[];for(let s=ev;s<=span;s+=ev)T.push(s);
+  const k=T.join()+"|"+cwp+"|"+fpc;if(this.ax._k===k)return;this.ax._k=k;this.ax.innerHTML=T.map(s=>`<i class="num" style="transform:translateX(${px(s).toFixed(1)}px)">${Math.floor(s/60)}:${pad(s%60)}</i>`).join("")}
+ /* band labels, each with a level marker: instant attack, a 1.5 s release, still once it reaches zero */
+ gutter(K,fr,J,nk){const g=this.gut;if(!g)return;g.style.setProperty("--bh",this.bh+"px");if(g._k!==K.join()){g._k=K.join();g.innerHTML=K.map(k=>`<span data-k="${k}">${bandLabel(k)}<i class="lvl"></i></span>`).join("")}
+  const last=fr[fr.length-1]||[];K.forEach((k,b)=>{const v=this.live?(last[J[b]]||0):0,y=Math.max(v/RX_CUT[3],(this.lvl[k]||0)*.846),L=y<.05?0:Math.min(1,y);this.lvl[k]=L;const el=g.children[b]&&g.children[b].firstElementChild;if(el&&el._l!==L){el._l=L;el.style.transform=`scaleY(${L.toFixed(2)})`}})}
+ /* the cursor: one hairline across every band at the hovered moment, and a readout of the data there */
+ point(c,row){this.cur=c;this.row=row??-1;this.overlay()}
+ overlay(){const o=this.ov&&this.ov.getContext("2d");if(!o)return;const d=this.dpr||1;o.setTransform(d,0,0,d,0,0);o.clearRect(0,0,this.cw,this.ch);const c=this.cur,tip=this.tip;
+  if(c<0||c>=this.cols){tip.classList.remove("on");return}const X=this.x0+c*this.cwp+this.cwp/2;o.globalAlpha=.4;o.fillStyle=this.C.ink;o.fillRect(Math.round(X),0,1,this.bh*this.keys().length);o.globalAlpha=1;
+  const K=this.keys(),b=Math.max(0,Math.min(K.length-1,this.row)),k=K[b],{fr,off}=this.data(),j=K.indexOf(k),nk=K.length,f0=c*this.fpc,f1=f0+this.fpc,t=f=>{const ms=f*250;return`${Math.floor(ms/60000)}:${pad(Math.floor(ms/1000)%60)}.${pad(Math.floor(ms%1000/10))}`};
+  let s=0,m=0,th=0,got=0,S=0,wr=0,tk=0;for(let f=f0;f<f1;f++){const i=f-off;if(i<0||i>=fr.length)continue;got++;const v=fr[i][j]||0;s+=v;m=Math.max(m,v);if((fr[i][nk]>>j)&1)th++}
+  fr.forEach(r=>{const v=r[j]||0;S+=v;if(v)wr++;else if((r[nk]>>j)&1)tk++});
+  const what=!got?"no frame recorded":!s?(th*2>=got?"thinking":"idle"):this.fpc>1?`mean ${(s/got).toFixed(1)} tokens per ¼ s · max ${m}`:`${s} tokens · writing`;
+  tip.innerHTML=`<b>${esc(bandName(k,this.w))}</b><span class="num">${t(f0)}–${t(f1)}${this.fpc>1?` · ${this.fpc} frames`:""}</span><span class="num">${what}</span><span class="num">${ft(S)} tokens · writing ${fr.length?Math.round(wr/fr.length*100):0}% · thinking ${fr.length?Math.round(tk/fr.length*100):0}% of the time</span>`;
+  const tw=tip.offsetWidth,L=X+10+tw>this.cw?X-10-tw:X+10;tip.style.transform=`translate(${Math.max(0,L).toFixed(0)}px,${(b*this.bh).toFixed(0)}px)`;tip.classList.add("on")}
+ /* settle: the live edge goes, the level markers clear, one last paint, and nothing moves after that */
+ settle(){if(!this.live)return;this.live=false;this.lvl={};this.paint(true);if(this.o.main&&this.o.say){const w=this.w,S=w.sig||[],K=w.sigKeys||[],busy=K.map((k,j)=>[k,S.reduce((a,r)=>a+(r[j]?1:0),0)]).filter(x=>x[0][0]==="d").sort((a,b)=>b[1]-a[1])[0];
+   this.o.say.textContent=`Run finished in ${fmt(S.length*250)}.${busy&&busy[1]>=4?` The busiest, the ${bandName(busy[0],w).split(" · ")[1].toLowerCase()}, wrote for ${fmt(busy[1]*250)}.`:""}`}}
+ kill(){this.io.disconnect();this.ro.disconnect()}
 }
-let plates={main:null,minis:[],raf:0};
-function stopPlates(){cancelAnimationFrame(plates.raf)}
-function mainPlate(){stopPlates();const cv=$("#spec");if(!cv)return null;plates.main=new Spectro(cv,$("#specO"),{h:132,ticks:true,analyser:true,gut:$("#specG")});plates.minis=[];return plates.main}
-function miniPlate(i,key){const cv=$("#mn"+i);if(!cv)return null;const m=new Spectro(cv,null,{h:26,bin:14});m.addBand(key);plates.minis[i]=m;return m}
-function replayPlates(w){const keys=w.sigKeys||["O","A",...(w.steps||[]).map((_,i)=>"d"+i)],sig=w.sigKeys&&w.sig?w.sig:synthSig(w,keys);const m=mainPlate();if(!m)return;m.replay(keys,sig,w.ms||0);
- (w.steps||[]).forEach((_,i)=>{const mm=miniPlate(i,"d"+i);if(!mm)return;const j=keys.indexOf("d"+i);mm.replay(["d"+i],sig.map(fr=>[fr[j]||0,((fr[keys.length]||0)>>j)&1]),w.ms||0)})}
-function synthSig(w,keys){const N=Math.max(60,Math.round((w.ms||60000)/250)),S=w.steps||[],out=[];for(let f=0;f<N;f++){const t=f/N,fr=keys.map(()=>0);let mask=0;
-  if(t<.03||(t>.44&&t<.5)||t>.95)mask|=1;
-  S.forEach((s,i)=>{const j=keys.indexOf("d"+i);if(j<0)return;const a=.03+i*.02,e=Math.min(.44,.06+(s.ms||20000)/(w.ms||60000)*.9),wr=a+(e-a)*.4;if(t>a&&t<wr)mask|=1<<j;if(t>=wr&&t<e)fr[j]=Math.round(2+Math.random()*6)});
-  const A=keys.indexOf("A");if(t>.5&&t<.56)mask|=1<<A;if(t>=.56&&t<.94)fr[A]=Math.round(1+Math.random()*7);fr.push(mask);out.push(fr)}return out}
-
+let plates={main:null,minis:[]};window.__RX=()=>plates;
+function stopPlates(){plates.main&&plates.main.settle();plates.minis.forEach(m=>m&&m.settle())}
+function mainPlate(w,live,frames){const cv=$("#spec");plates.main&&plates.main.kill();plates.minis.forEach(m=>m&&m.kill());plates.minis=[];if(!cv){plates.main=null;return null}
+ const lg=$("#specL");if(lg)lg.innerHTML=`<span>Tokens per ¼ s</span>${RX_LAB.map((l,i)=>`<span><i style="background:var(--seq-${i+1})"></i>${l}</span>`).join("")}<span><i class="th"></i>thinking</span><span><i class="id"></i>idle</span>`;
+ plates.main=new TokenRaster(cv,{main:true,live,src:()=>w,frames,ov:$("#specO"),gut:$("#specG"),say:$("#specS")});plates.main.paint(true);return plates.main}
+function miniPlate(i,key){const cv=$("#mn"+i),m=plates.main;if(!cv||!m)return null;const mm=new TokenRaster(cv,{only:key,live:m.live,src:m.o.src,frames:m.o.frames});plates.minis[i]=mm;mm.paint(true);return mm}
+function replayPlates(w,example){const S=w.sigKeys&&w.sig&&w.sig.length?null:example?synthSig(w):null,v=S?Object.assign({},w,S):w;
+ const m=mainPlate(v,false);if(!m)return;if(!(v.sig&&v.sig.length)){const f=$("#spec").parentElement;f.classList.add("empty")}
+ (w.steps||[]).forEach((_,i)=>miniPlate(i,"d"+i))}
+/* the example chat was never run live, so its activity is composed once from its own recorded timings (seeded, so the
+   same image every time). A real run without a signal shows as blank: nothing is invented for it. */
+function synthSig(w){const g=runGraph(w),S=w.steps||[],keys=["O","A",...S.map((_,i)=>"d"+i)],N=Math.max(40,Math.round((w.ms||60000)/250)),r=seeded(runKey(w)),out=[];
+ const iv=k=>{if(k==="O")return[0,(g.by.o&&g.by.o.tEnd)||2000,.5];if(k==="A"){const t=Math.max(...g.N.map(n=>n.tEnd||0));return[t,w.ms||t+20000,.15]}const n=g.by["a"+k.slice(1)];return n?[n.tStart??n.tBorn,n.tEnd??n.tStart+10000,.35]:[0,0,0]};
+ const I=keys.map(iv);for(let f=0;f<N;f++){const t=f*250,fr=keys.map(()=>0);let mask=0;
+  keys.forEach((k,j)=>{const[a,e,th]=I[j];if(t<a||t>=e)return;const u=(t-a)/Math.max(1,e-a);if(u<th)mask|=1<<j;else fr[j]=r()<.18?0:Math.round(4+r()*r()*28)});
+  if(t>=I[0][1]&&t<I[1][0]&&r()<.3)mask|=1;fr.push(mask);out.push(fr)}
+ return{sig:out,sigKeys:keys}}
 /* ---------- exhibits: key figures, charts, a comparison and sources, built from the desks' notes ---------- */
 function exhibitsHTML(ex,live){if(!ex)return "";const facts=(ex.facts||[]).filter(f=>f&&f.value!=null).slice(0,4),charts=(ex.charts||[]).slice(0,3),mx=ex.matrix&&Array.isArray(ex.matrix.rows)&&ex.matrix.rows.length?ex.matrix:null,src=(ex.sources||[]).filter(s=>s&&s.title).slice(0,8);
  if(!facts.length&&!charts.length&&!mx&&!src.length)return "";let k=0;const it=h=>`<div class="exi" style="animation-delay:${(k++)*.09}s">${h}</div>`;let o="";
@@ -3066,12 +3107,11 @@ async function send(q,re){const KL=await KLIB.load().catch(()=>null),docPre=DOCS
   else if(st==="skip"){ph.skip=1;if(li)li.classList.add("skip")}};
  /* the signal hub: every voice (orchestrator, answer, each desk) feeds the plates */
  const pend={},think={O:1},acc={};const sec=()=>now()/1000;
- requestAnimationFrame(()=>{const m=mainPlate();if(!m)return;m.addBand("O");m.addBand("A");let last=0;
-  const loop=t=>{if(t-last>=41.67){last=t;const amp={};for(const k in pend){amp[k]=Math.min(1,pend[k]/4*.6);acc[k]=(acc[k]||0)+pend[k];pend[k]=0}if(dsp.classList.contains("open")){m.step({amp,think},sec());plates.minis.forEach(mm=>mm&&mm.step({amp,think},null))}else{m.evolve({amp,think});plates.minis.forEach(mm=>mm&&mm.evolve({amp,think}))}const e=$("#lvE"),mt=mmss(now());if(e&&e._t!==mt){e._t=mt;e.textContent=mt}}plates.raf=requestAnimationFrame(loop)};plates.raf=requestAnimationFrame(loop)});
- const sigIv=setInterval(()=>{const keys=work.sigKeys;work.sig.push([...keys.map(k=>Math.round((acc[k]||0)/4)),keys.reduce((m,k,j)=>m|(think[k]?1<<j:0),0)]);for(const k in acc)acc[k]=0},250);
+ requestAnimationFrame(()=>mainPlate(work,true));
+ const sigIv=setInterval(()=>{for(const k in pend){acc[k]=(acc[k]||0)+pend[k];pend[k]=0}const keys=work.sigKeys;work.sig.push([...keys.map(k=>Math.round((acc[k]||0)/4)),keys.reduce((m,k,j)=>m|(think[k]?1<<j:0),0)]);for(const k in acc)acc[k]=0;plates.main&&plates.main.paint();plates.minis.forEach(m=>m&&m.paint())},250);
  const openBand=key=>{if(!work.sigKeys.includes(key)){work.sigKeys.push(key);work.sig.forEach(fr=>fr.splice(work.sigKeys.length-1,0,0))}plates.main&&plates.main.addBand(key)};
  let aText="",tickN=0;const totTok=()=>work.steps.reduce((a,s)=>a+tok(s.out),0)+tok(aText);
- const setT=(el,v)=>{if(el&&el._t!==v){el._t=v;el.textContent=v}};const tick=setInterval(()=>{const e=now();setT(tEl,mmss(e));setT($("#runE"),mmss(e));if(lbl.textContent!==$("#runT").textContent&&!lbl.classList.contains("swap"))$("#runT").textContent=lbl.textContent;const tt=totTok();setT(rk,tt?ft(tt)+" tokens":"");dxLive(e,work.steps.length,tt);
+ const setT=(el,v)=>{if(el&&el._t!==v){el._t=v;el.textContent=v}};const tick=setInterval(()=>{const e=now();setT(tEl,mmss(e));setT($("#runE"),mmss(e));if(lbl.textContent!==$("#runT").textContent&&!lbl.classList.contains("swap"))$("#runT").textContent=lbl.textContent;const tt=totTok();setT(rk,tt?ft(tt)+" tokens":"");dxLive(e,work.steps.length,tt);setT($("#lvE"),mmss(e));
   work.steps.forEach((s,i)=>{if(s._t0&&s._live)setT($("#dm"+i),fmt(performance.now()-s._t0))});if(++tickN%4===0){mapSync();if(run.dataset.view==="map")miniDraw(run,work,true)}},250);
  const follow=()=>{if(stick)sc.scrollTop=1e9};
  /* F(short line for the card's log, fuller line for the Dispatch's log) */
