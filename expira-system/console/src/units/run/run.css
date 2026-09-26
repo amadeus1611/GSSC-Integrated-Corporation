@@ -151,7 +151,7 @@
 /* the map sits behind a toggle and pours open from it */
 .run[data-view="log"] .mini{display:none}
 .run[data-view="map"] .flow,.run[data-view="map"] .cost,.run[data-view="map"] .ledw{display:none}
-.run .mini{margin:var(--sp-1h) 0 var(--sp-half);min-height:96px;animation:ink var(--t-enter) var(--ease-out) both}
+.run .mini{position:relative;margin:var(--sp-1h) 0 var(--sp-half);min-height:96px;animation:ink var(--t-enter) var(--ease-out) both}
 .run .mini:empty::before{content:"The map fills in as desks are staffed.";display:block;padding:var(--sp-9) 0;text-align:center;font:italic 400 var(--fs-ui) var(--f-display);color:var(--mute)}
 /* !important: a closed or off-screen surface rests; beats each unit's animation shorthand */
 .run[data-off] *,.run[data-off] *::before,.run[data-off] *::after{animation-play-state:paused!important}

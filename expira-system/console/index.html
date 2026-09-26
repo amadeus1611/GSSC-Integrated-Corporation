@@ -633,7 +633,7 @@ html.calm *,html.calm *::before,html.calm *::after{animation:none!important;tran
 /* the map sits behind a toggle and pours open from it */
 .run[data-view="log"] .mini{display:none}
 .run[data-view="map"] .flow,.run[data-view="map"] .cost,.run[data-view="map"] .ledw{display:none}
-.run .mini{margin:var(--sp-1h) 0 var(--sp-half);min-height:96px;animation:ink var(--t-enter) var(--ease-out) both}
+.run .mini{position:relative;margin:var(--sp-1h) 0 var(--sp-half);min-height:96px;animation:ink var(--t-enter) var(--ease-out) both}
 .run .mini:empty::before{content:"The map fills in as desks are staffed.";display:block;padding:var(--sp-9) 0;text-align:center;font:italic 400 var(--fs-ui) var(--f-display);color:var(--mute)}
 /* !important: a closed or off-screen surface rests; beats each unit's animation shorthand */
 .run[data-off] *,.run[data-off] *::before,.run[data-off] *::after{animation-play-state:paused!important}
@@ -1030,35 +1030,6 @@ html.calm *,html.calm *::before,html.calm *::after{animation:none!important;tran
 .by time{margin-left:auto;font-size:var(--fs-micro);letter-spacing:var(--tracked-tight);color:var(--mute)}
 .mapw{margin:var(--sp-3) 0 0;overflow-x:auto;overflow-y:hidden;scrollbar-width:thin}
 .mapw:empty{display:none}
-.map .ch{font:400 var(--fs-micro) var(--f-body);letter-spacing:.16em;fill:var(--mute)}
-.map .nd{cursor:pointer;animation:ndIn var(--t-enter) var(--ease-out) both}
-.map .nd:focus{outline:none}
-@keyframes ndIn{from{opacity:0;filter:blur(3px)}to{opacity:1;filter:none}}
-.map .nd:hover .bx,.map .nd:focus-visible .bx{stroke:var(--ink)}
-.map .nd.st-on .bx{stroke:var(--gold)}
-.map .nd.sel .bx{stroke:var(--gold);fill:var(--gold-wash)}
-.map text{font:300 var(--fs-chrome) var(--f-body);fill:var(--text)}
-.map .t1{fill:var(--ink)}
-.map .sf{font:400 var(--fs-chrome-2) var(--f-display);fill:var(--ink)}
-.map .it{font:italic 400 var(--fs-chrome-2) var(--f-display);fill:var(--text)}
-.map .cp{font-size:var(--fs-micro);letter-spacing:.15em;fill:var(--mute)}
-.map .rn{font:400 var(--fs-chrome-2) var(--f-display);fill:var(--gold)}
-.map .nm{font-size:var(--fs-micro);fill:var(--mute)}
-.map .sm{font-size:var(--fs-micro)}
-.map .dt{fill:none;stroke:var(--line-3);stroke-width:1}
-.map .st-on .dt{fill:var(--gold);stroke:var(--gold);animation:breathe var(--t-loop) var(--ease-inout) infinite}
-.map .st-ok .dt{fill:var(--ok);stroke:var(--ok)}
-.map .st-bad .dt{fill:var(--bad);stroke:var(--bad)}
-.map .st-filed .dt,.map .st-done .dt{fill:var(--soft);stroke:var(--soft)}
-.map .eg{fill:none;stroke:var(--line-3);stroke-width:.75;stroke-dasharray:1;stroke-dashoffset:1;transition:stroke-dashoffset var(--t-draw) var(--ease-soft-close)}
-.map .eg.drawn{stroke-dashoffset:0}
-.map .eg.dep{stroke:var(--gold);stroke-dasharray:2 3;stroke-dashoffset:0;opacity:0;transition:opacity var(--t-exit) var(--ease-soft-close)}
-.map .eg.dep.drawn{opacity:.55}
-.map .fl{fill:none;stroke:var(--gold);stroke-width:1;stroke-dasharray:3 6;opacity:0;transition:opacity var(--t-exit) var(--ease-soft-close);animation:flow var(--t-flow) linear infinite}
-.map .fl.on{opacity:.9}
-.map .pl{fill:var(--gold)}
-.dmap .map{margin:0 auto}
-/* the map's two views, and performance */
 .mvb{position:sticky;left:0;display:flex;align-items:center;gap:var(--sp-2h);margin:0 0 var(--sp-1h);min-height:22px}
 .mvr{flex:1;min-width:0;font:italic 400 var(--fs-chrome-2) var(--f-display);color:var(--mute);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .mvk{display:flex;gap:var(--sp-2);flex:none;font-size:var(--fs-micro);color:var(--mute)}
@@ -1069,55 +1040,7 @@ html.calm *,html.calm *::before,html.calm *::after{animation:none!important;tran
 }
 .dmap .mvb{padding:var(--sp-1h) var(--sp-2) 0;margin:0}
 .dmap .seg3{background:var(--sheet)}
-.map.field{display:block;width:100%;touch-action:pan-y;overflow:visible}
-.field.dragging,.field.dragging .fn{cursor:grabbing}
-.field .fn:focus{outline:none}
-.field .st-bad .core{stroke:var(--bad);stroke-width:1.6}
-.field .fn:hover .core,.field .fn:focus-visible .core,.field .fn.sel .core{stroke:var(--gold);stroke-width:1.6}
-.field .ring{fill:none;stroke:var(--gold);stroke-width:1;opacity:0;transform-box:fill-box;transform-origin:center}
-.field .st-on .ring{animation:ring var(--t-loop) var(--ease-inout) infinite}
-@keyframes ring{0%{opacity:.85;transform:scale(1)}100%{opacity:0;transform:scale(2.4)}}
-.field .k-agent .lb{fill:var(--text)}
-.field .k-orch .lb{font:400 var(--fs-chrome-2) var(--f-display);fill:var(--ink)}
-.field .k-conn .lb{font:400 var(--fs-chrome) var(--f-display);fill:var(--ink)}
-.field .ln{stroke:var(--line-3);stroke-linecap:round;transition:opacity var(--t-exit) var(--ease-soft-close),stroke var(--t-exit) var(--ease-soft-close)}
-.field .ln.dep{stroke:var(--gold);stroke-dasharray:2 3;opacity:.55}
-.field .lf{stroke:var(--gold);stroke-linecap:round;stroke-dasharray:3 6;opacity:0;transition:opacity var(--t-exit) var(--ease-soft-close);animation:flow var(--t-flow) linear infinite}
-.field .lf.on{opacity:.9}
-.field.hl .fn:not(.nb){opacity:.16}
-.field.hl .ln:not(.nb),.field.hl .lf:not(.nb){opacity:.05}
-.field.hl .ln.nb{stroke:var(--gold)}
-.field .pl{fill:var(--gold)}
-.field .hit{fill:transparent}
-.mapw:has(> .field){overflow:visible}
-/* the map */
-/* long threads: cards out of view are not painted until they come back */
-.map{display:block;overflow:visible;contain:layout paint}
-.map .fl.on,.field .lf.on{animation:flow var(--t-flow) linear infinite}
-/* the liquid: a membrane drawn between parent and child as it pulls away */
-.field .neck{fill:var(--c,var(--gold));pointer-events:none}
-.field .neck.k-site,.field .neck.k-more,.field .neck.k-conn{fill:var(--gold);opacity:.4}
-.field .fn{cursor:grab;animation:none;transition:opacity var(--t-enter) var(--ease-soft-close)}
-.field .fn.unborn{opacity:0;pointer-events:none}
-.field .lb{font:300 var(--fs-micro) var(--f-body);fill:var(--soft);paint-order:stroke;stroke:var(--sheet);stroke-width:3px;stroke-linejoin:round;pointer-events:none;transition:opacity var(--t-exit) var(--ease-soft-close)}
-.field .fn.young .lb{opacity:0}
-.field.hl .fn.unborn{opacity:0}
 .dmap{border:var(--rule-hair) solid var(--line-2);border-radius:var(--r-1);background:var(--well);margin:0;--n-sep:var(--well)}
-.field .core{transition:fill var(--t-exit) var(--ease-soft-close),stroke var(--t-exit) var(--ease-soft-close);fill:var(--c,var(--n-hollow));stroke:var(--n-sep);stroke-width:1.5}
-.field .k-orch .core{fill:var(--ink)}
-.field .k-site .core,.field .k-more .core{fill:var(--n-hollow);stroke:var(--n-rim);stroke-width:1.1}
-.field .k-agent.st-wait .core{fill:var(--n-hollow);stroke:var(--c);stroke-width:1.4}
-.field .k-site .lb,.field .k-more .lb{font-size:var(--fs-micro);fill:var(--n-lab)}
-.dmap .field .lb{stroke:var(--well)}
-.map .bx{fill:var(--panel);stroke-width:.6;transition:stroke var(--t-exit) var(--ease-soft-close),fill var(--t-exit) var(--ease-soft-close);stroke:var(--n-rim)}
-.dmap .bx{fill:var(--n-hollow)}
-.field .k-conn .core{stroke:var(--gold);stroke-width:1.5;fill:color-mix(in srgb,var(--gold) 16%,var(--n-hollow))}
-.map .eg.back{stroke:var(--gold);opacity:.55}
-.field .ln.back{stroke:var(--gold);opacity:.45;stroke-dasharray:3 3}
-.field .k-arb .core{fill:var(--gold)}
-.field .k-ans .core{fill:var(--n-hollow);stroke:var(--ok);stroke-width:1.8}
-.map .k-arb .bx{stroke:var(--gold)}
-.map .k-ans .bx{stroke:var(--ok)}
 .mfs{position:fixed;inset:20px;z-index:var(--z-map);display:flex;flex-direction:column;background:var(--sheet);border:var(--rule-hair) solid var(--line-3);border-radius:var(--r-5);box-shadow:var(--e3);overflow:hidden;opacity:0;visibility:hidden}
 .mfs.open{opacity:1;visibility:visible}
 .mfs-h{display:flex;align-items:center;gap:var(--sp-3);padding:var(--sp-3) var(--sp-3h) var(--sp-2h) var(--sp-5);border-bottom:var(--rule-hair) solid var(--line-2)}
@@ -1142,60 +1065,37 @@ html.calm *,html.calm *::before,html.calm *::after{animation:none!important;tran
 .mapt:hover,.mapt[aria-expanded="true"]{color:var(--ink)}
 .mapt[aria-expanded="true"] svg{color:var(--gold)}
 .run .mapw{display:none;border-top:0;padding-top:var(--sp-2)}
-/* nothing invisible keeps animating: the flowing dash runs only on a live link */
-.map .fl,.field .lf{animation:none;stroke-dasharray:.1 8;stroke-linecap:round;stroke-width:2.2}
-@keyframes flow{to{stroke-dashoffset:-8.1}}
-.mini svg{display:block;width:100%;max-width:700px;overflow:visible}
-.mini .me{fill:none;stroke:var(--line-3);stroke-width:1;opacity:.55;transition:opacity var(--t-exit),stroke var(--t-exit)}
-.mini .me.on{stroke:var(--gold);opacity:.8}
-.mini .me.dep{stroke-dasharray:2 3;opacity:.35}
-.mini .me.bk{stroke:var(--gold);opacity:.22}
-.mini .me.bk.on{opacity:.6}
-.mini .bd{fill:var(--gold)}
-.mini .md{stroke:none;fill:var(--soft)}
-.mini .md.k-orch{fill:var(--ink)}
-.mini .md.k-arb{fill:var(--gold)}
-.mini .md.k-conn{fill:var(--sheet);stroke:var(--gold);stroke-width:1.2}
-.mini .md.k-ans,.mini .md.k-doc{fill:var(--ink)}
-.mini .md.r-research{fill:var(--s1)}
-.mini .md.r-finance{fill:var(--s2)}
-.mini .md.r-legal{fill:var(--s4)}
-.mini .md.r-decision{fill:var(--s5)}
-.mini .md.s-bad{fill:var(--bad)}
-.mini .md.k-site,.mini .md.k-more{fill:var(--sheet);stroke:var(--line-3);stroke-width:1}
-.mini .md,.mini .halo{transform-box:fill-box;transform-origin:center}
-.mini .md.nb{animation:mnb var(--t-move) var(--spring) both}
-@keyframes mnb{from{transform:scale(.1)}to{transform:scale(1)}}
-.mini .halo{fill:none;stroke:var(--gold);stroke-width:1;opacity:.5;animation:halo var(--t-loop) var(--ease-inout) infinite}
-@keyframes halo{0%,100%{transform:scale(.8);opacity:.55}50%{transform:scale(1.25);opacity:.12}}
-.mini .hit{fill:transparent}
-.mini text{font:400 var(--fs-chrome) var(--f-body);fill:var(--soft);letter-spacing:.01em;paint-order:stroke;stroke:var(--sheet);stroke-width:3.5px;stroke-linejoin:round}
-.mini text .nm{fill:var(--mute);font-size:var(--fs-micro)}
-.mini .mn{cursor:pointer;outline:none;transition:opacity var(--t-enter)}
-.mini .mn.on text{fill:var(--ink)}
-.mini .mn.nb text{animation:ink var(--t-enter) calc(var(--stagger) * 3) var(--ease-out) both}
-.mini svg:has(.mn:hover) .mn:not(:hover){opacity:.4}
-.mini .mn:hover text,.mini .mn:focus-visible text{fill:var(--ink)}
-@media (max-width:560px){
-.mini text{font-size:var(--fs-ui)}
-}
-@media (prefers-reduced-motion:reduce){
-.mini .halo{display:none}
-}
-@media (max-width:560px){
-.mini .mn text{font-size:var(--fs-chrome-2)}
-}
-.mini .md.s-wait{opacity:.6}
-.field .fn text{transition:opacity var(--t-exit) var(--ease-soft-close) calc(var(--stagger) * 8)}
-.field .fn.unborn text,.field .fn.young text{opacity:0;transition:none}
-/* !important: order is truth; a hidden edge stays hidden while its flow loop runs */
-.map .eg:not(.drawn)~.fl{opacity:0!important}
-.field .ln,.field .lf{transition:opacity var(--t-exit) var(--ease-soft-close)}
-/* !important: order is truth; a hidden edge stays hidden while its flow loop runs */
-.field .ln.hid,.field .lf.hid{opacity:0!important}
-.mini .me.ne{stroke-dasharray:1;stroke-dashoffset:1;animation:fgDraw var(--t-draw) var(--ease-out) calc(var(--stagger) * 8) forwards}
-.mini .me.dep.ne{stroke-dasharray:none;stroke-dashoffset:0;opacity:0;animation:ink var(--t-enter) calc(var(--stagger) * 12) forwards}
-.mini .mn.nb .halo{animation:mnb var(--t-move) var(--spring) both,halo var(--t-loop) var(--ease-inout) calc(var(--stagger) * 15) infinite}
+/* the map plate: the canvas paints; the list of nodes over it takes focus and anchors the sheet */
+.map{position:relative;display:block;width:100%;contain:layout paint;overflow:visible}
+.map canvas{display:block;touch-action:pan-y}
+.map canvas.dragging{cursor:grabbing}
+.map-ax{position:absolute;inset:0;margin:0;padding:0;list-style:none;pointer-events:none}
+.map-ax li{display:contents}
+.mnb{position:absolute;left:0;top:0;padding:0;border:0;border-radius:var(--r-round);background:transparent;opacity:0;pointer-events:none}
+.map-flow .mnb{border-radius:var(--r-1)}
+.mnb:focus{outline:none}
+/* the tooltip: anchored to the node, moved only by transform; numbers in tabular figures */
+.map-tip{position:absolute;left:0;top:0;z-index:var(--z-2);max-width:280px;padding:var(--sp-2) var(--sp-2h);background:var(--panel);border:var(--rule-hair) solid var(--line-2);border-radius:var(--r-2);box-shadow:var(--e1);font-size:var(--fs-chrome-2);color:var(--text);pointer-events:none;opacity:0;visibility:hidden;transition:opacity var(--t-exit) var(--ease-soft-close),visibility 0s linear var(--t-exit)}
+.map-tip.on{opacity:1;visibility:visible;transition:opacity var(--t-enter) var(--ease-out),visibility 0s}
+.map-tip .mt-h{display:flex;align-items:baseline;gap:var(--sp-3);justify-content:space-between}
+.map-tip .mt-h b{font-weight:500;font-size:var(--fs-chrome);letter-spacing:var(--tracked-cap);text-transform:uppercase;color:var(--ink)}
+.map-tip .mt-s{display:inline-flex;align-items:center;gap:var(--sp-1);font-size:var(--fs-micro);letter-spacing:var(--tracked-tight);text-transform:uppercase;color:var(--mute)}
+.map-tip .mt-s i{width:5px;height:5px;border-radius:var(--r-round);border:var(--rule) solid currentColor}
+.map-tip .st-running,.map-tip .st-thinking{color:var(--gold-ink)}
+.map-tip .st-running i{background:currentColor}
+.map-tip .st-done i{background:currentColor}
+.map-tip .st-failed{color:var(--bad)}
+.map-tip p{margin:var(--sp-half) 0 var(--sp-1h);font:italic 400 var(--fs-chrome-2) var(--f-display);color:var(--soft)}
+.map-tip dl{display:grid;grid-template-columns:auto 1fr;gap:var(--sp-half) var(--sp-3);margin:0}
+.map-tip dt{font-size:var(--fs-micro);letter-spacing:var(--tracked-tight);text-transform:uppercase;color:var(--mute);line-height:1.6}
+.map-tip dd{margin:0;line-height:1.5}
+/* the flow's DOM: lane names in the gutter, tick labels on the axis, the now tag */
+.map-lanes,.map-axis{position:absolute;left:0;top:0;pointer-events:none}
+.map-lanes span{position:absolute;left:var(--sp-1);top:0;white-space:nowrap;font-size:var(--fs-micro);letter-spacing:var(--tracked-tight);text-transform:uppercase;color:var(--mute);line-height:12px}
+.map-axis{right:0;height:16px}
+.map-axis i{position:absolute;left:0;top:2px;font-style:normal;font-size:var(--fs-micro);color:var(--mute);line-height:12px;margin-left:3px}
+.map-now{position:absolute;left:0;top:2px;font-size:var(--fs-micro);letter-spacing:var(--tracked-tight);text-transform:uppercase;color:var(--gold-ink);line-height:12px;margin-left:-22px;background:var(--n-sep);padding:0 var(--sp-half);opacity:0;transition:opacity var(--t-exit) var(--ease-soft-close)}
+.map-now.on{opacity:1}
 .sh{display:flex;align-items:center;gap:var(--sp-1h);padding:var(--sp-3) var(--sp-2) var(--sp-1)}
 .sh .cap{flex:1}
 .sh .ib.sm{opacity:0;transition:opacity var(--t-exit) var(--ease-soft-close)}
@@ -1517,7 +1417,7 @@ html.tnone *,html.tnone *::before,html.tnone *::after{transition:none!important}
 .ctip i{width:7px;height:7px;border-radius:var(--r-1)}
 /* palette, toasts, tips, jump */
 .veil{position:fixed;inset:0;z-index:var(--z-veil);background:var(--veil);opacity:0;pointer-events:none;transition:opacity var(--t-exit) var(--ease-soft-close)}
-.veil.open{opacity:1;pointer-events:auto}
+.veil.open{opacity:1;pointer-events:auto;transition-duration:var(--t-enter);transition-timing-function:var(--ease-out)}
 .keys{position:fixed;left:50%;top:22vh;z-index:var(--z-dialog);width:min(300px,calc(100vw - 32px));background:var(--panel);border:var(--rule-hair) solid var(--line-3);border-radius:var(--r-5);box-shadow:var(--e2);padding:var(--sp-3h) var(--sp-4);transform:translate(-50%,-6px) scale(.985);opacity:0;filter:blur(5px);pointer-events:none;transition:transform var(--t-move) var(--ease-soft-close),opacity var(--t-exit) var(--ease-soft-close),filter var(--t-exit) var(--ease-soft-close)}
 .keys.open{transform:translate(-50%,0);opacity:1;filter:none;pointer-events:auto}
 .keys dl{display:grid;grid-template-columns:auto 1fr;gap:var(--sp-2) var(--sp-3h);margin:var(--sp-2h) 0 0;font-size:var(--fs-ui);color:var(--text)}
@@ -1957,20 +1857,9 @@ function fupsHTML(w){const L=w&&w.ledger;if(!L)return "";const open=(L.claims||[
  return `<div class="fups"><span class="cap">Open threads</span>${open.map((c,i)=>`<button type="button" class="fu" style="--i:${i}" data-fu="${esc(q(c))}"><b class="num">c${c.id}</b><span>${esc(q(c))}</span><svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.1" aria-hidden="true"><path d="M3.5 8.5l5-5M4.5 3.5h4v4"/></svg></button>`).join("")}</div>`}
 function costHTML(w){const ph=w.ph||{},ks=Object.keys(PHB).filter(k=>ph[k]&&!ph[k].skip&&ph[k].e!=null&&ph[k].s!=null);if(!ks.length&&!(w.steps||[]).length)return "";const t=tokLine(w);
  return `<div class="cost">${ks.length?`<div class="cl">${ks.map(k=>{const d=Math.max(0,ph[k].e-ph[k].s);return `<span>${PHB[k]}<b class="num">${d<1000?"<1 s":fmt(d)}</b></span>`}).join("")}${t?`<span class="tk">Tokens<b class="num">${t.replace(" tokens","")}</b></span>`:""}</div>`:""}${(w.steps||[]).length?`<div class="dp">${w.steps.map((st,i)=>`<button type="button" class="dpn" data-fu="${esc(`Go deeper on desk ${ROMAN[i]} (${ROLE[st.role]}${st.focus?`, ${st.focus}`:""}): `)}"><b class="num">${ROMAN[i]}</b>${ROLE[st.role]}${st.focus?`<i>${esc(st.focus)}</i>`:""}<span>Deepen</span></button>`).join("")}</div>`:""}</div>`}
-const MLAB=n=>n._ns?`Search · ${n._ns} sites`:n.kind==="orch"?"Orchestrator":n.kind==="arb"?"Arbiter":n.kind==="agent"?`${n.rn} ${ROLE[n.role]||n.role}`:n.kind==="conn"?"Search":n.kind==="ans"?"Answer":n.kind==="doc"?"Document":n.kind==="more"?n.t1:String(n.t1||"").replace(/^www\./,"").slice(0,22);
-let GOOID=0;
-function miniSVG(w,live,seenIds,narrow){let {N,E}=graphOf(w);if(narrow){const ns=N.filter(n=>n.col===4).reduce((a,n)=>a+(n.kind==="more"?+(String(n.t1).match(/\d+/)||[0])[0]:1),0);N=N.filter(n=>n.col!==4).map(n=>n.kind==="conn"&&ns?{...n,num:0,t1:"",_ns:ns}:n);E=E.filter(e=>N.some(n=>n.id===e.b)&&N.some(n=>n.id===e.a))}if(N.length<2)return "";const cols=[[],[],[],[],[]];N.forEach(n=>{if(n.kind!=="ans"&&n.kind!=="doc"&&cols[n.col])cols[n.col].push(n)});N.filter(n=>n.kind==="ans"||n.kind==="doc").forEach(n=>cols[1].push(n));
- const X=narrow?[10,96,190,292,0]:[16,150,300,470,560],RH=24,mx=Math.max(3,...cols.map(c=>c.length)),H=Math.min(250,mx*RH+22),P={};
- cols.forEach((c,ci)=>{const tot=(c.length-1)*RH;c.forEach((n,i)=>P[n.id]=[X[ci],Math.round(H/2-tot/2+i*RH)])});
- const cur=(a,b,back)=>{const [x1,y1]=P[a],[x2,y2]=P[b];const dx=Math.max(24,Math.abs(x2-x1)*.5),o=back?4:0;return `M${x1} ${y1+o}C${x1+(x2>x1?dx:-dx)} ${y1+o},${x2-(x2>x1?dx:-dx)} ${y2+o},${x2} ${y2+o}`};
- const gid="goo"+(++GOOID),on=new Set(),nb=new Set(seenIds?N.filter(n=>!seenIds.has(n.id)).map(n=>n.id):[]);let ed="",bd="";
- E.forEach(e=>{if(!P[e.a]||!P[e.b])return;const back=/>v$/.test(e.id)&&e.a[0]==="a",d=cur(e.a,e.b,back),act=live&&e.on;if(act){on.add(e.a);on.add(e.b)}
-  ed+=`<path class="me${act?" on":""}${e.dep?" dep":""}${back?" bk":""}${nb.has(e.a)||nb.has(e.b)?' ne" pathLength="1':""}" d="${d}"/>`;if(act&&!nb.has(e.a)&&!nb.has(e.b))for(let q=0;q<2;q++)bd+=`<circle class="bd${back?" bk":""}" r="1.7"><animateMotion dur="${back?1.3:1}s" begin="-${q*(back?.65:.5)}s" repeatCount="indefinite" path="${d}"/></circle>`});
- let dots="",rings="",labs="";N.forEach(n=>{const p=P[n.id];if(!p)return;const fresh=seenIds&&!seenIds.has(n.id);seenIds&&seenIds.add(n.id);const r=n.kind==="orch"||n.kind==="arb"?4.5:n.kind==="site"||n.kind==="more"?2.6:3.6,st=live&&n.st==="on";
-  const c=`<circle class="md k-${n.kind}${n.role?" r-"+n.role:""} s-${n.st}${fresh?" nb":""}" cx="${p[0]}" cy="${p[1]}" r="${r}"/>`;if(n.kind==="site"||n.kind==="more")rings+=c;else dots+=c;
-  labs+=`<g class="mn${st?" on":""}${fresh?" nb":""}" data-sheet="${esc(n.id)}" tabindex="0" role="button" aria-label="${esc(MLAB(n))}">${st?`<circle class="halo" cx="${p[0]}" cy="${p[1]}" r="${r+3}"/>`:""}<circle class="hit" cx="${p[0]}" cy="${p[1]}" r="11"/><text x="${p[0]+(n.col===4?7:8)}" y="${p[1]+3.4}">${esc(MLAB(n))}${n.num>1?`<tspan class="nm"> ${n.num}</tspan>`:""}</text></g>`});
- return `<svg viewBox="0 0 ${narrow?440:700} ${H}" preserveAspectRatio="xMinYMid meet" style="height:${H}px"><defs><filter id="${gid}" x="-20%" y="-20%" width="140%" height="140%"><feGaussianBlur in="SourceGraphic" stdDeviation="1.6" result="b"/><feColorMatrix in="b" values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 16 -6" result="g"/><feComposite in="SourceGraphic" in2="g" operator="atop"/></filter></defs><g class="eds">${ed}</g>${rings}<g filter="url(#${gid})">${dots}${bd}</g><g class="lbs">${labs}</g></svg>`}
-function miniDraw(run,w,live){const m=run.querySelector(".mini");if(!m)return;const {N,E}=graphOf(w),sig=N.map(n=>n.id+n.st).join()+"|"+E.map(e=>e.on?1:0).join("")+(live?1:0);const nw=m.clientWidth>0&&m.clientWidth<520;if(m._sig===sig+nw)return;m._sig=sig+nw;if(0)m._sig=sig;m._ids=m._ids||new Set();m.innerHTML=miniSVG(w,live,m._ids,m.clientWidth>0&&m.clientWidth<520)}
+/* the run card's map: the same map class, inline, one instance per card. Later calls only hand it the newest record:
+   the live run while it works, then the saved turn, so the card settles in place instead of being redrawn. */
+function miniDraw(run,w,live){const m=run.querySelector(".mini");if(!m)return;m._w=w;const inst=[...FM].find(x=>x.host===m);if(inst){inst.sync();return}mkMap(m,()=>m._w,{card:true,live})}
 function runView(run,v,remember){if(!run.querySelector(".vs"))v="log";run.dataset.view=v;run.querySelectorAll(".vs [data-view]").forEach(b=>b.setAttribute("aria-pressed",b.dataset.view===v));if(v==="map"){const b=run.closest(".bot"),w=b&&(b._work||cur?.turns[+b.dataset.k]?.work);if(w)miniDraw(run,w,run.classList.contains("running"))}if(remember)try{localStorage.setItem("expira.runview",v)}catch(e){}}
 const viewDefault=()=>{try{return localStorage.getItem("expira.runview")||"log"}catch(e){return "log"}};
 function runHTML(w,k,live,o={}){const M=w.map||{},th=M.thinking||[],n=(w.feed||[]).filter(f=>f[1]).length,op=live||o.open;
@@ -2358,35 +2247,13 @@ function cellHTML(c){if(typeof c==="number"&&c>=0&&c<=5&&Number.isInteger(c))ret
 function countUp(root){if(reduce)return;root.querySelectorAll("[data-count]").forEach(el=>{const s=el.dataset.count,m=s.match(/-?[\d,]*\.?\d+/);if(!m)return;const target=parseFloat(m[0].replace(/,/g,"")),dec=(m[0].split(".")[1]||"").length,pre=s.slice(0,m.index),post=s.slice(m.index+m[0].length),t0=performance.now(),D=1100;
  const f=t=>{const p=Math.min(1,(t-t0)/D),e=1-Math.pow(1-p,4),v=target*e;el.textContent=pre+(dec?v.toFixed(dec):Math.round(v).toLocaleString("en-PH"))+post;if(p<1)requestAnimationFrame(f);else el.textContent=s};requestAnimationFrame(f)})}
 
-/* ---------- the map: who worked with what, built as the run unfolds ---------- */
-const SVGN="http://www.w3.org/2000/svg";
-const sv=(t,a={})=>{const e=document.createElementNS(SVGN,t);for(const k in a)e.setAttribute(k,a[k]);return e};
+/* ---------- the map: who worked with what, built as the run unfolds; the model is runGraph (graph.js) ---------- */
 const hostOf=u=>{try{return new URL(u).hostname.replace(/^www\./,"")}catch(e){return ""}};
 const FM=new Set();window.__FM=FM;
 /* a map only works while someone can see it: on screen, tab visible, and its panel open */
 const seen=m=>m.vis&&!document.hidden&&!m.host.closest(".dsp:not(.open),.stg:not(.open),.mfs:not(.open),.run .mapw");
-const SPEC={0:{w:100,h:40,g:12},1:{w:112,h:40,g:0},2:{w:162,h:34,g:8},3:{w:126,h:36,g:0},4:{w:120,h:22,g:6}},COLN=["ORCHESTRATOR","ARBITER","DESKS","CONNECTOR","SOURCES"],SITES=9;
+const SITES=9;
 function hostsOf(P){const hs=[];(P||[]).forEach(p=>{const h=hostOf(p.url);if(!h)return;let o=hs.find(x=>x.h===h);if(!o)hs.push(o={h,n:0,t:0});o.n++;o.t+=tok(p.ex)});return hs}
-function graphOf(w){const S=w.steps||[],M=w.map||{},L=w.ledger,N=[],E=[],t=performance.now(),webOn=s=>s._live&&s._web&&t-s._web<4000,lt=ledgerStats(L);
- N.push({id:"o",col:0,kind:"orch",t2:"OPUS 5.5 · HIGH",st:w._o&&!w._vs&&!w._va?"on":"done",tk:tok((M.thinking||[]).join(" ")+" "+(M.rationale||""))});
- if(S.length){N.push({id:"v",col:1,kind:"arb",t2:w._va?"WEIGHING TRUTH":w._vs?"STAFFING":lt.n?`${lt.g}/${lt.n} GROUNDED`:"STAFFED",st:w._vs||w._va?"on":"done",tk:24*S.length+(L?tok((L.claims||[]).map(c=>c.text).join(" ")):0)});
-  E.push({id:"o>v",a:"o",b:"v",on:!!w._vs,wt:24*S.length})}
- S.forEach((s,i)=>{const tk=tok(s.out);N.push({id:"a"+i,col:2,kind:"agent",role:s.role,rn:ROMAN[i],t1:(ROLE[s.role]||s.role).toUpperCase()+(s.web?" · WEB":""),t2:s.focus||s.task,st:s._live?"on":s.v==="fail"?"bad":s.v==="pass"?"ok":s.ms?"filed":"wait",tk});
-  E.push({id:"v>a"+i,a:"v",b:"a"+i,on:!!s._live,wt:tk});(s.after||[]).forEach(n=>{if(n-1<i&&S[n-1])E.push({id:`a${n-1}~a${i}`,a:"a"+(n-1),b:"a"+i,dep:1,wt:0})});
-  /* the return lane: each desk's notes flow back to the Arbiter to be weighed */
-  if(L||w._va||w._vd)E.push({id:`a${i}>v`,a:"a"+i,b:"v",on:!!w._va,wt:tk*.6})});
- const C=M.calls||[],P=M.pages||[];
- if(C.length||P.length){const ns=C.filter(c=>!c.fetch).length,nf=C.length-ns,hs=hostsOf(P);
-  N.push({id:"c",col:3,kind:"conn",t2:[ns?`${ns} SEARCH${ns>1?"ES":""}`:"",nf?`${nf} READ${nf>1?"S":""}`:""].filter(Boolean).join(" · ")||"CONNECTED",st:S.some(webOn)||(w._va&&w._vweb&&t-w._vweb<4000)?"on":"done",tk:hs.reduce((a,o)=>a+o.t,0)});
-  [...new Set(C.map(c=>c.i))].forEach(i=>{if(S[i])E.push({id:`a${i}>c`,a:"a"+i,b:"c",on:!!webOn(S[i]),wt:C.filter(c=>c.i===i).length*60})});
-  if(S.length&&C.some(c=>c.i===-1))E.push({id:"v>c",a:"v",b:"c",on:!!(w._va&&w._vweb&&t-w._vweb<4000),wt:C.filter(c=>c.i===-1).length*60});
-  const show=hs.length>SITES+1?hs.slice(0,SITES):hs;
-  show.forEach(o=>{N.push({id:"s:"+o.h,col:4,kind:"site",t1:o.h,num:o.n,st:"done",tk:o.t});E.push({id:"c>s:"+o.h,a:"c",b:"s:"+o.h,wt:o.t})});
-  if(show.length<hs.length){const rest=hs.slice(show.length),r=rest.length,tk=rest.reduce((a,o)=>a+o.t,0);N.push({id:"more",col:4,kind:"more",t1:`${r} more site${r>1?"s":""}`,st:"done",tk});E.push({id:"c>more",a:"c",b:"more",wt:tk})}}
- if(S.length&&(w._ans||w.atok)){const au=L&&L.audit;N.push({id:"ans",col:0,kind:"ans",t2:w._aw?"WRITING":w._au?"AUDITING":au?(au.flags?`${au.flags} REVISED`:"AUDITED"):"FILED",st:w._aw||w._au?"on":"done",tk:w.atok||tok(w._atext||"")});
-  E.push({id:"v>ans",a:"v",b:"ans",on:!!w._aw,wt:w.atok||60})}
- if(w.doc||w._doc){N.push({id:"doc",col:0,kind:"doc",t2:w._doc?"BUILDING":w.doc&&w.doc.error?"HELD":`${(w.doc&&w.doc.pages)||""} PAGES · VERIFIED`,st:w._doc?"on":w.doc&&w.doc.error?"bad":"done",tk:tok((w.doc&&w.doc.src)||"")/4});if(S.length)E.push({id:"v>doc",a:"v",b:"doc",on:!!w._doc,wt:80})}
- return {N,E}}
 /* what a node is, in one line, for the map's readout */
 function nodeInfo(w,id){if(!w)return "";const S=w.steps||[],M=w.map||{},P=M.pages||[],C=M.calls||[];
  if(id==="v"){const t=ledgerStats(w.ledger);return `Arbiter · staffed ${words(S.length).toLowerCase()} desk${S.length===1?"":"s"}${t.n?` · ${t.g} of ${t.n} claims grounded`:""}`}
@@ -2399,7 +2266,7 @@ function nodeInfo(w,id){if(!w)return "";const S=w.steps||[],M=w.map||{},P=M.page
  const i=+id.slice(1),s=S[i];if(!s)return "";return `Desk ${ROMAN[i]} · ${ROLE[s.role]}${s.focus?" · "+s.focus:""} · ${ft(tok(s.out))} tokens${s.searches?` · ${s.searches} search${s.searches>1?"es":""}`:""}`}
 const RC={research:"var(--s1)",finance:"var(--s2)",legal:"var(--s4)",decision:"var(--s5)",builder:"var(--s3)"};
 let VIEW=(()=>{try{return localStorage.getItem("expira.mapView")||"field"}catch(e){return "field"}})();
-const HINT={flow:"Select a node to read it",field:"Size is tokens · weight is traffic · drag to rearrange"};
+const HINT={flow:"Time runs left to right · select a bar to read it",field:"Size is tokens · order is left to right · drag to rearrange"};
 function barHTML(v,w,o){const fsb=o&&(o.fs||o.pv)?"":`<button type="button" class="ib sm mvx" data-mfs aria-label="Full screen" data-tip="Full screen"><svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.1"><path d="M1.5 4.5v-3h3M7.5 1.5h3v3M10.5 7.5v3h-3M4.5 10.5h-3v-3"/></svg></button>`;const roles=[...new Set(((w&&w.steps)||[]).map(s=>s.role))];
  return `<div class="mvb"><span class="seg3" role="radiogroup" aria-label="Map view"><button type="button" role="radio" data-mv="flow" aria-checked="${v==="flow"}">Flow</button><button type="button" role="radio" data-mv="field" aria-checked="${v==="field"}">Field</button></span><span class="mvr">${HINT[v]}</span>${v==="field"?`<span class="mvk">${roles.map(r=>`<span><i style="background:${RC[r]}"></i>${ROLE[r]}</span>`).join("")}</span>`:""}${fsb}</div>`}
 function mkMap(host,get,opt){FM.forEach(m=>{if(m.host===host||!m.host.isConnected){try{m.kill()}catch(e){}}});host.replaceChildren();return new (VIEW==="field"?FieldMap:FlowMap)(host,get,opt)}
@@ -2407,72 +2274,412 @@ function setView(v){if(v===VIEW)return;VIEW=v;try{localStorage.setItem("expira.m
  [...FM].forEach(m=>{if(m.opt.pv)return;const hst=m.host,g=m.get,o=Object.assign({},m.opt,{replay:true});m.kill();mkMap(hst,g,o)})}
 document.addEventListener("click",e=>{const b=e.target.closest("[data-mv]");if(b)setView(b.dataset.mv)});
 document.addEventListener("visibilitychange",()=>{if(!document.hidden)FM.forEach(m=>m.go())});
-class FlowMap{
- constructor(host,get,opt={}){this.host=host;this.get=get;this.opt=opt;this.nodes=new Map();this.edges=new Map();this.W=0;this.H=0;this.Hc=0;this.fresh=true;this.pl=[];this.raf=0;
-  host.innerHTML=barHTML("flow",get(),opt);this.mvr=host.querySelector(".mvr");this.vis=true;this.svg=sv("svg",{class:"map",role:"group","aria-label":"Map of the run"});this.gC=sv("g");this.gE=sv("g");this.gP=sv("g");this.gN=sv("g");this.svg.append(this.gC,this.gE,this.gP,this.gN);host.append(this.svg);
-  this.svg.addEventListener("pointerover",e=>{const g=e.target.closest("[data-node]");this.mvr.textContent=g?nodeInfo(this.get(),g.dataset.node):HINT.flow});this.svg.addEventListener("pointerleave",()=>this.mvr.textContent=HINT.flow);
-  this.svg.addEventListener("click",e=>{const g=e.target.closest("[data-node]");if(g){e.stopPropagation();openSheet(this.get(),g.dataset.node,g)}});
-  this.svg.addEventListener("keydown",e=>{const g=e.target.closest&&e.target.closest("[data-node]");if(g&&(e.key==="Enter"||e.key===" ")){e.preventDefault();openSheet(this.get(),g.dataset.node,g)}});
-  this.ro=new ResizeObserver(()=>{const cw=host.clientWidth;if(!cw)return;const v=cw<560,w=v?Math.round(cw):Math.max(720,Math.round(cw));if(w!==this.W||v!==this.vert){this.W=w;this.vert=v;this.sync()}});this.ro.observe(host);this.io=new IntersectionObserver(es=>{this.vis=es[es.length-1].isIntersecting;if(this.vis)this.go()});this.io.observe(host);FM.add(this)}
- kill(){this.ro.disconnect();this.io.disconnect();cancelAnimationFrame(this.raf);this.raf=0;FM.delete(this)}
- layoutV(N){const W=this.W,pad=8,gap=34,pos={};let y=pad;
-  const place=(L,w,hh,g,cols)=>{if(!L.length)return;cols=Math.max(1,Math.min(cols,L.length));const rows=Math.ceil(L.length/cols);
-   L.forEach((n,k)=>{const r=Math.floor(k/cols),c=k%cols,inRow=Math.min(cols,L.length-r*cols),x0=(W-(inRow*w+(inRow-1)*g))/2;pos[n.id]={x:x0+c*(w+g),y:y+r*(hh+g),w,h:hh}});y+=rows*hh+(rows-1)*g+gap};
-  const by=c=>N.filter(n=>n.col===c),dw=Math.min(172,Math.floor((W-10)/2)),sw=Math.min(128,Math.floor((W-12)/3));
-  place(by(0),150,40,10,1);place(by(1),150,40,0,1);place(by(2),dw,34,10,Math.floor((W+10)/(dw+10)));place(by(3),150,36,0,1);place(by(4),sw,22,6,Math.floor((W+6)/(sw+6)));
-  return {H:Math.max(72,y-gap+pad),pos,cx:{},cols:[]}}
- layout(N){if(this.vert)return this.layoutV(N);const W=this.W,cols=[0,1,2,3,4].filter(c=>N.some(n=>n.col===c)),top=24,pad=8,ws=cols.map(c=>SPEC[c].w);
-  let gap=cols.length>1?(W-ws.reduce((a,b)=>a+b,0)-24)/(cols.length-1):0;gap=Math.min(gap,150);
-  let x=Math.max(12,(W-ws.reduce((a,b)=>a+b,0)-gap*(cols.length-1))/2);const cx={},pos={},colH={};let H=0;
-  cols.forEach((c,j)=>{const L=N.filter(n=>n.col===c);colH[c]=L.length*SPEC[c].h+SPEC[c].g*(L.length-1);cx[c]=x;H=Math.max(H,colH[c]);x+=ws[j]+gap});
-  H+=top+pad;cols.forEach((c,j)=>{let y=top+(H-top-pad-colH[c])/2;N.filter(n=>n.col===c).forEach(n=>{pos[n.id]={x:cx[c],y,w:ws[j],h:SPEC[c].h};y+=SPEC[c].h+SPEC[c].g})});
-  return {H:Math.max(H,72),pos,cx,cols}}
- mk(n,p){const g=sv("g",{class:`nd k-${n.kind} st-${n.st}`,"data-node":n.id,tabindex:"0",role:"button","aria-label":[n.kind==="orch"?"Orchestrator":n.kind==="conn"?"Exa":n.t1,n.t2].filter(Boolean).join(", ")});
-  g.append(sv("rect",{class:"bx",width:p.w,height:p.h,rx:3}));
-  const T=(c,x,y,t,an)=>{const e=sv("text",{class:c,x,y,...(an?{"text-anchor":an}:{})});e.textContent=t;g.append(e)};
-  const fit=(t,px,cw)=>{t=String(t||"");const m=Math.max(3,Math.floor(px/cw));return t.length>m?t.slice(0,m-1).trimEnd()+"…":t};
-  const dot=(y)=>g.append(sv("circle",{class:"dt",cx:p.w-10,cy:y,r:2.5}));
-  if(n.kind==="orch"||n.kind==="arb"||n.kind==="ans"||n.kind==="doc"){T("sf",10,17,{orch:"Orchestrator",arb:"Arbiter",ans:"Answer",doc:"Document"}[n.kind]);T("cp",10,30,fitS(n.t2,Math.floor((p.w-26)/6)));dot(13)}
-  else if(n.kind==="agent"){T("rn",9,21.5,n.rn+".");T("cp",30,14,fit(n.t1,p.w-46,6.2));T("it",30,26.5,fit(n.t2,p.w-46,5.3));dot(p.h/2)}
-  else if(n.kind==="conn"){T("t1",10,16,"Exa");T("cp",10,28.5,fit(n.t2,p.w-20,6.2));dot(13)}
-  else if(n.kind==="site"){T("t1 sm",9,14.5,fit(n.t1,p.w-30,5.4));T("nm",p.w-8,14.5,String(n.num),"end")}
-  else T("it",9,14.5,fit(n.t1,p.w-16,5.3));
-  return g}
- sync(){if(!this.host.isConnected){this.kill();return}if(!this.W)return;const w=this.get();if(!w)return;const {N,E}=graphOf(w),L=this.layout(N),rep=this.fresh&&this.opt.replay;
-  this.gC.replaceChildren(...L.cols.map(c=>{const t=sv("text",{class:"ch",x:L.cx[c],y:11});t.textContent=COLN[c];return t}));
-  const seen=new Set();N.forEach((n,ix)=>{seen.add(n.id);const p=L.pos[n.id],key=JSON.stringify([n.t1,n.t2,n.num,p.w]);let o=this.nodes.get(n.id);
-   if(!o){o={g:this.mk(n,p),x:p.x,y:p.y,key};if(rep)o.g.style.animationDelay=(n.col*.24+ix*.03).toFixed(2)+"s";this.gN.append(o.g);this.nodes.set(n.id,o)}
-   else if(o.key!==key){o.g.replaceChildren(...this.mk(n,p).childNodes);o.key=key}
-   const cls=`nd k-${n.kind} st-${n.st}${o.g.classList.contains("sel")?" sel":""}`;if(o.g.getAttribute("class")!==cls)o.g.setAttribute("class",cls);
-   Object.assign(o,{tx:p.x,ty:p.y,w:p.w,h:p.h,n})});
-  for(const [id,o] of this.nodes)if(!seen.has(id)){o.g.remove();this.nodes.delete(id)}
-  const se=new Set();E.forEach(e=>{se.add(e.id);let o=this.edges.get(e.id);
-   if(!o){const bk=(N.find(n=>n.id===e.a)||{}).col>(N.find(n=>n.id===e.b)||{}).col,g=sv("g"),p=sv("path",{class:"eg"+(e.dep?" dep":"")+(bk?" back":""),...(e.dep?{}:{pathLength:1})}),f=sv("path",{class:"fl"});g.append(p,f);this.gE.append(g);o={g,p,f};this.edges.set(e.id,o);
-    if(rep)p.style.transitionDelay=((this.nodes.get(e.b)?.n.col||1)*.24+.08).toFixed(2)+"s";requestAnimationFrame(()=>requestAnimationFrame(()=>p.classList.add("drawn")));f.style.transitionDelay=((parseFloat(p.style.transitionDelay)||0)+.6).toFixed(2)+"s"}
-   o.e=e;o.f.classList.toggle("on",!!e.on)});
-  for(const [id,o] of this.edges)if(!se.has(id)){o.g.remove();this.edges.delete(id)}
-  this.H=L.H;if(this.fresh){this.Hc=L.H;this.fresh=false;this.svg.setAttribute("viewBox",`0 0 ${this.W} ${this.Hc.toFixed(1)}`);this.svg.style.width=this.W+"px";this.svg.style.height=this.Hc.toFixed(1)+"px"}this.go()}
- ends(e){const a=this.nodes.get(e.a),b=this.nodes.get(e.b);if(!a||!b)return null;const ay=a.ry??a.y,by=b.ry??b.y,back=a.n&&b.n&&a.n.col>b.n.col;
-  if(back&&!this.vert){const x1=a.x,y1=ay+a.h/2+5,x2=b.x+b.w,y2=by+b.h/2+5,dx=(x2-x1)*.5;return [[x1,y1],[x1+dx,y1],[x2-dx,y2],[x2,y2]]}
-  if(back&&this.vert){const x1=a.x+a.w/2+10,y1=ay,x2=b.x+b.w/2+10,y2=by+b.h,dy=(y2-y1)*.5;return [[x1,y1],[x1,y1+dy],[x2,y2-dy],[x2,y2]]}
-  if(this.vert){if(e.dep)return null;const x1=a.x+a.w/2,y1=ay+a.h,x2=b.x+b.w/2,y2=by,dy=(y2-y1)*.5;return [[x1,y1],[x1,y1+dy],[x2,y2-dy],[x2,y2]]}
-  if(e.dep){const x=a.x,y1=ay+a.h/2,y2=by+b.h/2,bx=x-Math.min(18,8+Math.abs(y2-y1)*.12);return [[x,y1],[bx,y1],[bx,y2],[x,y2]]}
-  const x1=a.x+a.w,y1=ay+a.h/2,x2=b.x,y2=by+b.h/2,dx=(x2-x1)*.5;return [[x1,y1],[x1+dx,y1],[x2-dx,y2],[x2,y2]]}
- go(){if(this.raf||!seen(this))return;const step=()=>{this.raf=0;if(!this.host.isConnected){this.kill();return}if(!seen(this))return;let mv=false;const k=reduce?1:.14,f=v=>+v.toFixed(1);
-   const dh=this.H-this.Hc;if(Math.abs(dh)>.3){this.Hc+=dh*k;mv=true}else this.Hc=this.H;
-   /* while the plate is still growing, the layout is pressed to fit the height it has so far: nothing is ever cut off */
-   const top=this.vert?8:24,pad=8,hm=40,sq=this.H>this.Hc+.5?Math.max(0,(this.Hc-top-pad-hm)/Math.max(1,this.H-top-pad-hm)):1;
-   for(const o of this.nodes.values()){const dx=o.tx-o.x,dy=o.ty-o.y;if(Math.abs(dx)>.3||Math.abs(dy)>.3){o.x+=dx*k;o.y+=dy*k;mv=true}else{o.x=o.tx;o.y=o.ty}o.ry=top+(o.y-top)*sq;o.g.setAttribute("transform",`translate(${f(o.x)},${f(o.ry)})`)}
-   this.svg.setAttribute("viewBox",`0 0 ${this.W} ${f(this.Hc)}`);this.svg.style.width=this.W+"px";this.svg.style.height=f(this.Hc)+"px";
-   for(const o of this.edges.values()){const q=this.ends(o.e);if(!q){o.p.removeAttribute("d");o.f.removeAttribute("d");continue}const d=`M${q[0].map(f)} C${q[1].map(f)} ${q[2].map(f)} ${q[3].map(f)}`;if(o.d!==d){o.p.setAttribute("d",d);o.f.setAttribute("d",d);o.d=d}}
-   const t=performance.now();this.pl=this.pl.filter(p=>{const u=(t-p.t0)/p.dur;if(u>=1){p.c.remove();return false}const o=this.edges.get(p.id),q=o&&this.ends(o.e);if(!q){p.c.remove();return false}
-    const v=u<.5?2*u*u:1-Math.pow(-2*u+2,2)/2,m=1-v,pt=[0,1].map(i=>m*m*m*q[0][i]+3*m*m*v*q[1][i]+3*m*v*v*q[2][i]+v*v*v*q[3][i]);p.c.setAttribute("cx",f(pt[0]));p.c.setAttribute("cy",f(pt[1]));p.c.setAttribute("opacity",Math.min(1,(1-u)*3,u*8).toFixed(2));return true});
-   if(mv||this.pl.length)this.raf=requestAnimationFrame(step)};this.raf=requestAnimationFrame(step)}
- pulse(a,b){const id=`${a}>${b}`;if(reduce||!this.edges.has(id))return;const c=sv("circle",{class:"pl",r:2,opacity:0});this.gP.append(c);this.pl.push({c,id,t0:performance.now(),dur:950});this.go()}
+/* ---------- the run graph (R2 §5): one model, every map a view of it ----------
+   runGraph(w) reads a run record, live or saved, and returns every node and edge with the time it was born, the
+   time it started and ended, its tokens and its state, all in ms since the run began. Births carry a strictly
+   increasing seq: that is the order every view shows, live and on replay, never the layout or an array index.
+   Times come from, in order: the stamps the run now records (tb, ts, te, page t); the phase clock (ph); the feed;
+   the token signal (sig, 250 ms frames of tokens per voice); and last, the dependencies and durations. */
+const GROLE=r=>r==="decision"?"arbiter":r||"orchestrator";
+const LANES=["orchestrator","research","finance","legal","builder","arbiter"];
+const SIGF=250;
+function sigOf(w){const keys=w.sigKeys||[],fr=w.sig||[],live=!!w._p0,off=live?0:Math.max(0,Math.round((w.ms||0)/SIGF)-fr.length);
+ return{keys,fr,off,col:k=>keys.indexOf(k),
+  sum(k){const j=keys.indexOf(k);if(j<0)return null;let s=0;for(const f of fr)s+=f[j]||0;return s},
+  first(k){const j=keys.indexOf(k);if(j<0)return null;for(let i=0;i<fr.length;i++)if(fr[i][j])return(off+i)*SIGF;return null},
+  /* tokens per second at t: an exponential moving average (τ = 1 s) over the frames up to t */
+  rate(k,t){const j=keys.indexOf(k);if(j<0)return 0;const n=Math.min(fr.length,Math.floor(t/SIGF)-off);let r=0;for(let i=Math.max(0,n-12);i<n;i++)r+=((fr[i][j]||0)*4-r)*.22;return r},
+  think(k,t){const j=keys.indexOf(k);if(j<0)return false;const i=Math.min(fr.length,Math.floor(t/SIGF)-off)-1;return i>=0&&!!(fr[i][keys.length]&(1<<j))}}}
+function runNow(w){return w._p0?performance.now()-w._p0:(w.ms||0)}
+function runGraph(w){const S=w.steps||[],M=w.map||{},L=w.ledger,ph=w.ph||{},F=w.feed||[],sg=sigOf(w),live=!!(w._o||w._vs||w._va||w._aw||w._au||w._doc||S.some(s=>s._live)),T=runNow(w);
+ const fe=re=>{const f=F.find(x=>re.test(x[2]||x[1]||""));return f?f[0]:null},n0=v=>v==null||isNaN(v)?null:Math.max(0,Math.round(v));
+ const N=[],E=[],D=[],by={},add=n=>{by[n.id]=n;N.push(n);return n};
+ /* the orchestrator */
+ const oEnd=n0(ph.plan&&ph.plan.e)??n0(fe(/^Classified the brief/))??(w._o?null:(n0(S[0]&&S[0].tb)??0));
+ add({id:"o",kind:"orch",role:"orchestrator",label:"Orchestrator",sub:M.kind||"",parent:null,tBorn:0,tStart:0,tEnd:live&&w._o?null:oEnd,
+  tok:sg.sum("O")??tok((M.thinking||[]).join(" ")+" "+(M.rationale||"")),sigKey:"O",effort:"high",state:live&&w._o?(sg.think("O",T)?"thinking":"running"):"done"});
+ D.push({t:0,verb:"plan",targets:[],note:M.rationale||""});
+ /* the desks, and the Arbiter that staffs them and weighs what they file */
+ const desks=S.map((s,i)=>{const R=ROMAN[i],fb=n0(s.tb)??n0(fe(new RegExp(`^Opened desk ${R}\\b`)))??((oEnd??0)+i*240);
+  let te=n0(s.te)??n0(fe(new RegExp(`\\bDesk ${R} filed\\b`))),ts=n0(s.ts)??(s._t0&&w._p0?n0(s._t0-w._p0):null)??sg.first("d"+i)??(te!=null&&s.ms?n0(te-s.ms):null);
+  if(ts!=null)ts=Math.max(fb,te!=null?Math.min(ts,te):ts);if(s._live)te=null;const st=s._live?(sg.think("d"+i,T)?"thinking":"running"):s.v==="fail"?"failed":te!=null||s.ms?"done":ts!=null?"running":"queued";
+  return{id:"a"+i,kind:"desk",role:GROLE(s.role),label:`${R} · ${s.focus||ROLE[s.role]||s.role}`,rn:R,sub:s.focus||s.task||"",i,parent:"v",after:(s.after||[]).filter(n=>n-1<i&&S[n-1]).map(n=>"a"+(n-1)),
+   tBorn:fb,tStart:ts,tEnd:te,tok:sg.sum("d"+i)??tok(s.out),sigKey:"d"+i,effort:s.tier,web:{searches:s.searches||0},state:st,ms:s.ms}});
+ /* dependencies and durations fill any start the record does not have: a desk starts when what it waits on is filed */
+ desks.forEach(d=>{if(d.tStart==null&&d.state!=="queued"){const dep=Math.max(d.tBorn,...d.after.map(a=>{const p=desks[+a.slice(1)];return p&&p.tEnd!=null?p.tEnd:0}));d.tStart=dep}
+  else if(d.tStart!=null&&d.after.length){const dep=Math.max(0,...d.after.map(a=>{const p=desks[+a.slice(1)];return p&&p.tEnd!=null?p.tEnd:0}));d.tStart=Math.max(d.tStart,d.tEnd!=null?Math.min(dep,d.tEnd):dep)}
+  if(d.tEnd==null&&d.state==="done"&&d.ms)d.tEnd=d.tStart+d.ms;if(d.tEnd==null&&(d.state==="done"||d.state==="failed"))d.tEnd=d.tStart??d.tBorn});
+ if(S.length){const vb=Math.max(0,Math.min(...desks.map(d=>d.tBorn))-60),filed=desks.map(d=>d.tEnd).filter(v=>v!=null),rs=n0(ph.review&&ph.review.s)??(filed.length===S.length?Math.max(...filed):null),
+   re=n0(ph.review&&ph.review.e)??n0(fe(/^Review:|passed review|^Returned desk/))??(rs!=null&&!live?rs+1200:null),lt=ledgerStats(L);
+  add({id:"v",kind:"arb",role:"arbiter",label:"Arbiter",sub:lt.n?`${lt.g} of ${lt.n} claims grounded`:"staffs the desks, then weighs what they file",parent:"o",tBorn:vb,tStart:vb,tEnd:live&&(w._vs||w._va||re==null)?null:re??vb,rs,
+   tok:24*S.length+(L?tok((L.claims||[]).map(c=>c.text).join(" ")):0),effort:"high",state:live?(w._vs||w._va?"running":re!=null?"done":"queued"):"done"});
+  E.push({a:"o",b:"v",kind:"route",tok:24*S.length});D.push({t:vb,verb:"route",targets:["v"]});
+  desks.forEach(d=>{add(d);D.push({t:d.tBorn,verb:"staff",targets:[d.id]});E.push({a:"v",b:d.id,kind:"delegate",tok:d.tok});d.after.forEach(a=>E.push({a,b:d.id,kind:"depend",tok:0}));
+   if(d.tEnd!=null&&(rs!=null||L))E.push({a:d.id,b:"v",kind:"return",tok:Math.round(d.tok*.6),t:Math.max(d.tEnd,rs??d.tEnd)})});
+  if(re!=null&&!(live&&w._va))D.push({t:re,verb:"decide",targets:[]})}
+ /* the connector and the sites it read */
+ const C=M.calls||[],P=M.pages||[];
+ if(C.length||P.length){const hs=hostsOf(P),ct=C.length?Math.min(...C.map(c=>c.t||0)):null,caller=C.length?C[0].i:(P[0]&&P[0].i),cb=n0(ct)??(by["a"+caller]&&by["a"+caller].tStart)??0;
+  const ns=C.filter(c=>!c.fetch).length,nf=C.length-ns,webLive=live&&(S.some(s=>s._live&&s._web&&performance.now()-s._web<4000)||(w._va&&w._vweb&&performance.now()-w._vweb<4000));
+  add({id:"c",kind:"tool",role:"tool",label:"Exa",sub:[ns?`${ns} search${ns>1?"es":""}`:"",nf?`${nf} read${nf>1?"s":""}`:""].filter(Boolean).join(" · ")||"connected",parent:caller>=0&&by["a"+caller]?"a"+caller:"v",
+   tBorn:cb,tStart:cb,tEnd:webLive?null:Math.max(cb,...C.map(c=>(c.t||0)+1500)),tok:hs.reduce((a,o)=>a+o.t,0),state:webLive?"running":"done",calls:C.length});
+  [...new Set(C.map(c=>c.i))].forEach(i=>{const a=i===-1?"v":"a"+i;if(by[a])E.push({a,b:"c",kind:"call",tok:C.filter(c=>c.i===i).length*60,calls:C.filter(c=>c.i===i).map(c=>c.t||0)})});
+  const show=hs.length>SITES+1?hs.slice(0,SITES):hs;
+  show.forEach((o,k)=>{const pg=P.filter(p=>hostOf(p.url)===o.h),pt=n0(Math.min(...pg.map(p=>p.t??Infinity)));const tb=pt!=null&&isFinite(pt)?pt:cb+220*(k+1);
+   add({id:"s:"+o.h,kind:"site",role:"site",label:o.h,sub:`${o.n} page${o.n>1?"s":""}`,parent:"c",tBorn:Math.max(cb,tb),tStart:Math.max(cb,tb),tEnd:Math.max(cb,tb)+900,tok:o.t,state:"done",num:o.n});
+   E.push({a:"c",b:"s:"+o.h,kind:"fetch",tok:o.t,t:Math.max(cb,tb)})});
+  if(show.length<hs.length){const rest=hs.slice(show.length),r=rest.length,tk=rest.reduce((a,o)=>a+o.t,0),tb=cb+220*(show.length+1);
+   add({id:"more",kind:"more",role:"site",label:`${r} more site${r>1?"s":""}`,sub:"",parent:"c",tBorn:tb,tStart:tb,tEnd:tb+900,tok:tk,state:"done"});E.push({a:"c",b:"more",kind:"fetch",tok:tk,t:tb})}}
+ /* the answer, and the document built beside it */
+ if(S.length&&(w._ans||w.atok||w._aw||ph.answer)){const as=n0(ph.answer&&ph.answer.s)??n0(fe(/^Set the exhibits|^Delivered/))??Math.max(0,...desks.map(d=>d.tEnd||0),by.v.tEnd||0),au=L&&L.audit;
+  add({id:"ans",kind:"ans",role:"arbiter",label:"Answer",sub:au?(au.flags?`${au.flags} line${au.flags>1?"s":""} revised by the audit`:"audit clear"):"",parent:"v",tBorn:as,tStart:as,
+   tEnd:live&&(w._aw||w._au)?null:n0(ph.answer&&ph.answer.e)??n0(w.ms)??as,tok:w.atok||sg.sum("A")||tok(w._atext||""),sigKey:"A",state:live&&(w._aw||w._au)?"running":"done"});
+  E.push({a:"v",b:"ans",kind:"write",tok:w.atok||60});D.push({t:as,verb:"write",targets:["ans"]})}
+ if(w.doc||w._doc){const ds=n0(ph.doc&&ph.doc.s)??(by.ans?by.ans.tBorn:T),d=w.doc;
+  add({id:"doc",kind:"doc",role:"builder",label:"Document",sub:w._doc?"building":d&&d.error?"held":`${(d&&d.pages)||""} pages · verified`,parent:S.length?"v":"o",tBorn:ds,tStart:ds,tEnd:w._doc?null:n0(ph.doc&&ph.doc.e)??ds,
+   tok:Math.round(tok((d&&d.src)||"")/4),state:w._doc?"running":d&&d.error?"held":"done"});E.push({a:S.length?"v":"o",b:"doc",kind:"write",tok:80})}
+ /* seq: births in time order; ties keep the order they were declared in, which is parent before child */
+ N.forEach((n,k)=>n._k=k);N.sort((a,b)=>a.tBorn-b.tBorn||a._k-b._k);
+ const seen=new Set();N.forEach(n=>{if(n.parent&&!seen.has(n.parent)){const p=by[n.parent];if(p)n.tBorn=Math.max(n.tBorn,p.tBorn)}seen.add(n.id)});
+ N.sort((a,b)=>a.tBorn-b.tBorn||a._k-b._k);N.forEach((n,i)=>n.seq=i+1);
+ /* edges: born when both ends exist; their work flows while the working end is busy */
+ const WEB=2500;E.forEach(e=>{const a=by[e.a],b=by[e.b];e.id=`${e.a}>${e.b}`+(e.kind==="depend"?"~":e.kind==="return"?"<":"");e.seq=Math.max(a.seq,b.seq)+.5;e.tBorn=Math.max(a.tBorn,b.tBorn,e.t??0);
+  e.liveAt=t=>{if(!live&&t>=T)return false;const on=n=>n.tStart!=null&&t>=n.tStart&&(n.tEnd==null||t<n.tEnd);
+   switch(e.kind){case"delegate":return on(b);case"route":return on(a)&&by.v&&by.v.state==="running";case"call":return(e.calls||[]).some(c=>t>=c&&t<c+WEB)||(live&&a.state==="running"&&b.state==="running");
+    case"fetch":return t>=e.tBorn&&t<e.tBorn+1500;case"return":return b.rs!=null&&t>=e.tBorn&&(b.tEnd==null||t<b.tEnd);case"write":return on(b);default:return false}}});
+ E.sort((x,y)=>x.seq-y.seq);D.sort((x,y)=>x.t-y.t);
+ const tEnd=live?null:Math.max(n0(w.ms)||0,...N.map(n=>n.tEnd||n.tBorn));
+ return{N,E,D,by,live,T:live?T:tEnd,tEnd,sig:sg}}
+/* what a node's tokens are, as a rate now, for particles and the light */
+function nodeRate(g,n,t){if(n.sigKey)return g.sig.rate(n.sigKey,t);return n.state==="running"||n.state==="thinking"?240:0}
+/* the path the work arrived by: parent links up to the orchestrator, plus a dependency that just released it */
+function arrival(g,id){const out=[];let n=g.by[id];while(n&&n.parent){const e=g.E.find(x=>x.a===n.parent&&x.b===n.id&&x.kind!=="depend");if(e)out.push(e.id);
+  n.after&&n.after.forEach(a=>{const p=g.by[a];if(p&&p.tEnd!=null&&n.tStart!=null&&n.tStart-p.tEnd<1000){const d=g.E.find(x=>x.a===a&&x.b===n.id&&x.kind==="depend");if(d)out.push(d.id)}});n=g.by[n.parent]}return out}
+/* a seeded random stream, so the same run lands in the same place on every replay */
+function seeded(str){let h=1779033703^str.length;for(let i=0;i<str.length;i++){h=Math.imul(h^str.charCodeAt(i),3432918353);h=h<<13|h>>>19}
+ return()=>{h=Math.imul(h^h>>>16,2246822507);h=Math.imul(h^h>>>13,3266489909);return((h^=h>>>16)>>>0)/4294967296}}
+const runKey=w=>(w.map&&w.map.kind||"")+"|"+(w.steps||[]).map(s=>s.task||s.focus).join("|")+"|"+((w.feed&&w.feed[0]&&w.feed[0][2])||"");
+/* the tooltip's words for a node's state: never colour alone */
+const STW={queued:"Queued",running:"Running",thinking:"Thinking",done:"Filed",failed:"Failed",held:"Held"};
+/* ---------- the map plate (R2 §4): canvas for the picture, DOM for everything read or focused ----------
+   Each map is one canvas plus a thin DOM layer: an ordered list of buttons, one per visible node in execution order
+   (keyboard, screen readers and the sheet's anchor), the tooltip, and whatever numbers the view shows (a number
+   lives in the DOM, where tabular figures work). One rAF loop per map, asleep whenever nothing moves or no one can
+   see it; no layout is read inside the loop. The views (FieldMap, FlowMap) add their own model, motion and paint. */
+const ROLEC={orchestrator:"--ink",research:"--s1",finance:"--s2",legal:"--s4",builder:"--s3",arbiter:"--s5",tool:"--soft",site:"--mute"};
+const LANEN={orchestrator:"Orchestrator",research:"Research",finance:"Finance",legal:"Legal",builder:"Drafting",arbiter:"Arbiter",tool:"Exa"};
+/* a critically damped spring step (ζ = 1): no overshoot, and velocity carries through an interruption */
+const cds=(o,k,goal,w,dt)=>{const v=k+"v",a=w*w*(goal-o[k])-2*w*(o[v]||0);o[v]=(o[v]||0)+a*dt;o[k]+=o[v]*dt;if(Math.abs(goal-o[k])<.01&&Math.abs(o[v])<.01){o[k]=goal;o[v]=0;return false}return true};
+const cd01=(u,w)=>u<=0?0:1-(1+w*u)*Math.exp(-w*u);
+function mapCols(el){const cs=getComputedStyle(el),v=k=>cs.getPropertyValue(k).trim(),c={};
+ ["--ink","--text","--soft","--mute","--line","--line-2","--line-3","--gold","--s1","--s2","--s3","--s4","--s5","--n-hollow","--n-rim","--n-lab","--n-sep","--bad","--well","--panel"].forEach(k=>c[k]=v(k)||"#888");
+ c.font=v("--f-body")||"sans-serif";c.role=r=>c[ROLEC[r]||"--mute"];return c}
+/* the gold light: one pre-rendered radial sprite per map, drawn under the node that holds it */
+function glowSprite(col){const s=document.createElement("canvas"),R=64;s.width=s.height=R*2;const x=s.getContext("2d"),g=x.createRadialGradient(R,R,0,R,R,R);
+ g.addColorStop(0,col);g.addColorStop(.45,col);g.addColorStop(1,"transparent");x.globalAlpha=.5;x.fillStyle=g;x.fillRect(0,0,R*2,R*2);return s}
+class MapBase{
+ constructor(host,get,opt,view){Object.assign(this,{host,get,opt,view,W:0,H:0,Hc:0,raf:0,vis:true,g:null,hov:null,foc:null,lens:null,dpr:1,last:0,fresh:true,tipId:null,tipT:0,tipAt:0,ann:0,lt:{id:null,a:0,p:1,from:null,hold:0,ch:null,chT:0},path:{ids:[],a:0,old:[],oa:0}});
+  host.innerHTML=barHTML(view,get(),opt);this.mvr=host.querySelector(".mvr");
+  const box=this.box=document.createElement("div");box.className=`map map-${view}`;
+  this.cv=document.createElement("canvas");this.cv.setAttribute("aria-hidden","true");this.ctx=this.cv.getContext("2d");
+  this.ax=document.createElement("ol");this.ax.className="map-ax";this.ax.setAttribute("aria-label",view==="flow"?"The run in time order":"The run, node by node");
+  this.tip=document.createElement("div");this.tip.className="map-tip";this.tip.setAttribute("role","tooltip");this.tip.id="mtip"+(++MapBase.n);
+  this.say=document.createElement("p");this.say.className="sr";this.say.setAttribute("aria-live","polite");
+  box.append(this.cv,this.ax,this.tip,this.say);host.append(box);
+  /* pointer: the canvas hit-tests; the buttons take keyboard focus and anchor the sheet */
+  const pt=e=>{const r=this.box.getBoundingClientRect();return[e.clientX-r.left,e.clientY-r.top]};
+  this.cv.addEventListener("pointermove",e=>{if(this.drag)return this.dragTo(e,pt(e));const id=this.hitAt(...pt(e));this.cv.style.cursor=id?"pointer":"";this.hover(id,false)});
+  this.cv.addEventListener("pointerleave",()=>{if(!this.drag)this.hover(null,false)});
+  this.cv.addEventListener("pointerdown",e=>{if(e.button)return;const id=this.hitAt(...pt(e));if(!id)return;this.drag={id,x0:e.clientX,y0:e.clientY,moved:false,pid:e.pointerId};try{this.cv.setPointerCapture(e.pointerId)}catch(x){}this.dragStart&&this.dragStart(id,pt(e))});
+  const up=e=>{const d=this.drag;if(!d)return;this.drag=null;try{this.cv.releasePointerCapture(d.pid)}catch(x){}if(this.dragEnd)this.dragEnd(d);if(!d.moved&&e.type==="pointerup")this.open(d.id)};
+  this.cv.addEventListener("pointerup",up);this.cv.addEventListener("pointercancel",up);
+  this.ax.addEventListener("focusin",e=>{const b=e.target.closest("[data-node]");if(b){this.foc=b.dataset.node;this.hover(this.foc,true)}});
+  this.ax.addEventListener("focusout",()=>{this.foc=null;this.hover(null,true)});
+  this.ax.addEventListener("click",e=>{const b=e.target.closest("[data-node]");if(b){e.stopPropagation();this.open(b.dataset.node)}});
+  this.ax.addEventListener("keydown",e=>{const b=e.target.closest("[data-node]");if(!b)return;const L=[...this.ax.querySelectorAll("[data-node]")],i=L.indexOf(b);
+   const j={ArrowRight:1,ArrowDown:1,ArrowLeft:-1,ArrowUp:-1}[e.key];if(j){e.preventDefault();const n=L[Math.max(0,Math.min(L.length-1,i+j))];n&&n.focus({preventScroll:true})}});
+  /* the lens: the sheet marks the node it opened from; the map dims everything else while it is open */
+  new MutationObserver(()=>{const s=this.ax.querySelector(".sel");const id=s?s.dataset.node:null;if(id!==this.lens){this.lens=id;this.go()}}).observe(this.ax,{subtree:true,attributes:true,attributeFilter:["class"]});
+  this.ro=new ResizeObserver(()=>{const cw=Math.round(this.box.clientWidth),hh=Math.round(host.clientHeight);if(cw&&(cw!==this.W||this.opt.fs&&hh!==this.hh)){this.W=cw;this.hh=hh;this.resized=true;this.sync()}});this.ro.observe(this.box);if(opt.fs)this.ro.observe(host);
+  this.io=new IntersectionObserver(es=>{this.vis=es[es.length-1].isIntersecting;if(this.vis)this.go()});this.io.observe(host);
+  this.rng=seeded(runKey(get()||{}));FM.add(this)}
+ kill(){this.ro.disconnect();this.io.disconnect();cancelAnimationFrame(this.raf);this.raf=0;clearTimeout(this.tipTo);FM.delete(this)}
+ get alpha(){return this.al||0}set alpha(v){this.al=v}
+ open(id){const b=this.btn(id);if(b)openSheet(this.get(),id,b)}
+ btn(id){return this.ax.querySelector(`[data-node="${CSS.escape(id)}"]`)}
+ sync(){if(!this.host.isConnected){this.kill();return}if(!this.W)return;const w=this.get();if(!w)return;this.w=w;this.g=runGraph(w);this.rebuild();this.fresh=false;this.go()}
+ recolor(){this.C=mapCols(this.box);this.glow=glowSprite(this.C["--gold"])}
+ size(h){const d=window.devicePixelRatio||1,W=this.W,H=Math.max(1,Math.round(h));if(this.cw===W&&this.chh===H&&this.dpr===d)return;this.cw=W;this.chh=H;this.dpr=d;
+  this.cv.width=Math.round(W*d);this.cv.height=Math.round(H*d);this.cv.style.width=W+"px";this.cv.style.height=H+"px";this.box.style.height=H+"px"}
+ /* the loop: one per map, woken by sync, hover, pulses and the lens; it sleeps when step() says nothing moves */
+ go(){if(this.raf||!seen(this))return;this.last=performance.now();const f=t=>{this.raf=0;if(!this.host.isConnected){this.kill();return}if(!seen(this))return;
+   if(!this.C)this.recolor();const dt=Math.max(0,Math.min(.032,(t-this.last)/1000));this.last=t;const more=this.step(dt,t);this.size(this.Hc);
+   const x=this.ctx;x.setTransform(this.dpr,0,0,this.dpr,0,0);x.clearRect(0,0,this.W,this.Hc);this.paint(x,t);this.place();this.tipTick(t);
+   if(more)this.raf=requestAnimationFrame(f)};this.raf=requestAnimationFrame(f)}
+ /* the buttons: one per visible node, in execution order, over the node, so focus and the sheet land on it */
+ place(){const ids=this.visible();let k=0;const kids=this.ax.children;
+  ids.forEach(id=>{const a=this.anchorOf(id);if(!a)return;let li=kids[k];if(!li||li.firstChild.dataset.node!==id){li=[...kids].slice(k).find(l=>l.firstChild.dataset.node===id);
+    if(!li){li=document.createElement("li");const b=document.createElement("button");b.type="button";b.dataset.node=id;b.className="mnb";li.append(b);this.born(id)}this.ax.insertBefore(li,kids[k]||null)}
+   const b=li.firstChild,key=`${a.x.toFixed(0)},${a.y.toFixed(0)},${a.w.toFixed(0)},${a.h.toFixed(0)}`;if(b._k!==key){b._k=key;b.style.transform=`translate(${a.x.toFixed(1)}px,${a.y.toFixed(1)}px)`;b.style.width=Math.max(12,a.w).toFixed(1)+"px";b.style.height=Math.max(12,a.h).toFixed(1)+"px"}
+   const lab=this.ariaOf(id);if(b._l!==lab){b._l=lab;b.setAttribute("aria-label",lab)}k++});
+  while(kids.length>k)kids[k].remove()}
+ ariaOf(id){const n=this.g&&this.g.by[id];if(!n)return"";return`${n.label}, ${STW[n.state]||""}, ${ft(Math.round(n.tok||0))} tokens`}
+ /* births and filings, said politely and no more than once every two seconds */
+ born(id){const n=this.g&&this.g.by[id];if(!n||this.fresh||!this.g.live)return;this.speak(`${n.label} started`)}
+ speak(t){const now=performance.now();if(now-this.ann<2000)return;this.ann=now;this.say.textContent=t}
+ /* hover and keyboard focus: the neighbourhood stays, the rest dims; the tooltip opens after 120 ms, at once on focus */
+ hover(id,kb){if(this.hov===id&&!kb)return;this.hov=id;const nb=new Set();if(id&&this.g){nb.add(id);this.g.E.forEach(e=>{if(e.a===id)nb.add(e.b);if(e.b===id)nb.add(e.a)})}this.nb=id?nb:null;
+  clearTimeout(this.tipTo);if(id){this.tipTo=setTimeout(()=>{this.tipId=id;this.tipAt=0;this.go()},kb?0:120)}else this.tipTo=setTimeout(()=>{this.tipId=null;this.tip.classList.remove("on");this.cv.removeAttribute("aria-describedby")},80);this.go()}
+ dim(id){const f=this.lens||this.hov;if(!f)return 1;const on=this.lens?this.lensSet().has(id):this.nb&&this.nb.has(id);return on?1:this.lens?.2:.35}
+ lensSet(){if(this._lk===this.lens)return this._ls;const s=new Set([this.lens]);this.g&&this.g.E.forEach(e=>{if(e.a===this.lens)s.add(e.b);if(e.b===this.lens)s.add(e.a)});this._lk=this.lens;this._ls=s;return s}
+ /* the light: the running node with the highest rate holds it; a new start takes it at once; a challenger needs 1.5× for 400 ms */
+ light(t){const g=this.g,T=g.T,L=this.lt;let want=null;
+  if(g.live){const vis=new Set(this.visible()),run=[...vis].map(id=>({id,n:g.by[id]})).filter(s=>s.n&&(s.n.state==="running"||s.n.state==="thinking")&&s.n.kind!=="orch");
+   const nw=run.filter(s=>s.n.tStart!=null&&T-s.n.tStart<600).sort((a,b)=>b.n.tStart-a.n.tStart)[0];
+   if(nw&&nw.id!==L.id&&nw.id!==L.nw){L.nw=nw.id;want=nw.id}
+   else{const rt=s=>nodeRate(g,s.n,T),best=run.sort((a,b)=>rt(b)-rt(a))[0],cur=L.id&&run.find(s=>s.id===L.id),curOn=!!cur;
+    if(!curOn)want=best?best.id:"o";else if(best&&best!==cur&&t-L.hold>700&&rt(best)>1.5*rt(cur)){if(L.ch!==best.id){L.ch=best.id;L.chT=t;want=L.id}else want=t-L.chT>400?best.id:L.id}else{L.ch=null;want=L.id}}
+   if(!vis.has(want))want=L.id&&vis.has(L.id)?L.id:null}
+  if(want&&want!==L.id){const linked=!!this.travel&&!!L.id&&this.g.E.some(e=>(e.a===L.id&&e.b===want)||(e.b===L.id&&e.a===want));L.from=linked&&!reduce?L.id:null;L.p=linked&&!reduce?0:1;L.t0=t;L.id=want;L.hold=t;if(!linked)L.a=reduce?1:0;
+   this.path.old=this.path.ids;this.path.oa=this.path.a;this.path.ids=arrival(g,want);this.path.a=reduce?1:0}
+  const on=g.live&&!!L.id,dt=Math.min(.032,(t-(L.last||t))/1000);L.last=t;let mv=false;
+  if(L.p<1){L.p=cd01((t-L.t0)/1000,12);if(L.p>.995)L.p=1;mv=true}
+  const ta=on?1:0;if(L.a!==ta){L.a=reduce?ta:Math.max(0,Math.min(1,L.a+(ta?dt/.18:-dt/.6)));mv=true}if(!on&&L.a<=0){L.id=null;this.path.ids=[]}
+  const P=this.path;if(P.ids.length&&L.p>=1&&P.a<1&&on){P.a=reduce?1:Math.min(1,P.a+dt/.4);mv=true}if(P.oa>0){P.oa=reduce?0:Math.max(0,P.oa-dt/.6);mv=true}if(!on&&P.a>0){P.a=Math.max(0,P.a-dt/.6);mv=true}
+  return mv||on}
+ tipTick(t){const id=this.tipId;if(!id)return;const n=this.g&&this.g.by[id],a=n&&this.anchorOf(id);if(!a){this.tip.classList.remove("on");return}
+  if(t-this.tipAt>250){this.tipAt=t;const h=this.tipHTML(n);if(this.tip._h!==h){this.tip._h=h;this.tip.innerHTML=h;this.tw=this.tip.offsetWidth;this.th=this.tip.offsetHeight}}
+  const r=a.x+a.w+8+this.tw>this.W-4,x=r?a.x-8-this.tw:a.x+a.w+8,y=Math.max(0,Math.min(this.Hc-this.th,a.y+a.h/2-this.th/2)),k=`${x|0},${y|0}`;
+  if(this.tip._p!==k){this.tip._p=k;this.tip.style.transform=`translate(${Math.max(0,x).toFixed(0)}px,${y.toFixed(0)}px)`}
+  if(!this.tip.classList.contains("on")){this.tip.classList.add("on");const b=this.btn(id);b&&b.setAttribute("aria-describedby",this.tip.id)}}
+ tipHTML(n){const g=this.g,T=g.T,tm=v=>v==null?"now":"+"+mmss(v)+"."+Math.floor(v%1000/100),row=(k,v)=>v?`<dt>${k}</dt><dd>${v}</dd>`:"";
+  const dur=n.tStart!=null?((n.tEnd??T)-n.tStart):null,q=n.tStart!=null&&n.tStart-n.tBorn>200?n.tStart-n.tBorn:0,rt=n.state==="running"||n.state==="thinking"?Math.round(nodeRate(g,n,T)):0;
+  const S=(this.w.steps||[])[n.i],web=n.kind==="desk"&&S&&(S.searches||0)?`${S.searches} search${S.searches>1?"es":""}`:"",
+   after=n.after&&n.after.length?n.after.map(a=>(g.by[a]||{}).rn).filter(Boolean).join(", "):"";
+  const sub=n.kind==="desk"?esc(S&&(S.task||S.focus)||""):esc(nodeInfo(this.w,n.id).split(" · ").slice(1).join(" · "));
+  return`<div class="mt-h"><b>${esc(n.kind==="desk"?`${n.rn} · ${LANEN[n.role]||n.role}`:n.label)}</b><span class="mt-s st-${n.state}"><i></i>${STW[n.state]||""}</span></div>${sub?`<p>${sub}</p>`:""}<dl>`+
+   row("Tokens",`<span class="num">${ft(Math.round(n.tok||0))}</span>`)+row("Rate",rt?`<span class="num">${ft(rt)}</span> tok/s`:"")+
+   row("Time",n.tStart!=null?`<span class="num">${tm(n.tStart)} → ${n.tEnd==null?"now":tm(n.tEnd)}</span>${dur>0?` · <span class="num">${(dur/1000).toFixed(1)} s</span>`:""}${q?` · queued <span class="num">${(q/1000).toFixed(1)} s</span>`:""}`:"")+
+   row("Effort",n.effort&&TIERS[n.effort]?TIERS[n.effort].w[0].toUpperCase()+TIERS[n.effort].w.slice(1):"")+row("Web",web)+row("After",after)+`</dl>`}
 }
-/* the field: the same run as a gravity graph. Obsidian's four forces (centre, repel, link force, link distance)
-   on a d3-style integrator (velocity Verlet, alpha decay .0228 ≈ 300 ticks, velocity decay .4, soft collide), plus a pull toward each column */
-/* Hiroyuki Sato's metaball, after Varun Vachhar: the membrane between two circles, as one path; no filter, so no per-frame blur */
+MapBase.n=0;
+/* colours are read once per theme; a theme change repaints every map */
+{const re=()=>FM.forEach(m=>{m.C=null;m.go()});try{matchMedia("(prefers-color-scheme: dark)").addEventListener("change",re)}catch(e){}new MutationObserver(re).observe(document.documentElement,{attributes:true,attributeFilter:["data-theme","class"]})}
+/* ---------- the flow (R2 §3.1): real time, one lane per role ----------
+   Time runs left to right on a real axis whose domain grows on a spring while the run is live. Each lane is born with
+   its first node; desks of one role stack as sub-rows. A bar is a node's life: a dashed stub while it waits, a body
+   while it runs (feathered at the head), closed caps when it files, and a 2px ribbon along its foot whose strength is
+   its token rate. The staffing and routing decisions are diamonds, with the delegation drawn from the decision to
+   the bar it opened. Axis labels, lane names and the now tag are DOM, so their numbers sit in tabular figures. */
+const FLANES=["orchestrator","research","finance","legal","builder","arbiter","tool"],FSHORT={orchestrator:"Orc",research:"Res",finance:"Fin",legal:"Leg",builder:"Drf",arbiter:"Arb",tool:"Exa"};
+const laneOf=n=>n.kind==="orch"?"orchestrator":n.kind==="arb"||n.kind==="ans"?"arbiter":n.kind==="doc"?"builder":n.kind==="tool"?"tool":n.kind==="desk"?(FLANES.includes(n.role)?n.role:"research"):null;
+const tickLab=ms=>{const s=Math.round(ms/1000);return s===0?"0":s<60?s+" s":s%60?Math.floor(s/60)+":"+pad(s%60):s/60+" min"};
+class FlowMap extends MapBase{
+ constructor(host,get,opt={}){super(host,get,opt,"flow");Object.assign(this,{B:new Map(),Q:[],P:[],lastB:-1e9,lanes:new Map(),D:4000,cp:0});
+  this.lab=document.createElement("div");this.lab.className="map-lanes";this.axd=document.createElement("div");this.axd.className="map-axis";this.nowT=document.createElement("span");this.nowT.className="map-now";this.nowT.textContent="now";this.axd.append(this.nowT);
+  this.box.append(this.lab,this.axd)}
+ get G(){return this.W<560?34:96}
+ x(t){return this.G+Math.max(0,t)/this.D*(this.W-this.G-10)}
+ rebuild(){const g=this.g,anim=this.opt.replay||this.opt.live||g.live,seen=new Set();
+  g.N.forEach(n=>{const ln=laneOf(n);if(!ln)return;seen.add(n.id);let b=this.B.get(n.id);if(!b){b={id:n.id,vis:false,p:0,lane:ln};this.B.set(n.id,b);this.Q.push(n.id)}b.n=n;b.lane=ln});
+  for(const id of [...this.B.keys()])if(!seen.has(id))this.B.delete(id);
+  this.Q=this.Q.filter(id=>this.B.has(id)).sort((a,b)=>this.B.get(a).n.seq-this.B.get(b).n.seq);
+  if(this.fresh&&!anim){this.Q.forEach(id=>{const b=this.B.get(id);b.vis=true;b.p=1});this.Q=[];this.cp=1}
+  this.pack(this.fresh);if(this.fresh)this.D=this.dom()}
+ dom(){const g=this.g;return g.live?Math.max(g.T*1.08,4000):Math.max(g.tEnd||0,1000)}
+ /* lanes: born with their first visible node; sub-rows packed greedily so that a lane is only as tall as it must be */
+ pack(snap){const AX=16,RH=18,PADL=6;let y=AX;const L=new Map();
+  FLANES.forEach(ln=>{const bs=[...this.B.values()].filter(b=>b.vis&&b.lane===ln).sort((a,b)=>a.n.tBorn-b.n.tBorn||a.n.seq-b.n.seq);if(!bs.length)return;const ends=[];
+   bs.forEach(b=>{const s=b.n.tBorn,e=b.n.tEnd==null?Infinity:b.n.tEnd;let r=ends.findIndex(v=>v+150<=s);if(r<0){r=ends.length;ends.push(e)}else ends[r]=e;b.row=r});
+   const h=PADL*2+ends.length*RH,o=this.lanes.get(ln)||{y,h,yv:0,hv:0};o.ty=y;o.th=h;if(snap||reduce){o.y=y;o.h=h}L.set(ln,o);y+=h});
+  this.lanes=L;this.H=y+6;if(snap||!this.Hc)this.Hc=this.H}
+ cy(b){const l=this.lanes.get(b.lane);return l?l.y+6+b.row*18+9:0}
+ step(dt,t){const g=this.g;if(!g)return false;let mv=false;
+  if(this.Q.length){const gap=reduce?0:140;while(this.Q.length&&t-this.lastB>=gap){const b=this.B.get(this.Q[0]),p=b.n.parent&&this.B.get(b.n.parent);if(p&&!p.vis)break;this.Q.shift();b.vis=true;b.bt=t;this.lastB=t;if(gap)break}mv=true}
+  this.pack(false);for(const l of this.lanes.values()){if(reduce){l.y=l.ty;l.h=l.th;continue}mv=cds(l,"y",l.ty,14,dt)||mv;mv=cds(l,"h",l.th,14,dt)||mv}
+  if(Math.abs(this.H-this.Hc)>.4){if(reduce)this.Hc=this.H;else cds(this,"Hc",this.H,14,dt);mv=true}else this.Hc=this.H;
+  const tD=this.dom();if(Math.abs(tD-this.D)>1){if(reduce)this.D=tD;else cds(this,"D",tD,6,dt);mv=true}else this.D=tD;
+  for(const b of this.B.values())if(b.vis&&b.p<1){b.p=reduce?1:Math.min(1,b.p+dt/.28);mv=true}
+  if(!g.live&&!this.Q.length&&this.cp<1){this.cp=reduce?1:Math.min(1,this.cp+dt/.6);mv=true}
+  mv=this.flow(dt)||mv;mv=this.light(t)||mv;return mv||g.live}
+ /* the edges the flow draws: decisions to the bars they opened, dependencies, and the notes going back to be weighed */
+ edges(){const g=this.g,out=[];g.E.forEach(e=>{const a=this.B.get(e.a),b=this.B.get(e.b);if(!a||!b||!a.vis||!b.vis||a.p<1||b.p<1)return;const bn=b.n,an=a.n;let p;
+   if(e.kind==="delegate"||e.kind==="route"||e.kind==="write"){const x1=this.x(bn.tBorn),y1=this.cy(a),x2=this.x(bn.tStart??bn.tBorn),y2=this.cy(b);if(Math.abs(y2-y1)<2)return;const dy=(y2-y1)*.55,s=Math.sign(y2-y1);p=[[x1,y1+s*4],[x1,y1+dy],[x2,y2-dy*.4],[x2,y2-s*6]]}
+   else if(e.kind==="depend"){if(an.tEnd==null)return;const x1=this.x(an.tEnd),y1=this.cy(a),x2=this.x(bn.tStart??bn.tBorn),y2=this.cy(b),dx=Math.max(8,(x2-x1)*.5);p=[[x1,y1],[x1+dx,y1],[x2-dx,y2],[x2,y2]]}
+   else if(e.kind==="return"){if(an.tEnd==null)return;const x1=this.x(an.tEnd),y1=this.cy(a),x2=this.x(e.tBorn),y2=this.cy(b),dy=(y2-y1)*.55;p=[[x1,y1],[x1,y1+dy],[x2,y2-dy],[x2,y2-Math.sign(y2-y1)*6]]}
+   if(p)out.push({e,p})});return out}
+ flow(dt){const g=this.g,T=g.T;if(!g.live||reduce){this.P=this.P.filter(p=>(p.d+=72*dt)<p.len);return this.P.length>0}
+  const E=this.edges().filter(o=>(o.e.kind==="delegate"||o.e.kind==="return")&&o.e.liveAt(T));let tot=0;const lam=E.map(o=>{const n=g.by[o.e.kind==="delegate"?o.e.b:o.e.a],q=Math.min(9,.8+nodeRate(g,n,T)/60),len=blen(o.p);tot+=q*len/72;return[o,q,len]}),sc=tot>60?60/tot:1;
+  this.acc=this.acc||{};lam.forEach(([o,q,len])=>{const k=o.e.id;this.acc[k]=(this.acc[k]||this.rng())+q*sc*dt;while(this.acc[k]>=1){this.acc[k]-=1-(this.rng()-.5)*.3;if(this.P.length<60)this.P.push({id:k,d:0,len})}});
+  this.P=this.P.filter(p=>(p.d+=72*dt)<p.len);return this.P.length>0}
+ pulse(a,b){if(reduce)return;const o=this.edges().find(o=>o.e.a===a&&o.e.b===b);if(!o)return;this.P.push({id:o.e.id,d:0,len:blen(o.p)});this.go()}
+ visible(){return[...this.B.values()].filter(b=>b.vis).sort((a,b)=>a.n.seq-b.n.seq).map(b=>b.id)}
+ span(b){const n=b.n,T=this.g.T,x0=this.x(n.tBorn),xs=n.tStart==null?null:this.x(n.tStart),xe=n.tStart==null?null:Math.max(xs+4,this.x(n.tEnd??T));return{x0,xs,xe}}
+ anchorOf(id){const b=this.B.get(id);if(!b||!b.vis)return null;const s=this.span(b),y=this.cy(b),l=s.xs??s.x0,r=s.xe??this.x(this.g.T);return{x:l,y:y-6,w:Math.max(6,(r-l)*b.p),h:12}}
+ hitAt(x,y){for(const b of this.B.values()){if(!b.vis)continue;const a=this.anchorOf(b.id),x0=Math.min(a.x,this.span(b).x0);if(x>=x0-3&&x<=a.x+a.w+3&&y>=a.y-3&&y<=a.y+a.h+3)return b.id}return null}
+ crit(){if(this._ck===this.g)return this._cs;const bs=[...this.B.values()].filter(b=>b.n.tEnd!=null&&b.n.tStart!=null),s=new Set();let b=bs.sort((a,b)=>b.n.tEnd-a.n.tEnd)[0];
+  while(b&&!s.has(b.id)){s.add(b.id);const n=b.n,pre=[...(n.after||[]),n.parent].map(id=>this.B.get(id)).filter(p=>p&&p.n.tEnd!=null&&p.n.tEnd<=n.tStart+50);b=pre.sort((a,c)=>c.n.tEnd-a.n.tEnd)[0]}
+  this._ck=this.g;this._cs=s;return s}
+ paint(x,t){const C=this.C,g=this.g;if(!g)return;const W=this.W,G=this.G,H=this.Hc,T=g.T,ink=C["--ink"];
+  /* the frame: lane hairlines and names, the time grid, the axis labels */
+  x.lineWidth=1;let first=true;const labs=[];for(const [ln,l] of this.lanes){if(!first){x.globalAlpha=.08;x.strokeStyle=ink;x.beginPath();x.moveTo(0,Math.round(l.y)+.5);x.lineTo(W,Math.round(l.y)+.5);x.stroke()}first=false;labs.push([ln,l.y+l.h/2])}
+  const step=[1,2,5,10,15,30,60,120,300,600].map(s=>s*1000).find(s=>s/this.D*(W-G-10)>=64)||600000,ticks=[];for(let v=0;v<=this.D+1;v+=step)ticks.push(v);
+  x.globalAlpha=.06;x.strokeStyle=ink;x.beginPath();ticks.forEach(v=>{const X=Math.round(this.x(v))+.5;x.moveTo(X,16);x.lineTo(X,H)});x.stroke();
+  this.frame(labs,ticks);
+  /* edges at rest: decisions faint, dependencies fainter, returns only on hover, lens or once the run has settled */
+  const E=this.edges();for(const o of E){const e=o.e,near=(this.hov&&(e.a===this.hov||e.b===this.hov))||(this.lens&&(e.a===this.lens||e.b===this.lens));if(e.kind==="return"&&!near&&g.live)continue;
+   x.globalAlpha=near?.6:(e.kind==="depend"?.1:e.kind==="return"?.08:.14)*Math.min(this.dim(e.a),this.dim(e.b));x.strokeStyle=ink;x.lineWidth=near?1.25:1;x.setLineDash(e.kind==="depend"?[2,3]:[]);
+   const p=o.p;x.beginPath();x.moveTo(...p[0]);x.bezierCurveTo(...p[1],...p[2],...p[3]);x.stroke();x.setLineDash([]);
+   if(e.kind!=="depend"){const [ex,ey]=p[3],[cx,cy]=p[2],a=Math.atan2(ey-cy,ex-cx);x.fillStyle=ink;x.beginPath();x.moveTo(ex,ey);x.lineTo(ex-3.5*Math.cos(a-.5),ey-3.5*Math.sin(a-.5));x.lineTo(ex-3.5*Math.cos(a+.5),ey-3.5*Math.sin(a+.5));x.fill()}}
+  /* decisions: hairline diamonds on the top edge of whoever made them, clear of the bar's label */
+  x.lineWidth=1;g.D.forEach(d=>{const who=d.verb==="plan"||d.verb==="route"?"o":g.by.v?"v":"o",b=this.B.get(who),tg=d.targets[0]&&this.B.get(d.targets[0]);if(!b||!b.vis||tg&&!tg.vis)return;
+   const X=this.x(d.t),Y=this.cy(b)-6.5;x.globalAlpha=.7*this.dim(who);x.strokeStyle=ink;x.fillStyle=C["--well"];x.beginPath();x.moveTo(X,Y-3.5);x.lineTo(X+3.5,Y);x.lineTo(X,Y+3.5);x.lineTo(X-3.5,Y);x.closePath();x.fill();x.stroke()});
+  /* bars */
+  x.font=`500 9.5px ${C.font}`;x.textBaseline="middle";if("letterSpacing" in x)x.letterSpacing=".06em";const cs=this.crit();
+  for(const id of this.visible()){const b=this.B.get(id),n=b.n,al=this.dim(id)*Math.min(1,b.p*2),col=C.role(n.role),y=this.cy(b),s=this.span(b),st=n.state;x.globalAlpha=al;
+   const qEnd=n.tStart!=null?s.xs:this.x(T);if(qEnd-s.x0>2){x.strokeStyle=col;x.globalAlpha=al*.55;x.setLineDash([2,3]);x.lineDashOffset=n.tStart==null&&g.live&&!reduce?-t/60:0;x.beginPath();x.moveTo(s.x0,y+.5);x.lineTo(qEnd,y+.5);x.stroke();x.setLineDash([]);x.globalAlpha=al}
+   if(s.xs==null)continue;const xe=s.xs+(s.xe-s.xs)*b.p,w=xe-s.xs,live=st==="running"||st==="thinking",F=live?Math.min(16,w*.5):0;
+   x.fillStyle=col;x.globalAlpha=al*.14;rr(x,s.xs,y-6,w-F,12,3,F>0?1:0);x.fill();x.globalAlpha=al*.7;x.strokeStyle=col;rr(x,s.xs+.5,y-5.5,w-F-(F>0?0:1),11,3,F>0?2:0);x.stroke();
+   if(F>0){const gr=x.createLinearGradient(xe-F,0,xe,0);gr.addColorStop(0,col);gr.addColorStop(1,"transparent");x.globalAlpha=al*(st==="thinking"?.7:.14);x.fillStyle=gr;x.strokeStyle=gr;
+    if(st==="thinking"){x.beginPath();x.moveTo(xe-F,y-5.5);x.lineTo(xe,y-5.5);x.moveTo(xe-F,y+5.5);x.lineTo(xe,y+5.5);x.stroke()}else{x.fillRect(xe-F,y-6,F,12);x.globalAlpha=al*.7;x.beginPath();x.moveTo(xe-F,y-5.5);x.lineTo(xe,y-5.5);x.moveTo(xe-F,y+5.5);x.lineTo(xe,y+5.5);x.stroke()}}
+   /* the throughput ribbon: a whisper of the token raster */
+   if(n.sigKey){const j=g.sig.col(n.sigKey),fr=g.sig.fr,fw=this.x(250)-this.x(0);if(j>=0){x.fillStyle=col;for(let i=0;i<fr.length;i++){const v=fr[i][j];if(!v)continue;const X=this.x((g.sig.off+i)*250);if(X<s.xs||X>xe)continue;x.globalAlpha=al*Math.min(.85,v/30);x.fillRect(X,y+4,Math.max(1,fw),2)}}}
+   /* web calls: open ticks for searches, filled for reads, on the bar's top edge */
+   const calls=((this.w.map||{}).calls||[]).filter(c=>n.kind==="desk"?c.i===n.i:n.kind==="arb"?c.i===-1:n.kind==="tool");x.strokeStyle=col;x.fillStyle=col;x.globalAlpha=al*.8;
+   calls.forEach(c=>{const X=this.x(c.t||0);if(X>xe)return;if(c.fetch)x.fillRect(X-.5,y-9,1.5,6);else{x.beginPath();x.moveTo(X+.5,y-9);x.lineTo(X+.5,y-3);x.stroke()}});
+   x.globalAlpha=al;x.strokeStyle=st==="failed"?C["--bad"]:col;if(st==="failed"&&b.p>=1){x.beginPath();x.moveTo(xe-3,y-3);x.lineTo(xe+3,y+3);x.moveTo(xe+3,y-3);x.lineTo(xe-3,y+3);x.stroke()}
+   if(st==="held"&&b.p>=1){x.beginPath();x.moveTo(xe+2.5,y-4);x.lineTo(xe+2.5,y+4);x.moveTo(xe+5,y-4);x.lineTo(xe+5,y+4);x.stroke()}
+   if(cs.has(id)&&this.cp>0&&!g.live){x.globalAlpha=.4*al;x.strokeStyle=C["--gold"];x.beginPath();x.moveTo(s.xs,y+8.5);x.lineTo(s.xs+(xe-s.xs)*this.cp,y+8.5);x.stroke()}
+   if(this.lens===id||this.hov===id||this.foc===id){x.globalAlpha=al;x.strokeStyle=C["--gold"];x.lineWidth=this.foc===id?1.25:1;rr(x,s.xs-1.5,y-7.5,w+3,15,4);x.stroke();x.lineWidth=1}
+   /* label: inside when it fits, else to the right, else not at all */
+   const lb=n.kind==="desk"?`${n.rn} · ${n.sub}`:n.label,lw=x.measureText(lb).width;x.globalAlpha=al*Math.min(1,b.p);
+   const halo=(t,X)=>{x.lineWidth=3;x.lineJoin="round";x.strokeStyle=C["--n-sep"];x.strokeText(t,X,y+.5);x.fillStyle=C["--mute"];x.fillText(t,X,y+.5);x.lineWidth=1};x.textAlign="left";
+   if(lw+14<w-F){x.fillStyle=C["--text"];x.fillText(lb,s.xs+8,y+.5)}else if(xe+8+lw<W-6&&!this.rightBusy(b,xe+8+lw))halo(lb,xe+8);else if(s.xs-8-lw>G+4)halo(lb,s.xs-8-lw)}
+  /* particles on live delegations and returns */
+  if(this.P.length){const M=new Map(E.map(o=>[o.e.id,o]));x.globalAlpha=.55;for(const p of this.P){const o=M.get(p.id);if(!o)continue;const [px,py]=bez(o.p,Math.min(1,p.d/p.len)),src=g.by[o.e.a];x.fillStyle=C.role(src&&src.role);x.beginPath();x.arc(px,py,1.8,0,6.2832);x.fill()}}
+  /* now: a gold hairline while live, and the one light at the head of the busiest bar */
+  if(g.live){const X=this.x(T);x.globalAlpha=.6;x.strokeStyle=C["--gold"];x.beginPath();x.moveTo(Math.round(X)+.5,16);x.lineTo(Math.round(X)+.5,H);x.stroke()}
+  const L=this.lt,lb=L.id&&this.B.get(L.id);if(lb&&lb.vis&&L.a>0){const s=this.span(lb),X=s.xe??this.x(T),Y=this.cy(lb),R=10;x.globalAlpha=L.a;x.drawImage(this.glow,X-R,Y-R,R*2,R*2)}
+  x.globalAlpha=1}
+ rightBusy(b,xr){const y=this.cy(b);for(const o of this.B.values()){if(o===b||!o.vis||Math.abs(this.cy(o)-y)>2)continue;const s=this.span(o),l=s.xs??s.x0;if(l>this.span(b).xs&&l<xr)return true}return false}
+ /* the DOM layer: lane names in the gutter, tick labels on the axis, the now tag; reused, moved only by transform */
+ frame(labs,ticks){const nar=this.W<560,k=labs.map(([ln])=>ln).join()+nar;if(this._lk!==k){this._lk=k;this.lab.innerHTML=labs.map(([ln])=>`<span data-l="${ln}">${nar?FSHORT[ln]:LANEN[ln]}</span>`).join("")}
+  labs.forEach(([ln,y],i)=>{const e=this.lab.children[i];if(e&&e._y!==(y|0)){e._y=y|0;e.style.transform=`translateY(${(y-6).toFixed(1)}px)`}});
+  const tk=[...this.axd.querySelectorAll("i")];ticks.forEach((v,i)=>{let e=tk[i];if(!e){e=document.createElement("i");e.className="num";this.axd.append(e)}const l=tickLab(v);if(e.textContent!==l)e.textContent=l;const X=this.x(v).toFixed(1);if(e._x!==X){e._x=X;e.style.transform=`translateX(${X}px)`}});
+  tk.slice(ticks.length).forEach(e=>e.remove());const live=this.g.live;this.nowT.classList.toggle("on",live);if(live)this.nowT.style.transform=`translateX(${this.x(this.g.T).toFixed(1)}px)`}
+}
+/* a bar's outline: closed and rounded (0), square on the right for a body that feathers into its head (1), or open on the right (2) */
+function rr(x,X,Y,w,h,r,m=0){w=Math.max(0,w);r=Math.min(r,w/2,h/2);x.beginPath();
+ if(m===2){x.moveTo(X+w,Y);x.lineTo(X+r,Y);x.arcTo(X,Y,X,Y+h,r);x.arcTo(X,Y+h,X+w,Y+h,r);x.lineTo(X+w,Y+h);return}
+ x.moveTo(X+r,Y);if(m===1){x.lineTo(X+w,Y);x.lineTo(X+w,Y+h)}else{x.arcTo(X+w,Y,X+w,Y+h,r);x.arcTo(X+w,Y+h,X,Y+h,r)}x.lineTo(X+r,Y+h);x.arcTo(X,Y+h,X,Y,r);x.arcTo(X,Y,X+w,Y,r);x.closePath()}
+const bez=(p,u)=>{const m=1-u;return[0,1].map(i=>m*m*m*p[0][i]+3*m*m*u*p[1][i]+3*m*u*u*p[2][i]+u*u*u*p[3][i])};
+const blen=p=>{let l=0,q=p[0];for(let i=1;i<=12;i++){const r=bez(p,i/12);l+=Math.hypot(r[0]-q[0],r[1]-q[1]);q=r}return l};
+/* ---------- the field (R2 §3.2): order, volume and traffic ----------
+   x is the birth wave, so the map reads left to right in execution order; y is a d3-style simulation (Obsidian's
+   four forces, velocity decay .4, alpha decay .0228) on a seeded stream, so a run lands in the same place on every
+   replay. Area is tokens on an absolute scale. A child buds out of its parent on a metaball neck and is released;
+   edges draw in only once both ends exist; particles carry the current token rate in the direction of the work;
+   one gold light sits on the node doing the most, and the path the work arrived by glows faintly under it. */
+const TOK_REF=1000,R_REF=10,RMIN={site:3,more:3,desk:5},BUD=.7,PMAX=300;/* calibrated to real runs: a desk files 500 to 4 000 tokens */
+class FieldMap extends MapBase{
+ constructor(host,get,opt={}){super(host,get,opt,"field");Object.assign(this,{S:new Map(),L:new Map(),Q:[],P:[],lastB:-1e9,cam:{w:132,x0:40},cw:{w:132,x0:40}});this.al=1;this.travel=true}
+ radius(n){const k=n.kind==="desk"?"desk":n.kind,mx=this.opt.fs?33:22,raw=R_REF*(this.opt.fs?1.4:1)*Math.sqrt(Math.max(0,n.tok||0)/TOK_REF),mn=RMIN[k]??7;return{r:Math.max(mn,Math.min(mx,raw)),cl:raw>mx}}
+ label(n){return n.kind==="desk"?`${n.rn} · ${fitS(n.sub,20)}`:fitS(n.label,22)}
+ rebuild(){const g=this.g,W=this.W,narrow=W<560,fs=this.opt.fs,card=this.opt.card,wv={};let mx=0;
+  g.N.forEach(n=>{if(n.kind==="ans"||n.kind==="doc")return;wv[n.id]=n.parent&&wv[n.parent]!=null?wv[n.parent]+1:0;mx=Math.max(mx,wv[n.id])});g.N.forEach(n=>{if(wv[n.id]==null)wv[n.id]=mx+1});
+  const N=g.N.length;this.H=fs?Math.max(320,Math.round(this.host.clientHeight-40)):card?Math.round(Math.min(320,Math.max(180,130+N*10))):Math.round(narrow?Math.min(560,Math.max(260,200+N*15)):Math.min(460,Math.max(230,160+N*12)));
+  if(this.fresh||!this.Hc)this.Hc=this.H;this.rep=fs?190:narrow?70:95;this.sp=fs?Math.min(2.6,W/440):narrow?1:Math.min(1.5,W/560);this.v=fs?110:72;
+  const anim=this.opt.replay||this.opt.live||g.live,seen=new Set();let heat=0;
+  g.N.forEach(n=>{seen.add(n.id);let s=this.S.get(n.id);if(!s){s={id:n.id,x:W/2,y:this.Hc/2,vx:0,vy:0,r:0,rv:0,a:0,vis:false};this.S.set(n.id,s);this.Q.push(n.id);heat=.5}
+   const R=this.radius(n);if(s.n&&Math.abs(s.R-R.r)>1)heat=Math.max(heat,.08);s.n=n;s.wave=wv[n.id];s.R=R.r;s.cl=R.cl;const lb=this.label(n);if(s.lb!==lb){s.lb=lb;s.lw=0}});
+  for(const id of [...this.S.keys()])if(!seen.has(id)){this.S.delete(id);heat=.3}
+  this.Q=this.Q.filter(id=>this.S.has(id)).sort((a,b)=>this.S.get(a).n.seq-this.S.get(b).n.seq);
+  const se=new Set();g.E.forEach(e=>{se.add(e.id);let l=this.L.get(e.id);if(!l){l={p:0,acc:this.rng()};this.L.set(e.id,l)}l.e=e});for(const id of [...this.L.keys()])if(!se.has(id))this.L.delete(id);
+  const mk=this.host.querySelector(".mvk");if(mk){const roles=[...new Set((this.w.steps||[]).map(s=>s.role))],html=roles.map(r=>`<span><i style="background:${RC[r]}"></i>${ROLE[r]}</span>`).join("");if(mk.innerHTML!==html)mk.innerHTML=html}
+  /* a run opened after the fact lands settled: every node placed, 300 ticks computed at once (d3's static layout) */
+  if(this.fresh&&!anim){this.Q.forEach(id=>this.release(id,0,true));this.Q=[];this.colW(true);for(let i=0;i<300;i++)this.tick();this.al=0;this.S.forEach(s=>{s.r=s.R;s.a=1});this.L.forEach(l=>l.p=1)}
+  else this.al=Math.max(this.al,heat)}
+ colW(snap){const vw=[...this.S.values()].filter(s=>s.vis).map(s=>s.wave),n=vw.length?Math.max(...vw)+1:1,pad=this.opt.fs?90:64,w=n>1?Math.min(this.opt.fs?210:132,(this.W-2*pad)/(n-1)):0,x0=(this.W-w*(n-1))/2;
+  this.cw={w,x0};if(snap){this.cam.w=w;this.cam.x0=x0}}
+ cx(s){return this.cam.x0+s.wave*this.cam.w}
+ /* a birth: the child leaves its parent's centre toward its wave, swelling as it goes */
+ release(id,t,now){const s=this.S.get(id),n=s.n,p=n.parent&&this.S.get(n.parent);s.vis=true;s.bt=t;this.colW(now);
+  if(!p||!p.vis){s.x=this.cx(s)+(this.rng()-.5)*20;s.y=this.Hc/2+(this.rng()-.5)*30;s.bud=false;if(now){s.r=s.R;s.a=1}return}
+  const sib=this.g.N.filter(m=>m.parent===n.parent&&m.kind===n.kind),k=sib.indexOf(n),nn=sib.length,tx=this.cx(s)-p.x,base=Math.abs(tx)<16?Math.PI/2:tx>0?0:Math.PI,
+   ang=base+(nn>1?(k/(nn-1)-.5)*Math.min(2.5,.5*nn):(this.rng()-.5)*.6);s.dir=[Math.cos(ang),Math.sin(ang)];s.D=Math.max(this.rest(n,p.n)*.8,(Math.max(1,p.R)+s.R*2.6)*1.4);s.par=p;
+  if(now||reduce){s.x=p.x+s.dir[0]*s.D;s.y=p.y+s.dir[1]*s.D;s.bud=false;s.r=s.R;s.a=1}else{s.x=p.x;s.y=p.y;s.bud=true;s.r=.1}}
+ rest(a,b){const k=(this.g.E.find(e=>e.a===b.id&&e.b===a.id||e.a===a.id&&e.b===b.id)||{}).kind,ra=this.radius(a).r,rb=this.radius(b).r,sp=this.sp;
+  return(k==="depend"?44+ra+rb:k==="delegate"||k==="return"?54*sp+ra+rb:k==="call"?70*sp+rb:k==="fetch"?30+ra*.3+rb:46*sp+ra+rb)*FORCES.dist}
+ clamp(s){const px=Math.max(s.r+2,(s.lw||0)/2+4);s.x=Math.min(this.W-px,Math.max(px,s.x));s.y=Math.min(this.Hc-s.r-17,Math.max(s.r+8,s.y))}
+ tick(){const A=this.al,L=[...this.S.values()].filter(s=>s.vis&&!s.bud),n=L.length,H=this.Hc;
+  for(const l of this.L.values()){const e=l.e;if(e.kind==="return")continue;const a=this.S.get(e.a),b=this.S.get(e.b);if(!a||!b||!a.vis||!b.vis||a.bud||b.bud)continue;
+   let dx=b.x+b.vx-a.x-a.vx,dy=b.y+b.vy-a.y-a.vy;const d=Math.hypot(dx,dy)||1,k=(d-this.rest(a.n,b.n))/d*A*(e.kind==="depend"?.12:.4)*FORCES.link;dx*=k;dy*=k;b.vx-=dx*.5;b.vy-=dy*.5;a.vx+=dx*.5;a.vy+=dy*.5}
+  for(let i=0;i<n;i++){const a=L[i];for(let j=i+1;j<n;j++){const b=L[j];let dx=b.x-a.x,dy=b.y-a.y,d2=dx*dx+dy*dy;if(d2<1){dx=this.rng()-.5;dy=this.rng()-.5;d2=.5}
+    const f=this.rep*FORCES.repel*(2+(a.R+b.R)/8)*A/Math.max(d2,256);a.vx-=dx*f;a.vy-=dy*f;b.vx+=dx*f;b.vy+=dy*f;
+    const d=Math.sqrt(d2),min=a.R+b.R+18;if(d<min){const p=(min-d)/d*.35;a.vx-=dx*p;a.vy-=dy*p;b.vx+=dx*p;b.vy+=dy*p}
+    if(Math.abs(dy)<20&&Math.abs(dx)<((a.lw||60)+(b.lw||60))/2+8){const p=(20-Math.abs(dy))*.09*(dy<0?-1:1);a.vy-=p;b.vy+=p}}}
+  for(const s of L){s.vx+=(this.cx(s)-s.x)*.14*A*FORCES.center;s.vy+=(H/2-s.y)*.018*A*FORCES.center}
+  for(const s of L){if(s.fx!=null){s.x=s.fx;s.y=s.fy;s.vx=s.vy=0}else{s.vx*=.6;s.vy*=.6;s.x+=s.vx;s.y+=s.vy}this.clamp(s)}
+  this.al+=(0-this.al)*.0228}
+ step(dt,t){let mv=false;const g=this.g;if(!g)return false;
+  if(this.Q.length){const gap=reduce?0:140;while(this.Q.length&&t-this.lastB>=gap){const s=this.S.get(this.Q[0]),p=s.n.parent&&this.S.get(s.n.parent);if(p&&!p.vis)break;this.Q.shift();this.release(s.id,t,false);this.lastB=t;this.al=Math.max(this.al,.35);if(gap)break}mv=true}
+  this.colW(reduce);mv=(cds(this.cam,"w",this.cw.w,12,dt)|cds(this.cam,"x0",this.cw.x0,12,dt))>0||mv;
+  if(Math.abs(this.H-this.Hc)>.4){if(reduce)this.Hc=this.H;else cds(this,"Hc",this.H,14,dt);mv=true}else this.Hc=this.H;
+  for(const s of this.S.values()){if(!s.vis)continue;
+   if(s.bud){const u=(t-s.bt)/1000,p=s.par;if(u>=BUD||!p){s.bud=false;s.vx=s.dir[0]*1.6;s.vy=s.dir[1]*1.6;this.al=Math.max(this.al,.35)}else{const e=cd01(u,10);s.x=p.x+s.dir[0]*s.D*e;s.y=p.y+s.dir[1]*s.D*e;this.clamp(s)}mv=true}
+   if(reduce){s.r=s.R;s.a=1}else{if(cds(s,"r",s.R,14,dt))mv=true;if(s.a<1){s.a=Math.min(1,s.a+dt/.28);mv=true}}s.r=Math.max(.1,s.r)}
+  if(this.al>.002||this.drag){if(reduce)for(let i=0;i<300&&this.al>.002;i++)this.tick();else this.tick();mv=true}
+  for(const l of this.L.values()){if(l.p>=1)continue;const a=this.S.get(l.e.a),b=this.S.get(l.e.b);if(a&&b&&a.vis&&b.vis&&!a.bud&&!b.bud){l.p=reduce?1:Math.min(1,l.p+dt/.28);mv=true}else if(this.Q.length||[...this.S.values()].some(s=>s.bud))mv=true}
+  mv=this.flow(dt,t)||mv;mv=this.light(t)||mv;return mv||!!this.drag}
+ /* particles: emitted per live edge at the token rate, advanced at a fixed speed in real time, capped for the whole map */
+ geo(l){const a=this.S.get(l.e.a),b=this.S.get(l.e.b);if(!a||!b)return null;const dx=b.x-a.x,dy=b.y-a.y,d=Math.hypot(dx,dy)||1,k=.08*d;return{a,b,c:[(a.x+b.x)/2-dy/d*k,(a.y+b.y)/2+dx/d*k],len:d*1.01}}
+ flow(dt,t){const g=this.g,T=g.live?g.T:-1,cap=this.opt.card?120:PMAX,lam=[];let tot=0;
+  if(g.live&&!reduce)for(const l of this.L.values()){if(l.p<1||l.e.kind==="depend"||!l.e.liveAt(T))continue;const src=g.by[l.e.kind==="delegate"||l.e.kind==="write"||l.e.kind==="route"?l.e.b:l.e.a],
+    r=l.e.kind==="call"||l.e.kind==="fetch"?240:nodeRate(g,src,T),G=this.geo(l);if(!G)continue;const q=Math.min(9,.8+r/60);lam.push([l,q]);tot+=q*G.len/this.v}
+  const sc=tot>cap?cap/tot:1;lam.forEach(([l,q])=>{l.acc+=q*sc*dt;while(l.acc>=1){l.acc-=1-(this.rng()-.5)*.3;if(this.P.length<cap)this.P.push({l,d:0})}});
+  this.P=this.P.filter(p=>{const G=this.L.get(p.l.e.id)===p.l&&this.geo(p.l);if(!G)return false;p.d+=this.v*dt;return p.d<G.len});return this.P.length>0}
+ pulse(a,b){if(reduce)return;const l=this.L.get(`${a}>${b}`)||this.L.get(`${a}>${b}<`);if(!l||l.p<1)return;this.P.push({l,d:0});this.go()}
+ visible(){return[...this.S.values()].filter(s=>s.vis).sort((a,b)=>a.n.seq-b.n.seq).map(s=>s.id)}
+ anchorOf(id){const s=this.S.get(id);if(!s||!s.vis)return null;const r=Math.max(4,s.r);return{x:s.x-r,y:s.y-r,w:2*r,h:2*r}}
+ hitAt(x,y){let best=null,bd=1e9;for(const s of this.S.values()){if(!s.vis)continue;const d=Math.hypot(x-s.x,y-s.y);if(d<Math.max(s.r+5,11)&&d<bd){bd=d;best=s.id}}return best}
+ dragStart(id,[x,y]){const s=this.S.get(id);this.drag.dx=s.x-x;this.drag.dy=s.y-y}
+ dragTo(e,[x,y]){const d=this.drag,s=this.S.get(d.id);if(!s)return;if(!d.moved&&Math.hypot(e.clientX-d.x0,e.clientY-d.y0)>4){d.moved=true;this.cv.classList.add("dragging")}if(d.moved){s.fx=x+d.dx;s.fy=y+d.dy;this.al=Math.max(this.al,.25);this.go()}}
+ dragEnd(d){const s=this.S.get(d.id);this.cv.classList.remove("dragging");if(s){delete s.fx;delete s.fy}if(d.moved){this.al=Math.max(this.al,.15);this.go()}}
+ paint(x){const C=this.C,g=this.g;if(!g)return;const fs=this.opt.fs,L=this.lt;x.lineCap="round";
+  /* edges: bent 8% to the left of the work's direction; width is the tokens that have passed (history) */
+  for(const l of this.L.values()){const e=l.e;if(l.p<=0||e.kind==="return"&&!(this.lens||this.hov))continue;const G=this.geo(l);if(!G||!G.a.vis||!G.b.vis)continue;const {a,b,c}=G,near=this.hov&&(e.a===this.hov||e.b===this.hov);
+   x.globalAlpha=(e.kind==="depend"?.16:e.kind==="return"?.14:.22)*Math.min(this.dim(e.a),this.dim(e.b))*(near?2.4:1);x.strokeStyle=C["--ink"];
+   x.lineWidth=Math.max(.75,Math.min(2.25,.75+1.5*Math.sqrt((e.tok||0)/8000)));x.setLineDash(e.kind==="depend"?[2,3]:l.p<1?[G.len*l.p,G.len]:[]);
+   x.beginPath();x.moveTo(a.x,a.y);x.quadraticCurveTo(c[0],c[1],b.x,b.y);x.stroke()}
+  x.setLineDash([]);
+  /* the faint arrival path under the light */
+  const P=this.path,pth=(ids,al)=>{if(al<=0)return;x.globalAlpha=.28*al;x.strokeStyle=C["--gold"];x.lineWidth=1;ids.forEach(id=>{const l=this.L.get(id),G=l&&l.p>=1&&this.geo(l);if(!G)return;x.beginPath();x.moveTo(G.a.x,G.a.y);x.quadraticCurveTo(G.c[0],G.c[1],G.b.x,G.b.y);x.stroke()})};
+  pth(P.old,P.oa);pth(P.ids,P.a);
+  /* necks: the membrane between a budding child and its parent, in the parent's ink, on the same canvas as both discs */
+  for(const s of this.S.values()){if(!s.bud||!s.par)continue;const p=s.par,d=metaball(Math.max(1,p.r),Math.max(1,s.r),[p.x,p.y],[s.x,s.y]);if(!d)continue;x.globalAlpha=this.dim(s.id)*(p.n.kind==="site"||p.n.kind==="tool"?.5:.9);x.fillStyle=C.role(p.n.role);x.fill(new Path2D(d))}
+  /* particles, under the discs */
+  for(const p of this.P){const G=this.geo(p.l);if(!G)continue;const u=Math.min(1,p.d/G.len),m=1-u,px=m*m*G.a.x+2*m*u*G.c[0]+u*u*G.b.x,py=m*m*G.a.y+2*m*u*G.c[1]+u*u*G.b.y,src=g.by[p.l.e.a];
+   x.globalAlpha=.55*Math.max(0,Math.min(1,u/.06,(1-u)/.1))*Math.min(this.dim(p.l.e.a),this.dim(p.l.e.b));x.fillStyle=C.role(src&&src.role);x.beginPath();x.arc(px,py,fs?2.2:1.8,0,6.2832);x.fill()}
+  /* the light, travelling along its edge on a handover */
+  let lx=null,ly=null,lr=0;if(L.id&&L.a>0){const s=this.S.get(L.id),f=L.from&&this.S.get(L.from);if(s&&s.vis){lx=s.x;ly=s.y;lr=s.r;if(f&&L.p<1){lx=f.x+(s.x-f.x)*L.p;ly=f.y+(s.y-f.y)*L.p;lr=f.r+(s.r-f.r)*L.p}}}
+  if(lx!=null){const R=lr+10;x.globalAlpha=L.a;x.drawImage(this.glow,lx-R,ly-R,R*2,R*2)}
+  /* nodes: glyph, core and label in one translate, so nothing drifts apart */
+  x.font=`500 ${fs?10.5:9.5}px ${C.font}`;x.textAlign="center";x.textBaseline="alphabetic";if("letterSpacing" in x)x.letterSpacing=".06em";
+  const now=performance.now();for(const id of this.visible()){const s=this.S.get(id),n=s.n,r=s.r,al=this.dim(id)*s.a,st=n.state,col=C.role(n.role),hollow=n.kind==="site"||n.kind==="more"||n.kind==="doc"||st==="queued",mark=this.lens===id||this.hov===id;
+   if(!s.lw)s.lw=x.measureText(s.lb).width;
+   x.save();x.translate(s.x,s.y);x.globalAlpha=al;
+   if(this.hov===id&&L.id!==id){x.globalAlpha=al*.5;const R=r+8;x.drawImage(this.glow,-R,-R,R*2,R*2);x.globalAlpha=al}
+   x.beginPath();x.arc(0,0,r,0,6.2832);x.fillStyle=hollow?C["--n-hollow"]:col;x.fill();
+   x.lineWidth=1;x.strokeStyle=n.kind==="doc"?C["--gold"]:hollow?C["--n-rim"]:C["--n-sep"];if(st==="queued")x.setLineDash([2,2]);x.stroke();x.setLineDash([]);
+   const ring=(R,gap)=>{x.beginPath();if(gap)x.arc(0,0,R,-Math.PI/2+.52,Math.PI*1.5-.52);else x.arc(0,0,R,0,6.2832);x.stroke()};
+   x.strokeStyle=col;x.lineWidth=1;if(st==="running")ring(r+3);else if(st==="thinking")ring(r+3,true);else if(st==="held"){ring(r+2.5);ring(r+4.5)}
+   if(st==="failed"){x.strokeStyle=C["--bad"];ring(r+3);const k=r*.45;x.strokeStyle=C["--n-hollow"];x.beginPath();x.moveTo(-k,-k);x.lineTo(k,k);x.moveTo(k,-k);x.lineTo(-k,k);x.stroke()}
+   if(s.cl){x.strokeStyle=C["--n-rim"];x.lineWidth=.5;ring(r+1.5)}
+   if(mark||this.foc===id){x.strokeStyle=C["--gold"];x.lineWidth=this.foc===id?1.25:1.6;ring(this.foc===id?r+3.5:r)}
+   x.globalAlpha=al*(s.bud?Math.min(1,(now-s.bt)/(BUD*1000)):1);x.lineWidth=3;x.lineJoin="round";x.strokeStyle=C["--n-sep"];x.strokeText(s.lb,0,r+11);x.fillStyle=mark?C["--ink"]:C["--n-lab"];x.fillText(s.lb,0,r+11);x.restore()}
+  x.globalAlpha=1}
+}
+/* Hiroyuki Sato's metaball, after Varun Vachhar: the membrane between two circles, as one path */
 function metaball(r1,r2,c1,c2,hs=2.4,v=.5){const HP=Math.PI/2,d=Math.hypot(c2[0]-c1[0],c2[1]-c1[1]),maxD=r1+r2*2.6;let u1=0,u2=0;
  if(r1<=0||r2<=0||d>maxD||d<=Math.abs(r1-r2)+.01)return "";
  if(d<r1+r2){u1=Math.acos(Math.max(-1,Math.min(1,(r1*r1+d*d-r2*r2)/(2*r1*d))));u2=Math.acos(Math.max(-1,Math.min(1,(r2*r2+d*d-r1*r1)/(2*r2*d))))}
@@ -2480,89 +2687,10 @@ function metaball(r1,r2,c1,c2,hs=2.4,v=.5){const HP=Math.PI/2,d=Math.hypot(c2[0]
   V=(c,a,r)=>[c[0]+r*Math.cos(a),c[1]+r*Math.sin(a)],p1=V(c1,a1,r1),p2=V(c1,a2,r1),p3=V(c2,a3,r2),p4=V(c2,a4,r2),tr=r1+r2,
   d2=Math.min(v*hs,Math.hypot(p1[0]-p3[0],p1[1]-p3[1])/tr)*Math.min(1,d*2/tr),h1=V(p1,a1-HP,r1*d2),h2=V(p2,a2+HP,r1*d2),h3=V(p3,a3+HP,r2*d2),h4=V(p4,a4-HP,r2*d2),f=q=>q[0].toFixed(1)+","+q[1].toFixed(1);
  return `M${f(p1)}C${f(h1)} ${f(h3)} ${f(p3)}A${r2.toFixed(1)},${r2.toFixed(1)} 0 ${d>r1?1:0} 0 ${f(p4)}C${f(h4)} ${f(h2)} ${f(p2)}Z`}
-const rad=(t,k)=>k==="site"?Math.min(11,3.5+Math.sqrt(Math.max(0,t))*.3):Math.min(20,5+Math.sqrt(Math.max(0,t))*.5);
 const fitS=(t,n)=>{t=String(t||"");return t.length>n?t.slice(0,n-1).trimEnd()+"…":t};
-const flabel=n=>n.kind==="doc"?"Document":n.kind==="arb"?"Arbiter":n.kind==="ans"?"Answer":n.kind==="orch"?"Orchestrator":n.kind==="conn"?"Exa":n.kind==="agent"?`${n.rn} · ${fitS(n.t2,20)}`:fitS(n.t1,20);
-class FieldMap{
- constructor(host,get,opt={}){Object.assign(this,{host,get,opt,nodes:new Map(),links:new Map(),W:0,H:0,Hc:0,alpha:1,raf:0,pl:[],fresh:true,vis:true,hovId:null,hovN:null,drag:null,cx:{},rep:40});
-  host.innerHTML=barHTML("field",get(),opt);this.mvr=host.querySelector(".mvr");
-  this.svg=sv("svg",{class:"map field",role:"group","aria-label":"Field map of the run"});this.gL=sv("g");this.gB=sv("g");this.gP=sv("g");this.gN=sv("g");this.svg.append(this.gL,this.gB,this.gP,this.gN);host.append(this.svg);
-  const pt=e=>{const r=this.svg.getBoundingClientRect();return [(e.clientX-r.left)*this.W/r.width,(e.clientY-r.top)*this.Hc/r.height]};
-  this.svg.addEventListener("pointerdown",e=>{const g=e.target.closest("[data-node]");if(!g||e.button)return;const o=this.nodes.get(g.dataset.node);if(!o)return;e.preventDefault();const [x,y]=pt(e);
-   this.drag={o,g,dx:o.x-x,dy:o.y-y,x0:e.clientX,y0:e.clientY,moved:false,id:e.pointerId};try{this.svg.setPointerCapture(e.pointerId)}catch(x){}o.fx=o.x;o.fy=o.y;this.svg.classList.add("dragging")});
-  this.svg.addEventListener("pointermove",e=>{const d=this.drag;if(!d)return;if(!d.moved&&Math.hypot(e.clientX-d.x0,e.clientY-d.y0)>4)d.moved=true;if(d.moved){const [x,y]=pt(e);d.o.fx=x+d.dx;d.o.fy=y+d.dy;this.alpha=Math.max(this.alpha,.25);this.go()}});
-  const up=()=>{const d=this.drag;if(!d)return;this.drag=null;this.svg.classList.remove("dragging");try{this.svg.releasePointerCapture(d.id)}catch(x){}delete d.o.fx;delete d.o.fy;
-   if(!d.moved)openSheet(this.get(),d.g.dataset.node,d.g);else{this.alpha=Math.max(this.alpha,.15);this.go()}};
-  this.svg.addEventListener("pointerup",up);this.svg.addEventListener("pointercancel",up);
-  this.svg.addEventListener("pointerover",e=>{if(this.drag)return;const g=e.target.closest("[data-node]");this.hover(g?g.dataset.node:null)});
-  this.svg.addEventListener("pointerleave",()=>{if(!this.drag)this.hover(null)});
-  this.svg.addEventListener("focusin",e=>{const g=e.target.closest("[data-node]");if(g)this.hover(g.dataset.node)});this.svg.addEventListener("focusout",()=>this.hover(null));
-  this.svg.addEventListener("keydown",e=>{const g=e.target.closest&&e.target.closest("[data-node]");if(g&&(e.key==="Enter"||e.key===" ")){e.preventDefault();openSheet(this.get(),g.dataset.node,g)}});
-  this.ro=new ResizeObserver(()=>{const cw=Math.round(host.clientWidth);if(cw&&cw!==this.W){this.W=cw;this.alpha=Math.max(this.alpha,.3);this.sync()}});this.ro.observe(host);
-  this.io=new IntersectionObserver(es=>{this.vis=es[es.length-1].isIntersecting;if(this.vis)this.go()});this.io.observe(host);FM.add(this)}
- kill(){this.ro.disconnect();this.io.disconnect();cancelAnimationFrame(this.raf);this.raf=0;FM.delete(this)}
- mk(n){const g=sv("g",{class:`fn k-${n.kind}`,"data-node":n.id,tabindex:"0",role:"button"}),ring=sv("circle",{class:"ring",r:1}),core=sv("circle",{class:"core",r:1}),lab=sv("text",{class:"lb","text-anchor":"middle",y:12}),hit=sv("circle",{class:"hit",r:12});
-  if(n.role)g.style.setProperty("--c",RC[n.role]);g.append(hit,ring,core,lab);return {g,ring,core,lab,hit}}
- sync(){if(!this.host.isConnected){this.kill();return}if(!this.W)return;const w=this.get();if(!w)return;const {N,E}=graphOf(w),rep=this.fresh&&this.opt.replay,W=this.W,narrow=W<560;
-  const cols=[0,1,2,3,4].filter(c=>N.some(n=>n.col===c));this.cx={};const span=Math.min(.8,(cols.length-1)*.27)*W;cols.forEach((c,j)=>this.cx[c]=cols.length>1?(W-span)/2+span*j/(cols.length-1):W/2);
-  this.H=this.opt.fs?Math.max(320,Math.round(this.host.clientHeight-40)):Math.round(narrow?Math.min(560,Math.max(260,200+N.length*15)):Math.min(460,Math.max(230,160+N.length*12)));if(this.fresh)this.Hc=this.H;this.rep=this.opt.fs?190:narrow?70:95;this.sp=this.opt.fs?Math.min(2.6,W/440):narrow?1:Math.min(1.5,W/560);
-  let heat=0;const seen=new Set();
-  N.forEach((n,ix)=>{seen.add(n.id);let o=this.nodes.get(n.id);const r=n.kind==="doc"?Math.max(8,rad(n.tk)):n.kind==="arb"?Math.max(9,rad(n.tk)):n.kind==="ans"?Math.max(8,rad(n.tk)):n.kind==="orch"?Math.max(10,rad(n.tk)):n.kind==="conn"?Math.max(8,rad(n.tk)):n.kind==="agent"?Math.max(6,rad(n.tk)):rad(n.tk,"site");
-   if(!o){const par=E.find(e=>e.b===n.id&&!e.dep),po=par&&this.nodes.get(par.a),j=()=>(Math.random()-.5);
-    o=this.mk(n);o.vx=o.vy=0;o.rv=0;o.rc=.1;
-    if(po){const sib=E.filter(e=>e.a===par.a&&!e.dep).map(e=>e.b);o.sib=[Math.max(0,sib.indexOf(n.id)),sib.length];o.x=po.x+j()*2;o.y=po.y+j()*2;o.par=po;o.pid=par.a;o.born=performance.now()+(rep?120+n.col*420+ix*55:0);o.g.classList.add("unborn");if(n.role)o.neckC=RC[n.role]}
-    else{o.x=(this.cx[n.col]??W/2)+j()*20;o.y=this.Hc/2+j()*30;if(rep){o.born=performance.now()+60;o.g.classList.add("unborn")}}
-    this.gN.append(o.g);this.nodes.set(n.id,o);heat=Math.max(heat,.5)}
-   else if(Math.abs(o.r-r)>1)heat=Math.max(heat,.08);
-   o.n=n;o.col=n.col;o.r=r;o.m=1+r/8;o.R=r+9;const lab=flabel(n);if(o.labT!==lab){o.lab.textContent=lab;o.labT=lab;o.lw=lab.length*(n.kind==="site"?5:5.5)}
-   o.g.setAttribute("aria-label",nodeInfo(w,n.id));
-   const cls=`fn k-${n.kind} st-${n.st}${o.g.classList.contains("sel")?" sel":""}${this.hovN&&this.hovN.has(n.id)?" nb":""}${o.g.classList.contains("unborn")?" unborn":""}${o.g.classList.contains("young")?" young":""}`;if(o.g.getAttribute("class")!==cls)o.g.setAttribute("class",cls)});
-  for(const [id,o] of this.nodes)if(!seen.has(id)){o.g.remove();this.nodes.delete(id);heat=Math.max(heat,.3)}
-  const se=new Set();E.forEach(e=>{se.add(e.id);let l=this.links.get(e.id);if(!l){const bk=(N.find(n=>n.id===e.a)||{}).col>(N.find(n=>n.id===e.b)||{}).col,el=sv("line",{class:"ln"+(e.dep?" dep":"")+(bk?" back":"")}),f=sv("line",{class:"lf"});this.gL.append(el,f);l={el,f};this.links.set(e.id,l);heat=Math.max(heat,.4)}
-   l.e=e;const a=this.nodes.get(e.a),b=this.nodes.get(e.b),ra=a?a.r:0,rb=b?b.r:0;
-   const va=(e.a==="v"&&e.b[0]==="a")||(e.b==="v"&&e.a[0]==="a");l.d=(e.dep?44+ra+rb:va?54*this.sp+ra+rb:e.b==="c"?70*this.sp+rb:e.a==="c"?30+ra*.3+rb:46*this.sp+ra+rb)*FORCES.dist;l.s=e.dep?.12:.4;
-   const sw=(.5+Math.min(2,Math.log1p((e.wt||0)/60)*.55)).toFixed(2);if(l.sw!==sw){l.el.setAttribute("stroke-width",sw);l.f.setAttribute("stroke-width",Math.min(1.4,+sw).toFixed(2));l.sw=sw}
-   l.f.classList.toggle("on",!!e.on)});
-  for(const [id,l] of this.links)if(!se.has(id)){l.el.remove();l.f.remove();this.links.delete(id)}
-  const mk=this.host.querySelector(".mvk");if(mk){const roles=[...new Set((w.steps||[]).map(s=>s.role))],html=roles.map(r=>`<span><i style="background:${RC[r]}"></i>${ROLE[r]}</span>`).join("");if(mk.innerHTML!==html)mk.innerHTML=html}
-  this.alpha=Math.max(this.alpha,this.fresh?1:heat);this.fresh=false;this.svg.setAttribute("viewBox",`0 0 ${this.W} ${this.Hc.toFixed(1)}`);this.svg.style.height=this.Hc.toFixed(1)+"px";this.go()}
- clamp(o){const px=Math.max(o.rc+2,o.lw/2+4);o.x=Math.min(this.W-px,Math.max(px,o.x));o.y=Math.min(this.Hc-o.rc-17,Math.max(o.rc+8,o.y))}
- tick(){const A=this.alpha,ALL=[...this.nodes.values()];for(const o of ALL)o.wait=o.born!=null&&o.g.classList.contains("unborn");const L=ALL.filter(o=>!o.wait&&!o.scr),n=L.length,H=this.Hc;
-  for(const l of this.links.values()){const a=this.nodes.get(l.e.a),b=this.nodes.get(l.e.b);if(!a||!b||a.wait||b.wait||a.scr||b.scr)continue;let dx=b.x+b.vx-a.x-a.vx,dy=b.y+b.vy-a.y-a.vy;const d=Math.hypot(dx,dy)||1,k=(d-l.d)/d*A*l.s*FORCES.link;dx*=k;dy*=k;b.vx-=dx*.5;b.vy-=dy*.5;a.vx+=dx*.5;a.vy+=dy*.5}
-  for(let i=0;i<n;i++){const a=L[i];for(let j=i+1;j<n;j++){const b=L[j];let dx=b.x-a.x,dy=b.y-a.y,d2=dx*dx+dy*dy;if(d2<1){dx=Math.random()-.5;dy=Math.random()-.5;d2=.5}
-    const f=this.rep*FORCES.repel*(a.m+b.m)*A/Math.max(d2,256);a.vx-=dx*f;a.vy-=dy*f;b.vx+=dx*f;b.vy+=dy*f;
-    const d=Math.sqrt(d2),min=a.R+b.R;if(d<min){const p=(min-d)/d*.35;a.vx-=dx*p;a.vy-=dy*p;b.vx+=dx*p;b.vy+=dy*p}
-    if(Math.abs(dy)<20&&Math.abs(dx)<(a.lw+b.lw)/2+8){const p=(20-Math.abs(dy))*.09*(dy<0?-1:1);a.vy-=p;b.vy+=p}}}
-  for(const o of L){o.vx+=((this.cx[o.col]??this.W/2)-o.x)*.1*A*FORCES.center;o.vy+=(H/2-o.y)*.018*A*FORCES.center}
-  const now=performance.now();for(const o of ALL){if(o.scr&&o.par){const u=Math.min(1,(now-o.bt)/820),e=u<.5?4*u*u*u:1-Math.pow(-2*u+2,3)/2;o.x=o.par.x+o.dir[0]*o.D*e;o.y=o.par.y+o.dir[1]*o.D*e;this.clamp(o);if(u>=1){o.scr=false;o.g.classList.remove("young");o.vx=o.dir[0]*1.6;o.vy=o.dir[1]*1.6}continue}if(o.wait){if(o.par){o.x=o.par.x;o.y=o.par.y}o.vx=o.vy=0;continue}if(o.fx!=null){o.x=o.fx;o.y=o.fy;o.vx=o.vy=0;this.clamp(o);continue}o.vx*=.6;o.vy*=.6;o.x+=o.vx;o.y+=o.vy;this.clamp(o)}
-  this.alpha+=(0-this.alpha)*.0228}
- hover(id){if(this.hovId===id)return;this.hovId=id;const nb=new Set();if(id){nb.add(id);for(const l of this.links.values()){if(l.e.a===id)nb.add(l.e.b);if(l.e.b===id)nb.add(l.e.a)}}
-  this.hovN=id?nb:null;this.svg.classList.toggle("hl",!!id);for(const [k,o] of this.nodes)o.g.classList.toggle("nb",nb.has(k));
-  for(const l of this.links.values()){const on=!!id&&(l.e.a===id||l.e.b===id);l.el.classList.toggle("nb",on);l.f.classList.toggle("nb",on)}
-  const t=id?nodeInfo(this.get(),id):HINT.field;if(this.mvr.textContent!==t)this.mvr.textContent=t}
- go(){if(this.raf||!seen(this))return;const step=()=>{this.raf=0;if(!this.host.isConnected){this.kill();return}if(!seen(this))return;let mv=false;const f=v=>v.toFixed(1);
-   const dh=this.H-this.Hc;if(Math.abs(dh)>.4){this.Hc+=dh*(reduce?1:.12);mv=true}else this.Hc=this.H;
-   if(this.alpha>.002||this.drag){if(reduce)for(let i=0;i<300&&this.alpha>.002;i++)this.tick();else this.tick();mv=true}else if(mv)for(const o of this.nodes.values())this.clamp(o);
-   const now=performance.now();
-   for(const o of this.nodes.values()){if(o.born==null)continue;if(o.g.classList.contains("unborn")){mv=true;if(now>=o.born){o.g.classList.remove("unborn");o.bt=now;if(o.par){o.x=o.par.x;o.y=o.par.y}this.alpha=Math.max(this.alpha,.35);
-      if(o.par&&!reduce){const tx=(this.cx[o.col]??this.W/2)-o.par.x,[k,nn]=o.sib||[0,1],base=Math.abs(tx)<16?Math.PI/2:(tx>0?0:Math.PI),ang=base+(nn>1?(k/(nn-1)-.5)*Math.min(2.5,.5*nn):(Math.random()-.5)*.6),l=this.links.get(`${o.pid}>${o.n.id}`);o.dir=[Math.cos(ang),Math.sin(ang)];o.scr=true;o.g.classList.add("young");o.D=Math.max((l?l.d:70)*.8,(Math.max(1,o.par.r)+o.r*2.6)*1.4);o.par.rv=(o.par.rv||0)-.9;
-       o.neck=sv("path",{class:"neck k-"+o.n.kind});if(o.neckC)o.neck.style.setProperty("--c",o.neckC);if(o.pid==="o"&&o.n.kind!=="agent")o.neck.style.setProperty("--c","var(--ink)");this.gB.append(o.neck)}}}
-    else if(o.neck){const p=o.par,d=o.neck,age=now-o.bt;const path=age<2200&&p&&this.nodes.has(o.pid)?metaball(Math.max(1,p.rc),Math.max(1,o.rc),[p.x,p.y],[o.x,o.y]):"";
-     if(path){d.setAttribute("d",path);mv=true}else{const far=!p||Math.hypot(o.x-p.x,o.y-p.y)>Math.max(1,p.rc)+Math.max(1,o.rc)*2.6;if(far||age>=2200||!this.nodes.has(o.pid)){d.remove();o.neck=null;o.born=null;if(age<2200)o.rv=(o.rv||0)+.7}else{d.removeAttribute("d");mv=true}}}else o.born=null}
-   for(const o of this.nodes.values()){const want=o.g.classList.contains("unborn")?.1:o.r;if(reduce){o.rc=want;o.rv=0}else{o.rv=(o.rv||0)*.72+(want-o.rc)*.16;o.rc+=o.rv;if(Math.abs(o.rv)>.01||Math.abs(want-o.rc)>.05)mv=true;else{o.rc=want;o.rv=0}}o.rc=Math.max(.1,o.rc);
-    const tr=`translate(${f(o.x)},${f(o.y)})`;if(o.tr!==tr){o.g.setAttribute("transform",tr);o.tr=tr}
-    if(o.rs!==o.rc){const r=Math.max(.1,o.rc).toFixed(2);o.core.setAttribute("r",r);o.ring.setAttribute("r",r);o.hit.setAttribute("r",Math.max(o.rc+5,12).toFixed(1));o.lab.setAttribute("y",(o.rc+11).toFixed(1));o.rs=o.rc}}
-   for(const l of this.links.values()){const a=this.nodes.get(l.e.a),b=this.nodes.get(l.e.b);if(!a||!b)continue;{const u=a.g.classList.contains("unborn")||b.g.classList.contains("unborn"),yg=u||a.g.classList.contains("young")||b.g.classList.contains("young");if(l.u!==u){l.u=u;l.el.classList.toggle("hid",u)}if(l.yg!==yg){l.yg=yg;l.f.classList.toggle("hid",yg)}}const k=`${f(a.x)},${f(a.y)},${f(b.x)},${f(b.y)}`;if(l.k===k)continue;l.k=k;
-    for(const el of [l.el,l.f]){el.setAttribute("x1",f(a.x));el.setAttribute("y1",f(a.y));el.setAttribute("x2",f(b.x));el.setAttribute("y2",f(b.y))}}
-   this.svg.setAttribute("viewBox",`0 0 ${this.W} ${f(this.Hc)}`);this.svg.style.height=f(this.Hc)+"px";
-   const t=performance.now();this.pl=this.pl.filter(p=>{const u=(t-p.t0)/p.dur;if(u>=1){p.c.remove();return false}const l=this.links.get(p.id),a=l&&this.nodes.get(l.e.a),b=l&&this.nodes.get(l.e.b);if(!a||!b){p.c.remove();return false}
-    const v=u<.5?2*u*u:1-Math.pow(-2*u+2,2)/2;p.c.setAttribute("cx",f(a.x+(b.x-a.x)*v));p.c.setAttribute("cy",f(a.y+(b.y-a.y)*v));p.c.setAttribute("opacity",Math.min(1,(1-u)*3,u*8).toFixed(2));return true});
-   if(mv||this.pl.length)this.raf=requestAnimationFrame(step)};this.raf=requestAnimationFrame(step)}
- pulse(a,b){const id=`${a}>${b}`;if(reduce||!this.links.has(id))return;const c=sv("circle",{class:"pl",r:2.2,opacity:0});this.gP.append(c);this.pl.push({c,id,t0:performance.now(),dur:900});this.go()}
-}
 /* full screen: the same run, with room to read it, and its ledger beside it */
 POUR.attach($("#mfs"));
-function mapFS(btn){const host=btn.closest(".mapw"),m=[...FM].find(x=>x.host===host);if(!m)return;const w=m.get(),o=$("#mfs");closeSheet();acctMenu(false);
+function mapFS(btn){const host=btn.closest(".mapw,.mini"),m=[...FM].find(x=>x.host===host);if(!m)return;const w=m.get(),o=$("#mfs");closeSheet();acctMenu(false);
  $("#mfsT").textContent=cur?cur.title:"";$("#mfsL").innerHTML=ledgerHTML(w,true)||`<p class="empty2">This run has no claims ledger.</p>`;FM.forEach(x=>{if(x.opt.fs)x.kill()});$("#mfsMap").innerHTML="";
  o.classList.add("open");$("#veil").classList.add("open");setTimeout(()=>{mkMap($("#mfsMap"),()=>w,{replay:true,fs:true});$("#mfsX").focus({preventScroll:true})},60)}
 function closeFS(){const o=$("#mfs");if(!o.classList.contains("open"))return;o.classList.remove("open");$("#veil").classList.remove("open");FM.forEach(x=>{if(x.opt.fs)x.kill()})}
@@ -2570,13 +2698,11 @@ $("#mfsX").onclick=closeFS;
 document.addEventListener("click",e=>{const b=e.target.closest("[data-mfs]");if(b)mapFS(b)});
 document.addEventListener("click",e=>{const f=e.target.closest(".fbtn");if(f){const ol=f.closest(".strm");ol.classList.add("all");ol.querySelectorAll(".old").forEach(x=>x.classList.remove("old"));f.parentElement.remove();return}
  const m=e.target.closest(".mapt");if(m){const r=m.closest(".run"),hs=r.querySelector(".mapw"),on=!hs.classList.contains("show");hs.classList.toggle("show",on);m.setAttribute("aria-expanded",on);if(on){requestAnimationFrame(()=>FM.forEach(x=>x.host===hs&&x.sync&&x.sync()))}}});
-document.addEventListener("click",e=>{const vb=e.target.closest(".vs [data-view]");if(vb){e.stopPropagation();const r=vb.closest(".run");if(!r.classList.contains("open")){r.classList.add("open","pinned");r.querySelector(".run-h").setAttribute("aria-expanded","true")}runView(r,vb.dataset.view,true);return}
- const mn=e.target.closest(".mini .mn");if(mn){const b=mn.closest(".bot"),w=b&&(b._work||cur?.turns[+b.dataset.k]?.work);e.stopPropagation();if(w)openSheet(w,mn.dataset.sheet,mn);return}},true);
-document.addEventListener("keydown",e=>{if((e.key==="Enter"||e.key===" ")&&e.target.closest?.(".mini .mn")){e.preventDefault();e.target.click()}});
+document.addEventListener("click",e=>{const vb=e.target.closest(".vs [data-view]");if(vb){e.stopPropagation();const r=vb.closest(".run");if(!r.classList.contains("open")){r.classList.add("open","pinned");r.querySelector(".run-h").setAttribute("aria-expanded","true")}runView(r,vb.dataset.view,true);return}},true);
 function wakeMaps(){const f=()=>FM.forEach(m=>{if(!m.host.isConnected)return;if(m.host.getBoundingClientRect().width){m.vis=true;try{m.sync()}catch(e){}m.go&&m.go()}});requestAnimationFrame(f);setTimeout(f,420);setTimeout(f,900)}
 {const mo=new MutationObserver(wakeMaps);["#dsp","#mfs","#setMenu"].forEach(q=>{const el=$(q);if(el)mo.observe(el,{attributes:true,attributeFilter:["class"]})})}
-/* cards off-screen rest: their loops pause, their SMIL beads stop */
-const RUNIO=new IntersectionObserver(es=>es.forEach(en=>{const r=en.target;r.toggleAttribute("data-off",!en.isIntersecting);r.querySelectorAll(".mini svg").forEach(v=>{try{en.isIntersecting?v.unpauseAnimations():v.pauseAnimations()}catch(e){}})}),{rootMargin:"200px"});
+/* cards off-screen rest: their loops pause (each map sleeps on its own when it cannot be seen) */
+const RUNIO=new IntersectionObserver(es=>es.forEach(en=>en.target.toggleAttribute("data-off",!en.isIntersecting)),{rootMargin:"200px"});
 new MutationObserver(()=>document.querySelectorAll("#thread .run:not([data-io])").forEach(r=>{r.dataset.io=1;RUNIO.observe(r)})).observe(document.getElementById("thread"),{childList:true,subtree:true});
 const workOf=el=>{const b=el.closest(".bot");return b&&(b._work||cur?.turns[+b.dataset.k]?.work)};
 
@@ -2910,7 +3036,7 @@ async function send(q,re){const KL=await KLIB.load().catch(()=>null),docPre=DOCS
  const safe=OPT.safe,thorough=OPT.desks==="always",direct=OPT.desks==="off",depthDeep=OPT.depth==="deep";let webOn=OPT.web&&WEB.ok;
  if(webOn){try{const lim=await sample.limits();if(!lim||!lim.tools)webOn=false}catch(e){webOn=false}}
  const K=cur.turns.length,t0=performance.now(),now=()=>performance.now()-t0;
- const work={steps:[],firewall:safe?"pending":"off",feed:[],ms:0,sig:[],sigKeys:["O","A"],map:{thinking:[],calls:[],pages:[],rationale:"",kind:""},ph:{},_o:true};
+ const work={steps:[],firewall:safe?"pending":"off",feed:[],ms:0,sig:[],sigKeys:["O","A"],map:{thinking:[],calls:[],pages:[],rationale:"",kind:""},ph:{},_o:true,_p0:t0};
  const bot=document.createElement("div");bot.className="bot bi";bot.dataset.k=K;bot._work=work;
  bot.innerHTML=`<div class="by">${BYLINE}<time class="num">${hhmm(Date.now())}</time></div>${runHTML(work,K,true,{direct,safe,doc:!!docPre})}<div class="ans"></div><div class="exw"></div><div class="docw"></div>`;
  $("#thread").append(bot);sc.scrollTop=1e9;
@@ -2944,7 +3070,7 @@ async function send(q,re){const KL=await KLIB.load().catch(()=>null),docPre=DOCS
  const normStep=r=>{if(!r||!ROSTER[r.role])return null;const R=ROSTER[r.role];let tier=R.tiers.includes(r.tier)?r.tier:R.tiers[R.tiers.length-1];if(TIERS[tier].n<TIERS[R.floor].n)tier=R.floor;if(depthDeep&&R.tiers.includes("high"))tier="high";
   return{role:r.role,tier,focus:clip(r.focus||"",42),task:String(r.task||""),why:String(r.why||""),after:(Array.isArray(r.after)?r.after:[]).map(Number).filter(n=>n>0&&n<=8),redo:0,web:!!(webOn&&WEB_ROLES.has(r.role)&&r.web!==false)}};
  const staffUp=()=>{const g={};work.steps.forEach(s=>g[s.role]=(g[s.role]||0)+1);Object.entries(g).forEach(([r,n])=>{const c=stf.querySelector(`[data-r="${r}"]`);if(!c)stf.insertAdjacentHTML("beforeend",chipHTML(r,n));else c.querySelector("b").textContent=n>1?"×"+n:""})};
- const addStep=r=>{if(!work._vs){work._vs=1;F(null,"Handed the plan to the Arbiter to staff.")}if(work.steps.length>=8)return;const s=normStep(r);if(!s)return;const i=work.steps.length;work.steps.push(s);
+ const addStep=r=>{if(!work._vs){work._vs=1;F(null,"Handed the plan to the Arbiter to staff.")}if(work.steps.length>=8)return;const s=normStep(r);if(!s)return;s.tb=Math.round(now());const i=work.steps.length;work.steps.push(s);
   $("#dxDesks").hidden=false;$("#desks").insertAdjacentHTML("beforeend",deskHTML(s,i));openBand("d"+i);requestAnimationFrame(()=>miniPlate(i,"d"+i));staffUp();
   F(null,`Staffed desk ${ROMAN[i]}: ${ROLE[s.role].toLowerCase()}${s.focus?`, <em>${esc(s.focus.toLowerCase())}</em>,`:""} at ${TIERS[s.tier].w} effort${s.web?" with the web":""}${s.why?`; ${esc(s.why.charAt(0).toLowerCase()+s.why.slice(1).replace(/\.$/,""))}`:""}.`);
   if(s.after.length)F(null,`Desk ${ROMAN[i]} waits for ${s.after.map(n=>"desk "+ROMAN[n-1]).join(" and ")}.`);
@@ -2980,17 +3106,17 @@ ${history?`Conversation so far:\n${history}\n\n`:""}New message: ${q}`,{modelTie
    F(`Staffed <em>${words(steps.length).toLowerCase()} desk${steps.length>1?"s":""}</em>`,`Staffed ${words(steps.length).toLowerCase()} desk${steps.length>1?"s":""}: ${Object.entries(by).map(([r,n])=>`${n>1?words(n).toLowerCase()+" ":""}${ROLE[r].toLowerCase()}`).join(", ")}.`);
    if(steps.some(s=>s.web))F(null,"Web research is on for the desks that need it.");
    const brief=(s,i)=>`${ROSTER[s.role].brief}\n${todayLine()}\n${kDigest(KL,s.role)}${history?`Conversation so far:\n${history}\n\n`:""}Request: ${q}\nYour desk: ${ROLE[s.role]}${s.focus?`, focused on ${s.focus}`:""}.\nYour task: ${s.task}\n${steps.length>1?`Other desks are covering: ${steps.filter((_,j)=>j!==i).map(x=>`${x.focus||x.task} (${x.role})`).join("; ")}. Do not duplicate their work.\n`:""}${s.after.filter(n=>outs[n-1]).map(n=>`Input from desk ${ROMAN[n-1]} (${steps[n-1].role}):\n${outs[n-1].slice(0,3000)}`).join("\n\n")}${s.feedback?`\nA reviewer returned your last attempt: ${s.feedback}. Fix that.`:""}${s.web?"\nYou can search the web with web_search (and web_fetch for a specific page). Use it for anything current, local or checkable; at most 3 searches. Put the source url in brackets after each figure you take from the web, with its date, e.g. [url, Aug 2026]. Results come newest first: prefer the newest figure; put the current year in a query when timing matters; if the newest source you find is old, say so.":""}\nPlain text, under 220 words. Give figures with units and name sources where you can. End with: CONFIDENCE: high|medium|low`;
-   const runOne=async i=>{const s=steps[i],key="d"+i,stE=$("#ds"+i),out=$("#dn"+i);let len=0;s._t0=performance.now();s._live=true;think[key]=1;mapSync();
+   const runOne=async i=>{const s=steps[i],key="d"+i,stE=$("#ds"+i),out=$("#dn"+i);let len=0;s._t0=performance.now();s.ts=Math.round(now());s._live=true;think[key]=1;mapSync();
     stE.className="st live";swap(stE,s.redo?"Deepening":ROSTER[s.role].verb);s.searches=s.searches||0;s.srcN=s.srcN||0;
     const tools=s.web&&webOn?webTools({onSearch:(qs,fetch)=>{s.searches++;s._web=performance.now();s._lq=qs[0];work.map.calls.push({t:Math.round(now()),i,q:qs.slice(0,4).map(x=>clip(x,90)),fetch:!!fetch});pend[key]=(pend[key]||0)+30;
        $("#dq"+i).textContent=`${s.searches} ${fetch?"read":"search"}${s.searches>1?"es":""} · ${s.srcN} sources`;swap(stE,fetch?"Reading pages":"Searching the web");
        F(fetch?`Desk ${ROMAN[i]} read ${qs.length} page${qs.length>1?"s":""}`:`Desk ${ROMAN[i]} searched the web`,fetch?`Desk ${ROMAN[i]} read ${qs.map(x=>`<em>${esc(x)}</em>`).join(", ")}.`:`Desk ${ROMAN[i]} searched: ${qs.map(x=>`“${esc(x)}”`).join(", ")}.`);mapSync();mapPulse("a"+i,"c")},
-      onSources:list=>{const fresh=[];list.forEach(r=>{if(!r.url||work.map.pages.some(p=>p.url===r.url))return;const hh=hostOf(r.url);if(hh&&!work.map.pages.some(p=>hostOf(p.url)===hh))fresh.push(hh);work.map.pages.push({url:r.url,title:clip(r.title,140),date:r.published||null,ex:clip(r.excerpt,700),i,q:s._lq?clip(s._lq,90):""})});
+      onSources:list=>{const fresh=[];list.forEach(r=>{if(!r.url||work.map.pages.some(p=>p.url===r.url))return;const hh=hostOf(r.url);if(hh&&!work.map.pages.some(p=>hostOf(p.url)===hh))fresh.push(hh);work.map.pages.push({t:Math.round(now()),url:r.url,title:clip(r.title,140),date:r.published||null,ex:clip(r.excerpt,700),i,q:s._lq?clip(s._lq,90):""})});
        s.srcN+=list.length;pend[key]=(pend[key]||0)+20;$("#dq"+i).textContent=`${s.searches} search${s.searches>1?"es":""} · ${s.srcN} sources`;mapSync();fresh.slice(0,6).forEach((hh,j)=>setTimeout(()=>mapPulse("c","s:"+hh),160+j*110))},
       onError:code=>{if(["server_not_connected","needs_reauth","not_in_manifest","blocked_by_policy","selection_required"].includes(code)){webOn=false;say(MCP_COPY[code]||"Web research is unavailable.","warn")}F(null,`Web research failed for desk ${ROMAN[i]}${code?` (${esc(code)})`:""}.`)}}):null;
     try{const r=await sample(brief(s,i)+steerNote(),{modelTier:TIERS[s.tier].m,cache:false,...IM,signal:ctl.signal,...(tools?{tools}:{}),onText:({text})=>{pend[key]=(pend[key]||0)+Math.max(0,text.length-len);len=text.length;s.out=text;if(!s._raf)s._raf=requestAnimationFrame(()=>{s._raf=0;out.textContent=s.out;if(out.parentElement.classList.contains("show"))toEnd(out);const q=$("#dq"+i),v=(s.searches?`${s.searches} search${s.searches>1?"es":""} · `:"")+ft(tok(s.out))+" tokens";if(q&&q.textContent!==v)q.textContent=v})}});
      outs[i]=r.text;s.out=r.text;return r.text}
-    finally{s._live=false;think[key]=0;s.ms=performance.now()-s._t0;$("#dm"+i).textContent=fmt(s.ms);stE.className="st";swap(stE,"Filed");mapSync()}};
+    finally{s._live=false;think[key]=0;s.ms=performance.now()-s._t0;s.te=Math.round(now());$("#dm"+i).textContent=fmt(s.ms);stE.className="st";swap(stE,"Filed");mapSync()}};
    const done=[];steps.forEach((s,i)=>done[i]=(async()=>{for(const n of s.after)if(n-1<i&&done[n-1])await done[n-1];const r=await runOne(i);F(`Desk ${ROMAN[i]} filed its notes`,`Desk ${ROMAN[i]} filed ${ft(tok(r))} tokens of notes in ${fmt(s.ms)}.`);return r})());
    await Promise.all(done);P("desks","done");P("review","on");work._vd=1;mapSync();steps.forEach((_,k)=>setTimeout(()=>mapPulse("a"+k,"v"),120+k*110));
    /* the Arbiter weighs truth: each desk passes or returns, and every claim is checked against the pages read */
@@ -3000,7 +3126,7 @@ ${history?`Conversation so far:\n${history}\n\n`:""}New message: ${q}`,{modelTie
     think.O=1;work._va=1;mapSync();pend2.forEach(i=>{$("#ds"+i).className="st live";swap($("#ds"+i),"Being weighed")});
     const PGs=work.map.pages.slice(0,26),srcList=PGs.map((p,k)=>`[S${k+1}] ${p.title||hostOf(p.url)} — ${p.url} (${p.date||"undated"}${ageOf(p.date)!=null?`, ${ageText(ageOf(p.date))}`:""})\n${String(p.ex||"").slice(0,520)}`).join("\n\n");
     const arbTools=webOn?webTools({onSearch:(qs,fetch)=>{work._vweb=performance.now();work.map.calls.push({t:Math.round(now()),i:-1,q:qs.slice(0,4).map(x=>clip(x,90)),fetch:!!fetch});F(fetch?"The Arbiter read a page":"The Arbiter checked the web",fetch?`The Arbiter read ${qs.map(x=>`<em>${esc(x)}</em>`).join(", ")} to check a claim.`:`The Arbiter searched: ${qs.map(x=>`“${esc(x)}”`).join(", ")}.`);mapSync();mapPulse("v","c")},
-      onSources:list=>{const fresh=[];list.forEach(r=>{if(!r.url||work.map.pages.some(p=>p.url===r.url))return;const hh=hostOf(r.url);if(hh&&!work.map.pages.some(p=>hostOf(p.url)===hh))fresh.push(hh);work.map.pages.push({url:r.url,title:clip(r.title,140),date:r.published||null,ex:clip(r.excerpt,700),i:-1,q:""})});mapSync();fresh.slice(0,6).forEach((hh,j)=>setTimeout(()=>mapPulse("c","s:"+hh),160+j*110))},onError:()=>{}}):null;
+      onSources:list=>{const fresh=[];list.forEach(r=>{if(!r.url||work.map.pages.some(p=>p.url===r.url))return;const hh=hostOf(r.url);if(hh&&!work.map.pages.some(p=>hostOf(p.url)===hh))fresh.push(hh);work.map.pages.push({t:Math.round(now()),url:r.url,title:clip(r.title,140),date:r.published||null,ex:clip(r.excerpt,700),i:-1,q:""})});mapSync();fresh.slice(0,6).forEach((hh,j)=>setTimeout(()=>mapPulse("c","s:"+hh),160+j*110))},onError:()=>{}}):null;
     let rv=null;
     try{rv=await sample.json(`You are the EXPIRA Arbiter, the judge of truth. ${todayLine()}
 You staffed these desks; now judge what they filed.
@@ -3098,7 +3224,7 @@ ${PG.length?`Web sources the desks consulted, newest first (use these urls in "s
   const content=(work.firewall==="blocked"?"**Internal only.** The firewall found restricted details. Remove them before this goes to a client.\n\n":"")+fin2.text;
   const M=work.map,phOut=Object.fromEntries(Object.entries(work.ph).map(([k,v])=>[k,{s:Math.round(v.s||0),e:v.e!=null?Math.round(v.e):null,skip:v.skip?1:0}]));
   cur.turns.push({role:"assistant",content,ex,doc:work.doc||null,ts:Date.now(),work:{ms:work.ms,firewall:work.firewall,feed:work.feed,sig:work.sig.slice(-600),sigKeys:work.sigKeys,tok:totTok(),ph:phOut,
-   steps:steps.map(s=>({role:s.role,tier:s.tier,focus:s.focus,task:s.task,why:s.why,after:s.after,web:!!s.web,v:s.v,redo:s.redo,ms:s.ms,searches:s.searches||0,out:(s.out||"").slice(0,4000)})),web:M.pages.length,ledger:work.ledger?{claims:work.ledger.claims.map(c=>Object.assign({},c)),audit:work.ledger.audit||null}:null,atok:work.atok||tok(fin2.text),
+   steps:steps.map(s=>({role:s.role,tier:s.tier,focus:s.focus,task:s.task,why:s.why,after:s.after,web:!!s.web,v:s.v,redo:s.redo,ms:s.ms,tb:s.tb,ts:s.ts,te:s.te,searches:s.searches||0,out:(s.out||"").slice(0,4000)})),web:M.pages.length,ledger:work.ledger?{claims:work.ledger.claims.map(c=>Object.assign({},c)),audit:work.ledger.audit||null}:null,atok:work.atok||tok(fin2.text),
    map:{thinking:M.thinking.slice(0,6).map(t=>clip(t,240)),rationale:clip(M.rationale,240),kind:clip(M.kind,80),calls:M.calls.slice(0,40),pages:M.pages.slice(0,30)}}});save();
   try{if(db)await db.collection("runs").doc("r"+Date.now()).set({ts:Date.now(),request:q.slice(0,160),steps:steps.map(s=>({role:s.role,tier:s.tier,focus:s.focus||"",verdict:s.v||"",redo:s.redo})),firewall:work.firewall})}catch(e){}
   const k=cur.turns.length-1;bot.dataset.k=k;bot.classList.add("fresh");run.classList.remove("running");run.classList.add("settled");swap(lbl,summary(work));tEl.textContent=mmss(work.ms);{const mi=run.querySelector(".mini");if(mi){mi._sig=null;if(run.dataset.view==="map")setTimeout(()=>miniDraw(run,cur.turns[cur.turns.length-1].work,false),60)}}setTimeout(()=>{if(!run.classList.contains("pinned")){run.classList.remove("open");run.querySelector(".run-h").setAttribute("aria-expanded","false")}},1100);rk.textContent=tokLine(cur.turns[k].work);

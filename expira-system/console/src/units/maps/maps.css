@@ -4,35 +4,6 @@
 .by time{margin-left:auto;font-size:var(--fs-micro);letter-spacing:var(--tracked-tight);color:var(--mute)}
 .mapw{margin:var(--sp-3) 0 0;overflow-x:auto;overflow-y:hidden;scrollbar-width:thin}
 .mapw:empty{display:none}
-.map .ch{font:400 var(--fs-micro) var(--f-body);letter-spacing:.16em;fill:var(--mute)}
-.map .nd{cursor:pointer;animation:ndIn var(--t-enter) var(--ease-out) both}
-.map .nd:focus{outline:none}
-@keyframes ndIn{from{opacity:0;filter:blur(3px)}to{opacity:1;filter:none}}
-.map .nd:hover .bx,.map .nd:focus-visible .bx{stroke:var(--ink)}
-.map .nd.st-on .bx{stroke:var(--gold)}
-.map .nd.sel .bx{stroke:var(--gold);fill:var(--gold-wash)}
-.map text{font:300 var(--fs-chrome) var(--f-body);fill:var(--text)}
-.map .t1{fill:var(--ink)}
-.map .sf{font:400 var(--fs-chrome-2) var(--f-display);fill:var(--ink)}
-.map .it{font:italic 400 var(--fs-chrome-2) var(--f-display);fill:var(--text)}
-.map .cp{font-size:var(--fs-micro);letter-spacing:.15em;fill:var(--mute)}
-.map .rn{font:400 var(--fs-chrome-2) var(--f-display);fill:var(--gold)}
-.map .nm{font-size:var(--fs-micro);fill:var(--mute)}
-.map .sm{font-size:var(--fs-micro)}
-.map .dt{fill:none;stroke:var(--line-3);stroke-width:1}
-.map .st-on .dt{fill:var(--gold);stroke:var(--gold);animation:breathe var(--t-loop) var(--ease-inout) infinite}
-.map .st-ok .dt{fill:var(--ok);stroke:var(--ok)}
-.map .st-bad .dt{fill:var(--bad);stroke:var(--bad)}
-.map .st-filed .dt,.map .st-done .dt{fill:var(--soft);stroke:var(--soft)}
-.map .eg{fill:none;stroke:var(--line-3);stroke-width:.75;stroke-dasharray:1;stroke-dashoffset:1;transition:stroke-dashoffset var(--t-draw) var(--ease-soft-close)}
-.map .eg.drawn{stroke-dashoffset:0}
-.map .eg.dep{stroke:var(--gold);stroke-dasharray:2 3;stroke-dashoffset:0;opacity:0;transition:opacity var(--t-exit) var(--ease-soft-close)}
-.map .eg.dep.drawn{opacity:.55}
-.map .fl{fill:none;stroke:var(--gold);stroke-width:1;stroke-dasharray:3 6;opacity:0;transition:opacity var(--t-exit) var(--ease-soft-close);animation:flow var(--t-flow) linear infinite}
-.map .fl.on{opacity:.9}
-.map .pl{fill:var(--gold)}
-.dmap .map{margin:0 auto}
-/* the map's two views, and performance */
 .mvb{position:sticky;left:0;display:flex;align-items:center;gap:var(--sp-2h);margin:0 0 var(--sp-1h);min-height:22px}
 .mvr{flex:1;min-width:0;font:italic 400 var(--fs-chrome-2) var(--f-display);color:var(--mute);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .mvk{display:flex;gap:var(--sp-2);flex:none;font-size:var(--fs-micro);color:var(--mute)}
@@ -43,55 +14,7 @@
 }
 .dmap .mvb{padding:var(--sp-1h) var(--sp-2) 0;margin:0}
 .dmap .seg3{background:var(--sheet)}
-.map.field{display:block;width:100%;touch-action:pan-y;overflow:visible}
-.field.dragging,.field.dragging .fn{cursor:grabbing}
-.field .fn:focus{outline:none}
-.field .st-bad .core{stroke:var(--bad);stroke-width:1.6}
-.field .fn:hover .core,.field .fn:focus-visible .core,.field .fn.sel .core{stroke:var(--gold);stroke-width:1.6}
-.field .ring{fill:none;stroke:var(--gold);stroke-width:1;opacity:0;transform-box:fill-box;transform-origin:center}
-.field .st-on .ring{animation:ring var(--t-loop) var(--ease-inout) infinite}
-@keyframes ring{0%{opacity:.85;transform:scale(1)}100%{opacity:0;transform:scale(2.4)}}
-.field .k-agent .lb{fill:var(--text)}
-.field .k-orch .lb{font:400 var(--fs-chrome-2) var(--f-display);fill:var(--ink)}
-.field .k-conn .lb{font:400 var(--fs-chrome) var(--f-display);fill:var(--ink)}
-.field .ln{stroke:var(--line-3);stroke-linecap:round;transition:opacity var(--t-exit) var(--ease-soft-close),stroke var(--t-exit) var(--ease-soft-close)}
-.field .ln.dep{stroke:var(--gold);stroke-dasharray:2 3;opacity:.55}
-.field .lf{stroke:var(--gold);stroke-linecap:round;stroke-dasharray:3 6;opacity:0;transition:opacity var(--t-exit) var(--ease-soft-close);animation:flow var(--t-flow) linear infinite}
-.field .lf.on{opacity:.9}
-.field.hl .fn:not(.nb){opacity:.16}
-.field.hl .ln:not(.nb),.field.hl .lf:not(.nb){opacity:.05}
-.field.hl .ln.nb{stroke:var(--gold)}
-.field .pl{fill:var(--gold)}
-.field .hit{fill:transparent}
-.mapw:has(> .field){overflow:visible}
-/* the map */
-/* long threads: cards out of view are not painted until they come back */
-.map{display:block;overflow:visible;contain:layout paint}
-.map .fl.on,.field .lf.on{animation:flow var(--t-flow) linear infinite}
-/* the liquid: a membrane drawn between parent and child as it pulls away */
-.field .neck{fill:var(--c,var(--gold));pointer-events:none}
-.field .neck.k-site,.field .neck.k-more,.field .neck.k-conn{fill:var(--gold);opacity:.4}
-.field .fn{cursor:grab;animation:none;transition:opacity var(--t-enter) var(--ease-soft-close)}
-.field .fn.unborn{opacity:0;pointer-events:none}
-.field .lb{font:300 var(--fs-micro) var(--f-body);fill:var(--soft);paint-order:stroke;stroke:var(--sheet);stroke-width:3px;stroke-linejoin:round;pointer-events:none;transition:opacity var(--t-exit) var(--ease-soft-close)}
-.field .fn.young .lb{opacity:0}
-.field.hl .fn.unborn{opacity:0}
 .dmap{border:var(--rule-hair) solid var(--line-2);border-radius:var(--r-1);background:var(--well);margin:0;--n-sep:var(--well)}
-.field .core{transition:fill var(--t-exit) var(--ease-soft-close),stroke var(--t-exit) var(--ease-soft-close);fill:var(--c,var(--n-hollow));stroke:var(--n-sep);stroke-width:1.5}
-.field .k-orch .core{fill:var(--ink)}
-.field .k-site .core,.field .k-more .core{fill:var(--n-hollow);stroke:var(--n-rim);stroke-width:1.1}
-.field .k-agent.st-wait .core{fill:var(--n-hollow);stroke:var(--c);stroke-width:1.4}
-.field .k-site .lb,.field .k-more .lb{font-size:var(--fs-micro);fill:var(--n-lab)}
-.dmap .field .lb{stroke:var(--well)}
-.map .bx{fill:var(--panel);stroke-width:.6;transition:stroke var(--t-exit) var(--ease-soft-close),fill var(--t-exit) var(--ease-soft-close);stroke:var(--n-rim)}
-.dmap .bx{fill:var(--n-hollow)}
-.field .k-conn .core{stroke:var(--gold);stroke-width:1.5;fill:color-mix(in srgb,var(--gold) 16%,var(--n-hollow))}
-.map .eg.back{stroke:var(--gold);opacity:.55}
-.field .ln.back{stroke:var(--gold);opacity:.45;stroke-dasharray:3 3}
-.field .k-arb .core{fill:var(--gold)}
-.field .k-ans .core{fill:var(--n-hollow);stroke:var(--ok);stroke-width:1.8}
-.map .k-arb .bx{stroke:var(--gold)}
-.map .k-ans .bx{stroke:var(--ok)}
 .mfs{position:fixed;inset:20px;z-index:var(--z-map);display:flex;flex-direction:column;background:var(--sheet);border:var(--rule-hair) solid var(--line-3);border-radius:var(--r-5);box-shadow:var(--e3);overflow:hidden;opacity:0;visibility:hidden}
 .mfs.open{opacity:1;visibility:visible}
 .mfs-h{display:flex;align-items:center;gap:var(--sp-3);padding:var(--sp-3) var(--sp-3h) var(--sp-2h) var(--sp-5);border-bottom:var(--rule-hair) solid var(--line-2)}
@@ -116,57 +39,34 @@
 .mapt:hover,.mapt[aria-expanded="true"]{color:var(--ink)}
 .mapt[aria-expanded="true"] svg{color:var(--gold)}
 .run .mapw{display:none;border-top:0;padding-top:var(--sp-2)}
-/* nothing invisible keeps animating: the flowing dash runs only on a live link */
-.map .fl,.field .lf{animation:none;stroke-dasharray:.1 8;stroke-linecap:round;stroke-width:2.2}
-@keyframes flow{to{stroke-dashoffset:-8.1}}
-.mini svg{display:block;width:100%;max-width:700px;overflow:visible}
-.mini .me{fill:none;stroke:var(--line-3);stroke-width:1;opacity:.55;transition:opacity var(--t-exit),stroke var(--t-exit)}
-.mini .me.on{stroke:var(--gold);opacity:.8}
-.mini .me.dep{stroke-dasharray:2 3;opacity:.35}
-.mini .me.bk{stroke:var(--gold);opacity:.22}
-.mini .me.bk.on{opacity:.6}
-.mini .bd{fill:var(--gold)}
-.mini .md{stroke:none;fill:var(--soft)}
-.mini .md.k-orch{fill:var(--ink)}
-.mini .md.k-arb{fill:var(--gold)}
-.mini .md.k-conn{fill:var(--sheet);stroke:var(--gold);stroke-width:1.2}
-.mini .md.k-ans,.mini .md.k-doc{fill:var(--ink)}
-.mini .md.r-research{fill:var(--s1)}
-.mini .md.r-finance{fill:var(--s2)}
-.mini .md.r-legal{fill:var(--s4)}
-.mini .md.r-decision{fill:var(--s5)}
-.mini .md.s-bad{fill:var(--bad)}
-.mini .md.k-site,.mini .md.k-more{fill:var(--sheet);stroke:var(--line-3);stroke-width:1}
-.mini .md,.mini .halo{transform-box:fill-box;transform-origin:center}
-.mini .md.nb{animation:mnb var(--t-move) var(--spring) both}
-@keyframes mnb{from{transform:scale(.1)}to{transform:scale(1)}}
-.mini .halo{fill:none;stroke:var(--gold);stroke-width:1;opacity:.5;animation:halo var(--t-loop) var(--ease-inout) infinite}
-@keyframes halo{0%,100%{transform:scale(.8);opacity:.55}50%{transform:scale(1.25);opacity:.12}}
-.mini .hit{fill:transparent}
-.mini text{font:400 var(--fs-chrome) var(--f-body);fill:var(--soft);letter-spacing:.01em;paint-order:stroke;stroke:var(--sheet);stroke-width:3.5px;stroke-linejoin:round}
-.mini text .nm{fill:var(--mute);font-size:var(--fs-micro)}
-.mini .mn{cursor:pointer;outline:none;transition:opacity var(--t-enter)}
-.mini .mn.on text{fill:var(--ink)}
-.mini .mn.nb text{animation:ink var(--t-enter) calc(var(--stagger) * 3) var(--ease-out) both}
-.mini svg:has(.mn:hover) .mn:not(:hover){opacity:.4}
-.mini .mn:hover text,.mini .mn:focus-visible text{fill:var(--ink)}
-@media (max-width:560px){
-.mini text{font-size:var(--fs-ui)}
-}
-@media (prefers-reduced-motion:reduce){
-.mini .halo{display:none}
-}
-@media (max-width:560px){
-.mini .mn text{font-size:var(--fs-chrome-2)}
-}
-.mini .md.s-wait{opacity:.6}
-.field .fn text{transition:opacity var(--t-exit) var(--ease-soft-close) calc(var(--stagger) * 8)}
-.field .fn.unborn text,.field .fn.young text{opacity:0;transition:none}
-/* !important: order is truth; a hidden edge stays hidden while its flow loop runs */
-.map .eg:not(.drawn)~.fl{opacity:0!important}
-.field .ln,.field .lf{transition:opacity var(--t-exit) var(--ease-soft-close)}
-/* !important: order is truth; a hidden edge stays hidden while its flow loop runs */
-.field .ln.hid,.field .lf.hid{opacity:0!important}
-.mini .me.ne{stroke-dasharray:1;stroke-dashoffset:1;animation:fgDraw var(--t-draw) var(--ease-out) calc(var(--stagger) * 8) forwards}
-.mini .me.dep.ne{stroke-dasharray:none;stroke-dashoffset:0;opacity:0;animation:ink var(--t-enter) calc(var(--stagger) * 12) forwards}
-.mini .mn.nb .halo{animation:mnb var(--t-move) var(--spring) both,halo var(--t-loop) var(--ease-inout) calc(var(--stagger) * 15) infinite}
+/* the map plate: the canvas paints; the list of nodes over it takes focus and anchors the sheet */
+.map{position:relative;display:block;width:100%;contain:layout paint;overflow:visible}
+.map canvas{display:block;touch-action:pan-y}
+.map canvas.dragging{cursor:grabbing}
+.map-ax{position:absolute;inset:0;margin:0;padding:0;list-style:none;pointer-events:none}
+.map-ax li{display:contents}
+.mnb{position:absolute;left:0;top:0;padding:0;border:0;border-radius:var(--r-round);background:transparent;opacity:0;pointer-events:none}
+.map-flow .mnb{border-radius:var(--r-1)}
+.mnb:focus{outline:none}
+/* the tooltip: anchored to the node, moved only by transform; numbers in tabular figures */
+.map-tip{position:absolute;left:0;top:0;z-index:var(--z-2);max-width:280px;padding:var(--sp-2) var(--sp-2h);background:var(--panel);border:var(--rule-hair) solid var(--line-2);border-radius:var(--r-2);box-shadow:var(--e1);font-size:var(--fs-chrome-2);color:var(--text);pointer-events:none;opacity:0;visibility:hidden;transition:opacity var(--t-exit) var(--ease-soft-close),visibility 0s linear var(--t-exit)}
+.map-tip.on{opacity:1;visibility:visible;transition:opacity var(--t-enter) var(--ease-out),visibility 0s}
+.map-tip .mt-h{display:flex;align-items:baseline;gap:var(--sp-3);justify-content:space-between}
+.map-tip .mt-h b{font-weight:500;font-size:var(--fs-chrome);letter-spacing:var(--tracked-cap);text-transform:uppercase;color:var(--ink)}
+.map-tip .mt-s{display:inline-flex;align-items:center;gap:var(--sp-1);font-size:var(--fs-micro);letter-spacing:var(--tracked-tight);text-transform:uppercase;color:var(--mute)}
+.map-tip .mt-s i{width:5px;height:5px;border-radius:var(--r-round);border:var(--rule) solid currentColor}
+.map-tip .st-running,.map-tip .st-thinking{color:var(--gold-ink)}
+.map-tip .st-running i{background:currentColor}
+.map-tip .st-done i{background:currentColor}
+.map-tip .st-failed{color:var(--bad)}
+.map-tip p{margin:var(--sp-half) 0 var(--sp-1h);font:italic 400 var(--fs-chrome-2) var(--f-display);color:var(--soft)}
+.map-tip dl{display:grid;grid-template-columns:auto 1fr;gap:var(--sp-half) var(--sp-3);margin:0}
+.map-tip dt{font-size:var(--fs-micro);letter-spacing:var(--tracked-tight);text-transform:uppercase;color:var(--mute);line-height:1.6}
+.map-tip dd{margin:0;line-height:1.5}
+/* the flow's DOM: lane names in the gutter, tick labels on the axis, the now tag */
+.map-lanes,.map-axis{position:absolute;left:0;top:0;pointer-events:none}
+.map-lanes span{position:absolute;left:var(--sp-1);top:0;white-space:nowrap;font-size:var(--fs-micro);letter-spacing:var(--tracked-tight);text-transform:uppercase;color:var(--mute);line-height:12px}
+.map-axis{right:0;height:16px}
+.map-axis i{position:absolute;left:0;top:2px;font-style:normal;font-size:var(--fs-micro);color:var(--mute);line-height:12px;margin-left:3px}
+.map-now{position:absolute;left:0;top:2px;font-size:var(--fs-micro);letter-spacing:var(--tracked-tight);text-transform:uppercase;color:var(--gold-ink);line-height:12px;margin-left:-22px;background:var(--n-sep);padding:0 var(--sp-half);opacity:0;transition:opacity var(--t-exit) var(--ease-soft-close)}
+.map-now.on{opacity:1}

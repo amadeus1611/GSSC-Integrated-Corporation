@@ -3,6 +3,8 @@
 // Each unit lists the states that show it; a state is [name, async p => {...}] run in order on one page.
 const H = require('./harness'), path = require('path'), fs = require('fs');
 const { wait, click } = require('./states');
+// the centre of a node on the Dispatch map, in page coordinates
+const hoverNode = async (p, id) => { const pt = await p.evaluate(id => { const m = [...window.__FM].find(m => m.host.id === 'dxMap'); const a = m && m.anchorOf(id); if (!a) return null; const r = m.box.getBoundingClientRect(); return [r.left + a.x + a.w / 2, r.top + a.y + a.h / 2] }, id); if (pt) await p.mouse.move(pt[0], pt[1]); else console.log('no node', id) };
 const UNITS = {
   shell: [
     ['start', async p => { await click(p, '#newChat') }],
@@ -23,12 +25,28 @@ const UNITS = {
     ['settings-open', async p => { await wait(p, 600) }],
     ['palette-mid', async p => { await p.keyboard.press('Escape'); await wait(p, 500); await p.keyboard.press('Control+KeyK'); await wait(p, 70) }],
     ['palette-open', async p => { await wait(p, 500) }],
-    ['sheet-mid', async p => { await p.keyboard.press('Escape'); await wait(p, 500); await click(p, '.run-h'); await click(p, '.run [data-view=map]'); await wait(p, 900); const n = await p.$('.run [data-sheet]'); if (n) { await n.click(); await wait(p, 80) } else console.log('no [data-sheet]') }],
+    ['sheet-mid', async p => { await p.keyboard.press('Escape'); await wait(p, 500); await click(p, '.run-h'); await click(p, '.run [data-view=map]'); await wait(p, 900); const n = await p.$('.run .mini [data-node="a0"]'); if (n) { await n.focus(); await p.keyboard.press('Enter'); await wait(p, 80) } else console.log('no card map node') }],
     ['sheet-open', async p => { await wait(p, 600) }],
     ['map-fs-mid', async p => { await p.keyboard.press('Escape'); await wait(p, 500); await p.keyboard.press('Alt+KeyL'); await wait(p, 1500); const f = await p.$('#dsp [data-mfs]'); if (f) { await f.click(); await wait(p, 90) } else console.log('no [data-mfs]') }],
     ['map-fs-open', async p => { await wait(p, 600) }],
     ['cite-open', async p => { await p.keyboard.press('Escape'); await wait(p, 500); await p.keyboard.press('Escape'); await wait(p, 500); const c = await p.$('.cite'); if (c) { await c.scrollIntoViewIfNeeded(); await c.hover(); await wait(p, 700) } }],
     ['rest', async p => { await p.mouse.move(1200, 880); await wait(p, 900); const n = await p.evaluate(() => document.querySelectorAll('.pour-plate,.pour-bead').length + [...document.querySelectorAll('.menu,.stg,.pal,.sheet,#cpop,.docv,.mfs')].filter(e => e.style.boxShadow || e.getAnimations().length).length); console.log('leftover pour layers:', n) }],
+  ],
+  maps: [
+    ['field-replay-mid', async p => { await H.example(p); await p.keyboard.press('Alt+KeyL'); await wait(p, 700) }],
+    ['field-settled', async p => { await wait(p, 3200); console.log('maps', await p.evaluate(() => [...window.__FM].map(m => `${m.constructor.name} ${m.host.id || m.host.className} W${m.W} H${Math.round(m.Hc)} nodes ${m.visible().length} raf ${!!m.raf}`).join(' | '))) }],
+    ['field-hover', async p => { await hoverNode(p, 'a1'); await wait(p, 400) }],
+    ['field-lens', async p => { await p.mouse.down(); await p.mouse.up(); await wait(p, 700) }],
+    ['flow-replay-mid', async p => { await p.keyboard.press('Escape'); await wait(p, 500); await p.click('#dsp [data-mv=flow]'); await wait(p, 500) }],
+    ['flow-settled', async p => { await wait(p, 2600) }],
+    ['flow-hover', async p => { await hoverNode(p, 'a2'); await wait(p, 400) }],
+    ['card-map', async p => { await p.mouse.move(5, 5); await p.keyboard.press('Alt+KeyL'); await wait(p, 600); await click(p, '.run-h'); await click(p, '.run [data-view=map]'); await wait(p, 1500) }],
+    ['fullscreen', async p => { await p.click('#dsp [data-mv=field]').catch(() => {}); await p.keyboard.press('Alt+KeyL'); await wait(p, 900); const f = await p.$('#dsp [data-mfs]'); if (f) await f.click(); await wait(p, 3000) }],
+    ['live-early', async p => { await p.keyboard.press('Escape'); await wait(p, 500); await H.brief(p, H.BRIEF, { noWait: true }); await wait(p, 600); await p.keyboard.press('Alt+KeyL'); await wait(p, 3500) }],
+    ['live-mid', async p => { await wait(p, 5000); console.log('live', await p.evaluate(() => [...window.__FM].map(m => `${m.constructor.name} live ${m.g && m.g.live} nodes ${m.visible().length} light ${m.lt.id} parts ${(m.P || []).length}`).join(' | '))) }],
+    ['live-flow', async p => { await p.click('#dsp [data-mv=flow]'); await wait(p, 3000) }],
+    ['live-done', async p => { await p.waitForFunction(() => !document.querySelector('.app').classList.contains('busy'), null, { timeout: 150000 }); await wait(p, 2500) }],
+    ['live-field-done', async p => { await p.click('#dsp [data-mv=field]'); await wait(p, 3500); console.log('rest', await p.evaluate(() => [...window.__FM].map(m => `${m.constructor.name} raf ${!!m.raf} light ${m.lt.id}`).join(' | '))) }],
   ],
   composer: [
     ['idle', async p => { await click(p, '#newChat'); await p.mouse.move(900, 800); await wait(p, 600) }],

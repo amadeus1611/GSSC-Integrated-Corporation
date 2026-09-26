@@ -1,76 +1,109 @@
-class FlowMap{
- constructor(host,get,opt={}){this.host=host;this.get=get;this.opt=opt;this.nodes=new Map();this.edges=new Map();this.W=0;this.H=0;this.Hc=0;this.fresh=true;this.pl=[];this.raf=0;
-  host.innerHTML=barHTML("flow",get(),opt);this.mvr=host.querySelector(".mvr");this.vis=true;this.svg=sv("svg",{class:"map",role:"group","aria-label":"Map of the run"});this.gC=sv("g");this.gE=sv("g");this.gP=sv("g");this.gN=sv("g");this.svg.append(this.gC,this.gE,this.gP,this.gN);host.append(this.svg);
-  this.svg.addEventListener("pointerover",e=>{const g=e.target.closest("[data-node]");this.mvr.textContent=g?nodeInfo(this.get(),g.dataset.node):HINT.flow});this.svg.addEventListener("pointerleave",()=>this.mvr.textContent=HINT.flow);
-  this.svg.addEventListener("click",e=>{const g=e.target.closest("[data-node]");if(g){e.stopPropagation();openSheet(this.get(),g.dataset.node,g)}});
-  this.svg.addEventListener("keydown",e=>{const g=e.target.closest&&e.target.closest("[data-node]");if(g&&(e.key==="Enter"||e.key===" ")){e.preventDefault();openSheet(this.get(),g.dataset.node,g)}});
-  this.ro=new ResizeObserver(()=>{const cw=host.clientWidth;if(!cw)return;const v=cw<560,w=v?Math.round(cw):Math.max(720,Math.round(cw));if(w!==this.W||v!==this.vert){this.W=w;this.vert=v;this.sync()}});this.ro.observe(host);this.io=new IntersectionObserver(es=>{this.vis=es[es.length-1].isIntersecting;if(this.vis)this.go()});this.io.observe(host);FM.add(this)}
- kill(){this.ro.disconnect();this.io.disconnect();cancelAnimationFrame(this.raf);this.raf=0;FM.delete(this)}
- layoutV(N){const W=this.W,pad=8,gap=34,pos={};let y=pad;
-  const place=(L,w,hh,g,cols)=>{if(!L.length)return;cols=Math.max(1,Math.min(cols,L.length));const rows=Math.ceil(L.length/cols);
-   L.forEach((n,k)=>{const r=Math.floor(k/cols),c=k%cols,inRow=Math.min(cols,L.length-r*cols),x0=(W-(inRow*w+(inRow-1)*g))/2;pos[n.id]={x:x0+c*(w+g),y:y+r*(hh+g),w,h:hh}});y+=rows*hh+(rows-1)*g+gap};
-  const by=c=>N.filter(n=>n.col===c),dw=Math.min(172,Math.floor((W-10)/2)),sw=Math.min(128,Math.floor((W-12)/3));
-  place(by(0),150,40,10,1);place(by(1),150,40,0,1);place(by(2),dw,34,10,Math.floor((W+10)/(dw+10)));place(by(3),150,36,0,1);place(by(4),sw,22,6,Math.floor((W+6)/(sw+6)));
-  return {H:Math.max(72,y-gap+pad),pos,cx:{},cols:[]}}
- layout(N){if(this.vert)return this.layoutV(N);const W=this.W,cols=[0,1,2,3,4].filter(c=>N.some(n=>n.col===c)),top=24,pad=8,ws=cols.map(c=>SPEC[c].w);
-  let gap=cols.length>1?(W-ws.reduce((a,b)=>a+b,0)-24)/(cols.length-1):0;gap=Math.min(gap,150);
-  let x=Math.max(12,(W-ws.reduce((a,b)=>a+b,0)-gap*(cols.length-1))/2);const cx={},pos={},colH={};let H=0;
-  cols.forEach((c,j)=>{const L=N.filter(n=>n.col===c);colH[c]=L.length*SPEC[c].h+SPEC[c].g*(L.length-1);cx[c]=x;H=Math.max(H,colH[c]);x+=ws[j]+gap});
-  H+=top+pad;cols.forEach((c,j)=>{let y=top+(H-top-pad-colH[c])/2;N.filter(n=>n.col===c).forEach(n=>{pos[n.id]={x:cx[c],y,w:ws[j],h:SPEC[c].h};y+=SPEC[c].h+SPEC[c].g})});
-  return {H:Math.max(H,72),pos,cx,cols}}
- mk(n,p){const g=sv("g",{class:`nd k-${n.kind} st-${n.st}`,"data-node":n.id,tabindex:"0",role:"button","aria-label":[n.kind==="orch"?"Orchestrator":n.kind==="conn"?"Exa":n.t1,n.t2].filter(Boolean).join(", ")});
-  g.append(sv("rect",{class:"bx",width:p.w,height:p.h,rx:3}));
-  const T=(c,x,y,t,an)=>{const e=sv("text",{class:c,x,y,...(an?{"text-anchor":an}:{})});e.textContent=t;g.append(e)};
-  const fit=(t,px,cw)=>{t=String(t||"");const m=Math.max(3,Math.floor(px/cw));return t.length>m?t.slice(0,m-1).trimEnd()+"…":t};
-  const dot=(y)=>g.append(sv("circle",{class:"dt",cx:p.w-10,cy:y,r:2.5}));
-  if(n.kind==="orch"||n.kind==="arb"||n.kind==="ans"||n.kind==="doc"){T("sf",10,17,{orch:"Orchestrator",arb:"Arbiter",ans:"Answer",doc:"Document"}[n.kind]);T("cp",10,30,fitS(n.t2,Math.floor((p.w-26)/6)));dot(13)}
-  else if(n.kind==="agent"){T("rn",9,21.5,n.rn+".");T("cp",30,14,fit(n.t1,p.w-46,6.2));T("it",30,26.5,fit(n.t2,p.w-46,5.3));dot(p.h/2)}
-  else if(n.kind==="conn"){T("t1",10,16,"Exa");T("cp",10,28.5,fit(n.t2,p.w-20,6.2));dot(13)}
-  else if(n.kind==="site"){T("t1 sm",9,14.5,fit(n.t1,p.w-30,5.4));T("nm",p.w-8,14.5,String(n.num),"end")}
-  else T("it",9,14.5,fit(n.t1,p.w-16,5.3));
-  return g}
- sync(){if(!this.host.isConnected){this.kill();return}if(!this.W)return;const w=this.get();if(!w)return;const {N,E}=graphOf(w),L=this.layout(N),rep=this.fresh&&this.opt.replay;
-  this.gC.replaceChildren(...L.cols.map(c=>{const t=sv("text",{class:"ch",x:L.cx[c],y:11});t.textContent=COLN[c];return t}));
-  const seen=new Set();N.forEach((n,ix)=>{seen.add(n.id);const p=L.pos[n.id],key=JSON.stringify([n.t1,n.t2,n.num,p.w]);let o=this.nodes.get(n.id);
-   if(!o){o={g:this.mk(n,p),x:p.x,y:p.y,key};if(rep)o.g.style.animationDelay=(n.col*.24+ix*.03).toFixed(2)+"s";this.gN.append(o.g);this.nodes.set(n.id,o)}
-   else if(o.key!==key){o.g.replaceChildren(...this.mk(n,p).childNodes);o.key=key}
-   const cls=`nd k-${n.kind} st-${n.st}${o.g.classList.contains("sel")?" sel":""}`;if(o.g.getAttribute("class")!==cls)o.g.setAttribute("class",cls);
-   Object.assign(o,{tx:p.x,ty:p.y,w:p.w,h:p.h,n})});
-  for(const [id,o] of this.nodes)if(!seen.has(id)){o.g.remove();this.nodes.delete(id)}
-  const se=new Set();E.forEach(e=>{se.add(e.id);let o=this.edges.get(e.id);
-   if(!o){const bk=(N.find(n=>n.id===e.a)||{}).col>(N.find(n=>n.id===e.b)||{}).col,g=sv("g"),p=sv("path",{class:"eg"+(e.dep?" dep":"")+(bk?" back":""),...(e.dep?{}:{pathLength:1})}),f=sv("path",{class:"fl"});g.append(p,f);this.gE.append(g);o={g,p,f};this.edges.set(e.id,o);
-    if(rep)p.style.transitionDelay=((this.nodes.get(e.b)?.n.col||1)*.24+.08).toFixed(2)+"s";requestAnimationFrame(()=>requestAnimationFrame(()=>p.classList.add("drawn")));f.style.transitionDelay=((parseFloat(p.style.transitionDelay)||0)+.6).toFixed(2)+"s"}
-   o.e=e;o.f.classList.toggle("on",!!e.on)});
-  for(const [id,o] of this.edges)if(!se.has(id)){o.g.remove();this.edges.delete(id)}
-  this.H=L.H;if(this.fresh){this.Hc=L.H;this.fresh=false;this.svg.setAttribute("viewBox",`0 0 ${this.W} ${this.Hc.toFixed(1)}`);this.svg.style.width=this.W+"px";this.svg.style.height=this.Hc.toFixed(1)+"px"}this.go()}
- ends(e){const a=this.nodes.get(e.a),b=this.nodes.get(e.b);if(!a||!b)return null;const ay=a.ry??a.y,by=b.ry??b.y,back=a.n&&b.n&&a.n.col>b.n.col;
-  if(back&&!this.vert){const x1=a.x,y1=ay+a.h/2+5,x2=b.x+b.w,y2=by+b.h/2+5,dx=(x2-x1)*.5;return [[x1,y1],[x1+dx,y1],[x2-dx,y2],[x2,y2]]}
-  if(back&&this.vert){const x1=a.x+a.w/2+10,y1=ay,x2=b.x+b.w/2+10,y2=by+b.h,dy=(y2-y1)*.5;return [[x1,y1],[x1,y1+dy],[x2,y2-dy],[x2,y2]]}
-  if(this.vert){if(e.dep)return null;const x1=a.x+a.w/2,y1=ay+a.h,x2=b.x+b.w/2,y2=by,dy=(y2-y1)*.5;return [[x1,y1],[x1,y1+dy],[x2,y2-dy],[x2,y2]]}
-  if(e.dep){const x=a.x,y1=ay+a.h/2,y2=by+b.h/2,bx=x-Math.min(18,8+Math.abs(y2-y1)*.12);return [[x,y1],[bx,y1],[bx,y2],[x,y2]]}
-  const x1=a.x+a.w,y1=ay+a.h/2,x2=b.x,y2=by+b.h/2,dx=(x2-x1)*.5;return [[x1,y1],[x1+dx,y1],[x2-dx,y2],[x2,y2]]}
- go(){if(this.raf||!seen(this))return;const step=()=>{this.raf=0;if(!this.host.isConnected){this.kill();return}if(!seen(this))return;let mv=false;const k=reduce?1:.14,f=v=>+v.toFixed(1);
-   const dh=this.H-this.Hc;if(Math.abs(dh)>.3){this.Hc+=dh*k;mv=true}else this.Hc=this.H;
-   /* while the plate is still growing, the layout is pressed to fit the height it has so far: nothing is ever cut off */
-   const top=this.vert?8:24,pad=8,hm=40,sq=this.H>this.Hc+.5?Math.max(0,(this.Hc-top-pad-hm)/Math.max(1,this.H-top-pad-hm)):1;
-   for(const o of this.nodes.values()){const dx=o.tx-o.x,dy=o.ty-o.y;if(Math.abs(dx)>.3||Math.abs(dy)>.3){o.x+=dx*k;o.y+=dy*k;mv=true}else{o.x=o.tx;o.y=o.ty}o.ry=top+(o.y-top)*sq;o.g.setAttribute("transform",`translate(${f(o.x)},${f(o.ry)})`)}
-   this.svg.setAttribute("viewBox",`0 0 ${this.W} ${f(this.Hc)}`);this.svg.style.width=this.W+"px";this.svg.style.height=f(this.Hc)+"px";
-   for(const o of this.edges.values()){const q=this.ends(o.e);if(!q){o.p.removeAttribute("d");o.f.removeAttribute("d");continue}const d=`M${q[0].map(f)} C${q[1].map(f)} ${q[2].map(f)} ${q[3].map(f)}`;if(o.d!==d){o.p.setAttribute("d",d);o.f.setAttribute("d",d);o.d=d}}
-   const t=performance.now();this.pl=this.pl.filter(p=>{const u=(t-p.t0)/p.dur;if(u>=1){p.c.remove();return false}const o=this.edges.get(p.id),q=o&&this.ends(o.e);if(!q){p.c.remove();return false}
-    const v=u<.5?2*u*u:1-Math.pow(-2*u+2,2)/2,m=1-v,pt=[0,1].map(i=>m*m*m*q[0][i]+3*m*m*v*q[1][i]+3*m*v*v*q[2][i]+v*v*v*q[3][i]);p.c.setAttribute("cx",f(pt[0]));p.c.setAttribute("cy",f(pt[1]));p.c.setAttribute("opacity",Math.min(1,(1-u)*3,u*8).toFixed(2));return true});
-   if(mv||this.pl.length)this.raf=requestAnimationFrame(step)};this.raf=requestAnimationFrame(step)}
- pulse(a,b){const id=`${a}>${b}`;if(reduce||!this.edges.has(id))return;const c=sv("circle",{class:"pl",r:2,opacity:0});this.gP.append(c);this.pl.push({c,id,t0:performance.now(),dur:950});this.go()}
+/* ---------- the flow (R2 §3.1): real time, one lane per role ----------
+   Time runs left to right on a real axis whose domain grows on a spring while the run is live. Each lane is born with
+   its first node; desks of one role stack as sub-rows. A bar is a node's life: a dashed stub while it waits, a body
+   while it runs (feathered at the head), closed caps when it files, and a 2px ribbon along its foot whose strength is
+   its token rate. The staffing and routing decisions are diamonds, with the delegation drawn from the decision to
+   the bar it opened. Axis labels, lane names and the now tag are DOM, so their numbers sit in tabular figures. */
+const FLANES=["orchestrator","research","finance","legal","builder","arbiter","tool"],FSHORT={orchestrator:"Orc",research:"Res",finance:"Fin",legal:"Leg",builder:"Drf",arbiter:"Arb",tool:"Exa"};
+const laneOf=n=>n.kind==="orch"?"orchestrator":n.kind==="arb"||n.kind==="ans"?"arbiter":n.kind==="doc"?"builder":n.kind==="tool"?"tool":n.kind==="desk"?(FLANES.includes(n.role)?n.role:"research"):null;
+const tickLab=ms=>{const s=Math.round(ms/1000);return s===0?"0":s<60?s+" s":s%60?Math.floor(s/60)+":"+pad(s%60):s/60+" min"};
+class FlowMap extends MapBase{
+ constructor(host,get,opt={}){super(host,get,opt,"flow");Object.assign(this,{B:new Map(),Q:[],P:[],lastB:-1e9,lanes:new Map(),D:4000,cp:0});
+  this.lab=document.createElement("div");this.lab.className="map-lanes";this.axd=document.createElement("div");this.axd.className="map-axis";this.nowT=document.createElement("span");this.nowT.className="map-now";this.nowT.textContent="now";this.axd.append(this.nowT);
+  this.box.append(this.lab,this.axd)}
+ get G(){return this.W<560?34:96}
+ x(t){return this.G+Math.max(0,t)/this.D*(this.W-this.G-10)}
+ rebuild(){const g=this.g,anim=this.opt.replay||this.opt.live||g.live,seen=new Set();
+  g.N.forEach(n=>{const ln=laneOf(n);if(!ln)return;seen.add(n.id);let b=this.B.get(n.id);if(!b){b={id:n.id,vis:false,p:0,lane:ln};this.B.set(n.id,b);this.Q.push(n.id)}b.n=n;b.lane=ln});
+  for(const id of [...this.B.keys()])if(!seen.has(id))this.B.delete(id);
+  this.Q=this.Q.filter(id=>this.B.has(id)).sort((a,b)=>this.B.get(a).n.seq-this.B.get(b).n.seq);
+  if(this.fresh&&!anim){this.Q.forEach(id=>{const b=this.B.get(id);b.vis=true;b.p=1});this.Q=[];this.cp=1}
+  this.pack(this.fresh);if(this.fresh)this.D=this.dom()}
+ dom(){const g=this.g;return g.live?Math.max(g.T*1.08,4000):Math.max(g.tEnd||0,1000)}
+ /* lanes: born with their first visible node; sub-rows packed greedily so that a lane is only as tall as it must be */
+ pack(snap){const AX=16,RH=18,PADL=6;let y=AX;const L=new Map();
+  FLANES.forEach(ln=>{const bs=[...this.B.values()].filter(b=>b.vis&&b.lane===ln).sort((a,b)=>a.n.tBorn-b.n.tBorn||a.n.seq-b.n.seq);if(!bs.length)return;const ends=[];
+   bs.forEach(b=>{const s=b.n.tBorn,e=b.n.tEnd==null?Infinity:b.n.tEnd;let r=ends.findIndex(v=>v+150<=s);if(r<0){r=ends.length;ends.push(e)}else ends[r]=e;b.row=r});
+   const h=PADL*2+ends.length*RH,o=this.lanes.get(ln)||{y,h,yv:0,hv:0};o.ty=y;o.th=h;if(snap||reduce){o.y=y;o.h=h}L.set(ln,o);y+=h});
+  this.lanes=L;this.H=y+6;if(snap||!this.Hc)this.Hc=this.H}
+ cy(b){const l=this.lanes.get(b.lane);return l?l.y+6+b.row*18+9:0}
+ step(dt,t){const g=this.g;if(!g)return false;let mv=false;
+  if(this.Q.length){const gap=reduce?0:140;while(this.Q.length&&t-this.lastB>=gap){const b=this.B.get(this.Q[0]),p=b.n.parent&&this.B.get(b.n.parent);if(p&&!p.vis)break;this.Q.shift();b.vis=true;b.bt=t;this.lastB=t;if(gap)break}mv=true}
+  this.pack(false);for(const l of this.lanes.values()){if(reduce){l.y=l.ty;l.h=l.th;continue}mv=cds(l,"y",l.ty,14,dt)||mv;mv=cds(l,"h",l.th,14,dt)||mv}
+  if(Math.abs(this.H-this.Hc)>.4){if(reduce)this.Hc=this.H;else cds(this,"Hc",this.H,14,dt);mv=true}else this.Hc=this.H;
+  const tD=this.dom();if(Math.abs(tD-this.D)>1){if(reduce)this.D=tD;else cds(this,"D",tD,6,dt);mv=true}else this.D=tD;
+  for(const b of this.B.values())if(b.vis&&b.p<1){b.p=reduce?1:Math.min(1,b.p+dt/.28);mv=true}
+  if(!g.live&&!this.Q.length&&this.cp<1){this.cp=reduce?1:Math.min(1,this.cp+dt/.6);mv=true}
+  mv=this.flow(dt)||mv;mv=this.light(t)||mv;return mv||g.live}
+ /* the edges the flow draws: decisions to the bars they opened, dependencies, and the notes going back to be weighed */
+ edges(){const g=this.g,out=[];g.E.forEach(e=>{const a=this.B.get(e.a),b=this.B.get(e.b);if(!a||!b||!a.vis||!b.vis||a.p<1||b.p<1)return;const bn=b.n,an=a.n;let p;
+   if(e.kind==="delegate"||e.kind==="route"||e.kind==="write"){const x1=this.x(bn.tBorn),y1=this.cy(a),x2=this.x(bn.tStart??bn.tBorn),y2=this.cy(b);if(Math.abs(y2-y1)<2)return;const dy=(y2-y1)*.55,s=Math.sign(y2-y1);p=[[x1,y1+s*4],[x1,y1+dy],[x2,y2-dy*.4],[x2,y2-s*6]]}
+   else if(e.kind==="depend"){if(an.tEnd==null)return;const x1=this.x(an.tEnd),y1=this.cy(a),x2=this.x(bn.tStart??bn.tBorn),y2=this.cy(b),dx=Math.max(8,(x2-x1)*.5);p=[[x1,y1],[x1+dx,y1],[x2-dx,y2],[x2,y2]]}
+   else if(e.kind==="return"){if(an.tEnd==null)return;const x1=this.x(an.tEnd),y1=this.cy(a),x2=this.x(e.tBorn),y2=this.cy(b),dy=(y2-y1)*.55;p=[[x1,y1],[x1,y1+dy],[x2,y2-dy],[x2,y2-Math.sign(y2-y1)*6]]}
+   if(p)out.push({e,p})});return out}
+ flow(dt){const g=this.g,T=g.T;if(!g.live||reduce){this.P=this.P.filter(p=>(p.d+=72*dt)<p.len);return this.P.length>0}
+  const E=this.edges().filter(o=>(o.e.kind==="delegate"||o.e.kind==="return")&&o.e.liveAt(T));let tot=0;const lam=E.map(o=>{const n=g.by[o.e.kind==="delegate"?o.e.b:o.e.a],q=Math.min(9,.8+nodeRate(g,n,T)/60),len=blen(o.p);tot+=q*len/72;return[o,q,len]}),sc=tot>60?60/tot:1;
+  this.acc=this.acc||{};lam.forEach(([o,q,len])=>{const k=o.e.id;this.acc[k]=(this.acc[k]||this.rng())+q*sc*dt;while(this.acc[k]>=1){this.acc[k]-=1-(this.rng()-.5)*.3;if(this.P.length<60)this.P.push({id:k,d:0,len})}});
+  this.P=this.P.filter(p=>(p.d+=72*dt)<p.len);return this.P.length>0}
+ pulse(a,b){if(reduce)return;const o=this.edges().find(o=>o.e.a===a&&o.e.b===b);if(!o)return;this.P.push({id:o.e.id,d:0,len:blen(o.p)});this.go()}
+ visible(){return[...this.B.values()].filter(b=>b.vis).sort((a,b)=>a.n.seq-b.n.seq).map(b=>b.id)}
+ span(b){const n=b.n,T=this.g.T,x0=this.x(n.tBorn),xs=n.tStart==null?null:this.x(n.tStart),xe=n.tStart==null?null:Math.max(xs+4,this.x(n.tEnd??T));return{x0,xs,xe}}
+ anchorOf(id){const b=this.B.get(id);if(!b||!b.vis)return null;const s=this.span(b),y=this.cy(b),l=s.xs??s.x0,r=s.xe??this.x(this.g.T);return{x:l,y:y-6,w:Math.max(6,(r-l)*b.p),h:12}}
+ hitAt(x,y){for(const b of this.B.values()){if(!b.vis)continue;const a=this.anchorOf(b.id),x0=Math.min(a.x,this.span(b).x0);if(x>=x0-3&&x<=a.x+a.w+3&&y>=a.y-3&&y<=a.y+a.h+3)return b.id}return null}
+ crit(){if(this._ck===this.g)return this._cs;const bs=[...this.B.values()].filter(b=>b.n.tEnd!=null&&b.n.tStart!=null),s=new Set();let b=bs.sort((a,b)=>b.n.tEnd-a.n.tEnd)[0];
+  while(b&&!s.has(b.id)){s.add(b.id);const n=b.n,pre=[...(n.after||[]),n.parent].map(id=>this.B.get(id)).filter(p=>p&&p.n.tEnd!=null&&p.n.tEnd<=n.tStart+50);b=pre.sort((a,c)=>c.n.tEnd-a.n.tEnd)[0]}
+  this._ck=this.g;this._cs=s;return s}
+ paint(x,t){const C=this.C,g=this.g;if(!g)return;const W=this.W,G=this.G,H=this.Hc,T=g.T,ink=C["--ink"];
+  /* the frame: lane hairlines and names, the time grid, the axis labels */
+  x.lineWidth=1;let first=true;const labs=[];for(const [ln,l] of this.lanes){if(!first){x.globalAlpha=.08;x.strokeStyle=ink;x.beginPath();x.moveTo(0,Math.round(l.y)+.5);x.lineTo(W,Math.round(l.y)+.5);x.stroke()}first=false;labs.push([ln,l.y+l.h/2])}
+  const step=[1,2,5,10,15,30,60,120,300,600].map(s=>s*1000).find(s=>s/this.D*(W-G-10)>=64)||600000,ticks=[];for(let v=0;v<=this.D+1;v+=step)ticks.push(v);
+  x.globalAlpha=.06;x.strokeStyle=ink;x.beginPath();ticks.forEach(v=>{const X=Math.round(this.x(v))+.5;x.moveTo(X,16);x.lineTo(X,H)});x.stroke();
+  this.frame(labs,ticks);
+  /* edges at rest: decisions faint, dependencies fainter, returns only on hover, lens or once the run has settled */
+  const E=this.edges();for(const o of E){const e=o.e,near=(this.hov&&(e.a===this.hov||e.b===this.hov))||(this.lens&&(e.a===this.lens||e.b===this.lens));if(e.kind==="return"&&!near&&g.live)continue;
+   x.globalAlpha=near?.6:(e.kind==="depend"?.1:e.kind==="return"?.08:.14)*Math.min(this.dim(e.a),this.dim(e.b));x.strokeStyle=ink;x.lineWidth=near?1.25:1;x.setLineDash(e.kind==="depend"?[2,3]:[]);
+   const p=o.p;x.beginPath();x.moveTo(...p[0]);x.bezierCurveTo(...p[1],...p[2],...p[3]);x.stroke();x.setLineDash([]);
+   if(e.kind!=="depend"){const [ex,ey]=p[3],[cx,cy]=p[2],a=Math.atan2(ey-cy,ex-cx);x.fillStyle=ink;x.beginPath();x.moveTo(ex,ey);x.lineTo(ex-3.5*Math.cos(a-.5),ey-3.5*Math.sin(a-.5));x.lineTo(ex-3.5*Math.cos(a+.5),ey-3.5*Math.sin(a+.5));x.fill()}}
+  /* decisions: hairline diamonds on the top edge of whoever made them, clear of the bar's label */
+  x.lineWidth=1;g.D.forEach(d=>{const who=d.verb==="plan"||d.verb==="route"?"o":g.by.v?"v":"o",b=this.B.get(who),tg=d.targets[0]&&this.B.get(d.targets[0]);if(!b||!b.vis||tg&&!tg.vis)return;
+   const X=this.x(d.t),Y=this.cy(b)-6.5;x.globalAlpha=.7*this.dim(who);x.strokeStyle=ink;x.fillStyle=C["--well"];x.beginPath();x.moveTo(X,Y-3.5);x.lineTo(X+3.5,Y);x.lineTo(X,Y+3.5);x.lineTo(X-3.5,Y);x.closePath();x.fill();x.stroke()});
+  /* bars */
+  x.font=`500 9.5px ${C.font}`;x.textBaseline="middle";if("letterSpacing" in x)x.letterSpacing=".06em";const cs=this.crit();
+  for(const id of this.visible()){const b=this.B.get(id),n=b.n,al=this.dim(id)*Math.min(1,b.p*2),col=C.role(n.role),y=this.cy(b),s=this.span(b),st=n.state;x.globalAlpha=al;
+   const qEnd=n.tStart!=null?s.xs:this.x(T);if(qEnd-s.x0>2){x.strokeStyle=col;x.globalAlpha=al*.55;x.setLineDash([2,3]);x.lineDashOffset=n.tStart==null&&g.live&&!reduce?-t/60:0;x.beginPath();x.moveTo(s.x0,y+.5);x.lineTo(qEnd,y+.5);x.stroke();x.setLineDash([]);x.globalAlpha=al}
+   if(s.xs==null)continue;const xe=s.xs+(s.xe-s.xs)*b.p,w=xe-s.xs,live=st==="running"||st==="thinking",F=live?Math.min(16,w*.5):0;
+   x.fillStyle=col;x.globalAlpha=al*.14;rr(x,s.xs,y-6,w-F,12,3,F>0?1:0);x.fill();x.globalAlpha=al*.7;x.strokeStyle=col;rr(x,s.xs+.5,y-5.5,w-F-(F>0?0:1),11,3,F>0?2:0);x.stroke();
+   if(F>0){const gr=x.createLinearGradient(xe-F,0,xe,0);gr.addColorStop(0,col);gr.addColorStop(1,"transparent");x.globalAlpha=al*(st==="thinking"?.7:.14);x.fillStyle=gr;x.strokeStyle=gr;
+    if(st==="thinking"){x.beginPath();x.moveTo(xe-F,y-5.5);x.lineTo(xe,y-5.5);x.moveTo(xe-F,y+5.5);x.lineTo(xe,y+5.5);x.stroke()}else{x.fillRect(xe-F,y-6,F,12);x.globalAlpha=al*.7;x.beginPath();x.moveTo(xe-F,y-5.5);x.lineTo(xe,y-5.5);x.moveTo(xe-F,y+5.5);x.lineTo(xe,y+5.5);x.stroke()}}
+   /* the throughput ribbon: a whisper of the token raster */
+   if(n.sigKey){const j=g.sig.col(n.sigKey),fr=g.sig.fr,fw=this.x(250)-this.x(0);if(j>=0){x.fillStyle=col;for(let i=0;i<fr.length;i++){const v=fr[i][j];if(!v)continue;const X=this.x((g.sig.off+i)*250);if(X<s.xs||X>xe)continue;x.globalAlpha=al*Math.min(.85,v/30);x.fillRect(X,y+4,Math.max(1,fw),2)}}}
+   /* web calls: open ticks for searches, filled for reads, on the bar's top edge */
+   const calls=((this.w.map||{}).calls||[]).filter(c=>n.kind==="desk"?c.i===n.i:n.kind==="arb"?c.i===-1:n.kind==="tool");x.strokeStyle=col;x.fillStyle=col;x.globalAlpha=al*.8;
+   calls.forEach(c=>{const X=this.x(c.t||0);if(X>xe)return;if(c.fetch)x.fillRect(X-.5,y-9,1.5,6);else{x.beginPath();x.moveTo(X+.5,y-9);x.lineTo(X+.5,y-3);x.stroke()}});
+   x.globalAlpha=al;x.strokeStyle=st==="failed"?C["--bad"]:col;if(st==="failed"&&b.p>=1){x.beginPath();x.moveTo(xe-3,y-3);x.lineTo(xe+3,y+3);x.moveTo(xe+3,y-3);x.lineTo(xe-3,y+3);x.stroke()}
+   if(st==="held"&&b.p>=1){x.beginPath();x.moveTo(xe+2.5,y-4);x.lineTo(xe+2.5,y+4);x.moveTo(xe+5,y-4);x.lineTo(xe+5,y+4);x.stroke()}
+   if(cs.has(id)&&this.cp>0&&!g.live){x.globalAlpha=.4*al;x.strokeStyle=C["--gold"];x.beginPath();x.moveTo(s.xs,y+8.5);x.lineTo(s.xs+(xe-s.xs)*this.cp,y+8.5);x.stroke()}
+   if(this.lens===id||this.hov===id||this.foc===id){x.globalAlpha=al;x.strokeStyle=C["--gold"];x.lineWidth=this.foc===id?1.25:1;rr(x,s.xs-1.5,y-7.5,w+3,15,4);x.stroke();x.lineWidth=1}
+   /* label: inside when it fits, else to the right, else not at all */
+   const lb=n.kind==="desk"?`${n.rn} · ${n.sub}`:n.label,lw=x.measureText(lb).width;x.globalAlpha=al*Math.min(1,b.p);
+   const halo=(t,X)=>{x.lineWidth=3;x.lineJoin="round";x.strokeStyle=C["--n-sep"];x.strokeText(t,X,y+.5);x.fillStyle=C["--mute"];x.fillText(t,X,y+.5);x.lineWidth=1};x.textAlign="left";
+   if(lw+14<w-F){x.fillStyle=C["--text"];x.fillText(lb,s.xs+8,y+.5)}else if(xe+8+lw<W-6&&!this.rightBusy(b,xe+8+lw))halo(lb,xe+8);else if(s.xs-8-lw>G+4)halo(lb,s.xs-8-lw)}
+  /* particles on live delegations and returns */
+  if(this.P.length){const M=new Map(E.map(o=>[o.e.id,o]));x.globalAlpha=.55;for(const p of this.P){const o=M.get(p.id);if(!o)continue;const [px,py]=bez(o.p,Math.min(1,p.d/p.len)),src=g.by[o.e.a];x.fillStyle=C.role(src&&src.role);x.beginPath();x.arc(px,py,1.8,0,6.2832);x.fill()}}
+  /* now: a gold hairline while live, and the one light at the head of the busiest bar */
+  if(g.live){const X=this.x(T);x.globalAlpha=.6;x.strokeStyle=C["--gold"];x.beginPath();x.moveTo(Math.round(X)+.5,16);x.lineTo(Math.round(X)+.5,H);x.stroke()}
+  const L=this.lt,lb=L.id&&this.B.get(L.id);if(lb&&lb.vis&&L.a>0){const s=this.span(lb),X=s.xe??this.x(T),Y=this.cy(lb),R=10;x.globalAlpha=L.a;x.drawImage(this.glow,X-R,Y-R,R*2,R*2)}
+  x.globalAlpha=1}
+ rightBusy(b,xr){const y=this.cy(b);for(const o of this.B.values()){if(o===b||!o.vis||Math.abs(this.cy(o)-y)>2)continue;const s=this.span(o),l=s.xs??s.x0;if(l>this.span(b).xs&&l<xr)return true}return false}
+ /* the DOM layer: lane names in the gutter, tick labels on the axis, the now tag; reused, moved only by transform */
+ frame(labs,ticks){const nar=this.W<560,k=labs.map(([ln])=>ln).join()+nar;if(this._lk!==k){this._lk=k;this.lab.innerHTML=labs.map(([ln])=>`<span data-l="${ln}">${nar?FSHORT[ln]:LANEN[ln]}</span>`).join("")}
+  labs.forEach(([ln,y],i)=>{const e=this.lab.children[i];if(e&&e._y!==(y|0)){e._y=y|0;e.style.transform=`translateY(${(y-6).toFixed(1)}px)`}});
+  const tk=[...this.axd.querySelectorAll("i")];ticks.forEach((v,i)=>{let e=tk[i];if(!e){e=document.createElement("i");e.className="num";this.axd.append(e)}const l=tickLab(v);if(e.textContent!==l)e.textContent=l;const X=this.x(v).toFixed(1);if(e._x!==X){e._x=X;e.style.transform=`translateX(${X}px)`}});
+  tk.slice(ticks.length).forEach(e=>e.remove());const live=this.g.live;this.nowT.classList.toggle("on",live);if(live)this.nowT.style.transform=`translateX(${this.x(this.g.T).toFixed(1)}px)`}
 }
-/* the field: the same run as a gravity graph. Obsidian's four forces (centre, repel, link force, link distance)
-   on a d3-style integrator (velocity Verlet, alpha decay .0228 ≈ 300 ticks, velocity decay .4, soft collide), plus a pull toward each column */
-/* Hiroyuki Sato's metaball, after Varun Vachhar: the membrane between two circles, as one path; no filter, so no per-frame blur */
-function metaball(r1,r2,c1,c2,hs=2.4,v=.5){const HP=Math.PI/2,d=Math.hypot(c2[0]-c1[0],c2[1]-c1[1]),maxD=r1+r2*2.6;let u1=0,u2=0;
- if(r1<=0||r2<=0||d>maxD||d<=Math.abs(r1-r2)+.01)return "";
- if(d<r1+r2){u1=Math.acos(Math.max(-1,Math.min(1,(r1*r1+d*d-r2*r2)/(2*r1*d))));u2=Math.acos(Math.max(-1,Math.min(1,(r2*r2+d*d-r1*r1)/(2*r2*d))))}
- const ang=Math.atan2(c2[1]-c1[1],c2[0]-c1[0]),ms=Math.acos(Math.max(-1,Math.min(1,(r1-r2)/d))),a1=ang+u1+(ms-u1)*v,a2=ang-u1-(ms-u1)*v,a3=ang+Math.PI-u2-(Math.PI-u2-ms)*v,a4=ang-Math.PI+u2+(Math.PI-u2-ms)*v,
-  V=(c,a,r)=>[c[0]+r*Math.cos(a),c[1]+r*Math.sin(a)],p1=V(c1,a1,r1),p2=V(c1,a2,r1),p3=V(c2,a3,r2),p4=V(c2,a4,r2),tr=r1+r2,
-  d2=Math.min(v*hs,Math.hypot(p1[0]-p3[0],p1[1]-p3[1])/tr)*Math.min(1,d*2/tr),h1=V(p1,a1-HP,r1*d2),h2=V(p2,a2+HP,r1*d2),h3=V(p3,a3+HP,r2*d2),h4=V(p4,a4-HP,r2*d2),f=q=>q[0].toFixed(1)+","+q[1].toFixed(1);
- return `M${f(p1)}C${f(h1)} ${f(h3)} ${f(p3)}A${r2.toFixed(1)},${r2.toFixed(1)} 0 ${d>r1?1:0} 0 ${f(p4)}C${f(h4)} ${f(h2)} ${f(p2)}Z`}
-const rad=(t,k)=>k==="site"?Math.min(11,3.5+Math.sqrt(Math.max(0,t))*.3):Math.min(20,5+Math.sqrt(Math.max(0,t))*.5);
-const fitS=(t,n)=>{t=String(t||"");return t.length>n?t.slice(0,n-1).trimEnd()+"…":t};
-const flabel=n=>n.kind==="doc"?"Document":n.kind==="arb"?"Arbiter":n.kind==="ans"?"Answer":n.kind==="orch"?"Orchestrator":n.kind==="conn"?"Exa":n.kind==="agent"?`${n.rn} · ${fitS(n.t2,20)}`:fitS(n.t1,20);
+/* a bar's outline: closed and rounded (0), square on the right for a body that feathers into its head (1), or open on the right (2) */
+function rr(x,X,Y,w,h,r,m=0){w=Math.max(0,w);r=Math.min(r,w/2,h/2);x.beginPath();
+ if(m===2){x.moveTo(X+w,Y);x.lineTo(X+r,Y);x.arcTo(X,Y,X,Y+h,r);x.arcTo(X,Y+h,X+w,Y+h,r);x.lineTo(X+w,Y+h);return}
+ x.moveTo(X+r,Y);if(m===1){x.lineTo(X+w,Y);x.lineTo(X+w,Y+h)}else{x.arcTo(X+w,Y,X+w,Y+h,r);x.arcTo(X+w,Y+h,X,Y+h,r)}x.lineTo(X+r,Y+h);x.arcTo(X,Y+h,X,Y,r);x.arcTo(X,Y,X+w,Y,r);x.closePath()}
+const bez=(p,u)=>{const m=1-u;return[0,1].map(i=>m*m*m*p[0][i]+3*m*m*u*p[1][i]+3*m*u*u*p[2][i]+u*u*u*p[3][i])};
+const blen=p=>{let l=0,q=p[0];for(let i=1;i<=12;i++){const r=bez(p,i/12);l+=Math.hypot(r[0]-q[0],r[1]-q[1]);q=r}return l};
