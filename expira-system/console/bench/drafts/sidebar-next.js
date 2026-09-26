@@ -178,6 +178,7 @@ const SB=(()=>{const side=$("#side"),scroll=$("#sbScroll");
  let ROLL=new Map();
  function rollup(){const m=new Map(),go=n=>{let L=false,U=false;for(const k of n.kids){if(k.del)continue;if(k.kind==="folder"){const r=go(k);L=L||r.L;U=U||r.U}else{L=L||!!k.live;U=U||!!k.unread}}m.set(n,{L,U});return{L,U}};go(ROOT);ROLL=m}
  /* indentation: 12px a level for the first five, then 4px, so any depth stays readable at any width */
+ const RHpx=()=>parseFloat(tok("--sb-row"))||24;
  let IND=12;const indent=d=>Math.max(0,Math.min(d,5)*IND+Math.max(0,d-5)*4);
 
  /* ---- rows ---- */
@@ -250,9 +251,10 @@ const SB=(()=>{const side=$("#side"),scroll=$("#sbScroll");
   /* Recently Deleted lets go of anything older than 30 days */
   for(let i=TRASH.length-1;i>=0;i--)if(Date.now()-TRASH[i].at>KEEP)TRASH.splice(i,1);
   /* an isolated folder that has gone: the view climbs to its nearest surviving parent */
-  if(rootId&&!SYS[rootId]&&!find(rootId)){const was=rootAnc;rootId=[...was].reverse().find(id=>find(id))||null;const i=rootId?was.indexOf(rootId):-1;o={...o,field:"out",anchor:was[i+1]&&find(was[i+1])?was[i+1]:null};hlS.hold(ms("--sb-move"))}
+  if(rootId&&!SYS[rootId]&&!find(rootId)){const was=rootAnc;rootId=[...was].reverse().find(id=>find(id))||null;const i=rootId?was.indexOf(rootId):-1;o={...o,field:"out",chain:was.slice(i+1)};hlS.hold(ms("--sb-move"))}
   IND=parseFloat(tok("--sb-indent"))||12;rollup();
   const want=flat(),keep=new Set(want.map(w=>w.id));if(arr&&!keep.has(arr))arrange(null);
+  if(o.chain)o={...o,anchor:[...o.chain].reverse().find(id=>keep.has(id))||null};
   /* rows that leave: on or near the screen, they are pinned where they are, out of the flow, so the rows below can rise
      over them as they rack out; further away they simply go. All the reads come first, then the writes. */
   const leaving=[],far=[];els.forEach((e,id)=>{if(keep.has(id)||!e.isConnected||e.classList.contains("gone"))return;const y=before.get(id);
@@ -268,6 +270,8 @@ const SB=(()=>{const side=$("#side"),scroll=$("#sbScroll");
    /* a row far from the screen keeps only its box; the rest waits until it comes near (refar) */
    if(e.classList.contains("far")){e._w=w;if(w.n&&e.dataset.k!==w.n.kind)e.dataset.k=w.n.kind;e.classList.toggle("snip",!!(w.q&&w.hitB))}else{e._w=null;update(e,w)}
    if(e===ref)ref=nxt(e.nextSibling);else tree.insertBefore(e,ref)});
+  /* stepping out, the folder you came out of is kept in view: if it lands off screen, the list scrolls to it first */
+  if(o.field==="out"&&o.anchor&&els.get(o.anchor)){const y=els.get(o.anchor).offsetTop,H=scroll.clientHeight;if(y<scroll.scrollTop||y>scroll.scrollTop+H-RHpx())scroll.scrollTop=Math.max(0,y-H/3)}
   refar(true,true);
   /* moving a row in the document drops its focus; the row that had it keeps it */
   if(had&&had!==document.activeElement&&had.isConnected&&!had.closest(".gone"))had.focus({preventScroll:true});
@@ -383,8 +387,10 @@ const SB=(()=>{const side=$("#side"),scroll=$("#sbScroll");
  function goRoot(id,dir,push=true){id=id||null;if(id===rootId)return;if(push){rhist=rhist.slice(0,rat+1);rhist.push(id);rat=rhist.length-1}
   const hadFocus=side.contains(document.activeElement),f=id&&!SYS[id]&&find(id);if(f)f.n.open=true;if(SYS[id])SYS[id].open=true;
   /* the anchor: stepping in, the folder you enter; stepping out, the folder on your way back that is now in view */
-  let anchor=null;if(dir>0)anchor=id;else{const ch=SYS[rootId]?[rootId]:rootId?chainOf(rootId).map(n=>n.id):[],i=id?ch.indexOf(id):-1;anchor=ch[i+1]||null}
-  sync(()=>{rootId=id},{field:dir>0?"in":"out",anchor});say(id?"Showing "+(SYS[id]||f.n).t:"Showing all");
+  /* stepping out, the whole path from where you land down to where you were: the list anchors on the deepest folder of
+     it that it can show, which is the folder you came out of whenever its parents are open */
+  let anchor=null,chain=null;if(dir>0)anchor=id;else{const ch=SYS[rootId]?[rootId]:rootId?chainOf(rootId).map(n=>n.id):[],i=id?ch.indexOf(id):-1;chain=ch.slice(i+1)}
+  sync(()=>{rootId=id},{field:dir>0?"in":"out",anchor,chain});say(id?"Showing "+(SYS[id]||f.n).t:"Showing all");
   if(hadFocus&&(!side.contains(document.activeElement)||document.activeElement.closest(".gone")))tree.querySelector(".sb-row:not(.gone) .sb-hit")?.focus({preventScroll:true})}
  function rnav(d){let i=rat+d;while(i>=0&&i<rhist.length&&rhist[i]&&!SYS[rhist[i]]&&!find(rhist[i]))i+=d;if(i<0||i>=rhist.length)return;rat=i;goRoot(rhist[i],d,false)}
  const climb=()=>{if(!rootId)return;if(SYS[rootId])return goRoot(null,-1);const up=find(rootId);goRoot(up&&up.parent!==ROOT?up.parent.id:null,-1)};
