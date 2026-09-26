@@ -16,6 +16,7 @@ Owner: Duke Y. Demayo. Working branch: `claude/wizardly-ptolemy-6q4ter`, PR amad
 
 ## Console: how to change it
 - The source lives in `expira-system/console/src/`: `tokens.css`, `core/` (prelude, storage adapter, motion, pour, run, router, boot) and one folder per unit in `units/<unit>/` holding its own CSS, JS and markup. Change the unit that owns the behaviour, in place; do not append override blocks.
+- **Bench:** to tune one unit's motion or look on its own, use `bench/` (`python3 bench/bench.py sidebar`). A specimen pulls the unit straight from `src/`, so there is nothing to copy back; see `bench/README.md`.
 - **Build:** `cd expira-system/console && python3 build.py` writes `index.html` and fails on a duplicated selector across units (`--check` verifies without writing). Commit `src/` and the built `index.html` together.
 - **Test before shipping** (each with `NODE_PATH=/opt/node22/lib/node_modules`, run from `expira-system/console`):
   - `node qa/smoke.js` serves the console, runs the example chat and a mock brief in light and dark, and must report 0 errors;
