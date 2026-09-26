@@ -79,16 +79,17 @@
 
   /* motion: the whole vocabulary. Nothing overshoots. */
   --t-instant:90ms;          /* hover colour and opacity */
-  --t-enter:200ms;           /* menus, cards, toasts arrive fast */
-  --t-exit:380ms;            /* luxury soft close: slower than entry, pulled gently shut at the end */
-  --t-move:380ms;            /* layout moves, FLIP, the sidebar */
+  --t-enter:160ms;           /* menus, cards, toasts arrive fast (v44: was 200) */
+  --t-exit:280ms;            /* luxury soft close: slower than entry, pulled gently shut at the end (v44: was 380) */
+  --t-move:300ms;            /* layout moves, FLIP, the sidebar (v44: was 380) */
   --t-draw:420ms;            /* base for edges and chart pours; units scale it by length (×1 to ×2.5) */
   --ease-out:cubic-bezier(.16,1,.3,1);        /* entry: fast start, long settle */
   --ease-soft-close:cubic-bezier(.4,0,.1,1);  /* exit: travels, then decelerates into rest; never accelerates out */
   --ease-inout:cubic-bezier(.65,0,.35,1);     /* continuous travel between two held states */
-  /* the blur transition: the one sanctioned filter. Small surfaces only (menus, cards, toasts, tips), enter and
-     exit only, on the moving layer, filter:none at rest, never in loops, the docs viewer, the full-screen map or streamed words */
-  --blur-enter:4px;--blur-exit:3px;
+  /* the blur transition: the one sanctioned filter. Enter and exit only, filter:none at rest, never in loops or on streamed
+     words. v44 (Amadeus): large surfaces may blur too, on their content only and at a smaller radius (core/pour.js) */
+  --blur-enter:8px;--blur-exit:6px;       /* small surfaces blur as a whole */
+  --blur-enter-lg:6px;--blur-exit-lg:5px; /* large surfaces (settings, full-screen map, document) blur their content only (v44) */
   /* critically damped spring (ζ = 1, x = 1 − e^(−ωt)·(1 + ωt)), normalised: its duration comes from the t-token it is paired with */
   --spring:linear(0, 0.029, 0.0979, 0.1867, 0.2826, 0.3776, 0.467, 0.5482, 0.6204, 0.6833, 0.7374, 0.7834, 0.8222, 0.8546, 0.8815, 0.9037, 0.922, 0.937, 0.9492, 0.9591, 0.9672, 0.9737, 0.979, 0.9832, 0.9866, 0.9893, 0.9915, 0.9932, 0.9946, 0.9957, 0.9966, 0.9973, 1);
   --stagger:40ms;            /* between siblings queued by the order helper */
@@ -136,7 +137,7 @@
   --mark-a:#C9C2B2;--mark-b:#8F98A8;
 }
 
-@media (prefers-reduced-motion:reduce){:root{--t-enter:1ms;--t-exit:1ms;--blur-enter:0px;--blur-exit:0px;--t-move:1ms;--t-draw:1ms;--stagger:0ms}}
+@media (prefers-reduced-motion:reduce){:root{--t-enter:1ms;--t-exit:1ms;--blur-enter:0px;--blur-exit:0px;--blur-enter-lg:0px;--blur-exit-lg:0px;--t-move:1ms;--t-draw:1ms;--stagger:0ms}}
 html,body{height:100%}
 body{margin:0;background:var(--bg);color:var(--text);font:300 var(--fs-body)/1.6 var(--f-body);-webkit-font-smoothing:antialiased;overflow:hidden}
 button,input,textarea{font:inherit;color:inherit}
@@ -340,16 +341,6 @@ html.calm *,html.calm *::before,html.calm *::after{animation:none!important;tran
 /* the ready light breathes three times, then rests: stillness when settled */
 .ready i{width:5px;height:5px;border-radius:var(--r-round);background:var(--ok);animation:breathe var(--t-loop) var(--ease-inout) 3}
 .colon{animation:none}
-.contents{width:100%;max-width:720px;margin-top:var(--sp-8)}
-.contents h2{margin:0 0 var(--sp-1h)}
-.toc{list-style:none;margin:0;padding:0}
-.toc button{display:flex;align-items:baseline;gap:var(--sp-2h);width:100%;border:0;background:transparent;padding:var(--sp-2) 0;cursor:pointer;text-align:left;color:var(--text);font-size:var(--fs-body)}
-.toc .n{font:400 var(--fs-ui) var(--f-display);color:var(--gold-ink);width:18px}
-.toc .lead{flex:1;border-bottom:var(--rule-hair) dotted var(--line-3);transform:translateY(-4px);transition:border-color var(--t-exit) var(--ease-soft-close)}
-.toc .sec{font:italic 400 var(--fs-ui) var(--f-display);color:var(--soft)}
-.toc .t{transition:color var(--t-exit) var(--ease-soft-close),transform var(--t-move) var(--ease-soft-close)}
-.toc button:hover .t{color:var(--ink);transform:translateX(3px);transition-duration:var(--t-instant);transition-timing-function:var(--ease-out)}
-.toc button:hover .lead{border-color:var(--gold)}
 /* start */
 .hero{flex:1;display:none;flex-direction:column;align-items:center;justify-content:center;padding:0 var(--sp-5) 5vh;overflow:auto;position:relative}
 .hero>*{position:relative;z-index:var(--z-1)}
@@ -371,7 +362,6 @@ html.calm *,html.calm *::before,html.calm *::after{animation:none!important;tran
 @media (prefers-reduced-motion:reduce){
 .hero .mark polygon,.greet .ch{transition:none}
 }
-.hero .contents{width:min(880px,calc(100% - 32px));max-width:none}
 /* composer: one thin line that grows to seven */
 .dock{flex:none;padding:var(--sp-1) var(--sp-5) calc(8px + env(safe-area-inset-bottom,0px))}
 .app:not(.has-chat) .dock{padding:0}
@@ -1521,10 +1511,7 @@ html.tnone *,html.tnone *::before,html.tnone *::after{transition:none!important}
 .lbx img{min-width:120px;max-width:min(92vw,1100px);max-height:80vh;border-radius:var(--r-2);box-shadow:var(--e2);transform-origin:center}
 .lbx p{margin:0;font-size:var(--fs-chrome);letter-spacing:.04em;color:var(--soft)}
 .pal{position:fixed;left:50%;top:16vh;z-index:var(--z-dialog);width:min(540px,calc(100vw - 32px));background:var(--panel);border:var(--rule-hair) solid var(--line-3);border-radius:var(--r-5);box-shadow:var(--e2);transform:translate(-50%,0);opacity:0;pointer-events:none}
-/* the pour's own layers (core/pour.js): the shadow plate and the bead exist only while a surface is moving */
-.pour-plate,.pour-bead{position:fixed;pointer-events:none;display:block}
-.pour-plate{background:transparent}
-.pour-bead{width:18px;height:18px;border-radius:var(--r-round);box-shadow:var(--e1);opacity:0}
+/* the bloom (core/pour.js) needs no layers of its own: it animates the surface and, on a large surface, its content */
 </style>
 
 <div class="app has-chat" id="app">
@@ -1556,7 +1543,6 @@ html.tnone *,html.tnone *::before,html.tnone *::after{transition:none!important}
       <h1 class="greet" id="greet"></h1>
       <p class="ready capt" id="ready"><i></i><span id="readyT">Orchestrator ready</span></p>
       <div id="heroDock" style="width:100%;display:flex;justify-content:center"></div>
-      <div class="contents"><h2 class="cap">In this issue</h2><ol class="toc" id="toc"></ol></div>
     </section>
 
     <div class="scroll" id="scroll"><div class="thread" id="thread"></div></div>
@@ -1769,47 +1755,40 @@ function disclose(host,cls,on,body,inv){const isOn=()=>host.classList.contains(c
  clock.finished.then(()=>{if(host._dc!==s)return;if(!on){set(false);lines.forEach(a=>a.cancel())}anims.forEach(a=>a.cancel());host._dc=null;host._want=null}).catch(()=>{})}
 /* a click flips what the disclosure is heading to, so a click mid-close reopens it */
 function discToggle(host,cls,body,inv){const open=host._dc?host._want:host.classList.contains(cls)!==!!inv;disclose(host,cls,!open,body,inv);return!open}
-/* ---------- the pour (Gate A: the surface-tension droplet; reference qa/lab/pours.js, candidate A) ----------
-   A bead leaves the point that opened a surface and spreads into it, width leading and height following, and drains
-   back to the same point when it closes. One critically damped spring drives every layer on one clock: the surface
-   (scale and opacity), its shadow on a plate of its own (so nothing is clipped), the bead, and the content, which
-   surfaces only after the shell has formed and un-blurs as it arrives (small surfaces only). A reversal mid-flight
-   carries position and speed. Only transform, opacity and that content blur move; reduced motion is a state change.
-   Each unit attaches its own surface: POUR.attach(el,{blur,origin}); the pour follows the surface's open state
-   ("open" class), so whatever opens or closes it, the motion is the same. */
-const POUR=(()=>{const W_OPEN=42,W_CLOSE=26,BEAD=18;/* rad/s: open settles in ~220 ms, close in ~360 ms, no overshoot */
- const c01=x=>x<0?0:x>1?1:x,lerp=(a,b,t)=>a+(b-a)*t,smooth=(a,b,x)=>{const t=c01((x-a)/(b-a));return t*t*(3-2*t)};
- const at=(s,t)=>{const A=s.p0-s.g,B=s.v0+s.w*A,e=Math.exp(-s.w*t);return{p:s.g+(A+B*t)*e,v:(s.v0-s.w*B*t)*e}};
- const settle=s=>{let t=0;while(t<1.5){const k=at(s,t);if(Math.abs(k.p-s.g)<1e-3&&Math.abs(k.v)<.05)break;t+=1/240}return t};
- /* where the surface pours from: the pointer that opened it, else the focused control, else the caller's anchor, else its centre */
- let px=0,py=0,pt=-1e9;document.addEventListener("pointerdown",e=>{px=e.clientX;py=e.clientY;pt=performance.now()},true);
- const mid=r=>({x:r.left+r.width/2,y:r.top+r.height/2});
- function from(el,r,origin){const o=origin&&origin();if(o)return o;if(performance.now()-pt<700)return{x:px,y:py};
-  const a=document.activeElement;if(a&&a!==document.body&&!el.contains(a)){const q=a.getBoundingClientRect();if(q.width)return mid(q)}return mid(r)}
- function attach(el,{blur=false,origin}={}){let s=null,t0=0,anims=[],rest=el.classList.contains("open")?1:0,g=null,plate=null,bead=null;
-  const clean=()=>{anims.forEach(a=>a.cancel());anims=[];plate&&plate.remove();bead&&bead.remove();plate=bead=null;el.style.boxShadow="";el.style.transformOrigin=""};
-  let back=null;function geom(goal){const r=el.getBoundingClientRect();if(!r.width||!r.height)return null;const cs=getComputedStyle(el),m=new DOMMatrixReadOnly(cs.transform==="none"?undefined:cs.transform),c=!goal&&back||from(el,r,origin);back=goal?c:null;
-   /* the surface keeps its own transform (a centring translate); scale about the origin in its untransformed box */
-   return{r,cs,c,ox:c.x-r.left+m.e,oy:c.y-r.top+m.f,px:c.x-r.left,py:c.y-r.top,sx0:BEAD/r.width,sy0:BEAD/r.height}}
-  function layers(){const {r,cs}=g;clean();
-   plate=document.createElement("i");plate.className="pour-plate";plate.setAttribute("aria-hidden","true");
-   Object.assign(plate.style,{left:r.left+"px",top:r.top+"px",width:r.width+"px",height:r.height+"px",borderRadius:cs.borderRadius,boxShadow:cs.boxShadow,zIndex:cs.zIndex,transformOrigin:`${g.px}px ${g.py}px`});
-   bead=document.createElement("i");bead.className="pour-bead";bead.setAttribute("aria-hidden","true");
-   Object.assign(bead.style,{left:g.c.x-BEAD/2+"px",top:g.c.y-BEAD/2+"px",background:cs.backgroundColor,zIndex:cs.zIndex});
-   el.before(plate);el.after(bead);el.style.boxShadow="none";el.style.transformOrigin=`${g.ox}px ${g.oy}px`}
-  const sc=p=>`${lerp(g.sx0,1,p**.85)} ${lerp(g.sy0,1,p**1.15)}`,cf=p=>{const q=smooth(.86,1,p);return blur?{opacity:q,filter:`blur(${((1-q)*4).toFixed(2)}px)`}:{opacity:q}};
-  const frames=()=>[[el,p=>({scale:sc(p),opacity:smooth(0,.12,p),visibility:"visible"})],[plate,p=>({scale:sc(p),opacity:smooth(.05,.7,p)})],
-   [bead,p=>({scale:String(lerp(.7,1.3,smooth(0,.2,p))),opacity:smooth(0,.03,p)*(1-smooth(.08,.2,p))})],...[...el.children].slice(0,24).map(k=>[k,cf])];
-  function run(goal){const now=document.timeline.currentTime;let p0=rest,v0=0;if(s)({p:p0,v:v0}=at(s,(now-t0)/1000));
-   if(reduce||!document.timeline){s=null;rest=goal;clean();return}
-   if(!s){g=geom(goal);if(!g){rest=goal;return}layers()}else anims.forEach(a=>a.cancel());
-   s={p0:c01(p0),v0,g:goal,w:goal?W_OPEN:W_CLOSE};t0=now;const T=settle(s),N=Math.max(12,Math.ceil(T*120));
-   const ps=Array.from({length:N+1},(_,i)=>c01(at(s,T*i/N).p));ps[N]=goal;
-   anims=frames().map(([e,fr])=>{const a=e.animate(ps.map(fr),{duration:T*1000,easing:"linear",fill:"forwards"});a.startTime=now;return a});
-   const mine=s;Promise.all(anims.map(a=>a.finished)).then(()=>{if(s!==mine)return;s=null;rest=goal;clean()},()=>{})}
-  new MutationObserver(()=>{const o=el.classList.contains("open");if(o!==(s?s.g===1:rest===1))run(o?1:0)}).observe(el,{attributes:true,attributeFilter:["class"]});
-  /* snap: settle at once, without motion (a surface that re-opens on a new anchor pours again from there) */
-  return{get moving(){return!!s},snap(o){s=null;rest=o?1:0;clean()}}}
+/* ---------- the bloom (v44; it replaces the v41 droplet pour, which grew from the click point and drained back to it) ----------
+   A surface opens where it lives: it comes out of a soft blur, fades up and settles from a hair under full size, fast
+   (--t-enter on --ease-out). It closes in place on the luxury soft close (--t-exit on --ease-soft-close): it fades, eases a
+   hair smaller and softens back into the blur, decelerating into rest. It never travels to or from the pointer.
+   Small surfaces (menus, cards, the palette) blur as a whole. Large ones (settings, the full-screen map, the document) blur
+   only their content, at a smaller radius, because a blur costs in proportion to area × radius (Chrome, "Animating a blur").
+   The blur falls away faster than the fade, so the last frames of an entry and the first of an exit are sharp, and it is
+   filter:none at rest. A reversal mid-flight carries on from where it is. Reduced motion is a state change.
+   Each unit attaches its own surface: POUR.attach(el); the bloom follows the surface's open state ("open" class). */
+const POUR=(()=>{const c01=x=>x<0?0:x>1?1:x,lerp=(a,b,t)=>a+(b-a)*t;
+ const BIG=360000;/* px²: about 600 × 600; larger surfaces blur their content only */
+ function attach(el){let anims=[],rest=el.classList.contains("open")?1:0,cur=null,big=false;
+  const clean=()=>{anims.forEach(a=>a.cancel());anims=[];cur=null};
+  /* where the surface is between closed (0) and open (1) right now */
+  const now=()=>{if(!cur)return rest;const t=c01((document.timeline.currentTime-cur.t0)/cur.T);return lerp(cur.p0,cur.g,cur.E(t))};
+  function run(g){const p0=now();anims.forEach(a=>a.cancel());anims=[];
+   if(reduce||!document.timeline||!el.animate){cur=null;rest=g;return}
+   if(!cur){const r=el.getBoundingClientRect();big=r.width*r.height>BIG}
+   const open=g===1,T=Math.max(60,(open?MO.enter:MO.exit)*Math.abs(g-p0)),E=easeFn(open?MO.out:MO.soft);
+   /* the blur a surface starts from (entry) or softens into (exit); tokens.css holds the small-surface values */
+   const B=big?(open?BLUR.bigIn:BLUR.bigOut):(open?BLUR.in:BLUR.out),S=big?.985:.965,N=Math.max(10,Math.ceil(T/1000*120));
+   const ps=Array.from({length:N+1},(_,i)=>lerp(p0,g,E(i/N)));
+   const shell=p=>({opacity:c01(p*1.15),scale:String(lerp(S,1,p)),translate:big?"0 0":`0 ${((1-p)*4).toFixed(2)}px`,visibility:"visible",...(big?{}:{filter:blurAt(B,p)})});
+   const t0=document.timeline.currentTime,go=(e,f)=>{const a=e.animate(ps.map(f),{duration:T,easing:"linear",fill:"forwards"});a.startTime=t0;return a};
+   anims=[go(el,shell)];if(big)[...el.children].slice(0,12).forEach(k=>anims.push(go(k,p=>({filter:blurAt(B,p)}))));
+   const mine=cur={p0,g,T,E,t0};
+   Promise.all(anims.map(a=>a.finished)).then(()=>{if(cur!==mine)return;rest=g;clean()},()=>{})}
+  new MutationObserver(()=>{const o=el.classList.contains("open")?1:0;if(o!==(cur?cur.g:rest))run(o)}).observe(el,{attributes:true,attributeFilter:["class"]});
+  /* snap: settle at once, without motion */
+  return{get moving(){return!!cur},snap(o){clean();rest=o?1:0}}}
+ /* the blur falls to zero by 70% of the way open, so the surface is sharp well before it lands */
+ const blurAt=(B,p)=>{const k=c01(1-p/.7);return k<.01?"none":`blur(${(B*k*k).toFixed(2)}px)`};
+ const px=(n,d)=>{const x=parseFloat(getComputedStyle(root).getPropertyValue(n));return isNaN(x)?d:x};
+ const BLUR={in:px("--blur-enter",8),out:px("--blur-exit",6),bigIn:px("--blur-enter-lg",6),bigOut:px("--blur-exit-lg",5)};
  return{attach}})();
 /* policy: orchestrator/POLICY.md (low=quick, medium=default, high=complex) */
 const TIERS={low:{n:1,m:"quick",w:"light"},medium:{n:2,m:"default",w:"considered"},high:{n:3,m:"complex",w:"deep"}};
@@ -2025,8 +2004,8 @@ function costHTML(w){const ph=w.ph||{},ks=Object.keys(PHB).filter(k=>ph[k]&&!ph[
 /* the run card's map: the same map class, inline, one instance per card. Later calls only hand it the newest record:
    the live run while it works, then the saved turn, so the card settles in place instead of being redrawn. */
 function miniDraw(run,w,live){const m=run.querySelector(".mini");if(!m)return;m._w=w;const inst=[...FM].find(x=>x.host===m);if(inst){inst.sync();return}mkMap(m,()=>m._w,{card:true,live})}
-function runView(run,v,remember){if(!run.querySelector(".vs"))v="log";run.dataset.view=v;run.querySelectorAll(".vs [data-view]").forEach(b=>b.setAttribute("aria-pressed",b.dataset.view===v));if(v==="map"){const b=run.closest(".bot"),w=b&&(b._work||cur?.turns[+b.dataset.k]?.work);if(w)miniDraw(run,w,run.classList.contains("running"))}if(remember)KV.put("runview",v);}
-const viewDefault=()=>KV.get("runview","log")||"log";
+function runView(run,v,remember){if(!run.querySelector(".vs"))v="log";run.dataset.view=v;run.querySelectorAll(".vs [data-view]").forEach(b=>b.setAttribute("aria-pressed",b.dataset.view===v));if(v==="map"){const b=run.closest(".bot"),w=b&&(b._work||cur?.turns[+b.dataset.k]?.work);if(w)miniDraw(run,w,run.classList.contains("running"))}}
+const viewDefault=()=>"log";/* every run card opens on the log; Map is chosen per card and not remembered (v44) */
 function runHTML(w,k,live,o={}){const M=w.map||{},th=M.thinking||[],n=(w.feed||[]).filter(f=>f[1]).length,op=live||o.open;
  const dl=live?(o.direct?"":`<div class="delib"><span class="cap">Deliberation</span><p class="typing">Reading the brief</p></div>`):th.length?`<div class="delib"><span class="cap">Deliberation</span>${th.map(t=>`<p>${esc(t)}</p>`).join("")}</div>`:"";
  return `<div class="run ${live?"running":"settled"}${op?" open":""}" data-view="${(live&&!o.direct)||(w.steps||[]).length?viewDefault():"log"}"><button class="run-h" type="button" aria-expanded="${!!op}">${GLYPH}<span class="lbl">${live?(o.direct?"Considering":"Deliberating"):esc(summary(w))}</span><span class="rk num">${live?"":tokLine(w)}</span><span class="t num">${mmss(w.ms||0)}</span>${CHEV}</button>${(live&&!o.direct)||(w.steps||[]).length?`<div class="rv" role="group" aria-label="View"><span class="vs"><button type="button" data-view="log" aria-pressed="true">Log</button><button type="button" data-view="map" aria-pressed="false">Map</button></span><button type="button" class="rdx" data-read="${live?"live":k}" aria-label="Open the Dispatch" data-tip="The Dispatch"><svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.1"><path d="M4.5 3h4.5v4.5M9 3 3.5 8.5"/></svg></button></div>`:`<div class="rv"><button type="button" class="rdx" data-read="${live?"live":k}" aria-label="Open the Dispatch" data-tip="The Dispatch"><svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.1"><path d="M4.5 3h4.5v4.5M9 3 3.5 8.5"/></svg></button></div>`}<div class="sheen"></div>${railHTML(w,live,o)}
@@ -2119,9 +2098,6 @@ const greetPick=GREETS[Math.floor(Math.random()*GREETS.length)];
 /* the name comes from settings; with none set the greeting stands alone */
 function greetR(){const g=greetPick+(PREF.name?", ":"");$("#greet").innerHTML=[...g].map((c,i)=>`<span class="ch" style="animation-delay:${.04+i*.028}s;--k:${i}">${esc(c)}</span>`).join("")+(PREF.name?`<em class="ch" style="animation-delay:${.04+g.length*.028+.05}s">${esc(PREF.name)}</em>`:"")}greetR();
 function readyUpd(){swap($("#readyT"),`Orchestrator ready · ${OPT.desks==="off"?"answering directly":OPT.desks==="always"?"staffing generously":"staffs each brief itself"} · ${OPT.safe?"client-safe":"internal"}${OPT.depth==="deep"?" · deep":""}${OPT.web&&WEB.ok?" · web on":""}`)}
-const TOC=[["Price a twelve-room hotel repaint in Iloilo","Finance"],["Review the delay clause in a supply contract","Legal"],["Compare three ERP options for GSSC","Arbiter"],["Canvass office fit-out rates in Iloilo","Research"]];
-$("#toc").innerHTML=TOC.map(([t,s],i)=>`<li class="bi" style="animation-delay:${.15+i*.07}s"><button><span class="n">${i+1}</span><span class="t">${esc(t)}</span><span class="lead"></span><span class="sec">${s}</span></button></li>`).join("");
-$("#toc").addEventListener("click",e=>{const b=e.target.closest("button");if(!b)return;promptEl.value=b.querySelector(".t").textContent;grow();promptEl.focus();promptEl.setSelectionRange(1e4,1e4)});
 const hm=document.querySelector("#stage .mark");if(!reduce){$("#hero").addEventListener("pointermove",e=>{const r=$("#stage").getBoundingClientRect(),x=(e.clientX-r.left)/r.width-.5,y=(e.clientY-r.top)/r.height-.5;hm.style.transform=`perspective(700px) rotateY(${Math.max(-1,Math.min(1,x))*9}deg) rotateX(${-Math.max(-1,Math.min(1,y))*7}deg)`});$("#hero").addEventListener("pointerleave",()=>hm.style.transform="")}
 
 /* chrome */
@@ -2257,7 +2233,7 @@ function applyPrefs(){root.dataset.text=PREF.text;root.dataset.density=PREF.dens
 function reheat(){FM.forEach(m=>{if(m instanceof FieldMap){m.alpha=Math.max(m.alpha,.7);m.sync()}})}
 const sure=(b,label,go)=>{if(b.classList.contains("sure")){go();return}const t=b.textContent;b.classList.add("sure");b.textContent=label;clearTimeout(b._t);b._t=setTimeout(()=>{b.classList.remove("sure");b.textContent=t},3200)};
 $("#setMenu").addEventListener("click",e=>{
- const tb=e.target.closest("[data-tab]");if(tb){stab(tb.dataset.tab);return}
+ const tb=e.target.closest("[data-tab]");if(tb){if(tb.dataset.tab!==STAB||!$("#stgP").firstElementChild)stab(tb.dataset.tab);return}/* the open tab stays as it is */
  const th=e.target.closest("[data-th]");if(th){applyTheme(th.dataset.th,true);syncStg();return}
  const pk=e.target.closest("[data-pk]");if(pk){PREF[pk.dataset.pk]=pk.dataset.v;savePref();applyPrefs();syncStg();return}
  const sw=e.target.closest("[data-sw]");if(sw){const k=sw.dataset.sw;if(k==="grain"){PREF.grain=!PREF.grain;savePref();applyPrefs()}else if(k==="safe"){OPT.safe=!OPT.safe;saveOpt();drawOpt()}else if(k==="web"){if(!WEB.ok)return;OPT.web=!OPT.web;saveOpt();drawOpt()}syncStg();return}

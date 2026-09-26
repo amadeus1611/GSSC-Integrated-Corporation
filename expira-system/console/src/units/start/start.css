@@ -9,16 +9,6 @@
 /* the ready light breathes three times, then rests: stillness when settled */
 .ready i{width:5px;height:5px;border-radius:var(--r-round);background:var(--ok);animation:breathe var(--t-loop) var(--ease-inout) 3}
 .colon{animation:none}
-.contents{width:100%;max-width:720px;margin-top:var(--sp-8)}
-.contents h2{margin:0 0 var(--sp-1h)}
-.toc{list-style:none;margin:0;padding:0}
-.toc button{display:flex;align-items:baseline;gap:var(--sp-2h);width:100%;border:0;background:transparent;padding:var(--sp-2) 0;cursor:pointer;text-align:left;color:var(--text);font-size:var(--fs-body)}
-.toc .n{font:400 var(--fs-ui) var(--f-display);color:var(--gold-ink);width:18px}
-.toc .lead{flex:1;border-bottom:var(--rule-hair) dotted var(--line-3);transform:translateY(-4px);transition:border-color var(--t-exit) var(--ease-soft-close)}
-.toc .sec{font:italic 400 var(--fs-ui) var(--f-display);color:var(--soft)}
-.toc .t{transition:color var(--t-exit) var(--ease-soft-close),transform var(--t-move) var(--ease-soft-close)}
-.toc button:hover .t{color:var(--ink);transform:translateX(3px);transition-duration:var(--t-instant);transition-timing-function:var(--ease-out)}
-.toc button:hover .lead{border-color:var(--gold)}
 /* start */
 .hero{flex:1;display:none;flex-direction:column;align-items:center;justify-content:center;padding:0 var(--sp-5) 5vh;overflow:auto;position:relative}
 .hero>*{position:relative;z-index:var(--z-1)}
@@ -40,4 +30,3 @@
 @media (prefers-reduced-motion:reduce){
 .hero .mark polygon,.greet .ch{transition:none}
 }
-.hero .contents{width:min(880px,calc(100% - 32px));max-width:none}

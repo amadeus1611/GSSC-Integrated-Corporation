@@ -1,4 +1,1 @@
-/* the pour's own layers (core/pour.js): the shadow plate and the bead exist only while a surface is moving */
-.pour-plate,.pour-bead{position:fixed;pointer-events:none;display:block}
-.pour-plate{background:transparent}
-.pour-bead{width:18px;height:18px;border-radius:var(--r-round);box-shadow:var(--e1);opacity:0}
+/* the bloom (core/pour.js) needs no layers of its own: it animates the surface and, on a large surface, its content */

@@ -82,7 +82,7 @@ function applyPrefs(){root.dataset.text=PREF.text;root.dataset.density=PREF.dens
 function reheat(){FM.forEach(m=>{if(m instanceof FieldMap){m.alpha=Math.max(m.alpha,.7);m.sync()}})}
 const sure=(b,label,go)=>{if(b.classList.contains("sure")){go();return}const t=b.textContent;b.classList.add("sure");b.textContent=label;clearTimeout(b._t);b._t=setTimeout(()=>{b.classList.remove("sure");b.textContent=t},3200)};
 $("#setMenu").addEventListener("click",e=>{
- const tb=e.target.closest("[data-tab]");if(tb){stab(tb.dataset.tab);return}
+ const tb=e.target.closest("[data-tab]");if(tb){if(tb.dataset.tab!==STAB||!$("#stgP").firstElementChild)stab(tb.dataset.tab);return}/* the open tab stays as it is */
  const th=e.target.closest("[data-th]");if(th){applyTheme(th.dataset.th,true);syncStg();return}
  const pk=e.target.closest("[data-pk]");if(pk){PREF[pk.dataset.pk]=pk.dataset.v;savePref();applyPrefs();syncStg();return}
  const sw=e.target.closest("[data-sw]");if(sw){const k=sw.dataset.sw;if(k==="grain"){PREF.grain=!PREF.grain;savePref();applyPrefs()}else if(k==="safe"){OPT.safe=!OPT.safe;saveOpt();drawOpt()}else if(k==="web"){if(!WEB.ok)return;OPT.web=!OPT.web;saveOpt();drawOpt()}syncStg();return}
