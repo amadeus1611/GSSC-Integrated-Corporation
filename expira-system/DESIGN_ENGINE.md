@@ -118,6 +118,19 @@ Motion is the heart of the UX: fidelity in the engine comes first.
     - hovers arrive on `--t-instant` and leave on the soft close;
     - a folder or section opens as one move: the rows below FLIP while each child surfaces from a light blur as it is uncovered, and the guide line draws with them; closing reverses it;
   - the dark theme is near black with off-white text, on the full palette above.
+  - **the pull** (Amadeus: "the text sizes change before it closes"): the sidebar's small surfaces (the account pull-up, the row menus, the undo note) no longer use the bloom's scale.
+    - Opacity, a 6px drop and the blur ride one progress value on one curve, so the text never shrinks while it is still readable.
+    - Each surface keeps its own layer, so its text is not re-rasterised as it starts to move.
+    - The shared bloom in `core/pour.js` still scales, text and all; review the other surfaces when this is promoted.
+  - fully featured:
+    - a row menu (from `…` or a right-click): pin, rename, move to a folder, archive, delete with undo;
+    - rename in place (F2);
+    - new folder, named as it lands;
+    - a Recents filter: all, documents, running;
+    - drag a chat or a file onto a folder;
+    - arrow-key navigation (right opens, left closes or climbs);
+    - the list feathers at an edge while more lies beyond it;
+    - long names show in full on hover.
 - **v44** (2026-09-26, Amadeus's super plan, `console/SUPER_PLAN.md`):
   - faster and softer: entry 160 ms, the soft close 280 ms, layout moves 300 ms;
   - the pour is retired: cards, menus, settings, the full-screen map and the document open by blooming out of a blur in place and close back into it, never returning to the click point; large surfaces blur their content only;

@@ -35,6 +35,7 @@ BENCH.name="Sidebar · v45 draft";
     <div class="brand"><svg class="mark" viewBox="0 0 1413 425" role="img" aria-label="EXPIRA mark"><polygon points="0,0 233,0 391,100 206,425 40,425 0,302" fill="var(--mark-a)"/><polygon points="233,0 728,0 391,100" fill="var(--gold)"/><polygon points="391,100 728,0 778,0 871,225 1166,425 1058,425" fill="var(--mark-a)"/><polygon points="391,100 1058,425 206,425" fill="var(--mark-b)"/><polygon points="918,0 1043,0 1408,425 1241,425 968,192" fill="var(--gold)"/><polygon points="1043,0 1340,0 1408,425" fill="var(--mark-b)"/></svg><span class="wm" role="img" aria-label="EXPIRA"></span><button class="ib side-t" id="fold" aria-controls="side" aria-expanded="true" aria-label="Close sidebar" data-tip="Close sidebar"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1"><rect x="1.5" y="2.5" width="13" height="11" rx="1.5"/><path class="pane" d="M2.5 3h3.5v10h-3.5z"/><path class="dv" d="M6 2.5v11"/><path class="chev" d="M11 6.2 9.2 8l1.8 1.8"/></svg></button></div>
     <div class="sb-scroll" id="sbScroll"></div>
     <div class="sb-foot">
+      <div class="sb-toast" id="sbToast" role="status" aria-live="polite"><span></span><button type="button">Undo</button></div>
       <div class="sb-menu" id="sbMenu" role="menu" aria-label="Account">
         <div class="sb-mh"><b>Amadeus</b><small>GSSC Integrated Corporation</small></div>
         <div class="sb-seg" id="sbSeg" role="group" aria-label="Theme"><i class="pill" aria-hidden="true"></i>
@@ -52,13 +53,15 @@ BENCH.name="Sidebar · v45 draft";
       <button class="sb-me" id="sbMe" type="button" aria-haspopup="menu" aria-expanded="false" aria-controls="sbMenu"><span class="sb-av">A</span><span class="sb-who"><b>Amadeus</b><small>· GSSC</small></span><!--chev--></button>
     </div>
   </nav>
+  <div class="sb-pop" id="sbPop" role="menu" aria-label="Actions"></div>
   <main class="main" id="main">
     <header class="top"><span class="crumb" id="crumb">Recents</span><button class="ttl" id="ttl">Showroom fit-out, phase two</button></header>
     <div class="bn-chat"><div class="bn-col">
       <p class="bn-q">Summarise where the showroom fit-out stands and what is left for phase two.</p>
       <h2>Phase two, at a glance</h2>
       <p>This column stands in for the chat, so the fold has something to push. The sidebar on the left is the v45 draft: hover down the rows, open the folders and the sections, search, and pull the account menu up from the foot.</p>
-      <p>Keys: F fold, A account, S search, D the Quotations folder, R the Recents section, L loops the fold.</p>
+      <p>Try the … on any row or right-click it: pin, rename, move to a folder, archive, delete (with undo). Drag a chat or a file onto a folder. The + beside Files makes a folder; the filter beside Recents cycles all, documents, running. With a row focused, the arrows walk the list, right opens and left closes, F2 renames.</p>
+      <p>Keys: F fold, A account, S search, D the Quotations folder, R the Recents section, M a row menu, L loops the fold.</p>
     </div></div>
   </main>
 </div>
@@ -75,7 +78,7 @@ let reduce=matchMedia("(prefers-reduced-motion: reduce)").matches,busy=false;con
 Object.assign(BENCH,{MO,easeFn});
 const ks=f=>()=>setTimeout(f,0);
 BENCH.actions.push({label:"Fold",key:"f",run:()=>setFold(!app.classList.contains("folded"))},{label:"Account",key:"a",run:ks(()=>SB.acct())},
- {label:"Search",key:"s",run:ks(()=>SB.search(true))},{label:"Folder",key:"d",run:()=>SB.folder(0)},{label:"Recents",key:"r",run:()=>SB.section("recents")});
+ {label:"Search",key:"s",run:ks(()=>SB.search(true))},{label:"Folder",key:"d",run:()=>SB.folder(0)},{label:"Recents",key:"r",run:()=>SB.section("recents")},{label:"Row menu",key:"m",run:ks(()=>SB.pop(true,4))});
 })();
 </script>
 <script>

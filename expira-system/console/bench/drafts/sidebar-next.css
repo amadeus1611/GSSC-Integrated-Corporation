@@ -101,6 +101,7 @@
 .sb-me:hover .sb-chev{color:var(--ink);transition-duration:var(--t-move),var(--t-instant)}
 .sb-me[aria-expanded="true"] .sb-chev{transform:rotate(180deg)}
 
+.sb-menu,.sb-pop,.sb-toast{will-change:transform,opacity,filter}  /* their own layer: text is not re-rasterised as they move */
 .sb-menu{position:absolute;left:var(--sp-1h);right:var(--sp-1h);bottom:calc(100% + var(--sp-1h));z-index:var(--z-menu);padding:5px;background:var(--panel);border:var(--rule-hair) solid var(--line-3);border-radius:var(--r-5);box-shadow:var(--e3);
  transform-origin:50% 100%;opacity:0;visibility:hidden;pointer-events:none}
 .sb-menu.open{opacity:1;visibility:visible;pointer-events:auto}
@@ -119,3 +120,34 @@
 
 @keyframes sbIn{from{opacity:0;filter:blur(var(--blur-exit));transform:scale(.975)}to{opacity:1;filter:none;transform:none}}
 .sb-find.in{animation:sbIn var(--t-enter) var(--ease-out) both}
+
+/* the row menu: fixed, beside its row; the same surface as the pull-up */
+.sb-pop{position:fixed;left:0;top:0;width:212px;z-index:var(--z-menu);padding:5px;background:var(--panel);border:var(--rule-hair) solid var(--line-3);border-radius:var(--r-5);box-shadow:var(--e3);opacity:0;visibility:hidden;pointer-events:none}
+.sb-pop.open{opacity:1;visibility:visible;pointer-events:auto}
+.sb-pop .sb-hl{left:5px;right:5px}
+.sb-pop .sb-row{height:28px}
+.sb-pop .sb-hit small{margin-left:auto;font-size:var(--fs-chrome);color:var(--mute)}
+.sb-pop .sb-mh.plain{padding:var(--sp-1h) var(--sp-2) var(--sp-1);font-size:var(--fs-micro);letter-spacing:var(--tracked-cap);text-transform:uppercase;color:var(--mute)}
+.sb-row.danger .sb-hit,.sb-row.danger .sb-ic{color:var(--bad)}
+.sb-more[aria-expanded="true"]{opacity:1;background:var(--line-2);color:var(--ink)}
+/* rename in place: the field takes the title's exact box */
+.sb-ren{all:unset;box-sizing:border-box;width:100%;height:22px;margin:0 -4px;padding:0 4px;border-radius:var(--r-2);background:var(--well);box-shadow:inset 0 0 0 var(--rule-hair) var(--gold);color:var(--ink);font:inherit}
+/* drag and drop onto a folder; a folder that just received something glows once, softly */
+.sb-row.dragging{opacity:.35}
+.sb-fold.drop,.sb-fold.got{background:var(--gold-wash);box-shadow:inset 0 0 0 var(--rule-hair) var(--gold)}
+.sb-fold.got{transition:background var(--t-exit) var(--ease-soft-close),box-shadow var(--t-exit) var(--ease-soft-close)}
+.sb-fold{transition:background calc(var(--t-exit) * 2) var(--ease-soft-close),box-shadow calc(var(--t-exit) * 2) var(--ease-soft-close)}
+.sb-ib.on{color:var(--gold-ink);background:var(--gold-wash)}
+.sb-h .sb-ha:has(.on){opacity:1}
+.sb-grp[hidden]{display:none}
+/* the undo note sits above the account row */
+.sb-toast{position:absolute;left:var(--sp-1h);right:var(--sp-1h);bottom:calc(100% + var(--sp-1h));z-index:var(--z-toast);display:flex;align-items:center;gap:var(--sp-2);height:34px;padding:0 var(--sp-1) 0 var(--sp-3);background:var(--panel);border:var(--rule-hair) solid var(--line-3);border-radius:var(--r-5);box-shadow:var(--e2);font-size:var(--fs-ui);color:var(--soft);opacity:0;visibility:hidden;pointer-events:none}
+.sb-toast.open{opacity:1;visibility:visible;pointer-events:auto}
+.sb-toast span{flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.sb-toast em{font-style:normal;color:var(--ink)}
+.sb-toast button{all:unset;height:24px;padding:0 var(--sp-2);border-radius:var(--r-2);color:var(--gold-ink);font-weight:450;cursor:pointer;transition:background var(--t-exit) var(--ease-soft-close)}
+.sb-toast button:hover{background:var(--gold-wash);transition-duration:var(--t-instant)}
+/* the list feathers at an edge only while more lies beyond it */
+.sb-scroll{--fs:0px;--fe:0px;transition:--fs var(--t-exit) var(--ease-soft-close),--fe var(--t-exit) var(--ease-soft-close);-webkit-mask-image:linear-gradient(to bottom,transparent 0,#000 var(--fs),#000 calc(100% - var(--fe)),transparent 100%);mask-image:linear-gradient(to bottom,transparent 0,#000 var(--fs),#000 calc(100% - var(--fe)),transparent 100%)}
+.sb-scroll.f-s{--fs:18px}
+.sb-scroll.f-e{--fe:22px}

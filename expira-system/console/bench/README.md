@@ -43,7 +43,7 @@ Every specimen loads `early.js` in its head (it applies the tuned tokens before 
 
 - **sidebar-next**: the v45 sidebar draft and the near-black dark theme. Its CSS, markup and script are drafts in
   `bench/drafts/`, not `src/`, because it is a redesign rather than a tune; it is promoted into `units/sidebar` once
-  approved. Keys: F fold, A account, S search, D a folder, R a section.
+  approved. Keys: F fold, A account, S search, D a folder, R a section, M a row menu.
 - **sidebar**: the current sidebar: the fold (`setFold`, the travelling button, the chat giving and taking the width) and the
   account menu's bloom (`core/pour.js`). Keys: F fold, A account menu.
 
