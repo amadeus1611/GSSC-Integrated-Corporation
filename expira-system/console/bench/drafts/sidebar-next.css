@@ -1,0 +1,121 @@
+/* draft v45 sidebar (bench only until promoted into units/sidebar). Claude's structure, EXPIRA's hand:
+   two actions (New chat, Search), then the master template's Roman-numbered sections: I Files (folders), II Pinned,
+   III Recents. Rows are 28px, one hairline apart. No shortcut hints, no Dispatch; settings live in the account
+   pull-up at the foot. Motion: one highlight glides between rows on the spring; hovers arrive on --t-instant and
+   leave on the soft close; disclosures move the rows below as one FLIP while their children surface from a light
+   blur (sidebar-next.js). Only transform and opacity move, plus the sanctioned blur on small things. */
+.side.sb{padding:var(--sp-2h) var(--sp-2) var(--sp-2);gap:0}
+.sb .brand{display:flex;align-items:center;gap:var(--sp-2h);height:38px;padding:0 var(--sp-half) 0 var(--sp-2);margin-bottom:var(--sp-1h)}
+.sb .brand .mark{width:34px;flex:none}
+.sb .brand .side-t{margin-left:auto}
+.ib svg{width:15px;height:15px}  /* today this lives in units/sidebar; it stays there on promotion */
+.sb-scroll{flex:1;min-height:0;overflow-y:auto;position:relative;margin:0 calc(var(--sp-2) * -1);padding:0 var(--sp-2) var(--sp-3);scrollbar-width:none}
+.sb-scroll::-webkit-scrollbar{display:none}
+
+/* the gliding highlight: one per list, placed by script, faded by class */
+.sb-hl{position:absolute;left:var(--sp-2);right:var(--sp-2);top:0;height:28px;border-radius:var(--r-4);background:var(--line);opacity:0;pointer-events:none;z-index:0;
+ transition:transform var(--t-move) var(--spring),opacity var(--t-exit) var(--ease-soft-close)}
+.sb-hl.on{opacity:1;transition:transform var(--t-move) var(--spring),opacity var(--t-instant) var(--ease-out)}
+.sb-menu .sb-hl{left:5px;right:5px}
+
+/* rows */
+.sb-row{position:relative;z-index:1;display:flex;align-items:center;height:28px;border-radius:var(--r-4);color:var(--text);font-size:var(--fs-body);font-weight:350;letter-spacing:-.003em}
+.sb-row+.sb-row,.sb-row+.sb-kids,.sb-kids+.sb-row{margin-top:1px}
+.sb-row.on{background:var(--line-2)}
+.sb-hit{all:unset;box-sizing:border-box;flex:1;min-width:0;height:100%;display:flex;align-items:center;gap:var(--sp-2h);padding:0 var(--sp-2);cursor:pointer;border-radius:inherit;transition:transform var(--t-exit) var(--ease-soft-close)}
+.sb-hit:focus-visible{outline:var(--rule) solid var(--gold);outline-offset:-1px}
+.sb-hit:active{transform:scale(.985);transition:transform var(--t-instant) var(--ease-out)}
+.sb-ic{width:16px;height:16px;flex:none;color:var(--soft);transition:color var(--t-exit) var(--ease-soft-close)}
+.sb-row:hover .sb-ic,.sb-row.on .sb-ic{color:var(--ink);transition-duration:var(--t-instant);transition-timing-function:var(--ease-out)}
+.sb-t{flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.sb-m{flex:none;font-size:var(--fs-chrome-2);color:var(--mute);font-variant-numeric:tabular-nums;transition:opacity var(--t-exit) var(--ease-soft-close)}
+/* New chat carries its plus in a small disc, as Claude does */
+.sb-new .sb-ic{width:18px;height:18px;margin:0 -1px;padding:3px;border-radius:var(--r-round);background:var(--line-2);color:var(--ink)}
+.sb-new:hover .sb-ic{background:var(--line-3)}
+
+/* the row's own actions: arrive fast, leave on the soft close */
+.sb-more{all:unset;position:absolute;right:3px;top:50%;width:22px;height:22px;margin-top:-11px;display:grid;place-items:center;border-radius:var(--r-2);color:var(--mute);cursor:pointer;opacity:0;
+ transition:opacity var(--t-exit) var(--ease-soft-close),background var(--t-exit) var(--ease-soft-close),color var(--t-exit) var(--ease-soft-close)}
+.sb-more svg{width:12px;height:12px}
+.sb-row:hover .sb-more,.sb-more:focus-visible{opacity:1;transition-duration:var(--t-instant);transition-timing-function:var(--ease-out)}
+.sb-more:hover{background:var(--line-2);color:var(--ink)}
+.sb-row:hover .sb-m.hides{opacity:0}
+/* text stops short of the actions, and a count slides back under them */
+.sb-row:has(.sb-more) .sb-hit{padding-right:28px}
+.sb-row:has(.sb-more) .sb-m{margin-right:-20px}
+
+/* status, as Claude marks its sessions: a ring when idle, a live gold dot while a run works, a page when it built a document */
+.sb-g{width:16px;height:16px;flex:none;display:grid;place-items:center;color:var(--mute)}
+.sb-g i{width:6px;height:6px;border-radius:var(--r-round);box-shadow:inset 0 0 0 1px currentColor}
+.sb-g.live i{background:var(--gold);box-shadow:none;animation:breathe var(--t-loop) var(--ease-inout) infinite}
+.sb-g svg{width:13px;height:13px}
+
+/* section headers, after the master template: a Roman numeral in the display italic, tracked small caps, and a
+   hairline that opens on a short gold lead-in */
+.sb-h{position:relative;z-index:1;display:flex;align-items:center;gap:var(--sp-1h);height:26px;margin-top:var(--sp-3h);padding:0 var(--sp-half) 0 var(--sp-2);cursor:pointer;user-select:none}
+.sb-n{min-width:14px;font:italic 400 11px/1 var(--f-display);color:var(--gold-ink)}
+.sb-l{font-size:var(--fs-micro);letter-spacing:var(--tracked-cap);text-transform:uppercase;color:var(--mute);transition:color var(--t-exit) var(--ease-soft-close)}
+.sb-h:hover .sb-l{color:var(--soft);transition-duration:var(--t-instant)}
+.sb-rule{flex:1;height:var(--rule-hair);margin:0 var(--sp-1) 0 var(--sp-1h);background:linear-gradient(90deg,var(--gold) 0 10px,var(--line-2) 10px);opacity:.9}
+.sb-car{width:10px;height:10px;flex:none;color:var(--mute);transition:transform var(--t-move) var(--ease-inout)}
+.sb-h[aria-expanded="false"] .sb-car,.sb-fold[aria-expanded="false"] .sb-car{transform:rotate(-90deg)}
+.sb-ha{display:flex;gap:1px;opacity:0;transition:opacity var(--t-exit) var(--ease-soft-close)}
+.sb-h:hover .sb-ha,.sb-ha:focus-within{opacity:1;transition-duration:var(--t-instant);transition-timing-function:var(--ease-out)}
+.sb-ib{all:unset;width:22px;height:22px;display:grid;place-items:center;border-radius:var(--r-2);color:var(--mute);cursor:pointer;transition:background var(--t-exit) var(--ease-soft-close),color var(--t-exit) var(--ease-soft-close)}
+.sb-ib svg{width:13px;height:13px}
+.sb-ib:hover{background:var(--line-2);color:var(--ink);transition-duration:var(--t-instant)}
+.sb-ib:focus-visible{outline:var(--rule) solid var(--gold)}
+.sb-body,.sb-kids{position:relative}
+.sb-body{margin-top:var(--sp-1)}
+.sb-sub{position:relative;z-index:1;height:24px;display:flex;align-items:flex-end;padding:0 var(--sp-2) 5px;font-size:var(--fs-chrome);color:var(--mute)}
+.sb-sub:first-child{height:20px}
+
+/* the folder tree: children sit on a hairline guide under their folder's caret */
+.sb-fold .sb-car{margin:0 -4px 0 -1px}
+.sb-kids{padding-left:15px}
+.sb-kids::before{content:"";position:absolute;left:16px;top:2px;bottom:2px;width:var(--rule-hair);background:var(--line-2);transform-origin:50% 0}
+.sb-kids .sb-ic{width:14px;height:14px}
+.sb-empty{position:relative;z-index:1;height:26px;display:flex;align-items:center;padding:0 var(--sp-2) 0 var(--sp-3);font-size:var(--fs-ui);color:var(--mute)}
+.sb-kids[hidden],.sb-body[hidden],.sb-row[hidden],.sb-sub[hidden]{display:none}
+
+/* search opens in place of its row */
+.sb-find{position:relative;z-index:1;display:flex;align-items:center;gap:var(--sp-2h);height:28px;padding:0 var(--sp-1) 0 var(--sp-2);border-radius:var(--r-4);background:var(--line);box-shadow:inset 0 0 0 var(--rule-hair) var(--line-3)}
+.sb-find[hidden]{display:none}
+.sb-find input{all:unset;flex:1;min-width:0;font-size:var(--fs-body);color:var(--ink)}
+.sb-find input::placeholder{color:var(--mute)}
+.sb-none{position:relative;z-index:1;padding:var(--sp-2) var(--sp-2);font-size:var(--fs-ui);color:var(--mute)}
+.sb-none[hidden]{display:none}
+
+/* the account row and its pull-up: the name is the button; settings open from it */
+.sb-foot{position:relative;margin:var(--sp-1h) calc(var(--sp-2) * -1) 0;padding:var(--sp-1h) var(--sp-2) 0;border-top:var(--rule-hair) solid var(--line)}
+.sb-me{all:unset;box-sizing:border-box;width:100%;height:44px;display:flex;align-items:center;gap:var(--sp-2h);padding:0 var(--sp-2) 0 var(--sp-1h);border-radius:var(--r-5);cursor:pointer;
+ transition:background var(--t-exit) var(--ease-soft-close),transform var(--t-exit) var(--ease-soft-close)}
+.sb-me:hover,.sb-me[aria-expanded="true"]{background:var(--line);transition-duration:var(--t-instant);transition-timing-function:var(--ease-out)}
+.sb-me:active{transform:scale(.99);transition:transform var(--t-instant) var(--ease-out)}
+.sb-me:focus-visible{outline:var(--rule) solid var(--gold);outline-offset:-1px}
+.sb-av{width:28px;height:28px;flex:none;display:grid;place-items:center;border-radius:var(--r-round);background:var(--line-2);box-shadow:inset 0 0 0 var(--rule-hair) var(--line-3);color:var(--ink);font-size:var(--fs-ui);font-weight:500}
+.sb-who{flex:1;min-width:0;display:flex;align-items:baseline;gap:5px;white-space:nowrap;overflow:hidden}
+.sb-who b{font-weight:450;font-size:var(--fs-body);color:var(--ink);overflow:hidden;text-overflow:ellipsis}
+.sb-who small{font-size:var(--fs-chrome-2);color:var(--mute)}
+.sb-chev{width:12px;height:12px;flex:none;color:var(--mute);transition:transform var(--t-move) var(--ease-inout),color var(--t-exit) var(--ease-soft-close)}
+.sb-me:hover .sb-chev{color:var(--ink);transition-duration:var(--t-move),var(--t-instant)}
+.sb-me[aria-expanded="true"] .sb-chev{transform:rotate(180deg)}
+
+.sb-menu{position:absolute;left:var(--sp-1h);right:var(--sp-1h);bottom:calc(100% + var(--sp-1h));z-index:var(--z-menu);padding:5px;background:var(--panel);border:var(--rule-hair) solid var(--line-3);border-radius:var(--r-5);box-shadow:var(--e3);
+ transform-origin:50% 100%;opacity:0;visibility:hidden;pointer-events:none}
+.sb-menu.open{opacity:1;visibility:visible;pointer-events:auto}
+.sb-menu .sb-row{height:30px}
+.sb-mh{position:relative;z-index:1;display:flex;flex-direction:column;gap:1px;padding:var(--sp-2) var(--sp-2) var(--sp-2h)}
+.sb-mh b{font-weight:450;font-size:var(--fs-ui);color:var(--ink)}
+.sb-mh small{font-size:var(--fs-chrome-2);color:var(--mute)}
+.sb-sep{height:var(--rule-hair);background:var(--line-2);margin:5px var(--sp-1h)}
+/* the theme switch: a pill that slides to the choice on the spring */
+.sb-seg{position:relative;z-index:1;display:grid;grid-template-columns:repeat(3,1fr);margin:var(--sp-half) var(--sp-half) var(--sp-1);padding:2px;border-radius:var(--r-4);background:var(--well);box-shadow:inset 0 0 0 var(--rule-hair) var(--line-2)}
+.sb-seg .pill{position:absolute;top:2px;bottom:2px;left:2px;width:calc((100% - 4px) / 3);border-radius:var(--r-3);background:var(--panel);box-shadow:var(--e1),inset 0 0 0 var(--rule-hair) var(--line-3);transition:transform var(--t-move) var(--spring)}
+.sb-seg button{all:unset;position:relative;display:flex;align-items:center;justify-content:center;gap:5px;height:26px;border-radius:var(--r-3);font-size:var(--fs-chrome-2);color:var(--soft);cursor:pointer;transition:color var(--t-exit) var(--ease-soft-close)}
+.sb-seg button svg{width:13px;height:13px}
+.sb-seg button:hover,.sb-seg button[aria-checked="true"]{color:var(--ink);transition-duration:var(--t-instant)}
+.sb-seg button:focus-visible{outline:var(--rule) solid var(--gold)}
+
+@keyframes sbIn{from{opacity:0;filter:blur(var(--blur-exit));transform:scale(.975)}to{opacity:1;filter:none;transform:none}}
+.sb-find.in{animation:sbIn var(--t-enter) var(--ease-out) both}

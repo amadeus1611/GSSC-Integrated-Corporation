@@ -9,7 +9,8 @@ you tune here is the real thing and there is nothing to copy back. Whole-line di
 
     <!--@include path/from/src-->      a file from src/ (CSS gets the same @dark expansion as build.py)
     <!--@slice path/from/src #id-->    one element, by id, cut from a src/ file (the shell's markup)
-    <!--@bench file-->                 a file from bench/ (the tweak panel, stubs)
+    <!--@bench file-->                 a file from bench/ (the tweak panel, drafts)
+    <!--@rule path/from/src .sel-->     the top-level CSS rules whose selector is exactly .sel (one asset, not a unit)
 
 Tune in the panel, press Copy, paste the changed lines into src/tokens.css (or edit the unit's CSS in src/ and
 reload), then run build.py as usual. The bench never writes to src/ or index.html.
@@ -24,7 +25,7 @@ sys.dont_write_bytecode = True  # importing build.py must not leave a __pycache_
 sys.path.insert(0, CONSOLE)
 from build import expand_dark, read  # noqa: E402  one @dark rule for both builds
 
-DIR = re.compile(r'^\s*<!--@(include|slice|bench) ([\w./-]+)(?: #([\w-]+))?-->$')
+DIR = re.compile(r'^\s*<!--@(include|slice|bench|rule) ([\w./-]+)(?: ([#.][\w-]+))?-->$')
 
 
 def slice_by_id(text, i, where):
@@ -59,7 +60,12 @@ def build(name):
             raise SystemExit(f'bench: {kind} does not resolve: {rel}')
         body = read(p)
         if kind == 'slice':
-            body = slice_by_id(body, i, rel)
+            body = slice_by_id(body, i.lstrip('#'), rel)
+        elif kind == 'rule':
+            rules = re.findall(r'(?m)^%s\{[^}]*\}' % re.escape(i), body)
+            if not rules:
+                raise SystemExit(f'bench: no rule {i} in {rel}')
+            body = '\n'.join(rules)
         elif rel.endswith('.css'):
             body = expand_dark(body)
         out.append(body.rstrip('\n'))

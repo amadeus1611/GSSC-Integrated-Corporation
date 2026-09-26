@@ -43,6 +43,15 @@ A new derivative, whether a screen, a document or a chart, follows the master te
   - **Text.** All text tokens pass AA on every surface in both themes. Gold used as text has its own token, `--gold-ink`; `--gold` is for rules, lead-ins and focus rings only.
   - **Charts.** Fixed order: research navy blue, finance deep gold, builder teal, legal rust, arbiter plum. The palette is validated with the dataviz validator in both modes.
   - **Token raster.** Navy in light and gold in dark, darker or brighter meaning more; validated as an ordinal ramp.
+- **Full palette (2026-09-26, Amadeus).** Ten colours; the values and their roles are in `brand_assets/palette.json`. Those marked "estimated" were read from a screenshot; replace them with the Canva hex codes.
+  - Golds: light gold `#C9A35C`, deep gold `#AE8A47`, pale gold `#E9CF91`, sand `#E6D3A6`.
+  - Navies: midnight navy `#0B1A3F`, royal navy `#0C2461`.
+  - Neutrals: off-white `#F7F5F0`, light grey `#D9D9D9`, steel grey `#7D838E`, slate grey `#4D535E`.
+  - **Dark theme (v45 draft):**
+    - Surfaces are close to black, built from the brand ink rather than neutral grey: the sidebar is `#04060B` and the page is `#06090F`, stepping up to `#0C111B` for menus.
+    - The default text is the off-white.
+    - Captions use steel grey, which passes AA on every dark surface.
+    - It is drafted in `console/bench/drafts/dark-next.css` and is promoted by replacing the `@dark` block in `src/tokens.css`.
 - **No regressions:** each iteration must look at least as well thought out as the last one.
 
 ## 3. Motion principles
@@ -99,6 +108,16 @@ Motion is the heart of the UX: fidelity in the engine comes first.
 - **Tokens (v41):** every value comes from `src/tokens.css`. Spacing is a 4px scale with half steps (`--sp-half`, `--sp-1h` … `--sp-4h`) below 20px for dense chrome; a 1px nudge is optical and stays literal. Layers are named (`--z-side`, `--z-menu`, `--z-tip` …) in one stacking order. Dark tokens are written once in `@dark{}`.
 
 ## 5. Change log
+- **v45 draft, in the bench only** (2026-09-26, Amadeus's sidebar notes; `console/bench/sidebar-next.html`; nothing is promoted yet):
+  - the sidebar follows Claude's structure: New chat and Search, then the master template's numbered sections, I Files (folders), II Pinned and III Recents;
+  - rows are 28px, one hairline apart;
+  - no shortcut hints and no Dispatch;
+  - settings open from the account pull-up at the foot;
+  - motion:
+    - one highlight glides between rows on the spring;
+    - hovers arrive on `--t-instant` and leave on the soft close;
+    - a folder or section opens as one move: the rows below FLIP while each child surfaces from a light blur as it is uncovered, and the guide line draws with them; closing reverses it;
+  - the dark theme is near black with off-white text, on the full palette above.
 - **v44** (2026-09-26, Amadeus's super plan, `console/SUPER_PLAN.md`):
   - faster and softer: entry 160 ms, the soft close 280 ms, layout moves 300 ms;
   - the pour is retired: cards, menus, settings, the full-screen map and the document open by blooming out of a blur in place and close back into it, never returning to the click point; large surfaces blur their content only;

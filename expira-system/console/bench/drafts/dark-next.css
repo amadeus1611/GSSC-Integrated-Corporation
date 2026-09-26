@@ -1,0 +1,21 @@
+/* draft (bench only until promoted): the dark theme rebuilt on the full EXPIRA palette (DESIGN_ENGINE §2, 2026-09-26).
+   Surfaces are the brand ink #09101E pushed close to black, stepping up as they come forward; the default text is the
+   palette's off-white. Contrast (WCAG) on the darkest and lightest dark surface: off-white 18.6–17.3, soft 9.0–8.4,
+   steel grey 5.3–4.7 (also on a hovered row), light gold 8.6–8.0. Promote by replacing the @dark block in src/tokens.css. */
+@dark{
+  color-scheme:dark;
+  --pal-d-bg:#06090F;--pal-d-side:#04060B;--pal-d-panel:#0C111B;--pal-d-ink:#F7F5F0;--pal-d-line:rgba(247,245,240,.14);--pal-d-gold:#C9A35C;
+  --bg:#06090F;              /* page: ink, nearly black */
+  --side:#04060B;            /* sidebar: the darkest surface */
+  --panel:#0C111B;           /* menus, cards, sheets come forward */
+  --well:#0A0E17;--sheet:#090D15;
+  --ink:#F7F5F0;             /* off-white: headings and names */
+  --text:#F7F5F0;            /* off-white: the default text */
+  --soft:#A9ADB5;            /* secondary: between light grey #D9D9D9 and steel grey */
+  --mute:#7D838E;            /* steel grey: captions and micro labels */
+  --line:rgba(247,245,240,.055);--line-2:rgba(247,245,240,.10);--line-3:rgba(247,245,240,.19);
+  --gold:#C9A35C;--gold-ink:#C9A35C;--gold-hi:#E9CF91;--gold-wash:rgba(201,163,92,.09);--sel:rgba(201,163,92,.32);
+  --e1:0 1px 0 rgba(247,245,240,.035) inset,0 2px 8px -3px rgba(0,0,0,.6);
+  --e2:0 1px 0 rgba(247,245,240,.045) inset,0 1px 1px rgba(0,0,0,.4),0 14px 40px -18px rgba(0,0,0,.85);
+  --e3:0 1px 0 rgba(247,245,240,.05) inset,0 1px 2px rgba(0,0,0,.45),0 26px 56px -20px rgba(0,0,0,.9);
+}

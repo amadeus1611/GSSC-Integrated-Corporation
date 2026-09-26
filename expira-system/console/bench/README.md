@@ -31,13 +31,20 @@ unit should change, give the unit its own rule in its CSS instead.
 | `<!--@include units/sidebar/sidebar.css-->` | a file from `src/` (CSS gets `build.py`'s `@dark` expansion) |
 | `<!--@slice shell.html #side-->` | one element, by id, from a `src/` file |
 | `<!--@bench panel.js-->` | a file from `bench/` |
+| `<!--@rule units/sidebar/sidebar.css .wm-->` | only the top-level rules for that selector (one asset, not a whole unit) |
+
+A **tune** reads the unit straight from `src/`. A **redesign** starts as a draft in `bench/drafts/`, next to the real
+tokens and motion, and moves into `src/` only once it is approved.
 
 Every specimen loads `early.js` in its head (it applies the tuned tokens before the unit's scripts read them) and
 `panel.js` last, and sets `BENCH.MO`, `BENCH.easeFn` and `BENCH.actions` from inside its script.
 
 ## Specimens
 
-- **sidebar**: the sidebar fold (`setFold`, the travelling button, the chat giving and taking the width) and the
+- **sidebar-next**: the v45 sidebar draft and the near-black dark theme. Its CSS, markup and script are drafts in
+  `bench/drafts/`, not `src/`, because it is a redesign rather than a tune; it is promoted into `units/sidebar` once
+  approved. Keys: F fold, A account, S search, D a folder, R a section.
+- **sidebar**: the current sidebar: the fold (`setFold`, the travelling button, the chat giving and taking the width) and the
   account menu's bloom (`core/pour.js`). Keys: F fold, A account menu.
 
 To add one, copy `sidebar.html`, swap the includes and slices for the unit's, and stub only the globals its script

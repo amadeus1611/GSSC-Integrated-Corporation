@@ -1,0 +1,20 @@
+{
+  "name": "EXPIRA full colour palette",
+  "source": "Amadeus's Canva brand palette, shared 2026-09-26. Values marked \"estimated\" were read from a screenshot and should be replaced with Canva's own hex codes; \"brand\" values match the brand stack in manifest.json.",
+  "colors": [
+    {"name": "light gold",    "hex": "#C9A35C", "status": "brand",     "role": "gold in dark (rules, focus, gold text); highlights in light"},
+    {"name": "off-white",     "hex": "#F7F5F0", "status": "estimated", "role": "default text and headings in dark"},
+    {"name": "slate grey",    "hex": "#4D535E", "status": "estimated", "role": "quiet chrome, disabled states"},
+    {"name": "light grey",    "hex": "#D9D9D9", "status": "estimated", "role": "light hairlines and fills; the upper bound for secondary text in dark"},
+    {"name": "midnight navy", "hex": "#0B1A3F", "status": "brand",     "role": "ink in light; the root of the near-black dark surfaces"},
+    {"name": "sand",          "hex": "#E6D3A6", "status": "estimated", "role": "warm washes, selection, the light raster floor"},
+    {"name": "steel grey",    "hex": "#7D838E", "status": "estimated", "role": "captions and micro labels in dark (AA on every dark surface)"},
+    {"name": "deep gold",     "hex": "#AE8A47", "status": "brand",     "role": "decorative gold in light: lead-ins, marks"},
+    {"name": "pale gold",     "hex": "#E9CF91", "status": "estimated", "role": "gold highlights in dark"},
+    {"name": "royal navy",    "hex": "#0C2461", "status": "estimated", "role": "the brighter navy: accents and the research series"}
+  ],
+  "dark_surfaces": {
+    "note": "Brand ink #09101E pushed close to black; surfaces step up as they come forward (bench/drafts/dark-next.css, v45 draft).",
+    "side": "#04060B", "bg": "#06090F", "sheet": "#090D15", "well": "#0A0E17", "panel": "#0C111B"
+  }
+}
