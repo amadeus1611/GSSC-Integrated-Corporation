@@ -35,7 +35,7 @@ This follows the Chrome "performant expand and collapse" technique: scale on the
 
 **Design:**
 - **One Inspector per view.**
-  - In the thread, it's a panel docked at a fixed spot (see the decision below). Its width is fixed; its height fits the content up to a limit, and past that it scrolls inside.
+  - In the thread, it's a docked rail on the right that the chat column makes room for, so it never covers anything. The rail opens on the first preview or pin and stays open until it is closed, so the column doesn't jump on every hover. Inside the rail, each card's height fits its content, and a long card scrolls.
   - Inside a map card, it's a details strip under the map plate. It lives inside the card and never covers the map.
   - In the full-screen map, it's a side pane.
 - **Hover previews and click pins.** Hovering or focusing an item previews it in the Inspector after 120 ms. A click pins it: the item keeps a marker, and the Inspector shows a pin and a close control. While something is pinned, hovering another item previews it, and leaving that item returns to the pinned one. Esc or the close control unpins.
@@ -62,6 +62,6 @@ This follows the Chrome "performant expand and collapse" technique: scale on the
 
 After that: the reviewer pass, republish, and the DESIGN_ENGINE change log.
 
-## Decision for Amadeus
+## Decisions
 
-Where the thread's Inspector sits: bottom right above the composer, floating (recommended), or a docked rail on the right that the page makes room for.
+- 2026-09-26: Amadeus chose the **right rail** for the thread's Inspector (over a panel floating above the composer).
