@@ -80,11 +80,13 @@ const pad=n=>String(n).padStart(2,"0"),OPT={fresh:"12"},drawOpt=()=>{};
 <!--@bench drafts/chat-next.js-->
 Object.assign(BENCH,{MO,easeFn});window.SB=SB;window.CH=CH;  /* bench only: test hooks */
 /* the tree opens chats and documents into the pane; New chat returns to the greeting */
-SB.onopen=n=>CH.open(n);$("#newChat").addEventListener("click",()=>CH.start());
+SB.onopen=n=>CH.open(n);
+/* a brief starts a chat in the tree, marked live while it runs; its finished turns are kept on it */
+CH.onnew=t=>{const n=SB.newChat();n.t=t;SB.sync();return n};CH.onsync=()=>SB.sync();$("#newChat").addEventListener("click",()=>CH.start());
 
 const ks=f=>()=>setTimeout(f,0);
 BENCH.actions.push({label:"Pull up",run:()=>CH.pull()},{label:"Sample run: off",run:function(){this.on=!this.on;CH.sample(this.on);const b=[...document.querySelectorAll("#bn button")].find(x=>/^Sample run/.test(x.textContent));if(b)b.firstChild.textContent="Sample run: "+(this.on?"on":"off")}},{label:"New chat",run:()=>CH.start()},{label:"Send a brief",run:()=>CH.send(CH.RICH.brief)},
- {label:"Example",run:()=>{const f=SB.model.kids.find(n=>n.t==="Quotations");f.open=true;SB.sync();CH.open(f.kids.find(k=>k.t==="Quotation for the Makati site"))}},
+ {label:"Example",run:()=>{const f=SB.model.kids.find(n=>n.t==="Quotations");if(f){f.open=true;SB.sync()}CH.open((f&&f.kids.find(k=>k.t==="Quotation for the Makati site"))||{t:"Quotation for the Makati site",ts:Date.now()})}},
  {label:"Running",run:()=>CH.open(SB.model.kids.find(n=>n.live)||{t:"Showroom fit-out",live:true,body:""})},{label:"Dock",run:()=>SB.dock()});
 })();
 </script>

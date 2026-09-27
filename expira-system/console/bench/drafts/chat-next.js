@@ -136,6 +136,10 @@ const CH=(()=>{const ch=$("#ch"),scroll=$("#chScroll"),col=$("#chCol"),tab=$("#c
 
  /* ---- a new chat ---- */
  let mode="start",running=null,cur=null;
+ /* the tree is told when a brief starts a chat (hookNew returns its node) and when a chat's state changes (hookSync) */
+ let hookNew=null,hookSync=null;
+ /* a finished turn is kept on its chat (node.turns: brief, run record, answer, exhibits), so reopening it shows it */
+ const keep=(node,brief0,w,md,ex)=>{if(!node||!node.kind)return;(node.turns||(node.turns=[])).push({brief:brief0,work:JSON.parse(JSON.stringify(w,(k,v)=>k==="_t0"?undefined:v)),md,ex,at:Date.now()});node.ts=Date.now();node.body=String(md||"").slice(0,4000);hookSync?.()};
  function start(){if(running)stopRun();cur=null;const was=mode;mode="start";ttl.innerHTML="";ttl.hidden=true;greet();
   const heroParts=[$(".ch-lead"),$("#chHi"),$("#chDate")];
   const show=()=>{shut(true);ch.classList.add("start");ch.classList.remove("thread");col.replaceChildren();ta.value="";fit();tabSay();pull(tab,40);
@@ -150,11 +154,11 @@ const CH=(()=>{const ch=$("#ch"),scroll=$("#chScroll"),col=$("#chCol"),tab=$("#c
    const an=reduce?[]:parts.map((x,i)=>x.animate(focusOut(B()*.6),{duration:ms("--sb-out"),delay:i*20,easing:EZ(),fill:"forwards"}));
    Promise.all(an.map(a=>a.finished)).then(()=>{an.forEach(a=>a.cancel());ch.classList.remove("leaving")},()=>ch.classList.remove("leaving"))}
   const clear=()=>{ta.value="";fit()};isOpen()?shut(false,clear):clear();
-  const title=text.length>48?text.slice(0,46).replace(/\s+\S*$/,"")+"…":text;if(!cur){cur={t:title};setTitle(title)}
+  const title=text.length>48?text.slice(0,46).replace(/\s+\S*$/,"")+"…":text;if(!cur){cur=hookNew?.(title)||{t:title};setTitle(title)}const node=cur;
   const turn=brief(text,new Date());col.appendChild(turn);pull(turn.querySelector(".ch-quote"),90);
   const a=answerShell(null,true);col.appendChild(a);pull(a.querySelector(".ch-run"),220);scrollEnd(true);busyOn();
   /* a real run when this page can reach Claude; the sample run otherwise (and when the bench asks for it) */
-  ENG.ready().then(ok=>{if(a.isConnected)ok&&!SAMPLE?runReal(a,text):run(a,RICH)})}
+  ENG.ready().then(ok=>{if(a.isConnected)ok&&!SAMPLE?runReal(a,text,node):run(a,RICH,node,text)})}
  let SAMPLE=false;
  function setTitle(t){ttl.hidden=false;ttl.innerHTML=`${esc(t)}`;if(!reduce)ttl.animate(focusIn(B()*.5),{duration:ms("--sb-in"),easing:EZ()})}
 
@@ -390,8 +394,8 @@ const CH=(()=>{const ch=$("#ch"),scroll=$("#chScroll"),col=$("#chCol"),tab=$("#c
  function hooks(a,rate=1){const meta=a.querySelector(".ch-runm"),t=meta.querySelector(".t"),now=meta.querySelector(".now"),doc=a.querySelector(".ch-doc"),t0=performance.now();
   const tick=setInterval(()=>{t.textContent=mmss((performance.now()-t0)*rate)},250);
   return {update:w=>a._rv.update(w),phrase:x=>say(now,x),text:(md,final)=>streamDoc(doc,md,final),stop:()=>clearInterval(tick),t,now,doc}}
- const busyOn=()=>{comp.classList.add("busy");send.innerHTML=IC.stop;send.setAttribute("aria-label","Stop");tab.classList.add("live")};
- const busyOff=()=>{running=null;comp.classList.remove("busy");tab.classList.remove("live");tabSay();send.innerHTML=IC.arrow;send.setAttribute("aria-label","Send")};
+ const busyOn=()=>{if(cur&&cur.kind){cur.live=true;hookSync?.()}comp.classList.add("busy");send.innerHTML=IC.stop;send.setAttribute("aria-label","Stop");tab.classList.add("live")};
+ const busyOff=()=>{if(running&&running.node&&running.node.kind){running.node.live=false;hookSync?.()}else if(cur&&cur.kind){cur.live=false;hookSync?.()}running=null;comp.classList.remove("busy");tab.classList.remove("live");tabSay();send.innerHTML=IC.arrow;send.setAttribute("aria-label","Send")};
  col.addEventListener("click",e=>{
   const c=e.target.closest(".ch-act");if(c){if(c.dataset.act==="copy"){try{navigator.clipboard?.writeText(c.closest(".ch-a").querySelector(".ch-doc").innerText)}catch(x){}c.textContent="Copied";c.classList.add("done");setTimeout(()=>{c.textContent="Copy";c.classList.remove("done")},1600)}}});
 
@@ -446,19 +450,19 @@ const CH=(()=>{const ch=$("#ch"),scroll=$("#chScroll"),col=$("#chCol"),tab=$("#c
  /* one watcher for every chart's width: a change redraws it on the next frame, never inside the observer */
  const CRO=new ResizeObserver(es=>requestAnimationFrame(()=>es.forEach(e=>{if(e.target.isConnected)drawChart(e.target)})));
  const colophon=(d,md0)=>{const n=String(md0).replace(/[#|*-]/g," ").split(/\s+/).filter(Boolean).length;
-  return `<footer class="ch-colo"><span>Filed ${hhmm(d)}</span><span>${n} words · ${Math.max(1,Math.round(n/220))} min read</span><span class="acts"><button class="ch-act" type="button" data-act="copy">Copy</button><button class="ch-act" type="button" data-act="retry">Retry</button><button class="ch-act" type="button" data-act="dispatch">Dispatch</button></span></footer>`};
+  return `<footer class="ch-colo"><span>Filed ${hhmm(d)}</span><span>${n} words · ${Math.max(1,Math.round(n/220))} min read</span><span class="acts"><button class="ch-act" type="button" data-act="copy">Copy</button><button class="ch-act" type="button" data-act="retry">Retry</button></span></footer>`};
 
  /* ---- a real run: the brief goes to the engine (Claude and Exa, as the viewer); the view follows its record ---- */
- function runReal(a,text){const h=hooks(a),ctl=new AbortController();busyOn();running={a,stop:()=>ctl.abort()};tabSay();
+ function runReal(a,text,node){const h=hooks(a),ctl=new AbortController();busyOn();running={a,node,stop:()=>ctl.abort()};tabSay();
   ENG.go(text,{effort:SET.effort,out:SET.out,desks:SET.desks,client:SET.client},{update:h.update,phrase:h.phrase,text:h.text,
-   done:(w,md,ex)=>{h.stop();h.t.textContent=mmss(w.ms);say(h.now,w.firewall==="held"?"Held by the firewall":w.firewall==="clear"?"Firewall clear":"For the team");
+   done:(w,md,ex)=>{h.stop();keep(node,text,w,md,ex);h.t.textContent=mmss(w.ms);say(h.now,w.firewall==="held"?"Held by the firewall":w.firewall==="clear"?"Firewall clear":"For the team");
     const tail=document.createElement("div");tail.innerHTML=exhibits(ex)+colophon(new Date(),md);[...tail.children].forEach(x=>h.doc.appendChild(x));
     watchCharts(h.doc);flowIn([...h.doc.querySelectorAll(".ch-ex>*,.ch-colo")]);a.setAttribute("aria-busy","false");busyOff();follow()},
    fail:e=>{h.stop();a.setAttribute("aria-busy","false");busyOff();
     say(h.now,e&&e.code==="cancelled"?"Stopped":e&&e.code==="not_granted"?"Claude isn't allowed on this page":e&&e.code==="rate_limited"?"Busy: try again in a moment":"Could not finish")}},ctl.signal)}
 
  /* ---- the sample run (the bench, or a page without Claude): the same record, played on a clock ---- */
- function run(a,R){const h=hooks(a,16),w=JSON.parse(JSON.stringify(R.work)),T=[],at=(ms,f)=>T.push(setTimeout(f,ms));
+ function run(a,R,node,text){const h=hooks(a,16),w=JSON.parse(JSON.stringify(R.work)),T=[],at=(ms,f)=>T.push(setTimeout(f,ms));
   w.live=true;w._o=true;w._t0=performance.now();w.steps.forEach(s=>{s._ms=s.ms;delete s.ms;delete s.v});w.map=w.map||{};
   const pages=(w.map.pages||[]).slice(),calls=(w.map.calls||[]).slice(),ledger=w.ledger,audit=w.audit;w.map.pages=[];w.map.calls=[];delete w.ledger;delete w.audit;
   const T0=()=>Math.round(performance.now()-w._t0);
@@ -477,9 +481,9 @@ const CH=(()=>{const ch=$("#ch"),scroll=$("#chScroll"),col=$("#chCol"),tab=$("#c
      at(1300,()=>{w._w=false;w.weighed=true;if(ledger)w.ledger=ledger;h.update(w);
       w._a=true;w.atok=0;h.phrase("Writing it up");h.update(w);const at2=setInterval(()=>{w.atok+=90;h.update(w)},160);T.push(at2);
       ink(a,R,()=>{clearInterval(at2);w._a=false;w.answered=true;w.audit=audit||[];w._v=true;h.phrase("Checking the figures");h.update(w);
-       at(600,()=>{w._v=false;w.checked=true;w.live=false;w.firewall="clear";h.stop();h.t.textContent=mmss(R.work.ms);say(h.now,"Firewall clear");h.update(w);a.setAttribute("aria-busy","false");busyOff()})})})})})};
+       at(600,()=>{w._v=false;w.checked=true;w.live=false;w.firewall="clear";h.stop();keep(node,text||R.brief,Object.assign(w,{ms:R.work.ms}),R.md,R.ex);h.t.textContent=mmss(R.work.ms);say(h.now,"Firewall clear");h.update(w);a.setAttribute("aria-busy","false");busyOff()})})})})})};
   at(700,()=>{w._o=false;w.staffed=true;h.phrase("The Arbiter is staffing the desks");h.update(w);at(380,pump)});
-  running={a,stop:()=>{T.forEach(clearTimeout);ink.cancel?.();h.stop();w.stopped=true;w.live=false;w._o=w._a=w._v=w._w=false;w.steps.forEach(s=>{if(s._live){s._live=false;s.stopped=true}});h.update(w)}};tabSay()}
+  running={a,node,stop:()=>{T.forEach(clearTimeout);ink.cancel?.();h.stop();w.stopped=true;w.live=false;w._o=w._a=w._v=w._w=false;w.steps.forEach(s=>{if(s._live){s._live=false;s.stopped=true}});h.update(w)}};tabSay()}
  function stopRun(){if(!running)return;const {a,stop}=running;stop();busyOff();a.setAttribute("aria-busy","false");const n=a.querySelector(".ch-runm .now");if(n)say(n,"Stopped")}
 
  /* ---- charts, in and out, on the one curve: in, the grid fades up, the bars rise from the baseline one after another
@@ -536,9 +540,10 @@ const CH=(()=>{const ch=$("#ch"),scroll=$("#chScroll"),col=$("#chCol"),tab=$("#c
  /* ---- opening a chat or a document from the tree: shown settled; its blocks pull focus in order, 16ms apart ---- */
  function open(n){if(running)stopRun();CIO.disconnect();cur=n;const was=mode;mode="thread";shut(true);ch.classList.remove("start");ch.classList.add("thread");tabSay();setTitle(n.t);
   let h;if(n.kind==="doc"){h=`<header class="ch-dochead"><div class="ch-kick"><b>Document</b><span>${n.ts?new Date(n.ts).toLocaleDateString("en-GB",{day:"numeric",month:"short",year:"numeric"}):""}</span></div><h2>${esc(n.t)}</h2><div class="ch-lead"></div></header><article class="ch-turn ch-a"><div class="ch-doc">${page(n.body||"")}</div></article>`;col.innerHTML=h}
-  else{const R=n.t==="Quotation for the Makati site"?RICH:generic(n);const d=new Date(n.ts||Date.now());col.replaceChildren(brief(R.brief,new Date(d.getTime()-R.work.ms)));
-   const a=answerShell(R.work,false);a.querySelector(".ch-doc").innerHTML=page(R.md)+exhibits(R.ex)+colophon(d,R.md);col.appendChild(a);
-   if(n.live){const b=answerShell(R.work,true);col.replaceChildren(brief(R.brief,new Date()),b);run(b,R)}}
+  else{const T=n.turns&&n.turns.length?n.turns:[n.t==="Quotation for the Makati site"?RICH:generic(n)],R=T[T.length-1];col.replaceChildren();
+   T.forEach(t=>{const d=new Date(t.at||n.ts||Date.now());col.appendChild(brief(t.brief,new Date(d.getTime()-(t.work.ms||0))));
+    const a=answerShell(t.work,false);a.querySelector(".ch-doc").innerHTML=page(t.md)+exhibits(t.ex)+colophon(d,t.md);col.appendChild(a)});
+   if(n.live&&!n.turns){const b=answerShell(R.work,true);col.replaceChildren(brief(R.brief,new Date()),b);run(b,R)}}
   scroll.scrollTop=0;watchCharts(col);if(reduce)return;
   requestAnimationFrame(()=>flowIn([...col.querySelectorAll(".ch-dochead>*,.ch-quote,.ch-run,"+FLOWSEL)]))}
  function generic(n){const ps=String(n.body||"").split(/\n\n/).filter(Boolean),T=n.t;
@@ -569,4 +574,4 @@ const CH=(()=>{const ch=$("#ch"),scroll=$("#chScroll"),col=$("#chCol"),tab=$("#c
     {role:"decision",focus:"The schedule",task:"How the company should proceed",after:[2,3],v:"pass",ms:18000,out:"Recommend two phases. Options: one continuous build, two phases, night shifts only. You decide the schedule and the contingency.\nCONFIDENCE: high"}]}};
 
  greet();tabSay();ttl.hidden=!ttl.textContent;
- return{start,open,go,pull:rise,shut,sample:v=>{SAMPLE=!!v},send:t=>{ta.value=t;fit();go()},get mode(){return mode},RICH}})();
+ return{set onnew(f){hookNew=f},set onsync(f){hookSync=f},start,open,go,pull:rise,shut,sample:v=>{SAMPLE=!!v},send:t=>{ta.value=t;fit();go()},get mode(){return mode},RICH}})();

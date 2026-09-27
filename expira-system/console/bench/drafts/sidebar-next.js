@@ -95,7 +95,10 @@ const SB=(()=>{const side=$("#side"),scroll=$("#sbScroll");
  /* ---- the model (bench sample; the console builds it from chats, FOLDERS and the documents the kernel builds) ---- */
  let seq=0;const mk=(kind,t,o={})=>({id:"n"+(++seq),kind,t,pin:false,open:false,live:false,ts:0,del:false,...o,kids:kind==="folder"?(o.kids||[]):undefined});
  const now=Date.now(),H=36e5;
- const ROOT={kind:"root",kids:[
+ /* a fresh instance loads empty: no chats, no folders, nothing archived or deleted. ?sample (and ?stress) bring the
+    bench's sample tree back for the tests */
+ const SAMPLE=/[?&](sample|stress)\b/.test(location.search);
+ const ROOT={kind:"root",kids:!SAMPLE?[]:[
   mk("folder","Quotations",{open:true,kids:[mk("doc","Q-2026-014 · Makati showroom",{body:"Quotation Q-2026-014 for the Makati showroom. Scope: ceiling works, lighting track, display joinery and storefront glazing. Revision B, issued on 22 September.",ts:now-3*H}),mk("doc","Q-2026-011 · BGC office fit-out and fixtures",{body:"Quotation Q-2026-011 for the BGC office fit-out: partitions, acoustic ceiling, carpet tiles and fixed furniture. Revision A.",ts:now-30*H}),
    mk("chat","Quotation for the Makati site",{body:"Scope the Makati showroom fit-out: ceiling works, lighting track, display joinery and the storefront glazing.\n\nThe lighting schedule needs the client's final layout before we can count the track runs. Ask for the revised floor plan by Friday.\n\nGlazing: the storefront is a single span of laminated glass, so allow for a crane lift on a Sunday permit.",ts:now-2*H,unread:true}),mk("folder","Drafts",{kids:[mk("doc","Q-2026-015 · draft",{ts:now-5*H})]})]}),
   mk("folder","Contracts",{kids:[mk("doc","Client MSA · structural template",{body:"Master services agreement for structural works: scope, variations, liquidated damages, retention and the defects liability period of one year.",ts:now-80*H}),mk("doc","Supply agreement · draft",{body:"Draft supply agreement for ceiling track and drapery: delivery terms, inspection on arrival, and the warranty on moving parts.",ts:now-50*H})]}),
@@ -117,14 +120,14 @@ const SB=(()=>{const side=$("#side"),scroll=$("#sbScroll");
   const words=["ceiling","track","glazing","joinery","lighting","drapery","partition","acoustic","carpet","signage","storefront","mezzanine"];
   for(let i=0;i<2000;i++){const w=words[i%words.length],n=mk(i%5?"chat":"doc",`${w[0].toUpperCase()+w.slice(1)} review ${i+1}`,{ts:now-rnd()*2000*H,body:`Notes on the ${w} for job ${i+1}. `+words.slice(0,6).join(" ")});
    (rnd()<.35?ROOT:fs[Math.floor(rnd()*fs.length)]).kids.push(n)}}
- let sel=ROOT.kids[7].id,query="",selMode=false,anchor=null,arr=null;const picked=new Set();
+ let sel=ROOT.kids[7]?.id??null,query="",selMode=false,anchor=null,arr=null;const picked=new Set();
  const find=(id,list=ROOT.kids,parent=ROOT)=>{for(const n of list){if(n.id===id)return{n,parent};if(n.kids){const r=find(id,n.kids,n);if(r)return r}}return null};
  /* two quiet places at the foot of the tree: Archive, and Recently Deleted, which keeps things for 30 days. Each entry
     remembers the folder it came from, so Put Back returns it there (or to the top level, if that folder has gone). */
  const DAY=864e5,KEEP=30*DAY;
- const ARCH=[{n:mk("chat","Belmont drapery refit",{ts:now-900*H}),from:null,at:now-10*DAY},
+ const ARCH=!SAMPLE?[]:[{n:mk("chat","Belmont drapery refit",{ts:now-900*H}),from:null,at:now-10*DAY},
   {n:mk("folder","2025 tenders",{kids:[mk("doc","T-2025-031 · Iloilo terminal",{ts:now-4000*H}),mk("doc","T-2025-044 · Bacolod mall",{ts:now-3800*H})]}),from:null,at:now-41*DAY}];
- const TRASH=[{n:mk("chat","Old supplier comparison",{ts:now-300*H}),from:null,at:now-2*H},
+ const TRASH=!SAMPLE?[]:[{n:mk("chat","Old supplier comparison",{ts:now-300*H}),from:null,at:now-2*H},
   {n:mk("doc","Q-2026-003 · withdrawn",{ts:now-500*H}),from:ROOT.kids[0].id,at:now-27*H},
   {n:mk("folder","Scratch",{kids:[mk("doc","Rough notes",{ts:now-200*H}),mk("chat","Test run",{ts:now-210*H})]}),from:null,at:now-3*DAY-2*H},
   {n:mk("chat","Draft letter to the landlord",{ts:now-700*H}),from:null,at:now-27*DAY-5*H}];
@@ -545,7 +548,7 @@ const SB=(()=>{const side=$("#side"),scroll=$("#sbScroll");
    `<div class="sb-cc"><div class="sb-seg" role="radiogroup" aria-label="Appearance"><i class="pill" aria-hidden="true"></i>`+
     [["system",IC.sys,"Auto"],["light",IC.sun,"Light"],["dark",IC.moon,"Dark"]].map(([v,ic,l])=>`<button type="button" role="radio" data-th="${v}" aria-checked="false">${ic}<span>${l}</span></button>`).join("")+`</div>`+
    `<div class="sb-tiles">${tile("calm",IC.calm,"Calm motion")}${tile("compact",IC.rows,"Compact")}</div></div>`+
-   `<div class="sb-sep"></div>`+item("settings",IC.gear,"Settings")+item("library",IC.lib,"Library").replace('</span></button>','</span><span class="sb-m">5</span></button>')+item("p:data",IC.data,"Data",0,true)+item("p:help",IC.help,"Help",0,true)+
+   `<div class="sb-sep"></div>`+item("settings",IC.gear,"Settings")+item("library",IC.lib,"Library")+item("p:data",IC.data,"Data",0,true)+item("p:help",IC.help,"Help",0,true)+
    `<div class="sb-sysline"><span>EXPIRA Console 45</span><span>Kernel 2.18</span></div>`}
  /* the account card is a panel of controls, not a menu: its rows are plain buttons */
  const AP=pager(acard,anb,anf,hlM,n=>{const h=apage(n).replace(/ role="menuitem"/g,"");setTimeout(()=>paintSeg(false),0);return h});
