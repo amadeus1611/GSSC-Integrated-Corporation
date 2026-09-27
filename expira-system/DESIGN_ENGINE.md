@@ -314,11 +314,16 @@ The chat pane follows §4.1–§4.4 and the sidebar's colour logic. The old answ
   - The signature is the gold lead-in, a small serif greeting that knows the hour ("Good morning", "Good afternoon", "Good evening", or "Working late" after 22:00) with the name in the display italic, and the date in plain words ("Saturday 26 September"). There is no clock and no tracked caps.
   - It is set against the sidebar's foot: the lead-in sits on the foot's hairline, the greeting is level with the account, and the date is level with the EXPIRA mark, so the two panes close on one line. The mark itself stays in the sidebar.
   - It arrives as the lead-in draws from the left and the two lines focus in, 40ms apart.
-- **The sheet** is the focused place to write: the grabber, the brief (14px, two lines to start, growing to ten), the chat's settings, then attach, the model in words, an esc key and send.
-  - **The settings** are four quiet rows under a hairline: Effort (Quick, Auto, Deep), Desks (Research, Finance, Legal, Decision; never none), Output (Auto, Quotation, Contract, Resolution, Memo) and Client-facing. They are words, not chips: the chosen word is ink over a hairline that slides to it (transform only), and arrows move within a choice. A desk is on when its dot is filled. Client-facing is a small switch, and says what the firewall keeps out: suppliers, costs, margins and bank details.
-  - **It is glass:** the panel at 58% (54% in dark), a sheen and a lit top edge over a 24px backdrop blur with saturation. It reads as a material even over an empty page, and over a thread the answer shows through it, softened. It is opaque where the browser has no backdrop filter and when the system asks for reduced transparency. Headless renderers drop a blur this large, so judge the glass in a real browser.
-  - **A veil** steps the page back while it is up: a tint of the page colour, not a blur, so the glass has something sharp to soften.
-  - **It closes** with Esc, the esc key, a click on the veil, a click on the grabber, or a pull down. Focus goes back to the tab.
+- **The sheet** is the focused place to write: the grabber, the brief (14px, two lines to start, growing to ten), then one row of icons and send. The icons replace the settings rows; there is no visible text beyond the brief.
+  - **Icons carry the settings in their drawing:**
+    - Effort is three bars that fill to the level; a click steps Quick, Auto and Deep, and Shift steps back.
+    - Desks is four dots that fill for the desks that are on (never none).
+    - Output is a page carrying the glyph of the chosen output: a spark for Auto, a total rule for Quotation, a signature for Contract, a seal for Resolution, and lines for Memo.
+    - Client-facing is a shield that closes over a check when the firewall is on.
+    - Attach sits first; send sits alone on the right.
+  - Each icon names itself in a small ink label on hover after 0.3s, and at once for keyboard focus ("Desks · 3 of 4"). Desks and Output open a small glass menu above the icon: a glyph, the name over a quiet line, and a check for what is chosen. Arrows move in the menu, and Esc closes the menu before the sheet.
+  - **It is truly frosted.** The veil beneath the sheet carries the blur, a 14px backdrop blur over the whole pane with only its opacity animating, so the page goes soft as the sheet rises, as if under water. A small glass panel's own backdrop blur left text beneath it legible in Chromium (shapes blurred, text did not). The sheet keeps its own tint, sheen, lit edge and a 16px blur over the already softened page. Both are opaque where there is no backdrop filter and under reduced transparency.
+  - **It closes** with Esc, a click on the veil, a click on the grabber (focusable, Enter or Space), or a pull down. Focus goes back to the tab.
 - **One move, one progress.** A single progress, 0 (the line) to 1 (the open sheet), drives the grabber's travel, the reveal growing out of the line, the glass, the contents and the veil.
   - The reveal grows wide first, then tall, so the line becomes a bar and the bar rises. In a new chat the sheet opens in the middle of the page; in a thread it rises from the foot.
   - The reveal ends 40px past the shadow, so it never clips it. The contents focus in over the second half (8px of travel and a 2px blur).
@@ -352,6 +357,10 @@ The chat pane follows §4.1–§4.4 and the sidebar's colour logic. The old answ
 - **Tokens (v41):** every value comes from `src/tokens.css`. Spacing is a 4px scale with half steps (`--sp-half`, `--sp-1h` … `--sp-4h`) below 20px for dense chrome; a 1px nudge is optical and stays literal. Layers are named (`--z-side`, `--z-menu`, `--z-tip` …) in one stacking order. Dark tokens are written once in `@dark{}`.
 
 ## 6. Change log
+- **v45 chat bench, full glass and icons** (2026-09-27, Amadeus: "full glass integration. Design the layout inside the chat interface further, more refined … subtle, more about icons than text"; on the motion: "it looks like it comes out of water … keep that"): see §4.5.
+  - The page under the sheet is now truly frosted, because the veil carries the blur.
+  - The settings rows became one row of icons that draw their own state, with hover names and two small glass menus.
+  - The pull motion is unchanged.
 - **v45 chat bench, the pull tab** (2026-09-26, Amadeus: "make the chat interface like a pull up tab from the center middle like a line … that pulls up into a focused chat typing interface with settings for the chat … once the composer and outputs start coming in, it moves toward the bottom area … as the pull up tab as well"; "It doesn't look like glass"): see §4.5.
   - The composer now rests as a line in the middle of a new chat and at the foot of a thread. Pulled, clicked or typed at, it grows into a glass sheet with the chat's settings: effort, desks, output and client-facing.
   - The glass is stronger: a 24px blur, a sheen and a lit top edge, over a veil that steps the page back. Over a thread the answer now visibly shows through it.

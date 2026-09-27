@@ -5,7 +5,7 @@
    the signature racks out and the brief pulls focus as a pull quote. The desks work in one quiet line (no run card); the answer then inks in, word by word, laid out as the
    master template lays out a page. A chat opened from the tree is shown settled, its blocks pulling focus in order.
    Reads MO, easeFn and easeInv from core/motion.js, and $, root and reduce from the prelude (the bench stubs them). */
-const CH=(()=>{const ch=$("#ch"),scroll=$("#chScroll"),col=$("#chCol"),tab=$("#chTab"),sheet=$("#chSheet"),glass=sheet.querySelector(".ch-glass"),fg=sheet.querySelector(".ch-fg"),grab=$("#chGrab"),veil=$("#chVeil"),comp=$("#chComp"),set=$("#chSet"),ta=$("#prompt"),send=$("#chSend"),ttl=$("#ttl");
+const CH=(()=>{const ch=$("#ch"),scroll=$("#chScroll"),col=$("#chCol"),tab=$("#chTab"),sheet=$("#chSheet"),glass=sheet.querySelector(".ch-glass"),fg=sheet.querySelector(".ch-fg"),grab=$("#chGrab"),veil=$("#chVeil"),comp=$("#chComp"),ta=$("#prompt"),send=$("#chSend"),ttl=$("#ttl");
  const tok=n=>getComputedStyle(root).getPropertyValue(n).trim();
  const ms=n=>{const v=tok(n);return parseFloat(v)*(/ms$/.test(v)?1:1000)||1};
  const EZ=()=>tok("--sb-ease")||"cubic-bezier(.19,1,.22,1)",B=()=>parseFloat(tok("--blur-enter"))||3;
@@ -45,7 +45,7 @@ const CH=(()=>{const ch=$("#ch"),scroll=$("#chScroll"),col=$("#chCol"),tab=$("#c
  const lerp=(a,b,t)=>a+(b-a)*t,cl=(v,a=0,b=1)=>Math.max(a,Math.min(b,v)),sm=(p,a,b)=>{const t=cl((p-a)/(b-a));return t*t*(3-2*t)};
  const box=el=>{const r=el.getBoundingClientRect();return{x:r.left,y:r.top,w:r.width,h:r.height}};
  const isOpen=()=>sheet.classList.contains("on"),tabLn=tab.querySelector(".ln"),tabLb=tab.querySelector(".lb"),tabHt=tab.querySelector(".ht");
- function prep(){if(isOpen())return;sheet.classList.remove("mid","low");sheet.classList.add("on",mode==="start"?"mid":"low");veil.classList.add("on");tab.classList.add("away");tab.setAttribute("aria-expanded","true");paintSeg(true)}
+ function prep(){if(isOpen())return;sheet.classList.remove("mid","low");sheet.classList.add("on",mode==="start"?"mid":"low");veil.classList.add("on");tab.classList.add("away");tab.setAttribute("aria-expanded","true")}
  function measure(){sheet.style.transform=glass.style.clipPath=fg.style.clipPath="";const S=box(sheet),l=box(tabLn);G={S,L:{x:l.x+l.w/2-LW/2,y:l.y+l.h/2-SH/2,w:LW,h:SH}}}
  function frame(p){P=p;const {S,L}=G,ew=1-Math.pow(1-p,3),w=lerp(L.w,S.w,ew),h=lerp(L.h,S.h,p),cx=lerp(L.x+L.w/2,S.x+S.w/2,ew),y=lerp(L.y,S.y,p);
   const o=40*Math.pow(p,6),r=lerp(2,14,cl(p*1.6)),side=(S.w-w)/2-o;  /* o: the reveal ends past the shadow, never clipping it */
@@ -59,7 +59,7 @@ const CH=(()=>{const ch=$("#ch"),scroll=$("#chScroll"),col=$("#chCol"),tab=$("#c
   const step=now=>{const t=Math.min(1,(now-t0)/D);frame(p0+(to-p0)*E(t));if(t<1)tw=requestAnimationFrame(step);else{tw=0;done&&done()}};tw=requestAnimationFrame(step)}
  function rise(){if(isOpen()&&P>=1)return ta.focus({preventScroll:true});if(!isOpen()){prep();measure();frame(0)}
   ta.focus({preventScroll:true});tween(1,ms("--sb-dock")*Math.max(.35,1-P),EZ())}
- function shut(instant,after){if(!isOpen()){after&&after();return}if(P>=1||!G)measure();
+ function shut(instant,after){popHide(true);if(!isOpen()){after&&after();return}if(P>=1||!G)measure();
   tween(0,instant?0:ms("--sb-dock-out")*Math.max(.35,P),tok("--sb-dock-close")||EZ(),()=>{
    sheet.classList.remove("on","mid","low");veil.classList.remove("on");tab.classList.remove("away");tab.setAttribute("aria-expanded","false");
    [sheet,glass,fg,comp,veil,tabLb,tabHt].forEach(x=>{x.style.transform=x.style.clipPath=x.style.opacity=x.style.filter=""});P=0;after&&after()})}
@@ -76,7 +76,7 @@ const CH=(()=>{const ch=$("#ch"),scroll=$("#chScroll"),col=$("#chCol"),tab=$("#c
   el.addEventListener("pointermove",mv);el.addEventListener("pointerup",up);el.addEventListener("pointercancel",up)})}
  draggable(tab,true);draggable(grab,false);
  tab.addEventListener("click",e=>{if(e.detail===0)rise()});  /* Enter and Space; a pointer click is handled on release */
- veil.addEventListener("pointerdown",back);$("#chEsc").addEventListener("click",back);
+ veil.addEventListener("pointerdown",back);grab.addEventListener("keydown",e=>{if(e.key==="Enter"||e.key===" "){e.preventDefault();back()}});
  sheet.addEventListener("keydown",e=>{if(e.key==="Escape"){e.preventDefault();e.stopPropagation();back()}});
  /* start typing anywhere in the pane and the sheet comes up with what you typed */
  addEventListener("keydown",e=>{if(isOpen()||e.metaKey||e.ctrlKey||e.altKey||e.isComposing||e.key.length!==1)return;
@@ -84,21 +84,34 @@ const CH=(()=>{const ch=$("#ch"),scroll=$("#chScroll"),col=$("#chCol"),tab=$("#c
   e.preventDefault();e.stopImmediatePropagation();rise();if(e.key!==" "){ta.value+=e.key;fit()}});
  function tabSay(){const t=mode==="start"?"Brief EXPIRA":running?"Working · follow up":"Follow up";tabLb.textContent=t;tab.setAttribute("aria-label",mode==="start"?"Brief EXPIRA: pull up, or start typing":t)}
 
- /* ---- the chat's settings: effort and output are one choice each, the desks any of four (never none), and
-    client-facing turns the firewall on. The chosen word's hairline slides to it; arrows move within a choice. ---- */
- const SET={effort:"Auto",out:"Auto",desks:new Set(["Research","Finance","Legal","Decision"]),client:false};
- function paintSeg(still){set.querySelectorAll(".ch-seg").forEach(g=>{const b=g.querySelector('[aria-checked="true"]'),u=g.querySelector(".u");if(!b)return;
-  u.classList.toggle("still",!!still);u.style.transform=`translateX(${b.offsetLeft+8}px) scaleX(${Math.max(1,b.offsetWidth-16)})`;if(still)requestAnimationFrame(()=>u.classList.remove("still"))})}
- function choose(g,b){g.querySelectorAll("button").forEach(x=>{const on=x===b;x.setAttribute("aria-checked",String(on));x.tabIndex=on?0:-1});SET[g.dataset.k]=b.dataset.v;paintSeg()}
- const fw=$("#chFw");
- set.addEventListener("click",e=>{const b=e.target.closest("button");if(!b)return;
-  if(b.classList.contains("ch-sw")){SET.client=b.getAttribute("aria-checked")!=="true";b.setAttribute("aria-checked",String(SET.client));
-   fw.textContent=SET.client?"On: suppliers, costs, margins and bank details stay out":"Off: the answer is for the team";pull(fw,0,ms("--sb-in"));return}
-  const g=b.parentElement;
-  if(g.classList.contains("ch-seg"))choose(g,b);
-  else if(g.classList.contains("ch-tg")){const on=b.getAttribute("aria-pressed")!=="true";if(!on&&SET.desks.size===1)return;b.setAttribute("aria-pressed",String(on));SET.desks[on?"add":"delete"](b.dataset.v)}});
- set.addEventListener("keydown",e=>{const b=e.target.closest(".ch-seg button");if(!b||!/^Arrow(Left|Right)$/.test(e.key))return;e.preventDefault();
-  const bs=[...b.parentElement.querySelectorAll("button")],n=bs[(bs.indexOf(b)+(e.key==="ArrowRight"?1:bs.length-1))%bs.length];choose(b.parentElement,n);n.focus()});
+ /* ---- the chat's settings live in the bar's icons: effort steps on a click (Shift steps back), desks and output
+    open a small glass menu, client-facing toggles the firewall. Each icon redraws itself and renames itself. ---- */
+ const SET={effort:"Auto",out:"Auto",desks:new Set(["Research","Finance","Legal","Decision"]),client:false},EF=["Quick","Auto","Deep"];
+ const icE=$("#icEffort"),icD=$("#icDesks"),icO=$("#icOut"),icF=$("#icFw"),bar=$("#chBar"),popD=$("#popDesks"),popO=$("#popOut");
+ const name=(el,tip,label)=>{el.dataset.tip=tip;el.setAttribute("aria-label",label||tip.replace(" · ",": "))};
+ icE.addEventListener("click",e=>{const i=(EF.indexOf(SET.effort)+(e.shiftKey?2:1))%3;SET.effort=EF[i];icE.classList.remove("lv-1","lv-2","lv-3");icE.classList.add("lv-"+(i+1));name(icE,"Effort · "+SET.effort)});
+ icF.addEventListener("click",()=>{SET.client=!SET.client;icF.setAttribute("aria-pressed",String(SET.client));name(icF,SET.client?"Client-facing · firewall on":"Client-facing · off")});
+ function paintDesks(){icD.querySelectorAll(".d").forEach(g=>g.classList.toggle("on",SET.desks.has(g.dataset.d)));
+  name(icD,`Desks · ${SET.desks.size} of 4`,"Desks: "+[...SET.desks].join(", "))}
+ let popOpen=null;const icOf=pop=>pop===popD?icD:icO;
+ function popShow(pop){if(popOpen===pop)return popHide();popHide(true);popOpen=pop;const ic=icOf(pop);pop.getAnimations().forEach(x=>x.cancel());
+  pop.style.left=Math.max(0,bar.offsetLeft+ic.offsetLeft-6)+"px";pop.style.bottom=(comp.offsetHeight-bar.offsetTop+6)+"px";
+  pop.classList.add("on");ic.setAttribute("aria-expanded","true");pull(pop,0,ms("--sb-in"));(pop.querySelector('[aria-checked="true"]')||pop.querySelector("button")).focus({preventScroll:true})}
+ function popHide(now){const pop=popOpen;if(!pop)return;popOpen=null;icOf(pop).setAttribute("aria-expanded","false");
+  const end=()=>{if(popOpen!==pop)pop.classList.remove("on")};if(now||reduce)return end();
+  const x=pop.animate(focusOut(B()*.5),{duration:ms("--sb-out"),easing:EZ()});x.finished.then(end,end)}
+ icD.addEventListener("click",()=>popShow(popD));icO.addEventListener("click",()=>popShow(popO));
+ popD.addEventListener("click",e=>{const b=e.target.closest("button");if(!b)return;const d=b.dataset.v,on=!SET.desks.has(d);
+  if(!on&&SET.desks.size===1){pull(b,0,ms("--sb-in"));return}  /* never none: the last desk stays, and says so by settling */
+  SET.desks[on?"add":"delete"](d);b.setAttribute("aria-checked",String(on));paintDesks()});
+ popO.addEventListener("click",e=>{const b=e.target.closest("button");if(!b)return;popO.querySelectorAll("button").forEach(x=>x.setAttribute("aria-checked",String(x===b)));SET.out=b.dataset.v;
+  const g=icO.querySelector(".gl");g.innerHTML=b.querySelector(".gl").innerHTML;pull(g,0,ms("--sb-in"));name(icO,"Output · "+SET.out);popHide();icO.focus({preventScroll:true})});
+ [popD,popO].forEach(pop=>pop.addEventListener("keydown",e=>{const bs=[...pop.querySelectorAll("button")],i=bs.indexOf(document.activeElement);
+  if(e.key==="ArrowDown"||e.key==="ArrowUp"){e.preventDefault();bs[(i+(e.key==="ArrowDown"?1:bs.length-1))%bs.length].focus()}
+  else if(e.key==="Escape"){e.preventDefault();e.stopPropagation();const ic=icOf(pop);popHide();ic.focus()}
+  else if(e.key==="Tab")popHide()}));
+ document.addEventListener("pointerdown",e=>{if(popOpen&&!popOpen.contains(e.target)&&!e.target.closest("#icDesks,#icOut"))popHide()},true);
+ paintDesks();
 
  /* ---- a new chat ---- */
  let mode="start",running=null,cur=null;

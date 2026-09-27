@@ -66,13 +66,18 @@
 .ch.thread .ch-tab:hover .lb,.ch.thread .ch-tab:focus-visible .lb{opacity:1;filter:blur(0);transform:none;transition-duration:var(--sb-in)}
 .ch-tab.live .ln{background:var(--gold);animation:breathe var(--t-loop) var(--ease-inout) infinite}
 
-/* the veil: the page steps back while the sheet is up (a tint, not a blur, so the glass has something sharp to soften) */
-.ch-veil{position:absolute;inset:0;z-index:2;background:color-mix(in srgb,var(--bg) 55%,transparent);opacity:0;visibility:hidden}
+/* the veil: the page steps back and goes soft while the sheet is up, as if under water. It carries the blur (a
+   backdrop filter over the whole pane, only its opacity animates), because a small glass panel's own backdrop blur
+   leaves text beneath it legible in Chromium; over a softened page the sheet is truly frosted. */
+.ch-veil{position:absolute;inset:0;z-index:2;opacity:0;visibility:hidden;background:color-mix(in srgb,var(--bg) 34%,transparent);
+ -webkit-backdrop-filter:blur(14px) saturate(1.15);backdrop-filter:blur(14px) saturate(1.15)}
+@media (prefers-reduced-transparency:reduce){.ch-veil{background:color-mix(in srgb,var(--bg) 82%,transparent);-webkit-backdrop-filter:none;backdrop-filter:none}}
+@supports not ((backdrop-filter:blur(1px)) or (-webkit-backdrop-filter:blur(1px))){.ch-veil{background:color-mix(in srgb,var(--bg) 82%,transparent)}}
 .ch-veil.on{visibility:visible}
 
-/* ---- the sheet: the focused place to write. The grabber, the brief, the chat's settings, then attach, the model,
-   esc and send. It is glass: the tint, a sheen and a lit top edge over a 24px backdrop blur, so it reads as a material
-   even over an empty page, and the thread shows through it softened. In a new chat it opens in the middle of the page,
+/* ---- the sheet: the focused place to write. The grabber, the brief, then one row of icons that carry the chat's
+   settings, and send. It is glass: the tint, a sheen and a lit top edge over a backdrop blur, set over the veil that
+   has already frosted the page, so it reads as a material even over an empty page and nothing under it can be read. In a new chat it opens in the middle of the page,
    growing out of the line; in a thread it rises from the foot. The motion is chat-next.js's frame(): one progress,
    0 to 1, drives the grabber's travel, the reveal, the veil and the contents, so a pull and a click are the same move. ---- */
 .ch-sheet{position:absolute;left:0;right:0;margin:0 auto;z-index:3;width:min(var(--ch-col),calc(100% - var(--sp-6) * 2));visibility:hidden;pointer-events:none}
@@ -80,10 +85,10 @@
 .ch-sheet.mid{top:0;bottom:0;margin:auto;height:fit-content}
 .ch-sheet.low{bottom:var(--sp-3)}
 .ch-glass{position:absolute;inset:0;border-radius:var(--ch-sheet-r);
- background:var(--ch-sheen),color-mix(in srgb,var(--panel) var(--ch-glass),transparent);-webkit-backdrop-filter:blur(24px) saturate(1.8);backdrop-filter:blur(24px) saturate(1.8);
+ background:var(--ch-sheen),color-mix(in srgb,var(--panel) var(--ch-glass),transparent);-webkit-backdrop-filter:blur(16px) saturate(1.8);backdrop-filter:blur(16px) saturate(1.8);
  box-shadow:var(--ch-rim),inset 0 0 0 var(--rule-hair) var(--line-3),0 1px 2px rgba(var(--sb-shc),calc(var(--sb-sha) * .2)),0 24px 56px -24px rgba(var(--sb-shc),calc(var(--sb-sha) * 1.1))}
-/* opaque where the browser has no backdrop filter, and when the system asks for less transparency. Headless software
-   renderers drop a blur this large, so qa screenshots show the tint alone: judge the glass in a real browser. */
+/* opaque where the browser has no backdrop filter, and when the system asks for less transparency. The sheet's own
+   blur tints and lifts what is under it; the veil beneath has already frosted the page. */
 @supports not ((backdrop-filter:blur(1px)) or (-webkit-backdrop-filter:blur(1px))){.ch-glass{background:var(--panel)}}
 @media (prefers-reduced-transparency:reduce){.ch-glass{background:var(--panel);-webkit-backdrop-filter:none;backdrop-filter:none}}
 .ch-fg{position:relative}
@@ -93,39 +98,53 @@
 .ch-comp{position:relative;display:flex;flex-direction:column;padding:0 var(--sp-3h) var(--sp-2h)}
 .ch-comp textarea{all:unset;display:block;width:100%;min-height:44px;max-height:240px;overflow-y:auto;padding:2px 0;font:400 14px/1.55 var(--f-body);color:var(--ink);caret-color:var(--gold);white-space:pre-wrap;word-wrap:break-word;scrollbar-width:thin}
 .ch-comp textarea::placeholder{color:var(--mute)}
-/* the chat's settings: four quiet rows under a hairline. Words, not chips: the chosen word is ink over a hairline that
-   slides to it (transform only); a desk is on when its dot is filled; client-facing is a small switch, and says what
-   the firewall keeps out. */
-.ch-set{display:grid;gap:1px;margin:var(--sp-2) calc(var(--sp-3h) * -1) var(--sp-1h);padding:var(--sp-1h) var(--sp-3h);border-top:var(--rule-hair) solid var(--line);border-bottom:var(--rule-hair) solid var(--line)}
-.ch-row{display:flex;align-items:center;gap:var(--sp-2);min-height:26px}
-.ch-row .k{flex:none;width:92px;font-size:var(--fs-chrome);color:var(--mute)}
-.ch-seg,.ch-tg{position:relative;display:flex;flex-wrap:wrap;gap:1px;margin-left:calc(var(--sp-2) * -1)}
-.ch-seg button,.ch-tg button{all:unset;position:relative;display:flex;align-items:center;gap:6px;height:22px;padding:0 var(--sp-2);border-radius:var(--sb-r-sm);font-size:var(--fs-chrome-2);color:var(--mute);cursor:pointer;
- transition:color var(--sb-out) var(--sb-ease),background var(--sb-out) var(--sb-ease)}
-.ch-seg button:hover,.ch-tg button:hover{color:var(--ink);background:var(--line);transition-duration:calc(var(--sb-in) * .5)}
-.ch-seg button[aria-checked="true"]{color:var(--ink)}
-.ch-seg .u{position:absolute;left:0;bottom:1px;width:1px;height:var(--rule);background:var(--ink);transform-origin:0 50%;pointer-events:none;transition:transform var(--sb-move) var(--sb-ease)}
-.ch-seg .u.still{transition:none}
-.ch-tg button::before{content:"";width:5px;height:5px;border-radius:50%;box-shadow:inset 0 0 0 1px var(--line-3);transition:background var(--sb-out) var(--sb-ease),box-shadow var(--sb-out) var(--sb-ease)}
-.ch-tg button[aria-pressed="true"]{color:var(--soft)}
-.ch-tg button[aria-pressed="true"]::before{background:var(--ink);box-shadow:inset 0 0 0 1px var(--ink);transition-duration:var(--sb-in)}
-.ch-sw{all:unset;position:relative;flex:none;width:24px;height:14px;border-radius:7px;background:var(--line-2);box-shadow:inset 0 0 0 var(--rule-hair) var(--line-3);cursor:pointer;transition:background var(--sb-out) var(--sb-ease)}
-.ch-sw i{position:absolute;top:2px;left:2px;width:10px;height:10px;border-radius:50%;background:var(--soft);box-shadow:0 1px 2px rgba(var(--sb-shc),calc(var(--sb-sha) * .3));transition:transform var(--sb-move) var(--sb-ease),background var(--sb-out) var(--sb-ease)}
-.ch-sw[aria-checked="true"]{background:var(--ink);transition-duration:var(--sb-in)}
-.ch-sw[aria-checked="true"] i{transform:translateX(10px);background:var(--bg)}
-.ch-fw{margin-left:var(--sp-1);font-size:var(--fs-chrome);color:var(--mute);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.ch-cbar{display:flex;align-items:center;gap:2px;margin:0 -4px 0 -6px}
-.ch-ib{all:unset;display:grid;place-items:center;width:26px;height:24px;border-radius:var(--sb-r-sm);color:var(--mute);cursor:pointer;transition:background var(--sb-out) var(--sb-ease),color var(--sb-out) var(--sb-ease)}
-.ch-ib svg{width:14px;height:14px}
-.ch-ib:hover{background:var(--line);color:var(--ink);transition-duration:calc(var(--sb-in) * .5)}
-.ch-ib:focus-visible,.ch-send:focus-visible,.ch-esc:focus-visible,.ch-seg button:focus-visible,.ch-tg button:focus-visible,.ch-sw:focus-visible{outline:var(--rule) solid var(--gold);outline-offset:-1px}
-.ch-esc{all:unset;height:18px;margin-right:var(--sp-2);padding:0 5px;border-radius:4px;font:500 10px/18px var(--f-body);letter-spacing:.02em;color:var(--mute);box-shadow:inset 0 0 0 var(--rule-hair) var(--line-3);cursor:pointer;
- transition:color var(--sb-out) var(--sb-ease),background var(--sb-out) var(--sb-ease)}
-.ch-esc:hover{color:var(--ink);background:var(--line);transition-duration:calc(var(--sb-in) * .5)}
-.ch-model{margin-left:auto;margin-right:var(--sp-3);font-size:var(--fs-chrome);color:var(--mute);white-space:nowrap}
-.ch-model em{font:italic 400 var(--fs-chrome) var(--f-display)}
+/* ---- the bar: icons, not words. Each icon draws its own setting: the effort bars fill to the level (click to step
+   Quick, Auto, Deep; Shift steps back), the four desk dots fill for the desks that are on, the page carries the glyph
+   of the output, and the shield closes over a check when the answer is client-facing (the firewall is on). Desks and
+   Output open a small glass menu; everything names itself on hover, after a beat, and at once for the keyboard. ---- */
+.ch-cbar{position:relative;display:flex;align-items:center;gap:2px;margin:var(--sp-2) -6px 0 -8px}
+.ch-sp{flex:1}
+.ch-ic{all:unset;position:relative;display:grid;place-items:center;width:30px;height:28px;border-radius:var(--sb-r-sm);color:var(--mute);cursor:pointer;
+ transition:background var(--sb-out) var(--sb-ease),color var(--sb-out) var(--sb-ease)}
+.ch-ic svg{width:16px;height:16px;overflow:visible}
+.ch-ic:hover,.ch-ic[aria-expanded="true"]{background:var(--line);color:var(--ink);transition-duration:calc(var(--sb-in) * .5)}
+.ch-ic:focus-visible,.ch-send:focus-visible,.ch-pop button:focus-visible,.ch-grab:focus-visible{outline:var(--rule) solid var(--gold);outline-offset:-1px}
+#icEffort rect{fill:currentColor;opacity:.26;transition:opacity var(--sb-out) var(--sb-ease)}
+#icEffort.lv-1 .b1,#icEffort.lv-2 .b1,#icEffort.lv-2 .b2,#icEffort.lv-3 rect{opacity:1;transition-duration:var(--sb-in)}
+#icDesks .r{fill:none;stroke:currentColor;stroke-width:1.05;opacity:.5}
+#icDesks .f{fill:currentColor;transform-box:fill-box;transform-origin:center;transform:scale(0);transition:transform var(--sb-out) var(--sb-ease)}
+#icDesks .d.on .f{transform:none;transition-duration:var(--sb-move)}
+.fillg{fill:currentColor;stroke:none}
+#icFw .sf{fill:currentColor;stroke:none;opacity:0;transition:opacity var(--sb-out) var(--sb-ease)}
+#icFw .ck{opacity:0;transform-box:fill-box;transform-origin:center;transform:scale(.5);transition:opacity var(--sb-out) var(--sb-ease),transform var(--sb-out) var(--sb-ease)}
+#icFw[aria-pressed="true"]{color:var(--ink)}
+#icFw[aria-pressed="true"] .sf{opacity:.13;transition-duration:var(--sb-in)}
+#icFw[aria-pressed="true"] .ck{opacity:1;transform:none;transition-duration:var(--sb-move)}
+/* the names: a small ink label over the icon, after a beat on hover and at once on keyboard focus */
+.ch-cbar [data-tip]::after{content:attr(data-tip);position:absolute;left:50%;bottom:calc(100% + 7px);z-index:5;padding:3px 7px;border-radius:5px;
+ background:color-mix(in srgb,var(--ink) 90%,transparent);color:var(--bg);font:400 var(--fs-chrome)/1.3 var(--f-body);letter-spacing:.01em;white-space:nowrap;pointer-events:none;
+ opacity:0;transform:translate(-50%,3px);transition:opacity var(--sb-out) var(--sb-ease),transform var(--sb-out) var(--sb-ease)}
+.ch-cbar [data-tip]:hover::after,.ch-cbar [data-tip]:focus-visible::after{opacity:1;transform:translate(-50%,0);transition-duration:var(--sb-in);transition-delay:.3s}
+.ch-cbar [data-tip]:focus-visible::after{transition-delay:0s}
+.ch-cbar [data-tip][aria-expanded="true"]::after{opacity:0;transition:none}
+.ch-cbar .ch-send[data-tip]::after{left:auto;right:0;transform:translate(0,3px)}
+.ch-cbar .ch-send[data-tip]:hover::after,.ch-cbar .ch-send[data-tip]:focus-visible::after{transform:none}
+/* the menus: the same glass, smaller; a glyph, the name over a quiet line, a check for what is chosen */
+.ch-pop{position:absolute;z-index:6;min-width:216px;padding:4px;border-radius:12px;visibility:hidden;
+ background:var(--ch-sheen),color-mix(in srgb,var(--panel) 82%,transparent);-webkit-backdrop-filter:blur(20px) saturate(1.8);backdrop-filter:blur(20px) saturate(1.8);
+ box-shadow:var(--ch-rim),inset 0 0 0 var(--rule-hair) var(--line-3),0 1px 2px rgba(var(--sb-shc),calc(var(--sb-sha) * .2)),0 16px 40px -18px rgba(var(--sb-shc),calc(var(--sb-sha) * 1.1))}
+.ch-pop.on{visibility:visible}
+.ch-pop button{all:unset;box-sizing:border-box;display:flex;align-items:center;gap:10px;width:100%;height:38px;padding:0 10px 0 9px;border-radius:8px;cursor:pointer;
+ transition:background var(--sb-out) var(--sb-ease)}
+.ch-pop button:hover{background:var(--line);transition-duration:calc(var(--sb-in) * .5)}
+.ch-pop button>svg:first-child{flex:none;width:16px;height:16px;color:var(--mute);transition:color var(--sb-out) var(--sb-ease)}
+.ch-pop .t{display:flex;flex-direction:column;flex:1;min-width:0;font-size:var(--fs-chrome-2);line-height:1.25;color:var(--ink)}
+.ch-pop .t small{font-size:var(--fs-chrome);color:var(--mute)}
+.ch-pop .ok{flex:none;width:12px;height:12px;color:var(--ink);opacity:0;transform:scale(.5);transition:opacity var(--sb-out) var(--sb-ease),transform var(--sb-out) var(--sb-ease)}
+.ch-pop [aria-checked="true"] .ok{opacity:1;transform:none;transition-duration:var(--sb-move)}
+.ch-pop [aria-checked="true"]>svg:first-child{color:var(--ink)}
 /* send: quiet until there is something to send, then it becomes ink, out of a blur */
-.ch-send{all:unset;display:grid;place-items:center;width:26px;height:26px;border-radius:var(--sb-r);background:var(--line-2);color:var(--mute);cursor:default;
+.ch-send{all:unset;position:relative;display:grid;place-items:center;width:26px;height:26px;border-radius:var(--sb-r);background:var(--line-2);color:var(--mute);cursor:default;
  transition:background var(--sb-out) var(--sb-ease),color var(--sb-out) var(--sb-ease),transform var(--sb-move) var(--sb-ease)}
 .ch-send svg{width:13px;height:13px}
 .ch-comp.has .ch-send{background:var(--ink);color:var(--bg);cursor:pointer;transition-duration:var(--sb-in)}
@@ -259,4 +278,4 @@
 
 /* words ink in as they stream: each one surfaces out of a small blur, on the one curve (chat-next.js) */
 .ch-w{display:inline}
-@media (max-width:760px){.ch-scroll{padding:var(--sp-4) var(--sp-4) 88px}.ch-sheet{width:calc(100% - var(--sp-4) * 2)}.ch-row .k{width:76px}.ch-sign{left:var(--sp-4)}.ch-when{display:none}.ch-sh{grid-template-columns:64px 1fr auto}.ch-sh .t{display:none}.ch-out{margin-left:var(--sp-1)}}
+@media (max-width:760px){.ch-scroll{padding:var(--sp-4) var(--sp-4) 88px}.ch-sheet{width:calc(100% - var(--sp-4) * 2)}.ch-sign{left:var(--sp-4)}.ch-when{display:none}.ch-sh{grid-template-columns:64px 1fr auto}.ch-sh .t{display:none}.ch-out{margin-left:var(--sp-1)}}
