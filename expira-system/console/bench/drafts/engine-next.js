@@ -85,7 +85,7 @@ Leave out anything the answer does not support; empty is fine.`,{modelTier:"quic
 
  /* the run. h: {update(w), phrase(text), text(md), done(w, md, ex), fail(err)} */
  async function go(q,set,h,signal){const t0=now(),w={live:true,brief:q,steps:[],map:{kind:"",rationale:"",thinking:[],pages:[],calls:[]},ms:0,firewall:null,_o:true};
-  const tick=()=>{w.ms=now()-t0};const up=()=>{tick();h.update(w)};
+  const tick=()=>{w.ms=now()-t0};const up=()=>{tick();h.update(w)};let pend=0;const soon=()=>{if(!pend)pend=setTimeout(()=>{pend=0;up()},140)};  /* token counts stream: the view hears them a few times a second */
   try{
    await webReady;h.phrase("Reading the brief");up();
    const p=await plan(q,set,signal);Object.assign(w.map,{kind:p.kind,rationale:p.rationale,thinking:p.thinking});w.steps=p.steps;w._o=false;up();
@@ -94,13 +94,13 @@ Leave out anything the answer does not support; empty is fine.`,{modelTier:"quic
    await new Promise((res,rej)=>{let open=0;const pump=()=>{if(signal.aborted)return rej(Object.assign(new Error("cancelled"),{code:"cancelled"}));
      w.steps.forEach((s,i)=>{if(started.has(i)||!(s.after||[]).every(n=>w.steps[n-1].done))return;started.add(i);open++;s._live=true;s._t0=now();h.phrase(s.phrase);up();
       const tools=WEB.ok&&WEBR.has(s.role)?webTools({onSearch:()=>{s.searches=(s.searches||0)+1;up()},onSources:list=>{list.forEach(r=>{if(!w.map.pages.some(x=>x.url===r.url))w.map.pages.push({url:r.url,title:r.title,date:r.published,ex:r.excerpt,i})});up()},onError:()=>{}}):undefined;
-      sample(deskPrompt(q,s,w,set),{modelTier:s.role==="decision"&&tier!=="quick"?"complex":tier,cache:false,signal,tools})
+      sample(deskPrompt(q,s,w,set),{modelTier:s.role==="decision"&&tier!=="quick"?"complex":tier,cache:false,signal,tools,onText:({text})=>{s.tok=Math.round(text.length/4);soon()}})
        .then(r=>{s.out=r.text;s.v="pass"},e=>{if(e&&e.code==="cancelled")throw e;s.out=String(e&&e.message||"The desk could not finish.");s.v="fail"})
        .then(()=>{s.ms=now()-s._t0;s._live=false;s.done=true;open--;up();if(w.steps.every(x=>x.done))res();else pump()},rej)});
      if(!open&&!w.steps.every(x=>x.done))rej(new Error("The plan's desks wait on each other."))};pump()});
    /* the answer, as it is written */
    w._a=true;h.phrase("Writing it up");up();
-   const fin=await sample(composePrompt(q,w,set),{modelTier:set.effort==="Deep"?"complex":"default",cache:false,signal,onText:({text})=>h.text(text)});
+   const fin=await sample(composePrompt(q,w,set),{modelTier:set.effort==="Deep"?"complex":"default",cache:false,signal,onText:({text})=>{w.atok=Math.round(text.length/4);h.text(text);soon()}});
    const md=fin.text;h.text(md,true);w._a=false;w.answered=true;up();
    /* the exhibits, then the check: the firewall for a client-facing answer; for the team, the pattern scan alone */
    w._v=true;h.phrase(set.client?"Checking it against the firewall":"Checking the figures");up();

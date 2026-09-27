@@ -260,4 +260,5 @@ Each step is one commit, first in the bench and then in `src/`. Each is tested i
 - [x] §10.1 The glass (2026-09-27, bench). Only the sheet is frosted, and truly: a blurred copy of the thread is laid behind it (Chromium's backdrop-filter leaves an unblurred band at a panel's edges). The page above stays sharp and live. A full-pane veil blur was tried and dropped, because it hid what you were answering. The sheet was also redesigned around icons at Amadeus's ask (DESIGN_ENGINE §4.5).
 - [x] Editorial grid for the thread and calm for the sheet (2026-09-27, bench; DESIGN_ENGINE §4.5).
 - [x] Nodes instead of the log, top-to-bottom flow, more-below feathering, and a real engine in the bench (2026-09-27).
+- [x] The gravity field returns (seeded, token-sized nodes on sagging cables carrying pulses at the token rate), cards in the left margin, the field easing to its height, and charts drawing in and out (2026-09-27, bench; DESIGN_ENGINE §4.5).
 - [ ] §10.2–10.5: next is 10.2, making the settings drive the answer (the icons already hold the state in `SET`).

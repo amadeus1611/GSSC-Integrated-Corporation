@@ -349,7 +349,15 @@ The chat pane follows §4.1–§4.4 and the sidebar's colour logic. The old answ
   - red when it failed or was held.
 
   Sources land as small gold dots under the desk that read them. The margin holds the time and one phrase: what is happening now, then the verdict ("Firewall clear").
-  - **A node opens a card** (the sheet's glass, fast in and soft out): what it did, its verdict, time, searches and confidence, its findings, and its sources as links. EXPIRA's card holds the plan's reasoning; the check's card holds the firewall's verdict and anything it caught. Arrows move between nodes and Esc closes the card.
+- **The nodes are a gravity field, not a grid** (the old engine's physics in the house style):
+  - Each node is held to its column, while a d3-style simulation (velocity decay .4, alpha decay .0228, on a seeded stream so a run always lays out the same) settles its height. New nodes bud from their parent and drift out to their column.
+  - A node's size follows its tokens: the plan's reasoning, a desk's streamed notes, the answer as written.
+  - **Edges are cables.** Each has a small middle mass that hangs below the chord under a little gravity and sways on its own damping. A cable thickens with the tokens that have passed along it.
+  - **Data passes along the cables.** While a desk works, gold pulses run into it at its token rate; a source sends a short burst as it lands.
+  - Nodes can be dragged; let go and a node drifts back to its column. The loop runs only while something moves and sleeps when the field is settled or off screen. A saved run opens already settled; calm is static.
+  - The field's height follows its tallest column and eases to its new height (`--sb-move`).
+- **Cards open in the left margin.** The layout is asymmetric: the right margin carries the field and the left margin stays empty. So a node's card opens there as an inspector, level with its node and joined to it by a dashed gold leader. The card's width follows the margin (at most 340px), so a wide left pane never crowds it. It opens fast (a 10px slide in with blur) and closes soft, and the margin phrase steps aside while it is open. When the margins fold, the card opens under its node. It holds what the node did, its verdict, time, searches and confidence, its findings, and its sources as links. EXPIRA's card holds the plan's reasoning; the check's card holds the firewall's verdict and anything it caught. Arrows move between nodes and Esc closes the card.
+- **Charts come in and go out.** A chart draws itself as it comes into view: its grid and axis fade in, its bars rise from the base 70ms apart (`--sb-dock`), and its values focus in after them. It folds back when it leaves the screen, so it draws again when it returns. On a new chat the bars fall before the page clears.
   - The view reads the run record the engine writes, in the shape of `core/run.js` (steps with role, focus, task, after and state; `map.pages` with the desk that read each one), so a live run and a saved one draw the same.
 - **The answer flows in, top to bottom.** While it streams, each block that is new since the last frame focuses in after the one before it (60ms apart, re-rendered at most every 120ms), and the block still being written stays in place. A saved page flows in the same way: what is on screen 45ms apart, the rest as it scrolls into view.
 - **More below.** While there is more under the fold, the foot's feather deepens from 44px to 150px, and a small chevron waits at the far edge and scrolls on by most of a screen. At the end both go.
@@ -387,6 +395,10 @@ The chat pane follows §4.1–§4.4 and the sidebar's colour logic. The old answ
 - **Tokens (v41):** every value comes from `src/tokens.css`. Spacing is a 4px scale with half steps (`--sp-half`, `--sp-1h` … `--sp-4h`) below 20px for dense chrome; a 1px nudge is optical and stays literal. Layers are named (`--z-side`, `--z-menu`, `--z-tip` …) in one stacking order. Dark tokens are written once in `@dark{}`.
 
 ## 6. Change log
+- **v45 chat bench, the gravity field, cables and charts** (2026-09-27, Amadeus: "return the node gravity engine instead but to the aesthetic of our things"; "let the charts have the in and out animation"; "perhaps all the pop ups should go there instead? … to the limit of the left dock"; "let the node area dynamically resize … smoothly"; "make it look like cables dangling with the data passing through it … determining token and throughput"): see §4.5.
+  - The nodes are a seeded gravity field again, sized by tokens, on sagging cables that thicken with tokens and carry pulses at the token rate.
+  - Cards open in the left margin with a leader, the field eases to its height, and charts draw in and fold out with the scroll.
+  - Fixed: the field's visibility observer read the first entry of a batch, which could be stale, so a new run could stay frozen as if off screen. It now reads the latest entry.
 - **v45 chat bench, nodes and a real engine** (2026-09-27, Amadeus: "the node system instead … icons over text, but when you click on it it expands to show the sources"; "let it flow from the top to bottom"; "make it usable already, so I can test run prompts"; "indicate via feathering at the bottom that there is more"):
   - The work line and its ledger became a row of nodes with cards.
   - The answer flows in top to bottom, and the foot feathers while there is more below.
