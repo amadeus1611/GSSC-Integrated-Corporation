@@ -186,6 +186,21 @@ Effort, Desks, Output and Client-facing are recorded (`SET` in `chat-next.js`) b
 - **Arrow keys** move between the settings rows.
 
 ### 10.5 Promotion together with the sidebar (joins §9)
+**Done in the bench (2026-09-27):** `bench/drafts/engine-next.js` runs real briefs as the viewer, through Claude (`sample`) and Exa (`mcp`). It uses the console's own `core/web.js` (the Exa tools) and `core/ground.js` (the firewall), and the same run record as `core/run.js`.
+- The orchestrator plans within Effort (at most 2, 3 or 4 desks), the desks chosen, and the Output shape.
+- The desks run in dependency order, side by side where they can; research, legal and decision may search.
+- The answer streams in as markdown in the house layout, and the exhibits are set from it.
+- A client-facing answer goes through the firewall's three votes; the team's answer gets the pattern scan.
+- Without Claude access (a local file, or consent refused) the chat falls back to the sample run. The bench's Sample run switch forces it.
+
+**Still to carry over from `core/run.js` at promotion:**
+- the Arbiter's claim grounding (`GROUND.gateClaims`) and the auditor's revision pass;
+- the kernel document builder (quotations, contracts and resolutions as documents);
+- saving runs to the store;
+- the steer and cost notes;
+- the token signal that drives the full-screen maps.
+
+**Promotion plan:**
 - **Units:**
   - `units/start` gets the signature;
   - `units/composer` gets the tab, the sheet and the settings;
@@ -244,4 +259,5 @@ Each step is one commit, first in the bench and then in `src/`. Each is tested i
 - [ ] §9 Saving and promotion: planned in detail above (2026-09-26); waiting on Amadeus's go.
 - [x] §10.1 The glass (2026-09-27, bench). Only the sheet is frosted, and truly: a blurred copy of the thread is laid behind it (Chromium's backdrop-filter leaves an unblurred band at a panel's edges). The page above stays sharp and live. A full-pane veil blur was tried and dropped, because it hid what you were answering. The sheet was also redesigned around icons at Amadeus's ask (DESIGN_ENGINE §4.5).
 - [x] Editorial grid for the thread and calm for the sheet (2026-09-27, bench; DESIGN_ENGINE §4.5).
+- [x] Nodes instead of the log, top-to-bottom flow, more-below feathering, and a real engine in the bench (2026-09-27).
 - [ ] §10.2–10.5: next is 10.2, making the settings drive the answer (the icons already hold the state in `SET`).

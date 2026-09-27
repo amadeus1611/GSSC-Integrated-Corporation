@@ -100,7 +100,7 @@ const CH=(()=>{const ch=$("#ch"),scroll=$("#chScroll"),col=$("#chCol"),tab=$("#c
   if(sheet.contains(t)||tab.contains(t)||!ch.contains(t))return;
   /* the thread now spans the pane: a click on its text or an exhibit keeps the sheet, a click on the empty grid
      around them (a container itself, not something in it) puts it away */
-  if(col.contains(t)&&!t.matches(".ch-col,.ch-turn,.ch-doc,.ch-sec,.ch-ex,.ch-fig,.ch-led,.ch-step,.ch-mk,.ch-colo,.ch-dochead"))return;back()});grab.addEventListener("keydown",e=>{if(e.key==="Enter"||e.key===" "){e.preventDefault();back()}});
+  if(col.contains(t)&&!t.matches(".ch-col,.ch-turn,.ch-doc,.ch-sec,.ch-ex,.ch-fig,.ch-run,.ch-mk,.ch-colo,.ch-dochead"))return;back()});grab.addEventListener("keydown",e=>{if(e.key==="Enter"||e.key===" "){e.preventDefault();back()}});
  sheet.addEventListener("keydown",e=>{if(e.key==="Escape"){e.preventDefault();e.stopPropagation();back()}});
  /* start typing anywhere in the pane and the sheet comes up with what you typed; with the sheet already up, typing
     after reading or selecting above goes back into the brief */
@@ -157,7 +157,10 @@ const CH=(()=>{const ch=$("#ch"),scroll=$("#chScroll"),col=$("#chCol"),tab=$("#c
   const clear=()=>{ta.value="";fit()};isOpen()?shut(false,clear):clear();
   const title=text.length>48?text.slice(0,46).replace(/\s+\S*$/,"")+"…":text;if(!cur){cur={t:title};setTitle(title)}
   const turn=brief(text,new Date());col.appendChild(turn);pull(turn.querySelector(".ch-quote"),90);
-  const a=answerShell(RICH.work,true);col.appendChild(a);pull(a.querySelector(".ch-proc"),220);scrollEnd(true);run(a,RICH)}
+  const a=answerShell(null,true);col.appendChild(a);pull(a.querySelector(".ch-run"),220);scrollEnd(true);busyOn();
+  /* a real run when this page can reach Claude; the sample run otherwise (and when the bench asks for it) */
+  ENG.ready().then(ok=>{if(a.isConnected)ok&&!SAMPLE?runReal(a,text):run(a,RICH)})}
+ let SAMPLE=false;
  function setTitle(t){ttl.hidden=false;ttl.innerHTML=`${esc(t)}`;if(!reduce)ttl.animate(focusIn(B()*.5),{duration:ms("--sb-in"),easing:EZ()})}
 
  /* ---- the thread ---- */
@@ -167,20 +170,91 @@ const CH=(()=>{const ch=$("#ch"),scroll=$("#chScroll"),col=$("#chCol"),tab=$("#c
  const mmss=v=>{const s=Math.round(v/1000);return Math.floor(s/60)+":"+String(s%60).padStart(2,"0")};
  const ROLE={research:"Research",finance:"Finance",legal:"Legal",decision:"Decision",builder:"Builder"};
  const words=n=>["No desks","One desk","Two desks","Three desks","Four desks","Five desks","Six desks"][n]||n+" desks";
- /* the answer's shell: the work in one line, the ledger it opens, and the page the answer will fill */
+ /* ---- the run, as nodes: EXPIRA, the desks in the order they depend on each other (desks that work side by side
+    stack), the answer, then the check. A node is an icon in a small glass ring: faint while it waits, a breathing gold
+    ring while it works, settled ink when done. Sources land as small gold dots under the desk that read them. Select a
+    node for what it did, its verdict and time, its sources; EXPIRA's node holds the plan's reasoning. The view reads
+    the run record the engine writes (the shape of core/run.js), so a live run and a saved one draw the same. ---- */
+ const SVGI=p=>`<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${p}</svg>`;
+ const NICO={orch:SVGI('<circle cx="8" cy="8" r="2.1"/><path d="M8 1.9v2.4M8 11.7v2.4M1.9 8h2.4M11.7 8h2.4"/>'),
+  research:SVGI('<circle cx="7.2" cy="7.2" r="3.9"/><path d="m10.1 10.1 3 3"/>'),
+  finance:SVGI('<path d="M2.8 13.2h10.4"/><path d="M4.4 11V8.2M8 11V5.2M11.6 11V3"/>'),
+  legal:SVGI('<path d="M8 2.6v10.6M4.6 13.2h6.8M3.2 4.4h9.6"/><path d="M4.6 4.4 2.8 8.6a1.9 1.9 0 0 0 3.6 0zM11.4 4.4l-1.8 4.2a1.9 1.9 0 0 0 3.6 0z"/>'),
+  decision:SVGI('<path d="M8 13.4V8.6M8 8.6 4.4 5M8 8.6 11.6 5"/><circle cx="4" cy="4.6" r="1.3"/><circle cx="12" cy="4.6" r="1.3"/>'),
+  builder:SVGI('<path d="M3 13h10M4.5 13V7l3.5-3 3.5 3v6"/>'),
+  answer:SVGI('<path d="M4.2 1.8h5.1l3 3V13.6a.6.6 0 0 1-.6.6H4.2a.6.6 0 0 1-.6-.6V2.4a.6.6 0 0 1 .6-.6z"/><path d="M5.8 7.4h4.4M5.8 9.4h4.4M5.8 11.4h2.6"/>'),
+  check:SVGI('<path d="M8 1.9 12.9 3.7v4c0 3-2.1 5.2-4.9 6.4C5.2 12.9 3.1 10.7 3.1 7.7v-4z"/><path d="M5.9 8 7.4 9.5 10.2 6.6"/>')};
+ const hostOf=u=>{try{return new URL(u).hostname.replace(/^www\./,"")}catch(e){return ""}};
+ const NN={orch:"EXPIRA",answer:"Answer",check:"Check",...ROLE};
+ function runModel(w){const S=w.steps||[],live=!!w.live,dep=[],lv=[];
+  S.forEach((s,i)=>{dep[i]=(s.after||[]).map(n=>n-1).filter(j=>j>=0&&j<i);lv[i]=1+(dep[i].length?Math.max(...dep[i].map(j=>lv[j])):0)});
+  const L=S.length?Math.max(...lv):0,P=(w.map&&w.map.pages)||[],st=s=>s.v==="fail"?"fail":s._live?"run":s.done||(!live&&s.v)?"done":s.stopped||w.stopped?"stop":"q";
+  const N=[{id:"o",k:"orch",lv:0,deps:[],st:w._o?"run":live&&!S.length?"run":"done"}];
+  S.forEach((s,i)=>N.push({id:"d"+i,k:s.role,lv:lv[i],deps:dep[i].length?dep[i].map(j=>"d"+j):["o"],st:st(s),i,pages:P.filter(p=>p.i===i)}));
+  const sinks=S.map((_,i)=>"d"+i).filter((id,i)=>!dep.some(d=>d.includes(i)));
+  N.push({id:"a",k:"answer",lv:L+1,deps:sinks.length?sinks:["o"],st:w._a?"run":w.answered||!live?"done":w.stopped?"stop":"q"});
+  N.push({id:"c",k:"check",lv:L+2,deps:["a"],st:w._v?"run":w.firewall==="held"?"warn":w.checked||!live?"done":w.stopped?"stop":"q"});
+  return {N,cols:L+3}}
+ function nodeCard(w,id){const S=w.steps||[],M=w.map||{},meta=(...x)=>`<p class="m">${x.filter(Boolean).join(" · ")}</p>`;
+  if(id==="o")return `<header>${NICO.orch}<b>EXPIRA</b><span>${esc(M.kind||"The plan")}</span></header>${M.rationale?`<p class="lede">${esc(M.rationale)}</p>`:""}${(M.thinking||[]).length?`<ol class="th">${M.thinking.map(x=>`<li>${esc(x)}</li>`).join("")}</ol>`:""}${meta(S.length?words(S.length)+" at work":"Planning")}`;
+  if(id==="a")return `<header>${NICO.answer}<b>Answer</b><span>${w._a?"Writing":"Filed"}</span></header>${meta(w._a?"Written as it streams":"Laid out as the house page")}`;
+  if(id==="c"){const hits=w.fwHits||[];return `<header>${NICO.check}<b>Check</b><span>${w._v?"Checking":w.firewall==="held"?"Held":/^internal/.test(w.firewall||"")?"For the team":"Firewall clear"}</span></header><p class="lede">${w.firewall==="held"?"The firewall held this answer for a client: it reveals what module 04 keeps out.":w.firewall==="clear"?"Checked for a client: no suppliers, costs, margins or bank details.":"Written for the team. The firewall applies when the answer is client-facing."}</p>${hits.length?`<ul class="hits">${hits.map(h=>`<li>${esc(h)}</li>`).join("")}</ul>`:""}`}
+  const i=+id.slice(1),s=S[i];if(!s)return "";const P=(M.pages||[]).filter(p=>p.i===i),out=String(s.out||""),conf=(out.match(/CONFIDENCE:\s*(\w+)/i)||[])[1],body=out.replace(/\n?CONFIDENCE:.*$/is,"").trim();
+  return `<header>${NICO[s.role]||NICO.builder}<b>${esc(NN[s.role]||s.role)}</b><span>${ROMAN[i]||""}</span></header><p class="lede">${esc(s.focus||"")}</p>${s.task?`<p class="task">${esc(s.task)}</p>`:""}`+
+   meta(s.v==="fail"?"Did not finish":s._live?"Working":s.done||s.v?"Passed":"Waiting",s.ms?mmss(s.ms):"",s.searches?`${s.searches} search${s.searches>1?"es":""}`:"",conf?`Confidence ${conf.toLowerCase()}`:"")+
+   (body&&!s._live?`<p class="out">${esc(body.length>520?body.slice(0,520)+"…":body)}</p>`:"")+
+   (P.length?`<ol class="src">${P.slice(0,8).map(p=>`<li><a href="${esc(p.url)}" target="_blank" rel="noopener noreferrer"><i aria-hidden="true">${esc((hostOf(p.url)[0]||"·").toUpperCase())}</i><span>${esc(p.title||p.url)}<small>${esc(hostOf(p.url))}</small></span></a></li>`).join("")}</ol>`:"")}
+ function runView(host){const svg=document.createElementNS("http://www.w3.org/2000/svg","svg");svg.setAttribute("class","edges");svg.setAttribute("aria-hidden","true");
+  const nodes=document.createElement("div");nodes.className="nodes";const pop=document.createElement("div");pop.className="ch-npop";pop.setAttribute("role","dialog");pop.hidden=true;
+  host.append(svg,nodes,pop);const NE=new Map(),EE=new Map(),SE=new Map();let W=0,last=null,first=true,openId=null;
+  const R=13,GAP=40;
+  function layout(M){W=host.clientWidth||W||600;const per={};M.N.forEach(n=>{(per[n.lv]=per[n.lv]||[]).push(n)});const maxN=Math.max(...Object.values(per).map(a=>a.length));
+   host.style.setProperty("--gh",(maxN*GAP+(M.N.some(n=>n.pages&&n.pages.length)?12:0))+"px");
+   const span=Math.max(1,M.cols-1),x=lv=>R+2+lv*(W-2*R-4)/span,pos={};
+   Object.entries(per).forEach(([lv,a])=>a.forEach((n,k)=>{pos[n.id]={x:x(+lv),y:(maxN*GAP)/2+(k-(a.length-1)/2)*GAP}}));return pos}
+  function label(n,w){const s=n.i!=null?(w.steps||[])[n.i]:null,st={q:"waiting",run:"working",done:"done",fail:"did not finish",stop:"stopped",warn:"held"}[n.st];
+   return `${NN[n.k]||n.k}${s?`, ${s.focus}`:""}, ${st}${n.pages&&n.pages.length?`, ${n.pages.length} source${n.pages.length>1?"s":""}`:""}`}
+  function update(w){last=w;const M=runModel(w),pos=layout(M);
+   M.N.forEach(n=>{let e=NE.get(n.id);const p=pos[n.id];
+    if(!e){e=document.createElement("button");e.type="button";e.className="ch-node";e.dataset.id=n.id;e.setAttribute("aria-haspopup","dialog");e.setAttribute("aria-expanded","false");
+     e.innerHTML=`<span class="nb">${NICO[n.k]||NICO.builder}</span>`;nodes.appendChild(e);NE.set(n.id,e);
+     if(!reduce)e.querySelector(".nb").animate([{opacity:0,transform:"scale(.6)",filter:`blur(${B()*.6}px)`},{opacity:1,transform:"none",filter:"blur(0px)"}],{duration:ms("--sb-move"),delay:first?n.lv*60:0,easing:EZ(),fill:"backwards"})}
+    e.style.transform=`translate(${p.x.toFixed(1)}px,${p.y.toFixed(1)}px)`;const was=e.dataset.st;e.dataset.st=n.st;e.dataset.tip=NN[n.k]||n.k;e.setAttribute("aria-label",label(n,w));
+    if(was&&was!==n.st&&n.st==="done"&&!reduce)e.querySelector(".nb").animate([{transform:"scale(1.14)"},{transform:"none"}],{duration:ms("--sb-move"),easing:EZ()});
+    n.deps.forEach(d=>{const key=d+">"+n.id,a=pos[d];if(!a)return;let pe=EE.get(key);
+     if(!pe){pe=document.createElementNS("http://www.w3.org/2000/svg","path");svg.appendChild(pe);EE.set(key,pe);if(!reduce)pe.animate([{opacity:0},{opacity:1}],{duration:ms("--sb-move"),delay:first?n.lv*60+40:0,easing:EZ(),fill:"backwards"})}
+     const x1=a.x+R+3,x2=p.x-R-3,mx=(x1+x2)/2;pe.setAttribute("d",`M${x1.toFixed(1)} ${a.y.toFixed(1)} C${mx.toFixed(1)} ${a.y.toFixed(1)} ${mx.toFixed(1)} ${p.y.toFixed(1)} ${x2.toFixed(1)} ${p.y.toFixed(1)}`);
+     pe.setAttribute("class",n.st==="run"?"on":n.st==="q"||n.st==="stop"?"":"done")});
+    (n.pages||[]).slice(0,7).forEach((pg,j,arr)=>{const key=n.id+"|"+pg.url;let d=SE.get(key);
+     const tf=`translate(${(p.x+(j-(arr.length-1)/2)*7).toFixed(1)}px,${(p.y+R+9).toFixed(1)}px)`;
+     if(!d){d=document.createElement("i");d.className="ch-sat";nodes.appendChild(d);SE.set(key,d);d.style.transform=tf;if(!reduce)d.animate([{opacity:0,transform:tf+" scale(0)"},{opacity:1,transform:tf}],{duration:ms("--sb-in"),easing:EZ()})}
+     d.style.transform=tf})});
+   first=false;if(openId&&!pop.hidden)pop.innerHTML=nodeCard(w,openId)}
+  function place(id){const e=NE.get(id);if(!e)return;const m=/translate\(([-\d.]+)px,([-\d.]+)px\)/.exec(e.style.transform)||[0,0,0];
+   const x=+m[1],y=+m[2],pw=Math.min(320,W);pop.style.left=Math.max(0,Math.min(W-pw,x-pw/2)).toFixed(0)+"px";pop.style.top=(y+R+14).toFixed(0)+"px";pop.style.width=pw+"px"}
+  function show(id){const e=NE.get(id);if(!e||!last)return;if(openId===id&&!pop.hidden)return hide();if(openId)NE.get(openId)?.setAttribute("aria-expanded","false");
+   openId=id;pop.innerHTML=nodeCard(last,id);pop.setAttribute("aria-label",e.getAttribute("aria-label"));place(id);pop.getAnimations().forEach(a=>a.cancel());pop.hidden=false;e.setAttribute("aria-expanded","true");
+   if(!reduce)pop.animate([{opacity:0,transform:"translateY(-4px) scale(.98)",filter:`blur(${B()*.6}px)`},{opacity:1,transform:"none",filter:"blur(0px)"}],{duration:ms("--sb-in"),easing:EZ()})}
+  function hide(back){const id=openId;if(!id)return;openId=null;const e=NE.get(id);e?.setAttribute("aria-expanded","false");
+   const end=()=>{if(!openId)pop.hidden=true};if(reduce)end();else pop.animate(focusOut(B()*.6),{duration:ms("--sb-out"),easing:EZ()}).finished.then(end,end);if(back)e?.focus({preventScroll:true})}
+  nodes.addEventListener("click",e=>{const b=e.target.closest(".ch-node");if(b)show(b.dataset.id)});
+  host.addEventListener("keydown",e=>{if(e.key==="Escape"&&openId){e.preventDefault();e.stopPropagation();hide(true);return}
+   const b=e.target.closest(".ch-node");if(!b||!/^Arrow(Left|Right)$/.test(e.key))return;e.preventDefault();const L=[...NE.values()],i=L.indexOf(b);L[(i+(e.key==="ArrowRight"?1:L.length-1))%L.length].focus()});
+  document.addEventListener("pointerdown",e=>{if(openId&&!pop.contains(e.target)&&!e.target.closest(".ch-node"))hide()},true);
+  new ResizeObserver(()=>{if(last&&host.clientWidth&&host.clientWidth!==W){update(last);if(openId)place(openId)}}).observe(host);
+  return {update,hide}}
+
+ /* the answer's shell: the run (its time and a phrase in the margin, the nodes across the page) over the page it fills */
  function answerShell(w,live){const a=document.createElement("article");a.className="ch-turn ch-a";a.setAttribute("aria-busy",String(!!live));
-  const steps=w.steps||[];
-  a.innerHTML=`<div class="ch-proc${live?" live":""}"><span class="dot" aria-hidden="true"></span>`+
-   (live?`<span class="desks">${steps.map((s,i)=>(i?"<i>·</i>":"")+`<span>${ROLE[s.role]||s.role}</span>`).join("")}</span><span class="now" aria-live="polite">Reading the brief</span><span class="t">0:00</span>`
-    :settledLine(w))+`</div>`+
-   `<div class="ch-led" hidden>${(w.map?.thinking||[]).length?`<div class="ch-delib">${w.map.thinking.map(x=>`<p>${esc(x)}</p>`).join("")}</div>`:""}`+
-   steps.map((s,i)=>`<div class="ch-step"><button class="ch-sh" type="button" aria-expanded="false"><span class="role">${ROLE[s.role]||esc(s.role)}</span><span class="what">${esc(s.focus)}<small>${esc(s.task)}</small></span><span class="v">${IC.ok}${s.v==="pass"?"Passed":esc(s.v)}</span><span class="t">${mmss(s.ms)}</span></button><div class="ch-out" hidden>${esc(s.out)}</div></div>`).join("")+`</div>`+
-   `<div class="ch-doc"></div>`;return a}
- const settledLine=w=>`<span class="sum"><b>${words((w.steps||[]).length)}</b> · ${mmss(w.ms||0)}${w.firewall==="clear"?" · Firewall clear":""}</span><button class="ch-show" type="button" aria-expanded="false">Show the work ${IC.car}</button>`;
- /* the ledger opens in place; its rows rise in (no animated height), and a row opens to what that desk found */
- col.addEventListener("click",e=>{const s=e.target.closest(".ch-show");if(s){const led=s.closest(".ch-a").querySelector(".ch-led"),o=led.hidden;led.hidden=!o;s.setAttribute("aria-expanded",String(o));
-   if(o&&!reduce)[...led.children].forEach((x,i)=>pull(x,i*28,ms("--sb-in")));return}
-  const h=e.target.closest(".ch-sh");if(h){const out=h.nextElementSibling,o=out.hidden;out.hidden=!o;h.setAttribute("aria-expanded",String(o));if(o)pull(out,0,ms("--sb-in"));return}
+  a.innerHTML=`<div class="ch-run"><div class="ch-runm"><span class="t">${live?"0:00":mmss(w&&w.ms||0)}</span><span class="now" aria-live="polite">${live?"":w&&w.firewall==="clear"?"Firewall clear":""}</span></div><div class="ch-graph" role="group" aria-label="How EXPIRA worked"></div></div><div class="ch-doc"></div>`;
+  a._rv=runView(a.querySelector(".ch-graph"));if(w)requestAnimationFrame(()=>a._rv.update(w));return a}
+ const say=(el,x)=>{if(el.textContent===x)return;el.textContent=x;if(!reduce)el.animate(focusIn(B()*.5),{duration:ms("--sb-in"),easing:EZ()})};
+ function hooks(a,rate=1){const meta=a.querySelector(".ch-runm"),t=meta.querySelector(".t"),now=meta.querySelector(".now"),doc=a.querySelector(".ch-doc"),t0=performance.now();
+  const tick=setInterval(()=>{t.textContent=mmss((performance.now()-t0)*rate)},250);
+  return {update:w=>a._rv.update(w),phrase:x=>say(now,x),text:(md,final)=>streamDoc(doc,md,final),stop:()=>clearInterval(tick),t,now,doc}}
+ const busyOn=()=>{comp.classList.add("busy");send.innerHTML=IC.stop;send.setAttribute("aria-label","Stop");tab.classList.add("live")};
+ const busyOff=()=>{running=null;comp.classList.remove("busy");tab.classList.remove("live");tabSay();send.innerHTML=IC.arrow;send.setAttribute("aria-label","Send")};
+ col.addEventListener("click",e=>{
   const c=e.target.closest(".ch-act");if(c){if(c.dataset.act==="copy"){try{navigator.clipboard?.writeText(c.closest(".ch-a").querySelector(".ch-doc").innerText)}catch(x){}c.textContent="Copied";c.classList.add("done");setTimeout(()=>{c.textContent="Copy";c.classList.remove("done")},1600)}}});
 
  /* ---- a small markdown reader for the answer: sections (###), paragraphs, lists and tables, with **bold** ---- */
@@ -221,21 +295,41 @@ const CH=(()=>{const ch=$("#ch"),scroll=$("#chScroll"),col=$("#chCol"),tab=$("#c
  const colophon=(d,md0)=>{const n=String(md0).replace(/[#|*-]/g," ").split(/\s+/).filter(Boolean).length;
   return `<footer class="ch-colo"><span>Filed ${hhmm(d)}</span><span>${n} words · ${Math.max(1,Math.round(n/220))} min read</span><span class="acts"><button class="ch-act" type="button" data-act="copy">Copy</button><button class="ch-act" type="button" data-act="retry">Retry</button><button class="ch-act" type="button" data-act="dispatch">Dispatch</button></span></footer>`};
 
- /* ---- running: the desks work in the one line, then the answer inks in ---- */
- function run(a,R){const steps=R.work.steps,proc=a.querySelector(".ch-proc"),desk=[...proc.querySelectorAll(".desks span")],now=proc.querySelector(".now"),t=proc.querySelector(".t"),t0=performance.now();
-  comp.classList.add("busy");send.innerHTML=IC.stop;send.setAttribute("aria-label","Stop");tab.classList.add("live");
-  const tick=setInterval(()=>{t.textContent=mmss((performance.now()-t0)*16)},250);
-  const say=x=>{now.textContent=x;if(!reduce)now.animate(focusIn(B()*.5),{duration:ms("--sb-in"),easing:EZ()})};
-  const timers=[];let i=0;
-  const next=()=>{if(i>0){desk[i-1].classList.remove("on");desk[i-1].classList.add("done")}
-   if(i<steps.length){desk[i].classList.add("on");say(R.phrases[i]);i++;timers.push(setTimeout(next,1100))}
-   else{clearInterval(tick);ink(a,R,()=>finish(a,R))}};
-  timers.push(setTimeout(next,700));running={a,stop:()=>{timers.forEach(clearTimeout);clearInterval(tick);ink.cancel?.()}};tabSay()}
- function finish(a,R){running=null;comp.classList.remove("busy");tab.classList.remove("live");tabSay();send.innerHTML=IC.arrow;send.setAttribute("aria-label","Send");a.setAttribute("aria-busy","false");
-  const proc=a.querySelector(".ch-proc");const old=[...proc.childNodes].slice(1);old.forEach(x=>x.remove());proc.classList.remove("live");proc.insertAdjacentHTML("beforeend",settledLine(R.work));
-  [...proc.children].slice(1).forEach((x,i)=>pull(x,i*30))}
- function stopRun(){if(!running)return;running.stop();const a=running.a;running=null;comp.classList.remove("busy");tab.classList.remove("live");tabSay();send.innerHTML=IC.arrow;send.setAttribute("aria-label","Send");a.setAttribute("aria-busy","false");
-  const p=a.querySelector(".ch-proc");p.classList.remove("live");p.querySelector(".now").textContent="Stopped"}
+ /* ---- a real run: the brief goes to the engine (Claude and Exa, as the viewer); the view follows its record ---- */
+ function runReal(a,text){const h=hooks(a),ctl=new AbortController();busyOn();running={a,stop:()=>ctl.abort()};tabSay();
+  ENG.go(text,{effort:SET.effort,out:SET.out,desks:SET.desks,client:SET.client},{update:h.update,phrase:h.phrase,text:h.text,
+   done:(w,md,ex)=>{h.stop();h.t.textContent=mmss(w.ms);say(h.now,w.firewall==="held"?"Held by the firewall":w.firewall==="clear"?"Firewall clear":"For the team");
+    const tail=document.createElement("div");tail.innerHTML=exhibits(ex)+colophon(new Date(),md);[...tail.children].forEach(x=>h.doc.appendChild(x));
+    flowIn([...h.doc.querySelectorAll(".ch-ex>*,.ch-colo")]);a.setAttribute("aria-busy","false");busyOff();follow()},
+   fail:e=>{h.stop();a.setAttribute("aria-busy","false");busyOff();
+    say(h.now,e&&e.code==="cancelled"?"Stopped":e&&e.code==="not_granted"?"Claude isn't allowed on this page":e&&e.code==="rate_limited"?"Busy: try again in a moment":"Could not finish")}},ctl.signal)}
+
+ /* ---- the sample run (the bench, or a page without Claude): the same record, played on a clock ---- */
+ function run(a,R){const h=hooks(a,16),w=JSON.parse(JSON.stringify(R.work)),T=[],at=(ms,f)=>T.push(setTimeout(f,ms));
+  w.live=true;w._o=true;w.steps.forEach(s=>{s._ms=s.ms;delete s.ms;delete s.v});const pages=((w.map||{}).pages||[]).slice();w.map=w.map||{};w.map.pages=[];
+  busyOn();h.phrase("Reading the brief");h.update(w);
+  const pump=()=>{w.steps.forEach((s,i)=>{if(s._go||!(s.after||[]).every(n=>w.steps[n-1].done))return;s._go=s._live=true;h.phrase(R.phrases[i]||`${NN[s.role]} is working`);h.update(w);
+    pages.filter(p=>p.i===i).forEach((p,k)=>at(180+k*200,()=>{w.map.pages.push(p);h.update(w)}));
+    at(1100,()=>{s._live=false;s.done=true;s.v="pass";s.ms=s._ms;h.update(w);
+     if(!w.steps.every(x=>x.done))return pump();
+     w._a=true;h.phrase("Writing it up");h.update(w);
+     ink(a,R,()=>{w._a=false;w.answered=true;w._v=true;h.phrase("Checking the figures");h.update(w);
+      at(600,()=>{w._v=false;w.checked=true;w.live=false;w.firewall="clear";h.stop();h.t.textContent=mmss(R.work.ms);say(h.now,"Firewall clear");h.update(w);a.setAttribute("aria-busy","false");busyOff()})})})})};
+  at(700,()=>{w._o=false;h.update(w);pump()});
+  running={a,stop:()=>{T.forEach(clearTimeout);ink.cancel?.();h.stop();w.stopped=true;w.live=false;w._o=w._a=w._v=false;w.steps.forEach(s=>{if(s._live){s._live=false;s.stopped=true}});h.update(w)}};tabSay()}
+ function stopRun(){if(!running)return;const {a,stop}=running;stop();busyOff();a.setAttribute("aria-busy","false");const n=a.querySelector(".ch-runm .now");if(n)say(n,"Stopped")}
+
+ /* ---- the answer flows in, top to bottom: while it streams, each block new since the last frame focuses in after
+    the one before it, and the block still being written stays in place. Re-rendered at most every 120ms. ---- */
+ const sd={t:0,md:"",doc:null},FLOWSEL=".ch-mk,.ch-doc p,.ch-doc li,.ch-dt tr,.ch-figs>div,.ch-fig,.ch-exh,.ch-src li,.ch-colo";
+ function streamDoc(doc,md,final){sd.md=md;sd.doc=doc;if(final){clearTimeout(sd.t);sd.t=0;paint(doc,md);return}if(!sd.t)sd.t=setTimeout(()=>{sd.t=0;paint(sd.doc,sd.md)},120)}
+ function paint(doc,md){const n0=doc.querySelectorAll(FLOWSEL).length;doc.innerHTML=page(md);const bl=[...doc.querySelectorAll(FLOWSEL)];
+  if(!reduce)bl.slice(n0).forEach((b,k)=>pull(b,Math.min(360,k*60)));follow()}
+ /* a settled page flows in too: what is on screen, top to bottom, 45ms apart; the rest as it scrolls into view */
+ let flowIO=null;
+ function flowIn(bl){if(reduce||!bl.length)return;flowIO?.disconnect();const vh=scroll.clientHeight,top=scroll.getBoundingClientRect().top;let k=0;
+  flowIO=new IntersectionObserver(es=>{let j=0;es.forEach(e=>{if(!e.isIntersecting)return;flowIO.unobserve(e.target);e.target.classList.remove("ch-pre");pull(e.target,Math.min(240,j++*45),ms("--sb-in"))})},{root:scroll,rootMargin:"0px 0px -6% 0px"});
+  bl.forEach(b=>{const r=b.getBoundingClientRect();if(r.top-top<vh)pull(b,Math.min(900,k++*45),ms("--sb-in"));else{b.classList.add("ch-pre");flowIO.observe(b)}})}
  /* ink: blocks arrive in order; inside a paragraph or a list item the words surface a few at a time out of a small
     blur, as if written; tables arrive row by row, figures one by one, the chart's bars grow from the baseline */
  let inkT=[];
@@ -251,7 +345,13 @@ const CH=(()=>{const ch=$("#ch"),scroll=$("#chScroll"),col=$("#chCol"),tab=$("#c
  ink.cancel=()=>{inkT.forEach(clearTimeout);inkT=[];col.querySelectorAll("[style*='opacity: 0']").forEach(b=>b.style.opacity="")};
  function wrapWords(el){const ws=[];const walk=n=>{[...n.childNodes].forEach(c=>{if(c.nodeType===3){const f=document.createDocumentFragment();c.textContent.split(/(\s+)/).forEach(p=>{if(!p)return;if(/^\s+$/.test(p))f.appendChild(document.createTextNode(p));else{const s=document.createElement("span");s.className="ch-w";s.textContent=p;f.appendChild(s);ws.push(s)}});c.replaceWith(f)}else walk(c)})};walk(el);return ws}
  /* the thread follows what is being written while you are at the bottom; scroll up and it lets you read */
- let pinned=true;scroll.addEventListener("scroll",()=>{pinned=scroll.scrollTop+scroll.clientHeight>scroll.scrollHeight-80;scroll.classList.toggle("f-s",scroll.scrollTop>2)},{passive:true});
+ /* more below: while there is more under the fold, the foot's feather deepens and a small chevron waits at the far
+    edge; at the end both go, so the pull tab sits on a quiet foot */
+ const more=$("#chMore");let moreOn=false;
+ function moreCheck(){const m=mode==="thread"&&scroll.scrollHeight-scroll.scrollTop-scroll.clientHeight>24;if(m===moreOn)return;moreOn=m;scroll.classList.toggle("more",m);more.classList.toggle("on",m);more.tabIndex=m?0:-1}
+ more.addEventListener("click",()=>scroll.scrollBy({top:scroll.clientHeight*.8,behavior:reduce?"auto":"smooth"}));
+ new ResizeObserver(()=>moreCheck()).observe(col);
+ let pinned=true;scroll.addEventListener("scroll",()=>{pinned=scroll.scrollTop+scroll.clientHeight>scroll.scrollHeight-80;scroll.classList.toggle("f-s",scroll.scrollTop>2);moreCheck()},{passive:true});
  const follow=()=>{if(pinned)scrollEnd(false)};
  function scrollEnd(smooth){scroll.scrollTo({top:scroll.scrollHeight,behavior:smooth&&!reduce?"smooth":"auto"})}
 
@@ -262,11 +362,11 @@ const CH=(()=>{const ch=$("#ch"),scroll=$("#chScroll"),col=$("#chCol"),tab=$("#c
    const a=answerShell(R.work,false);a.querySelector(".ch-doc").innerHTML=page(R.md)+exhibits(R.ex)+colophon(d,R.md);col.appendChild(a);
    if(n.live){const b=answerShell(R.work,true);col.replaceChildren(brief(R.brief,new Date()),b);run(b,R)}}
   scroll.scrollTop=0;if(reduce)return;
-  const bl=[...col.querySelectorAll(".ch-kick,.ch-quote,.ch-dochead h2,.ch-proc,.ch-sec,.ch-ex>*,.ch-colo")];bl.forEach((b,i)=>pull(b,Math.min(260,i*16+(was==="start"?80:0))))}
+  requestAnimationFrame(()=>flowIn([...col.querySelectorAll(".ch-dochead>*,.ch-quote,.ch-run,"+FLOWSEL)]))}
  function generic(n){const ps=String(n.body||"").split(/\n\n/).filter(Boolean),T=n.t;
   return{brief:`Where does ${T.charAt(0).toLowerCase()+T.slice(1)} stand, and what is left to do?`,phrases:["Reading the brief","Weighing what is known","Writing it up"],
    md:`### Where it stands\n${ps[0]||"Nothing has been written here yet."}${ps.length>1?"\n\n### What is left\n"+ps.slice(1).map(p=>"- "+p).join("\n"):""}`,
-   work:{ms:26000,firewall:"clear",steps:[{role:"research",focus:"What is on file",task:"Read the chat and its documents",v:"pass",ms:9000,out:ps[0]||""},{role:"decision",focus:"What is left",task:"Name the open items",v:"pass",ms:17000,out:ps.slice(1).join("\n")}],map:{thinking:[]}},ex:null}}
+   work:{ms:26000,firewall:"clear",steps:[{role:"research",focus:"What is on file",task:"Read the chat and its documents",v:"pass",ms:9000,out:ps[0]||""},{role:"decision",focus:"What is left",task:"Name the open items",v:"pass",ms:17000,after:[1],out:ps.slice(1).join("\n")}],map:{thinking:[]}},ex:null}}
 
  /* ---- the rich example: a fit-out, scoped, priced, weighed and recommended (bench sample; figures add up) ---- */
  const RICH={brief:"Makati showroom: ceiling works, lighting track, display joinery and the storefront glazing. Scope it, price it roughly, flag the risks, and recommend how we proceed.",
@@ -276,11 +376,13 @@ const CH=(()=>{const ch=$("#ch"),scroll=$("#chScroll"),col=$("#chCol"),tab=$("#c
    charts:[{type:"bar",title:"Cost by line",unit:"PHP",labels:["Ceiling","Lighting track","Joinery","Glazing"],series:[{name:"Amount",values:[312000,228400,386500,262000]}],note:"Joinery is the largest line; it is also the one made off site."}],
    matrix:{title:"Three ways to schedule it",columns:["Risk","Disruption","Handover"],rows:[{name:"One continuous build",cells:[3,2,"Nov 28"]},{name:"Two phases (recommended)",cells:[4,4,"Nov 21"]},{name:"Night shifts only",cells:[2,5,"Dec 12"]}],note:"Ratings out of five; higher is better."},
    sources:[{title:"Metro Manila fit-out rate cards, 2026 Q3",note:"verified"},{title:"Staff canvass, Makati",note:"unverified"}]},
-  work:{ms:85000,firewall:"clear",map:{thinking:["Four lines of work before a fixed opening: nothing can be priced until local rates are in.","The budget will clear PHP 1 million, so finance works at deep effort.","A storefront lift brings permit and handover risk; legal can read it in parallel.","Once the budget and the risks are known, the decision desk weighs the schedule."]},
+  work:{ms:85000,firewall:"clear",map:{kind:"Fit-out pricing",rationale:"Local rates first, then the budget and the risks side by side, then one recommendation.",
+   pages:[{i:0,url:"https://rates.fitout-ph.example/2026-q3",title:"Metro Manila fit-out rate cards, 2026 Q3"},{i:0,url:"https://glazing.builders.example/laminated-storefronts",title:"Laminated storefront glazing: installed rates"},{i:0,url:"https://lighting.trade.example/track-systems",title:"Track lighting systems: per-metre pricing"},{i:2,url:"https://permits.makati.example/sunday-works",title:"Weekend works and crane permits"}],
+   thinking:["Four lines of work before a fixed opening: nothing can be priced until local rates are in.","The budget will clear PHP 1 million, so finance works at deep effort.","A storefront lift brings permit and handover risk; legal can read it in parallel.","Once the budget and the risks are known, the decision desk weighs the schedule."]},
    steps:[{role:"research",focus:"Local rates",task:"Metro Manila rates and lead times for track, joinery and glazing",v:"pass",ms:12000,out:"Lighting track: PHP 1,900–2,600 per metre (verified).\nLaminated storefront glazing: PHP 7,800–9,400 per m² installed (verified).\nJoinery lead time 4–5 weeks (staff canvass, unverified).\nCONFIDENCE: medium"},
-    {role:"finance",focus:"The budget",task:"An indicative budget for 240 m²",v:"pass",ms:31000,out:"Ceiling 312,000; track 228,400; joinery 386,500; glazing 262,000. Subtotal 1,188,900. Contingency 8% 95,112. Total PHP 1,284,012 before VAT; PHP 5,350 per m².\nCONFIDENCE: medium"},
-    {role:"legal",focus:"Permit and handover",task:"Risks behind a Sunday lift and a fixed opening",v:"pass",ms:24000,out:"Secure the Sunday permit before quoting a date; exclude delay from late layout approval; variations by signed order only.\nCONFIDENCE: high"},
-    {role:"decision",focus:"The schedule",task:"How the company should proceed",v:"pass",ms:18000,out:"Recommend two phases. Options: one continuous build, two phases, night shifts only. You decide the schedule and the contingency.\nCONFIDENCE: high"}]}};
+    {role:"finance",focus:"The budget",task:"An indicative budget for 240 m²",after:[1],v:"pass",ms:31000,out:"Ceiling 312,000; track 228,400; joinery 386,500; glazing 262,000. Subtotal 1,188,900. Contingency 8% 95,112. Total PHP 1,284,012 before VAT; PHP 5,350 per m².\nCONFIDENCE: medium"},
+    {role:"legal",focus:"Permit and handover",task:"Risks behind a Sunday lift and a fixed opening",after:[1],v:"pass",ms:24000,out:"Secure the Sunday permit before quoting a date; exclude delay from late layout approval; variations by signed order only.\nCONFIDENCE: high"},
+    {role:"decision",focus:"The schedule",task:"How the company should proceed",after:[2,3],v:"pass",ms:18000,out:"Recommend two phases. Options: one continuous build, two phases, night shifts only. You decide the schedule and the contingency.\nCONFIDENCE: high"}]}};
 
  greet();tabSay();ttl.hidden=!ttl.textContent;
- return{start,open,go,pull:rise,shut,send:t=>{ta.value=t;fit();go()},get mode(){return mode},RICH}})();
+ return{start,open,go,pull:rise,shut,sample:v=>{SAMPLE=!!v},send:t=>{ta.value=t;fit();go()},get mode(){return mode},RICH}})();

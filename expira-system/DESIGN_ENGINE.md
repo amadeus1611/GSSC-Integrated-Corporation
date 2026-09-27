@@ -336,11 +336,23 @@ The chat pane follows §4.1–§4.4 and the sidebar's colour logic. The old answ
   - Opening is fast (`--sb-dock` on `--sb-ease`); closing is soft (`--sb-dock-out` on `--sb-dock-close`), as the sidebar docks.
   - **On send** the sheet folds back into the line, travelling down to the foot of the thread, while the signature clears with focus out, 20ms apart per part. The line waits there as the tab.
 - **The brief** is the master template's pull quote alone: an italic serif with a 2px gold rule. Its time is marginalia: it waits in the left margin, level with the first line, and shows on hover, fast in and soft out (hidden below 760px).
-- **The work** is one line, not a card:
-  - while the desks run, a breathing dot, the four desks in tracked caps with the current one lit, a phrase in italics and a timer;
-  - once settled, "Four desks · 1:25 · Firewall clear" and a "Show the work" word button.
+- **The work is nodes, not a log.** Under the brief, a row of small icon nodes runs across the text column and the right margin:
+  - EXPIRA (the plan);
+  - the desks, in the order they depend on each other, with desks that work side by side stacked;
+  - the answer;
+  - the check.
 
-  The ledger opens under a strong rule: the deliberation in italics, then one row per desk with its focus, verdict and time. Each row opens to its output.
+  Each node is an icon in a glass ring on hairline edges:
+  - faint while it waits;
+  - a breathing gold ring on a gold edge while it works;
+  - settled ink when done, with a small settle;
+  - red when it failed or was held.
+
+  Sources land as small gold dots under the desk that read them. The margin holds the time and one phrase: what is happening now, then the verdict ("Firewall clear").
+  - **A node opens a card** (the sheet's glass, fast in and soft out): what it did, its verdict, time, searches and confidence, its findings, and its sources as links. EXPIRA's card holds the plan's reasoning; the check's card holds the firewall's verdict and anything it caught. Arrows move between nodes and Esc closes the card.
+  - The view reads the run record the engine writes, in the shape of `core/run.js` (steps with role, focus, task, after and state; `map.pages` with the desk that read each one), so a live run and a saved one draw the same.
+- **The answer flows in, top to bottom.** While it streams, each block that is new since the last frame focuses in after the one before it (60ms apart, re-rendered at most every 120ms), and the block still being written stays in place. A saved page flows in the same way: what is on screen 45ms apart, the rest as it scrolls into view.
+- **More below.** While there is more under the fold, the foot's feather deepens from 44px to 150px, and a small chevron waits at the far edge and scrolls on by most of a screen. At the end both go.
 - **The page is an editorial grid, almost edge to edge.** The thread spans the pane with a 28px gutter, in three columns on shared lines:
   - **The left margin holds marginalia:**
     - section numerals, hanging large (24px, gold, in the display italic);
@@ -375,6 +387,10 @@ The chat pane follows §4.1–§4.4 and the sidebar's colour logic. The old answ
 - **Tokens (v41):** every value comes from `src/tokens.css`. Spacing is a 4px scale with half steps (`--sp-half`, `--sp-1h` … `--sp-4h`) below 20px for dense chrome; a 1px nudge is optical and stays literal. Layers are named (`--z-side`, `--z-menu`, `--z-tip` …) in one stacking order. Dark tokens are written once in `@dark{}`.
 
 ## 6. Change log
+- **v45 chat bench, nodes and a real engine** (2026-09-27, Amadeus: "the node system instead … icons over text, but when you click on it it expands to show the sources"; "let it flow from the top to bottom"; "make it usable already, so I can test run prompts"; "indicate via feathering at the bottom that there is more"):
+  - The work line and its ledger became a row of nodes with cards.
+  - The answer flows in top to bottom, and the foot feathers while there is more below.
+  - The bench now sends real briefs through Claude and Exa (`bench/drafts/engine-next.js`, see `SUPER_PLAN_45.md` §10.5).
 - **v45 chat bench, the editorial grid, and calm** (2026-09-27, Amadeus: "rework it to be like our macos expira hybrid … almost edge to edge … so it emphasizes the glass design in the center"; "make the calm version of the chat panel where it won't have the blur effect"): see §4.5.
   - The thread became an almost edge-to-edge editorial grid (Tufte-style margins, full-width rules and exhibits) that keeps the prose at a reading measure, with the glass sheet centred over it.
   - Calm gives a solid sheet with no frost and no motion.
