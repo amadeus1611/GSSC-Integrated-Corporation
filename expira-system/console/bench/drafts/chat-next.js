@@ -5,7 +5,7 @@
    the signature racks out and the brief pulls focus as a pull quote. The desks work in one quiet line (no run card); the answer then inks in, word by word, laid out as the
    master template lays out a page. A chat opened from the tree is shown settled, its blocks pulling focus in order.
    Reads MO, easeFn and easeInv from core/motion.js, and $, root and reduce from the prelude (the bench stubs them). */
-const CH=(()=>{const ch=$("#ch"),scroll=$("#chScroll"),col=$("#chCol"),tab=$("#chTab"),sheet=$("#chSheet"),glass=sheet.querySelector(".ch-glass"),fg=sheet.querySelector(".ch-fg"),grab=$("#chGrab"),veil=$("#chVeil"),comp=$("#chComp"),ta=$("#prompt"),send=$("#chSend"),ttl=$("#ttl");
+const CH=(()=>{const ch=$("#ch"),scroll=$("#chScroll"),col=$("#chCol"),tab=$("#chTab"),sheet=$("#chSheet"),glass=sheet.querySelector(".ch-glass"),fg=sheet.querySelector(".ch-fg"),grab=$("#chGrab"),comp=$("#chComp"),ta=$("#prompt"),send=$("#chSend"),ttl=$("#ttl");
  const tok=n=>getComputedStyle(root).getPropertyValue(n).trim();
  const ms=n=>{const v=tok(n);return parseFloat(v)*(/ms$/.test(v)?1:1000)||1};
  const EZ=()=>tok("--sb-ease")||"cubic-bezier(.19,1,.22,1)",B=()=>parseFloat(tok("--blur-enter"))||3;
@@ -37,7 +37,7 @@ const CH=(()=>{const ch=$("#ch"),scroll=$("#chScroll"),col=$("#chCol"),tab=$("#c
 
  /* ---- the pull tab and its sheet. One progress P, 0 (the line) to 1 (the open sheet), drives everything in frame():
     the grabber's travel, the reveal growing out of the line (wide first, then tall, so the line becomes a bar and the
-    bar rises), the glass, the contents focusing in, and the veil. A click tweens P on the dock's curve, a pull sets it
+    bar rises), the glass and the contents focusing in. A click tweens P on the dock's curve, a pull sets it
     under the finger, and a release finishes it by position and speed, so the pull and the click are one move. Opening
     is fast (--sb-dock on --sb-ease); closing is soft (--sb-dock-out on --sb-dock-close). After a send the sheet folds
     back into the line, and the line waits at the foot of the thread. ---- */
@@ -45,7 +45,7 @@ const CH=(()=>{const ch=$("#ch"),scroll=$("#chScroll"),col=$("#chCol"),tab=$("#c
  const lerp=(a,b,t)=>a+(b-a)*t,cl=(v,a=0,b=1)=>Math.max(a,Math.min(b,v)),sm=(p,a,b)=>{const t=cl((p-a)/(b-a));return t*t*(3-2*t)};
  const box=el=>{const r=el.getBoundingClientRect();return{x:r.left,y:r.top,w:r.width,h:r.height}};
  const isOpen=()=>sheet.classList.contains("on"),tabLn=tab.querySelector(".ln"),tabLb=tab.querySelector(".lb"),tabHt=tab.querySelector(".ht");
- function prep(){if(isOpen())return;sheet.classList.remove("mid","low");sheet.classList.add("on",mode==="start"?"mid":"low");veil.classList.add("on");tab.classList.add("away");tab.setAttribute("aria-expanded","true")}
+ function prep(){if(isOpen())return;sheet.classList.remove("mid","low");sheet.classList.add("on",mode==="start"?"mid":"low");tab.classList.add("away");tab.setAttribute("aria-expanded","true")}
  function measure(){sheet.style.transform=glass.style.clipPath=fg.style.clipPath="";const S=box(sheet),l=box(tabLn);G={S,L:{x:l.x+l.w/2-LW/2,y:l.y+l.h/2-SH/2,w:LW,h:SH}}}
  function frame(p){P=p;const {S,L}=G,ew=1-Math.pow(1-p,3),w=lerp(L.w,S.w,ew),h=lerp(L.h,S.h,p),cx=lerp(L.x+L.w/2,S.x+S.w/2,ew),y=lerp(L.y,S.y,p);
   const o=40*Math.pow(p,6),r=lerp(2,14,cl(p*1.6)),side=(S.w-w)/2-o;  /* o: the reveal ends past the shadow, never clipping it */
@@ -53,7 +53,7 @@ const CH=(()=>{const ch=$("#ch"),scroll=$("#chScroll"),col=$("#chCol"),tab=$("#c
   glass.style.clipPath=fg.style.clipPath=p>=1?"":`inset(${-o}px ${side.toFixed(2)}px ${(S.h-h-o).toFixed(2)}px ${side.toFixed(2)}px round ${r.toFixed(2)}px)`;
   glass.style.opacity=p>=1?"":sm(p,0,.32);
   const q=sm(p,.3,.92);comp.style.opacity=q>=1?"":q;comp.style.transform=q>=1?"":`translateY(${((1-q)*8).toFixed(2)}px)`;comp.style.filter=q>=1||reduce?"":mb(1-q,2);
-  veil.style.opacity=p;tabLb.style.opacity=tabHt.style.opacity=p<=0?"":mode==="start"?1-sm(p,0,.22):0}  /* in a thread the label only ever shows on hover */
+  tabLb.style.opacity=tabHt.style.opacity=p<=0?"":mode==="start"?1-sm(p,0,.22):0}  /* in a thread the label only ever shows on hover */
  function tween(to,D,Es,done){cancelAnimationFrame(tw);tw=0;const p0=P,E=easeFn(Es),t0=performance.now();
   if(reduce||D<5){frame(to);done&&done();return}
   const step=now=>{const t=Math.min(1,(now-t0)/D);frame(p0+(to-p0)*E(t));if(t<1)tw=requestAnimationFrame(step);else{tw=0;done&&done()}};tw=requestAnimationFrame(step)}
@@ -61,8 +61,8 @@ const CH=(()=>{const ch=$("#ch"),scroll=$("#chScroll"),col=$("#chCol"),tab=$("#c
   ta.focus({preventScroll:true});tween(1,ms("--sb-dock")*Math.max(.35,1-P),EZ())}
  function shut(instant,after){popHide(true);if(!isOpen()){after&&after();return}if(P>=1||!G)measure();
   tween(0,instant?0:ms("--sb-dock-out")*Math.max(.35,P),tok("--sb-dock-close")||EZ(),()=>{
-   sheet.classList.remove("on","mid","low");veil.classList.remove("on");tab.classList.remove("away");tab.setAttribute("aria-expanded","false");
-   [sheet,glass,fg,comp,veil,tabLb,tabHt].forEach(x=>{x.style.transform=x.style.clipPath=x.style.opacity=x.style.filter=""});P=0;after&&after()})}
+   sheet.classList.remove("on","mid","low");tab.classList.remove("away");tab.setAttribute("aria-expanded","false");
+   [sheet,glass,fg,comp,tabLb,tabHt].forEach(x=>{x.style.transform=x.style.clipPath=x.style.opacity=x.style.filter=""});P=0;after&&after()})}
  const back=()=>shut(false,()=>tab.focus({preventScroll:true}));
  /* the pull: the grabber follows the finger, 1:1; let go and it finishes by where it is and how fast it was moving */
  function draggable(el,opening){el.addEventListener("pointerdown",e=>{if(e.button!==0)return;const y0=e.clientY;let moved=false,p0=0,trail=[[e.timeStamp,y0]];
@@ -76,12 +76,17 @@ const CH=(()=>{const ch=$("#ch"),scroll=$("#chScroll"),col=$("#chCol"),tab=$("#c
   el.addEventListener("pointermove",mv);el.addEventListener("pointerup",up);el.addEventListener("pointercancel",up)})}
  draggable(tab,true);draggable(grab,false);
  tab.addEventListener("click",e=>{if(e.detail===0)rise()});  /* Enter and Space; a pointer click is handled on release */
- veil.addEventListener("pointerdown",back);grab.addEventListener("keydown",e=>{if(e.key==="Enter"||e.key===" "){e.preventDefault();back()}});
+ /* the page stays readable and live while the sheet is up: you can read, scroll and select above it. A click on the
+    empty page (not on the thread's text) puts the sheet away; typing while the page has focus goes back into the brief */
+ document.addEventListener("pointerdown",e=>{if(!isOpen()||P<1||e.button!==0)return;const t=e.target;
+  if(sheet.contains(t)||tab.contains(t)||col.contains(t)||!ch.contains(t))return;back()});grab.addEventListener("keydown",e=>{if(e.key==="Enter"||e.key===" "){e.preventDefault();back()}});
  sheet.addEventListener("keydown",e=>{if(e.key==="Escape"){e.preventDefault();e.stopPropagation();back()}});
- /* start typing anywhere in the pane and the sheet comes up with what you typed */
- addEventListener("keydown",e=>{if(isOpen()||e.metaKey||e.ctrlKey||e.altKey||e.isComposing||e.key.length!==1)return;
-  const a=document.activeElement;if(a&&a!==document.body&&(/INPUT|TEXTAREA|SELECT/.test(a.tagName)||a.isContentEditable||a.closest(".side,.sb-pop,#bn")||(e.key===" "&&a!==tab)))return;
-  e.preventDefault();e.stopImmediatePropagation();rise();if(e.key!==" "){ta.value+=e.key;fit()}});
+ /* start typing anywhere in the pane and the sheet comes up with what you typed; with the sheet already up, typing
+    after reading or selecting above goes back into the brief */
+ addEventListener("keydown",e=>{if(e.metaKey||e.ctrlKey||e.altKey||e.isComposing||e.key.length!==1)return;
+  const a=document.activeElement;if(a&&a!==document.body&&(/INPUT|TEXTAREA|SELECT/.test(a.tagName)||a.isContentEditable||a.closest(".side,.sb-pop,#bn,.ch-pop")||(e.key===" "&&a!==tab)))return;
+  e.preventDefault();e.stopImmediatePropagation();if(isOpen())ta.focus({preventScroll:true});else rise();
+  if(e.key!==" "||isOpen()){ta.value+=e.key;fit();ta.setSelectionRange(ta.value.length,ta.value.length)}});
  function tabSay(){const t=mode==="start"?"Brief EXPIRA":running?"Working · follow up":"Follow up";tabLb.textContent=t;tab.setAttribute("aria-label",mode==="start"?"Brief EXPIRA: pull up, or start typing":t)}
 
  /* ---- the chat's settings live in the bar's icons: effort steps on a click (Shift steps back), desks and output

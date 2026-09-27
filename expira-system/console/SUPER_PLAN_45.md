@@ -242,5 +242,5 @@ Each step is one commit, first in the bench and then in `src/`. Each is tested i
   The 8ms target is met on a normal tree but not with 2,000 rows open, where most of the time is the browser laying out the rows' boxes. Full virtualisation is the remaining step if real use ever needs it.
 - [x] §8 Screen readers and keyboard (2026-09-26, bench). axe is clean with the tree, the two places, the row menu, select mode, search and the account card. The account card became a dialog, since it is a panel of controls.
 - [ ] §9 Saving and promotion: planned in detail above (2026-09-26); waiting on Amadeus's go.
-- [x] §10.1 The glass (2026-09-27, bench). The veil carries a 14px backdrop blur, and text under the sheet can no longer be read (light and dark). The sheet was also redesigned around icons at Amadeus's ask (DESIGN_ENGINE §4.5).
+- [x] §10.1 The glass (2026-09-27, bench). Only the sheet is frosted (88% panel over a 16px blur), so text under it cannot be read in light or dark, and the page above stays sharp and live. A full-pane veil blur was tried and dropped: it hid what you were answering. The sheet was also redesigned around icons at Amadeus's ask (DESIGN_ENGINE §4.5).
 - [ ] §10.2–10.5: next is 10.2, making the settings drive the answer (the icons already hold the state in `SET`).

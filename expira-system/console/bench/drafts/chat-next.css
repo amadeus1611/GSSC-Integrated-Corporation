@@ -11,12 +11,12 @@
   --ch-strong:color-mix(in srgb,var(--ink) 78%,transparent);  /* the template's navy rule */
   --ch-sign-x:28px;--ch-sign-y:11px;  /* the signature's corner: set against the sidebar's foot */
   --ch-sheet-r:14px;         /* the sheet's corner */
-  --ch-glass:58%;            /* how much panel shows in the glass */
+  --ch-glass:88%;            /* how much panel shows in the glass: dense enough that nothing under it can be read */
   --ch-rim:inset 0 1px 0 rgba(255,255,255,.75);  /* the glass's lit top edge */
   --ch-sheen:linear-gradient(to bottom,rgba(255,255,255,.34),rgba(255,255,255,0) 44%);
 }
-@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--ch-bar:#C9A35C;--ch-glass:54%;--ch-rim:inset 0 .5px 0 rgba(255,255,255,.09);--ch-sheen:linear-gradient(to bottom,rgba(255,255,255,.045),rgba(255,255,255,0) 44%)}}
-:root[data-theme="dark"]{--ch-bar:#C9A35C;--ch-glass:54%;--ch-rim:inset 0 .5px 0 rgba(255,255,255,.09);--ch-sheen:linear-gradient(to bottom,rgba(255,255,255,.045),rgba(255,255,255,0) 44%)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--ch-bar:#C9A35C;--ch-glass:88%;--ch-rim:inset 0 .5px 0 rgba(255,255,255,.09);--ch-sheen:linear-gradient(to bottom,rgba(255,255,255,.045),rgba(255,255,255,0) 44%)}}
+:root[data-theme="dark"]{--ch-bar:#C9A35C;--ch-glass:88%;--ch-rim:inset 0 .5px 0 rgba(255,255,255,.09);--ch-sheen:linear-gradient(to bottom,rgba(255,255,255,.045),rgba(255,255,255,0) 44%)}
 
 /* the pane: the header, the thread (feathered at both ends), the pull tab and its sheet */
 .main{position:relative}
@@ -66,20 +66,15 @@
 .ch.thread .ch-tab:hover .lb,.ch.thread .ch-tab:focus-visible .lb{opacity:1;filter:blur(0);transform:none;transition-duration:var(--sb-in)}
 .ch-tab.live .ln{background:var(--gold);animation:breathe var(--t-loop) var(--ease-inout) infinite}
 
-/* the veil: the page steps back and goes soft while the sheet is up, as if under water. It carries the blur (a
-   backdrop filter over the whole pane, only its opacity animates), because a small glass panel's own backdrop blur
-   leaves text beneath it legible in Chromium; over a softened page the sheet is truly frosted. */
-.ch-veil{position:absolute;inset:0;z-index:2;opacity:0;visibility:hidden;background:color-mix(in srgb,var(--bg) 34%,transparent);
- -webkit-backdrop-filter:blur(14px) saturate(1.15);backdrop-filter:blur(14px) saturate(1.15)}
-@media (prefers-reduced-transparency:reduce){.ch-veil{background:color-mix(in srgb,var(--bg) 82%,transparent);-webkit-backdrop-filter:none;backdrop-filter:none}}
-@supports not ((backdrop-filter:blur(1px)) or (-webkit-backdrop-filter:blur(1px))){.ch-veil{background:color-mix(in srgb,var(--bg) 82%,transparent)}}
-.ch-veil.on{visibility:visible}
 
 /* ---- the sheet: the focused place to write. The grabber, the brief, then one row of icons that carry the chat's
-   settings, and send. It is glass: the tint, a sheen and a lit top edge over a backdrop blur, set over the veil that
-   has already frosted the page, so it reads as a material even over an empty page and nothing under it can be read. In a new chat it opens in the middle of the page,
-   growing out of the line; in a thread it rises from the foot. The motion is chat-next.js's frame(): one progress,
-   0 to 1, drives the grabber's travel, the reveal, the veil and the contents, so a pull and a click are the same move. ---- */
+   settings, and send. It is frosted glass: 88% of the panel, a sheen and a lit top edge over a 16px backdrop blur. Only
+   the sheet is frosted; the page above it stays sharp, readable and live, so you can read, scroll and select while you
+   write. The tint is dense on purpose: in Chromium a panel's backdrop blur softens shapes but can leave text beneath it
+   legible, so the tint, not the blur, is what makes the text under it unreadable. In a new chat the sheet opens in the
+   middle of the page, growing out of the line; in a thread it rises from the foot. The motion is chat-next.js's
+   frame(): one progress, 0 to 1, drives the grabber's travel, the reveal and the contents, so a pull and a click are
+   the same move. ---- */
 .ch-sheet{position:absolute;left:0;right:0;margin:0 auto;z-index:3;width:min(var(--ch-col),calc(100% - var(--sp-6) * 2));visibility:hidden;pointer-events:none}
 .ch-sheet.on{visibility:visible;pointer-events:auto}
 .ch-sheet.mid{top:0;bottom:0;margin:auto;height:fit-content}
@@ -87,8 +82,7 @@
 .ch-glass{position:absolute;inset:0;border-radius:var(--ch-sheet-r);
  background:var(--ch-sheen),color-mix(in srgb,var(--panel) var(--ch-glass),transparent);-webkit-backdrop-filter:blur(16px) saturate(1.8);backdrop-filter:blur(16px) saturate(1.8);
  box-shadow:var(--ch-rim),inset 0 0 0 var(--rule-hair) var(--line-3),0 1px 2px rgba(var(--sb-shc),calc(var(--sb-sha) * .2)),0 24px 56px -24px rgba(var(--sb-shc),calc(var(--sb-sha) * 1.1))}
-/* opaque where the browser has no backdrop filter, and when the system asks for less transparency. The sheet's own
-   blur tints and lifts what is under it; the veil beneath has already frosted the page. */
+/* opaque where the browser has no backdrop filter, and when the system asks for less transparency */
 @supports not ((backdrop-filter:blur(1px)) or (-webkit-backdrop-filter:blur(1px))){.ch-glass{background:var(--panel)}}
 @media (prefers-reduced-transparency:reduce){.ch-glass{background:var(--panel);-webkit-backdrop-filter:none;backdrop-filter:none}}
 .ch-fg{position:relative}
