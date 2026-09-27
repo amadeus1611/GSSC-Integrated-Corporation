@@ -261,4 +261,5 @@ Each step is one commit, first in the bench and then in `src/`. Each is tested i
 - [x] Editorial grid for the thread and calm for the sheet (2026-09-27, bench; DESIGN_ENGINE §4.5).
 - [x] Nodes instead of the log, top-to-bottom flow, more-below feathering, and a real engine in the bench (2026-09-27).
 - [x] The gravity field returns (seeded, token-sized nodes on sagging cables carrying pulses at the token rate), cards in the left margin, the field easing to its height, and charts drawing in and out (2026-09-27, bench; DESIGN_ENGINE §4.5).
+- [x] The relay: the Arbiter staffing and weighing (a one-round claims ledger checked by the grounding gate, and the answer audited in code), Exa hanging under the desks that called it with its evidence threaded to the weighing gate, words on the cables, and charts drawn at their real width (2026-09-27, bench; DESIGN_ENGINE §4.5). Still to port from `core/run.js`: the Arbiter's return-and-deepen rounds, and the audit's revision pass.
 - [ ] §10.2–10.5: next is 10.2, making the settings drive the answer (the icons already hold the state in `SET`).

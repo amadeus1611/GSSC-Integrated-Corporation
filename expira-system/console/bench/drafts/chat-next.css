@@ -214,12 +214,34 @@
 .ch-graph path.src{stroke:color-mix(in srgb,var(--gold) 38%,transparent)}
 .ch-graph path.lead{stroke:color-mix(in srgb,var(--gold) 80%,transparent);stroke-width:1px!important;stroke-dasharray:2 3}
 .ch-graph .pulse{fill:var(--gold);opacity:0}
+/* the web's threads: the call from a desk to Exa (dotted, gold while it searches), and the evidence Exa brought, carried
+   down to the Arbiter as it weighs (a finer dotted thread) */
+.ch-graph path.call{stroke:color-mix(in srgb,var(--gold) 42%,transparent);stroke-dasharray:1.5 2.5}
+.ch-graph path.call.on{stroke:color-mix(in srgb,var(--gold) 85%,transparent)}
+.ch-graph path.ev{stroke:var(--line-3);stroke-dasharray:1 3.5}
+.ch-graph path.ev.done{stroke:color-mix(in srgb,var(--ink) 24%,transparent)}
+.ch-graph path.ev.on{stroke:color-mix(in srgb,var(--gold) 60%,transparent)}
+/* focus: a node's conversation stays; the rest of the field steps back */
+.ch-graph.focus path:not(.hot):not(.lead){opacity:.2}
+.ch-graph.focus .ch-node:not(.hot) .nb,.ch-graph.focus .ch-sat:not(.hot){opacity:.3}
+.ch-graph.focus path.hot{transition-duration:var(--sb-in)}
+/* the words on a cable: what passes along it, under its lowest point; fast in, soft out */
+.ch-wire{position:absolute;left:0;top:0;translate:-50% 0;padding:1px 5px;border-radius:4px;background:color-mix(in srgb,var(--bg) 86%,transparent);
+ font:400 10px/1.35 var(--f-body);color:var(--mute);white-space:nowrap;font-variant-numeric:tabular-nums;pointer-events:none;
+ opacity:0;filter:blur(3px);transition:opacity var(--sb-out) var(--sb-dock-close),filter var(--sb-out) var(--sb-dock-close)}
+.ch-wire.side{translate:0 0}
+.ch-wire.show.dup{opacity:0}
+.ch-wire.show{opacity:1;filter:blur(0);transition-duration:var(--sb-in);transition-timing-function:var(--sb-ease)}
 .ch-graph .nodes{position:absolute;inset:0}
 .ch-node{all:unset;position:absolute;left:0;top:0;width:28px;height:28px;margin:-14px 0 0 -14px;border-radius:50%;cursor:pointer;-webkit-tap-highlight-color:transparent}
 .ch-node .nb{position:absolute;inset:0;display:grid;place-items:center;border-radius:50%;color:var(--mute);
  background:var(--panel);box-shadow:var(--ch-rim),inset 0 0 0 var(--rule-hair) var(--line-3),0 1px 2px rgba(var(--sb-shc),calc(var(--sb-sha) * .18));transform:scale(var(--s,1));
  transition:color var(--sb-out) var(--sb-ease),box-shadow var(--sb-out) var(--sb-ease),opacity var(--sb-out) var(--sb-ease),transform var(--sb-move) var(--sb-ease)}
 .ch-node .nb svg{width:13px;height:13px}
+/* LAYA's gates (the Arbiter staffing and weighing, the check) are rounded squares: decisions in code; the workers are
+   circles. Exa is the smallest node, in gold ink */
+.ch-node.gate .nb,.ch-node.gate .nb::after{border-radius:32%}
+.ch-node[data-k="exa"] .nb{color:var(--gold-ink)}
 .ch-node .nb::after{content:"";position:absolute;inset:-4px;border-radius:50%;box-shadow:0 0 0 1px var(--gold);opacity:0;pointer-events:none}
 .ch-node[data-st="q"] .nb,.ch-node[data-st="stop"] .nb{opacity:.45}
 .ch-node[data-st="run"] .nb{color:var(--ink);box-shadow:var(--ch-rim),inset 0 0 0 1px var(--gold),0 1px 2px rgba(var(--sb-shc),calc(var(--sb-sha) * .18))}
@@ -235,7 +257,7 @@
  font:400 var(--fs-chrome)/1.3 var(--f-body);white-space:nowrap;pointer-events:none;opacity:0;transform:translate(-50%,3px);transition:opacity var(--sb-out) var(--sb-ease),transform var(--sb-out) var(--sb-ease)}
 .ch-node:hover::after{opacity:1;transform:translate(-50%,0);transition-duration:var(--sb-in);transition-delay:.3s}
 .ch-node[aria-expanded="true"]::after{opacity:0;transition:none}
-.ch-sat{position:absolute;left:0;top:0;width:7px;height:7px;margin:-3.5px 0 0 -3.5px;border-radius:50%;background:var(--gold);box-shadow:0 0 0 2px color-mix(in srgb,var(--gold) 18%,transparent)}
+.ch-sat{position:absolute;left:0;top:0;width:7px;height:7px;margin:-3.5px 0 0 -3.5px;border-radius:50%;background:var(--gold);box-shadow:0 0 0 2px color-mix(in srgb,var(--gold) 18%,transparent);transition:opacity var(--sb-out) var(--sb-ease)}
 .ch-sat::after{content:attr(data-tip);position:absolute;left:50%;bottom:calc(100% + 6px);padding:2px 6px;border-radius:5px;background:color-mix(in srgb,var(--ink) 90%,transparent);color:var(--bg);
  font:400 var(--fs-chrome)/1.3 var(--f-body);white-space:nowrap;pointer-events:none;opacity:0;transform:translate(-50%,3px);transition:opacity var(--sb-out) var(--sb-ease),transform var(--sb-out) var(--sb-ease)}
 .ch-sat:hover::after{opacity:1;transform:translate(-50%,0);transition-duration:var(--sb-in);transition-delay:.2s}
@@ -260,6 +282,14 @@
 .ch-npop .th{margin:var(--sp-2) 0 0;padding:0;list-style:none}
 .ch-npop .th li{margin:0 0 3px;font:italic 400 var(--fs-chrome-2)/1.45 var(--f-display);color:var(--soft)}
 .ch-npop .hits{margin:var(--sp-2) 0 0;padding-left:var(--sp-3);font-size:var(--fs-chrome);color:var(--bad)}
+.ch-npop .staff,.ch-npop .claims,.ch-npop .qs{margin:var(--sp-2) 0 0;padding:var(--sp-1) 0 0;list-style:none;border-top:var(--rule-hair) solid var(--line-2)}
+.ch-npop .staff li,.ch-npop .claims li,.ch-npop .qs li{display:flex;gap:var(--sp-2);align-items:baseline;padding:3px 0;font-size:var(--fs-chrome-2);line-height:1.4;color:var(--soft)}
+.ch-npop .staff i{flex:none;width:20px;font:italic 400 var(--fs-chrome) var(--f-display);color:var(--gold-ink)}
+.ch-npop .staff b{flex:none;font-weight:600;color:var(--ink)}
+.ch-npop .qs i,.ch-npop .claims em{flex:none;width:70px;font:600 var(--fs-micro) var(--f-body);letter-spacing:var(--tracked);text-transform:uppercase;font-style:normal;color:var(--mute)}
+.ch-npop .claims .supported em,.ch-npop .claims .derived em{color:var(--gold-ink)}
+.ch-npop .claims .conflict em{color:var(--bad)}
+.ch-npop .hits small{display:block;color:var(--mute)}
 .ch-npop .src{margin:var(--sp-2) 0 0;padding:var(--sp-1) 0 0;list-style:none;border-top:var(--rule-hair) solid var(--line-2)}
 .ch-npop .src a{display:flex;align-items:flex-start;gap:var(--sp-2);padding:4px 6px;margin:0 -6px;border-radius:6px;color:var(--text);text-decoration:none;transition:background var(--sb-out) var(--sb-ease)}
 .ch-npop .src a:hover{background:var(--line);transition-duration:calc(var(--sb-in) * .5)}
@@ -319,11 +349,11 @@
 .ch-fcap b{font:400 14px/1.3 var(--f-display);color:var(--ink)}
 .ch-fcap small{font-size:var(--fs-micro);letter-spacing:var(--tracked);text-transform:uppercase;color:var(--mute)}
 .ch-fcap .ch-note{margin-top:var(--sp-2)}
-.ch-chart{display:block;width:100%;height:auto;overflow:visible}
+.ch-chart{display:block;width:100%;min-height:184px;overflow:visible}
 .ch-chart .grid line{stroke:var(--line-2);stroke-width:1;vector-effect:non-scaling-stroke}
 .ch-chart .base{stroke:var(--ch-strong);stroke-width:1;vector-effect:non-scaling-stroke}
 .ch-chart .bar{fill:var(--ch-bar);transform-box:fill-box;transform-origin:50% 100%}
-.ch-chart text{font:400 9px var(--f-body);fill:var(--mute);font-variant-numeric:tabular-nums}
+.ch-chart text{font:400 10px var(--f-body);fill:var(--mute);font-variant-numeric:tabular-nums}
 .ch-chart text.v{fill:var(--soft)}
 .ch-fig .ch-dt{margin-top:0}
 .ch-note{margin:var(--sp-1h) 0 0;font:italic 400 var(--fs-chrome-2)/1.5 var(--f-display);color:var(--mute)}

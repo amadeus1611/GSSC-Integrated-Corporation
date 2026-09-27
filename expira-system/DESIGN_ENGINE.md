@@ -336,11 +336,17 @@ The chat pane follows §4.1–§4.4 and the sidebar's colour logic. The old answ
   - Opening is fast (`--sb-dock` on `--sb-ease`); closing is soft (`--sb-dock-out` on `--sb-dock-close`), as the sidebar docks.
   - **On send** the sheet folds back into the line, travelling down to the foot of the thread, while the signature clears with focus out, 20ms apart per part. The line waits there as the tab.
 - **The brief** is the master template's pull quote alone: an italic serif with a 2px gold rule. Its time is marginalia: it waits in the left margin, level with the first line, and shows on hover, fast in and soft out (hidden below 760px).
-- **The work is nodes, not a log.** Under the brief, a row of small icon nodes runs across the text column and the right margin:
+- **The work is nodes, not a log: the relay, left to right.** Under the brief, a row of small icon nodes runs across the text column and the right margin, in the order the work moves:
   - EXPIRA (the plan);
+  - the Arbiter, staffing the desks from the roster;
   - the desks, in the order they depend on each other, with desks that work side by side stacked;
+  - the Arbiter again, weighing what the desks filed into a claims ledger;
   - the answer;
   - the check.
+
+  **Two shapes say who decides.** The workers (EXPIRA, the desks, the answer) are circles. LAYA's gates (the Arbiter staffing, the Arbiter weighing, the check) are rounded squares: decisions made on closed lists and checked in code.
+
+  **Exa hangs below the desk that called it**, between its column and the next, as the smallest node in gold ink. The desk's call reaches it on a short dotted gold cable: pulses run out while it searches, and run back as pages land. Exa splits into the pages it read (gold dots). Its evidence travels on a fine dotted thread to the Arbiter's weighing gate, and pulses along it while the Arbiter weighs. So the spine stays one clean line, and the web's detail hangs underneath it.
 
   Each node is an icon in a glass ring on hairline edges:
   - faint while it waits;
@@ -357,7 +363,17 @@ The chat pane follows §4.1–§4.4 and the sidebar's colour logic. The old answ
   - Nodes can be dragged; let go and a node drifts back to its column. The loop runs only while something moves and sleeps when the field is settled or off screen. A saved run opens already settled; calm is static.
   - The field's height follows its tallest column and eases to its new height (`--sb-move`).
 - **Cards open in the left margin.** The layout is asymmetric: the right margin carries the field and the left margin stays empty. So a node's card opens there as an inspector, level with its node and joined to it by a dashed gold leader. The card's width follows the margin (at most 340px), so a wide left pane never crowds it. It opens fast (a 10px slide in with blur) and closes soft, and the margin phrase steps aside while it is open. When the margins fold, the card opens under its node. It holds what the node did, its verdict, time, searches and confidence, its findings, and its sources as links. EXPIRA's card holds the plan's reasoning; the check's card holds the firewall's verdict and anything it caught. Arrows move between nodes and Esc closes the card.
+- **The cables say what passes along them.** A few words sit under a cable's lowest point:
+  - the task handed down ("Local rates");
+  - the query sent to Exa (“fit-out rate cards makati 2026” +1);
+  - the pages that came back ("3 pages");
+  - the notes filed ("notes · 306 tok");
+  - the claims that held ("6 of 8 grounded").
+
+  While a run is live, the words show for a moment as something passes, fast in and soft out. At rest they are hidden. Hovering a node, or opening its card, shows its whole conversation: every cable it speaks on keeps its words, the nodes at the other ends stay, and the rest of the field steps back to a fifth. The same words from one node are said once, and words that would land on others step down a line.
+- **The new nodes have cards too.** The Arbiter's staffing card lists the desks it staffed and what the roster check dropped. Its weighing card lists the ledger, each claim marked Grounded, Derived, Partial, Conflict or Open, with the gate's count of quotes found word for word and sums re-computed. Exa's card lists each call and its queries, then the pages. The check's card adds the audit: whether every figure in the answer traced to the ledger.
 - **Charts come in and go out.** A chart draws itself as it comes into view: its grid and axis fade in, its bars rise from the base 70ms apart (`--sb-dock`), and its values focus in after them. It folds back when it leaves the screen, so it draws again when it returns. On a new chat the bars fall before the page clears.
+  - **A chart is drawn at its real width, in pixels**, so its type stays 10px at any size and nothing clips. It is drawn again whenever its width changes. The axis makes room for its widest figure. A label that will not fit its slot breaks onto a second line and then shortens, with the full label kept as its title. A figure too wide for its bar is written short (386.5K).
   - The view reads the run record the engine writes, in the shape of `core/run.js` (steps with role, focus, task, after and state; `map.pages` with the desk that read each one), so a live run and a saved one draw the same.
 - **The answer flows in, top to bottom.** While it streams, each block that is new since the last frame focuses in after the one before it (60ms apart, re-rendered at most every 120ms), and the block still being written stays in place. A saved page flows in the same way: what is on screen 45ms apart, the rest as it scrolls into view.
 - **More below.** While there is more under the fold, the foot's feather deepens from 44px to 150px, and a small chevron waits at the far edge and scrolls on by most of a screen. At the end both go.
@@ -395,6 +411,12 @@ The chat pane follows §4.1–§4.4 and the sidebar's colour logic. The old answ
 - **Tokens (v41):** every value comes from `src/tokens.css`. Spacing is a 4px scale with half steps (`--sp-half`, `--sp-1h` … `--sp-4h`) below 20px for dense chrome; a 1px nudge is optical and stays literal. Layers are named (`--z-side`, `--z-menu`, `--z-tip` …) in one stacking order. Dark tokens are written once in `@dark{}`.
 
 ## 6. Change log
+- **v45 chat bench, the relay: the Arbiter, Exa and the words on the cables** (2026-09-27, Amadeus: "emphasize more their connectors, like orchestrator to exa to whatever … showing exactly … how they communicate … but keeping the whole linear order"; "the cool details too of the older engine to show exa split into 4 then communicate to the next"; "oh i meant arbiter too, the laya engine"; "allow the presented charts to dynamically resize, it is clipping"): see §4.5.
+  - The field is now the whole relay: EXPIRA → Arbiter (staffs) → desks → Arbiter (weighs) → Answer → Check. LAYA's gates are rounded squares, and the workers are circles.
+  - Exa hangs under each desk that called it, split into its pages, and its evidence runs on to the weighing gate.
+  - Cables carry their words for a moment as things pass, and all of a node's words show on hover or while its card is open.
+  - The bench engine gained the Arbiter's weighing, ported from `core/run.js` as one round: the claims ledger, re-checked by `GROUND.gateClaims`, then the answer's figures audited by `GROUND.auditAnswer`. Every Exa call is recorded with its queries.
+  - Charts are drawn at their real width with fixed 10px type, and redrawn on resize. Before this they scaled their text with the pane (5px on a phone, 18px on a wide screen) and clipped.
 - **v45 chat bench, the gravity field, cables and charts** (2026-09-27, Amadeus: "return the node gravity engine instead but to the aesthetic of our things"; "let the charts have the in and out animation"; "perhaps all the pop ups should go there instead? … to the limit of the left dock"; "let the node area dynamically resize … smoothly"; "make it look like cables dangling with the data passing through it … determining token and throughput"): see §4.5.
   - The nodes are a seeded gravity field again, sized by tokens, on sagging cables that thicken with tokens and carry pulses at the token rate.
   - Cards open in the left margin with a leader, the field eases to its height, and charts draw in and fold out with the scroll.

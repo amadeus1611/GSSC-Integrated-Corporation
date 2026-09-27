@@ -185,25 +185,67 @@ const CH=(()=>{const ch=$("#ch"),scroll=$("#chScroll"),col=$("#chCol"),tab=$("#c
   answer:SVGI('<path d="M4.2 1.8h5.1l3 3V13.6a.6.6 0 0 1-.6.6H4.2a.6.6 0 0 1-.6-.6V2.4a.6.6 0 0 1 .6-.6z"/><path d="M5.8 7.4h4.4M5.8 9.4h4.4M5.8 11.4h2.6"/>'),
   check:SVGI('<path d="M8 1.9 12.9 3.7v4c0 3-2.1 5.2-4.9 6.4C5.2 12.9 3.1 10.7 3.1 7.7v-4z"/><path d="M5.9 8 7.4 9.5 10.2 6.6"/>')};
  const hostOf=u=>{try{return new URL(u).hostname.replace(/^www\./,"")}catch(e){return ""}};
- const NN={orch:"EXPIRA",answer:"Answer",check:"Check",...ROLE};
- function runModel(w){const S=w.steps||[],live=!!w.live,dep=[],lv=[];
+ /* the relay's other voices: the Arbiter's two gates (it staffs the desks, then weighs what they file, by LAYA's rule:
+    closed lists and checks in code), and Exa, the web, which a desk calls and which splits into the pages it read */
+ Object.assign(NICO,{staff:SVGI('<path d="M8 1.8 14.2 8 8 14.2 1.8 8z"/><path d="M5.6 8h4.8M8 5.6v4.8"/>'),
+  weigh:SVGI('<path d="M8 2.2v11.4M4.8 13.6h6.4M2.6 4.6h10.8"/><path d="M4.4 4.6 2.6 8.4h3.6zM11.6 4.6 9.8 8.4h3.6z"/>'),
+  exa:SVGI('<circle cx="8" cy="8" r="5.6"/><path d="M2.4 8h11.2M8 2.4c1.7 1.6 2.4 3.5 2.4 5.6S9.7 12 8 13.6M8 2.4C6.3 4 5.6 5.9 5.6 8s.7 4 2.4 5.6"/>')});
+ const NN={orch:"EXPIRA",answer:"Answer",check:"Check",staff:"Arbiter",weigh:"Arbiter",exa:"Exa",...ROLE};
+ const TIP={staff:"Arbiter · staffs",weigh:"Arbiter · weighs",check:"Check · firewall",exa:"Exa · the web"};
+ const ftok=n=>n>=1000?(n/1000).toFixed(n>=10000?0:1)+"k":String(Math.round(n||0));
+ const lstat=L=>{const c=(L&&L.claims)||[];return {n:c.length,g:c.filter(x=>x.v==="supported"||x.v==="derived").length,q:c.filter(x=>x.v==="partial"||x.v==="conflict").length,u:c.filter(x=>x.v==="unsupported").length}};
+ /* the relay, in the order the work moves: EXPIRA plans; the Arbiter staffs; the desks work in the order they depend
+    on each other (side by side stacked), each web desk calling Exa, which splits into the pages it read; the Arbiter
+    weighs what the desks filed against those pages; the answer is written; the check closes it. Every node keeps its
+    column, so the run reads left to right; Exa and its pages hang below the desk that called them, between columns. */
+ function runModel(w){const S=w.steps||[],live=!!w.live,dep=[],lv=[],M=w.map||{},P=M.pages||[],C=M.calls||[],T=w._t0?performance.now()-w._t0:1e12;
   S.forEach((s,i)=>{dep[i]=(s.after||[]).map(n=>n-1).filter(j=>j>=0&&j<i);lv[i]=1+(dep[i].length?Math.max(...dep[i].map(j=>lv[j])):0)});
-  const L=S.length?Math.max(...lv):0,P=(w.map&&w.map.pages)||[],st=s=>s.v==="fail"?"fail":s._live?"run":s.done||(!live&&s.v)?"done":s.stopped||w.stopped?"stop":"q";
-  const N=[{id:"o",k:"orch",lv:0,deps:[],st:w._o?"run":live&&!S.length?"run":"done"}];
-  S.forEach((s,i)=>N.push({id:"d"+i,k:s.role,lv:lv[i],deps:dep[i].length?dep[i].map(j=>"d"+j):["o"],st:st(s),i,pages:P.filter(p=>p.i===i)}));
+  const L=S.length?Math.max(...lv):0,st=s=>s.v==="fail"?"fail":s._live?"run":s.done||(!live&&s.v)?"done":s.stopped||w.stopped?"stop":"q";
+  const N=[{id:"o",k:"orch",lv:0,deps:[],st:w._o?"run":live&&!S.length?"run":"done"},
+   {id:"s",k:"staff",lv:1,deps:["o"],st:w._o?(w.stopped?"stop":"q"):"done"}];
+  const hubs=[];
+  S.forEach((s,i)=>{N.push({id:"d"+i,k:s.role,lv:lv[i]+1,deps:dep[i].length?dep[i].map(j=>"d"+j):["s"],st:st(s),i});
+   const cs=C.filter(c=>c.i===i),ps=P.filter(p=>p.i===i);if(!cs.length&&!ps.length)return;
+   const recent=cs.length&&s._live&&T-Math.max(...cs.map(c=>c.t||0))<5000;
+   N.push({id:"x"+i,k:"exa",lv:lv[i]+1,par:"d"+i,deps:["d"+i],st:recent?"run":s._live||s.done||!live?"done":"q",i,calls:cs,pages:ps});hubs.push("x"+i)});
   const sinks=S.map((_,i)=>"d"+i).filter((id,i)=>!dep.some(d=>d.includes(i)));
-  N.push({id:"a",k:"answer",lv:L+1,deps:sinks.length?sinks:["o"],st:w._a?"run":w.answered||!live?"done":w.stopped?"stop":"q"});
-  N.push({id:"c",k:"check",lv:L+2,deps:["a"],st:w._v?"run":w.firewall==="held"?"warn":w.checked||!live?"done":w.stopped?"stop":"q"});
-  return {N,cols:L+3}}
+  N.push({id:"w",k:"weigh",lv:L+2,deps:sinks.length?sinks:["s"],ev:hubs,st:w._w?"run":w.weighed||(!live&&S.length)?(w.unweighed?"warn":"done"):w.stopped?"stop":"q"});
+  const aw=C.filter(c=>c.i===-1),pw=P.filter(p=>p.i===-1);
+  if(aw.length||pw.length)N.push({id:"xw",k:"exa",lv:L+2,par:"w",deps:["w"],st:w._w&&T-Math.max(...aw.map(c=>c.t||0))<5000?"run":"done",i:-1,calls:aw,pages:pw});
+  N.push({id:"a",k:"answer",lv:L+3,deps:["w"],st:w._a?"run":w.answered||!live?"done":w.stopped?"stop":"q"});
+  N.push({id:"c",k:"check",lv:L+4,deps:["a"],st:w._v?"run":w.firewall==="held"?"warn":w.checked||!live?"done":w.stopped?"stop":"q"});
+  return {N,cols:L+5}}
+ /* what passes along a cable, in a few words: the task handed down, the query sent out, the pages that came back, the
+    notes filed, the claims that held. Shown for a moment as it passes, and for every cable of the node in focus. */
+ function wireText(a,b,w){const S=w.steps||[],M=w.map||{},C=M.calls||[],P=M.pages||[],di=id=>/^d\d+$/.test(id)?+id.slice(1):null,lt=lstat(w.ledger);
+  if(a==="o"&&b==="s")return S.length?`plan · ${words(S.length).toLowerCase()}`:"";
+  if(a==="s"&&di(b)!=null)return S[di(b)]?.focus||"";
+  if(b[0]==="x"){const i=b==="xw"?-1:+b.slice(1),cs=C.filter(c=>c.i===i);if(!cs.length)return "";const c=cs[cs.length-1],q=(c.q||[])[0]||"";return c.fetch?`reads ${q}`:`“${q.length>30?q.slice(0,29)+"…":q}”${cs.length>1?` +${cs.length-1}`:""}`}
+  if(a[0]==="x"&&b==="w"){const i=+a.slice(1),n=P.filter(p=>p.i===i).length;return n?`${n} page${n>1?"s":""}`:""}
+  if(di(a)!=null){const s=S[di(a)];if(!s||!s.done&&!(s.v&&!w.live))return "";const t=s.tok!=null?s.tok:Math.round(String(s.out||"").length/4);return `notes · ${ftok(t)} tok`}
+  if(a==="w"&&b==="a")return w.ledger?`${lt.g} of ${lt.n} grounded`:w.unweighed?"unweighed":"";
+  if(a==="a"&&b==="c")return w.audit?(w.audit.length?`${w.audit.length} line${w.audit.length>1?"s":""} flagged`:"figures audited"):w.atok?`${ftok(w.atok)} tok`:"";
+  return ""}
+ const VERB={supported:"Grounded",derived:"Derived",partial:"Partial",conflict:"Conflict",unsupported:"Open"};
  function nodeCard(w,id){const S=w.steps||[],M=w.map||{},meta=(...x)=>`<p class="m">${x.filter(Boolean).join(" · ")}</p>`;
+  const srcs=P=>P.length?`<ol class="src">${P.slice(0,8).map(p=>`<li><a href="${esc(p.url)}" target="_blank" rel="noopener noreferrer"><i aria-hidden="true">${esc((hostOf(p.url)[0]||"·").toUpperCase())}</i><span>${esc(p.title||p.url)}<small>${esc(hostOf(p.url))}</small></span></a></li>`).join("")}</ol>`:"";
   if(id==="o")return `<header>${NICO.orch}<b>EXPIRA</b><span>${esc(M.kind||"The plan")}</span></header>${M.rationale?`<p class="lede">${esc(M.rationale)}</p>`:""}${(M.thinking||[]).length?`<ol class="th">${M.thinking.map(x=>`<li>${esc(x)}</li>`).join("")}</ol>`:""}${meta(S.length?words(S.length)+" at work":"Planning")}`;
-  if(id==="a")return `<header>${NICO.answer}<b>Answer</b><span>${w._a?"Writing":"Filed"}</span></header>${meta(w._a?"Written as it streams":"Laid out as the house page")}`;
-  if(id==="c"){const hits=w.fwHits||[];return `<header>${NICO.check}<b>Check</b><span>${w._v?"Checking":w.firewall==="held"?"Held":/^internal/.test(w.firewall||"")?"For the team":"Firewall clear"}</span></header><p class="lede">${w.firewall==="held"?"The firewall held this answer for a client: it reveals what module 04 keeps out.":w.firewall==="clear"?"Checked for a client: no suppliers, costs, margins or bank details.":"Written for the team. The firewall applies when the answer is client-facing."}</p>${hits.length?`<ul class="hits">${hits.map(h=>`<li>${esc(h)}</li>`).join("")}</ul>`:""}`}
+  if(id==="s"){const f=w.staff||{};return `<header>${NICO.staff}<b>Arbiter</b><span>Staffs</span></header><p class="lede">${S.length?`${words(S.length)} staffed from the roster`:"Waiting on the plan"}</p>`+
+   (S.length?`<ol class="staff">${S.map((s,i)=>`<li><i>${ROMAN[i]}</i><b>${esc(NN[s.role]||s.role)}</b><span>${esc(s.focus||"")}</span></li>`).join("")}</ol>`:"")+
+   meta("Checked in code: a closed roster",f.dropped&&f.dropped.length?`${f.dropped.length} off the roster dropped`:"",f.over?`${f.over} over the limit`:"")}
+  if(id==="w"){const L=w.ledger,lt=lstat(L),g=L&&L.gate;return `<header>${NICO.weigh}<b>Arbiter</b><span>${w._w?"Weighing":"Weighs"}</span></header><p class="lede">${L?`${lt.g} of ${lt.n} claims grounded`:w._w?"Weighing what the desks filed":w.unweighed?"The notes went forward unweighed":"Waiting on the desks"}</p>`+
+   (L&&L.claims.length?`<ol class="claims">${L.claims.slice(0,14).map(c=>`<li class="${c.v}"><em>${VERB[c.v]||c.v}</em><span>${esc(c.text)}</span></li>`).join("")}</ol>`:"")+
+   meta(g&&g.checked?`${g.quotes} of ${g.checked} quotes found word for word`:"",g&&g.calcs?`${g.calcs} sum${g.calcs>1?"s":""} re-computed`:"",g&&g.down?`${g.down} downgraded`:"",lt.q?`${lt.q} qualified`:"",lt.u?`${lt.u} open`:"")}
+  if(id[0]==="x"){const i=id==="xw"?-1:+id.slice(1),C=(M.calls||[]).filter(c=>c.i===i),P=(M.pages||[]).filter(p=>p.i===i),who=i<0?"The Arbiter":`${NN[S[i]?.role]||"The desk"}`;
+   return `<header>${NICO.exa}<b>Exa</b><span>${esc(who)}</span></header><p class="lede">${C.length?`${C.length} call${C.length>1?"s":""}, ${P.length} page${P.length===1?"":"s"} back`:`${P.length} page${P.length===1?"":"s"} read`}</p>`+
+    (C.length?`<ol class="qs">${C.slice(0,6).map(c=>`<li><i>${c.fetch?"read":"search"}</i><span>${esc((c.q||[]).join(" · "))}</span></li>`).join("")}</ol>`:"")+srcs(P)}
+  if(id==="a")return `<header>${NICO.answer}<b>Answer</b><span>${w._a?"Writing":"Filed"}</span></header>${meta(w._a?"Written as it streams, from the ledger":"Laid out as the house page",w.atok?`${ftok(w.atok)} tokens`:"")}`;
+  if(id==="c"){const hits=w.fwHits||[],au=w.audit;return `<header>${NICO.check}<b>Check</b><span>${w._v?"Checking":w.firewall==="held"?"Held":/^internal/.test(w.firewall||"")?"For the team":"Firewall clear"}</span></header><p class="lede">${w.firewall==="held"?"The firewall held this answer for a client: it reveals what module 04 keeps out.":w.firewall==="clear"?"Checked for a client: no suppliers, costs, margins or bank details.":"Written for the team. The firewall applies when the answer is client-facing."}</p>${hits.length?`<ul class="hits">${hits.map(h=>`<li>${esc(h)}</li>`).join("")}</ul>`:""}`+
+   (au?`<p class="m">${au.length?`${au.length} line${au.length>1?"s":""} not backed by the ledger`:"Every figure traced to the ledger"}</p>${au.length?`<ul class="hits">${au.slice(0,5).map(f=>`<li>${esc(f.quote)} <small>${esc(f.why)}</small></li>`).join("")}</ul>`:""}`:"")}
   const i=+id.slice(1),s=S[i];if(!s)return "";const P=(M.pages||[]).filter(p=>p.i===i),out=String(s.out||""),conf=(out.match(/CONFIDENCE:\s*(\w+)/i)||[])[1],body=out.replace(/\n?CONFIDENCE:.*$/is,"").trim();
   return `<header>${NICO[s.role]||NICO.builder}<b>${esc(NN[s.role]||s.role)}</b><span>${ROMAN[i]||""}</span></header><p class="lede">${esc(s.focus||"")}</p>${s.task?`<p class="task">${esc(s.task)}</p>`:""}`+
    meta(s.v==="fail"?"Did not finish":s._live?"Working":s.done||s.v?"Passed":"Waiting",s.ms?mmss(s.ms):"",s.searches?`${s.searches} search${s.searches>1?"es":""}`:"",conf?`Confidence ${conf.toLowerCase()}`:"")+
-   (body&&!s._live?`<p class="out">${esc(body.length>520?body.slice(0,520)+"…":body)}</p>`:"")+
-   (P.length?`<ol class="src">${P.slice(0,8).map(p=>`<li><a href="${esc(p.url)}" target="_blank" rel="noopener noreferrer"><i aria-hidden="true">${esc((hostOf(p.url)[0]||"·").toUpperCase())}</i><span>${esc(p.title||p.url)}<small>${esc(hostOf(p.url))}</small></span></a></li>`).join("")}</ol>`:"")}
+   (body&&!s._live?`<p class="out">${esc(body.length>520?body.slice(0,520)+"…":body)}</p>`:"")+srcs(P)}
  /* the field: the old console's gravity map (units/maps/field.js), set in the house style. x is held to the node's
     column, so the run still reads left to right in the order the work happens; y is a small d3-style simulation
     (link, charge, collision and a pull to the centre line; velocity decay .4, alpha decay .0228) on a seeded stream,
@@ -223,11 +265,12 @@ const CH=(()=>{const ch=$("#ch"),scroll=$("#chScroll"),col=$("#chCol"),tab=$("#c
   const GAP=40,PADX=20;
   const mulberry=a=>()=>{a|=0;a=a+0x6D2B79F5|0;let t=Math.imul(a^a>>>15,1|a);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296};
   const colX=lv=>PADX+lv*(W-2*PADX)/Math.max(1,cols-1);
-  const rOf=n=>n.k==="src"?3.5:n.k==="orch"||n.k==="check"?13:11+Math.min(8,Math.sqrt((n.tok||0)/160));
+  const rOf=n=>n.k==="src"?3.5:n.k==="exa"?8.5:n.k==="orch"?13:n.k==="check"?12:n.k==="staff"?11:11+Math.min(8,Math.sqrt((n.tok||0)/160));
+  const ON=/\bon\b/,colStep=()=>(W-2*PADX)/Math.max(1,cols-1);
   function ensure(n,w,par){let s=S.get(n.id);
    if(!s){const p=par&&S.get(par);s={id:n.id,k:n.k,x:p?p.x:colX(n.lv||0),y:p?p.y:H/2+(rng()-.5)*14,vx:0,vy:0,r:rOf(n),par,lv:n.lv,tok:0,rate:0,t0:performance.now()};S.set(n.id,s);
     if(n.k==="src"){s.el=document.createElement("i");s.el.className="ch-sat";s.el.dataset.tip=hostOf(n.url);nodes.appendChild(s.el);if(!reduce&&!first)s.el.animate([{opacity:0,transform:"scale(0)"},{opacity:1,transform:"none"}],{duration:ms("--sb-in"),easing:EZ(),composite:"add"})}
-    else{const e=document.createElement("button");e.type="button";e.className="ch-node";e.dataset.id=n.id;e.setAttribute("aria-haspopup","dialog");e.setAttribute("aria-expanded","false");e.innerHTML=`<span class="nb">${NICO[n.k]||NICO.builder}</span>`;nodes.appendChild(e);s.el=e;
+    else{const e=document.createElement("button");e.type="button";e.className="ch-node";e.dataset.id=n.id;e.dataset.k=n.k;if(/^(staff|weigh|check)$/.test(n.k))e.classList.add("gate");e.setAttribute("aria-haspopup","dialog");e.setAttribute("aria-expanded","false");e.innerHTML=`<span class="nb">${NICO[n.k]||NICO.builder}</span>`;nodes.appendChild(e);s.el=e;
      if(!reduce)e.querySelector(".nb").animate([{opacity:0,transform:"scale(.4)",filter:`blur(${B()*.6}px)`},{opacity:1,transform:"none",filter:"blur(0px)"}],{duration:ms("--sb-move"),delay:first&&!live?n.lv*50:0,easing:EZ(),fill:"backwards"})}
     alpha=Math.max(alpha,.55)}
    s.lv=n.lv;s.st=n.st;const tok=n.tok||0,now=performance.now(),dt=Math.max(.05,(now-s.t0)/1000);if(tok>s.tok){s.rate+=((tok-s.tok)/dt-s.rate)*.5}else if(n.st!=="run")s.rate*=.5;s.tok=tok;s.t0=now;
@@ -236,31 +279,40 @@ const CH=(()=>{const ch=$("#ch"),scroll=$("#chScroll"),col=$("#chCol"),tab=$("#c
     if(!reduce)el.animate([{opacity:0},{opacity:1}],{duration:ms("--sb-move"),delay:first&&!live?120:60,easing:EZ(),fill:"backwards"})}
    e.cls=cls;return e}
   function label(n,w){const s=n.i!=null?(w.steps||[])[n.i]:null,st={q:"waiting",run:"working",done:"done",fail:"did not finish",stop:"stopped",warn:"held"}[n.st];
-   return `${NN[n.k]||n.k}${s?`, ${s.focus}`:""}, ${st}${n.pages&&n.pages.length?`, ${n.pages.length} source${n.pages.length>1?"s":""}`:""}`}
+   if(n.k==="exa")return `Exa, for ${n.i<0?"the Arbiter":NN[s?.role]||"a desk"}, ${n.calls.length} call${n.calls.length===1?"":"s"}, ${n.pages.length} page${n.pages.length===1?"":"s"}, ${st}`;
+   return `${TIP[n.k]||NN[n.k]||n.k}${s?`, ${s.focus}`:""}, ${st}`}
   let e0=null;
   /* tokens per node, from the record: the plan's reasoning, a desk's streamed or filed notes, the answer as written */
-  function tokOf(n,w){if(n.k==="orch"){const M=w.map||{};return Math.round((String(M.rationale||"")+(M.thinking||[]).join(" ")).length/4)+(w.steps||[]).length*40}
+  function tokOf(n,w){if(n.k==="exa")return Math.round(n.pages.reduce((a,p)=>a+String(p.ex||p.title||"").length,0)/4);
+   if(n.k==="weigh")return Math.round(((w.ledger&&w.ledger.claims)||[]).reduce((a,c)=>a+c.text.length+(c.quote||"").length,0)/4);
+   if(n.k==="orch"){const M=w.map||{};return Math.round((String(M.rationale||"")+(M.thinking||[]).join(" ")).length/4)+(w.steps||[]).length*40}
    if(n.i!=null){const s=(w.steps||[])[n.i]||{};return s.tok!=null?s.tok:Math.round(String(s.out||"").length/4)}
    if(n.k==="answer")return w.atok||0;return 0}
   function update(w){last=w;live=!!w.live;if(!seedDone){let h=0;for(const c of String(w.brief||w.map&&w.map.kind||"x"))h=Math.imul(h^c.charCodeAt(0),16777619);rng=mulberry(h);seedDone=true}
-   const M=runModel(w);cols=M.cols;W=host.clientWidth||W||600;const per={};M.N.forEach(n=>{per[n.lv]=(per[n.lv]||0)+1});const stack=Math.max(...Object.values(per)),srcs=M.N.some(n=>n.pages&&n.pages.length);
-   H=Math.round(Math.min(200,Math.max(84,52+stack*40+(srcs?38:0))));host.style.setProperty("--gh",H+"px");
+   const M=runModel(w);cols=M.cols;W=host.clientWidth||W||600;const per={};M.N.forEach(n=>{if(n.k!=="exa")per[n.lv]=(per[n.lv]||0)+1});const stack=Math.max(...Object.values(per)),hubs=M.N.some(n=>n.k==="exa"),srcs=M.N.some(n=>n.pages&&n.pages.length);
+   H=Math.round(Math.min(280,Math.max(84,52+stack*40+(hubs?44:0)+(srcs?30:0))));host.style.setProperty("--gh",H+"px");
    const seen=new Set();
-   M.N.forEach(n=>{n.tok=tokOf(n,w);const s=ensure(n,w,n.deps&&n.deps[0]);e0=s;seen.add(n.id);const e=s.el;const was=e.dataset.st;e.dataset.st=n.st;e.dataset.tip=NN[n.k]||n.k;e.setAttribute("aria-label",label(n,w));e.style.setProperty("--d",(s.r*2).toFixed(1)+"px");
+   M.N.forEach(n=>{n.tok=tokOf(n,w);const s=ensure(n,w,n.deps&&n.deps[0]);e0=s;seen.add(n.id);const e=s.el;const was=e.dataset.st;e.dataset.st=n.st;e.dataset.tip=TIP[n.k]||NN[n.k]||n.k;e.setAttribute("aria-label",label(n,w));e.style.setProperty("--d",(s.r*2).toFixed(1)+"px");
     if(was&&was!==n.st){alpha=Math.max(alpha,.12);if(n.st==="done"&&!reduce)e.querySelector(".nb").animate([{transform:"scale(1.14)"},{transform:"none"}],{duration:ms("--sb-move"),easing:EZ()})}
-    n.deps.forEach(d=>edge(d,n.id,n.st==="run"?"on":n.st==="q"||n.st==="stop"?"":"done"));
-    (n.pages||[]).slice(0,8).forEach(pg=>{const sid="s:"+n.id+"|"+pg.url,had=S.has(sid);ensure({id:sid,k:"src",url:pg.url,lv:n.lv},w,n.id);seen.add(sid);const ce=edge(sid,n.id,"src");if(!had&&!first&&!reduce)ce.burst=3})});
+    const spine=n.st==="run"?"on":n.st==="q"||n.st==="stop"?"":"done";
+    n.deps.forEach(d=>edge(d,n.id,n.k==="exa"?"call"+(n.st==="run"?" on":""):spine));
+    (n.ev||[]).forEach(x=>edge(x,n.id,"ev"+(n.st==="run"?" on":n.st==="q"||n.st==="stop"?"":" done")));
+    (n.pages||[]).slice(0,8).forEach(pg=>{const sid="s:"+n.id+"|"+pg.url,had=S.has(sid);ensure({id:sid,k:"src",url:pg.url,lv:n.lv},w,n.id);seen.add(sid);const ce=edge(sid,n.id,"src");
+     if(!had&&!first&&!reduce){ce.burst=3;const back=E.get(n.par+">"+n.id);if(back)back.burstRev=(back.burstRev||0)+2}})});
+   E.forEach(e=>{if(e.cls==="src")return;const t=wireText(e.a,e.b,w);if(t===e.capT)return;const had=e.capT!=null;e.capT=t;if(!e.cap&&t){e.cap=document.createElement("span");e.cap.className="ch-wire";e.cap.setAttribute("aria-hidden","true");nodes.prepend(e.cap)}
+    if(e.cap)e.cap.textContent=t;if(t&&live&&had&&!first&&!reduce)flash(e)});
    for(const [id,s] of S)if(!seen.has(id)){s.el.remove();S.delete(id)}
    for(const [k,e] of E)if(!S.has(e.a)||!S.has(e.b)){e.el.remove();E.delete(k)}
    if(first&&(!live||reduce)){for(let i=0;i<300;i++){tick(Math.max(.001,1-i/300));cables()}E.forEach(e=>{e.vx=e.vy=0});alpha=0}
    first=false;render();wake();if(openId&&!pop.hidden)pop.innerHTML=nodeCard(w,openId)}
   /* a cable's middle: a small mass pulled to the point that hangs below the chord (its sag), under a little gravity;
      it runs every frame the field runs, whatever alpha, so the cables settle on their own damping */
-  function cables(){E.forEach(e=>{const A=S.get(e.a),Bn=S.get(e.b);if(!A||!Bn)return;const cx=(A.x+Bn.x)/2,cyy=(A.y+Bn.y)/2,len=Math.hypot(Bn.x-A.x,Bn.y-A.y),sag=e.cls==="src"?len*.12:Math.min(26,len*.14);
+  function cables(){E.forEach(e=>{const A=S.get(e.a),Bn=S.get(e.b);if(!A||!Bn)return;const cx=(A.x+Bn.x)/2,cyy=(A.y+Bn.y)/2,len=Math.hypot(Bn.x-A.x,Bn.y-A.y),sag=e.cls==="src"?len*.12:e.cls.startsWith("call")?Math.min(10,len*.1):e.cls.startsWith("ev")?Math.min(40,len*.18):Math.min(26,len*.14);
     e.vx+=(cx-e.mx)*.09;e.vy+=(cyy+sag-e.my)*.09+.15;e.vx*=.82;e.vy*=.82;e.mx+=e.vx;e.my+=e.vy})}
   function tick(a){const L=[...S.values()],cy=H/2;
    L.forEach(s=>{if(s===drag)return;
-    if(s.k==="src"){const p=S.get(s.par);if(p){const dx=s.x-p.x,dy=s.y-p.y,d=Math.hypot(dx,dy)||1,want=p.r+15,f=(want-d)*.12*a;s.vx+=dx/d*f;s.vy+=dy/d*f;s.vy+=.5*a}}
+    if(s.k==="exa"){const p=S.get(s.par);if(p){const k=.12*Math.max(a,.3);s.vx+=(p.x+colStep()*.5-s.x)*k;s.vy+=(p.y+46-s.y)*k}}
+    else if(s.k==="src"){const p=S.get(s.par);if(p){const dx=s.x-p.x,dy=s.y-p.y,d=Math.hypot(dx,dy)||1,want=p.r+15,f=(want-d)*.12*a;s.vx+=dx/d*f;s.vy+=dy/d*f;s.vy+=.5*a}}
     else{s.vx+=(colX(s.lv)-s.x)*Math.max(.12*a,.04);s.vy+=(cy-s.y)*.022*a}});
    E.forEach(e=>{const A=S.get(e.a),Bn=S.get(e.b);if(!A||!Bn||e.cls==="src")return;const dy=(Bn.y-A.y)*.03*a;if(A!==drag)A.vy+=dy;if(Bn!==drag)Bn.vy-=dy});
    for(let i=0;i<L.length;i++)for(let j=i+1;j<L.length;j++){const p=L[i],q=L[j];let dx=q.x-p.x,dy=q.y-p.y,d2=dx*dx+dy*dy;if(d2>8100)continue;
@@ -276,16 +328,34 @@ const CH=(()=>{const ch=$("#ch"),scroll=$("#chScroll"),col=$("#chCol"),tab=$("#c
   let tPrev=performance.now();
   function render(){const now=performance.now(),dt=Math.min(.05,(now-tPrev)/1000);tPrev=now;
    S.forEach(s=>{s.el.style.transform=`translate(${s.x.toFixed(1)}px,${s.y.toFixed(1)}px)`;if(s.k!=="src")s.el.style.setProperty("--s",(s.r/13).toFixed(3))});
-   pn=0;E.forEach(e=>{const A=S.get(e.a),Bn=S.get(e.b);if(!A||!Bn)return;e.el.setAttribute("d",curve(e,A,Bn));e.el.setAttribute("class",e.cls);
-    /* the cable's weight: the tokens that have passed along it (the target's), eased */
-    const tokW=e.cls==="src"?0:Math.min(2.2,Math.sqrt((Bn.tok||0)/400)*.7),want=(e.cls==="src"?.8:1)+tokW;e.wt+=(want-e.wt)*.15;e.el.style.strokeWidth=e.wt.toFixed(2)+"px";
-    /* data along it: into a working node, as many and as fast as its rate; a burst from a source as it lands */
-    if(!reduce){const rate=e.cls==="on"?Math.max(Bn.rate,30):0;e.spawn+=dt*(rate>0?Math.min(6,1.2+rate/60):0);if(e.burst){e.spawn+=e.burst;e.burst=0}
+   pn=0;E.forEach(e=>{const A=S.get(e.a),Bn=S.get(e.b);if(!A||!Bn)return;e.el.setAttribute("d",curve(e,A,Bn));e.el.setAttribute("class",e.cls+(e.hot?" hot":""));
+    /* the cable's weight: the tokens that have passed along it (the target's), eased; the web's threads stay fine */
+    const thin=e.cls==="src"||/^(call|ev)/.test(e.cls),tokW=thin?0:Math.min(2.2,Math.sqrt((Bn.tok||0)/400)*.7),want=(e.cls==="src"?.8:thin?.9:1)+tokW;e.wt+=(want-e.wt)*.15;e.el.style.strokeWidth=e.wt.toFixed(2)+"px";
+    /* data along it: into a working node, as many and as fast as its rate; queries out to Exa and pages back; the
+       evidence down to the Arbiter as it weighs; a burst from a source as it lands */
+    if(!reduce){const on=ON.test(e.cls),kind=e.cls.startsWith("call")?"call":e.cls.startsWith("ev")?"ev":"spine",rate=on?(kind==="spine"?Math.max(Bn.rate,30):kind==="call"?120:160):0;
+     e.spawn+=dt*(rate>0?Math.min(6,1.2+rate/60):0);if(e.burst){e.spawn+=e.burst;e.burst=0}
      while(e.spawn>=1&&e.P.length<14){e.spawn-=1;e.P.push({t:0,v:.55+Math.min(1.4,(rate||40)/220)})}if(e.spawn>=1)e.spawn=0;
-     e.P=e.P.filter(p=>(p.t+=p.v*dt)<1);e.P.forEach(p=>{const [x,y]=at(e.q,p.t),c=dot();c.setAttribute("cx",x.toFixed(1));c.setAttribute("cy",y.toFixed(1));c.style.opacity=(Math.sin(p.t*Math.PI)).toFixed(2)})}});
+     while(e.burstRev>0&&e.P.length<14){e.burstRev--;e.P.push({t:-e.burstRev*.12,v:1.1,rev:true})}e.burstRev=0;
+     e.P=e.P.filter(p=>(p.t+=p.v*dt)<1);e.P.forEach(p=>{if(p.t<0)return;const [x,y]=at(e.q,p.rev?1-p.t:p.t),c=dot();c.setAttribute("cx",x.toFixed(1));c.setAttribute("cy",y.toFixed(1));c.style.opacity=(Math.sin(p.t*Math.PI)).toFixed(2)})}
+});
+   /* the words on the cables: under each cable's lowest point (beside the short Exa cable); the same words from the same
+      node are said once, and words that would land on others step down a line */
+   const box=[],said=new Set();E.forEach(e=>{if(!e.cap||!(e.flash||e.hot))return;const side=e.cls.startsWith("call"),w0=tpx(e.capT)+10,k=e.a+"|"+e.capT,dup=said.has(k);said.add(k);e.cap.classList.toggle("dup",dup);if(dup)return;
+    let x=e.mx+(side?9:0),y=e.my+(side?-7:10);const l=side?x:x-w0/2;for(let n=0;n<4&&box.some(b=>l<b[0]+b[2]&&l+w0>b[0]&&y<b[1]+14&&y+14>b[1]);n++)y+=14;
+    box.push([l,y,w0]);e.cap.classList.toggle("side",side);e.cap.style.transform=`translate(${x.toFixed(1)}px,${y.toFixed(1)}px)`});
    for(let i=pn;i<pool.length;i++)pool[i].style.opacity="0";
    if(openId)leadTo(openId)}
-  const swaying=()=>[...E.values()].some(e=>Math.abs(e.vx)+Math.abs(e.vy)>.02),flowing=()=>[...E.values()].some(e=>e.P.length||e.burst||e.cls==="on");
+  const swaying=()=>[...E.values()].some(e=>Math.abs(e.vx)+Math.abs(e.vy)>.02),flowing=()=>[...E.values()].some(e=>e.P.length||e.burst||ON.test(e.cls));
+  /* the words on a cable: shown for a moment as something passes along it, then gone */
+  function flash(e){if(!e.cap)return;e.flash=true;clearTimeout(e.ft);render();e.cap.classList.add("show");e.ft=setTimeout(()=>{e.flash=false;if(!e.hot)e.cap.classList.remove("show")},2600)}
+  /* focus: the node under the pointer, or the one whose card is open, shows its conversation (every cable it speaks on,
+     with its words, and the nodes at the other ends); the rest of the field steps back */
+  let hov=null;
+  function setFocus(){const id=hov||openId,hot=new Set(id?[id]:[]);
+   E.forEach(e=>{const on=!!id&&(e.a===id||e.b===id||(S.get(e.b)?.k==="exa"&&e.b===id)||(e.cls==="src"&&S.get(e.b)?.par===id));e.hot=on;if(on){hot.add(e.a);hot.add(e.b)}
+    if(e.cap){e.cap.classList.toggle("show",on||!!e.flash)}});
+   S.forEach(s=>s.el.classList.toggle("hot",hot.has(s.id)));host.classList.toggle("focus",!!id);render()}
   function busy(){return alpha>.004||!!drag||(!reduce&&(swaying()||(live&&flowing())||[...E.values()].some(e=>e.P.length)))}
   function frame(){raf=0;if(!vis)return;if(alpha>.004||drag){tick(Math.max(alpha,drag?.3:0));alpha*=1-.0228}cables();render();if(busy())raf=requestAnimationFrame(frame)}
   function wake(){if(!raf&&vis&&busy()&&!reduce)raf=requestAnimationFrame(frame)}
@@ -304,11 +374,13 @@ const CH=(()=>{const ch=$("#ch"),scroll=$("#chScroll"),col=$("#chCol"),tab=$("#c
    else{const pw=Math.min(320,W);pop.classList.remove("side");pop.style.width=pw+"px";pop.style.left=(off+Math.max(0,Math.min(W-pw,s.x-pw/2))).toFixed(0)+"px";pop.style.top=(host.offsetTop+s.y+s.r+12).toFixed(0)+"px"}}
   function leadTo(id){const s=S.get(id);if(!s||!inMargin()||pop.hidden){lead.setAttribute("d","");return}const y0=Math.max(0,s.y-22)+19;lead.setAttribute("d",`M${(-GAP+2).toFixed(1)} ${y0.toFixed(1)} C${(-GAP/2).toFixed(1)} ${y0.toFixed(1)} ${(s.x-s.r-18).toFixed(1)} ${s.y.toFixed(1)} ${(s.x-s.r-3).toFixed(1)} ${s.y.toFixed(1)}`)}
   function show(id){const s=S.get(id);if(!s||!last)return;if(openId===id&&!pop.hidden)return hide();if(openId)S.get(openId)?.el.setAttribute("aria-expanded","false");
-   openId=id;pop.innerHTML=nodeCard(last,id);pop.setAttribute("aria-label",s.el.getAttribute("aria-label"));place(id);pop.getAnimations().forEach(a=>a.cancel());pop.hidden=false;s.el.setAttribute("aria-expanded","true");run.classList.add("carded");leadTo(id);
+   openId=id;pop.innerHTML=nodeCard(last,id);pop.setAttribute("aria-label",s.el.getAttribute("aria-label"));place(id);pop.getAnimations().forEach(a=>a.cancel());pop.hidden=false;s.el.setAttribute("aria-expanded","true");run.classList.add("carded");leadTo(id);setFocus();
    if(!reduce){const side=pop.classList.contains("side");pop.animate([{opacity:0,transform:side?"translateX(-10px)":"translateY(-4px) scale(.98)",filter:`blur(${B()*.6}px)`},{opacity:1,transform:"none",filter:"blur(0px)"}],{duration:ms("--sb-in"),easing:EZ()});
     lead.animate([{opacity:0},{opacity:1}],{duration:ms("--sb-in"),delay:60,easing:EZ(),fill:"backwards"})}}
-  function hide(back){const id=openId;if(!id)return;openId=null;const s=S.get(id);s?.el.setAttribute("aria-expanded","false");run.classList.remove("carded");
+  function hide(back){const id=openId;if(!id)return;openId=null;setFocus();const s=S.get(id);s?.el.setAttribute("aria-expanded","false");run.classList.remove("carded");
    const end=()=>{if(!openId){pop.hidden=true;lead.setAttribute("d","")}};if(reduce)end();else{lead.animate([{opacity:1},{opacity:0}],{duration:ms("--sb-out"),easing:EZ(),fill:"forwards"}).finished.then(a=>{},()=>{});pop.animate(focusOut(B()*.6),{duration:ms("--sb-out"),easing:EZ()}).finished.then(end,end)}if(back)s?.el.focus({preventScroll:true})}
+  nodes.addEventListener("pointerover",e=>{const b=e.target.closest(".ch-node");if(b&&!drag&&hov!==b.dataset.id){hov=b.dataset.id;setFocus()}});
+  nodes.addEventListener("pointerout",e=>{const b=e.target.closest(".ch-node");if(b&&!b.contains(e.relatedTarget)){hov=null;setFocus()}});
   nodes.addEventListener("click",e=>{const b=e.target.closest(".ch-node");if(!b)return;if(justDragged){justDragged=false;return}lead.getAnimations().forEach(a=>a.cancel());show(b.dataset.id)});
   host.addEventListener("keydown",e=>{const b=e.target.closest(".ch-node");if(!b||!/^Arrow(Left|Right)$/.test(e.key))return;e.preventDefault();const L=[...nodes.querySelectorAll(".ch-node")],i=L.indexOf(b);L[(i+(e.key==="ArrowRight"?1:L.length-1))%L.length].focus()});
   run.addEventListener("keydown",e=>{if(e.key==="Escape"&&openId){e.preventDefault();e.stopPropagation();hide(true)}});
@@ -353,16 +425,31 @@ const CH=(()=>{const ch=$("#ch"),scroll=$("#chScroll"),col=$("#chCol"),tab=$("#c
   if(ex.sources?.length)h+=`<div class="ch-exh">Sources</div><ol class="ch-src">${ex.sources.map(s=>`<li><span>${esc(s.title)}</span><em class="${s.note==="verified"?"ok":""}">${esc(s.note||"")}</em></li>`).join("")}</ol>`;
   return h+`</div>`}
  /* a bar chart drawn as the template draws one: hairline gridlines, one series in the house navy (gold in the dark),
-    values over the bars; the bars grow from the baseline as the chart arrives */
+    values over the bars. It is drawn at its real width, in pixels, so its type stays 10px at any size (text never
+    scales), and it is drawn again whenever its width changes: the axis makes room for its widest figure, a label that
+    will not fit its slot breaks onto a second line and then shortens, and a figure too wide for its bar is written short. */
  /* the axis steps in round numbers: 1, 2, 2.5 or 5 times a power of ten, four steps to the top */
  const niceTop=max=>{const raw=max/4,p=Math.pow(10,Math.floor(Math.log10(raw||1))),st=[1,2,2.5,5,10].map(m=>m*p).find(m=>m>=raw);return st*4};
- function bars(c){const v=c.series[0].values,max=Math.max(...v),top=niceTop(max),W=600,H=190,L=42,Bm=24,T=14,bw=Math.min(64,(W-L)/v.length*.42);
-  const y=x=>T+(H-T-Bm)*(1-x/top),ticks=[0,.25,.5,.75,1].map(f=>top*f);
-  return `<svg class="ch-chart" viewBox="0 0 ${W} ${H}" role="img" aria-label="${esc(c.title)}: ${c.labels.map((l,i)=>l+" "+v[i].toLocaleString("en-US")).join(", ")}">`+
-   `<g class="grid">${ticks.map(t=>`<line x1="${L}" x2="${W}" y1="${y(t).toFixed(1)}" y2="${y(t).toFixed(1)}"/>`).join("")}</g>`+
-   ticks.map(t=>`<text x="${L-8}" y="${(y(t)+3).toFixed(1)}" text-anchor="end">${t.toLocaleString("en-US")}</text>`).join("")+
-   v.map((x,i)=>{const cx=L+(W-L)*(i+.5)/v.length;return `<rect class="bar" x="${(cx-bw/2).toFixed(1)}" y="${y(x).toFixed(1)}" width="${bw.toFixed(1)}" height="${(y(0)-y(x)).toFixed(1)}" rx="1.5"/><text class="v" x="${cx.toFixed(1)}" y="${(y(x)-6).toFixed(1)}" text-anchor="middle">${x.toLocaleString("en-US")}</text><text x="${cx.toFixed(1)}" y="${H-6}" text-anchor="middle">${esc(c.labels[i])}</text>`}).join("")+
-   `<line class="base" x1="${L}" x2="${W}" y1="${y(0).toFixed(1)}" y2="${y(0).toFixed(1)}"/></svg>`}
+ const short=v=>Math.abs(v)>=1e6?+(v/1e6).toFixed(Math.abs(v)>=1e7?0:1)+"M":Math.abs(v)>=1e4?+(v/1e3).toFixed(Math.abs(v)>=1e5?0:1)+"K":v.toLocaleString("en-US");
+ let mctx=null;const tpx=t=>{if(!mctx){mctx=document.createElement("canvas").getContext("2d");const f=getComputedStyle(document.documentElement).getPropertyValue("--f-body")||"sans-serif";mctx.font=`400 10px ${f}`}return mctx.measureText(String(t)).width};
+ function fitLabel(t,w){const words=String(t).split(/\s+/);if(tpx(t)<=w)return[t];
+  let a="",k=0;while(k<words.length&&tpx((a?a+" ":"")+words[k])<=w){a=(a?a+" ":"")+words[k];k++}
+  if(!a){a=words[0];k=1}let b=words.slice(k).join(" ");const cut=x=>{if(tpx(x)<=w)return x;while(x.length>1&&tpx(x+"…")>w)x=x.slice(0,-1);return x+"…"};return b?[cut(a),cut(b)]:[cut(a)]}
+ function bars(c){const v=c.series[0].values;
+  return `<svg class="ch-chart" data-c="${esc(JSON.stringify({l:c.labels,v}))}" role="img" aria-label="${esc(c.title)}: ${c.labels.map((l,i)=>l+" "+v[i].toLocaleString("en-US")).join(", ")}"></svg>`}
+ function drawChart(svg){const W=Math.round(svg.getBoundingClientRect().width||svg.parentElement.clientWidth);if(!W||W===svg._w)return;svg._w=W;
+  let d;try{d=JSON.parse(svg.dataset.c)}catch(e){return}const v=d.v,n=v.length,top=niceTop(Math.max(1,...v)),ticks=[0,.25,.5,.75,1].map(f=>top*f);
+  const L=Math.ceil(Math.max(...ticks.map(t=>tpx(t.toLocaleString("en-US")))))+10,slot=(W-L)/n,lab=d.l.map(l=>fitLabel(l,Math.max(24,slot-8))),rows=Math.max(1,...lab.map(x=>x.length));
+  const H=W<520?184:220,Bm=12+rows*12,T=18,bw=Math.max(6,Math.min(56,slot*.46)),y=x=>T+(H-T-Bm)*(1-Math.max(0,x)/top);
+  svg.setAttribute("viewBox",`0 0 ${W} ${H}`);svg.setAttribute("height",H);
+  svg.innerHTML=`<g class="grid">${ticks.map(t=>`<line x1="${L}" x2="${W}" y1="${y(t).toFixed(1)}" y2="${y(t).toFixed(1)}"/>`).join("")}</g>`+
+   ticks.map(t=>`<text x="${L-8}" y="${(y(t)+3.5).toFixed(1)}" text-anchor="end">${t.toLocaleString("en-US")}</text>`).join("")+
+   v.map((x,i)=>{const cx=L+slot*(i+.5),full=x.toLocaleString("en-US"),val=tpx(full)<=slot-6?full:short(x);
+    return `<rect class="bar" x="${(cx-bw/2).toFixed(1)}" y="${y(x).toFixed(1)}" width="${bw.toFixed(1)}" height="${(y(0)-y(x)).toFixed(1)}" rx="1.5"/><text class="v" x="${cx.toFixed(1)}" y="${(y(x)-6).toFixed(1)}" text-anchor="middle">${esc(val)}</text>`+
+     `<text class="lb" x="${cx.toFixed(1)}" y="${(y(0)+15).toFixed(1)}" text-anchor="middle">${lab[i].map((t,j)=>`<tspan x="${cx.toFixed(1)}" dy="${j?12:0}">${esc(t)}</tspan>`).join("")}${lab[i].join(" ")!==d.l[i]?`<title>${esc(d.l[i])}</title>`:""}</text>`}).join("")+
+   `<line class="base" x1="${L}" x2="${W}" y1="${y(0).toFixed(1)}" y2="${y(0).toFixed(1)}"/>`}
+ /* one watcher for every chart's width: a change redraws it on the next frame, never inside the observer */
+ const CRO=new ResizeObserver(es=>requestAnimationFrame(()=>es.forEach(e=>{if(e.target.isConnected)drawChart(e.target)})));
  const colophon=(d,md0)=>{const n=String(md0).replace(/[#|*-]/g," ").split(/\s+/).filter(Boolean).length;
   return `<footer class="ch-colo"><span>Filed ${hhmm(d)}</span><span>${n} words · ${Math.max(1,Math.round(n/220))} min read</span><span class="acts"><button class="ch-act" type="button" data-act="copy">Copy</button><button class="ch-act" type="button" data-act="retry">Retry</button><button class="ch-act" type="button" data-act="dispatch">Dispatch</button></span></footer>`};
 
@@ -371,24 +458,33 @@ const CH=(()=>{const ch=$("#ch"),scroll=$("#chScroll"),col=$("#chCol"),tab=$("#c
   ENG.go(text,{effort:SET.effort,out:SET.out,desks:SET.desks,client:SET.client},{update:h.update,phrase:h.phrase,text:h.text,
    done:(w,md,ex)=>{h.stop();h.t.textContent=mmss(w.ms);say(h.now,w.firewall==="held"?"Held by the firewall":w.firewall==="clear"?"Firewall clear":"For the team");
     const tail=document.createElement("div");tail.innerHTML=exhibits(ex)+colophon(new Date(),md);[...tail.children].forEach(x=>h.doc.appendChild(x));
-    flowIn([...h.doc.querySelectorAll(".ch-ex>*,.ch-colo")]);watchCharts(h.doc);a.setAttribute("aria-busy","false");busyOff();follow()},
+    watchCharts(h.doc);flowIn([...h.doc.querySelectorAll(".ch-ex>*,.ch-colo")]);a.setAttribute("aria-busy","false");busyOff();follow()},
    fail:e=>{h.stop();a.setAttribute("aria-busy","false");busyOff();
     say(h.now,e&&e.code==="cancelled"?"Stopped":e&&e.code==="not_granted"?"Claude isn't allowed on this page":e&&e.code==="rate_limited"?"Busy: try again in a moment":"Could not finish")}},ctl.signal)}
 
  /* ---- the sample run (the bench, or a page without Claude): the same record, played on a clock ---- */
  function run(a,R){const h=hooks(a,16),w=JSON.parse(JSON.stringify(R.work)),T=[],at=(ms,f)=>T.push(setTimeout(f,ms));
-  w.live=true;w._o=true;w.steps.forEach(s=>{s._ms=s.ms;delete s.ms;delete s.v});const pages=((w.map||{}).pages||[]).slice();w.map=w.map||{};w.map.pages=[];
+  w.live=true;w._o=true;w._t0=performance.now();w.steps.forEach(s=>{s._ms=s.ms;delete s.ms;delete s.v});w.map=w.map||{};
+  const pages=(w.map.pages||[]).slice(),calls=(w.map.calls||[]).slice(),ledger=w.ledger,audit=w.audit;w.map.pages=[];w.map.calls=[];delete w.ledger;delete w.audit;
+  const T0=()=>Math.round(performance.now()-w._t0);
+  /* a call goes out to Exa; its pages come back one by one, a little later */
+  const call=(c,k)=>at(k,()=>{w.map.calls.push(Object.assign({},c,{t:T0()}));h.update(w);const ci=calls.indexOf(c);
+   pages.filter(p=>p.c===ci).forEach((p,j)=>at(260+j*160,()=>{w.map.pages.push(Object.assign({},p,{c:w.map.calls.length-1}));h.update(w)}))});
   busyOn();h.phrase("Reading the brief");h.update(w);
   const pump=()=>{w.steps.forEach((s,i)=>{if(s._go||!(s.after||[]).every(n=>w.steps[n-1].done))return;s._go=s._live=true;h.phrase(R.phrases[i]||`${NN[s.role]} is working`);h.update(w);
-    pages.filter(p=>p.i===i).forEach((p,k)=>at(180+k*200,()=>{w.map.pages.push(p);h.update(w)}));
-    const TT=Math.round(String(s.out||"").length/4*6);s.tok=0;for(let k=1;k<=8;k++)at(k*130,()=>{s.tok=Math.round(TT*k/8);h.update(w)});
-    at(1100,()=>{s._live=false;s.done=true;s.v="pass";s.ms=s._ms;h.update(w);
+    const mine=calls.filter(c=>c.i===i);mine.forEach((c,k)=>call(c,90+k*520));
+    const dur=1100+(mine.length?mine.length*380:0);
+    const TT=Math.round(String(s.out||"").length/4*6);s.tok=0;for(let k=1;k<=8;k++)at(k*dur/9,()=>{s.tok=Math.round(TT*k/8);h.update(w)});
+    at(dur,()=>{s._live=false;s.done=true;s.v="pass";s.ms=s._ms;h.update(w);
      if(!w.steps.every(x=>x.done))return pump();
-     w._a=true;w.atok=0;h.phrase("Writing it up");h.update(w);const at2=setInterval(()=>{w.atok+=90;h.update(w)},160);T.push(at2);
-     ink(a,R,()=>{clearInterval(at2);w._a=false;w.answered=true;w._v=true;h.phrase("Checking the figures");h.update(w);
-      at(600,()=>{w._v=false;w.checked=true;w.live=false;w.firewall="clear";h.stop();h.t.textContent=mmss(R.work.ms);say(h.now,"Firewall clear");h.update(w);a.setAttribute("aria-busy","false");busyOff()})})})})};
-  at(700,()=>{w._o=false;h.update(w);pump()});
-  running={a,stop:()=>{T.forEach(clearTimeout);ink.cancel?.();h.stop();w.stopped=true;w.live=false;w._o=w._a=w._v=false;w.steps.forEach(s=>{if(s._live){s._live=false;s.stopped=true}});h.update(w)}};tabSay()}
+     /* the Arbiter weighs what they filed against the pages read */
+     w._w=true;h.phrase("The Arbiter is weighing the claims");h.update(w);calls.filter(c=>c.i===-1).forEach((c,k)=>call(c,200+k*400));
+     at(1300,()=>{w._w=false;w.weighed=true;if(ledger)w.ledger=ledger;h.update(w);
+      w._a=true;w.atok=0;h.phrase("Writing it up");h.update(w);const at2=setInterval(()=>{w.atok+=90;h.update(w)},160);T.push(at2);
+      ink(a,R,()=>{clearInterval(at2);w._a=false;w.answered=true;w.audit=audit||[];w._v=true;h.phrase("Checking the figures");h.update(w);
+       at(600,()=>{w._v=false;w.checked=true;w.live=false;w.firewall="clear";h.stop();h.t.textContent=mmss(R.work.ms);say(h.now,"Firewall clear");h.update(w);a.setAttribute("aria-busy","false");busyOff()})})})})})};
+  at(700,()=>{w._o=false;w.staffed=true;h.phrase("The Arbiter is staffing the desks");h.update(w);at(380,pump)});
+  running={a,stop:()=>{T.forEach(clearTimeout);ink.cancel?.();h.stop();w.stopped=true;w.live=false;w._o=w._a=w._v=w._w=false;w.steps.forEach(s=>{if(s._live){s._live=false;s.stopped=true}});h.update(w)}};tabSay()}
  function stopRun(){if(!running)return;const {a,stop}=running;stop();busyOff();a.setAttribute("aria-busy","false");const n=a.querySelector(".ch-runm .now");if(n)say(n,"Stopped")}
 
  /* ---- charts, in and out, on the one curve: in, the grid fades up, the bars rise from the baseline one after another
@@ -403,7 +499,7 @@ const CH=(()=>{const ch=$("#ch"),scroll=$("#chScroll"),col=$("#chCol"),tab=$("#c
   svg.querySelectorAll(".bar").forEach((b,k)=>b.animate([{transform:"none"},{transform:"scaleY(0)"}],{duration:ms("--sb-out"),delay:k*25,easing:EZ(),fill:"forwards"}));
   svg.querySelectorAll("text.v").forEach(v=>v.animate(focusOut(B()*.5),{duration:ms("--sb-out"),easing:EZ(),fill:"forwards"}))}
  const CIO=new IntersectionObserver(es=>es.forEach(e=>{const c=e.target;if(e.isIntersecting&&e.intersectionRatio>=.3){if(!c._in)chartIn(c,120)}else if(!e.isIntersecting&&c._in){c._in=false}}),{root:scroll,threshold:[0,.3]});
- const watchCharts=root=>root&&root.querySelectorAll(".ch-chart").forEach(c=>CIO.observe(c));
+ const watchCharts=root=>root&&root.querySelectorAll(".ch-chart").forEach(c=>{if(c.closest(".ch-mirror"))return;drawChart(c);CRO.observe(c);CIO.observe(c)});
 
  /* ---- the answer flows in, top to bottom: while it streams, each block new since the last frame focuses in after
     the one before it, and the block still being written stays in place. Re-rendered at most every 120ms. ---- */
@@ -423,11 +519,11 @@ const CH=(()=>{const ch=$("#ch"),scroll=$("#chScroll"),col=$("#chCol"),tab=$("#c
  function ink(a,R,done){const doc=a.querySelector(".ch-doc");doc.innerHTML=page(R.md)+exhibits(R.ex)+colophon(new Date(),R.md);
   if(reduce){done();return}
   const blocks=[...doc.querySelectorAll(".ch-mk,.ch-doc p,.ch-doc li,.ch-dt tr,.ch-figs>div,.ch-fig .ch-fcap,.ch-chart,.ch-note,.ch-exh,.ch-src li,.ch-colo")];
-  blocks.forEach(b=>{b.style.opacity="0"});let t=0;const W=26;
+  watchCharts(doc);blocks.forEach(b=>{b.style.opacity="0"});let t=0;const W=26;
   blocks.forEach(b=>{const at=t;
    if(b.matches(".ch-doc p,.ch-doc li")){const ws=wrapWords(b);t+=Math.min(900,ws.length*W)+40;inkT.push(setTimeout(()=>{b.style.opacity="";ws.forEach((w,k)=>w.animate([{opacity:0,filter:"blur(2.5px)"},{opacity:1,filter:"blur(0px)"}],{duration:280,delay:k*W,easing:EZ(),fill:"backwards"}));follow()},at))}
    else{t+=b.matches(".ch-dt tr")?55:b.matches(".ch-chart")?260:90;inkT.push(setTimeout(()=>{b.style.opacity="";pull(b,0,ms("--sb-in"));
-    if(b.matches(".ch-chart")){chartIn(b);watchCharts(b.parentNode)}follow()},at))}});
+    if(b.matches(".ch-chart")){watchCharts(b.parentNode);chartIn(b)}follow()},at))}});
   inkT.push(setTimeout(done,t+120))}
  ink.cancel=()=>{inkT.forEach(clearTimeout);inkT=[];col.querySelectorAll("[style*='opacity: 0']").forEach(b=>b.style.opacity="")};
  function wrapWords(el){const ws=[];const walk=n=>{[...n.childNodes].forEach(c=>{if(c.nodeType===3){const f=document.createDocumentFragment();c.textContent.split(/(\s+)/).forEach(p=>{if(!p)return;if(/^\s+$/.test(p))f.appendChild(document.createTextNode(p));else{const s=document.createElement("span");s.className="ch-w";s.textContent=p;f.appendChild(s);ws.push(s)}});c.replaceWith(f)}else walk(c)})};walk(el);return ws}
@@ -448,8 +544,8 @@ const CH=(()=>{const ch=$("#ch"),scroll=$("#chScroll"),col=$("#chCol"),tab=$("#c
   else{const R=n.t==="Quotation for the Makati site"?RICH:generic(n);const d=new Date(n.ts||Date.now());col.replaceChildren(brief(R.brief,new Date(d.getTime()-R.work.ms)));
    const a=answerShell(R.work,false);a.querySelector(".ch-doc").innerHTML=page(R.md)+exhibits(R.ex)+colophon(d,R.md);col.appendChild(a);
    if(n.live){const b=answerShell(R.work,true);col.replaceChildren(brief(R.brief,new Date()),b);run(b,R)}}
-  scroll.scrollTop=0;if(reduce)return;
-  requestAnimationFrame(()=>{flowIn([...col.querySelectorAll(".ch-dochead>*,.ch-quote,.ch-run,"+FLOWSEL)]);watchCharts(col)})}
+  scroll.scrollTop=0;watchCharts(col);if(reduce)return;
+  requestAnimationFrame(()=>flowIn([...col.querySelectorAll(".ch-dochead>*,.ch-quote,.ch-run,"+FLOWSEL)]))}
  function generic(n){const ps=String(n.body||"").split(/\n\n/).filter(Boolean),T=n.t;
   return{brief:`Where does ${T.charAt(0).toLowerCase()+T.slice(1)} stand, and what is left to do?`,phrases:["Reading the brief","Weighing what is known","Writing it up"],
    md:`### Where it stands\n${ps[0]||"Nothing has been written here yet."}${ps.length>1?"\n\n### What is left\n"+ps.slice(1).map(p=>"- "+p).join("\n"):""}`,
@@ -464,8 +560,14 @@ const CH=(()=>{const ch=$("#ch"),scroll=$("#chScroll"),col=$("#chCol"),tab=$("#c
    matrix:{title:"Three ways to schedule it",columns:["Risk","Disruption","Handover"],rows:[{name:"One continuous build",cells:[3,2,"Nov 28"]},{name:"Two phases (recommended)",cells:[4,4,"Nov 21"]},{name:"Night shifts only",cells:[2,5,"Dec 12"]}],note:"Ratings out of five; higher is better."},
    sources:[{title:"Metro Manila fit-out rate cards, 2026 Q3",note:"verified"},{title:"Staff canvass, Makati",note:"unverified"}]},
   work:{ms:85000,firewall:"clear",map:{kind:"Fit-out pricing",rationale:"Local rates first, then the budget and the risks side by side, then one recommendation.",
-   pages:[{i:0,url:"https://rates.fitout-ph.example/2026-q3",title:"Metro Manila fit-out rate cards, 2026 Q3"},{i:0,url:"https://glazing.builders.example/laminated-storefronts",title:"Laminated storefront glazing: installed rates"},{i:0,url:"https://lighting.trade.example/track-systems",title:"Track lighting systems: per-metre pricing"},{i:2,url:"https://permits.makati.example/sunday-works",title:"Weekend works and crane permits"}],
+   calls:[{i:0,q:["metro manila track lighting price per metre","laminated storefront glazing installed rate"]},{i:0,q:["fit-out rate cards makati 2026"]},{i:2,q:["makati weekend works crane permit"]},{i:-1,q:["joinery lead time manila fit-out"]}],
+   pages:[{i:0,c:0,url:"https://lighting.trade.example/track-systems",title:"Track lighting systems: per-metre pricing"},{i:0,c:0,url:"https://glazing.builders.example/laminated-storefronts",title:"Laminated storefront glazing: installed rates"},{i:0,c:1,url:"https://rates.fitout-ph.example/2026-q3",title:"Metro Manila fit-out rate cards, 2026 Q3"},{i:2,c:2,url:"https://permits.makati.example/sunday-works",title:"Weekend works and crane permits"},{i:-1,c:3,url:"https://joinery.makers.example/lead-times",title:"Custom joinery lead times, Metro Manila"}],
    thinking:["Four lines of work before a fixed opening: nothing can be priced until local rates are in.","The budget will clear PHP 1 million, so finance works at deep effort.","A storefront lift brings permit and handover risk; legal can read it in parallel.","Once the budget and the risks are known, the decision desk weighs the schedule."]},
+   ledger:{gate:{checked:4,quotes:4,down:0,calcs:3},claims:[
+    {id:1,v:"supported",text:"Lighting track costs PHP 1,900–2,600 per metre in Metro Manila."},{id:2,v:"supported",text:"Laminated storefront glazing costs PHP 7,800–9,400 per m² installed."},
+    {id:3,v:"partial",text:"Custom joinery takes 4–5 weeks to make.",note:"one maker states 4 weeks; the canvass says 5"},{id:4,v:"derived",text:"The four lines come to PHP 1,188,900."},
+    {id:5,v:"derived",text:"An 8% contingency is PHP 95,112."},{id:6,v:"derived",text:"The indicative total is PHP 1,284,012 before VAT, PHP 5,350 per m²."},
+    {id:7,v:"supported",text:"A Sunday crane lift in Makati needs a weekend works permit."},{id:8,v:"unsupported",text:"The store can stay dark for three weeks.",note:"the client's own figure, to confirm"}]},audit:[],
    steps:[{role:"research",focus:"Local rates",task:"Metro Manila rates and lead times for track, joinery and glazing",v:"pass",ms:12000,out:"Lighting track: PHP 1,900–2,600 per metre (verified).\nLaminated storefront glazing: PHP 7,800–9,400 per m² installed (verified).\nJoinery lead time 4–5 weeks (staff canvass, unverified).\nCONFIDENCE: medium"},
     {role:"finance",focus:"The budget",task:"An indicative budget for 240 m²",after:[1],v:"pass",ms:31000,out:"Ceiling 312,000; track 228,400; joinery 386,500; glazing 262,000. Subtotal 1,188,900. Contingency 8% 95,112. Total PHP 1,284,012 before VAT; PHP 5,350 per m².\nCONFIDENCE: medium"},
     {role:"legal",focus:"Permit and handover",task:"Risks behind a Sunday lift and a fixed opening",after:[1],v:"pass",ms:24000,out:"Secure the Sunday permit before quoting a date; exclude delay from late layout approval; variations by signed order only.\nCONFIDENCE: high"},

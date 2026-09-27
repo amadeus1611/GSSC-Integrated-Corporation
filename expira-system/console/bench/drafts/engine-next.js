@@ -1,9 +1,12 @@
 /* ---------- draft v45 engine (bench): a brief, sent through Claude and Exa, as the chat pane shows it ----------
    The same pipeline and the same run record as core/run.js, kept lean so the new chat can run real briefs before the
-   promotion (SUPER_PLAN_45 §10.5): the orchestrator plans the desks inside the composer's settings; the desks run in
-   dependency order, in parallel where they can, the research, legal and decision desks searching with Exa through
-   core/web.js; the answer is written as it streams; the exhibits are set from it; and a client-facing answer goes
-   through the firewall of core/ground.js. Every step is written into one record `w` (steps, map.pages, the flags the
+   promotion (SUPER_PLAN_45 §10.5): the orchestrator plans the desks inside the composer's settings; the Arbiter staffs
+   them from the roster, in code (LAYA's rule: a closed list, checked, never generated); the desks run in dependency
+   order, in parallel where they can, the research, legal and decision desks searching with Exa through core/web.js,
+   each call and the pages it returned kept in map.calls and map.pages; the Arbiter weighs what they filed into a
+   claims ledger, and the gate of core/ground.js re-checks every quote, figure and sum in code; the answer is written
+   from the ledger as it streams, and its figures are audited against it in code; the exhibits are set from it; and a
+   client-facing answer goes through the firewall of core/ground.js. Every step is written into one record `w` (steps, map.pages, the flags the
    node view reads) and handed to the view through hooks, so the view never waits on the engine's shape.
    Calls run as the viewer, on the viewer's plan: `sample` for Claude, `mcp` for Exa (the page declares both). */
 const ENG=(()=>{
@@ -34,11 +37,13 @@ Brief: """${q}"""
 Return JSON: {"kind": a 2-4 word label for the brief, "rationale": one sentence, "thinking": 2-4 short plain sentences on how you will approach it,
 "steps": [{"role": one of the allowed desks, "focus": 2-4 words, "task": at most 12 words, "after": [positions], "phrase": "<Role> is <doing what>, at most 8 words"}]}`,
    {modelTier:"default",cache:false,signal});
-  let S=Array.isArray(p&&p.steps)?p.steps.filter(s=>s&&allowed.includes(s.role)).slice(0,max):[];
+  const asked=Array.isArray(p&&p.steps)?p.steps.filter(Boolean):[];let S=asked.filter(s=>allowed.includes(s.role)).slice(0,max);
+  const dropped=asked.filter(s=>!allowed.includes(s.role)).map(s=>String(s.role||"?").slice(0,20)),over=Math.max(0,asked.filter(s=>allowed.includes(s.role)).length-max);
   if(!S.length)S=allowed.slice(0,max).map((r,i,a)=>({role:r,focus:r[0].toUpperCase()+r.slice(1),task:"Work the brief from this desk",after:r==="decision"?a.map((_,j)=>j+1).filter(j=>j<i+1):[]}));
   S=S.map((s,i)=>({role:s.role,focus:clipS(s.focus||s.role,40),task:clipS(s.task||"",90),phrase:clipS(s.phrase||`${s.role} is working`,60),
    after:(Array.isArray(s.after)?s.after:[]).map(Number).filter(n=>n>=1&&n<=i)}));
-  return {kind:clipS(p&&p.kind||"",40),rationale:clipS(p&&p.rationale||"",240),thinking:(Array.isArray(p&&p.thinking)?p.thinking:[]).slice(0,4).map(x=>clipS(x,160)),steps:S}}
+  return {kind:clipS(p&&p.kind||"",40),rationale:clipS(p&&p.rationale||"",240),thinking:(Array.isArray(p&&p.thinking)?p.thinking:[]).slice(0,4).map(x=>clipS(x,160)),steps:S,
+   staff:{asked:asked.length,kept:S.length,dropped,over,roster:allowed,fallback:!asked.some(s=>allowed.includes(s.role))}}}
 
  /* one desk: its brief, what the desks it waits on found, the web if it may search, and a confidence to close */
  function deskPrompt(q,s,w,set){const prior=(s.after||[]).map(n=>w.steps[n-1]).filter(x=>x&&x.out).map(x=>`${x.role} desk (${x.focus}) found:\n${clipS(x.out,2400)}`).join("\n\n");
@@ -49,6 +54,34 @@ Your focus: ${s.focus}. Your task: ${s.task}.
 ${prior?`What the other desks found:\n${prior}\n`:""}${WEBR.has(s.role)&&WEB.ok?"Search the web for anything current (rates, prices, rules) and cite the url of every figure you use. ":""}Be concrete: figures with their units and currency (PHP), assumptions named.
 ${set.client?FIRE+"\n":""}Write plain notes for the team, at most 220 words, no headings. End with one line: CONFIDENCE: low|medium|high.`}
 
+ /* the Arbiter weighs what the desks filed: each note broken into claims, each claim judged against the pages read;
+    then the gate re-judges the ledger in code (quote in the page, figures in the quote, sums that re-compute) */
+ const VS=["supported","derived","partial","conflict","unsupported"];
+ const ledgerStats=L=>{const c=(L&&L.claims)||[];return {n:c.length,g:c.filter(x=>x.v==="supported"||x.v==="derived").length,q:c.filter(x=>x.v==="partial"||x.v==="conflict").length,u:c.filter(x=>x.v==="unsupported").length}};
+ async function weigh(q,w,signal){const PG=(w.map.pages||[]).slice(0,26);
+  const src=PG.map((p,k)=>`[S${k+1}] ${p.title||p.url} — ${p.url} (${p.date||"undated"})\n${String(p.ex||"").slice(0,520)}`).join("\n\n");
+  const tools=WEB.ok?webTools({onSearch:(qs,fetch)=>{w.map.calls.push({i:-1,t:Math.round(now()-w._t0),q:(qs||[]).slice(0,4).map(x=>clipS(x,90)),fetch:!!fetch})},
+   onSources:list=>{const c=w.map.calls.length-1;list.forEach(r=>{if(r.url&&!w.map.pages.some(x=>x.url===r.url))w.map.pages.push({url:r.url,title:r.title,date:r.published,ex:r.excerpt,i:-1,c})})},onError:()=>{}}):undefined;
+  const rv=await sample.json(`You are the EXPIRA Arbiter, the judge of truth. ${todayLine()}
+You staffed these desks; now judge what they filed.
+1. Break the notes into the atomic factual claims an answer would rest on (figures, prices, dates, names, rules, events), at most 14.
+2. Judge each claim strictly against the numbered sources below${tools?" and any checks you run":""}:
+   supported: a source states it; derived: correctly computed from other claims or the user's own figures; partial: a source supports part of it or an older value; conflict: sources disagree (prefer the newest and say so); unsupported: no source (an estimate, assumption, or memory).
+   Never call a claim supported without citing a source number. The page then checks each quote against the source text, each figure against its quote and each calc against checked figures, and downgrades whatever fails.
+${tools?"You may run up to 2 web_search calls, only to check the unsupported or conflicting claims that matter most.\n":""}Reply with only JSON: {"claims":[{"claim":string (one sentence with its figure and unit),"desk":number (step number, 0 if none),"verdict":"supported"|"derived"|"partial"|"conflict"|"unsupported","confidence":number (0 to 1),"sources":["S1"],"quote":string (supported, partial or conflict: the exact words of one cited source, copied character for character; "" otherwise),"calc":string (derived: the arithmetic, e.g. "22050*40"; "" otherwise),"note":string (under 16 words)}]}
+
+The brief: """${q}"""
+
+Desks:
+${w.steps.map((s,i)=>`Step ${i+1} (${s.role}, ${s.focus}) task: ${s.task}\n${clipS(s.out,2600)}`).join("\n\n---\n\n")}
+
+Sources:
+${src||"(none: judge figures unsupported unless they are arithmetic from given inputs)"}`,{modelTier:"complex",cache:false,signal,...(tools?{tools}:{})});
+  const claims=((rv&&Array.isArray(rv.claims))?rv.claims:[]).filter(c=>c&&(c.claim||c.text)).slice(0,14).map(c=>{const d=Number(c.desk)-1;return {text:clipS(c.claim||c.text,240),desk:w.steps[d]?d:-1,v:VS.includes(c.verdict)?c.verdict:"unsupported",conf:Math.max(0,Math.min(1,Number(c.confidence)||0)),
+    urls:[...new Set((Array.isArray(c.sources)?c.sources:[]).map(x=>parseInt(String(x).replace(/\D/g,""),10)-1).filter(k=>PG[k]).map(k=>PG[k].url))],note:clipS(c.note||"",180),quote:clipS(c.quote||"",400),calc:String(c.calc||"").slice(0,120)}})
+   .map(c=>c.v==="supported"&&!c.urls.length?Object.assign(c,{v:"unsupported",note:(c.note?c.note+" ":"")+"(no source cited)"}):c);
+  const gate=GROUND.gateClaims(claims,PG,q,null);claims.forEach((c,k)=>c.id=k+1);return {claims,gate}}
+
  /* the answer: the house page, as markdown the view lays out (### sections, short paragraphs, - bullets, pipe tables) */
  function composePrompt(q,w,set){const notes=w.steps.map((s,i)=>`Desk ${i+1} · ${s.role} · ${s.focus}${s.v==="fail"?" (failed)":""}:\n${clipS(s.out,3000)}`).join("\n\n");
   const pages=(w.map.pages||[]).slice(0,20).map((p,k)=>`[S${k+1}] ${p.title||p.url} — ${p.url}`).join("\n");
@@ -56,7 +89,7 @@ ${set.client?FIRE+"\n":""}Write plain notes for the team, at most 220 words, no 
 The brief: """${q}"""
 The desks' notes:
 ${notes}
-${pages?`Sources the desks read:\n${pages}\n`:""}${OUT[set.out]||OUT.Auto}
+${pages?`Sources the desks read:\n${pages}\n`:""}${w.ledger&&w.ledger.claims.length?`The claims ledger, weighed by the Arbiter and checked in code. State supported and derived claims as fact; give partial and conflict claims with their caveat; present unsupported ones only as estimates:\n${w.ledger.claims.map(c=>`- (${c.v}) ${c.text}${c.note?` — ${c.note}`:""}`).join("\n")}\n`:""}${OUT[set.out]||OUT.Auto}
 ${set.client?FIRE+"\n":""}Write the answer in markdown and nothing else:
 - 2 to 5 sections, each starting with "### " and a plain title; the first section gives the answer or the recommendation.
 - Short paragraphs; "- " bullets for lists; pipe tables for figures (a header row, then rows; a total row in **bold**).
@@ -84,29 +117,36 @@ Leave out anything the answer does not support; empty is fine.`,{modelTier:"quic
   return ex}
 
  /* the run. h: {update(w), phrase(text), text(md), done(w, md, ex), fail(err)} */
- async function go(q,set,h,signal){const t0=now(),w={live:true,brief:q,steps:[],map:{kind:"",rationale:"",thinking:[],pages:[],calls:[]},ms:0,firewall:null,_o:true};
+ async function go(q,set,h,signal){const t0=now(),w={live:true,brief:q,steps:[],map:{kind:"",rationale:"",thinking:[],pages:[],calls:[]},ms:0,firewall:null,_o:true,_t0:t0};
   const tick=()=>{w.ms=now()-t0};const up=()=>{tick();h.update(w)};let pend=0;const soon=()=>{if(!pend)pend=setTimeout(()=>{pend=0;up()},140)};  /* token counts stream: the view hears them a few times a second */
   try{
    await webReady;h.phrase("Reading the brief");up();
-   const p=await plan(q,set,signal);Object.assign(w.map,{kind:p.kind,rationale:p.rationale,thinking:p.thinking});w.steps=p.steps;w._o=false;up();
+   const p=await plan(q,set,signal);Object.assign(w.map,{kind:p.kind,rationale:p.rationale,thinking:p.thinking});w.steps=p.steps;w.staff=p.staff;w._o=false;w.staffed=true;up();
    /* the desks: start every desk whose desks are done; run side by side; a failed desk is noted and the run goes on */
    const tier=TIER[set.effort]||"default",started=new Set();
    await new Promise((res,rej)=>{let open=0;const pump=()=>{if(signal.aborted)return rej(Object.assign(new Error("cancelled"),{code:"cancelled"}));
      w.steps.forEach((s,i)=>{if(started.has(i)||!(s.after||[]).every(n=>w.steps[n-1].done))return;started.add(i);open++;s._live=true;s._t0=now();h.phrase(s.phrase);up();
-      const tools=WEB.ok&&WEBR.has(s.role)?webTools({onSearch:()=>{s.searches=(s.searches||0)+1;up()},onSources:list=>{list.forEach(r=>{if(!w.map.pages.some(x=>x.url===r.url))w.map.pages.push({url:r.url,title:r.title,date:r.published,ex:r.excerpt,i})});up()},onError:()=>{}}):undefined;
+      const tools=WEB.ok&&WEBR.has(s.role)?webTools({onSearch:(qs,fetch)=>{s.searches=(s.searches||0)+1;w.map.calls.push({i,t:Math.round(now()-t0),q:(qs||[]).slice(0,4).map(x=>clipS(x,90)),fetch:!!fetch});up()},
+       onSources:list=>{const c=w.map.calls.map(x=>x.i).lastIndexOf(i);list.forEach(r=>{if(!w.map.pages.some(x=>x.url===r.url))w.map.pages.push({url:r.url,title:r.title,date:r.published,ex:r.excerpt,i,c})});up()},onError:()=>{}}):undefined;
       sample(deskPrompt(q,s,w,set),{modelTier:s.role==="decision"&&tier!=="quick"?"complex":tier,cache:false,signal,tools,onText:({text})=>{s.tok=Math.round(text.length/4);soon()}})
        .then(r=>{s.out=r.text;s.v="pass"},e=>{if(e&&e.code==="cancelled")throw e;s.out=String(e&&e.message||"The desk could not finish.");s.v="fail"})
        .then(()=>{s.ms=now()-s._t0;s._live=false;s.done=true;open--;up();if(w.steps.every(x=>x.done))res();else pump()},rej)});
      if(!open&&!w.steps.every(x=>x.done))rej(new Error("The plan's desks wait on each other."))};pump()});
+   /* the Arbiter weighs what they filed; if it cannot, the notes go forward unweighed and the record says so */
+   w._w=true;h.phrase("The Arbiter is weighing the claims");up();
+   try{w.ledger=await weigh(q,w,signal)}catch(e){if(e&&e.code==="cancelled")throw e;w.ledger=null;w.unweighed=true}
+   w._w=false;w.weighed=true;up();
    /* the answer, as it is written */
    w._a=true;h.phrase("Writing it up");up();
    const fin=await sample(composePrompt(q,w,set),{modelTier:set.effort==="Deep"?"complex":"default",cache:false,signal,onText:({text})=>{w.atok=Math.round(text.length/4);h.text(text);soon()}});
-   const md=fin.text;h.text(md,true);w._a=false;w.answered=true;up();
+   const md=fin.text;h.text(md,true);w._a=false;w.answered=true;
+   /* its figures, audited in code: each must come from the ledger, the brief, or one step of arithmetic over them */
+   if(w.ledger&&w.ledger.claims.length)w.audit=GROUND.auditAnswer(md,w.ledger.claims,q);up();
    /* the exhibits, then the check: the firewall for a client-facing answer; for the team, the pattern scan alone */
    w._v=true;h.phrase(set.client?"Checking it against the firewall":"Checking the figures");up();
    const ex=await exhibits(q,md,w,signal);
    if(set.client){const fw=await GROUND.firewall(sample.json,`${md}\n\n${ex?JSON.stringify(ex).slice(0,6000):""}`,"",{signal});w.firewall=fw.verdict==="clear"?"clear":"held";w.fwHits=fw.hits||[]}
    else{const sc=GROUND.scan(md);w.firewall=sc.hold.length?"internal-flag":"internal";w.fwHits=sc.hold.map(x=>`${x.what}: “${x.quote}”`)}
    w._v=false;w.checked=true;w.live=false;tick();h.update(w);h.done(w,md,ex)}
-  catch(e){w.live=false;w._o=w._a=w._v=false;w.steps.forEach(s=>{if(s._live){s._live=false;s.stopped=true}});w.stopped=true;tick();h.update(w);h.fail(e)}}
- return {ready,go,get web(){return !!WEB.ok}}})();
+  catch(e){w.live=false;w._o=w._a=w._v=w._w=false;w.steps.forEach(s=>{if(s._live){s._live=false;s.stopped=true}});w.stopped=true;tick();h.update(w);h.fail(e)}}
+ return {ready,go,ledgerStats,get web(){return !!WEB.ok}}})();
