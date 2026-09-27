@@ -5,7 +5,7 @@
    the signature racks out and the brief pulls focus as a pull quote. The desks work in one quiet line (no run card); the answer then inks in, word by word, laid out as the
    master template lays out a page. A chat opened from the tree is shown settled, its blocks pulling focus in order.
    Reads MO, easeFn and easeInv from core/motion.js, and $, root and reduce from the prelude (the bench stubs them). */
-const CH=(()=>{const ch=$("#ch"),scroll=$("#chScroll"),col=$("#chCol"),tab=$("#chTab"),sheet=$("#chSheet"),glass=sheet.querySelector(".ch-glass"),frost=sheet.querySelector(".ch-frost"),mirror=sheet.querySelector(".ch-mirror"),fg=sheet.querySelector(".ch-fg"),grab=$("#chGrab"),comp=$("#chComp"),ta=$("#prompt"),send=$("#chSend"),ttl=$("#ttl");
+const CH=(()=>{const ch=$("#ch"),scroll=$("#chScroll"),col=$("#chCol"),tab=$("#chTab"),sheet=$("#chSheet"),glass=sheet.querySelector(".ch-glass"),frost=sheet.querySelector(".ch-frost"),fg=sheet.querySelector(".ch-fg"),grab=$("#chGrab"),comp=$("#chComp"),ta=$("#prompt"),send=$("#chSend"),ttl=$("#ttl");
  const tok=n=>getComputedStyle(root).getPropertyValue(n).trim();
  const ms=n=>{const v=tok(n);return parseFloat(v)*(/ms$/.test(v)?1:1000)||1};
  const EZ=()=>tok("--sb-ease")||"cubic-bezier(.19,1,.22,1)",B=()=>parseFloat(tok("--blur-enter"))||3;
@@ -45,30 +45,25 @@ const CH=(()=>{const ch=$("#ch"),scroll=$("#chScroll"),col=$("#chCol"),tab=$("#c
  const lerp=(a,b,t)=>a+(b-a)*t,cl=(v,a=0,b=1)=>Math.max(a,Math.min(b,v)),sm=(p,a,b)=>{const t=cl((p-a)/(b-a));return t*t*(3-2*t)};
  const box=el=>{const r=el.getBoundingClientRect();return{x:r.left,y:r.top,w:r.width,h:r.height}};
  const isOpen=()=>sheet.classList.contains("on"),tabLn=tab.querySelector(".ln"),tabLb=tab.querySelector(".lb"),tabHt=tab.querySelector(".ht");
- function prep(){if(isOpen())return;sheet.classList.remove("mid","low");sheet.classList.add("on",mode==="start"?"mid":"low");mirrorBuild();tab.classList.add("away");tab.setAttribute("aria-expanded","true")}
- function measure(){sheet.style.transform=glass.style.clipPath=fg.style.clipPath=frost.style.clipPath="";const S=box(sheet),l=box(tabLn);G={S,L:{x:l.x+l.w/2-LW/2,y:l.y+l.h/2-SH/2,w:LW,h:SH}};mirrorPlace(S)}
- /* ---- the frost: a copy of the thread, blurred with a plain filter, laid exactly behind the sheet. It is glued to the
-    page: its offset is where the thread sits against the resting sheet (measured when the sheet is measured), less
-    what the thread has scrolled since, less the sheet's own travel while it moves (TX, TY), so no layout is read while
-    anything animates. It is rebuilt, a beat later, when the thread changes or resizes, and dropped when the sheet is
-    put away. ---- */
- let TX=0,TY=0,MB=null,mT=0;const lowT=matchMedia("(prefers-reduced-transparency: reduce)");
- function mirrorBuild(){if(lowT.matches||root.classList.contains("calm"))return;  /* calm: a solid sheet, nothing to blur */
- const c=col.cloneNode(true);["id","role","aria-label","aria-live"].forEach(a=>c.removeAttribute(a));
-  c.querySelectorAll("[id]").forEach(x=>x.removeAttribute("id"));mirror.style.width=col.offsetWidth+"px";mirror.replaceChildren(c);mo.observe(col,{subtree:true,childList:true,characterData:true,attributes:true,attributeFilter:["style","class"]})}
- function mirrorPlace(S){const c=box(col);MB={x:c.x-S.x,y:c.y-S.y,s:scroll.scrollTop};mirrorMove()}
- function mirrorMove(){if(!MB)return;mirror.style.transform=`translate(${(MB.x-TX).toFixed(2)}px,${(MB.y-(scroll.scrollTop-MB.s)-TY).toFixed(2)}px)`}
- function mirrorDrop(){mo.disconnect();clearTimeout(mT);mT=0;mirror.replaceChildren();MB=null;TX=TY=0}
- const mo=new MutationObserver(()=>{if(!mT)mT=setTimeout(()=>{mT=0;if(isOpen()){mirrorBuild();if(P>=1)mirrorPlace(box(sheet))}},160)});
- scroll.addEventListener("scroll",()=>{if(isOpen())mirrorMove()},{passive:true});
- /* the sheet grows as you write, and the pane can resize: re-seat the frost when the sheet is at rest */
- new ResizeObserver(()=>{if(isOpen()&&P>=1&&!tw)mirrorPlace(box(sheet))}).observe(sheet);
- new ResizeObserver(()=>{if(isOpen()&&!mT)mT=setTimeout(()=>{mT=0;if(isOpen()){mirrorBuild();if(P>=1&&!tw)mirrorPlace(box(sheet))}},160)}).observe(col);
+ function prep(){if(isOpen())return;sheet.classList.remove("mid","low");sheet.classList.add("on",mode==="start"?"mid":"low");tab.classList.add("away");tab.setAttribute("aria-expanded","true")}
+ function measure(){sheet.style.transform=glass.style.clipPath=fg.style.clipPath="";const S=box(sheet),l=box(tabLn);G={S,L:{x:l.x+l.w/2-LW/2,y:l.y+l.h/2-SH/2,w:LW,h:SH}};shape(0,0,S.w,S.h,14)}
+ /* ---- the frost: the browser's own backdrop blur, so whatever is live under the sheet (the node field, a streaming
+    answer, a chart drawing in) is frosted in the same frame it is painted, never a copy a beat behind. backdrop-filter
+    only samples what lies directly behind its element, which left an unblurred band along a panel's edges; so the
+    frost layer reaches 40px past the sheet on every side and a mask trims it back to the sheet's shape (a mask applies
+    after the filter; clip-path and overflow would cut the blur's input). The mask is drawn from gradients, not an
+    image, so it follows the reveal in the same frame with nothing to decode: shape() sets the rounded rectangle, in
+    the sheet's own pixels. ---- */
+ let TX=0,TY=0;
+ function shape(x,y,w,h,r){const f=frost.style;f.setProperty("--fx",x.toFixed(2)+"px");f.setProperty("--fy",y.toFixed(2)+"px");f.setProperty("--fw",w.toFixed(2)+"px");f.setProperty("--fh",h.toFixed(2)+"px");f.setProperty("--fr",r.toFixed(2)+"px")}
+ /* the sheet grows as you write, and the pane can resize: the frost's shape follows the sheet at rest */
+ new ResizeObserver(()=>{if(isOpen()&&P>=1&&!tw)shape(0,0,sheet.offsetWidth,sheet.offsetHeight,14)}).observe(sheet);
  function frame(p){P=p;const {S,L}=G,ew=1-Math.pow(1-p,3),w=lerp(L.w,S.w,ew),h=lerp(L.h,S.h,p),cx=lerp(L.x+L.w/2,S.x+S.w/2,ew),y=lerp(L.y,S.y,p);
   const o=40*Math.pow(p,6),r=lerp(2,14,cl(p*1.6)),side=(S.w-w)/2-o;  /* o: the reveal ends past the shadow, never clipping it */
-  TX=p>=1?0:cx-(S.x+S.w/2);TY=p>=1?0:y-S.y;mirrorMove();
+  TX=p>=1?0:cx-(S.x+S.w/2);TY=p>=1?0:y-S.y;
   sheet.style.transform=p>=1?"":`translate(${TX.toFixed(2)}px,${TY.toFixed(2)}px)`;
-  frost.style.clipPath=glass.style.clipPath=fg.style.clipPath=p>=1?"":`inset(${-o}px ${side.toFixed(2)}px ${(S.h-h-o).toFixed(2)}px ${side.toFixed(2)}px round ${r.toFixed(2)}px)`;
+  if(p>=1)shape(0,0,S.w,S.h,14);else shape((S.w-w)/2,0,w,h,r);  /* the frost takes the reveal's shape, less the shadow's margin */
+  glass.style.clipPath=fg.style.clipPath=p>=1?"":`inset(${-o}px ${side.toFixed(2)}px ${(S.h-h-o).toFixed(2)}px ${side.toFixed(2)}px round ${r.toFixed(2)}px)`;
   frost.style.opacity=glass.style.opacity=p>=1?"":sm(p,0,.32);
   const q=sm(p,.3,.92);comp.style.opacity=q>=1?"":q;comp.style.transform=q>=1?"":`translateY(${((1-q)*8).toFixed(2)}px)`;comp.style.filter=q>=1||reduce?"":mb(1-q,2);
   tabLb.style.opacity=tabHt.style.opacity=p<=0?"":mode==="start"?1-sm(p,0,.22):0}  /* in a thread the label only ever shows on hover */
@@ -80,7 +75,7 @@ const CH=(()=>{const ch=$("#ch"),scroll=$("#chScroll"),col=$("#chCol"),tab=$("#c
  function shut(instant,after){popHide(true);if(!isOpen()){after&&after();return}if(P>=1||!G)measure();
   tween(0,instant?0:ms("--sb-dock-out")*Math.max(.35,P),tok("--sb-dock-close")||EZ(),()=>{
    sheet.classList.remove("on","mid","low");tab.classList.remove("away");tab.setAttribute("aria-expanded","false");
-   [sheet,glass,frost,fg,comp,tabLb,tabHt].forEach(x=>{x.style.transform=x.style.clipPath=x.style.opacity=x.style.filter=""});P=0;mirrorDrop();after&&after()})}
+   [sheet,glass,frost,fg,comp,tabLb,tabHt].forEach(x=>{x.style.transform=x.style.clipPath=x.style.opacity=x.style.filter=""});P=0;TX=TY=0;after&&after()})}
  const back=()=>shut(false,()=>tab.focus({preventScroll:true}));
  /* the pull: the grabber follows the finger, 1:1; let go and it finishes by where it is and how fast it was moving */
  function draggable(el,opening){el.addEventListener("pointerdown",e=>{if(e.button!==0)return;const y0=e.clientY;let moved=false,p0=0,trail=[[e.timeStamp,y0]];
@@ -499,7 +494,7 @@ const CH=(()=>{const ch=$("#ch"),scroll=$("#chScroll"),col=$("#chCol"),tab=$("#c
   svg.querySelectorAll(".bar").forEach((b,k)=>b.animate([{transform:"none"},{transform:"scaleY(0)"}],{duration:ms("--sb-out"),delay:k*25,easing:EZ(),fill:"forwards"}));
   svg.querySelectorAll("text.v").forEach(v=>v.animate(focusOut(B()*.5),{duration:ms("--sb-out"),easing:EZ(),fill:"forwards"}))}
  const CIO=new IntersectionObserver(es=>es.forEach(e=>{const c=e.target;if(e.isIntersecting&&e.intersectionRatio>=.3){if(!c._in)chartIn(c,120)}else if(!e.isIntersecting&&c._in){c._in=false}}),{root:scroll,threshold:[0,.3]});
- const watchCharts=root=>root&&root.querySelectorAll(".ch-chart").forEach(c=>{if(c.closest(".ch-mirror"))return;drawChart(c);CRO.observe(c);CIO.observe(c)});
+ const watchCharts=root=>root&&root.querySelectorAll(".ch-chart").forEach(c=>{drawChart(c);CRO.observe(c);CIO.observe(c)});
 
  /* ---- the answer flows in, top to bottom: while it streams, each block new since the last frame focuses in after
     the one before it, and the block still being written stays in place. Re-rendered at most every 120ms. ---- */

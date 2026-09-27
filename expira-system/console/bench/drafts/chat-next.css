@@ -90,13 +90,21 @@
 .ch-sheet.on{visibility:visible;pointer-events:auto}
 .ch-sheet.mid{top:0;bottom:0;margin:auto;height:fit-content}
 .ch-sheet.low{bottom:var(--sp-3)}
-/* the frost: a copy of the thread, blurred, laid exactly behind the sheet and kept glued to the page as it scrolls and
-   as the sheet moves (chat-next.js mirror*). A plain filter blurs text and figures right to the edge; Chromium's
-   backdrop-filter left a band along a panel's edges unblurred, where text stayed sharp, so the sheet does not use it.
-   The frost is opaque (the page colour under the blur), so nothing under the sheet shows through as it is. */
-.ch-frost{position:absolute;inset:0;border-radius:var(--ch-sheet-r);overflow:hidden;background:var(--bg);pointer-events:none}
-.ch-mirror{position:absolute;left:0;top:0;container:ch/inline-size;filter:blur(var(--ch-frost)) saturate(1.35);will-change:transform;user-select:none}
-.ch-mirror>*{margin:0!important}
+/* the frost: the browser's backdrop blur, live in the same frame as whatever moves beneath (chat-next.js shape()).
+   backdrop-filter only samples what lies directly behind its element, so a panel-sized frost left a band along the edges
+   where text stayed sharp. The layer reaches --e past the sheet on every side, and a mask trims it back to the sheet's
+   rounded rectangle after the filter has run: two bands and four corner discs, all gradients, placed by --fx/--fy/--fw/
+   --fh/--fr in the sheet's pixels, so the shape follows the reveal with nothing to decode. No ancestor of the sheet may
+   carry a filter, opacity, mask or clip-path (each would become the blur's backdrop root). */
+.ch-frost{--e:40px;--fx:0px;--fy:0px;--fw:0px;--fh:0px;--fr:14px;--mb:linear-gradient(#000 0 0);--mc:radial-gradient(closest-side,#000 calc(100% - .75px),#0000);
+ position:absolute;inset:calc(var(--e) * -1);pointer-events:none;
+ -webkit-backdrop-filter:blur(var(--ch-frost)) saturate(1.35);backdrop-filter:blur(var(--ch-frost)) saturate(1.35);
+ --ms:var(--fw) calc(var(--fh) - var(--fr) * 2),calc(var(--fw) - var(--fr) * 2) var(--fh),calc(var(--fr) * 2) calc(var(--fr) * 2),calc(var(--fr) * 2) calc(var(--fr) * 2),calc(var(--fr) * 2) calc(var(--fr) * 2),calc(var(--fr) * 2) calc(var(--fr) * 2);
+ --mp:calc(var(--e) + var(--fx)) calc(var(--e) + var(--fy) + var(--fr)),calc(var(--e) + var(--fx) + var(--fr)) calc(var(--e) + var(--fy)),
+  calc(var(--e) + var(--fx)) calc(var(--e) + var(--fy)),calc(var(--e) + var(--fx) + var(--fw) - var(--fr) * 2) calc(var(--e) + var(--fy)),
+  calc(var(--e) + var(--fx)) calc(var(--e) + var(--fy) + var(--fh) - var(--fr) * 2),calc(var(--e) + var(--fx) + var(--fw) - var(--fr) * 2) calc(var(--e) + var(--fy) + var(--fh) - var(--fr) * 2);
+ -webkit-mask-image:var(--mb),var(--mb),var(--mc),var(--mc),var(--mc),var(--mc);mask-image:var(--mb),var(--mb),var(--mc),var(--mc),var(--mc),var(--mc);
+ -webkit-mask-repeat:no-repeat;mask-repeat:no-repeat;-webkit-mask-size:var(--ms);mask-size:var(--ms);-webkit-mask-position:var(--mp);mask-position:var(--mp)}
 .ch-glass{position:absolute;inset:0;border-radius:var(--ch-sheet-r);
  background:var(--ch-sheen),color-mix(in srgb,var(--panel) var(--ch-glass),transparent);
  box-shadow:var(--ch-rim),inset 0 0 0 var(--rule-hair) var(--line-3),0 1px 2px rgba(var(--sb-shc),calc(var(--sb-sha) * .2)),0 24px 56px -24px rgba(var(--sb-shc),calc(var(--sb-sha) * 1.1))}
