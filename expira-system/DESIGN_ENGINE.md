@@ -327,6 +327,7 @@ The chat pane follows §4.1–§4.4 and the sidebar's colour logic. The old answ
     - Instead the frost is a copy of the thread, blurred with a plain `filter` (14px, saturation 1.35), on the page colour and laid exactly behind the sheet. Its offset is where the thread sits against the resting sheet, less what the thread has scrolled since, less the sheet's own travel while it moves, so no layout is read during an animation. It is rebuilt a beat (160ms) after the thread changes or resizes, and dropped when the sheet is put away.
     - Over it sits the panel tint (50% in light, 52% in dark), a sheen and a lit top edge.
     - With reduced transparency there is no frost, just a solid panel.
+  - **Calm** (the sidebar's Calm motion, or reduced motion) is responsive and snappy. The sheet is a solid panel with no frost, and no blurred copy is built. It opens and closes at once, the answer appears without inking, and hover names and marginalia appear without a blur.
   - **It closes** with Esc, a click on the empty page (not on the thread's text), a click on the grabber (focusable, Enter or Space), or a pull down. Focus goes back to the tab.
 - **One move, one progress.** A single progress, 0 (the line) to 1 (the open sheet), drives the grabber's travel, the reveal growing out of the line, the glass and the contents.
   - The reveal grows wide first, then tall, so the line becomes a bar and the bar rises. In a new chat the sheet opens in the middle of the page; in a thread it rises from the foot.
@@ -340,11 +341,24 @@ The chat pane follows §4.1–§4.4 and the sidebar's colour logic. The old answ
   - once settled, "Four desks · 1:25 · Firewall clear" and a "Show the work" word button.
 
   The ledger opens under a strong rule: the deliberation in italics, then one row per desk with its focus, verdict and time. Each row opens to its output.
-- **The answer is a master-template page:**
-  - sections under a Roman numeral in gold italic, with a serif heading over a hairline that carries a gold lead-in;
-  - `table.dt` tables: a strong top rule, a tracked caps head, hairline rows, alternating shading, tabular right-aligned figures, and a total row in the royal navy bar (gold in dark);
-  - figures in large serif numerals, a bar chart with rounded ticks, a comparison with dots, and numbered sources;
-  - a colophon with the filing time, the word count and reading time, and word buttons (Copy, Retry, Dispatch).
+- **The page is an editorial grid, almost edge to edge.** The thread spans the pane with a 28px gutter, in three columns on shared lines:
+  - **The left margin holds marginalia:**
+    - section numerals, hanging large (24px, gold, in the display italic);
+    - exhibit labels (Figures, Sources);
+    - figure and table captions, with their notes beneath;
+    - the brief's time on hover;
+    - the desks' names in the ledger;
+    - the colophon's filing time.
+  - **The text column holds the prose** at a reading measure of 520px, about 75–80 characters of 14px body. Studies put comfortable screen reading at 55–75 characters; very wide lines cost regressions and retention. So the page goes edge to edge, and the paragraphs do not.
+  - **The right margin is where exhibits extend:**
+    - the figures row, the chart, tables of more than three columns, and the work line span the text column and the right margin;
+    - the brief is set large (19px) as the page's deck across both;
+    - the ledger's verdicts and times, and the colophon's actions, sit at the far edge.
+  - **Rules run the full width.** A section's rule goes edge to edge, with the gold lead-in on it marking where the text begins.
+  - Every container down to a ledger row is a CSS subgrid on the same named lines (`ml`, `text`, `mr`, `bleed`), so every margin item hangs on one margin.
+  - The glass sheet stays centred over the text column: the one centred object on a wide page, which is what makes the glass read.
+  - The grid answers to the pane, not the window (a container query on the thread): below 900px of pane the margins fold into the text column and it reads as one column.
+- **The answer is a master-template page:** navy-ruled `table.dt` tables, serif figures, a bar chart with rounded ticks, a comparison with dots, numbered sources, and a colophon of word buttons.
 - **Ink:** the answer arrives block by block. Prose writes in word by word at 26ms a word, up to 900ms a block, each word a light blur resolving. Table rows follow 55ms apart, and chart bars rise from the baseline 60ms apart.
 - **Opening a saved chat or document** reveals the page with focus in, 16ms apart per block and capped at 260ms, rather than writing it in again.
 - **Reduced motion:** everything appears at once, with no blur.
@@ -361,6 +375,9 @@ The chat pane follows §4.1–§4.4 and the sidebar's colour logic. The old answ
 - **Tokens (v41):** every value comes from `src/tokens.css`. Spacing is a 4px scale with half steps (`--sp-half`, `--sp-1h` … `--sp-4h`) below 20px for dense chrome; a 1px nudge is optical and stays literal. Layers are named (`--z-side`, `--z-menu`, `--z-tip` …) in one stacking order. Dark tokens are written once in `@dark{}`.
 
 ## 6. Change log
+- **v45 chat bench, the editorial grid, and calm** (2026-09-27, Amadeus: "rework it to be like our macos expira hybrid … almost edge to edge … so it emphasizes the glass design in the center"; "make the calm version of the chat panel where it won't have the blur effect"): see §4.5.
+  - The thread became an almost edge-to-edge editorial grid (Tufte-style margins, full-width rules and exhibits) that keeps the prose at a reading measure, with the glass sheet centred over it.
+  - Calm gives a solid sheet with no frost and no motion.
 - **v45 chat bench, a real frost** (2026-09-27, Amadeus: "it doesn't blur the text and other assets under the chat panel, find a fix"): Chromium's `backdrop-filter` leaves an unblurred band at a panel's edges, where text stays sharp, and no layering of it fixed that. The sheet now frosts a blurred copy of the thread laid exactly behind it, glued to the page through scroll and motion. Text, figures and the chart blur right to the edge, and the tint drops back to 50% so the glass reads as glass.
 - **v45 chat bench, frost only where you type** (2026-09-27, Amadeus: "Don't make the whole page glass blur, just the interface where I type … it would not allow me to read … whatever is above the chat box"): the veil is gone and the page above the sheet stays sharp and live. The sheet alone is frosted, at 88% panel over its blur, so text beneath it cannot be read. A click on the thread's text keeps the sheet up, and typing returns to the brief; a click on the empty page puts it away.
 - **v45 chat bench, full glass and icons** (2026-09-27, Amadeus: "full glass integration. Design the layout inside the chat interface further, more refined … subtle, more about icons than text"; on the motion: "it looks like it comes out of water … keep that"): see §4.5.

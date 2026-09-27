@@ -53,8 +53,9 @@ const CH=(()=>{const ch=$("#ch"),scroll=$("#chScroll"),col=$("#chCol"),tab=$("#c
     anything animates. It is rebuilt, a beat later, when the thread changes or resizes, and dropped when the sheet is
     put away. ---- */
  let TX=0,TY=0,MB=null,mT=0;const lowT=matchMedia("(prefers-reduced-transparency: reduce)");
- function mirrorBuild(){if(lowT.matches)return;const c=col.cloneNode(true);["id","role","aria-label","aria-live"].forEach(a=>c.removeAttribute(a));
-  c.querySelectorAll("[id]").forEach(x=>x.removeAttribute("id"));c.style.width=col.offsetWidth+"px";mirror.replaceChildren(c);mo.observe(col,{subtree:true,childList:true,characterData:true,attributes:true,attributeFilter:["style","class"]})}
+ function mirrorBuild(){if(lowT.matches||root.classList.contains("calm"))return;  /* calm: a solid sheet, nothing to blur */
+ const c=col.cloneNode(true);["id","role","aria-label","aria-live"].forEach(a=>c.removeAttribute(a));
+  c.querySelectorAll("[id]").forEach(x=>x.removeAttribute("id"));mirror.style.width=col.offsetWidth+"px";mirror.replaceChildren(c);mo.observe(col,{subtree:true,childList:true,characterData:true,attributes:true,attributeFilter:["style","class"]})}
  function mirrorPlace(S){const c=box(col);MB={x:c.x-S.x,y:c.y-S.y,s:scroll.scrollTop};mirrorMove()}
  function mirrorMove(){if(!MB)return;mirror.style.transform=`translate(${(MB.x-TX).toFixed(2)}px,${(MB.y-(scroll.scrollTop-MB.s)-TY).toFixed(2)}px)`}
  function mirrorDrop(){mo.disconnect();clearTimeout(mT);mT=0;mirror.replaceChildren();MB=null;TX=TY=0}
@@ -94,9 +95,12 @@ const CH=(()=>{const ch=$("#ch"),scroll=$("#chScroll"),col=$("#chCol"),tab=$("#c
  draggable(tab,true);draggable(grab,false);
  tab.addEventListener("click",e=>{if(e.detail===0)rise()});  /* Enter and Space; a pointer click is handled on release */
  /* the page stays readable and live while the sheet is up: you can read, scroll and select above it. A click on the
-    empty page (not on the thread's text) puts the sheet away; typing while the page has focus goes back into the brief */
+    empty page (not on the thread's text or an exhibit) puts the sheet away; typing while the page has focus goes back into the brief */
  document.addEventListener("pointerdown",e=>{if(!isOpen()||P<1||e.button!==0)return;const t=e.target;
-  if(sheet.contains(t)||tab.contains(t)||col.contains(t)||!ch.contains(t))return;back()});grab.addEventListener("keydown",e=>{if(e.key==="Enter"||e.key===" "){e.preventDefault();back()}});
+  if(sheet.contains(t)||tab.contains(t)||!ch.contains(t))return;
+  /* the thread now spans the pane: a click on its text or an exhibit keeps the sheet, a click on the empty grid
+     around them (a container itself, not something in it) puts it away */
+  if(col.contains(t)&&!t.matches(".ch-col,.ch-turn,.ch-doc,.ch-sec,.ch-ex,.ch-fig,.ch-led,.ch-step,.ch-mk,.ch-colo,.ch-dochead"))return;back()});grab.addEventListener("keydown",e=>{if(e.key==="Enter"||e.key===" "){e.preventDefault();back()}});
  sheet.addEventListener("keydown",e=>{if(e.key==="Escape"){e.preventDefault();e.stopPropagation();back()}});
  /* start typing anywhere in the pane and the sheet comes up with what you typed; with the sheet already up, typing
     after reading or selecting above goes back into the brief */
@@ -191,16 +195,16 @@ const CH=(()=>{const ch=$("#ch"),scroll=$("#chScroll"),col=$("#chCol"),tab=$("#c
  const ROMAN=["I","II","III","IV","V","VI","VII","VIII","IX","X"];
  const isNum=c=>/^(\*\*)?(PHP|₱|\$)?\s?-?[\d,.]+(%| days?| weeks?)?(\*\*)?$/.test(c.trim());
  function table(rows){const [h,...b]=rows;const nc=h.map((_,j)=>b.length&&b.every(r=>!r[j]||isNum(r[j])));
-  return `<table class="ch-dt"><thead><tr>${h.map((c,j)=>`<th${nc[j]?' class="num"':""}>${inl(c)}</th>`).join("")}</tr></thead><tbody>${b.map(r=>`<tr${r.every(c=>!c||/^\*\*.*\*\*$/.test(c))?' class="total"':""}>${r.map((c,j)=>`<td${nc[j]?' class="num"':""}>${inl(c)}</td>`).join("")}</tr>`).join("")}</tbody></table>`}
+  return `<table class="ch-dt${h.length>3?" wide":""}"><thead><tr>${h.map((c,j)=>`<th${nc[j]?' class="num"':""}>${inl(c)}</th>`).join("")}</tr></thead><tbody>${b.map(r=>`<tr${r.every(c=>!c||/^\*\*.*\*\*$/.test(c))?' class="total"':""}>${r.map((c,j)=>`<td${nc[j]?' class="num"':""}>${inl(c)}</td>`).join("")}</tr>`).join("")}</tbody></table>`}
  function page(md0){return md(md0).map((s,i)=>`<section class="ch-sec">${s.title?`<header class="ch-mk"><span class="n">${ROMAN[i-(md(md0)[0].title?0:1)]||""}</span><h2>${inl(s.title)}</h2></header>`:""}`+
   s.body.map(b=>b.t==="p"?`<p>${inl(b.text)}</p>`:b.t==="ul"?`<ul>${b.items.map(x=>`<li>${inl(x)}</li>`).join("")}</ul>`:table(b.rows)).join("")+`</section>`).join("")}
 
  /* ---- exhibits: figures, a chart, a comparison, the sources ---- */
  function exhibits(ex){if(!ex)return"";let h=`<div class="ch-ex">`,n=0;
   if(ex.facts?.length)h+=`<div class="ch-exh">Figures</div><div class="ch-figs">${ex.facts.map(f=>`<div><b>${esc(f.value)}</b><span>${esc(f.label)}</span>${f.note?`<em>${esc(f.note)}</em>`:""}</div>`).join("")}</div>`;
-  (ex.charts||[]).forEach(c=>{n++;h+=`<figure class="ch-fig"><figcaption class="ch-fcap"><span class="f">Fig. ${n}</span><b>${esc(c.title)}</b><small>${esc(c.unit||"")}</small></figcaption>${bars(c)}${c.note?`<p class="ch-note">${esc(c.note)}</p>`:""}</figure>`});
-  if(ex.matrix){const m=ex.matrix;h+=`<figure class="ch-fig"><figcaption class="ch-fcap"><span class="f">Table</span><b>${esc(m.title)}</b></figcaption><table class="ch-dt"><thead><tr><th><span class="sr">Option</span></th>${m.columns.map(c=>`<th>${esc(c)}</th>`).join("")}</tr></thead><tbody>`+
-   m.rows.map(r=>`<tr${/recommended/i.test(r.name)?' class="pick"':""}><td>${esc(r.name.replace(/\s*\(recommended\)/i,""))}${/recommended/i.test(r.name)?"<em>recommended</em>":""}</td>${r.cells.map(v=>`<td>${typeof v==="number"?`<span class="ch-dots" role="img" aria-label="${v} of 5">${[1,2,3,4,5].map(k=>`<i class="${k<=v?"on":""}"></i>`).join("")}</span>`:esc(v)}</td>`).join("")}</tr>`).join("")+`</tbody></table>${m.note?`<p class="ch-note">${esc(m.note)}</p>`:""}</figure>`}
+  (ex.charts||[]).forEach(c=>{n++;h+=`<figure class="ch-fig"><figcaption class="ch-fcap"><span class="f">Fig. ${n}</span><b>${esc(c.title)}</b><small>${esc(c.unit||"")}</small>${c.note?`<p class="ch-note">${esc(c.note)}</p>`:""}</figcaption>${bars(c)}</figure>`});
+  if(ex.matrix){const m=ex.matrix;h+=`<figure class="ch-fig"><figcaption class="ch-fcap"><span class="f">Table</span><b>${esc(m.title)}</b>${m.note?`<p class="ch-note">${esc(m.note)}</p>`:""}</figcaption><table class="ch-dt wide"><thead><tr><th><span class="sr">Option</span></th>${m.columns.map(c=>`<th>${esc(c)}</th>`).join("")}</tr></thead><tbody>`+
+   m.rows.map(r=>`<tr${/recommended/i.test(r.name)?' class="pick"':""}><td>${esc(r.name.replace(/\s*\(recommended\)/i,""))}${/recommended/i.test(r.name)?"<em>recommended</em>":""}</td>${r.cells.map(v=>`<td>${typeof v==="number"?`<span class="ch-dots" role="img" aria-label="${v} of 5">${[1,2,3,4,5].map(k=>`<i class="${k<=v?"on":""}"></i>`).join("")}</span>`:esc(v)}</td>`).join("")}</tr>`).join("")+`</tbody></table></figure>`}
   if(ex.sources?.length)h+=`<div class="ch-exh">Sources</div><ol class="ch-src">${ex.sources.map(s=>`<li><span>${esc(s.title)}</span><em class="${s.note==="verified"?"ok":""}">${esc(s.note||"")}</em></li>`).join("")}</ol>`;
   return h+`</div>`}
  /* a bar chart drawn as the template draws one: hairline gridlines, one series in the house navy (gold in the dark),
