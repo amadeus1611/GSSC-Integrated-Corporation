@@ -196,9 +196,9 @@ settings once Phase 1.2 puts them on the answer.
 
 The research pass (everything above) runs in the page. The **furtherance pass** is an optional second pass in a Claude Code
 session on the viewer's own account, for refined and focused work: a legal reading, a deeper source hunt, a costed
-build-up, a review, and LAYA's checks for client-facing work. It shows in the relay as a **Further** gate, is set from one
+build-up, a review, and LAYA's checks for client-facing work. It shows in the relay as a **Furtherance** gate, is set from one
 more icon in the sheet (Off, Ask, Auto; default Ask), and never blocks or replaces the research answer. The full plan,
-the job contract, the phases F0 to F5 and the decisions are in `FURTHERANCE_PLAN.md`. **F0 (a spike proving the page can
+the job contract, the model-and-effort routing per domain (Sonnet 5.5 for checkable work, escalating on a failed check; Opus 5.5 high for unchecked or client-bound one-shot work; settled by a trial before anything is reassigned), the phases F0 to F5 and the decisions are in `FURTHERANCE_PLAN.md`. **F0 (a spike proving the page can
 start a session and exchange a job document with it) comes first and needs one real attempt on your account; if it fails,
 the plan stops there.**
 
