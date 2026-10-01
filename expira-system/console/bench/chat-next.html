@@ -50,6 +50,16 @@ BENCH.name="Chat · v45 draft";
       </div>
       <button class="ch-tab" id="chTab" type="button" aria-expanded="false" aria-controls="chSheet" aria-label="Brief EXPIRA: pull up, or start typing"><i class="ln"></i><span class="lb">Brief EXPIRA</span><span class="ht">pull up, or start typing</span></button>
       <button class="ch-more" id="chMore" type="button" tabindex="-1" aria-label="More below"><svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 4.5 6 7.5 9 4.5"/></svg></button>
+      <nav class="ch-rail" id="chRail" aria-label="Prompts">
+        <button class="ch-rt" id="chRt" type="button" aria-expanded="false" aria-controls="chOutline" aria-label="Prompts: open the outline" data-tip="Prompts"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" aria-hidden="true"><path d="M3.5 4.5h9M3.5 8h6.5M3.5 11.5h8"/></svg></button>
+        <div class="ch-rp" id="chRp"></div>
+      </nav>
+      <div class="ch-peek" id="chPeek" aria-hidden="true" hidden><div class="pk"></div></div>
+      <div class="ch-outline" id="chOutline" role="dialog" aria-label="Prompts in this chat" hidden>
+        <header><b>Prompts</b><span id="chOn"></span></header>
+        <label class="ch-ofw" hidden><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" aria-hidden="true"><circle cx="7.2" cy="7.2" r="3.9"/><path d="m10.1 10.1 3 3"/></svg><input id="chOf" type="search" placeholder="Filter prompts" aria-label="Filter prompts" autocomplete="off" spellcheck="false"></label>
+        <div class="ch-ol" id="chOl"></div>
+      </div>
       <div class="ch-sheet" id="chSheet" role="dialog" aria-label="Brief EXPIRA">
         <div class="ch-frost" aria-hidden="true"></div>
         <div class="ch-glass" aria-hidden="true"></div>

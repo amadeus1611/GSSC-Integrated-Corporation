@@ -43,7 +43,7 @@ def slice_by_id(text, i, where):
     raise SystemExit(f'bench: <{tag} id="{i}"> is never closed in {where}')
 
 
-def build(name):
+def build(name, clean=False):
     spec = os.path.join(HERE, name + '.html')
     if not os.path.isfile(spec):
         raise SystemExit(f'bench: no specimen {name}.html in bench/')
@@ -54,6 +54,8 @@ def build(name):
             out.append(line)
             continue
         kind, rel, i = m.groups()
+        if clean and kind == 'bench' and rel in ('panel.css', 'panel.js'):
+            continue  # --clean: no tuning panel (the page that gets published)
         base = HERE if kind == 'bench' else SRC
         p = os.path.normpath(os.path.join(base, rel))
         if not p.startswith(base + os.sep) or not os.path.isfile(p):
@@ -72,9 +74,9 @@ def build(name):
     return '\n'.join(out)
 
 
-def write(name):
+def write(name, clean=False):
     os.makedirs(OUT, exist_ok=True)
-    html = build(name)
+    html = build(name, clean)
     p = os.path.join(OUT, name + '.html')
     with open(p, 'w', encoding='utf-8', newline='') as f:
         f.write(html)
@@ -106,12 +108,12 @@ def main():
     args = [a for a in sys.argv[1:] if not a.startswith('--')]
     if not args:
         names = sorted(f[:-5] for f in os.listdir(HERE) if f.endswith('.html'))
-        raise SystemExit('usage: bench.py <specimen> [--serve [port]]\nspecimens: ' + ', '.join(names))
+        raise SystemExit('usage: bench.py <specimen> [--clean] [--serve [port]]\nspecimens: ' + ', '.join(names))
     name = args[0]
     if '--serve' in sys.argv:
         serve(name, int(args[1]) if len(args) > 1 else 8765)
     else:
-        p, n = write(name)
+        p, n = write(name, '--clean' in sys.argv)
         print(f'bench: wrote {os.path.relpath(p, CONSOLE)} ({n:,} bytes)')
 
 

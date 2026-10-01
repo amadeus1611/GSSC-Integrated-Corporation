@@ -436,7 +436,7 @@ const CH=(()=>{const ch=$("#ch"),scroll=$("#chScroll"),col=$("#chCol"),tab=$("#c
   if(!a){a=words[0];k=1}let b=words.slice(k).join(" ");const cut=x=>{if(tpx(x)<=w)return x;while(x.length>1&&tpx(x+"…")>w)x=x.slice(0,-1);return x+"…"};return b?[cut(a),cut(b)]:[cut(a)]}
  function bars(c){const v=c.series[0].values;
   return `<svg class="ch-chart" data-c="${esc(JSON.stringify({l:c.labels,v}))}" role="img" aria-label="${esc(c.title)}: ${c.labels.map((l,i)=>l+" "+v[i].toLocaleString("en-US")).join(", ")}"></svg>`}
- function drawChart(svg){const W=Math.round(svg.getBoundingClientRect().width||svg.parentElement.clientWidth);if(!W||W===svg._w)return;svg._w=W;
+ function drawChart(svg,w0){const W=Math.round(w0??(svg.getBoundingClientRect().width||svg.parentElement.clientWidth));if(!W||W===svg._w)return;svg._w=W;
   let d;try{d=JSON.parse(svg.dataset.c)}catch(e){return}const v=d.v,n=v.length,top=niceTop(Math.max(1,...v)),ticks=[0,.25,.5,.75,1].map(f=>top*f);
   const L=Math.ceil(Math.max(...ticks.map(t=>tpx(t.toLocaleString("en-US")))))+10,slot=(W-L)/n,lab=d.l.map(l=>fitLabel(l,Math.max(24,slot-8))),rows=Math.max(1,...lab.map(x=>x.length));
   const H=W<520?184:220,Bm=12+rows*12,T=18,bw=Math.max(6,Math.min(56,slot*.46)),y=x=>T+(H-T-Bm)*(1-Math.max(0,x)/top);
@@ -448,7 +448,7 @@ const CH=(()=>{const ch=$("#ch"),scroll=$("#chScroll"),col=$("#chCol"),tab=$("#c
      `<text class="lb" x="${cx.toFixed(1)}" y="${(y(0)+15).toFixed(1)}" text-anchor="middle">${lab[i].map((t,j)=>`<tspan x="${cx.toFixed(1)}" dy="${j?12:0}">${esc(t)}</tspan>`).join("")}${lab[i].join(" ")!==d.l[i]?`<title>${esc(d.l[i])}</title>`:""}</text>`}).join("")+
    `<line class="base" x1="${L}" x2="${W}" y1="${y(0).toFixed(1)}" y2="${y(0).toFixed(1)}"/>`}
  /* one watcher for every chart's width: a change redraws it on the next frame, never inside the observer */
- const CRO=new ResizeObserver(es=>requestAnimationFrame(()=>es.forEach(e=>{if(e.target.isConnected)drawChart(e.target)})));
+ const CRO=new ResizeObserver(es=>{const W=es.map(e=>e.contentRect.width);requestAnimationFrame(()=>es.forEach((e,k)=>{if(e.target.isConnected)drawChart(e.target,W[k])}))});
  const colophon=(d,md0)=>{const n=String(md0).replace(/[#|*-]/g," ").split(/\s+/).filter(Boolean).length;
   return `<footer class="ch-colo"><span>Filed ${hhmm(d)}</span><span>${n} words · ${Math.max(1,Math.round(n/220))} min read</span><span class="acts"><button class="ch-act" type="button" data-act="copy">Copy</button><button class="ch-act" type="button" data-act="retry">Retry</button></span></footer>`};
 
@@ -498,7 +498,7 @@ const CH=(()=>{const ch=$("#ch"),scroll=$("#chScroll"),col=$("#chCol"),tab=$("#c
   svg.querySelectorAll(".bar").forEach((b,k)=>b.animate([{transform:"none"},{transform:"scaleY(0)"}],{duration:ms("--sb-out"),delay:k*25,easing:EZ(),fill:"forwards"}));
   svg.querySelectorAll("text.v").forEach(v=>v.animate(focusOut(B()*.5),{duration:ms("--sb-out"),easing:EZ(),fill:"forwards"}))}
  const CIO=new IntersectionObserver(es=>es.forEach(e=>{const c=e.target;if(e.isIntersecting&&e.intersectionRatio>=.3){if(!c._in)chartIn(c,120)}else if(!e.isIntersecting&&c._in){c._in=false}}),{root:scroll,threshold:[0,.3]});
- const watchCharts=root=>root&&root.querySelectorAll(".ch-chart").forEach(c=>{drawChart(c);CRO.observe(c);CIO.observe(c)});
+ const watchCharts=root=>{if(!root)return;const L=[...root.querySelectorAll(".ch-chart")],W=L.map(c=>c.getBoundingClientRect().width);L.forEach((c,k)=>{drawChart(c,W[k]);CRO.observe(c);CIO.observe(c)})};  /* every width is read before any chart is written, so a long thread lays out once */
 
  /* ---- the answer flows in, top to bottom: while it streams, each block new since the last frame focuses in after
     the one before it, and the block still being written stays in place. Re-rendered at most every 120ms. ---- */
@@ -511,7 +511,9 @@ const CH=(()=>{const ch=$("#ch"),scroll=$("#chScroll"),col=$("#chCol"),tab=$("#c
  function flowIn(bl){if(reduce||!bl.length)return;flowIO?.disconnect();const vh=scroll.clientHeight,top=scroll.getBoundingClientRect().top;let k=0;
   const go=(b,d)=>{pull(b,d,ms("--sb-in"));const c=b.matches(".ch-fig")&&b.querySelector(".ch-chart");if(c)chartIn(c,d+80)};  /* a chart rises with its block */
   flowIO=new IntersectionObserver(es=>{let j=0;es.forEach(e=>{if(!e.isIntersecting)return;flowIO.unobserve(e.target);e.target.classList.remove("ch-pre");go(e.target,Math.min(240,j++*45))})},{root:scroll,rootMargin:"0px 0px -6% 0px"});
-  bl.forEach(b=>{const r=b.getBoundingClientRect();if(r.top-top<vh)go(b,Math.min(900,k++*45));else{b.classList.add("ch-pre");flowIO.observe(b)}})}
+  /* every position is read before anything is written: a long thread lays out once, not once per block */
+  const R=bl.map(b=>b.getBoundingClientRect().top-top);
+  bl.forEach((b,n)=>{if(R[n]<vh)go(b,Math.min(900,k++*45));else{b.classList.add("ch-pre");flowIO.observe(b)}})}
  /* ink: blocks arrive in order; inside a paragraph or a list item the words surface a few at a time out of a small
     blur, as if written; tables arrive row by row, figures one by one, the chart's bars grow from the baseline */
  let inkT=[];
@@ -536,6 +538,80 @@ const CH=(()=>{const ch=$("#ch"),scroll=$("#chScroll"),col=$("#chCol"),tab=$("#c
  let pinned=true;scroll.addEventListener("scroll",()=>{pinned=scroll.scrollTop+scroll.clientHeight>scroll.scrollHeight-80;scroll.classList.toggle("f-s",scroll.scrollTop>2);moreCheck()},{passive:true});
  const follow=()=>{if(pinned)scrollEnd(false)};
  function scrollEnd(smooth){scroll.scrollTo({top:scroll.scrollHeight,behavior:smooth&&!reduce?"smooth":"auto"})}
+
+ /* ---- the prompt rail: a way through a long session. One small mark per prompt on the right edge (a dot; the one
+    you are reading stretches to a gold pill; a running one breathes; a stopped or held one goes red). Rest the pointer
+    on the rail and a card beside it says what that prompt was and how it went; the rail answers to the nearest mark, so
+    there are no dead gaps. Click or Enter jumps to it, the wheel over the rail steps one prompt, and the arrows move
+    along it. Past 24 prompts the rail shows a window of 24 around the one you are on, with how many wait above and
+    below. The small tab at the top pulls out the outline: every prompt, with its time, how it ended, the desks and
+    sources it used, and a filter once there are more than eight. It reads the thread itself (each .ch-brief and the
+    answer under it), so it follows whatever the thread shows: a live run, a reopened chat, a retried turn. ---- */
+ const rail=$("#chRail"),rp=$("#chRp"),rt=$("#chRt"),peek=$("#chPeek"),pk=peek.querySelector(".pk"),outl=$("#chOutline"),olL=$("#chOl"),olF=$("#chOf"),olN=$("#chOn");
+ const WIN=24,NOTDESK=new Set(["orch","staff","weigh","exa","answer","check"]);
+ let PR=[],act=0,drawn="",olOpen=false,pkAt=-1,pkT=0,rT=0,wT=0;
+ const plural=(n,w)=>`${n} ${w}${n===1?"":"s"}`;
+ function gather(){return [...col.querySelectorAll(":scope>.ch-brief")].map((b,i)=>{const a=b.nextElementSibling&&b.nextElementSibling.classList.contains("ch-a")?b.nextElementSibling:null;
+  let st="done",txt="";if(a){if(a.getAttribute("aria-busy")==="true"){st="live";txt="Working"}else{txt=(a.querySelector(".ch-runm .now")?.textContent||"").trim();st=/held/i.test(txt)?"warn":/stopped|could not|isn.t allowed|try again/i.test(txt)?"stop":"done"}}
+  const desks=a?[...a.querySelectorAll(".ch-node[data-k]")].filter(n=>!NOTDESK.has(n.dataset.k)).length:0,srcs=a?a.querySelectorAll(".ch-sat").length:0;
+  return {b,i,q:(b.querySelector(".ch-quote")?.textContent||"").trim(),time:b.querySelector(".ch-when")?.textContent||"",st,txt,desks,srcs}})}
+ const metaOf=p=>[p.time,p.txt,p.desks?plural(p.desks,"desk"):"",p.srcs?plural(p.srcs,"source"):""].filter(Boolean).join(" · ");
+ /* which prompt is being read: the last one whose top has passed a third of the way down the pane */
+ function reading(){if(!PR.length)return 0;const sr=scroll.getBoundingClientRect();if(scroll.scrollTop+scroll.clientHeight>=scroll.scrollHeight-4)return PR.length-1;
+  let k=0;PR.forEach((p,i)=>{if(p.b.getBoundingClientRect().top-sr.top<=scroll.clientHeight*.3)k=i});return k}
+ const winOf=()=>{const n=PR.length,s=n>WIN?Math.max(0,Math.min(n-WIN,act-(WIN>>1))):0;return [s,Math.min(n,s+WIN)]};
+ function drawRail(){const [s,e]=winOf(),sig=PR.map(p=>p.st[0]).join("")+"|"+s;
+  if(sig!==drawn){const prev=rp.querySelectorAll(".ch-pl").length,same=drawn.endsWith("|"+s);drawn=sig;
+   rp.innerHTML=(s>0?`<button class="ch-rm" type="button" data-go="${s-1}" aria-label="${plural(s,"earlier prompt")}">↑${s}</button>`:"")+
+    PR.slice(s,e).map(p=>`<button class="ch-pl ${p.st}" type="button" data-i="${p.i}" aria-label="Prompt ${p.i+1} of ${PR.length}: ${esc(p.q.slice(0,80))}"><i class="d"></i><i class="p"></i></button>`).join("")+
+    (e<PR.length?`<button class="ch-rm" type="button" data-go="${e}" aria-label="${plural(PR.length-e,"later prompt")}">${PR.length-e}↓</button>`:"");
+   if(!reduce&&same)[...rp.querySelectorAll(".ch-pl")].slice(prev).forEach((x,k)=>x.animate(focusIn(B()*.3),{duration:ms("--sb-in"),delay:k*40,easing:EZ(),fill:"backwards"}))}
+  markRail()}
+ function markRail(){rp.querySelectorAll(".ch-pl").forEach(x=>{const on=+x.dataset.i===act;x.classList.toggle("on",on);x.tabIndex=on?0:-1;if(on)x.setAttribute("aria-current","true");else x.removeAttribute("aria-current")})}
+ function syncRail(){PR=gather();const show=mode==="thread"&&PR.length>=2;rail.classList.toggle("on",show);if(!show){peekOff(true);outlineOff(true);return}
+  act=reading();drawRail();if(olOpen)drawOutline()}
+ const soonRail=()=>{if(!rT)rT=setTimeout(()=>{rT=0;try{syncRail()}catch(e){console.error("rail",e.message,e.stack.split("\n")[1])}},220)};
+ new MutationObserver(soonRail).observe(col,{childList:true,subtree:true,attributes:true,attributeFilter:["aria-busy"]});
+ let rf=0;scroll.addEventListener("scroll",()=>{if(rf||!rail.classList.contains("on"))return;rf=requestAnimationFrame(()=>{rf=0;const k=reading();if(k!==act){act=k;drawRail();if(olOpen)markOutline()}})},{passive:true});
+ /* the jump: the prompt comes to a little below the top, and its quote lands in focus */
+ function jump(i){const p=PR[i];if(!p)return;const sr=scroll.getBoundingClientRect(),br=p.b.getBoundingClientRect();
+  scroll.scrollTo({top:scroll.scrollTop+br.top-sr.top-22,behavior:reduce?"auto":"smooth"});act=i;drawRail();if(olOpen)markOutline();
+  const q=p.b.querySelector(".ch-quote");if(q&&!reduce)setTimeout(()=>pull(q,0,ms("--sb-in")),200)}
+ const step=d=>{if(!PR.length)return;jump(Math.max(0,Math.min(PR.length-1,act+d)))};
+ /* the card beside a mark */
+ function peekOn(i){const p=PR[i],x=rp.querySelector(`.ch-pl[data-i="${i}"]`);if(!p||!x)return;clearTimeout(pkT);
+  const was=!peek.hidden;pk.innerHTML=`<small>${i+1} of ${PR.length}${p.time?" · "+p.time:""}</small><p>${esc(p.q)}</p>${metaOf(p)?`<em class="${p.st}">${esc(metaOf(p))}</em>`:""}`;
+  peek.hidden=false;const cr=ch.getBoundingClientRect(),xr=x.getBoundingClientRect(),h=peek.offsetHeight,y=Math.max(8,Math.min(cr.height-h-8,xr.top-cr.top+xr.height/2-18));
+  peek.style.translate=`0 ${y.toFixed(1)}px`;if(was&&pkAt===i)return;if(!was)peek.style.transition="none";else peek.style.transition="";
+  if(!was){void peek.offsetWidth;peek.style.transition=""}pkAt=i;
+  if(!reduce)pk.animate(was?focusIn(B()*.3):[{opacity:0,transform:"translateX(8px)",filter:`blur(${B()*.5}px)`},{opacity:1,transform:"none",filter:"blur(0px)"}],{duration:ms("--sb-in")*(was?.7:1),easing:EZ()})}
+ function peekOff(now){clearTimeout(pkT);if(peek.hidden)return;pkAt=-1;const end=()=>{if(pkAt<0)peek.hidden=true};if(now||reduce)return end();
+  pk.animate(focusOut(B()*.5),{duration:ms("--sb-out"),easing:EZ()}).finished.then(end,end)}
+ rp.addEventListener("pointerover",e=>{const x=e.target.closest(".ch-pl");if(x)peekOn(+x.dataset.i)});
+ rail.addEventListener("pointerleave",()=>{clearTimeout(pkT);pkT=setTimeout(()=>peekOff(),140)});
+ rp.addEventListener("focusin",e=>{const x=e.target.closest(".ch-pl");if(x&&e.target.matches(":focus-visible"))peekOn(+x.dataset.i)});
+ rp.addEventListener("focusout",()=>{pkT=setTimeout(()=>{if(!rail.matches(":hover"))peekOff()},60)});
+ rp.addEventListener("click",e=>{const x=e.target.closest(".ch-pl,.ch-rm");if(!x)return;jump(+(x.dataset.i??x.dataset.go))});
+ rp.addEventListener("wheel",e=>{e.preventDefault();const t=Date.now();if(t-wT<170)return;wT=t;step(e.deltaY>0?1:-1)},{passive:false});
+ rail.addEventListener("keydown",e=>{const L=[...rp.querySelectorAll(".ch-pl")],i=L.indexOf(document.activeElement);
+  if(e.key==="Escape"){if(olOpen){e.preventDefault();e.stopPropagation();outlineOff();rt.focus({preventScroll:true})}else peekOff();return}
+  if(i<0||!/^(Arrow(Up|Down|Left|Right)|Home|End)$/.test(e.key))return;e.preventDefault();
+  const j=e.key==="Home"?0:e.key==="End"?L.length-1:Math.max(0,Math.min(L.length-1,i+(/Up|Left/.test(e.key)?-1:1)));L[j].focus({preventScroll:true});peekOn(+L[j].dataset.i)});
+ /* the pullout: the whole session as a list */
+ function drawOutline(){const q=olF.value.trim().toLowerCase();olN.textContent=PR.length;olF.parentElement.hidden=PR.length<=8;
+  olL.innerHTML=PR.map(p=>`<button class="ch-or${p.i===act?" on":""}" type="button" data-i="${p.i}"${q&&!p.q.toLowerCase().includes(q)?" hidden":""}><i class="n">${p.i+1}</i><span class="t">${esc(p.q)}</span><span class="s ${p.st}" aria-hidden="true"></span><span class="m">${esc(metaOf(p))}</span></button>`).join("")}
+ function markOutline(){olL.querySelectorAll(".ch-or").forEach(x=>x.classList.toggle("on",+x.dataset.i===act))}
+ function outlineOn(){if(olOpen)return;olOpen=true;peekOff(true);PR=gather();drawOutline();outl.hidden=false;rt.setAttribute("aria-expanded","true");rt.classList.add("on");
+  if(!reduce)outl.animate([{opacity:0,transform:"translateX(10px)",filter:`blur(${B()*.6}px)`},{opacity:1,transform:"none",filter:"blur(0px)"}],{duration:ms("--sb-in"),easing:EZ()});
+  const row=olL.querySelector(".ch-or.on")||olL.querySelector(".ch-or");row?.focus({preventScroll:true});row?.scrollIntoView({block:"center"})}
+ function outlineOff(now){if(!olOpen)return;olOpen=false;rt.setAttribute("aria-expanded","false");rt.classList.remove("on");const end=()=>{if(!olOpen)outl.hidden=true};
+  if(now||reduce)return end();outl.animate(focusOut(B()*.6),{duration:ms("--sb-out"),easing:EZ()}).finished.then(end,end)}
+ rt.addEventListener("click",()=>olOpen?outlineOff():outlineOn());
+ olL.addEventListener("click",e=>{const x=e.target.closest(".ch-or");if(!x)return;outlineOff();jump(+x.dataset.i)});
+ olF.addEventListener("input",drawOutline);
+ outl.addEventListener("keydown",e=>{if(e.key==="Escape"){e.preventDefault();e.stopPropagation();outlineOff();rt.focus({preventScroll:true})}
+  else if(/^Arrow(Up|Down)$/.test(e.key)&&document.activeElement!==olF){const L=[...olL.querySelectorAll(".ch-or:not([hidden])")],i=L.indexOf(document.activeElement);if(i<0&&e.key==="ArrowDown"){L[0]?.focus();e.preventDefault();return}e.preventDefault();L[Math.max(0,Math.min(L.length-1,i+(e.key==="ArrowDown"?1:-1)))]?.focus()}});
+ document.addEventListener("pointerdown",e=>{if(olOpen&&!outl.contains(e.target)&&!rail.contains(e.target))outlineOff()},true);
 
  /* ---- opening a chat or a document from the tree: shown settled; its blocks pull focus in order, 16ms apart ---- */
  function open(n){if(running)stopRun();CIO.disconnect();cur=n;const was=mode;mode="thread";shut(true);ch.classList.remove("start");ch.classList.add("thread");tabSay();setTitle(n.t);

@@ -412,3 +412,53 @@
 /* words ink in as they stream: each one surfaces out of a small blur, on the one curve (chat-next.js) */
 .ch-w{display:inline}
 @media (max-width:760px){.ch-scroll{padding:var(--sp-4) var(--sp-4) 88px}.ch-sheet{width:calc(100% - var(--sp-4) * 2)}.ch-sign{left:var(--sp-4)}.ch-when{display:none}}
+
+/* ---- the prompt rail (chat-next.js, "the prompt rail"): a dot per prompt on the right edge, the one being read a gold
+   pill; a card beside the mark under the pointer; a tab that pulls out the outline. Dots and pills cross-fade (opacity
+   only); the card slides with `translate`. Nothing here contains the composer sheet, so its live glass is untouched. ---- */
+.ch-rail{position:absolute;right:8px;top:50%;translate:0 -50%;z-index:2;width:24px;display:flex;flex-direction:column;align-items:center;max-height:calc(100% - 140px);
+ opacity:0;visibility:hidden;transition:opacity var(--sb-out) var(--sb-ease),visibility 0s linear var(--sb-out)}
+.ch-rail.on{opacity:1;visibility:visible;transition:opacity var(--sb-in) var(--sb-ease)}
+.ch-rt{all:unset;display:grid;place-items:center;width:22px;height:22px;margin-bottom:4px;border-radius:50%;color:var(--mute);cursor:pointer;transition:color var(--sb-out) var(--sb-ease),background var(--sb-out) var(--sb-ease)}
+.ch-rt svg{width:12px;height:12px}.ch-rt:hover,.ch-rt.on{color:var(--ink);background:var(--line);transition-duration:var(--sb-in)}
+.ch-rt:focus-visible,.ch-pl:focus-visible,.ch-rm:focus-visible{outline:var(--rule) solid var(--gold);outline-offset:1px}
+.ch-rt[data-tip]::after{display:none}
+.ch-rp{display:flex;flex-direction:column;align-items:center}
+.ch-pl{all:unset;position:relative;display:block;width:24px;height:14px;cursor:pointer;-webkit-tap-highlight-color:transparent}
+.ch-pl i{position:absolute;left:50%;top:50%;translate:-50% -50%;display:block;transition:opacity var(--sb-move) var(--sb-ease),background var(--sb-move) var(--sb-ease)}
+.ch-pl .d{width:4px;height:4px;border-radius:50%;background:color-mix(in srgb,var(--ink) 30%,transparent)}
+.ch-pl .p{width:12px;height:4px;border-radius:2px;background:var(--gold);opacity:0}
+.ch-pl.on .p{opacity:1}.ch-pl.on .d{opacity:0}
+.ch-pl:hover:not(.on) .p{opacity:.5;background:var(--ink)}.ch-pl:hover:not(.on) .d{opacity:0}
+.ch-pl.done:not(.on) .d{background:color-mix(in srgb,var(--ink) 36%,transparent)}
+.ch-pl.live .d{background:var(--gold)}
+.ch-pl.live::after{content:"";position:absolute;left:50%;top:50%;width:10px;height:10px;margin:-5px 0 0 -5px;border-radius:50%;box-shadow:0 0 0 1px var(--gold);opacity:0;animation:breathe var(--t-loop) var(--ease-inout) infinite;pointer-events:none}
+.ch-pl.stop:not(.on) .d,.ch-pl.warn:not(.on) .d{background:var(--bad)}
+.ch-rm{all:unset;display:block;padding:2px 0;font:400 9px/1 var(--f-body);color:var(--mute);font-variant-numeric:tabular-nums;cursor:pointer}.ch-rm:hover{color:var(--ink)}
+.ch-peek{position:absolute;right:40px;top:0;z-index:4;width:min(264px,calc(100% - 80px));pointer-events:none;transition:translate var(--sb-move) var(--sb-ease)}
+.ch-peek[hidden]{display:none}
+.ch-peek .pk,.ch-outline{border-radius:12px;background:var(--ch-sheen),var(--panel);
+ box-shadow:var(--ch-rim),inset 0 0 0 var(--rule-hair) var(--line-3),0 1px 2px rgba(var(--sb-shc),calc(var(--sb-sha) * .2)),0 18px 40px -18px rgba(var(--sb-shc),calc(var(--sb-sha) * 1.1))}
+.ch-peek .pk{padding:var(--sp-2h) var(--sp-3)}
+.ch-peek small{display:block;font:400 var(--fs-chrome) var(--f-body);color:var(--mute);font-variant-numeric:tabular-nums}
+.ch-peek p{margin:3px 0 0;font:italic 400 14px/1.4 var(--f-display);color:var(--ink);display:-webkit-box;-webkit-line-clamp:5;-webkit-box-orient:vertical;overflow:hidden}
+.ch-peek em{display:block;margin-top:var(--sp-1h);font:400 var(--fs-chrome) var(--f-body);font-style:normal;color:var(--mute)}
+.ch-peek em.warn,.ch-peek em.stop{color:var(--bad)}
+.ch-outline{position:absolute;right:40px;top:48px;bottom:132px;z-index:4;width:min(320px,calc(100% - 80px));display:flex;flex-direction:column;overflow:hidden}
+.ch-outline[hidden]{display:none}
+.ch-outline header{display:flex;align-items:baseline;gap:var(--sp-2);padding:var(--sp-3) var(--sp-3h) var(--sp-2)}
+.ch-outline header b{font-weight:600;font-size:var(--fs-micro);letter-spacing:var(--tracked);text-transform:uppercase;color:var(--ink)}
+.ch-outline header span{margin-left:auto;font:italic 400 var(--fs-chrome-2) var(--f-display);color:var(--gold-ink)}
+.ch-ofw{display:flex;align-items:center;gap:var(--sp-2);margin:0 var(--sp-3) var(--sp-2);padding:0 var(--sp-2);height:26px;border-radius:7px;background:var(--line);color:var(--mute)}
+.ch-ofw[hidden]{display:none}.ch-ofw svg{width:12px;height:12px;flex:none}
+.ch-ofw input{all:unset;flex:1;min-width:0;font:400 var(--fs-chrome-2) var(--f-body);color:var(--ink)}.ch-ofw:focus-within{box-shadow:0 0 0 var(--rule) var(--gold)}
+.ch-ol{flex:1;min-height:0;overflow:auto;scrollbar-width:thin;padding:0 0 var(--sp-2)}
+.ch-or{all:unset;box-sizing:border-box;display:grid;grid-template-columns:22px 1fr 8px;gap:1px var(--sp-2);width:100%;padding:7px var(--sp-3h);cursor:pointer;transition:background var(--sb-out) var(--sb-ease)}
+.ch-or[hidden]{display:none}.ch-or:hover,.ch-or:focus-visible{background:var(--line);transition-duration:calc(var(--sb-in) * .5)}.ch-or:focus-visible{outline:var(--rule) solid var(--gold);outline-offset:-2px}
+.ch-or .n{font:italic 400 var(--fs-chrome-2) var(--f-display);font-style:italic;color:var(--mute);text-align:right}.ch-or.on .n{color:var(--gold-ink)}
+.ch-or .t{font-size:var(--fs-chrome-2);line-height:1.35;color:var(--text);display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.ch-or .s{width:5px;height:5px;margin-top:5px;border-radius:50%;background:color-mix(in srgb,var(--ink) 30%,transparent)}.ch-or .s.live{background:var(--gold)}.ch-or .s.stop,.ch-or .s.warn{background:var(--bad)}
+.ch-or .m{grid-column:2/4;font-size:var(--fs-chrome);color:var(--mute);font-variant-numeric:tabular-nums}
+.ch-or.on .t{color:var(--ink)}
+@media (max-width:760px){.ch-rail,.ch-peek,.ch-outline{display:none}}
+.calm .ch-rail,.calm .ch-rail.on{transition-duration:1ms}.calm .ch-pl i,.calm .ch-peek{transition-duration:1ms}.calm .ch-pl.live::after{animation:none;opacity:.7}

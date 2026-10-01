@@ -112,6 +112,12 @@ Files: `bench/drafts/chat-next.*`, `bench/drafts/sidebar-next.*`, `bench/drafts/
    - `hovers.js`-style audit of every new control, and axe in each new surface.
    - No pageerrors, and 0 rAF when settled.
 
+### Done: the prompt rail (2026-10-01)
+
+A mark per prompt on the right edge, a hover card, a pullout outline with a filter, windowing past 24, wheel and arrow keys, and
+jump-to-prompt. Still to do for it: phones (hide today; a swipe-in outline is Phase 4), and a count on each mark of the answer's
+settings once Phase 1.2 puts them on the answer.
+
 ## Phase 2: it keeps what you do (bench)
 
 1. **Saving.**
@@ -156,6 +162,7 @@ Files: `bench/drafts/chat-next.*`, `bench/drafts/sidebar-next.*`, `bench/drafts/
    - `bench/drafts/sidebar-next.*` becomes `src/units/sidebar/`.
    - `bench/drafts/chat-next.*` becomes `src/units/chat/` (the thread, the composer and the run view), replacing
      `units/thread`, `units/composer` and `units/run`.
+   - Publish with `bench/bench.py chat-next --clean`, which leaves the tuning panel out; this page is the console's chat and sidebar, so none of the bench controls ship.
    - `engine-next.js` becomes the engine in `src/core/`, beside `web.js`, `ground.js` and `store.js`.
    - `build.py`'s duplicate-selector check must pass. Commit `src/` and the built `index.html` together.
 3. **Engine parity** with the old `core/run.js`, before the old file goes:
@@ -183,14 +190,14 @@ Files: `bench/drafts/chat-next.*`, `bench/drafts/sidebar-next.*`, `bench/drafts/
 - The §10.4 leftovers.
 - The Details rail: keep it for citations once answers carry them, or park it. See the decisions below.
 
-## Decisions for Amadeus (with a recommendation)
+## Decisions (answered 2026-10-01)
 
-1. **Park the maps and the full-screen map with the Dispatch?** Recommended: yes for alpha. The relay field already shows
-   the run; bring a full-screen relay back later if it is missed.
-2. **Keep the Details rail?** Recommended: park it for alpha. The node cards open in the left margin, and nothing in the
-   new chat previews into the rail yet.
-3. **Retry: keep both turns, or replace?** Recommended: keep both, with the "1 · 2" switch, so nothing is lost.
-4. **Where saved answers go:** a Documents folder at the top of the tree (recommended), or the Library only.
+1. **The old run maps and the full-screen map are retired with the Dispatch.** Park them in Phase 3.1.
+2. **The Details rail is retired.** Park it with them.
+3. **Retry keeps both turns**, with the "1 · 2" switch (left to me; nothing is lost).
+4. **Saved answers go to a Documents folder** at the top of the tree. Library works as the plan describes: all documents in one place.
+5. **The bench panel is not part of the page.** The published page is built with `bench.py chat-next --clean`; the tuning panel and its buttons stay in the repo for tuning only.
+6. **A prompt rail on the right** (done in the bench, 2026-10-01; DESIGN_ENGINE §4.5): see below.
 
 ## Cost and order, for a short budget
 

@@ -60,3 +60,8 @@ Every specimen loads `early.js` in its head (it applies the tuned tokens before 
 To add one, copy `sidebar.html`, swap the includes and slices for the unit's, and stub only the globals its script
 reads from `core/prelude.js`. If a unit needs another unit's CSS to look right, the specimen says so in a comment,
 and that is a hint the rule may belong to the unit.
+
+
+## Publishing a specimen without the tuning panel
+
+`python3 bench/bench.py chat-next --clean` writes the page without the tuning panel (`panel.css` and `panel.js` are left out; `early.js` stays, so `#{"th":"dark"}` and `slow` still work from the URL). Use `--clean` for anything that is published or shown to others, and the default build when tuning.
