@@ -192,6 +192,16 @@ settings once Phase 1.2 puts them on the answer.
 - The §10.4 leftovers.
 - The Details rail: keep it for citations once answers carry them, or park it. See the decisions below.
 
+## Phase 5: the furtherance pass (after alpha)
+
+The research pass (everything above) runs in the page. The **furtherance pass** is an optional second pass in a Claude Code
+session on the viewer's own account, for refined and focused work: a legal reading, a deeper source hunt, a costed
+build-up, a review, and LAYA's checks for client-facing work. It shows in the relay as a **Further** gate, is set from one
+more icon in the sheet (Off, Ask, Auto; default Ask), and never blocks or replaces the research answer. The full plan,
+the job contract, the phases F0 to F5 and the decisions are in `FURTHERANCE_PLAN.md`. **F0 (a spike proving the page can
+start a session and exchange a job document with it) comes first and needs one real attempt on your account; if it fails,
+the plan stops there.**
+
 ## Decisions (answered 2026-10-01)
 
 1. **The old run maps and the full-screen map are retired with the Dispatch.** Park them in Phase 3.1.
