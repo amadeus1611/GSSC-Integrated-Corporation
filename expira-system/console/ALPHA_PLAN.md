@@ -12,6 +12,8 @@ This file is the handoff. Each phase below is sized for one session, lists its f
 prove it. Start a phase by naming it ("alpha phase 2"). Phases 1 and 2 stay in the bench and need no approval. **Phase 3
 moves the work into `src/` and the live artifact: that is the §9 go, so say "go alpha" to start it.**
 
+> The node system has its own plan, `NODE_PLAN.md`. Its phase N1 (text no longer covered by animations, and a live thinking bar) is a readability bug and should be done before Phase 3 below; N2 to N6 can follow alpha.
+
 ## Where it stands (done in this session)
 
 - **Fresh instance.** The bench loads empty: no chats, folders, archive or deleted items, and no Library count.
