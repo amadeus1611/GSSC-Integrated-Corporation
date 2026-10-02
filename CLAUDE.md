@@ -26,6 +26,7 @@ Owner: Duke Y. Demayo. Working branch: `claude/wizardly-ptolemy-6q4ter`, PR amad
   - `node qa/hovers.js [dark]` audits hover, press and focus on every control (`LIST=1` lists them);
   - `node qa/perf.js` traces a full mock run: no long tasks or rAF while settled, maps asleep;
   - `AXE=<path to axe.min.js> node qa/a11y.js` runs axe-core; install axe-core outside the repo, never commit it;
+  - the node field and thinking bar (bench build, `python3 bench/bench.py chat-next --clean` first): `node qa/legibility.js` (no caption covers anything; the bar and announcements), `node qa/wires.js` (ropes and pulses), `node qa/split.js` (Exa fan-out and join), `node qa/replay.js`, `node qa/scale.js` (30 saved turns);
   - `node qa/shots.js <unit>` takes screenshots per unit (shell, pour, maps, dispatch, raster, thread, composer, rest).
   Screenshots go to `qa/out/` (git-ignored). Use `qa/harness.js` (`serve`, `open`, `brief`, `example`, `cast`) for custom checks.
 - **Test hooks:** `window.__FM` for the map instances, `window.__ex(ex)` for the exhibits HTML, `window.__KV` for the storage adapter and `window.__RX` for the raster.

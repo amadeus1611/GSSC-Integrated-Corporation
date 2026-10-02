@@ -214,7 +214,7 @@
 .ch-runm .t{font-size:var(--fs-chrome);color:var(--soft);font-variant-numeric:tabular-nums}
 .ch-runm .now{font:italic 400 var(--fs-chrome-2)/1.35 var(--f-display);color:var(--mute)}
 .ch-run>.ch-graph{grid-column:text-start/mr-end}
-.ch-graph{position:relative;height:var(--gh,84px);transition:height var(--sb-move) var(--sb-ease)}  /* the field grows with what it holds, eased */
+.ch-graph{position:relative;height:var(--gh,84px)}  /* its height is eased by the field's own loop (chat-next.js easeH), so its captions know it */  /* the field grows with what it holds, eased */
 .ch-graph .edges{position:absolute;inset:0;width:100%;height:100%;overflow:visible;pointer-events:none}
 .ch-graph path{fill:none;stroke:var(--line-3);stroke-width:1;stroke-linecap:round;transition:stroke var(--sb-move) var(--sb-ease),opacity var(--sb-move) var(--sb-ease)}
 .ch-graph path.done{stroke:color-mix(in srgb,var(--ink) 34%,transparent)}
@@ -234,10 +234,11 @@
 .ch-graph.focus .ch-node:not(.hot) .nb,.ch-graph.focus .ch-sat:not(.hot){opacity:.3}
 .ch-graph.focus path.hot{transition-duration:var(--sb-in)}
 /* the words on a cable: what passes along it, under its lowest point; fast in, soft out */
-.ch-wire{position:absolute;left:0;top:0;translate:-50% 0;padding:1px 5px;border-radius:4px;background:color-mix(in srgb,var(--bg) 86%,transparent);
+.ch-wire{position:absolute;left:0;top:0;padding:1px 5px;border-radius:4px;background:color-mix(in srgb,var(--bg) 86%,transparent);
  font:400 10px/1.35 var(--f-body);color:var(--mute);white-space:nowrap;font-variant-numeric:tabular-nums;pointer-events:none;
  opacity:0;filter:blur(3px);transition:opacity var(--sb-out) var(--sb-dock-close),filter var(--sb-out) var(--sb-dock-close)}
-.ch-wire.side{translate:0 0}
+.ch-wire.wait{opacity:0!important}
+.ch-wire{text-shadow:0 0 3px var(--bg),0 0 3px var(--bg),0 0 6px var(--bg);transition:opacity var(--sb-out) var(--sb-dock-close),filter var(--sb-out) var(--sb-dock-close)}
 .ch-wire.show.dup{opacity:0}
 .ch-wire.show{opacity:1;filter:blur(0);transition-duration:var(--sb-in);transition-timing-function:var(--sb-ease)}
 .ch-graph .nodes{position:absolute;inset:0}
@@ -261,11 +262,11 @@
 .ch-node.drag .nb{transform:scale(calc(var(--s,1) * 1.12));box-shadow:var(--ch-rim),inset 0 0 0 1px var(--gold),0 8px 22px -10px rgba(var(--sb-shc),calc(var(--sb-sha) * 1.2))}
 .ch-node:focus-visible .nb{outline:var(--rule) solid var(--gold);outline-offset:2px}
 /* the node's name, after a beat on hover */
-.ch-node::after{content:attr(data-tip);position:absolute;left:50%;bottom:calc(100% + 8px);padding:2px 6px;border-radius:5px;background:color-mix(in srgb,var(--ink) 90%,transparent);color:var(--bg);
- font:400 var(--fs-chrome)/1.3 var(--f-body);white-space:nowrap;pointer-events:none;opacity:0;transform:translate(-50%,3px);transition:opacity var(--sb-out) var(--sb-ease),transform var(--sb-out) var(--sb-ease)}
-.ch-node:hover::after{opacity:1;transform:translate(-50%,0);transition-duration:var(--sb-in);transition-delay:.3s}
-.ch-node[aria-expanded="true"]::after{opacity:0;transition:none}
+
 .ch-sat{position:absolute;left:0;top:0;width:7px;height:7px;margin:-3.5px 0 0 -3.5px;border-radius:50%;background:var(--gold);box-shadow:0 0 0 2px color-mix(in srgb,var(--gold) 18%,transparent);transition:opacity var(--sb-out) var(--sb-ease)}
+.ch-qry{position:absolute;left:0;top:0;width:14px;height:6px;margin:-3px 0 0 -7px;border-radius:3px;background:var(--gold-wash);box-shadow:inset 0 0 0 1px var(--gold);transition:opacity var(--sb-out) var(--sb-ease)}
+.ch-qry::after{content:attr(data-tip);position:absolute;left:50%;bottom:calc(100% + 6px);padding:2px 6px;border-radius:5px;background:color-mix(in srgb,var(--ink) 90%,transparent);color:var(--bg);font:400 var(--fs-chrome)/1.3 var(--f-body);white-space:nowrap;pointer-events:none;opacity:0;transform:translate(-50%,3px);transition:opacity var(--sb-out) var(--sb-ease),transform var(--sb-out) var(--sb-ease)}
+.ch-qry:hover::after{opacity:1;transform:translate(-50%,0);transition-duration:var(--sb-in);transition-delay:.2s}
 .ch-sat::after{content:attr(data-tip);position:absolute;left:50%;bottom:calc(100% + 6px);padding:2px 6px;border-radius:5px;background:color-mix(in srgb,var(--ink) 90%,transparent);color:var(--bg);
  font:400 var(--fs-chrome)/1.3 var(--f-body);white-space:nowrap;pointer-events:none;opacity:0;transform:translate(-50%,3px);transition:opacity var(--sb-out) var(--sb-ease),transform var(--sb-out) var(--sb-ease)}
 .ch-sat:hover::after{opacity:1;transform:translate(-50%,0);transition-duration:var(--sb-in);transition-delay:.2s}
@@ -462,3 +463,80 @@
 .ch-or.on .t{color:var(--ink)}
 @media (max-width:760px){.ch-rail,.ch-peek,.ch-outline{display:none}}
 .calm .ch-rail,.calm .ch-rail.on{transition-duration:1ms}.calm .ch-pl i,.calm .ch-peek{transition-duration:1ms}.calm .ch-pl.live::after{animation:none;opacity:.7}
+
+/* ---- the thinking bar (chat-next.js, "the thinking bar") ---- */
+.ch-run{grid-template-rows:auto auto}
+.ch-runm{grid-row:1/3;align-self:start;margin-top:5px}
+.ch-run>.ch-think{grid-column:text-start/mr-end;grid-row:1;position:relative;margin-bottom:var(--sp-2)}
+.ch-run>.ch-graph{grid-row:2}
+.ch-runm .now{white-space:nowrap;overflow:hidden;max-width:230px;text-overflow:ellipsis}
+.ch-tb{all:unset;box-sizing:border-box;display:flex;align-items:center;gap:var(--sp-2);width:100%;height:30px;padding:0 var(--sp-2h) 0 var(--sp-2);border-radius:9px;cursor:pointer;
+ background:var(--ch-sheen),color-mix(in srgb,var(--panel) 72%,transparent);box-shadow:var(--ch-rim),inset 0 0 0 var(--rule-hair) var(--line-3);color:var(--soft);
+ transition:background var(--sb-out) var(--sb-ease),box-shadow var(--sb-out) var(--sb-ease)}
+.ch-tb:hover{background:var(--ch-sheen),var(--panel);transition-duration:var(--sb-in)}
+.ch-tb:focus-visible{outline:var(--rule) solid var(--gold);outline-offset:2px}
+.ch-tb .ic{flex:none;display:grid;place-items:center;width:20px;height:20px;border-radius:50%;color:var(--ink);box-shadow:inset 0 0 0 var(--rule-hair) color-mix(in srgb,var(--ink) 34%,transparent)}
+.ch-tb .ic svg{width:12px;height:12px}
+.ch-think:not(.done) .ch-tb .ic{box-shadow:inset 0 0 0 1px var(--gold)}
+.ch-tb .who{flex:none;display:flex;align-items:baseline;gap:var(--sp-1h);font-size:var(--fs-chrome-2);white-space:nowrap}
+.ch-tb .who b{font-weight:600;color:var(--ink)}.ch-tb .who i{font-style:normal;color:var(--mute)}
+.ch-tb .mdl{flex:none;font:600 9px/1 var(--f-body);letter-spacing:var(--tracked);text-transform:uppercase;font-style:normal;color:var(--gold-ink);padding:3px 6px;border-radius:5px;background:var(--gold-wash);white-space:nowrap}
+.ch-tb .mdl[hidden],.ch-tb .more[hidden]{display:none}
+.ch-tb .say{flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font:italic 400 13px/1.2 var(--f-display);color:var(--soft)}
+.ch-tb .more{flex:none;font:500 10px/1 var(--f-body);color:var(--gold-ink);padding:3px 5px;border-radius:9px;background:var(--gold-wash)}
+.ch-tb .vit{flex:none;display:flex;gap:var(--sp-2);font-size:var(--fs-chrome);color:var(--mute);font-variant-numeric:tabular-nums;white-space:nowrap}
+.ch-tb .vit .rt:empty,.ch-tb .vit .tk:empty{display:none}
+.ch-tb .chev{flex:none;width:12px;height:12px;color:var(--mute);transition:transform var(--sb-move) var(--sb-ease)}
+.ch-think.open .chev{transform:rotate(180deg)}
+.ch-think.done .say{font-style:normal;font-size:var(--fs-chrome-2)}
+.ch-tlog{position:absolute;left:0;right:0;top:calc(100% + 4px);z-index:5;max-height:min(300px,60vh);overflow:auto;scrollbar-width:thin;padding:var(--sp-1) 0;border-radius:12px;
+ background:var(--ch-sheen),var(--panel);box-shadow:var(--ch-rim),inset 0 0 0 var(--rule-hair) var(--line-3),0 1px 2px rgba(var(--sb-shc),calc(var(--sb-sha) * .2)),0 18px 40px -18px rgba(var(--sb-shc),calc(var(--sb-sha) * 1.1))}
+.ch-tlog[hidden]{display:none}
+.ch-tlog ol{margin:0;padding:0;list-style:none}
+.ch-tlog li{display:grid;grid-template-columns:40px 18px 1fr auto;gap:0 var(--sp-2);align-items:baseline;padding:4px var(--sp-3);font-size:var(--fs-chrome-2);line-height:1.45;color:var(--soft)}
+.ch-tlog li time{font-size:var(--fs-chrome);color:var(--mute);font-variant-numeric:tabular-nums;text-align:right}
+.ch-tlog li .ic{display:grid;place-items:center;align-self:center;color:var(--mute)}.ch-tlog li .ic svg{width:12px;height:12px}
+.ch-tlog li .tx b{font-weight:600;color:var(--ink)}
+.ch-tlog li .rt{font:600 9px/1 var(--f-body);letter-spacing:var(--tracked);text-transform:uppercase;font-style:normal;color:var(--gold-ink)}
+.ch-tlog li.nw .s{font-style:italic;font-family:var(--f-display);color:var(--ink)}
+.ch-tlog li.nw .ic{color:var(--gold-ink)}
+.ch-think .sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+.calm .ch-tb,.calm .ch-tb .chev{transition-duration:1ms}
+@media (max-width:760px){.ch-tb .who i,.ch-tb .vit .rt,.ch-tb .vit .tk{display:none}.ch-run>.ch-think{grid-column:bleed}}
+
+/* ---- nodes (N4): a name under the node that is working, hovered, in focus, or new (for 2.6 s); a count badge; clearer states ---- */
+.ch-node .nm{position:absolute;left:50%;top:calc(100% + 1px);translate:-50% 0;font:500 10px/12px var(--f-body);color:var(--soft);white-space:nowrap;pointer-events:none;
+ opacity:0;filter:blur(2px);transition:opacity var(--sb-out) var(--sb-ease),filter var(--sb-out) var(--sb-ease)}
+.ch-node:hover .nm,.ch-node.hot .nm,.ch-node.intro .nm,.ch-node[data-st="run"] .nm,.ch-node:focus-visible .nm{opacity:1;filter:blur(0);transition-duration:var(--sb-in)}
+.ch-node[aria-expanded="true"] .nm{opacity:0}
+.ch-node[data-n]::before{content:attr(data-n);position:absolute;right:-4px;top:-4px;z-index:1;min-width:13px;height:13px;padding:0 3px;box-sizing:border-box;border-radius:7px;display:grid;place-items:center;
+ font:600 9px/1 var(--f-body);font-variant-numeric:tabular-nums;color:var(--gold-ink);background:var(--gold-wash);box-shadow:0 0 0 1.5px var(--bg);pointer-events:none}
+.ch-node[data-st="fail"]::before,.ch-node[data-st="warn"]::before{color:var(--bg);background:var(--bad)}
+@keyframes chspin{to{transform:rotate(360deg)}}
+.ch-node[data-st="run"] .nb::before{content:"";position:absolute;inset:-5px;border-radius:50%;border:1.5px solid transparent;border-top-color:var(--gold);animation:chspin 1.5s linear infinite;pointer-events:none}
+.ch-node.gate[data-st="run"] .nb::before{border-radius:32%}
+.ch-node[data-st="stop"] .nb{box-shadow:var(--ch-rim),inset 0 0 0 1px color-mix(in srgb,var(--ink) 40%,transparent);outline:1px dashed color-mix(in srgb,var(--ink) 38%,transparent);outline-offset:2px}
+.calm .ch-node[data-st="run"] .nb::before{animation:none;border-top-color:var(--gold);border-right-color:var(--gold)}
+.calm .ch-node .nm{filter:none;transition-duration:1ms}
+
+/* ---- replay (N5): a log header with the speeds, and a scrubber under the bar ---- */
+.ch-tlh{display:flex;align-items:center;gap:var(--sp-1h);padding:var(--sp-1h) var(--sp-3) var(--sp-1);border-bottom:var(--rule-hair) solid var(--line-2);margin-bottom:var(--sp-1)}
+.ch-tlh[hidden]{display:none}
+.ch-tlh span{font-weight:600;font-size:var(--fs-micro);letter-spacing:var(--tracked);text-transform:uppercase;color:var(--mute);margin-right:var(--sp-1)}
+.ch-tlh button{all:unset;padding:2px 7px;border-radius:6px;font:500 var(--fs-chrome) var(--f-body);color:var(--soft);cursor:pointer;font-variant-numeric:tabular-nums;transition:background var(--sb-out) var(--sb-ease),color var(--sb-out) var(--sb-ease)}
+.ch-tlh button:hover,.ch-tlh button:focus-visible{background:var(--line);color:var(--ink);transition-duration:calc(var(--sb-in) * .5)}.ch-tlh button:focus-visible{outline:var(--rule) solid var(--gold)}
+.ch-tlh button.stop{margin-left:auto;color:var(--gold-ink)}.ch-tlh button[hidden]{display:none}
+.ch-scrub{position:absolute;left:var(--sp-2h);right:var(--sp-2h);bottom:-9px;width:calc(100% - var(--sp-2h) * 2);height:12px;margin:0;appearance:none;background:transparent;cursor:pointer}
+.ch-scrub[hidden]{display:none}
+.ch-scrub::-webkit-slider-runnable-track{height:2px;border-radius:1px;background:var(--line-3)}
+.ch-scrub::-webkit-slider-thumb{appearance:none;width:10px;height:10px;margin-top:-4px;border-radius:50%;background:var(--gold);box-shadow:0 0 0 2px var(--bg)}
+.ch-scrub::-moz-range-track{height:2px;border-radius:1px;background:var(--line-3)}.ch-scrub::-moz-range-thumb{width:10px;height:10px;border:0;border-radius:50%;background:var(--gold)}
+.ch-scrub:focus-visible{outline:var(--rule) solid var(--gold);outline-offset:4px}
+
+/* ---- cards in one layout (N6): asked / model / took / confidence; a copy button; and narrow panes ---- */
+.ch-npop .sl{display:grid;grid-template-columns:auto 1fr;gap:2px var(--sp-2h);margin:var(--sp-2) 0 0;font-size:var(--fs-chrome-2);line-height:1.4}
+.ch-npop .sl dt{color:var(--mute);font-size:var(--fs-chrome)}.ch-npop .sl dd{margin:0;color:var(--soft)}
+.ch-npop .cp{all:unset;margin-top:var(--sp-2);padding:2px 8px;border-radius:6px;font:500 var(--fs-chrome) var(--f-body);color:var(--soft);cursor:pointer;box-shadow:inset 0 0 0 var(--rule-hair) var(--line-3);transition:background var(--sb-out) var(--sb-ease),color var(--sb-out) var(--sb-ease)}
+.ch-npop .cp:hover,.ch-npop .cp:focus-visible{background:var(--line);color:var(--ink);transition-duration:calc(var(--sb-in) * .5)}.ch-npop .cp:focus-visible{outline:var(--rule) solid var(--gold)}
+@container ch (max-width:560px){.ch-wire,.ch-node .nm{display:none}.ch-tb .mdl{display:none}}
+.ch-node[data-k="exa"] .nm{left:calc(100% + 3px);top:50%;translate:0 -50%}

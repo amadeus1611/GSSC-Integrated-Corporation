@@ -1,4 +1,4 @@
-# The node system: iteration plan (written 2026-10-01)
+# The node system: iteration plan (written 2026-10-01; built 2026-10-02, see "Status" at the end)
 
 Asked by Amadeus: "the node system is good now but we need to iterate and make it better: the icons, logic, animations
 like the splitting, smoothness, engine. I like how it looks like wires hanging right now, keep that idea, but extend and
@@ -290,3 +290,34 @@ with the alpha plan's Phase 3, not before.
   one joined call.
 - **A thinking bar that says too much.** It carries one sentence; the drawer is opt-in; the summary replaces it when done.
 - **Scope.** N5 (the event log) touches the engine and the saved record; keep N1–N4 on the old record so each can ship alone.
+
+## 10. Status (2026-10-02): N1 to N6 built in the bench
+
+All six phases were built in the bench (`bench/drafts/chat-next.*`, `engine-next.js`) and verified with scripted checks; nothing in `src/`
+or the live console changed. Each check is a script in `qa/` (build the page first with `python3 bench/bench.py chat-next --clean`).
+
+| Phase | Built | Check (result) |
+|---|---|---|
+| N1 | the caption placer (candidates, no overlap, a reserved lane, at most three at once, the height eased in the field's own loop so captions know it); the thinking bar (the node working, its tier, the sentence it is on, elapsed, tokens, tokens a second, "+n" for parallel work); the log (a plain list, opens on click and closes on an outside click or Esc); one polite announcement a 2 seconds | `qa/legibility.js`: 0 overlaps in 75 frames at 1440, 1100 and 800 px and in dark (before: 18 of 24 frames); one-line margin word and bar; type at least 10 px; announcements 2 s apart |
+| N2 | rope cables (five points, rigid segments, gravity, damping), slack that draws in under load, pulses at a constant px/s by arc length | `qa/wires.js`: W1 88% of measured pulse speeds within 15% of declared and no dependence on length; W2 loaded 10.9% vs idle 15.3% hang; W3 0 moving ropes and 0 frames at rest |
+| N3 | the engine runs each query of a search as its own parallel Exa call (`splitTools`), each with its own pages; the field buds a satellite per query, lands each query's pages on it, joins them back into Exa, and the pocket collapses | `qa/split.js`: 4 calls started within 9 ms; 4 satellites; 0 afterwards; field 262 px → 253 px after the join |
+| N4 | the Legal icon (a gavel, no longer a twin of the Arbiter's scales); rings sized 2r; a name under working, hovered and new nodes; a count badge (pages, desks, claims) and a red "!" for failed or held; a rotating arc while working; a dashed ring when stopped | screenshots in light and dark; axe clean |
+| N5 | a slim snapshot of the run whenever its shape changes, kept with the turn; Replay at 1x, 4x, 8x from the log with a scrubber and Stop | `qa/replay.js`: the replayed field ends in the same nodes and states as the live run; the scrubber seeks; Stop restores |
+| N6 | saved turns build their field only near the viewport, from their stored positions and height; a cached token reader (the 650 ms of style lookups); cards in one layout (Asked, Model, Took, Confidence) with a model row on the plan, the weighing and the answer, and a copy button; captions and names hidden below 560 px of pane | `qa/scale.js`: 30 turns open in 136 ms with 2 fields built; p95 frame 16.7 ms; 0 frames at rest; axe clean with the bar, the log open, a replay and a card |
+
+**Also done from the furtherance plan (page routing only):** the Arbiter now weighs on the `default` tier and runs once more on `complex` only if the
+code gate downgrades two or more claims or a claim conflicts (the thinking bar and log say so); exhibits moved from `quick` to `default`.
+
+**Models in the thinking bar.** The page can name a tier to the platform, not a model, so the bar and the log say the tier ("Balanced",
+"Most capable"), and both when the platform answers on a different tier than asked ("Most capable → Balanced"). `TIER_MODEL` in
+`chat-next.js` stays empty until F2b verifies what each tier resolves to; then it can name the model. The Furtherance pass (Claude Code) will show exact model IDs.
+
+**Not done, and why**
+- *The vertical relay and the chip row for phones* (G): below 560 px the captions and names are hidden and the field is cramped but usable; a real narrow layout is still to design.
+- *A "+n" cap for stacks over four desks* (G): the field height grows to 300 px and stops.
+- *Trace-back from the answer to the node* (I): the answer carries no citations to hang it on; it needs `[cN]` markers from the ledger in the compose step first.
+- *A hidden ordered list of the relay* (H): the node buttons already carry state, tokens and sources in their labels and arrow keys move between them; a duplicate list would be noise.
+- *Over/under gaps where cables cross, the persisting trail, the segmented rim on the weighing gate* (C, E): the cables already stay lit when done; the other two are small and left.
+- *The event log is a snapshot log, not an append-only event stream* (F): enough for replay and the thinking bar; a persisted, compacted form belongs with Phase 2 of the alpha plan (a 90 s run is about 55 snapshots).
+- *The Arbiter's return arc* (F): the bench engine has no return-and-deepen rounds yet (ALPHA_PLAN Phase 3.3).
+- *Real token counts from usage* (F): the platform's sample result does not report them; counts are characters over four.
