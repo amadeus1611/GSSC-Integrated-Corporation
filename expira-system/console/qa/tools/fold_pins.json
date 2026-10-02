@@ -1,0 +1,22 @@
+{
+ "pin": {
+  "||.acct-h small": "menus",
+  "||.sp h3": "thread",
+  "||.run .mapw": "maps"
+ },
+ "nomerge": [
+  "@media (max-width:560px)||.fig svg.ch",
+  "||.ans h3",
+  "||.comp",
+  "||.dock",
+  "||.fig svg.ch",
+  "||.menu.open",
+  "||.menu.opt",
+  "||.run .delib p::before,.strm .se::before",
+  "||.stg-n [role=tab]:hover",
+  "||.stg-n [role=tab][aria-selected=true]",
+  "||.stg-n nav",
+  "||.strm .se",
+  "||.strm .se::before"
+ ]
+}

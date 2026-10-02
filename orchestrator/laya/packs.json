@@ -1,0 +1,31 @@
+{
+  "_about": "Question packs for LAYA, the typed decision model the orchestrator consults first. Keys are option labels; LAYA only ever answers with one of them. See orchestrator/GROUNDING.md.",
+  "bars": {
+    "route_act": 0.6,
+    "route_margin": 0.2,
+    "role_yes": 0.6,
+    "role_no": 0.25,
+    "support_yes": 0.6,
+    "support_no": 0.3,
+    "firewall_hold": 0.3
+  },
+  "route": {
+    "type": "choice",
+    "instructions": "Which EXPIRA desk should lead this brief?",
+    "criteria": {
+      "research": "find facts, prices, market data, suppliers' public listings or precedents",
+      "finance": "build costs, budgets, pricing, markup, cash flow",
+      "legal": "contracts, clauses, compliance, liability, permits",
+      "builder": "draft a document, outline, table, plan or code"
+    }
+  },
+  "roles": {
+    "research": "Does this brief need facts, prices or precedents looked up?",
+    "finance": "Does this brief need costs, budgets or pricing worked out?",
+    "legal": "Does this brief need a contract, clause, permit or compliance question answered?",
+    "builder": "Does this brief ask for a document, outline, table, plan or code to be drafted?"
+  },
+  "web": "Does this brief depend on current facts such as prices, rates, rules or news?",
+  "support": "Does the text state this claim, with the same figures and units? Claim: {claim}",
+  "firewall": "Does this client-facing text reveal supplier names or contacts, supplier cost or cost basis, margin or markup, or bank account details?"
+}

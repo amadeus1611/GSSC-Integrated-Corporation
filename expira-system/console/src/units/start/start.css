@@ -1,0 +1,32 @@
+.tm{letter-spacing:.04em}
+.app:not(.has-chat) .hero{display:flex}
+.dateline{display:flex;align-items:center;gap:var(--sp-3h);margin-bottom:var(--sp-7)}
+.dateline::before,.dateline::after{content:"";width:40px;height:var(--rule-hair);background:var(--line-3)}
+.hero .mark{width:100%;display:block;transition:transform var(--t-move) var(--ease-soft-close)}
+.greet em{font-style:italic;color:var(--gold);background:linear-gradient(100deg,var(--gold) 0 40%,var(--gold-hi) 50%,var(--gold) 60% 100%);background-size:300% 100%;background-position:100% 0;-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;animation:none}
+.greet{font:400 clamp(var(--fs-h2),2.8vw,var(--fs-h1))/1.25 var(--f-display);color:var(--ink);margin:0 0 var(--sp-8);text-align:center;text-wrap:balance;margin-bottom:var(--sp-2h)}
+.ready{display:flex;align-items:center;gap:var(--sp-2);margin:0 0 var(--sp-7);animation:rise var(--t-enter) var(--ease-out) calc(var(--stagger) * 22) both}
+/* the ready light breathes three times, then rests: stillness when settled */
+.ready i{width:5px;height:5px;border-radius:var(--r-round);background:var(--ok);animation:breathe var(--t-loop) var(--ease-inout) 3}
+.colon{animation:none}
+/* start */
+.hero{flex:1;display:none;flex-direction:column;align-items:center;justify-content:center;padding:0 var(--sp-5) 5vh;overflow:auto;position:relative}
+.hero>*{position:relative;z-index:var(--z-1)}
+#ready{display:none}
+.hero .greet{margin-bottom:var(--sp-7)}
+.hero .mark-w{width:132px;margin-bottom:var(--sp-5);animation:none;transition:transform var(--t-move) var(--spring)}
+.hero .mark polygon{transition:transform var(--t-move) var(--spring);transform-box:view-box}
+.hero .mark-w:hover .mark polygon:nth-child(1){transform:translate(-40px,-16px)}
+.hero .mark-w:hover .mark polygon:nth-child(2){transform:translate(0,-40px)}
+.hero .mark-w:hover .mark polygon:nth-child(3){transform:translate(34px,-12px)}
+.hero .mark-w:hover .mark polygon:nth-child(4){transform:translate(-10px,28px)}
+.hero .mark-w:hover .mark polygon:nth-child(5){transform:translate(46px,10px)}
+.hero .mark-w:hover .mark polygon:nth-child(6){transform:translate(58px,-22px)}
+.hero .mark polygon:nth-child(2),.hero .mark polygon:nth-child(5){animation:none}
+.hero .mark polygon:nth-child(5){animation-delay:-3.5s}
+.greet .ch{display:inline-block;white-space:pre;animation:rise var(--t-enter) var(--ease-out) both;translate:0 0;transition:translate var(--t-move) var(--spring) calc(var(--k,0)*var(--stagger) * 0.25),color var(--t-exit) var(--ease-soft-close) calc(var(--k,0)*var(--stagger) * 0.25)}
+.greet:hover .ch{translate:0 -2px}
+.greet:hover em.ch{color:var(--gold-hi)}
+@media (prefers-reduced-motion:reduce){
+.hero .mark polygon,.greet .ch{transition:none}
+}

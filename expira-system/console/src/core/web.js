@@ -1,0 +1,26 @@
+/* ---------- the web: Exa, called through the viewer's connector ---------- */
+const WEB={ok:false,mcp:null,sid:[...crypto.getRandomValues(new Uint8Array(16))].map(b=>b.toString(16).padStart(2,"0")).join(""),server:"Exa"};
+const WEB_ROLES=new Set(["research","legal","decision"]);
+const MCP_COPY={server_not_connected:"Exa isn't connected. Add it in claude.ai Settings → Connectors.",needs_reauth:"Reconnect Exa in claude.ai Settings → Connectors.",not_in_manifest:"Web research isn't allowed for this page. Allow Exa when asked.",selection_required:"Choose which Exa connector to use when Claude asks.",blocked_by_policy:"Your organisation blocks web research here."};
+async function webInit(){try{WEB.mcp=await window.claude?.use?.("mcp")??null;if(!WEB.mcp)throw 0;const l=await WEB.mcp.listTools(WEB.server);const sv=(l.servers||[]).find(x=>x.server===WEB.server);WEB.ok=!!(sv&&(sv.tools||[]).some(t=>t.name==="web_search_exa"))}catch(e){WEB.ok=false}
+ const b=$("#webOpt");if(b){b.setAttribute("aria-disabled",String(!WEB.ok));b.dataset.hint=WEB.ok?"Research and legal desks can search with Exa.":"Connect Exa in claude.ai to enable web research."}drawOpt()}
+const freshDays=()=>({"3":92,"12":366}[OPT.fresh]||0);
+const todayISO=()=>{const d=new Date();return `${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())}`};
+const todayLine=()=>`Today is ${new Date().toLocaleDateString("en-PH",{weekday:"long",day:"numeric",month:"long",year:"numeric"})} (${todayISO()}), Asia/Manila.`;
+const ageOf=d=>{const t=Date.parse(d||"");if(isNaN(t))return null;return Math.max(0,Math.round((Date.now()-t)/864e5))};
+const ageText=a=>a==null?"undated":a<2?"today":a<45?`${a} days old`:a<600?`${Math.round(a/30.4)} months old`:`${(a/365).toFixed(1)} years old`;
+const clip=(t,n)=>{t=String(t||"").replace(/\s+/g," ").trim();return t.length>n?t.slice(0,n)+"…":t};
+function webTools(ctx){/* ctx: {onSearch(queries), onSources(list), onError(code)} */
+ const exaTxt=p=>typeof p==="string"?p:p&&Array.isArray(p.content)?p.content.map(c=>c.text||"").join("\n"):p&&typeof p.text==="string"?p.text:JSON.stringify(p||"");
+ const exaParse=p=>{if(p&&Array.isArray(p.results))return p;const t=exaTxt(p);return {results:t.split(/\n-{3,}\n/).map(b=>{const g=k=>(b.match(new RegExp("^"+k+":\\s*(.*)$","m"))||[])[1]||"";const url=g("URL")||(b.match(/https?:\/\/\S+/)||[""])[0];const title=g("Title")||(b.match(/^#\s*(.+)$/m)||[])[1]||url;const pub=g("Published");const body=b.split(/Highlights:|\n\n/).slice(1).join(" ").replace(/\n\.\.\.\n/g," … ").replace(/\s+/g," ").trim()||b;return {url,title,publish_date:pub&&pub!=="N/A"?pub:null,excerpts:[body]}}).filter(r=>r.url)}};
+ const call=async(tool,input,signal)=>{try{const r=await WEB.mcp.callTool(WEB.server,tool,input,{signal,cache:false});return exaParse(r.payload??r)}catch(e){ctx.onError(e&&e.code);throw new Error(MCP_COPY[e&&e.code]||("web "+tool+" failed: "+(e&&e.code||"error")))}};
+ const trim=p=>{const rs=(p&&p.results)||[],win=freshDays();const out=rs.slice(0,8).map(r=>{const a=ageOf(r.publish_date);return {url:r.url,title:clip(r.title,120),published:r.publish_date||null,age_days:a,stale:!!(win&&a!=null&&a>win),excerpt:clip((r.excerpts||[]).join(" … "),900)}})
+   /* newest first; undated after dated; anything outside the window goes last */
+   .sort((x,y)=>(x.stale-y.stale)||((x.age_days??1e6)-(y.age_days??1e6))).slice(0,7);ctx.onSources(out);return {today:todayISO(),order:"newest first",rule:win?`Prefer results with stale:false. stale:true means older than ${OPT.fresh} months; use it only as background and say how old it is.`:"Prefer the newest result when figures differ.",results:out}};
+ return [
+  {name:"web_search",description:"Search the web for current facts. Returns up to 6 results with url, title, published date and excerpts that usually answer directly. Give one precise objective and 2-3 short keyword queries. Cite the url of any figure you use.",
+   inputSchema:{type:"object",properties:{objective:{type:"string",description:"What you are trying to find, specific and atomic"},search_queries:{type:"array",items:{type:"string"},description:"2-3 keyword queries, 3-6 words each"}},required:["objective","search_queries"]},
+   execute:async(inp,{signal})=>{const q=(Array.isArray(inp.search_queries)?inp.search_queries:[inp.search_queries]).map(String).filter(Boolean).slice(0,4);ctx.onSearch(q);return trim(await call("web_search_exa",{query:q.join("; ").slice(0,400),objective:(String(inp.objective||q.join("; ")).slice(0,360)+(freshDays()?` Prefer sources published in the last ${OPT.fresh} months; today is ${todayISO()}.`:` Today is ${todayISO()}.`)),numResults:6},signal))}},
+  {name:"web_fetch",description:"Read specific pages when search excerpts are not enough (exact wording, full tables). Pass up to 3 urls and an objective. Returns focused excerpts per page.",
+   inputSchema:{type:"object",properties:{urls:{type:"array",items:{type:"string"}},objective:{type:"string"}},required:["urls","objective"]},
+   execute:async(inp,{signal})=>{const u=(Array.isArray(inp.urls)?inp.urls:[inp.urls]).map(String).filter(x=>/^https?:\/\//.test(x)).slice(0,3);if(!u.length)throw new Error("Give at least one http(s) url.");ctx.onSearch(u.map(x=>(x.match(/^https?:\/\/([^/]+)/)||[])[1]||x),true);return trim(await call("web_fetch_exa",{urls:u,maxCharacters:3000},signal))}}]}

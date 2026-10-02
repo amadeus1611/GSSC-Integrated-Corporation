@@ -1,0 +1,3 @@
+/* the latest run from the keyboard: "." opens or folds it, "m" switches it between the log and the map */
+document.addEventListener("keydown",e=>{if(e.metaKey||e.ctrlKey||e.altKey||e.target.closest?.("input,textarea,[contenteditable]"))return;const r=[...document.querySelectorAll("#thread .run")].pop();if(!r)return;
+ if(e.key==="."){e.preventDefault();r.querySelector(".run-h").click()}else if(e.key==="m"){if(!r.querySelector(".vs"))return;e.preventDefault();if(!r.classList.contains("open")){r.classList.add("open","pinned");r.querySelector(".run-h").setAttribute("aria-expanded","true")}runView(r,r.dataset.view==="map"?"log":"map",true)}});

@@ -1,0 +1,2 @@
+/* the Dispatch rests while it is closed: its running animations pause and resume where they were */
+{const D=$("#dsp");let held=[];new MutationObserver(()=>{if(D.classList.contains("open")){held.forEach(a=>{try{a.play()}catch(e){}});held=[]}else{held=D.getAnimations({subtree:true}).filter(a=>a.playState==="running"&&a.effect&&a.effect.target!==D&&!(typeof CSSTransition!=="undefined"&&a instanceof CSSTransition)&&!(a instanceof CSSAnimation&&/^(blurIn|evIn)$/.test(a.animationName)));held.forEach(a=>a.pause())}}).observe(D,{attributes:true,attributeFilter:["class"]})}

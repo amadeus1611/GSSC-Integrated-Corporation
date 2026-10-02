@@ -1,0 +1,194 @@
+<meta charset="utf-8">
+<title>EXPIRA Console</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@200..600&family=Libre+Baskerville:ital@0;1&display=swap" rel="stylesheet">
+<style>
+<!--@include tokens.css-->
+<!--@include base.css-->
+<!--@include units/sidebar/sidebar.css-->
+<!--@include units/shell/shell.css-->
+<!--@include units/start/start.css-->
+<!--@include units/composer/composer.css-->
+<!--@include units/run/run.css-->
+<!--@include units/figures/figures.css-->
+<!--@include units/exhibits/exhibits.css-->
+<!--@include units/dispatch/dispatch.css-->
+<!--@include units/spectro/spectro.css-->
+<!--@include units/thread/thread.css-->
+<!--@include units/maps/maps.css-->
+<!--@include units/sheet/sheet.css-->
+<!--@include units/menus/menus.css-->
+<!--@include units/selection/selection.css-->
+<!--@include units/docs/docs.css-->
+<!--@include units/settings/settings.css-->
+<!--@include units/overlays/overlays.css-->
+<!--@include units/pour/pour.css-->
+</style>
+
+<div class="app has-chat" id="app">
+  <nav class="side" aria-label="Chats" id="side">
+    <div class="brand"><svg class="mark" viewBox="0 0 1413 425" role="img" aria-label="EXPIRA mark"><polygon points="0,0 233,0 391,100 206,425 40,425 0,302" fill="var(--mark-a)"/><polygon points="233,0 728,0 391,100" fill="var(--gold)"/><polygon points="391,100 728,0 778,0 871,225 1166,425 1058,425" fill="var(--mark-a)"/><polygon points="391,100 1058,425 206,425" fill="var(--mark-b)"/><polygon points="918,0 1043,0 1408,425 1241,425 968,192" fill="var(--gold)"/><polygon points="1043,0 1340,0 1408,425" fill="var(--mark-b)"/></svg><span class="wm" role="img" aria-label="EXPIRA"></span><button class="ib side-t" id="fold" aria-controls="side" aria-expanded="true" aria-label="Close sidebar" data-tip="Close sidebar"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1"><rect x="1.5" y="2.5" width="13" height="11" rx="1.5"/><path class="pane" d="M2.5 3h3.5v10h-3.5z"/><path class="dv" d="M6 2.5v11"/><path class="chev" d="M11 6.2 9.2 8l1.8 1.8"/></svg></button></div>
+    <div class="nav">
+      <button class="navb" id="newChat"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.1"><path d="M8 3v10M3 8h10"/></svg>New chat<span class="kb">⌥N</span></button>
+      <button class="navb" id="findBtn"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.1"><circle cx="7" cy="7" r="4.5"/><path d="M10.5 10.5L14 14"/></svg>Search<span class="kb">/</span></button>
+      <button class="navb" id="filesNav"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.1" ><path d="M3.5 1.5h6l3 3v10h-9z"/><path d="M9.5 1.5v3h3M5.5 8h5M5.5 10.5h5M5.5 13h3"/></svg>Files<span class="kb" id="filesN"></span></button>
+      <button class="navb" id="dspNav"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.1"><path d="M3 2.5h10v11H3zM5.5 5.5h5M5.5 8h5M5.5 10.5h3"/></svg>The Dispatch<span class="kb">⌥L</span></button>
+    </div>
+    <div class="search"><label for="find" class="sr">Search chats</label><input id="find" placeholder="Search chats"></div>
+    <div class="recents" id="recents"></div>
+    <div class="foot"><button class="me" id="me" aria-haspopup="menu" aria-expanded="false" aria-controls="acct"><span class="av" data-me="av"></span><span class="who"><span data-me="n"></span><small data-me="o"></small></span><svg class="mech" viewBox="0 0 10 10" fill="none" stroke="currentColor" stroke-width="1.1" aria-hidden="true"><path d="M3 4.2L5 2.4 7 4.2M3 5.8L5 7.6 7 5.8"/></svg></button><button class="ib" id="palBtn" style="margin-left:auto" data-tip="Settings  ⌘," aria-label="Settings"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1"><circle cx="8" cy="8" r="2.1"/><path d="M8 1.8l1.1 1.6 1.9-.4.5 1.9 1.8.8-.6 1.8 1.1 1.6-1.6 1.1.2 1.9-1.9.3-.8 1.8-1.8-.7L8 14.2l-1.1-1.6-1.9.4-.5-1.9-1.8-.8.6-1.8L2.2 7l1.6-1.1-.2-1.9 1.9-.3.8-1.8 1.8.7z"/></svg></button></div>
+  </nav>
+
+  <main class="main" id="main">
+        <h1 class="sr" id="h1"></h1>
+        <header class="top">
+      <span class="crumb" id="crumb"></span><button class="ttl" id="ttl" data-tip="Rename  F2"></button>
+      <div class="r">
+        <button class="runpill" id="runPill" hidden><i></i><span id="runT">Working</span><span class="num" id="runE">00:00</span></button><button class="dsp-btn ins-btn" id="insBtn" type="button" aria-expanded="false" aria-controls="sheet" data-tip="Details  ⌥I"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.1" aria-hidden="true"><circle cx="8" cy="8" r="6"/><path d="M8 7.2v3.8M8 5.1v.1"/></svg><span>Details</span></button><button class="dsp-btn" id="dspBtn" data-tip="The Dispatch  ⌘L"><i aria-hidden="true"></i><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.1" aria-hidden="true"><rect x="1.5" y="2.5" width="13" height="11" rx="1.5"/><path class="pn" d="M10 2.5v11"/></svg><span>Dispatch</span></button>
+      </div>
+    </header>
+
+    <section class="hero" id="hero">
+      <div class="dateline cap" id="dateline"></div>
+      <div class="mark-w grain" id="stage"><svg class="mark" viewBox="0 0 1413 425" role="img" aria-label="EXPIRA mark"><polygon points="0,0 233,0 391,100 206,425 40,425 0,302" fill="var(--mark-a)"/><polygon points="233,0 728,0 391,100" fill="var(--gold)"/><polygon points="391,100 728,0 778,0 871,225 1166,425 1058,425" fill="var(--mark-a)"/><polygon points="391,100 1058,425 206,425" fill="var(--mark-b)"/><polygon points="918,0 1043,0 1408,425 1241,425 968,192" fill="var(--gold)"/><polygon points="1043,0 1340,0 1408,425" fill="var(--mark-b)"/></svg></div>
+      <h1 class="greet" id="greet"></h1>
+      <p class="ready capt" id="ready"><i></i><span id="readyT">Orchestrator ready</span></p>
+      <div id="heroDock" style="width:100%;display:flex;justify-content:center"></div>
+    </section>
+
+    <div class="scroll" id="scroll"><div class="thread" id="thread"></div></div>
+
+    <div class="dock" id="dock">
+      <button class="jump" id="jump" type="button">Latest ↓</button>
+      <div class="qbar dbar" id="dbar" hidden><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.1" aria-hidden="true"><path d="M3.5 1.5h6l3 3v10h-9z"/><path d="M9.5 1.5v3h3M5.5 8h5M5.5 10.5h5M5.5 13h3"/></svg><span class="qk">Will build</span><span class="qt" id="dbT"></span><button type="button" class="ib sm" id="dbX" aria-label="Do not build a document"><svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.2"><path d="M3 3l6 6M9 3l-6 6"/></svg></button></div>
+      <div class="qbar" id="qbar" hidden><svg viewBox="0 0 16 16" fill="currentColor" aria-hidden="true"><path d="M3 9.5C3 6.8 4.6 5 7 4.5l.4.9C5.9 6 5.2 7 5.1 8H7v4H3zM9 9.5C9 6.8 10.6 5 13 4.5l.4.9C11.9 6 11.2 7 11.1 8H13v4H9z"/></svg><span class="qk">Asking about</span><span class="qt" id="qt"></span><button type="button" class="ib sm" id="qx" aria-label="Remove the quote"><svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.2"><path d="M3 3l6 6M9 3l-6 6"/></svg></button></div>
+      <div class="att" id="att" hidden></div>
+      <form class="comp" id="form">
+        <label for="prompt" class="sr">Message EXPIRA</label>
+        <div class="pw"><textarea id="prompt" rows="1" placeholder="Brief EXPIRA…"></textarea><span class="phx" id="phx" aria-hidden="true">Brief EXPIRA…</span></div>
+        <div class="ctl">
+          <span class="count num" id="count"></span>
+          <input type="file" id="attIn" multiple hidden accept="image/*"><button type="button" class="optb ab1" id="attBtn" aria-label="Attach images" data-tip="Attach images" hidden><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.1" aria-hidden="true"><path d="M10.6 4.6 5.5 9.7a1.6 1.6 0 0 0 2.3 2.3l5.3-5.3a3 3 0 0 0-4.2-4.2L3.5 7.9a4.3 4.3 0 0 0 6.1 6.1l3.5-3.5"/></svg></button><button type="button" class="optb" id="docBtn" aria-haspopup="menu" aria-expanded="false" data-tip="Make a document"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.1" aria-hidden="true"><path d="M3.5 1.5h6l3 3v10h-9z"/><path d="M9.5 1.5v3h3M5.5 8h5M5.5 10.5h5M5.5 13h3"/></svg><span id="docSum">Document</span></button><button type="button" class="optb" id="optBtn" aria-haspopup="menu" aria-expanded="false"><span class="ic" aria-hidden="true"><i></i><i></i><i></i></span><span id="optSum">Auto</span><svg viewBox="0 0 10 10" fill="none" stroke="currentColor" stroke-width="1"><path d="M2.5 6.5L5 4l2.5 2.5"/></svg></button>
+          <button type="submit" class="send" id="send" aria-label="Send" data-tip="Send"><svg viewBox="0 0 16 16" aria-hidden="true"><path class="ar" d="M8 13V3M3.5 7.5L8 3l4.5 4.5" fill="none" stroke="currentColor" stroke-width="1.5"/><rect class="sq" x="4.5" y="4.5" width="7" height="7" rx="1" fill="currentColor"/></svg></button>
+        </div>
+      </form>
+      
+    </div>
+  </main>
+</div>
+
+<div class="cpop" id="cpop" role="tooltip"></div>
+<div class="cpop chov" id="chov" role="tooltip" hidden></div>
+<div class="lbx" id="lbx" hidden><img alt=""><p></p></div>
+<aside class="dsp" id="dsp" aria-label="The Dispatch">
+  <div class="dsp-h"><span class="cap">The Dispatch</span><span class="cap num" id="dspNo"></span><button class="ib" id="dspClose" aria-label="Close" data-tip="Close  Esc"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.1"><path d="M4 4l8 8M12 4l-8 8"/></svg></button></div>
+  <div class="dsp-b" id="dspB"></div>
+</aside>
+
+<div class="menu opt" id="docMenu" role="menu" aria-label="Make a document">
+  <div class="mh cap">Build from the kernel</div>
+  <button role="menuitemradio" data-dt="quotation">Quotation<i class="ck"></i></button>
+  <button role="menuitemradio" data-dt="company_profile">Company profile<i class="ck"></i></button>
+  <button role="menuitemradio" data-dt="contract">Contract (CMSA)<i class="ck"></i></button>
+  <button role="menuitemradio" data-dt="secretary_certificate">Secretary's certificate<i class="ck"></i></button>
+  <button role="menuitemradio" data-dt="board_resolution">Board resolution<i class="ck"></i></button>
+  <button role="menuitemradio" data-dt="notarial_acknowledgment">Notarial acknowledgment<i class="ck"></i></button>
+  <div class="sep"></div>
+  <button role="menuitemradio" data-dt="">No document<i class="ck"></i></button>
+  <p class="hint">The next brief builds this document, filled from what the desks verify, and gives you a file to download.</p>
+</div>
+<div class="menu opt" id="optMenu" role="menu" aria-label="Options">
+  <div class="mh cap">Staffing</div>
+  <button role="menuitemradio" data-opt="desks" data-v="auto" data-hint="The orchestrator decides how many desks, and which, for each brief.">Auto<i class="ck"></i></button>
+  <button role="menuitemradio" data-opt="desks" data-v="always" data-hint="Always staff desks, and split the work generously.">Thorough<i class="ck"></i></button>
+  <button role="menuitemradio" data-opt="desks" data-v="off" data-hint="No desks. The fastest answer.">Direct<i class="ck"></i></button>
+  <div class="mh cap">Depth</div>
+  <div class="seg2" role="radiogroup" aria-label="Depth"><button role="menuitemradio" data-opt="depth" data-v="standard" data-hint="Desks start at their floor.">Standard</button><button role="menuitemradio" data-opt="depth" data-v="deep" data-hint="Every desk runs at deep effort, including low-level lookups.">Deep</button></div>
+  <div class="mh cap">Freshness</div>
+  <div class="seg2 s3" role="radiogroup" aria-label="Freshness"><button role="menuitemradio" data-opt="fresh" data-v="3" data-hint="Prefer sources from the last 90 days.">90 days</button><button role="menuitemradio" data-opt="fresh" data-v="12" data-hint="Prefer sources from the last 12 months.">12 mo</button><button role="menuitemradio" data-opt="fresh" data-v="any" data-hint="No preference for recent sources.">Any</button></div>
+  <div class="sep"></div>
+  <button role="menuitemcheckbox" data-opt="safe" data-hint="Firewall-check every answer and exhibit.">Client-safe<i class="sw"></i></button>
+  <button role="menuitemcheckbox" data-opt="web" aria-disabled="true" id="webOpt" data-hint="Checking Exa…">Web research<i class="sw"></i></button>
+  <p class="hint" id="optHint"></p>
+</div>
+<div class="stg" id="setMenu" role="dialog" aria-modal="true" aria-labelledby="stgT">
+  <aside class="stg-n"><h2 id="stgT">Settings</h2><nav role="tablist" aria-orientation="vertical" aria-label="Settings sections"><button role="tab" data-tab="general" aria-selected="false"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1"><path d="M2.5 4.5h7M12.5 4.5h1M2.5 11.5h1M6.5 11.5h7"/><circle cx="11" cy="4.5" r="1.5"/><circle cx="5" cy="11.5" r="1.5"/></svg><span>General</span></button><button role="tab" data-tab="appearance" aria-selected="false"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1"><circle cx="8" cy="8" r="5.5"/><path d="M8 2.5v11a5.5 5.5 0 000-11z" fill="currentColor" stroke="none"/></svg><span>Appearance</span></button><button role="tab" data-tab="briefs" aria-selected="false"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1"><path d="M3.5 2.5h9v11h-9zM5.5 5.5h5M5.5 8h5M5.5 10.5h3"/></svg><span>Briefs</span></button><button role="tab" data-tab="map" aria-selected="false"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1"><circle cx="4" cy="8" r="1.8"/><circle cx="11.5" cy="4" r="1.4"/><circle cx="12" cy="11.5" r="1.4"/><path d="M5.6 7.2l4.6-2.5M5.6 8.8l5 2.1"/></svg><span>The map</span></button><button role="tab" data-tab="kernel" aria-selected="false"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1"><path d="M8 1.8l5.4 3.1v6.2L8 14.2l-5.4-3.1V4.9z"/><path d="M8 8l5.4-3.1M8 8v6.2M8 8L2.6 4.9"/></svg><span>Kernel</span></button><button role="tab" data-tab="files" aria-selected="false"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.1" ><path d="M3.5 1.5h6l3 3v10h-9z"/><path d="M9.5 1.5v3h3M5.5 8h5M5.5 10.5h5M5.5 13h3"/></svg><span>Files</span></button><button role="tab" data-tab="library" aria-selected="false"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1"><path d="M1.5 4.5a1 1 0 011-1h3.6l1.5 1.5h5.9a1 1 0 011 1v6.5a1 1 0 01-1 1h-11a1 1 0 01-1-1z"/></svg><span>Library</span></button><button role="tab" data-tab="about" aria-selected="false"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1"><circle cx="8" cy="8" r="5.5"/><path d="M8 7.2v4M8 5v.3"/></svg><span>About</span></button></nav><p class="stg-v">EXPIRA Console · v41</p></aside>
+  <section class="stg-p" id="stgP" role="tabpanel" aria-labelledby="stgT" tabindex="0"></section>
+  <button class="ib stg-x" id="stgX" aria-label="Close settings" data-tip="Close  Esc"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.1"><path d="M4 4l8 8M12 4l-8 8"/></svg></button>
+</div>
+<div class="menu acct" id="acct" role="menu" aria-label="Account">
+  <div class="acct-h"><span class="av" data-me="av"></span><span><b data-me="n"></b><small data-me="o"></small></span></div>
+  <div class="seg" role="group" aria-label="Theme"><button role="menuitemradio" data-th="system"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1"><rect x="2" y="3" width="12" height="8.5" rx="1"/><path d="M6 13.5h4"/></svg>System</button><button role="menuitemradio" data-th="light"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1"><circle cx="8" cy="8" r="3"/><path d="M8 1.5v1.5M8 13v1.5M1.5 8H3M13 8h1.5M3.4 3.4l1 1M11.6 11.6l1 1M3.4 12.6l1-1M11.6 4.4l1-1"/></svg>Light</button><button role="menuitemradio" data-th="dark"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1"><path d="M13 9.5A5.5 5.5 0 116.5 3a4.5 4.5 0 006.5 6.5z"/></svg>Dark</button></div>
+  <div class="sep"></div>
+  <button role="menuitem" data-ac="settings"><svg class="ic" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1"><circle cx="8" cy="8" r="2.1"/><path d="M8 1.8l1.1 1.6 1.9-.4.5 1.9 1.8.8-.6 1.8 1.1 1.6-1.6 1.1.2 1.9-1.9.3-.8 1.8-1.8-.7L8 14.2l-1.1-1.6-1.9.4-.5-1.9-1.8-.8.6-1.8L2.2 7l1.6-1.1-.2-1.9 1.9-.3.8-1.8 1.8.7z"/></svg><span class="t">Settings</span><span class="kb">⌘,</span></button>
+  <button role="menuitem" data-ac="pal"><svg class="ic" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1"><path d="M5 3a2 2 0 100 4h6a2 2 0 100-4 2 2 0 00-2 2v6a2 2 0 102-2H5a2 2 0 102 2V5a2 2 0 00-2-2z"/></svg><span class="t">Commands</span><span class="kb">⌘K</span></button>
+  <button role="menuitem" data-ac="keys"><svg class="ic" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1"><rect x="1.5" y="4" width="13" height="8" rx="1.2"/><path d="M4 6.5h.5M6.5 6.5h.5M9 6.5h.5M11.5 6.5h.5M5 9.5h6"/></svg><span class="t">Keyboard shortcuts</span><span class="kb">?</span></button>
+  <button role="menuitem" data-ac="library"><svg class="ic" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1"><rect x="2" y="3" width="12" height="3" rx=".6"/><path d="M3 6v6.5a1 1 0 001 1h8a1 1 0 001-1V6M6.5 9h3"/></svg><span class="t">Library<small id="archN2"></small></span></button>
+  <div class="sep"></div>
+  <button role="menuitem" data-ac="about"><svg class="ic" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1"><circle cx="8" cy="8" r="5.5"/><path d="M8 7.2v4M8 5v.3"/></svg><span class="t">About EXPIRA</span></button>
+</div>
+<div class="menu ctx" id="ctx" role="menu" aria-label="Actions"></div>
+<div class="veil" id="veil"></div>
+<div class="keys" id="keys" role="dialog" aria-label="Keyboard shortcuts"><div class="cap">Keyboard</div><dl><dt><span class="kb">⌘K</span></dt><dd>Commands</dd><dt><span class="kb">⌘,</span></dt><dd>Settings</dd><dt><span class="kb">⌥N</span></dt><dd>New chat</dd><dt><span class="kb">⌥L</span></dt><dd>The Dispatch</dd><dt><span class="kb">/</span></dt><dd>Search chats</dd><dt><span class="kb">Enter</span></dt><dd>Send</dd><dt><span class="kb">⇧ Enter</span></dt><dd>New line</dd><dt><span class="kb">Esc</span></dt><dd>Stop or close</dd><dt><span class="kb">?</span></dt><dd>This card</dd></dl></div>
+<div class="pal" id="pal" role="dialog" aria-label="Commands" inert><label for="palIn" class="sr">Command</label><input id="palIn" placeholder="Type a command…" role="combobox" aria-expanded="true" aria-controls="palList" aria-autocomplete="list" autocomplete="off" spellcheck="false"><ul id="palList" role="listbox" aria-label="Commands"></ul></div>
+<div class="toasts" id="toasts" aria-live="polite"></div>
+<div class="selbar" id="selbar" role="toolbar" aria-label="Selection"><button type="button" data-sa="ask"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.1" aria-hidden="true"><path d="M2.5 3.5h11v7h-6l-3 2.5v-2.5h-2z"/></svg><span>Ask EXPIRA</span></button><button type="button" data-sa="explain"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.1" aria-hidden="true"><circle cx="8" cy="8" r="5.5"/><path d="M6.4 6.4a1.7 1.7 0 113 1c-.6.4-1.4.8-1.4 1.6M8 11v.3"/></svg><span>Explain</span></button><button type="button" data-sa="define"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.1" aria-hidden="true"><path d="M3 2.5h7.5L13 5v8.5H3z"/><path d="M5.5 7h5M5.5 9.5h5M5.5 12h3"/></svg><span>Define</span></button><i class="sep"></i><button type="button" data-sa="copy"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.1" aria-hidden="true"><rect x="5.5" y="5.5" width="8" height="8" rx="1"/><path d="M10.5 5.5v-2a1 1 0 00-1-1h-6a1 1 0 00-1 1v6a1 1 0 001 1h2"/></svg><span>Copy</span></button><button type="button" data-sa="newchat"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.1" aria-hidden="true"><path d="M8 3v10M3 8h10"/></svg><span>New chat</span></button></div>
+<div class="defc" id="defc" role="dialog" aria-label="Definition"><div class="dk cap">Define</div><div class="dt" id="defT"></div><p class="dd" id="defD"></p><div class="da"><button type="button" class="ab" data-sa="ask">Ask more</button><button type="button" class="ab" data-dclose>Close</button></div></div>
+<div class="mfs" id="mfs" role="dialog" aria-modal="true" aria-label="The map, full screen"><div class="mfs-h"><span class="cap">The map</span><span class="mt" id="mfsT"></span><button class="ib" id="mfsX" aria-label="Close full screen" data-tip="Close  Esc"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.1"><path d="M4 4l8 8M12 4l-8 8"/></svg></button></div><div class="mfs-b"><div class="mapw fsmap" id="mfsMap"></div><aside class="mfs-l" id="mfsL"><div class="mfs-tabs" role="tablist" aria-label="Beside the map"><button type="button" role="tab" id="ftD" data-ft="d" aria-controls="mfsD" aria-selected="false">Details</button><button type="button" role="tab" id="ftW" data-ft="w" aria-controls="mfsW" aria-selected="true">Weighing</button><button type="button" role="tab" id="ftL" data-ft="l" aria-controls="mfsLg" aria-selected="false">Log</button></div><div class="mfs-p fs-d" id="mfsD" data-p="d" role="tabpanel" aria-labelledby="ftD" hidden><p class="ins-e fs-e">Click a node, a claim or a source and its details open here.</p></div><div class="mfs-p" id="mfsW" data-p="w" role="tabpanel" aria-labelledby="ftW"></div><div class="mfs-p" id="mfsLg" data-p="l" role="tabpanel" aria-labelledby="ftL" hidden></div></aside></div></div>
+<div class="docv" id="docv" role="dialog" aria-modal="true" aria-labelledby="docvT"><div class="docv-h"><span class="cap">Document</span><span class="dt" id="docvT"></span><span class="dm num" id="docvM"></span><span class="da"><button type="button" class="btn2" id="docvCopy">Copy HTML</button><button type="button" class="btn2" id="docvSave">Download</button><button class="ib" id="docvX" aria-label="Close the document" data-tip="Close  Esc"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.1"><path d="M4 4l8 8M12 4l-8 8"/></svg></button></span></div><div class="docv-b"><iframe id="docvF" title="Document preview" sandbox="allow-same-origin"></iframe><aside class="docv-l" id="docvL"></aside></div></div>
+<div class="tip" id="tip" aria-hidden="true"></div>
+<aside class="sheet" id="sheet" aria-label="Details"><div class="ins-h"><span class="cap">Details</span><span class="ins-st cap" id="insSt"></span><button class="ins-un" id="insUn" type="button" hidden>Unpin</button><button class="ib sx" id="sheetX" type="button" aria-label="Close details" data-tip="Close details  ⌥I"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.1"><path d="M4 4l8 8M12 4l-8 8"/></svg></button></div><div class="speek" id="sheetP"></div><div class="sb" id="sheetB" aria-live="polite"></div><div class="sb ins-v" id="insV" hidden></div><p class="ins-e" id="insE">Hover a citation, a source, a chat or a map node and its details show here. Click one to keep it.</p></aside>
+
+<script>
+<!--@include core/prelude.js-->
+<!--@include units/start/grain.js-->
+<!--@include core/ui.js-->
+<!--@include core/pour.js-->
+<!--@include core/roster.js-->
+<!--@include units/thread/md.js-->
+<!--@include units/figures/charts.js-->
+<!--@include units/thread/stream.js-->
+<!--@include core/store.js-->
+<!--@include units/library/library.js-->
+<!--@include units/thread/cards.js-->
+<!--@include units/maps/mini.js-->
+<!--@include units/thread/messages.js-->
+<!--@include core/router.js-->
+<!--@include units/selection/selection.js-->
+<!--@include units/start/start.js-->
+<!--@include units/shell/shell.js-->
+<!--@include core/theme.js-->
+<!--@include units/settings/settings.js-->
+<!--@include units/account/account.js-->
+<!--@include units/settings/panels.js-->
+<!--@include units/composer/options.js-->
+<!--@include units/composer/composer.js-->
+<!--@include units/palette/palette.js-->
+<!--@include units/dispatch/dispatch.js-->
+<!--@include units/spectro/raster.js-->
+<!--@include units/exhibits/exhibits.js-->
+<!--@include units/maps/model.js-->
+<!--@include units/maps/graph.js-->
+<!--@include units/maps/canvas.js-->
+<!--@include units/maps/flow.js-->
+<!--@include units/maps/field.js-->
+<!--@include units/maps/controls.js-->
+<!--@include units/sheet/sheet.js-->
+<!--@include core/planner.js-->
+<!--@include core/web.js-->
+<!--@include core/ground.js-->
+<!--@include core/kernel.js-->
+<!--@include units/docs/docs.js-->
+<!--@include core/boot.js-->
+<!--@include units/menus/mercury.js-->
+<!--@include units/run/keys.js-->
+<!--@include units/dispatch/rest.js-->
+<!--@include core/motion.js-->
+<!--@include units/figures/forms.js-->
+<!--@include units/thread/feather.js-->
+<!--@include units/thread/claims.js-->
+<!--@include units/composer/attachments.js-->
+<!--@include core/run.js-->
+<!--@include units/settings/nav-indicator.js-->
+<!--@include core/epilogue.js-->
+</script>

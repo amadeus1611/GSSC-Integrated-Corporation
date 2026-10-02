@@ -1,0 +1,82 @@
+.by .who{font-size:var(--fs-micro);letter-spacing:var(--tracked);text-transform:uppercase;color:var(--ink)}
+.by{justify-content:flex-start;display:flex;align-items:center;gap:var(--sp-2h)}
+.by .mark{width:26px}
+.by time{margin-left:auto;font-size:var(--fs-micro);letter-spacing:var(--tracked-tight);color:var(--mute)}
+.mapw{margin:var(--sp-3) 0 0;overflow-x:auto;overflow-y:hidden;scrollbar-width:thin}
+.mapw:empty{display:none}
+.mvb{position:sticky;left:0;display:flex;align-items:center;gap:var(--sp-2h);margin:0 0 var(--sp-1h);min-height:22px}
+.mvr{flex:1;min-width:0;font:italic 400 var(--fs-chrome-2) var(--f-display);color:var(--mute);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.mvk{display:flex;gap:var(--sp-2);flex:none;font-size:var(--fs-micro);color:var(--mute)}
+.mvk span{display:inline-flex;align-items:center;gap:var(--sp-1)}
+.mvk i{width:6px;height:6px;border-radius:var(--r-round)}
+@media (max-width:760px){
+.mvk{display:none}
+}
+.dmap .mvb{padding:var(--sp-1h) var(--sp-2) 0;margin:0}
+.dmap .seg3{background:var(--sheet)}
+.dmap{border:var(--rule-hair) solid var(--line-2);border-radius:var(--r-1);background:var(--well);margin:0;--n-sep:var(--well)}
+.mfs{position:fixed;inset:20px;z-index:var(--z-map);display:flex;flex-direction:column;background:var(--sheet);border:var(--rule-hair) solid var(--line-3);border-radius:var(--r-5);box-shadow:var(--e3);overflow:hidden;opacity:0;visibility:hidden}
+.mfs.open{opacity:1;visibility:visible}
+.mfs-h{display:flex;align-items:center;gap:var(--sp-3);padding:var(--sp-3) var(--sp-3h) var(--sp-2h) var(--sp-5);border-bottom:var(--rule-hair) solid var(--line-2)}
+.mfs-h .cap{color:var(--ink)}
+.mfs-h .mt{font:italic 400 var(--fs-ui) var(--f-display);color:var(--soft);flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.mfs-b{flex:1;min-height:0;display:grid;grid-template-columns:minmax(0,1fr) min(360px,34vw)}
+.fsmap{margin:0;padding:0;overflow:auto;min-height:0}
+.fsmap .mvb{padding:var(--sp-3) var(--sp-4) var(--sp-1);margin:0}
+.mfs-l{border-left:var(--rule-hair) solid var(--line-2);min-height:0;display:flex;flex-direction:column}
+/* v44: the side pane's three linked tabs: Details (the docked rail), Weighing (the ledger) and Log */
+.mfs-tabs{display:flex;gap:var(--sp-1);flex:none;padding:var(--sp-2) var(--sp-3) 0;border-bottom:var(--rule-hair) solid var(--line-2)}
+.mfs-tabs button{border:0;background:none;padding:var(--sp-1h) var(--sp-2) var(--sp-2);font-size:var(--fs-micro);font-weight:400;letter-spacing:var(--tracked);text-transform:uppercase;color:var(--mute);cursor:pointer;box-shadow:inset 0 -1px 0 transparent;transition:color var(--t-exit) var(--ease-soft-close),box-shadow var(--t-exit) var(--ease-soft-close)}
+.mfs-tabs button:hover{color:var(--ink);transition-duration:var(--t-instant);transition-timing-function:var(--ease-out)}
+.mfs-tabs button[aria-selected="true"]{color:var(--ink);box-shadow:inset 0 -1.5px 0 var(--gold)}
+.mfs-p{flex:1;min-height:0;overflow:auto;padding:var(--sp-4) var(--sp-4h)}
+.mfs-p[hidden]{display:none}
+.mfs-p.fs-d:not([hidden]){padding:0;display:flex;flex-direction:column}
+.mfs-p.fs-d:has(.sheet) .fs-e{display:none}
+.fs-log{max-height:none;padding-right:0}
+.fs-log li.lk{cursor:pointer;border-radius:var(--r-2);transition:background-color var(--t-exit) var(--ease-soft-close)}
+.fs-log li.lk:hover{background:var(--well);transition-duration:var(--t-instant)}
+.fs-log li.hit{background:var(--gold-wash)}
+/* !important: a closed or off-screen surface rests; beats each unit's animation shorthand */
+.mfs:not(.open) *{animation-play-state:paused!important}
+@media (max-width:860px){
+.mfs{inset:8px}
+.mfs-b{grid-template-columns:1fr;grid-template-rows:minmax(0,1fr) auto}
+.mfs-l{border-left:0;border-top:var(--rule-hair) solid var(--line-2);max-height:38vh}
+}
+.field .k-doc .core{fill:var(--n-hollow);stroke:var(--gold);stroke-width:1.8}
+.map .k-doc .bx{stroke:var(--gold)}
+.mvx{flex:none;width:24px;height:24px;border-radius:var(--r-3);margin-left:var(--sp-1)}
+.ib.mvx svg{width:12px;height:12px;display:block}
+/* the map plate: the canvas paints; the list of nodes over it takes focus and anchors the sheet */
+.map{position:relative;display:block;width:100%;contain:layout paint;overflow:visible}
+.map canvas{display:block;touch-action:pan-y}
+.map canvas.dragging{cursor:grabbing}
+.map-ax{position:absolute;inset:0;margin:0;padding:0;list-style:none;pointer-events:none}
+.map-ax li{display:contents}
+.mnb{position:absolute;left:0;top:0;padding:0;border:0;border-radius:var(--r-round);background:transparent;opacity:0;pointer-events:none}
+.map-flow .mnb{border-radius:var(--r-1)}
+.mnb:focus{outline:none}
+/* the tooltip: anchored to the node, moved only by transform; numbers in tabular figures */
+.map-tip{position:absolute;left:0;top:0;z-index:var(--z-2);max-width:280px;padding:var(--sp-2) var(--sp-2h);background:var(--panel);border:var(--rule-hair) solid var(--line-2);border-radius:var(--r-2);box-shadow:var(--e1);font-size:var(--fs-chrome-2);color:var(--text);pointer-events:none;opacity:0;visibility:hidden;transition:opacity var(--t-exit) var(--ease-soft-close),visibility 0s linear var(--t-exit)}
+.mtr{font-size:var(--fs-chrome-2);color:var(--text)}
+.map-tip.on{opacity:1;visibility:visible;transition:opacity var(--t-enter) var(--ease-out),visibility 0s}
+:is(.map-tip,.mtr) .mt-h{display:flex;align-items:baseline;gap:var(--sp-3);justify-content:space-between}
+:is(.map-tip,.mtr) .mt-h b{font-weight:500;font-size:var(--fs-chrome);letter-spacing:var(--tracked-cap);text-transform:uppercase;color:var(--ink)}
+:is(.map-tip,.mtr) .mt-s{display:inline-flex;align-items:center;gap:var(--sp-1);font-size:var(--fs-micro);letter-spacing:var(--tracked-tight);text-transform:uppercase;color:var(--mute)}
+:is(.map-tip,.mtr) .mt-s i{width:5px;height:5px;border-radius:var(--r-round);border:var(--rule) solid currentColor}
+:is(.map-tip,.mtr) .st-running,.map-tip .st-thinking{color:var(--gold-ink)}
+:is(.map-tip,.mtr) .st-running i{background:currentColor}
+:is(.map-tip,.mtr) .st-done i{background:currentColor}
+:is(.map-tip,.mtr) .st-failed{color:var(--bad)}
+:is(.map-tip,.mtr) p{margin:var(--sp-half) 0 var(--sp-1h);font:italic 400 var(--fs-chrome-2) var(--f-display);color:var(--soft)}
+:is(.map-tip,.mtr) dl{display:grid;grid-template-columns:auto 1fr;gap:var(--sp-half) var(--sp-3);margin:0}
+:is(.map-tip,.mtr) dt{font-size:var(--fs-micro);letter-spacing:var(--tracked-tight);text-transform:uppercase;color:var(--mute);line-height:1.6}
+:is(.map-tip,.mtr) dd{margin:0;line-height:1.5}
+/* the flow's DOM: lane names in the gutter, tick labels on the axis, the now tag */
+.map-lanes,.map-axis{position:absolute;left:0;top:0;pointer-events:none}
+.map-lanes span{position:absolute;left:var(--sp-1);top:0;white-space:nowrap;font-size:var(--fs-micro);letter-spacing:var(--tracked-tight);text-transform:uppercase;color:var(--mute);line-height:12px}
+.map-axis{right:0;height:16px}
+.map-axis i{position:absolute;left:0;top:2px;font-style:normal;font-size:var(--fs-micro);color:var(--mute);line-height:12px;margin-left:3px}
+.map-now{position:absolute;left:0;top:2px;font-size:var(--fs-micro);letter-spacing:var(--tracked-tight);text-transform:uppercase;color:var(--gold-ink);line-height:12px;margin-left:-22px;background:var(--n-sep);padding:0 var(--sp-half);opacity:0;transition:opacity var(--t-exit) var(--ease-soft-close)}
+.map-now.on{opacity:1}
