@@ -216,7 +216,7 @@
 .ch-run>.ch-graph{grid-column:text-start/mr-end}
 .ch-graph{position:relative;height:var(--gh,84px)}  /* its height is eased by the field's own loop (chat-next.js easeH), so its captions know it */  /* the field grows with what it holds, eased */
 .ch-graph .edges{position:absolute;inset:0;width:100%;height:100%;overflow:visible;pointer-events:none}
-.ch-graph path{fill:none;stroke:var(--line-3);stroke-width:1;stroke-linecap:round;transition:stroke var(--sb-move) var(--sb-ease),opacity var(--sb-move) var(--sb-ease)}
+.ch-graph path{fill:none;stroke:var(--line-3);stroke-width:1;stroke-linecap:round;transition:stroke var(--sb-move) var(--sb-ease),opacity var(--sb-in) var(--ease-inout)}
 .ch-graph path.done{stroke:color-mix(in srgb,var(--ink) 34%,transparent)}
 .ch-graph path.on{stroke:color-mix(in srgb,var(--gold) 70%,transparent)}
 .ch-graph path.src{stroke:color-mix(in srgb,var(--gold) 38%,transparent)}
@@ -230,8 +230,8 @@
 .ch-graph path.ev.done{stroke:color-mix(in srgb,var(--ink) 24%,transparent)}
 .ch-graph path.ev.on{stroke:color-mix(in srgb,var(--gold) 60%,transparent)}
 /* focus: a node's conversation stays; the rest of the field steps back */
-.ch-graph.focus path:not(.hot):not(.lead){opacity:.2}
-.ch-graph.focus .ch-node:not(.hot) .nb,.ch-graph.focus .ch-sat:not(.hot){opacity:.3}
+.ch-graph.focus path:not(.hot):not(.lead){opacity:.4}
+.ch-graph.focus .ch-node:not(.hot) .nb,.ch-graph.focus .ch-sat:not(.hot){opacity:.62}
 .ch-graph.focus path.hot{transition-duration:var(--sb-in)}
 /* the words on a cable: what passes along it, under its lowest point; fast in, soft out */
 .ch-wire{position:absolute;left:0;top:0;padding:1px 5px;border-radius:4px;background:color-mix(in srgb,var(--bg) 86%,transparent);
@@ -243,10 +243,10 @@
 .ch-wire.show{opacity:1;filter:blur(0);transition-duration:var(--sb-in);transition-timing-function:var(--sb-ease)}
 .ch-graph .nodes{position:absolute;inset:0}
 .ch-node{all:unset;position:absolute;left:0;top:0;width:28px;height:28px;margin:-14px 0 0 -14px;border-radius:50%;cursor:pointer;-webkit-tap-highlight-color:transparent}
-.ch-node .nb{position:absolute;inset:0;display:grid;place-items:center;border-radius:50%;color:var(--mute);
- background:var(--panel);box-shadow:var(--ch-rim),inset 0 0 0 var(--rule-hair) var(--line-3),0 1px 2px rgba(var(--sb-shc),calc(var(--sb-sha) * .18));transform:scale(var(--s,1));
- transition:color var(--sb-out) var(--sb-ease),box-shadow var(--sb-out) var(--sb-ease),opacity var(--sb-out) var(--sb-ease),transform var(--sb-move) var(--sb-ease)}
-.ch-node .nb svg{width:13px;height:13px}
+.ch-node .nb{position:absolute;inset:calc(14px * (1 - var(--s,1)));display:grid;will-change:transform;place-items:center;border-radius:50%;color:var(--mute);
+ background:var(--panel);box-shadow:var(--ch-rim),inset 0 0 0 var(--rule-hair) var(--line-3),0 1px 2px rgba(var(--sb-shc),calc(var(--sb-sha) * .18));transform:none;
+ transition:color var(--sb-out) var(--sb-ease),box-shadow var(--sb-out) var(--sb-ease),opacity var(--sb-in) var(--ease-inout),transform var(--sb-move) var(--sb-ease)}
+.ch-node .nb svg{width:calc(13px * var(--s,1));height:calc(13px * var(--s,1));stroke-width:calc(1.2 / var(--s,1))}
 /* LAYA's gates (the Arbiter staffing and weighing, the check) are rounded squares: decisions in code; the workers are
    circles. Exa is the smallest node, in gold ink */
 .ch-node.gate .nb,.ch-node.gate .nb::after{border-radius:32%}
@@ -257,13 +257,13 @@
 .ch-node[data-st="run"] .nb::after{animation:breathe var(--t-loop) var(--ease-inout) infinite}
 .ch-node[data-st="done"] .nb{color:var(--ink);box-shadow:var(--ch-rim),inset 0 0 0 var(--rule-hair) color-mix(in srgb,var(--ink) 40%,transparent),0 1px 2px rgba(var(--sb-shc),calc(var(--sb-sha) * .18))}
 .ch-node[data-st="fail"] .nb,.ch-node[data-st="warn"] .nb{color:var(--bad);box-shadow:inset 0 0 0 1px color-mix(in srgb,var(--bad) 60%,transparent)}
-.ch-node:hover .nb,.ch-node[aria-expanded="true"] .nb{transform:scale(calc(var(--s,1) * 1.1));color:var(--ink);transition-duration:var(--sb-in)}
+.ch-node:hover .nb,.ch-node[aria-expanded="true"] .nb{transform:scale(1.1);color:var(--ink);transition-duration:var(--sb-in)}
 .ch-node.drag{cursor:grabbing}
-.ch-node.drag .nb{transform:scale(calc(var(--s,1) * 1.12));box-shadow:var(--ch-rim),inset 0 0 0 1px var(--gold),0 8px 22px -10px rgba(var(--sb-shc),calc(var(--sb-sha) * 1.2))}
+.ch-node.drag .nb{transform:scale(1.12);box-shadow:var(--ch-rim),inset 0 0 0 1px var(--gold),0 8px 22px -10px rgba(var(--sb-shc),calc(var(--sb-sha) * 1.2))}
 .ch-node:focus-visible .nb{outline:var(--rule) solid var(--gold);outline-offset:2px}
 /* the node's name, after a beat on hover */
 
-.ch-sat{position:absolute;left:0;top:0;width:7px;height:7px;margin:-3.5px 0 0 -3.5px;border-radius:50%;background:var(--gold);box-shadow:0 0 0 2px color-mix(in srgb,var(--gold) 18%,transparent);transition:opacity var(--sb-out) var(--sb-ease)}
+.ch-sat{position:absolute;left:0;top:0;width:7px;height:7px;margin:-3.5px 0 0 -3.5px;border-radius:50%;background:var(--gold);box-shadow:0 0 0 2px color-mix(in srgb,var(--gold) 18%,transparent);transition:opacity var(--sb-in) var(--ease-inout)}
 .ch-qry{position:absolute;left:0;top:0;width:14px;height:6px;margin:-3px 0 0 -7px;border-radius:3px;background:var(--gold-wash);box-shadow:inset 0 0 0 1px var(--gold);transition:opacity var(--sb-out) var(--sb-ease)}
 .ch-qry::after{content:attr(data-tip);position:absolute;left:50%;bottom:calc(100% + 6px);padding:2px 6px;border-radius:5px;background:color-mix(in srgb,var(--ink) 90%,transparent);color:var(--bg);font:400 var(--fs-chrome)/1.3 var(--f-body);white-space:nowrap;pointer-events:none;opacity:0;transform:translate(-50%,3px);transition:opacity var(--sb-out) var(--sb-ease),transform var(--sb-out) var(--sb-ease)}
 .ch-qry:hover::after{opacity:1;transform:translate(-50%,0);transition-duration:var(--sb-in);transition-delay:.2s}

@@ -355,7 +355,7 @@ const CH=(()=>{const ch=$("#ch"),scroll=$("#chScroll"),col=$("#chCol"),tab=$("#c
   const pool=[];let pn=0;const dot=()=>{let c=pool[pn];if(!c){c=document.createElementNS(NS,"circle");c.setAttribute("r","1.8");c.setAttribute("class","pulse");svg.insertBefore(c,lead);pool.push(c)}pn++;return c};
   let tPrev=performance.now();
   function render(){const now=performance.now(),dt=Math.min(.05,(now-tPrev)/1000);tPrev=now;
-   S.forEach(s=>{s.el.style.transform=`translate(${s.x.toFixed(1)}px,${s.y.toFixed(1)}px)`;if(s.k!=="src")s.el.style.setProperty("--s",(s.r/14).toFixed(3))});
+   S.forEach(s=>{s.el.style.transform=`translate(${s.x.toFixed(1)}px,${s.y.toFixed(1)}px)`;if(s.k!=="src"){const v=(s.r/14).toFixed(2);if(s._sv!==v){s._sv=v;s.el.style.setProperty("--s",v)}}});
    pn=0;E.forEach(e=>{const A=S.get(e.a),Bn=S.get(e.b);if(!A||!Bn||!e.pts)return;e.el.setAttribute("d",ropePath(e,A,Bn));e.el.setAttribute("class",e.cls+(e.hot?" hot":""));
     /* the cable's weight: the tokens that have passed along it (the target's), eased; the web's threads stay fine; a loaded cable is a little brighter */
     const thin=e.cls==="src"||/^(call|ev)/.test(e.cls),tokW=thin?0:Math.min(2.2,Math.sqrt((Bn.tok||0)/400)*.7),want=(e.cls==="src"?.8:thin?.9:1)+tokW+e.ld*.25+(e.n&&e.cls.startsWith("ev")?Math.min(1.2,e.n*.22):0);e.wt+=(want-e.wt)*.15;e.el.style.strokeWidth=e.wt.toFixed(2)+"px";

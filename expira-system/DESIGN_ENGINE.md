@@ -630,3 +630,5 @@ The chat pane follows §4.1–§4.4 and the sidebar's colour logic. The old answ
   - clip-path reveals end past the shadow;
   - a transform-only indicator in the settings nav;
   - web research through Exa.
+
+- **2026-10-02 · the raster snap.** A node's icon was scaled by its size (`scale(r/14)`) and again on hover; a scaled, composited layer is rasterised at one scale while it moves and again when it stops, so the strokes thinned (read as grey on the small nodes) and snapped sharp at the end of every transition. Rule: size by layout (`inset`, svg `width`, compensated `stroke-width`), keep a hover scale on a layer with `will-change:transform` so the raster never changes, and write `--s` only when it changes. The root now sets grayscale antialiasing, so promoting and dropping a layer never re-renders the type. Focus dimming eased to a symmetric curve (nodes .62, cables .4) instead of the front-loaded expo-out.
