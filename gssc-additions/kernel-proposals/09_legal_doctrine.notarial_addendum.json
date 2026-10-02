@@ -1,0 +1,75 @@
+{
+  "module_id": "09_legal_doctrine",
+  "addendum": "notarial_and_execution",
+  "version": "1.1-proposed",
+  "status": "Proposed addendum to a GSSC document kernel module (legal doctrine). Not applied to any kernel by this file.",
+  "purpose": "Give every master agreement derivative the same execution pages, in the same order, built from the 2004 Rules on Notarial Practice, so a signed and notarised instrument needs no redesign.",
+  "agreement_derivative": {
+    "builder": "gssc-system/runtime/build_derivative.py",
+    "style": "gssc-additions/design-tokens/gssc-hero-notice-derivative.css + gssc-agreement-derivative.css (ONE appended style element)",
+    "page_order": [
+      "p-seal cover (full bleed, no chrome)",
+      "Key Terms (parties and every deal-specific value)",
+      "clauses with a per-page legal basis area",
+      "signatures (flow after the last clause)",
+      "acknowledgment (notarial page)",
+      "Annex A: authority and identification"
+    ],
+    "cover": "Sealed cover: registered stacked lockup, company name, instrument title, edition, CONFIDENTIAL top and bottom bands; no sources or basis area.",
+    "basis_area": "Every page after the cover carries a labelled 'Legal basis · this page' area (class ev-sources) listing the statutes and decisions its clauses rest on, or stating that none is cited."
+  },
+  "execution": {
+    "signatory_default": "president_of_record",
+    "signatory_rule": "The President of record signs for GSSC; the signature lockup (kernel asset 'signature', minimum 175px wide) sits above the signatory name with signing room between the lockup and the line.",
+    "authority_rule": "A job title, signature block or business card is not proof of authority: each party attaches the governing corporate record (secretary's certificate or board resolution) as Annex A; the notary keeps the identification presented.",
+    "formal_blanks": "Counterparty identity, agreement number, effective date, venue of signing and every notary field stay blank lines for the parties and the notary; they are never prefilled."
+  },
+  "acknowledgment": {
+    "elements": [
+      "Each signatory appears in person before the notary public and presents the complete instrument.",
+      "Each is identified by the notary through competent evidence of identity.",
+      "Each represents that the signature was voluntarily affixed for the purposes stated in the instrument and declares that it is his or her free and voluntary act and deed.",
+      "A signatory acting in a representative capacity declares that he or she has the authority to sign in that capacity."
+    ],
+    "competent_evidence_of_identity": "At least one current identification document issued by an official agency bearing the photograph and signature of the individual (the rule's alternative, an oath of credible witnesses, is for the notary to apply).",
+    "page_count_statement": "The certificate states the number of pages of the instrument including the page on which the acknowledgment is written; the builder computes it.",
+    "notary_fields": [
+      "Notary Public for",
+      "Until",
+      "Commission No.",
+      "Roll of Attorneys No.",
+      "IBP No.",
+      "PTR No.",
+      "MCLE Compliance No.",
+      "Office address",
+      "Doc. No.",
+      "Page No.",
+      "Book No.",
+      "Series of"
+    ],
+    "sources": [
+      {
+        "citation": "2004 Rules on Notarial Practice, Rule II, Sec. 1 (Acknowledgment)",
+        "url": "https://lawphil.net/judjuris/juri2023/jun2023/ac_13287_2023.html",
+        "retrieved": "2026-10-02"
+      },
+      {
+        "citation": "2004 Rules on Notarial Practice, Rule II, Sec. 12 (Competent Evidence of Identity)",
+        "url": "https://lawphil.net/judjuris/juri2023/jun2023/ac_13287_2023.html",
+        "retrieved": "2026-10-02"
+      }
+    ]
+  },
+  "attribution_rule": "An agreement that uses a clause adapted from an openly licensed template (for example CC BY 4.0) carries the licence attribution line and says changes were made.",
+  "hard_stops": [
+    "do not mark a template as executed, notarised or witnessed",
+    "do not prefill any notary field",
+    "do not state that a document has been notarised until the notarial certificate is completed and signed",
+    "do not copy personal TINs, residential addresses or IDs into an agreement (kernel module 09 privacy rule)"
+  ],
+  "checks": [
+    "render_check.py PASS",
+    "gssc-additions/runtime/clip_check.py CLEAN",
+    "engine/lib/gsscdoc.js ok for data-doc-type master-agreement (sealed cover first; IN WITNESS WHEREOF, acknowledgment and Annex A present)"
+  ]
+}

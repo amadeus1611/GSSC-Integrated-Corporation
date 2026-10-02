@@ -1,0 +1,43 @@
+/* Master agreement components (appended after the kernel-addition layer in the ONE derivative style element). Master variables only; new class names only (agr- prefix). */
+.agr-blank{display:inline-block;height:12px;border-bottom:.75pt solid var(--navy-dark);vertical-align:baseline;margin:0 2px}
+.agr-h{font-family:var(--f-body);font-size:7.5px;font-weight:600;line-height:1.2;letter-spacing:var(--tracked);text-transform:uppercase;color:#7d6220;margin:0 0 4px 0}
+.agr-parties{display:grid;grid-template-columns:1fr 1fr;gap:0 22px;margin:10px 0 6px 0}
+.agr-party{min-width:0;border-top:var(--border-strong);padding-top:8px}
+.agr-dl{margin:0;padding:0}
+.agr-dl div{display:grid;grid-template-columns:34% minmax(0,1fr);gap:0 10px;padding:5px 0;border-bottom:var(--border-hair);min-width:0}
+.agr-dl dt{font-family:var(--f-body);font-size:7.5px;font-weight:600;line-height:1.4;letter-spacing:.06em;text-transform:uppercase;color:var(--slate);margin:0}
+.agr-dl dd{font-family:var(--f-body);font-size:var(--fs-caption);line-height:1.45;color:var(--navy-dark);margin:0;overflow-wrap:break-word;min-width:0}
+.agr-parties .agr-dl div{grid-template-columns:1fr;gap:1px 0}
+.agr-sigs{display:grid;grid-template-columns:1fr 1fr;gap:0 26px;margin:20px 0 14px 0}
+.agr-sig{min-width:0;border-top:var(--border-strong);padding-top:8px}
+.agr-lockup{display:block;width:175px;height:auto;margin:8px 0 44px 0;opacity:var(--sig-lockup-opacity)}
+.agr-gap{height:76px}
+.agr-line{height:0;border-bottom:.75pt solid var(--navy-dark);margin:0 0 5px 0}
+.agr-sn{font-family:var(--f-body);font-size:var(--fs-caption);font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--navy-dark);line-height:1.3}
+.agr-st{font-family:var(--f-display);font-style:italic;font-size:var(--fs-caption);color:var(--slate);line-height:1.4;margin:1px 0 4px 0}
+.agr-sd{font-family:var(--f-body);font-size:7.5px;line-height:1.45;color:var(--slate);margin:0}
+.agr-wit{display:grid;grid-template-columns:1fr 1fr;gap:0 26px;margin:6px 0 0 0}
+.agr-wit div{padding-top:22px;border-bottom:.75pt solid var(--navy-dark);font-family:var(--f-body);font-size:7.5px;letter-spacing:.06em;text-transform:uppercase;color:var(--slate);line-height:1.6}
+.agr-caps{font-family:var(--f-body);font-size:8px;font-weight:600;letter-spacing:.14em;color:var(--navy-dark);margin:12px 0 6px 0;line-height:1.5}
+.agr-ack{font-family:var(--f-display);font-size:10px;line-height:1.7;color:var(--ink);margin:0 0 8px 0;text-align:justify}
+.agr-venue{display:grid;grid-template-columns:330px 1fr;gap:0 8px;font-family:var(--f-body);font-size:var(--fs-caption);line-height:1.8;color:var(--navy-dark);margin:6px 0 8px 0}
+.agr-nt{display:grid;grid-template-columns:1fr 1fr;gap:0 22px;margin:8px 0 0 0}
+.agr-nt div{display:grid;grid-template-columns:auto 1fr;gap:0 6px;align-items:end;font-family:var(--f-body);font-size:7.5px;letter-spacing:.05em;text-transform:uppercase;color:var(--slate);line-height:1.2;padding:7px 0 0 0}
+.agr-nt div span.agr-blank{min-width:0;width:100%;margin:0}
+.agr-reg{font-family:var(--f-body);font-size:8px;letter-spacing:.08em;text-transform:uppercase;color:var(--slate);margin:14px 0 0 0;line-height:1.9}
+
+.agr-fill{display:block;height:17px;border-bottom:.75pt solid var(--navy-dark);margin:0 0 3px 0;width:100%}
+.agr-fill+.agr-fill{margin-top:5px}
+
+.agr-cap{font-family:var(--f-body);font-size:7.5px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--slate);line-height:1.3;margin:0 0 2px 0}
+.agr-cls{border-top:var(--border-strong)}
+.agr-cl{display:grid;grid-template-columns:26px 24% minmax(0,1fr);gap:0 12px;padding:9px 0 9px 0;border-bottom:var(--border-hair)}
+.agr-cl .agr-n{font-family:var(--f-display);font-size:var(--fs-caption);color:#7d6220;line-height:1.5}
+.agr-cl .agr-t{font-family:var(--f-body);font-size:var(--fs-caption);font-weight:600;color:var(--navy-dark);line-height:1.45}
+.agr-cl .agr-x{font-family:var(--f-body);font-size:var(--fs-body);line-height:1.55;color:var(--ink);overflow-wrap:break-word}
+
+/* type refinement: kerning, ligatures, lining numerals in data, oldstyle numerals in running text, tabular figures in registers */
+.agr-dl dd,.agr-dl dt,.agr-cl .agr-x,.agr-cl .agr-t,.agr-ack,.agr-sd,.agr-nt div,.agr-reg{font-kerning:normal;font-variant-ligatures:common-ligatures;text-rendering:optimizeLegibility;-webkit-font-smoothing:antialiased}
+.agr-dl dd,.agr-reg,.agr-venue,.agr-nt div{font-variant-numeric:lining-nums tabular-nums}
+.agr-cl .agr-x,.agr-ack{font-variant-numeric:oldstyle-nums;hyphens:manual}
+.agr-dl dt,.agr-cap,.agr-h,.agr-sn{font-feature-settings:"case" 1,"cpsp" 1}
