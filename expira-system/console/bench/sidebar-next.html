@@ -1,0 +1,85 @@
+<!doctype html>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Sidebar Next</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@200..600&family=Libre+Baskerville:ital@0;1&display=swap" rel="stylesheet">
+<!-- Specimen: the v45 sidebar draft. The sidebar's CSS, markup and script are drafts in bench/drafts/ (nothing in src/
+     changes until it is promoted); the tokens, the frame (units/shell), the fold, the motion vocabulary and the bloom
+     are the console's own, read from src/. drafts/dark-next.css is the dark theme rebuilt on the full palette. -->
+<style>
+<!--@include tokens.css-->
+<!--@bench drafts/dark-next.css-->
+<!--@include base.css-->
+<!--@include units/shell/shell.css-->
+<!--@rule units/sidebar/sidebar.css .wm-->
+<!--@bench drafts/sidebar-next.css-->
+<!--@bench panel.css-->
+/* bench only: the main header's crumb and title, and a quiet stand-in for the chat */
+.crumb{font-size:var(--fs-ui);color:var(--mute)}
+.crumb::after{content:"/";margin-left:var(--sp-2);color:var(--line-3)}
+.ttl{all:unset;font:400 var(--fs-ui)/1 var(--f-display);color:var(--ink)}
+.bn-chat{flex:1;overflow:hidden;padding:var(--sp-6) var(--sp-5)}
+.bn-col{max-width:680px;margin:0 auto;display:flex;flex-direction:column;gap:var(--sp-4)}
+.bn-col p{margin:0;color:var(--text)}
+.bn-col .bn-q{align-self:flex-end;max-width:70%;background:var(--well);border:var(--rule-hair) solid var(--line-2);border-radius:var(--r-5);padding:var(--sp-2) var(--sp-3)}
+.bn-col h2{margin:0;font:400 var(--fs-h3)/1.3 var(--f-display);color:var(--ink)}
+.bn-col p.bn-hit{border-radius:var(--r-2);animation:bnHit 1.6s var(--sb-ease,ease) both}
+@keyframes bnHit{from{background:var(--gold-wash);box-shadow:0 0 0 6px var(--gold-wash)}to{background:transparent;box-shadow:0 0 0 6px transparent}}
+</style>
+<script>
+var BENCH_EXTRA={time:["--sb-in","--sb-out","--sb-move","--sb-dock","--sb-dock-out","--sb-settle"],curve:["--sb-ease","--sb-dock-close"]};  /* the sidebar's own motion: one curve, fast then a long soft settle */
+<!--@bench early.js-->
+BENCH.name="Sidebar · v45 draft";
+</script>
+
+<div class="app has-chat" id="app">
+  <button class="ib side-t sb-dockbtn" id="fold" aria-controls="side" aria-expanded="true" aria-label="Close sidebar" data-tip="Close sidebar"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1"><rect x="1.5" y="2.5" width="13" height="11" rx="1.5"/><path class="pane" d="M2.5 3h3.5v10h-3.5z"/><path class="dv" d="M6 2.5v11"/><path class="chev" d="M11 6.2 9.2 8l1.8 1.8"/></svg></button>
+  <nav class="side sb" aria-label="Sidebar" id="side">
+    <div class="brand" aria-hidden="true"></div>
+    <div class="sb-scroll" id="sbScroll"></div>
+    <div class="sb-grip" id="sbGrip" role="separator" aria-orientation="vertical" aria-label="Resize the sidebar" aria-valuemin="208" aria-valuemax="400" tabindex="0"></div>
+    <div class="sb-foot">
+      <div class="sb-acct" id="sbMenu"><div class="sb-nav" role="group" aria-label="Menu pages"><button type="button" data-nav="back" aria-label="Back"></button><button type="button" data-nav="fwd" aria-label="Forward"></button></div><div class="sb-card" role="dialog" aria-label="Account"></div></div>
+      <button class="sb-me" id="sbMe" type="button" aria-haspopup="dialog" aria-expanded="false" aria-controls="sbMenu"><span class="sb-av">A</span><span class="sb-who"><b>Amadeus</b><small>GSSC Integrated</small></span><!--updown--></button>
+      <div class="sb-sig"><svg class="mark" viewBox="0 0 1413 425" role="img" aria-label="EXPIRA mark"><polygon points="0,0 233,0 391,100 206,425 40,425 0,302" fill="var(--mark-a)"/><polygon points="233,0 728,0 391,100" fill="var(--gold)"/><polygon points="391,100 728,0 778,0 871,225 1166,425 1058,425" fill="var(--mark-a)"/><polygon points="391,100 1058,425 206,425" fill="var(--mark-b)"/><polygon points="918,0 1043,0 1408,425 1241,425 968,192" fill="var(--gold)"/><polygon points="1043,0 1340,0 1408,425" fill="var(--mark-b)"/></svg><span class="wm" role="img" aria-label="EXPIRA"></span></div>
+    </div>
+  </nav>
+  <div class="sb-pop" id="sbPop"><div class="sb-nav" role="group" aria-label="Menu pages"><button type="button" data-nav="back" aria-label="Back"></button><button type="button" data-nav="fwd" aria-label="Forward"></button></div><div class="sb-card" role="menu" aria-label="Actions"></div></div>
+  <main class="main" id="main">
+    <header class="top"><span class="crumb" id="crumb">Recents</span><button class="ttl" id="ttl">Showroom fit-out, phase two</button></header>
+    <div class="bn-chat"><div class="bn-col">
+      <p class="bn-q">Summarise where the showroom fit-out stands and what is left for phase two.</p>
+      <h2>Phase two, at a glance</h2>
+      <p>This column stands in for the chat, so the fold has something to push. The sidebar on the left is the v45 draft: hover down the rows, open the folders and the sections, search, and pull the account menu up from the foot.</p>
+      <p>The sidebar is a small file system now: folders you make, chats and documents inside them, loose chats below, newest first. Drag anything onto a folder (linger and a closed one springs open), or onto open space for the top level. The folder icon beside New chat makes a folder; right-click empty space for the same. Pull the sidebar's edge to resize it; pull it far enough left and it docks.</p>
+      <p>Keys: F dock, N new chat, S search, D a folder, M a row menu, A account, L loops the dock. With a row focused: arrows walk, right opens, left closes, F2 renames, Delete deletes (and undoes). A deleted row offers undo, and a trash can to delete it now.</p>
+    </div></div>
+  </main>
+</div>
+
+<script>
+(()=>{
+/* bench stubs: the few globals the scripts expect from core/prelude.js */
+const $=s=>document.querySelector(s),app=$("#app"),root=document.documentElement;
+let reduce=matchMedia("(prefers-reduced-motion: reduce)").matches,busy=false;const open=()=>{},promptEl={focus(){}};
+<!--@include core/motion.js-->
+<!--@include core/pour.js-->
+<!--@bench drafts/sidebar-next.js-->
+Object.assign(BENCH,{MO,easeFn});window.SB=SB;  /* bench only: test hooks */
+/* bench only: the chat column shows what you open. Opened from a search, the paragraph with the words is brought into
+   view and brushed once in gold, as the console will do with the matching turn. */
+const col=$(".bn-col"),esc=t=>String(t).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+SB.onopen=(n,o)=>{$("#ttl").textContent=n.t;$("#crumb").textContent=o.sys==="trash"?"Recently Deleted":o.sys==="arch"?"Archive":"Chats";
+ const ps=(n.body||"Nothing here yet.").split(/\n\n/);col.innerHTML=`<h2>${esc(n.t)}</h2>`+ps.map(x=>`<p>${esc(x)}</p>`).join("");
+ if(!reduce)col.animate([{opacity:0,filter:"blur(3px)"},{opacity:1,filter:"blur(0px)"}],{duration:420,easing:"cubic-bezier(.19,1,.22,1)"});
+ const q=(o.q||"").toLowerCase();if(!q)return;const hit=[...col.querySelectorAll("p")].find(p=>p.textContent.toLowerCase().includes(q));
+ if(hit){hit.classList.add("bn-hit");hit.scrollIntoView({block:"center",behavior:reduce?"auto":"smooth"})}};
+const ks=f=>()=>setTimeout(f,0);
+BENCH.actions.push({label:"Dock",key:"f",run:()=>SB.dock()},{label:"New chat",key:"n",run:()=>SB.newChat()},{label:"Account",key:"a",run:ks(()=>SB.acct())},
+ {label:"Search",key:"s",run:ks(()=>SB.search(true))},{label:"Folder",key:"d",run:()=>SB.folder(0)},{label:"Row menu",key:"m",run:ks(()=>SB.pop(true,4))},{label:"Finish run",key:"r",run:()=>SB.finish()});
+})();
+</script>
+<script>
+<!--@bench panel.js-->
+</script>

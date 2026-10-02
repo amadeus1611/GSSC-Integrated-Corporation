@@ -1,0 +1,79 @@
+<!doctype html>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Sidebar Bench</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@200..600&family=Libre+Baskerville:ital@0;1&display=swap" rel="stylesheet">
+<!-- Specimen: the sidebar (units/sidebar, units/shell) and the account menu that opens from its footer (units/menus).
+     The CSS, the markup and the fold script are the console's own, read from src/ at build time.
+     thread.css is here only for .who, the name and org in the sidebar footer, which it styles for every unit. -->
+<style>
+<!--@include tokens.css-->
+<!--@include base.css-->
+<!--@include units/sidebar/sidebar.css-->
+<!--@include units/shell/shell.css-->
+<!--@include units/thread/thread.css-->
+<!--@include units/menus/menus.css-->
+<!--@include units/pour/pour.css-->
+<!--@bench panel.css-->
+/* bench only: a quiet stand-in for the chat, so the fold's margin move has something to push */
+.bn-chat{flex:1;overflow:hidden;padding:var(--sp-6) var(--sp-5)}
+.bn-col{max-width:680px;margin:0 auto;display:flex;flex-direction:column;gap:var(--sp-4)}
+.bn-col p{margin:0;color:var(--text)}
+.bn-col .bn-q{align-self:flex-end;max-width:70%;background:var(--well);border:var(--rule-hair) solid var(--line-2);border-radius:var(--r-5);padding:var(--sp-2) var(--sp-3)}
+.bn-col h2{margin:0;font:400 var(--fs-h3)/1.3 var(--f-display);color:var(--ink)}
+</style>
+<script>
+<!--@bench early.js-->
+BENCH.name="Sidebar";
+</script>
+
+<div class="app has-chat" id="app">
+<!--@slice shell.html #side-->
+  <main class="main" id="main">
+    <header class="top"><span class="crumb" id="crumb">Recents</span><button class="ttl" id="ttl">Showroom fit-out, phase two</button></header>
+    <div class="bn-chat"><div class="bn-col">
+      <p class="bn-q">Summarise where the showroom fit-out stands and what is left for phase two.</p>
+      <h2>Phase two, at a glance</h2>
+      <p>This column stands in for the chat. It is here so you can watch it take the sidebar's width as the sidebar folds, on the same time and curve, and give it back as it opens.</p>
+      <p>Press F to fold the sidebar, A for the account menu, and L to loop. Slow the speed down to see each frame of the move.</p>
+    </div></div>
+  </main>
+</div>
+<!--@slice shell.html #acct-->
+
+<script>
+(()=>{
+/* bench stubs: the few globals the unit's scripts expect from core/prelude.js */
+const $=s=>document.querySelector(s),app=$("#app"),root=document.documentElement;
+let reduce=matchMedia("(prefers-reduced-motion: reduce)").matches,busy=false;const open=()=>{},promptEl={focus(){}};
+<!--@include core/motion.js-->
+<!--@include core/pour.js-->
+<!--@include units/shell/shell.js-->
+/* bench only: sample recents in the library's row markup (units/library/library.js rowHTML) */
+const dots=`<svg viewBox="0 0 12 12" fill="currentColor"><circle cx="2.5" cy="6" r="1"/><circle cx="6" cy="6" r="1"/><circle cx="9.5" cy="6" r="1"/></svg>`;
+const row=(t,m,on)=>`<div class="row ${on?"on":""}"><button class="item"><span class="it-t">${t}</span>${m?`<span class="it-m num">${m}</span>`:""}</button><button class="dots" aria-label="Chat actions">${dots}</button></div>`;
+$("#recents").innerHTML=`<div class="sec"><div class="sh"><span class="cap">Today</span></div>${row("Showroom fit-out, phase two","Three desks · 02:14",true)}${row("Quotation for the Makati site","Direct · 00:41")}</div>`+
+ `<div class="sec"><div class="sh"><span class="cap">Previous 7 days</span></div>${row("Supplier shortlist review","Four desks · 03:02")}${row("Board resolution draft","Two desks · 01:20")}${row("Warehouse lease terms")}</div>`;
+document.querySelectorAll('[data-me="av"]').forEach(x=>x.textContent="SV");
+document.querySelectorAll('[data-me="n"]').forEach(x=>x.textContent="Sample Viewer");
+document.querySelectorAll('[data-me="o"]').forEach(x=>x.textContent="GSSC Integrated");
+const n2=$("#archN2");if(n2)n2.textContent="5 chats";
+/* the account menu: placement as in units/account/account.js acctMenu, the bloom from core/pour.js */
+POUR.attach($("#acct"));
+function acctMenu(o){const a=$("#acct"),b=$("#me");o=o??!a.classList.contains("open");
+ if(o){const r=b.getBoundingClientRect();a.style.left=Math.max(8,Math.min(innerWidth-256,r.left-4))+"px";a.style.top="0px";a.classList.add("open");a.style.top=Math.max(8,r.top-a.offsetHeight-8)+"px"}
+ else a.classList.remove("open");b.setAttribute("aria-expanded",String(!!o))}
+$("#me").onclick=e=>{e.stopPropagation();acctMenu()};
+$("#acct").onclick=e=>{e.stopPropagation();const th=e.target.closest("[data-th]");
+ if(th){const v=th.dataset.th;if(v==="system")delete root.dataset.theme;else root.dataset.theme=v;BENCH.state.th=v==="system"?undefined:v;BENCH.save();paintTheme();return}
+ if(e.target.closest("[data-ac]"))acctMenu(false)};
+const paintTheme=()=>document.querySelectorAll("#acct [data-th]").forEach(b=>b.setAttribute("aria-checked",String((root.dataset.theme||"system")===b.dataset.th)));paintTheme();
+addEventListener("click",()=>acctMenu(false));addEventListener("keydown",e=>{if(e.key==="Escape")acctMenu(false)});
+Object.assign(BENCH,{MO,easeFn});
+BENCH.actions.push({label:"Fold sidebar",key:"f",run:()=>setFold(!app.classList.contains("folded"))},{label:"Account menu",key:"a",run:()=>setTimeout(()=>acctMenu(),0)});
+})();
+</script>
+<script>
+<!--@bench panel.js-->
+</script>

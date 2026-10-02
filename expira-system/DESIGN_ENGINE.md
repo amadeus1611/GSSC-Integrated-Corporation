@@ -43,6 +43,15 @@ A new derivative, whether a screen, a document or a chart, follows the master te
   - **Text.** All text tokens pass AA on every surface in both themes. Gold used as text has its own token, `--gold-ink`; `--gold` is for rules, lead-ins and focus rings only.
   - **Charts.** Fixed order: research navy blue, finance deep gold, builder teal, legal rust, arbiter plum. The palette is validated with the dataviz validator in both modes.
   - **Token raster.** Navy in light and gold in dark, darker or brighter meaning more; validated as an ordinal ramp.
+- **Full palette (2026-09-26, Amadeus).** Ten colours; the values and their roles are in `brand_assets/palette.json`. Those marked "estimated" were read from a screenshot; replace them with the Canva hex codes.
+  - Golds: light gold `#C9A35C`, deep gold `#AE8A47`, pale gold `#E9CF91`, sand `#E6D3A6`.
+  - Navies: midnight navy `#0B1A3F`, royal navy `#0C2461`.
+  - Neutrals: off-white `#F7F5F0`, light grey `#D9D9D9`, steel grey `#7D838E`, slate grey `#4D535E`.
+  - **Dark theme (v45 draft):**
+    - Surfaces are close to black, built from the brand ink rather than neutral grey: the sidebar is `#04060B` and the page is `#06090F`, stepping up to `#0C111B` for menus.
+    - The default text is the off-white.
+    - Captions use steel grey, which passes AA on every dark surface.
+    - It is drafted in `console/bench/drafts/dark-next.css` and is promoted by replacing the `@dark` block in `src/tokens.css`.
 - **No regressions:** each iteration must look at least as well thought out as the last one.
 
 ## 3. Motion principles
@@ -87,7 +96,322 @@ Motion is the heart of the UX: fidelity in the engine comes first.
 
   Nothing overshoots anywhere. The source is `console/qa/lab/tokens.proposed.css`, which becomes `src/tokens.css`.
 
-## 4. Build habits
+## 4. EXPIRA × macOS: the house style for the Console and its derivatives (v45, Amadeus, 2026-09-26)
+
+**What it is.** The EXPIRA Console and everything derived from it take the calm of macOS, as in Finder, the menus and the dock: quiet surfaces, one motion language, and structure the person shapes. They wear it in EXPIRA's own dress: near black, off-white, brand gold, the display serif, and hairlines. This is the global concept for the Console and its derivatives; §1–§3 still hold, and this section refines them.
+
+**Scope.**
+- **It applies to** the EXPIRA Console and every EXPIRA screen or derivative (menus, panels, the sidebar, settings, viewers).
+- **It does not apply to** the GSSC kernel templates or their derivatives: the quotation master, the company profile, the CMSA, the secretary's certificate, the board resolution and the notarial acknowledgment. Their layout and colour logic (§1) are settled, and they keep them. When the Console shows a GSSC document, the document keeps its own look inside the EXPIRA frame.
+- **The reference implementation** is the v45 sidebar in the bench: `console/bench/sidebar-next.html`, with `console/bench/drafts/`. It is promoted into `src/` unit by unit.
+
+### 4.1 Logic: a place people shape, not a form they fill in
+- **Structure.**
+  - Show the fewest fixed things, then let the person's own structure carry the rest.
+  - Layout, as in macOS: a toolbar row (New chat and New folder as icons, with the sidebar button at its right), then a real search field that never scrolls, then one tree: folders the person makes (they nest, and they hold chats and documents), then loose chats, newest first. Last come the account and the mark.
+  - Don't add fixed categories, date headings or counts where order already says it.
+- **State is a property, not a place. Gold means "this needs you".**
+  - A chat at rest is a small grey ring.
+  - A running chat is a gold dot that breathes.
+  - A finished chat you have not opened yet is a gold ring: the dot settles into it with one soft pulse, and it fades to grey once you open it.
+  - A new document you have not opened is a gold page.
+  - Pinned is not a colour. It is a small pin at the row's end (which gives way to the `…` on hover), and the item floats to the top of its own level: a pin inside a folder goes to the top of that folder, and a pinned folder goes to the top of the level that holds it.
+  - Every level has four groups, always in this order: pinned folders, pinned items, folders, items. Pinned folders always lead the pins.
+  - A pin holds its place. It moves only among the pins, and it cannot be dragged or moved into a folder; the Folder page says "Pinned · unpin to move". A pinned folder already brings everything inside it forward, while a pinned file stands on its own, so filing a pin into a folder would blur the two.
+  - Unpinned items are filed freely: drag, Move to, or drop on a folder or a step in the path bar.
+- **An empty folder still holds one row of space.** It shows a quiet italic "Empty" where a child's name would begin. Its dimness is its colour, never its opacity, so its focus in and focus out land exactly where it rests and never jump. While something is dragged over its folder, "Empty" racks out and "Drop here" pulls focus in gold in the same place.
+- **The path bar is always there, and it says where you are.** It sits under Search and never scrolls: back and forward (the same two small frosted buttons as the cards), then the trail.
+  - The trail is the path of the open item, as a file explorer's path bar shows the selected file: "All / Quotations / Drafts / *Q-2026-015*", with the item itself in the display italic. When a folder is isolated, its step reads in ink. With nothing open it reads "All".
+  - "All" always comes first. Any step isolates that folder and accepts drops.
+  - Back and forward walk the roots you have isolated, as a browser does; ⌘[ and ⌘] do the same.
+  - While you search, the trail reads "All / 4 results" and the arrows dim, because search looks everywhere.
+  - A trail longer than the bar scrolls sideways and feathers only on the side that is cut off. Steps that stay glide to their new place, new ones pull focus, and ones that go rack out, on one clock.
+- **Isolate is a choice, never automatic.** The same click always does the same thing: one click on a folder opens or closes it, and one click on a chat opens it.
+  - `…` › Isolate (on the first page, after Pin) makes a folder the root of the view: the list slides one way while the new one slides in from the other, and rows seen in both travel to their new place. On a chat, Isolate folder focuses the folder it lives in. Two-finger click opens the same menu.
+  - ⌘↓ isolates the focused folder; ⌘↑, Escape, or ← at the top of the view climbs out one level.
+  - New chats and folders made while isolated go into the isolated folder.
+  - If the isolated folder is deleted or moved away, the view climbs to its nearest surviving parent.
+- **Depth has no limit, and stays readable.** Folders nest to any depth. The first five levels indent 12px each; each level after that indents 4px. The tree lines still mark every level, and long names feather at the edge.
+- **Closed folders carry what needs you inside them.** A closed folder shows the strongest state of anything within it, at any depth: a breathing gold dot while something runs, a gold ring while something is unread. It sits at the glyph's shoulder and surfaces out of a blur. When a run finishes inside a closed folder, the folder's mark gives the ring's one soft pulse. An open folder shows nothing, because its rows already do.
+- **Two quiet places at the foot of the tree: Archive, and Recently Deleted.** They sit under a hairline, below everything you made, and appear only when they hold something. They open in place like folders, or can be isolated.
+  - Inside, items sit under small date captions (Today, Yesterday, the weekday, then "16 Sep"), newest first.
+  - Recently Deleted keeps things for 30 days. Each row counts down its days at its end, in red once three or fewer are left. It leads with a quiet "Kept for 30 days" and an Empty action.
+  - Delete is still in place first: the row defocuses with its undo arrow for four seconds, then glides into Recently Deleted (the place pulses if it is closed). The trash can beside the undo arrow still deletes at once and for good.
+  - A deleted item's menu offers Put back (to the folder it came from, or the top level if that folder has gone) and Delete now. An archived item's offers Unarchive and Delete. Archive is on the Folder page.
+  - What cannot be undone asks once, in place: the choice turns red and reads "Empty 4 items?", and turns back if it is left alone for three seconds.
+  - Dragging onto Recently Deleted deletes; onto Archive archives. Search does not look inside the two places.
+- **Actions are a card of pages.**
+  - The row's `…` menu opens a card whose first page is short: Rename, Pin, Isolate, Rearrange, Folder, Delete.
+  - Deeper choices are further pages of the same card, not new pop-ups: Folder leads to Move to, New folder and Pin, and Move to leads to the folders.
+  - Back and forward are two separate small frosted buttons, each its own surface with the cards' corners and depth. A disabled one dims its glyph, not its surface.
+  - On the row menu they sit between the card and the row, at the right, under the `…`. On the account card they sit above the card, at its right.
+  - Right-clicking empty space offers New chat and New folder.
+- **Fewer words, more detail. People are smarter than we think.**
+  - There are no tooltips and no shortcut hints on rows.
+  - Long names feather into the surface; they never end in "…". The feather applies only to text that actually overflows (checked live as widths change); text that fits is never touched.
+  - Right-aligned values, such as an Account field, wrap rather than fade.
+  - Undo happens in place: a deleted row defocuses and its action becomes an undo arrow for a few seconds, with a trash can beside it to delete it at once. There is no toast.
+  - Only an action menu may use words for its choices.
+- **A drag always ends.** The resize grip ends its drag on any of these: pointer up, a cancelled pointer, lost capture, the window losing focus, or a move with no button held. A release outside the frame therefore never leaves the pointer stuck to the grip.
+- **Rubber bands tighten.** Stretched past its limit, a surface resists more the further it is pulled, up to a fixed amount (the sidebar: 64px past its maximum). Released, it settles back very softly.
+- **Select many.** The toolbar's Select puts a round check where each row's glyph sits, so nothing moves.
+  - Click picks and Shift-click picks a run; Space, ⌘A and Delete work too.
+  - A frosted selection bar pulls up above the account row with the count, Select all, Sort, Move, Delete and Done.
+  - Sort opens its own small card: newest, oldest, by name either way, by kind. Folders stay first, and the rows glide into the new order.
+  - A mass delete puts every picked row into its own in-place undo.
+  - Move opens a Move to card in the same place as Sort (asking for the other one turns the card's page). The picked rows glide into the folder together, on one clock. Picked pins stay, and the card says so in one line: "1 pinned stays".
+  - The two places, and what is in them, are never picked; they keep their glyphs.
+- **Search reads inside chats and documents.** The tree filters in place and keeps its shape. A name that matches shows its words on a soft gold wash. An item that matches in its text grows a second line: a short snippet that starts a few words before the match, feathered where it is cut, pulling focus as it arrives. Opening a result opens the chat at the matching turn and brushes it once in gold. Typing settles for 120ms before the tree follows.
+- **The account card is a system panel, not an app menu.**
+  - Identity comes first: the monogram, the name, the organisation and where the data lives ("Synced").
+  - Then a Control Center strip that acts in place: Appearance (Auto, Light, Dark; the page cross-fades), Calm motion, and Compact rows (the rows reflow in one move).
+  - Then one icon column: Settings, Library, Data ›, Help ›. The last two are pages of the same card.
+  - Last is a quiet system line, as About This Mac has: "EXPIRA Console 45 · Kernel 2.18".
+  - The card keeps its own type scale (the sidebar's density never reaches it) and lays itself out from its own width with container queries, so it stays whole and centred at any dock width.
+  - Positions inside it are proportional, never measured: the appearance pill steps in its own width, so it is centred on its choice at every size.
+  - Narrow, the switch keeps its icons and the tiles stack one per row with full names.
+  - Resizing the dock keeps an open card open, and its change of shape is animated. Each piece that moved glides from where it was on the curve with a motion blur, labels that return pull focus, and the card eases to its new height.
+  - The identity row opens an Account page (name, organisation, storage).
+  - The tiles act out their state: Calm's waves settle flat, and Compact's lines draw together. Their wells dip slightly under a press (the well, never the text).
+- **Direct manipulation.**
+  - Drag onto a folder; a closed folder springs open if you linger, as in Finder.
+  - Pull the sidebar's edge to resize it. The width is remembered.
+  - Pull the edge far enough left and the sidebar docks shut.
+  - Arrows walk the tree: right opens, left closes or climbs, F2 renames, and Delete deletes and undoes.
+- **Rearrange without dragging.**
+  - `…` › Rearrange lifts the row onto its own surface. The ‹ › buttons, turned upright as ˄ ˅, stand where the `…` was.
+  - Each press moves it one place within its group, and the rows glide on the one curve. A button dims at the end of its group, so a row never crosses from pins to unpinned or from folders to items.
+  - ↑ and ↓ do the same while arranging, and ⌥↑ and ⌥↓ work on any focused row without the menu. A click elsewhere, Escape or Enter sets it down.
+  - A level arranged by hand keeps that order. New arrivals go to the top of their group, and choosing a Sort hands the order back to the sort.
+  - A reorder never drops keyboard focus: the row that had it keeps it.
+- **Touch is a first-class pointer.** On a touch screen (`pointer: coarse`, whatever the width) rows are 36px tall at the same type size, the `…` is always there at low contrast, and there is no hover plate. A long press (450ms, broken by 8px of movement) lifts the row onto its own surface and opens its menu at the finger; the tap that follows is swallowed. Dragging is off on touch: Rearrange and Move to cover it.
+- **On a phone the dock is a drawer.** Below 760px wide (the shell's own breakpoint) the sidebar slides over the chat, at most 86% of the screen, over a soft scrim. It opens from the sidebar button or a pull from the left edge, follows the finger, and lets go on the dock's own curves from exactly where the finger left it, towards whichever way it was heading. A swipe left, a tap on the scrim, opening a chat, or Escape puts it away. It starts put away.
+- **A big tree stays light.** Rows more than a screen from view keep only their box (`content-visibility: hidden`) and are filled in as they come near; containment clips, so it is never applied to a row that can be seen. Each change reads every position once and writes once, animates only what is on or near the screen, and shares one sampled curve between the rows that move. While the list scrolls, positions come from a cache and only the rows crossing the edge change; the hover plate steps aside until the pointer itself moves.
+- **Screen readers hear the same calm.** Rows are tree items with their level, position and set size, selection and expansion. One polite voice says what just happened, in the house's words: "Pinned", "Showing Quotations", "Deleted. Undo is available", "Moved 3 to Contracts", "4 results". The path bar is a navigation landmark with the current step marked. The account card is a panel of controls (a dialog), not a menu.
+
+### 4.2 Motion: one curve, focus in and focus out
+- **One curve for everything**, entering and leaving alike: fast, then a long soft settle (`--sb-ease` `cubic-bezier(.19,1,.22,1)`). It supersedes the per-direction curves of §3 for EXPIRA surfaces.
+- **Large moves get a travel curve.** A curve that is right for a menu is wrong for a whole panel: it covers most of the distance in the first 100 ms and then crawls the last pixels, which reads as "instant, then a stop". The dock closing and a resize settling therefore use `--sb-dock-close` `cubic-bezier(.3,.85,.15,1)` over 720 ms and 760 ms. It still leaves quickly, but it spreads the travel so the eye can follow it, then settles very softly.
+- **A large surface dissolves as it slows.** Closing, the dock stays solid through the fast part and fades and blurs over its settle, so its last pixels melt away rather than stop and vanish.
+- **Whole-list moves are one field, arranged around an anchor** (stepping into a folder, stepping out, searching; after Material's choreography rules and Amadeus's "react with the other files and folders"). The anchor is the folder you step into or out of, or the search field.
+  - **One direction per move, so nothing crosses:** stepping in, everything rises; stepping out, everything settles down; a search pours its results down out of the field and draws what goes back up into it.
+  - **Depth, not sideways travel,** says into and out of: a lateral slide would say the two lists are peers.
+  - **Space clears before it fills.** Rows that go rack out first, nearest the anchor first, drifting 5px with the move. Rows that arrive then pull focus in order of their distance from the anchor, 16ms a row and at most 150ms apart, drifting 6px in the move's direction.
+  - **Arrivals wait for their space:** 70ms in a search, 40ms stepping in.
+  - **Rows that stay glide, but never far.** A row that would cross more than five rows leaves a ghost where it was and surfaces where it lands. The rows that glide sweep a band of the list: nothing arrives inside it for 130ms, until they have passed, and anything still leaving inside it goes at once.
+  - **The anchor is the still point.** Stepping out, the folder you left surfaces first, in its place, and the tree unfolds around it. It never flies to or from the path bar: that long diagonal read as something arriving from the top right.
+  - **Stepping out anchors on the folder you were in**: the deepest folder on the path between where you land and where you were that the list can show. Only that folder and its own contents move. If it lands off screen, the list first scrolls it into view, a third of the way down.
+  - **The direction comes from the tree, not from history.** Deeper is in, shallower is out, anything else is a plain change of view, so back and forward play whichever the step really is.
+  - **Measured from where each half happens.** Stepping in, what leaves folds towards the folder you went through, and what arrives unfolds from the top, where the new list begins; stepping out, the reverse.
+- **The path bar never jumps.** Steps on their way out fade from an overlay above the trail, so they never widen it; the trail opens already scrolled to its right end and holds there. Its edge feathers fade in and out rather than switching.
+- **Everything that moves has a slight motion blur**, in proportion to its speed and sharp at rest:
+  - the dock, up to 1.6px;
+  - the sidebar button, up to 2.4px;
+  - moving rows, up to 1.1px;
+  - the hover plate, up to 1.4px;
+  - a resize settling, up to 1.2px.
+  
+  Moves are sampled from their curve so the blur can follow the speed.
+- **Timing:**
+
+  | Token | Duration | Used for |
+  |---|---|---|
+  | `--sb-in` | 420 ms | appear |
+  | `--sb-out` | 320 ms | leave |
+  | `--sb-move` | 460 ms | layout moves and the hover plate |
+  | `--sb-dock` | 560 ms | the dock |
+- **Focus, not just fade.**
+  - Anything appearing pulls focus: opacity first, focus last.
+  - Anything leaving racks out: focus first, fade after.
+  - Only opacity and blur change, so text never changes size.
+- **Text never scales or slides.**
+  - Rows do not shrink when pressed.
+  - Search is the row itself becoming a field in place, with its icon and word fixed.
+  - Rows that move do so by whole pixels on the compositor.
+  - Only shapes without text may stretch: the hover plate and hairlines.
+- **The hover plate.** One soft plate per list surfaces out of a blur, glides between rows on the curve, and stretches along its path with its speed (the mercury bead's rule, §3). It racks out when the pointer leaves.
+- **Disclosure is one move.**
+  - The rows below move on the curve.
+  - Each new row pulls focus the moment it is uncovered, and each leaving row racks out just before it is covered.
+  - A closing block keeps its exact box while it fades.
+- **One clock per change.** When a card changes (a page switch, a change of shape as the dock resizes, a tile's state), every piece starts on the same frame and runs for the same time (`--sb-move`) on the same curve. That includes the card's height, the old and new pages, each tile's box, the icons and labels, and the rows that move. Nothing arrives early or late.
+  - A tile's box is its own layer, so it can morph from its old size to its new one while its icon and label glide inside it, and no text is ever scaled.
+  - A change of shape waits a beat (90 ms) for the dock's width to settle across the line, so dragging back and forth over it never flickers.
+  - The hover plate holds still for the length of a change, so the pointer landing on new rows cannot start a second clock.
+  - The theme cross-fade runs on the same `--sb-move`.
+- **Focus resolves before the move ends.** Blur is gone by 60% of the way, so the last stretch of every move is already sharp and nothing snaps into focus at the end. A lingering sub-pixel blur that clears only when the animation stops reads as a jolt.
+- **Depth moves with the card.** Every floating card and pill casts a soft, layered shadow (`--sb-depth`): an inner top highlight, a hairline, a near shadow and a long soft one. It grows in as the card arrives and eases away as it leaves, drawn from the same progress value.
+- **A theme change is one picture.** The page cross-fades between themes as a whole, and every CSS transition is held while it runs, so no element keeps fading on its own after the page has landed.
+- **Optical centring is measured, not judged.** Glyphs are block-level and centred in their boxes, and labels sit on a 1.0 line box. The bench checks the centres to within 0.01px.
+- **Corners: just a little rounding** (Amadeus, v45, superseding the rounder macOS values).
+  - Floating cards and the selection bar: 6px (`--sb-r-lg`).
+  - Modules (tiles, the appearance switch, the search field, the account row, the back and forward buttons): 4px (`--sb-r`).
+  - Rows and small controls: 3px (`--sb-r-sm`).
+  - Circles stay circles: the monogram, status dots, the tiles' wells.
+- **Small surfaces "pull".** Menus and cards use opacity, a small drop and focus on one progress value, with no scale, each on its own layer. Reversal carries on from where it is.
+- **The dock.**
+  - The dock slides out on the curve while its content racks out and drifts a little behind it (depth).
+  - The sidebar button travels with it: from the dock's top right, across the dock, into the head of the chat, on the dock's own curve and time, so it lands as the dock leaves at any width. While moving fast it blurs and stretches a little along its path, and it is sharp again as it settles. Opening sends it back.
+  - Its hover previews where it will send the dock: open, the pane narrows and the chevron leans left; docked, the pane widens and the chevron leans right.
+
+### 4.3 Colour: the improved EXPIRA stack
+The full palette is in `brand_assets/palette.json`, and §2 lists the ten colours. The stack below assigns their roles for EXPIRA surfaces.
+
+**Dark: near black, built from the brand ink rather than neutral grey.**
+- **Surfaces**, stepping up as they come forward:
+
+  | Surface | Hex |
+  |---|---|
+  | sidebar | `#04060B` |
+  | page | `#06090F` |
+  | sheet | `#090D15` |
+  | well | `#0A0E17` |
+  | panel | `#0C111B` |
+- **Text:**
+
+  | Token | Hex | Colour | Use | Contrast |
+  |---|---|---|---|---|
+  | `--text`, `--ink` | `#F7F5F0` | off-white | default text | 17–19:1 |
+  | `--soft` | `#A9ADB5` | between light grey and steel | secondary | 8–9:1 |
+  | `--mute` | `#7D838E` | steel grey | captions | 4.7–5.3:1, AA on every surface, a hovered row included |
+- **Hairlines:** off-white at 5.5%, 10% and 19%.
+- **Gold:**
+
+  | Hex | Colour | Roles |
+  |---|---|---|
+  | `#C9A35C` | light gold | rules, focus rings, gold text, the live dot, the pin ring |
+  | `#E9CF91` | pale gold | highlights |
+- **Selection:** a warm grey, gold 9% over the second hairline. It is the only colour a resting row carries.
+- **Menus are frosted glass:** the panel at 80% over a 22px backdrop blur with 1.5 saturation, a hairline border and a deep, soft shadow.
+
+**Light:** the Gate A paper palette of §2 stands. Surfaces are warm paper and ink is brand navy `#0B1A3F`. Decorative gold is `#A8862F` and gold text is `#846936`. The same roles apply: one warm selection, gold only where it means something.
+
+**Type:** chrome size throughout the sidebar and menus.
+- Rows are 11px on 24px, and meta is 10px.
+- Labels are 9.5px (the floor, §2), in Inter at 400.
+- The display serif appears only as an accent.
+
+**The account row** is a macOS popup button in EXPIRA dress.
+- The monogram is set in the display italic on a quiet disc, and its ring warms to gold when the row is hovered or open.
+- The name and org sit on two lines.
+- The indicator is macOS's pair of up and down chevrons. Hovered, they part a little; open, they turn inward and meet, so the same mark reads as "close".
+
+### 4.4 Tokens
+The sidebar's tokens are:
+- motion: `--sb-ease`, `--sb-in`, `--sb-out`, `--sb-move`, `--sb-dock`, `--sb-dock-close`, `--sb-dock-out`, `--sb-settle`;
+- scale: `--sb-fs`, `--sb-fs-2`, `--sb-row`, `--sb-ic`, `--sb-indent`;
+- width: `--sb-w`.
+
+They live in `bench/drafts/sidebar-next.css`, and the dark stack lives in `bench/drafts/dark-next.css`. On promotion they move into `src/tokens.css` under the same names: the `--sb-*` motion tokens become the EXPIRA-wide motion tokens, and the dark stack replaces the `@dark` block.
+
+### 4.5 The chat: no card, the page is the answer (v45 chat bench, Amadeus, 2026-09-26)
+The chat pane follows §4.1–§4.4 and the sidebar's colour logic. The old answer card, which boxed the log, the answer and the exhibits, is gone: the pane itself is the page. The draft is `bench/chat-next.html` (`drafts/chat-next.css`, `drafts/chat-next.js`).
+- **The composer rests as a pull tab**, not a box. It is one short line (36 by 4px, the sheet's own grabber). This is the chat's difference from the usual chat interface: nothing waits open at the foot of the page, and writing is a place you pull up into.
+  - In a new chat the tab waits in the middle of the page over "Brief EXPIRA". On hover it lifts 2px and widens, the way a grabber invites the pull, and "pull up, or start typing" focuses in beneath it.
+  - In a thread it waits at the foot of the pane, and says "Follow up" only when you are on it. While the desks work it breathes gold.
+  - It opens by pulling it up, by clicking it, by Enter or Space on it, or by just starting to type anywhere in the pane; the key you typed is kept. It is a real button, so a drag always has a single-pointer and a keyboard alternative (Material's rule for drag handles).
+- **A new chat** is otherwise empty: the tab, and a signature in the bottom-left corner. There are no suggested prompts.
+  - The signature is the gold lead-in, a small serif greeting that knows the hour ("Good morning", "Good afternoon", "Good evening", or "Working late" after 22:00) with the name in the display italic, and the date in plain words ("Saturday 26 September"). There is no clock and no tracked caps.
+  - It is set against the sidebar's foot: the lead-in sits on the foot's hairline, the greeting is level with the account, and the date is level with the EXPIRA mark, so the two panes close on one line. The mark itself stays in the sidebar.
+  - It arrives as the lead-in draws from the left and the two lines focus in, 40ms apart.
+- **The sheet** is the focused place to write: the grabber, the brief (14px, two lines to start, growing to ten), then one row of icons and send. The icons replace the settings rows; there is no visible text beyond the brief.
+  - **Icons carry the settings in their drawing:**
+    - Effort is three bars that fill to the level; a click steps Quick, Auto and Deep, and Shift steps back.
+    - Desks is four dots that fill for the desks that are on (never none).
+    - Output is a page carrying the glyph of the chosen output: a spark for Auto, a total rule for Quotation, a signature for Contract, a seal for Resolution, and lines for Memo.
+    - Client-facing is a shield that closes over a check when the firewall is on.
+    - Attach sits first; send sits alone on the right.
+  - Each icon names itself in a small ink label on hover after 0.3s, and at once for keyboard focus ("Desks · 3 of 4"). Desks and Output open a small glass menu above the icon: a glyph, the name over a quiet line, and a check for what is chosen. Arrows move in the menu, and Esc closes the menu before the sheet.
+  - **Only the sheet is frosted, and truly.** The page above it stays sharp, readable and live: you can read, scroll and select while you write, and typing afterwards goes back into the brief. Under the sheet, text and figures are blurred right to its edge.
+    - **How:** the browser's own `backdrop-filter` (14px, saturation 1.35), so whatever is live under the sheet (the node field, a streaming answer, a chart drawing in) is frosted in the same frame it is painted. A frost that is a copy of the page is always a beat behind live content, and it reads as a second, delayed render.
+    - `backdrop-filter` only samples what lies directly behind its element. A panel-sized frost therefore leaves a band along its edges where text stays sharp, and trimming a larger layer with `clip-path` or `overflow` does the same, because they cut the blur's input. So the frost layer reaches 40px past the sheet on every side, and a **mask** trims it back to the sheet's rounded rectangle. A mask applies after the filter, which keeps the blur clean to the edge (reproduced on a bare page: panel-sized, overflow and clip-path all leave the band; the mask does not).
+    - The mask is drawn from gradients (two bands and four corner discs), placed by five custom properties in the sheet's pixels, so it follows the reveal in the same frame with no image to decode.
+    - No ancestor of the sheet may carry a filter, an opacity below 1, a mask or a clip-path, because any of them would become the blur's backdrop root and cut it off.
+    - Over it sits the panel tint (50% in light, 52% in dark), a sheen and a lit top edge.
+    - With reduced transparency there is no frost, just a solid panel.
+  - **Calm** (the sidebar's Calm motion, or reduced motion) is responsive and snappy. The sheet is a solid panel with no frost. It opens and closes at once, the answer appears without inking, and hover names and marginalia appear without a blur.
+  - **It closes** with Esc, a click on the empty page (not on the thread's text), a click on the grabber (focusable, Enter or Space), or a pull down. Focus goes back to the tab.
+- **One move, one progress.** A single progress, 0 (the line) to 1 (the open sheet), drives the grabber's travel, the reveal growing out of the line, the glass and the contents.
+  - The reveal grows wide first, then tall, so the line becomes a bar and the bar rises. In a new chat the sheet opens in the middle of the page; in a thread it rises from the foot.
+  - The reveal ends 40px past the shadow, so it never clips it. The contents focus in over the second half (8px of travel and a 2px blur).
+  - A click tweens the progress; a pull sets it under the finger, 1:1. Let go and it finishes by position and speed: past a third of the way (or flicked up faster than 0.3px/ms) it opens; otherwise it settles back. Pulling the open sheet down closes it past 40% of the way or on a flick down.
+  - Opening is fast (`--sb-dock` on `--sb-ease`); closing is soft (`--sb-dock-out` on `--sb-dock-close`), as the sidebar docks.
+  - **On send** the sheet folds back into the line, travelling down to the foot of the thread, while the signature clears with focus out, 20ms apart per part. The line waits there as the tab.
+- **The brief** is the master template's pull quote alone: an italic serif with a 2px gold rule. Its time is marginalia: it waits in the left margin, level with the first line, and shows on hover, fast in and soft out (hidden below 760px).
+- **The work is nodes, not a log: the relay, left to right.** Under the brief, a row of small icon nodes runs across the text column and the right margin, in the order the work moves:
+  - EXPIRA (the plan);
+  - the Arbiter, staffing the desks from the roster;
+  - the desks, in the order they depend on each other, with desks that work side by side stacked;
+  - the Arbiter again, weighing what the desks filed into a claims ledger;
+  - the answer;
+  - the check.
+
+  **Two shapes say who decides.** The workers (EXPIRA, the desks, the answer) are circles. LAYA's gates (the Arbiter staffing, the Arbiter weighing, the check) are rounded squares: decisions made on closed lists and checked in code.
+
+  **Exa hangs below the desk that called it**, between its column and the next, as the smallest node in gold ink. The desk's call reaches it on a short dotted gold cable: pulses run out while it searches, and run back as pages land. Exa splits into the pages it read (gold dots). Its evidence travels on a fine dotted thread to the Arbiter's weighing gate, and pulses along it while the Arbiter weighs. So the spine stays one clean line, and the web's detail hangs underneath it.
+
+  Each node is an icon in a glass ring on hairline edges:
+  - faint while it waits;
+  - a breathing gold ring on a gold edge while it works;
+  - settled ink when done, with a small settle;
+  - red when it failed or was held.
+
+  Sources land as small gold dots under the desk that read them. The margin holds the time and one phrase: what is happening now, then the verdict ("Firewall clear").
+- **The nodes are a gravity field, not a grid** (the old engine's physics in the house style):
+  - Each node is held to its column, while a d3-style simulation (velocity decay .4, alpha decay .0228, on a seeded stream so a run always lays out the same) settles its height. New nodes bud from their parent and drift out to their column.
+  - A node's size follows its tokens: the plan's reasoning, a desk's streamed notes, the answer as written.
+  - **Edges are cables.** Each has a small middle mass that hangs below the chord under a little gravity and sways on its own damping. A cable thickens with the tokens that have passed along it.
+  - **Data passes along the cables.** While a desk works, gold pulses run into it at its token rate; a source sends a short burst as it lands.
+  - Nodes can be dragged; let go and a node drifts back to its column. The loop runs only while something moves and sleeps when the field is settled or off screen. A saved run opens already settled; calm is static.
+  - The field's height follows its tallest column and eases to its new height (`--sb-move`).
+- **Cards open in the left margin.** The layout is asymmetric: the right margin carries the field and the left margin stays empty. So a node's card opens there as an inspector, level with its node and joined to it by a dashed gold leader. The card's width follows the margin (at most 340px), so a wide left pane never crowds it. It opens fast (a 10px slide in with blur) and closes soft, and the margin phrase steps aside while it is open. When the margins fold, the card opens under its node. It holds what the node did, its verdict, time, searches and confidence, its findings, and its sources as links. EXPIRA's card holds the plan's reasoning; the check's card holds the firewall's verdict and anything it caught. Arrows move between nodes and Esc closes the card.
+- **The cables say what passes along them.** A few words sit under a cable's lowest point:
+  - the task handed down ("Local rates");
+  - the query sent to Exa (“fit-out rate cards makati 2026” +1);
+  - the pages that came back ("3 pages");
+  - the notes filed ("notes · 306 tok");
+  - the claims that held ("6 of 8 grounded").
+
+  While a run is live, the words show for a moment as something passes, fast in and soft out. At rest they are hidden. Hovering a node, or opening its card, shows its whole conversation: every cable it speaks on keeps its words, the nodes at the other ends stay, and the rest of the field steps back to a fifth. The same words from one node are said once, and words that would land on others step down a line.
+- **The new nodes have cards too.** The Arbiter's staffing card lists the desks it staffed and what the roster check dropped. Its weighing card lists the ledger, each claim marked Grounded, Derived, Partial, Conflict or Open, with the gate's count of quotes found word for word and sums re-computed. Exa's card lists each call and its queries, then the pages. The check's card adds the audit: whether every figure in the answer traced to the ledger.
+- **Charts come in and go out.** A chart draws itself as it comes into view: its grid and axis fade in, its bars rise from the base 70ms apart (`--sb-dock`), and its values focus in after them. It folds back when it leaves the screen, so it draws again when it returns. On a new chat the bars fall before the page clears.
+  - **A chart is drawn at its real width, in pixels**, so its type stays 10px at any size and nothing clips. It is drawn again whenever its width changes. The axis makes room for its widest figure. A label that will not fit its slot breaks onto a second line and then shortens, with the full label kept as its title. A figure too wide for its bar is written short (386.5K).
+  - The view reads the run record the engine writes, in the shape of `core/run.js` (steps with role, focus, task, after and state; `map.pages` with the desk that read each one), so a live run and a saved one draw the same.
+- **The answer flows in, top to bottom.** While it streams, each block that is new since the last frame focuses in after the one before it (60ms apart, re-rendered at most every 120ms), and the block still being written stays in place. A saved page flows in the same way: what is on screen 45ms apart, the rest as it scrolls into view.
+- **The thinking bar and the log** sit above the field in the text column. One line: the node working (icon, name, focus), the tier its model runs on (a small gold chip), the sentence it is on (the tail of what it is writing, in the display italic), a "+n" when desks work side by side, and the vitals (elapsed, tokens, tokens a second). Click it for the log: a plain list of what happened with a time, who and the tier on each row, a live "now" line while it runs, and Replay (1x, 4x, 8x) with a scrubber. When the run is done it becomes "Thought for 1:25 · Four desks · 5 sources · Firewall clear".
+- **The Exa split.** A search with several queries buds one small pill per query under Exa, each landing its own pages, then folds back into Exa leaving a thicker evidence cable to the weighing gate.
+- **The prompt rail: a way through a long session** (the right edge; from two prompts up; hidden on a phone for now).
+  - **One mark per prompt.** A small dot, with the one being read stretched to a gold pill (the dot and the pill cross-fade; opacity only). A running prompt breathes in gold, and a stopped or held one is red.
+  - **A card beside the mark** under the pointer says which prompt it is ("6 of 14 · 14:24"), what was asked, and how it went ("Firewall clear · 4 desks · 5 sources"). It slides to the next mark as the pointer moves, so there are no dead gaps.
+  - **Moving.** A click or Enter jumps to the prompt, which comes to just under the top, and its quote lands in focus. The wheel over the rail steps one prompt. Arrow keys, Home and End move along the marks (one tab stop, on the current mark).
+  - **Many prompts.** Past 24 the rail shows a window of 24 around the current one, with how many wait above and below ("↑6", "6↓"; each one jumps).
+  - **The pullout.** A small tab above the marks opens the outline: every prompt, numbered, with its time, how it ended, and the desks and sources it used. It filters once there are more than eight. It opens from the right edge, fast in and soft out, and returns focus to the tab on Esc. A pick jumps and closes it.
+  - It reads the thread itself, so it follows a live run, a reopened chat and a retried turn.
+  - Pattern drawn from the right-edge navigators in DeepSeek and the ChatGPT and Claude extensions (a mark per prompt, a hover card, a windowed list), set in the house surfaces.
+- **More below.** While there is more under the fold, the foot's feather deepens from 44px to 150px, and a small chevron waits at the far edge and scrolls on by most of a screen. At the end both go.
+- **The page is an editorial grid, almost edge to edge.** The thread spans the pane with a 28px gutter, in three columns on shared lines:
+  - **The left margin holds marginalia:**
+    - section numerals, hanging large (24px, gold, in the display italic);
+    - exhibit labels (Figures, Sources);
+    - figure and table captions, with their notes beneath;
+    - the brief's time on hover;
+    - the desks' names in the ledger;
+    - the colophon's filing time.
+  - **The text column holds the prose** at a reading measure of 520px, about 75–80 characters of 14px body. Studies put comfortable screen reading at 55–75 characters; very wide lines cost regressions and retention. So the page goes edge to edge, and the paragraphs do not.
+  - **The right margin is where exhibits extend:**
+    - the figures row, the chart, tables of more than three columns, and the work line span the text column and the right margin;
+    - the brief is set large (19px) as the page's deck across both;
+    - the ledger's verdicts and times, and the colophon's actions, sit at the far edge.
+  - **Rules run the full width.** A section's rule goes edge to edge, with the gold lead-in on it marking where the text begins.
+  - Every container down to a ledger row is a CSS subgrid on the same named lines (`ml`, `text`, `mr`, `bleed`), so every margin item hangs on one margin.
+  - The glass sheet stays centred over the text column: the one centred object on a wide page, which is what makes the glass read.
+  - The grid answers to the pane, not the window (a container query on the thread): below 900px of pane the margins fold into the text column and it reads as one column.
+- **The answer is a master-template page:** navy-ruled `table.dt` tables, serif figures, a bar chart with rounded ticks, a comparison with dots, numbered sources, and a colophon of word buttons.
+- **Ink:** the answer arrives block by block. Prose writes in word by word at 26ms a word, up to 900ms a block, each word a light blur resolving. Table rows follow 55ms apart, and chart bars rise from the baseline 60ms apart.
+- **Opening a saved chat or document** reveals the page with focus in, 16ms apart per block and capped at 260ms, rather than writing it in again.
+- **Reduced motion:** everything appears at once, with no blur.
+
+## 5. Build habits
 
 - **Master-template layout:** a wide thread with a 72-character prose measure, and a dock with the composer controls underneath it.
 - **Performance budgets:**
@@ -98,7 +422,170 @@ Motion is the heart of the UX: fidelity in the engine comes first.
 - **Build workflow (v41):** edit `console/src/`, never `index.html`; `build.py` assembles the page and refuses duplicate ids or a selector defined in two units. Prove refactors with `qa/styles.js` (computed styles) and `qa/diff.js` (pixels) against a baseline, and ship only on a 0-error smoke test.
 - **Tokens (v41):** every value comes from `src/tokens.css`. Spacing is a 4px scale with half steps (`--sp-half`, `--sp-1h` … `--sp-4h`) below 20px for dense chrome; a 1px nudge is optical and stays literal. Layers are named (`--z-side`, `--z-menu`, `--z-tip` …) in one stacking order. Dark tokens are written once in `@dark{}`.
 
-## 5. Change log
+## 6. Change log
+- **v45 chat bench, the node system iteration N1 to N6** (2026-10-02, Amadeus: "start the whole plan"; "in the delegation show and tell the user via the thinking bar the models chosen … expanding the thinking bar shows the claude-like simple log list"): `console/NODE_PLAN.md` section 10.
+  - A thinking bar above the field: the node working, its tier, the sentence it is on, elapsed, tokens, tokens a second; click for a plain log list; replay at 1x, 4x, 8x with a scrubber.
+  - Captions never cover a node or each other (0 overlaps in every sampled frame at three widths; it was 18 of 24).
+  - Rope cables that tighten under load, pulses at a constant speed, Exa splitting into one satellite per query and joining back, a redrawn Legal icon, names and count badges, saved turns that build lazily from stored positions, and cards in one layout.
+  - The Arbiter weighs on the balanced tier and escalates to the most capable only on evidence. The page names a tier, not a model, so the bar says the tier.
+- **The furtherance plan, models and delegation** (2026-10-01, Amadeus: "no Haiku 4.5, we will not use non-latest models … think of the delegation system too, how well it handles effort levels and model choice"): `FURTHERANCE_PLAN.md` sections 3 to 6. Latest models only (Sonnet 5.5 and Opus 5.5). Reading `POLICY.md`, the agent files and `tier_log.csv` found effort handled well (explicit, per file, logged, escalating) and model choice not handled (all seven agents are Opus 5.5, nothing says when to use another, no model column in the log, no escalation by model). Proposed after a trial: pinned `<role>-<model>-<effort>` agent files, a routing table and escalation ladder in `POLICY.md`, `model` and `checker` log columns, and one routing source for the page and Claude Code. No change made.
+- **The furtherance pass, planned** (2026-10-01, Amadeus: "run it through our Claude Code … more like an OS on the EXPIRA site … rename it as a furtherance pass … the research pass versus the Claude Code pass for more refined and focused research like legal"): `console/FURTHERANCE_PLAN.md`, no code change. A **Furtherance** gate joins the relay under the weighing gate (a rounded square, because it decides with checks), set from a **Furtherance** icon in the sheet (Off, Ask, Auto). Its results are marked "further" in the margin of the answer.
+- **v45 chat bench, the node system plan** (2026-10-01, Amadeus: "iterate and make it better … the splitting, smoothness, engine … keep the wires hanging … a live thinking bar … some texts are blocked while the animations are playing"): `console/NODE_PLAN.md`, no code change. A measured run found a caption on a node or on another caption in 18 of 24 sampled frames, a margin phrase that wraps and jumps, and a split that the engine never really performs (it joins four queries into one Exa call). The plan: a collision-free caption placer with a reserved lane, a thinking bar, rope cables that tighten under load, a real fan-out of Exa queries with a join, redrawn icons, and an event log with replay.
+- **v45 chat bench, the prompt rail and a clean build** (2026-10-01, Amadeus: "add the prompt button to the right that shows the prompts via smaller circles that increase in number … a pullout tab … so we can easily move through long sessions"; "remove the bench or keep it backended, I don't need the buttons and tweaks"): see §4.5.
+  - `bench.py <specimen> --clean` leaves the tuning panel out. The published page is built with it; the panel stays for tuning.
+  - Opening a long thread no longer stalls: `flowIn` read every block's position and animated it in the same loop, forcing one layout per block (about 7 s on 30 prompts). Positions are now read first, then written; the same for the charts' widths.
+- **v45 chat bench, a fresh instance** (2026-09-27, Amadeus: "make it a fresh instance now, no chats nothing when loaded"; "remove the dispatch thing entirely"): the bench loads empty (`?sample` restores the sample tree for tests). A brief now starts a chat in the tree, live while it runs, and its finished turns are kept on it and redrawn when it is reopened. The Dispatch action is gone from the colophon. The road to alpha is `console/ALPHA_PLAN.md`.
+- **v45 chat bench, live glass** (2026-09-27, Amadeus: "the glass effect for live things … is not synced … it looks like it is double rendered"): the frost is the browser's `backdrop-filter` again, extended 40px past the sheet and trimmed by a gradient mask, so live content under the sheet is blurred in the same frame. The copy of the thread (rebuilt 160ms late, and blind to the node field's per-frame motion) is gone. The earlier note in §4.5 that enlarging the blur layer "does not help" was wrong: clipping cuts the blur's input, but masking does not.
+- **v45 chat bench, the relay: the Arbiter, Exa and the words on the cables** (2026-09-27, Amadeus: "emphasize more their connectors, like orchestrator to exa to whatever … showing exactly … how they communicate … but keeping the whole linear order"; "the cool details too of the older engine to show exa split into 4 then communicate to the next"; "oh i meant arbiter too, the laya engine"; "allow the presented charts to dynamically resize, it is clipping"): see §4.5.
+  - The field is now the whole relay: EXPIRA → Arbiter (staffs) → desks → Arbiter (weighs) → Answer → Check. LAYA's gates are rounded squares, and the workers are circles.
+  - Exa hangs under each desk that called it, split into its pages, and its evidence runs on to the weighing gate.
+  - Cables carry their words for a moment as things pass, and all of a node's words show on hover or while its card is open.
+  - The bench engine gained the Arbiter's weighing, ported from `core/run.js` as one round: the claims ledger, re-checked by `GROUND.gateClaims`, then the answer's figures audited by `GROUND.auditAnswer`. Every Exa call is recorded with its queries.
+  - Charts are drawn at their real width with fixed 10px type, and redrawn on resize. Before this they scaled their text with the pane (5px on a phone, 18px on a wide screen) and clipped.
+- **v45 chat bench, the gravity field, cables and charts** (2026-09-27, Amadeus: "return the node gravity engine instead but to the aesthetic of our things"; "let the charts have the in and out animation"; "perhaps all the pop ups should go there instead? … to the limit of the left dock"; "let the node area dynamically resize … smoothly"; "make it look like cables dangling with the data passing through it … determining token and throughput"): see §4.5.
+  - The nodes are a seeded gravity field again, sized by tokens, on sagging cables that thicken with tokens and carry pulses at the token rate.
+  - Cards open in the left margin with a leader, the field eases to its height, and charts draw in and fold out with the scroll.
+  - Fixed: the field's visibility observer read the first entry of a batch, which could be stale, so a new run could stay frozen as if off screen. It now reads the latest entry.
+- **v45 chat bench, nodes and a real engine** (2026-09-27, Amadeus: "the node system instead … icons over text, but when you click on it it expands to show the sources"; "let it flow from the top to bottom"; "make it usable already, so I can test run prompts"; "indicate via feathering at the bottom that there is more"):
+  - The work line and its ledger became a row of nodes with cards.
+  - The answer flows in top to bottom, and the foot feathers while there is more below.
+  - The bench now sends real briefs through Claude and Exa (`bench/drafts/engine-next.js`, see `SUPER_PLAN_45.md` §10.5).
+- **v45 chat bench, the editorial grid, and calm** (2026-09-27, Amadeus: "rework it to be like our macos expira hybrid … almost edge to edge … so it emphasizes the glass design in the center"; "make the calm version of the chat panel where it won't have the blur effect"): see §4.5.
+  - The thread became an almost edge-to-edge editorial grid (Tufte-style margins, full-width rules and exhibits) that keeps the prose at a reading measure, with the glass sheet centred over it.
+  - Calm gives a solid sheet with no frost and no motion.
+- **v45 chat bench, a real frost** (2026-09-27, Amadeus: "it doesn't blur the text and other assets under the chat panel, find a fix"): Chromium's `backdrop-filter` leaves an unblurred band at a panel's edges, where text stays sharp, and no layering of it fixed that. The sheet now frosts a blurred copy of the thread laid exactly behind it, glued to the page through scroll and motion. Text, figures and the chart blur right to the edge, and the tint drops back to 50% so the glass reads as glass.
+- **v45 chat bench, frost only where you type** (2026-09-27, Amadeus: "Don't make the whole page glass blur, just the interface where I type … it would not allow me to read … whatever is above the chat box"): the veil is gone and the page above the sheet stays sharp and live. The sheet alone is frosted, at 88% panel over its blur, so text beneath it cannot be read. A click on the thread's text keeps the sheet up, and typing returns to the brief; a click on the empty page puts it away.
+- **v45 chat bench, full glass and icons** (2026-09-27, Amadeus: "full glass integration. Design the layout inside the chat interface further, more refined … subtle, more about icons than text"; on the motion: "it looks like it comes out of water … keep that"): see §4.5.
+  - The page under the sheet is now truly frosted, because the veil carries the blur.
+  - The settings rows became one row of icons that draw their own state, with hover names and two small glass menus.
+  - The pull motion is unchanged.
+- **v45 chat bench, the pull tab** (2026-09-26, Amadeus: "make the chat interface like a pull up tab from the center middle like a line … that pulls up into a focused chat typing interface with settings for the chat … once the composer and outputs start coming in, it moves toward the bottom area … as the pull up tab as well"; "It doesn't look like glass"): see §4.5.
+  - The composer now rests as a line in the middle of a new chat and at the foot of a thread. Pulled, clicked or typed at, it grows into a glass sheet with the chat's settings: effort, desks, output and client-facing.
+  - The glass is stronger: a 24px blur, a sheen and a lit top edge, over a veil that steps the page back. Over a thread the answer now visibly shows through it.
+  - Also fixed from axe:
+    - the empty title before the first message;
+    - section headings that skipped a level;
+    - a blank header cell in the comparison table;
+    - the contrast of "recommended".
+- **v45 chat bench, the signature and the glass** (2026-09-26, Amadeus: "remove the recommended prompts … move the intro text to the bottom left … editorial … clear up the time and date … should we make the text interface transparent too like macOS?"):
+  - The starters are gone.
+  - The greeting moved to a signature in the bottom-left corner, on the sidebar's foot line; the composer sits alone in the middle.
+  - The date is plain words, and the brief lost its "Brief 17:29" kicker, keeping its time as hover marginalia.
+  - The composer is now a translucent material with a 16px blur, and the veil above the dock is gone.
+- **v45 chat bench** (2026-09-26, Amadeus: "No more card now, let us utilize the big chat interface, redesign the output that follows the GSSC Template EXPIRA style MacOS … a small Good morning Duke … very subtle"): a separate bench for the chat pane, `bench/chat-next.html`, on the sidebar's colours and motion. See §4.5.
+  - A new chat shows the date, the greeting, the composer and three starters.
+  - The composer glides into the dock on send.
+  - The answer card is gone. The work is one line with a ledger that opens underneath, and the answer is a master-template page with numerals, tables, figures, a chart and sources.
+  - The answer writes in word by word.
+- **v45 the field, like ‹ ›** (2026-09-26, Amadeus: "that weird animation where it comes from the top right … fix it to be like the ‹ ›"): the row's hand-off to the path bar is gone, because on multi-level jumps it flew a long diagonal. Every move is now built like one level of ‹ ›: the anchor stands still, no row travels more than five rows, and the band a gliding group sweeps stays clear until it has passed. Also fixed: ‹ › chose their motion by history, not by the tree, so back into a deeper folder played "out"; and stepping in measured arrivals from the folder's old place, leaving the new view blank for about 200ms.
+- **v45 the field, anchored on the folder you left** (2026-09-26, Amadeus: "When I click on Revisions … and then click on All, it moves Records back"): stepping out anchored on the top-level folder of the path, so Records flew down from the path bar although Revisions was the folder left. It now anchors on the deepest visible folder of the path and scrolls it into view. An audit of every whole-list move (path steps up and down, back, forward, climb, All, isolate, open, search, clear) lists only the anchor and its own contents travelling.
+- **v45 the field** (2026-09-26, Amadeus: "the path line jumping ruins immersion"; "isolating back … slots in from the top"; "reorder by hierarchy … so it reacts with the other files and folders"):
+  - **Path bar.** The jump was the scroll width shrinking as outgoing steps were removed, which snapped the scroll back. Outgoing steps now fade in an overlay; measured frame by frame, the trail holds one scroll position from start to end.
+  - **Stepping in, stepping out and search now run as one field** (§4.2), replacing a lateral slide and separate fades. Filmstrips showed rows crossing paths (leaving rows drifting against rising ones; a search match flying up the whole list); the field removes every crossing.
+- **v45 sidebar, finished in the bench** (2026-09-26, Amadeus: "do all the recommendations … very well designed, fully featured, animations, premium … subtle"): see `console/SUPER_PLAN_45.md`.
+  - The path bar is always on under Search, and Isolate is a menu choice; the automatic step-in by width is gone. Depth indents 12px for five levels, then 4px.
+  - Closed folders roll up running and unread.
+  - Archive and Recently Deleted are two quiet places at the foot of the tree (not pages of the account card): date captions, a 30-day countdown, Put back, Delete now, and Empty that asks once in place.
+  - Move many from the selection bar. Search inside chats with snippets.
+  - Touch rows and long press; the phone drawer with an edge pull and swipe.
+  - Scale: 2,000 chats in 212 folders. Measured in this container (about 3× slower than a laptop): opening all 200 folders at once went from 2.5s to 0.2s and a search from 4.4s to 0.2s; everyday moves take 60 to 90ms; scrolling holds about 23ms a frame at trackpad speeds (16.7ms on a normal tree). The fixes: one read pass and one write pass (a class toggled between reads had forced a layout per row), tokens read once per task, no `:has()` on rows, and far rows drawn as boxes.
+  - Accessibility: axe is clean in every state (tree, places, menus, select, search, account card).
+- **v45 rearrange and pin rules** (2026-09-26, Amadeus: "pins can only be adjusted inside pins locations … folders should always take priority at the top of the pins"):
+  - `…` › Rearrange with upright ˄ ˅ buttons in the ‹ › design, plus ↑/↓ and ⌥↑/⌥↓. It works within four groups: pinned folders, pinned items, folders, items. A hand order is kept per level until a Sort is chosen. One clock per press.
+  - A pin cannot be dragged or moved into a folder until it is unpinned.
+  - Fix: moving a row in the document dropped its keyboard focus, so a second arrow press did nothing. `sync` now gives focus back.
+- **v45 pins, Empty and deep nesting** (2026-09-26, Amadeus: "What happens when we have folders inside folders inside folders? … Will it then spawn the <> button?"):
+  - Pins sort first within their own level, folders included, in the order they were pinned.
+  - "Empty" is now an italic serif line in the muted colour, aligned with the child names. Its old `opacity:.6` fought the focus-in, which ends at 1, and made it jump. Measured: it only falls while its folder closes and only rises while it opens.
+  - Deep nesting steps in once a name would drop under about 90px. The path bar brings its own ‹ › and a scrolling, feathered trail; one clock for a step in or out (measured: every tree animation shares one start time).
+- **v45 status and fixes** (2026-09-26, Amadeus):
+  - Gold now means "needs you": running is a gold dot, finished and unread is a gold ring (with one pulse as a run ends), and opening a chat reads it.
+  - Pinned moves to its own small pin mark, and Pin is on the first page of the `…` menu.
+  - Fixes:
+    - The tiles' well class `.w` collided with the console's streamed-word rule `.w{animation:inkw}`, so toggling Calm restarted Compact's icon. It is renamed `.sb-well`.
+    - The theme hold now reaches the tiles' own layers (`::before`), measured at exactly two colour states.
+    - The resize can no longer stick after a release the page did not hear.
+- **v45 one clock** (2026-09-26, Amadeus: "not synced across all the assets"):
+  - A change in a card is one transaction on one clock. Measured: 16 animations share one start and one duration in a change of shape, and 4 in a page switch.
+  - Tile boxes morph on their own layer.
+  - The narrow switch waits 90 ms: 0 flips while jittering across the line.
+  - The hover plate holds during a change.
+- **v45 corners and resize** (2026-09-26, Amadeus):
+  - Corners are tightened to 6, 4 and 3px everywhere.
+  - Back and forward are two separate frosted buttons, placed above the account card.
+  - Resizing the dock no longer closes the pull-up: the click that ends a drag stops at the grip.
+  - An open card's reflow is animated as the dock compresses or widens.
+- **v45 system panel, second refinement** (2026-09-26, Amadeus):
+  - The theme swap holds all transitions, so the tiles change with the page.
+  - The feather applies only to overflowing text: the Account values and "Calm motion" were losing letters.
+  - Account values wrap.
+  - Secondary text in the card moves to `--soft` for legibility.
+  - An on-tile takes a whole warm tint.
+  - Glyph centring was measured at 0.00 to 0.01px.
+- **v45 system panel, refined** (2026-09-26, Amadeus: "not centred; Compact clips"):
+  - The card has a fixed type scale and container-query layout.
+  - The appearance pill is proportional, and was measured centred within 0.02px at 208, 256 and 400px, in both densities and both themes.
+  - Tiles stack when narrow, and their glyphs animate their state.
+  - The identity row opens an Account page, and Library shows its count.
+  - The appearance switch takes left and right arrows.
+- **v45 system panel** (2026-09-26, Amadeus):
+  - The account card is rebuilt as a system panel: identity with sync status, a Control Center strip (Appearance, Calm motion, Compact), Settings, Library, Data ›, Help ›, and a system line.
+  - A shared pager drives both the account card and the row menu. The back and forward pill sits between each card and what opened it.
+  - Select many is added, with a selection bar and a Sort card.
+  - Soft depth shadows animate with every card.
+  - Focus now resolves by 60% of each move, which fixes the late snap into sharpness.
+  - Pulling the sidebar shut no longer replays the slide: the remembered width is restored with no transition while docked.
+- **v45 dock and layout** (2026-09-26, Amadeus):
+  - The dock's close no longer rushes and then stalls. It now has its own travel curve, and it dissolves as it slows.
+  - Opening keeps its feel and gains motion blur.
+  - Everything that moves blurs slightly with its speed.
+  - The resize rubber band tightens to 64px past its maximum and settles back softly.
+  - A deleted row offers a trash can beside undo, to delete it at once.
+  - The layout follows macOS: a toolbar row, a real search field, the tree, and the account as a popup button (a serif monogram and the up-and-down chevrons).
+- **v45 concept** (2026-09-26, Amadeus): §4 EXPIRA × macOS is added as the global house style for the Console and its derivatives.
+  - It covers the file-system logic, one curve with focus in and focus out, and the improved near-black stack.
+  - The GSSC kernel templates keep their own look.
+  - The sidebar draft becomes a file system: folders the person makes, loose chats newest first, no fixed sections, dates, tooltips or ellipses.
+  - The row menu becomes a card of pages with back and forward arrows. Rows are resizable, and pulling the edge docks the sidebar.
+  - The dock button travels across the dock into the chat with a motion blur, and its hover changes with where it is.
+- **v45 draft, in the bench only** (2026-09-26, Amadeus's sidebar notes; `console/bench/sidebar-next.html`; nothing is promoted yet):
+  - the sidebar follows Claude's structure: New chat and Search, then the master template's numbered sections, I Files (folders), II Pinned and III Recents;
+  - rows are 28px, one hairline apart;
+  - no shortcut hints and no Dispatch;
+  - settings open from the account pull-up at the foot;
+  - motion:
+    - one highlight glides between rows on the spring;
+    - hovers arrive on `--t-instant` and leave on the soft close;
+    - a folder or section opens as one move: the rows below FLIP while each child surfaces from a light blur as it is uncovered, and the guide line draws with them; closing reverses it;
+  - the dark theme is near black with off-white text, on the full palette above.
+  - **the pull** (Amadeus: "the text sizes change before it closes"): the sidebar's small surfaces (the account pull-up, the row menus, the undo note) no longer use the bloom's scale.
+    - Opacity, a 6px drop and the blur ride one progress value on one curve, so the text never shrinks while it is still readable.
+    - Each surface keeps its own layer, so its text is not re-rasterised as it starts to move.
+    - The shared bloom in `core/pour.js` still scales, text and all; review the other surfaces when this is promoted.
+  - **text never scales or slides** (Amadeus: "they look jumpy, like their original size is not linked"):
+    - the pressed-row shrink is gone;
+    - search no longer swaps in a box that grows: the row itself becomes the field, with the icon and the word fixed in place while the well fades in around them and the word dims to a placeholder;
+    - text that closes only fades and blurs;
+    - rows that move do so by whole-pixel distances on the compositor.
+  - **blur timing reversed for the sidebar** (Amadeus, v45: "fast close, slow entry"):
+    - entries resolve out of the blur over `--sb-in` 300 ms, and closes blur away over `--sb-out` 150 ms;
+    - this reverses the console-wide v44 rule (a fast push and a slower soft close) for the sidebar only; decide at promotion whether it becomes the rule everywhere.
+  - **refinement pass** (Amadeus: "refine the hovers, blur and closes; move the logo to the bottom left; reduce the text; subtler categories"):
+    - **Type** is at chrome size: rows are 11px on 24px, meta 10px, labels at the 9.5px floor. The sizes are sidebar tokens (`--sb-fs`, `--sb-row`, `--sb-ic`).
+    - **The EXPIRA mark** signs the bottom left under the account row, at half strength until hovered. The top row keeps only the sidebar button, at the left.
+    - **Section headers are quieter.** The numeral and label are muted with no gold at rest. On hover the numeral warms to gold, a hairline draws out on the spring, and the caret and actions come out of a blur.
+    - **The hover plate** surfaces out of a blur, glides on the spring and stretches along its path in proportion to its speed (the mercury bead's rule), then defocuses away when the pointer leaves.
+    - **One focus curve for everything that appears or leaves.** Entering, opacity leads and focus comes last (a lens pulling focus, `--sb-in`). Leaving, focus goes first and the fade follows (racking out, `--sb-out`). The pull-up's surfaces use the same map.
+    - The plus in New chat turns a quarter on the spring when hovered.
+  - fully featured:
+    - a row menu (from `…` or a right-click): pin, rename, move to a folder, archive, delete with undo;
+    - rename in place (F2);
+    - new folder, named as it lands;
+    - a Recents filter: all, documents, running;
+    - drag a chat or a file onto a folder;
+    - arrow-key navigation (right opens, left closes or climbs);
+    - the list feathers at an edge while more lies beyond it;
+    - long names show in full on hover.
 - **v44** (2026-09-26, Amadeus's super plan, `console/SUPER_PLAN.md`):
   - faster and softer: entry 160 ms, the soft close 280 ms, layout moves 300 ms;
   - the pour is retired: cards, menus, settings, the full-screen map and the document open by blooming out of a blur in place and close back into it, never returning to the click point; large surfaces blur their content only;
@@ -143,3 +630,5 @@ Motion is the heart of the UX: fidelity in the engine comes first.
   - clip-path reveals end past the shadow;
   - a transform-only indicator in the settings nav;
   - web research through Exa.
+
+- **2026-10-02 · the raster snap.** A node's icon was scaled by its size (`scale(r/14)`) and again on hover; a scaled, composited layer is rasterised at one scale while it moves and again when it stops, so the strokes thinned (read as grey on the small nodes) and snapped sharp at the end of every transition. Rule: size by layout (`inset`, svg `width`, compensated `stroke-width`), keep a hover scale on a layer with `will-change:transform` so the raster never changes, and write `--s` only when it changes. The root now sets grayscale antialiasing, so promoting and dropping a layer never re-renders the type. Focus dimming eased to a symmetric curve (nodes .62, cables .4) instead of the front-loaded expo-out.

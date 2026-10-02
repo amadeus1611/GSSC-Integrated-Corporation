@@ -1,0 +1,542 @@
+/* draft v45 chat (bench only until promoted into units/start, units/composer and units/thread). The chat pane is the
+   document: no card around the answer and no run card above it. A new chat is the composer and a signature in the corner; a
+   brief reads as a GSSC pull quote; the answer is laid out as the master template lays out a page (Roman-numeral
+   sections, hairline rules with the gold lead-in, navy-ruled tables, serif figures, a filed colophon), in the
+   EXPIRA × macOS house style: the dock's colours, one curve, focus in and focus out, text that never scales.
+   Motion (chat-next.js) rides the sidebar's tokens: --sb-ease, --sb-in, --sb-out, --sb-move. */
+:root{
+  --ch-col:680px;            /* the sheet's width, centred over the thread's text column */
+  --ch-fs:14px;--ch-lh:1.65;
+  --ch-bar:#0C2461;          /* the chart's one series: royal navy in light, light gold in dark */
+  --ch-strong:color-mix(in srgb,var(--ink) 78%,transparent);  /* the template's navy rule */
+  --ch-sign-x:28px;--ch-sign-y:11px;  /* the signature's corner: set against the sidebar's foot */
+  --ch-sheet-r:14px;         /* the sheet's corner */
+  --ch-glass:50%;            /* how much panel tints the frost */
+  --ch-frost:14px;           /* the frost's blur */
+  --ch-rim:inset 0 1px 0 rgba(255,255,255,.75);  /* the glass's lit top edge */
+  --ch-sheen:linear-gradient(to bottom,rgba(255,255,255,.34),rgba(255,255,255,0) 44%);
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--ch-bar:#C9A35C;--ch-glass:52%;--ch-rim:inset 0 .5px 0 rgba(255,255,255,.09);--ch-sheen:linear-gradient(to bottom,rgba(255,255,255,.045),rgba(255,255,255,0) 44%)}}
+:root[data-theme="dark"]{--ch-bar:#C9A35C;--ch-glass:52%;--ch-rim:inset 0 .5px 0 rgba(255,255,255,.09);--ch-sheen:linear-gradient(to bottom,rgba(255,255,255,.045),rgba(255,255,255,0) 44%)}
+
+/* the pane: the header, the thread (feathered at both ends), the pull tab and its sheet */
+.main{position:relative}
+.top .crumb{display:none}
+.top .ttl{font:400 13px/1 var(--f-display);color:var(--ink);letter-spacing:-.005em;opacity:1;transition:opacity var(--sb-out) var(--sb-ease),filter var(--sb-out) var(--sb-ease)}
+.top .ttl small{margin-left:var(--sp-2);font:400 var(--fs-chrome)/1 var(--f-body);letter-spacing:var(--tracked-tight);text-transform:uppercase;color:var(--mute)}
+.ch{position:relative;flex:1;min-height:0;display:flex;flex-direction:column}
+.ch-scroll{flex:1;min-height:0;overflow-y:auto;scrollbar-width:thin;padding:var(--sp-6) 28px 96px;container:ch/inline-size;
+ --fs:0px;-webkit-mask-image:linear-gradient(to bottom,transparent 0,#000 var(--fs),#000 calc(100% - var(--fb)),transparent 100%);mask-image:linear-gradient(to bottom,transparent 0,#000 var(--fs),#000 calc(100% - var(--fb)),transparent 100%);transition:--fs var(--sb-out) var(--sb-ease)}
+.ch-scroll.f-s{--fs:18px}
+/* more below: the foot's feather deepens from 44px to 150px while there is more under the fold; a small chevron waits at
+   the far edge of the right margin and scrolls on by most of a screen. At the end both go. */
+@property --fb{syntax:"<length>";inherits:false;initial-value:44px}
+.ch-scroll{--fb:44px;transition:--fs var(--sb-out) var(--sb-ease),--fb var(--sb-move) var(--sb-ease)}
+.ch-scroll.more{--fb:150px}
+.ch-more{all:unset;position:absolute;right:30px;bottom:14px;z-index:2;display:grid;place-items:center;width:26px;height:26px;border-radius:50%;color:var(--soft);cursor:pointer;
+ background:var(--panel);box-shadow:var(--ch-rim),inset 0 0 0 var(--rule-hair) var(--line-3),0 4px 14px -8px rgba(var(--sb-shc),calc(var(--sb-sha) * .9));
+ opacity:0;transform:translateY(4px);filter:blur(1.5px);pointer-events:none;transition:opacity var(--sb-out) var(--sb-ease),transform var(--sb-out) var(--sb-ease),filter var(--sb-out) var(--sb-ease),color var(--sb-out) var(--sb-ease)}
+.ch-more svg{width:12px;height:12px}
+.ch-more.on{opacity:1;transform:none;filter:blur(0);pointer-events:auto;transition-duration:var(--sb-in)}
+.ch-more:hover{color:var(--ink)}
+.ch-more:focus-visible{outline:var(--rule) solid var(--gold);outline-offset:2px}
+.calm .ch-more{filter:none;transition-duration:1ms}
+.ch.start .ch-scroll{visibility:hidden}
+
+/* ---- a new chat: the pull tab alone in the middle of the page, and a signature in the bottom-left corner: the gold
+   lead-in, a small greeting with your name in the display italic, and the date in plain words. The signature sits on
+   the sidebar's foot, the greeting level with the account and the date level with the EXPIRA mark, so the two panes
+   close on one line. No starters and no clock. ---- */
+.ch-hero{position:absolute;inset:0;display:none;pointer-events:none}
+.ch.start .ch-hero,.ch.leaving .ch-hero{display:block}
+.ch-sign{position:absolute;left:var(--ch-sign-x);bottom:var(--ch-sign-y);display:flex;flex-direction:column;align-items:flex-start;pointer-events:none;user-select:none}
+.ch-lead{width:var(--lead-in);height:var(--rule);margin:0 0 var(--sp-3h);background:var(--gold);transform-origin:0 50%}
+.ch-hi{margin:0;font:400 20px/1.2 var(--f-display);letter-spacing:-.012em;color:var(--ink)}
+.ch-hi em{font-style:italic}
+.ch-date{margin:var(--sp-3h) 0 0;font-size:var(--fs-chrome);color:var(--mute);font-variant-numeric:tabular-nums}
+
+/* ---- the pull tab: the composer at rest is one short line, the sheet's own grabber. In a new chat it waits in the
+   middle of the page over "Brief EXPIRA"; in a thread it waits at the foot of the pane, and says "Follow up" only
+   when you are on it. Pull it up, click it, press Enter or Space on it, or just start typing: the line grows into the
+   sheet. On hover it lifts 2px and widens, the way a grabber invites the pull; while the desks work it breathes gold. ---- */
+.ch-tab{all:unset;box-sizing:border-box;position:absolute;left:0;right:0;margin:0 auto;z-index:2;width:240px;height:72px;top:calc(50% - 36px - 4vh);
+ display:flex;flex-direction:column;align-items:center;padding-top:34px;cursor:grab;touch-action:none;user-select:none;-webkit-tap-highlight-color:transparent}
+.ch-tab:active{cursor:grabbing}
+.ch-tab .ln,.ch-grab .ln{display:block;flex:none;width:36px;height:4px;border-radius:2px;background:var(--line-3);
+ transition:transform var(--sb-out) var(--sb-ease),background var(--sb-out) var(--sb-ease),box-shadow var(--sb-out) var(--sb-ease)}
+.ch-tab .lb{margin-top:var(--sp-2h);font-size:var(--fs-chrome-2);color:var(--mute);white-space:nowrap}
+.ch-tab .ht{margin-top:3px;font-size:var(--fs-chrome);color:var(--mute);white-space:nowrap;opacity:0;filter:blur(1.5px);transform:translateY(-2px);
+ transition:opacity var(--sb-out) var(--sb-ease),filter var(--sb-out) var(--sb-ease),transform var(--sb-out) var(--sb-ease)}
+.ch-tab:hover .ln,.ch-tab:focus-visible .ln{background:var(--soft);transform:translateY(-2px) scaleX(1.18);transition-duration:var(--sb-in)}
+.ch-tab:hover .ht,.ch-tab:focus-visible .ht{opacity:.85;filter:blur(0);transform:none;transition-duration:var(--sb-in)}
+.ch-tab:focus-visible{outline:none}
+.ch-tab:focus-visible .ln{box-shadow:0 0 0 3px var(--gold-wash)}
+.ch-tab.away .ln{visibility:hidden}
+.ch.thread .ch-tab{top:auto;bottom:0;height:40px;padding-top:22px}
+.ch.thread .ch-tab .lb{position:absolute;bottom:24px;margin:0;opacity:0;filter:blur(1.5px);transform:translateY(2px);
+ transition:opacity var(--sb-out) var(--sb-ease),filter var(--sb-out) var(--sb-ease),transform var(--sb-out) var(--sb-ease)}
+.ch.thread .ch-tab .ht{display:none}
+.ch.thread .ch-tab:hover .lb,.ch.thread .ch-tab:focus-visible .lb{opacity:1;filter:blur(0);transform:none;transition-duration:var(--sb-in)}
+.ch-tab.live .ln{background:var(--gold);animation:breathe var(--t-loop) var(--ease-inout) infinite}
+
+
+/* ---- the sheet: the focused place to write. The grabber, the brief, then one row of icons that carry the chat's
+   settings, and send. It is frosted glass: the thread under it, blurred (the frost below), with the panel tint, a sheen
+   and a lit top edge over it. Only the sheet is frosted; the page above it stays sharp, readable and live, so you can
+   read, scroll and select while you write. In a new chat the sheet opens in the middle of the page, growing out of the
+   line; in a thread it rises from the foot. The motion is chat-next.js's frame(): one progress, 0 to 1, drives the
+   grabber's travel, the reveal and the contents, so a pull and a click are the same move. ---- */
+.ch-sheet{position:absolute;left:0;right:0;margin:0 auto;z-index:3;width:min(var(--ch-col),calc(100% - var(--sp-6) * 2));visibility:hidden;pointer-events:none}
+.ch-sheet.on{visibility:visible;pointer-events:auto}
+.ch-sheet.mid{top:0;bottom:0;margin:auto;height:fit-content}
+.ch-sheet.low{bottom:var(--sp-3)}
+/* the frost: the browser's backdrop blur, live in the same frame as whatever moves beneath (chat-next.js shape()).
+   backdrop-filter only samples what lies directly behind its element, so a panel-sized frost left a band along the edges
+   where text stayed sharp. The layer reaches --e past the sheet on every side, and a mask trims it back to the sheet's
+   rounded rectangle after the filter has run: two bands and four corner discs, all gradients, placed by --fx/--fy/--fw/
+   --fh/--fr in the sheet's pixels, so the shape follows the reveal with nothing to decode. No ancestor of the sheet may
+   carry a filter, opacity, mask or clip-path (each would become the blur's backdrop root). */
+.ch-frost{--e:40px;--fx:0px;--fy:0px;--fw:0px;--fh:0px;--fr:14px;--mb:linear-gradient(#000 0 0);--mc:radial-gradient(closest-side,#000 calc(100% - .75px),#0000);
+ position:absolute;inset:calc(var(--e) * -1);pointer-events:none;
+ -webkit-backdrop-filter:blur(var(--ch-frost)) saturate(1.35);backdrop-filter:blur(var(--ch-frost)) saturate(1.35);
+ --ms:var(--fw) calc(var(--fh) - var(--fr) * 2),calc(var(--fw) - var(--fr) * 2) var(--fh),calc(var(--fr) * 2) calc(var(--fr) * 2),calc(var(--fr) * 2) calc(var(--fr) * 2),calc(var(--fr) * 2) calc(var(--fr) * 2),calc(var(--fr) * 2) calc(var(--fr) * 2);
+ --mp:calc(var(--e) + var(--fx)) calc(var(--e) + var(--fy) + var(--fr)),calc(var(--e) + var(--fx) + var(--fr)) calc(var(--e) + var(--fy)),
+  calc(var(--e) + var(--fx)) calc(var(--e) + var(--fy)),calc(var(--e) + var(--fx) + var(--fw) - var(--fr) * 2) calc(var(--e) + var(--fy)),
+  calc(var(--e) + var(--fx)) calc(var(--e) + var(--fy) + var(--fh) - var(--fr) * 2),calc(var(--e) + var(--fx) + var(--fw) - var(--fr) * 2) calc(var(--e) + var(--fy) + var(--fh) - var(--fr) * 2);
+ -webkit-mask-image:var(--mb),var(--mb),var(--mc),var(--mc),var(--mc),var(--mc);mask-image:var(--mb),var(--mb),var(--mc),var(--mc),var(--mc),var(--mc);
+ -webkit-mask-repeat:no-repeat;mask-repeat:no-repeat;-webkit-mask-size:var(--ms);mask-size:var(--ms);-webkit-mask-position:var(--mp);mask-position:var(--mp)}
+.ch-glass{position:absolute;inset:0;border-radius:var(--ch-sheet-r);
+ background:var(--ch-sheen),color-mix(in srgb,var(--panel) var(--ch-glass),transparent);
+ box-shadow:var(--ch-rim),inset 0 0 0 var(--rule-hair) var(--line-3),0 1px 2px rgba(var(--sb-shc),calc(var(--sb-sha) * .2)),0 24px 56px -24px rgba(var(--sb-shc),calc(var(--sb-sha) * 1.1))}
+/* when the system asks for less transparency: no frost, a solid panel */
+@media (prefers-reduced-transparency:reduce){.ch-frost{display:none}.ch-glass{background:var(--panel)}}
+/* calm (the sidebar's Calm motion, or reduced motion): responsive and snappy. The sheet is a solid panel with no frost
+   and no blur anywhere; it opens and closes at once (chat-next.js reads the same reduce flag), and hover names and
+   marginalia appear without a blur */
+.calm .ch-frost{display:none}
+.calm .ch-glass{background:var(--panel)}
+.calm .ch-tab .ht,.calm .ch-brief>.ch-when,.calm .ch-cbar [data-tip]::after{filter:none!important;transition-duration:1ms!important;transition-delay:0s!important}
+.ch-fg{position:relative}
+.ch-grab{height:22px;display:grid;place-items:center;cursor:grab;touch-action:none;user-select:none}
+.ch-grab:active{cursor:grabbing}
+.ch-grab:hover .ln{background:var(--soft);transform:translateY(1px) scaleX(1.18);transition-duration:var(--sb-in)}
+.ch-comp{position:relative;display:flex;flex-direction:column;padding:0 var(--sp-3h) var(--sp-2h)}
+.ch-comp textarea{all:unset;display:block;width:100%;min-height:44px;max-height:240px;overflow-y:auto;padding:2px 0;font:400 14px/1.55 var(--f-body);color:var(--ink);caret-color:var(--gold);white-space:pre-wrap;word-wrap:break-word;scrollbar-width:thin}
+.ch-comp textarea::placeholder{color:var(--mute)}
+/* ---- the bar: icons, not words. Each icon draws its own setting: the effort bars fill to the level (click to step
+   Quick, Auto, Deep; Shift steps back), the four desk dots fill for the desks that are on, the page carries the glyph
+   of the output, and the shield closes over a check when the answer is client-facing (the firewall is on). Desks and
+   Output open a small glass menu; everything names itself on hover, after a beat, and at once for the keyboard. ---- */
+.ch-cbar{position:relative;display:flex;align-items:center;gap:2px;margin:var(--sp-2) -6px 0 -8px}
+.ch-sp{flex:1}
+.ch-ic{all:unset;position:relative;display:grid;place-items:center;width:30px;height:28px;border-radius:var(--sb-r-sm);color:var(--mute);cursor:pointer;
+ transition:background var(--sb-out) var(--sb-ease),color var(--sb-out) var(--sb-ease)}
+.ch-ic svg{width:16px;height:16px;overflow:visible}
+.ch-ic:hover,.ch-ic[aria-expanded="true"]{background:var(--line);color:var(--ink);transition-duration:calc(var(--sb-in) * .5)}
+.ch-ic:focus-visible,.ch-send:focus-visible,.ch-pop button:focus-visible,.ch-grab:focus-visible{outline:var(--rule) solid var(--gold);outline-offset:-1px}
+#icEffort rect{fill:currentColor;opacity:.26;transition:opacity var(--sb-out) var(--sb-ease)}
+#icEffort.lv-1 .b1,#icEffort.lv-2 .b1,#icEffort.lv-2 .b2,#icEffort.lv-3 rect{opacity:1;transition-duration:var(--sb-in)}
+#icDesks .r{fill:none;stroke:currentColor;stroke-width:1.05;opacity:.5}
+#icDesks .f{fill:currentColor;transform-box:fill-box;transform-origin:center;transform:scale(0);transition:transform var(--sb-out) var(--sb-ease)}
+#icDesks .d.on .f{transform:none;transition-duration:var(--sb-move)}
+.fillg{fill:currentColor;stroke:none}
+#icFw .sf{fill:currentColor;stroke:none;opacity:0;transition:opacity var(--sb-out) var(--sb-ease)}
+#icFw .ck{opacity:0;transform-box:fill-box;transform-origin:center;transform:scale(.5);transition:opacity var(--sb-out) var(--sb-ease),transform var(--sb-out) var(--sb-ease)}
+#icFw[aria-pressed="true"]{color:var(--ink)}
+#icFw[aria-pressed="true"] .sf{opacity:.13;transition-duration:var(--sb-in)}
+#icFw[aria-pressed="true"] .ck{opacity:1;transform:none;transition-duration:var(--sb-move)}
+/* the names: a small ink label over the icon, after a beat on hover and at once on keyboard focus */
+.ch-cbar [data-tip]::after{content:attr(data-tip);position:absolute;left:50%;bottom:calc(100% + 7px);z-index:5;padding:3px 7px;border-radius:5px;
+ background:color-mix(in srgb,var(--ink) 90%,transparent);color:var(--bg);font:400 var(--fs-chrome)/1.3 var(--f-body);letter-spacing:.01em;white-space:nowrap;pointer-events:none;
+ opacity:0;transform:translate(-50%,3px);transition:opacity var(--sb-out) var(--sb-ease),transform var(--sb-out) var(--sb-ease)}
+.ch-cbar [data-tip]:hover::after,.ch-cbar [data-tip]:focus-visible::after{opacity:1;transform:translate(-50%,0);transition-duration:var(--sb-in);transition-delay:.3s}
+.ch-cbar [data-tip]:focus-visible::after{transition-delay:0s}
+.ch-cbar [data-tip][aria-expanded="true"]::after{opacity:0;transition:none}
+.ch-cbar .ch-send[data-tip]::after{left:auto;right:0;transform:translate(0,3px)}
+.ch-cbar .ch-send[data-tip]:hover::after,.ch-cbar .ch-send[data-tip]:focus-visible::after{transform:none}
+/* the menus: the same glass, smaller; a glyph, the name over a quiet line, a check for what is chosen */
+.ch-pop{position:absolute;z-index:6;min-width:216px;padding:4px;border-radius:12px;visibility:hidden;
+ background:var(--ch-sheen),color-mix(in srgb,var(--panel) 82%,transparent);-webkit-backdrop-filter:blur(20px) saturate(1.8);backdrop-filter:blur(20px) saturate(1.8);
+ box-shadow:var(--ch-rim),inset 0 0 0 var(--rule-hair) var(--line-3),0 1px 2px rgba(var(--sb-shc),calc(var(--sb-sha) * .2)),0 16px 40px -18px rgba(var(--sb-shc),calc(var(--sb-sha) * 1.1))}
+.ch-pop.on{visibility:visible}
+.ch-pop button{all:unset;box-sizing:border-box;display:flex;align-items:center;gap:10px;width:100%;height:38px;padding:0 10px 0 9px;border-radius:8px;cursor:pointer;
+ transition:background var(--sb-out) var(--sb-ease)}
+.ch-pop button:hover{background:var(--line);transition-duration:calc(var(--sb-in) * .5)}
+.ch-pop button>svg:first-child{flex:none;width:16px;height:16px;color:var(--mute);transition:color var(--sb-out) var(--sb-ease)}
+.ch-pop .t{display:flex;flex-direction:column;flex:1;min-width:0;font-size:var(--fs-chrome-2);line-height:1.25;color:var(--ink)}
+.ch-pop .t small{font-size:var(--fs-chrome);color:var(--mute)}
+.ch-pop .ok{flex:none;width:12px;height:12px;color:var(--ink);opacity:0;transform:scale(.5);transition:opacity var(--sb-out) var(--sb-ease),transform var(--sb-out) var(--sb-ease)}
+.ch-pop [aria-checked="true"] .ok{opacity:1;transform:none;transition-duration:var(--sb-move)}
+.ch-pop [aria-checked="true"]>svg:first-child{color:var(--ink)}
+/* send: quiet until there is something to send, then it becomes ink, out of a blur */
+.ch-send{all:unset;position:relative;display:grid;place-items:center;width:26px;height:26px;border-radius:var(--sb-r);background:var(--line-2);color:var(--mute);cursor:default;
+ transition:background var(--sb-out) var(--sb-ease),color var(--sb-out) var(--sb-ease),transform var(--sb-move) var(--sb-ease)}
+.ch-send svg{width:13px;height:13px}
+.ch-comp.has .ch-send{background:var(--ink);color:var(--bg);cursor:pointer;transition-duration:var(--sb-in)}
+.ch-comp.has .ch-send:hover svg{transform:translateY(-1px);transition:transform var(--sb-in) var(--sb-ease)}
+.ch-send svg{transition:transform var(--sb-out) var(--sb-ease)}
+.ch-comp.busy .ch-send{background:var(--line-2);color:var(--soft);cursor:pointer}
+
+/* ---- the thread: an editorial grid, almost edge to edge. Three columns span the pane: the left margin (marginalia:
+   section numerals, exhibit labels and captions, notes, the brief's time, the desks' names), the text column (the
+   prose, at a reading measure of about 70 characters; studies put comfortable screen reading at 55 to 75), and the
+   right margin, which the exhibits, tables and chart extend into. Rules run the full width; the gold lead-in marks
+   where the text begins. Every container down to the rows is a subgrid on the same lines, so a numeral, a caption and
+   a desk's name all hang on one margin. The glass sheet sits centred over the text column: the one centred object on
+   a wide page. Below 900px of pane the margins fold in and it reads as one column. ---- */
+.ch-col{--ch-measure:520px;--ch-gap:40px;display:grid;column-gap:var(--ch-gap);max-width:none;margin:0;
+ grid-template-columns:[bleed-start ml-start] minmax(0,1fr) [ml-end text-start] minmax(0,var(--ch-measure)) [text-end mr-start] minmax(0,1fr) [mr-end bleed-end];
+ grid-auto-flow:row;align-content:start}
+:is(.ch-turn,.ch-a,.ch-doc,.ch-sec,.ch-ex,.ch-fig,.ch-run,.ch-mk,.ch-colo,.ch-dochead){grid-column:bleed;display:grid;grid-template-columns:subgrid;align-items:start}
+:is(.ch-col,.ch-turn,.ch-a,.ch-doc,.ch-sec,.ch-ex,.ch-fig,.ch-dochead)>*{grid-column:text}
+.ch-turn{position:relative}
+.ch-turn+.ch-turn{margin-top:var(--sp-8)}
+.ch-col>.ch-turn,.ch-col>.ch-dochead,.ch-a>.ch-doc,.ch-a>.ch-run,.ch-doc>*,.ch-sec>.ch-mk,.ch-ex>.ch-fig{grid-column:bleed}
+
+/* the brief: the master template's pull quote, set large as the page's deck across the text and the right margin;
+   its time waits in the left margin and shows when you are on it, fast in and soft out */
+.ch-brief{margin:0 0 var(--sp-6)}
+.ch-kick{display:flex;gap:var(--sp-2);font-size:var(--fs-micro);letter-spacing:var(--tracked);text-transform:uppercase;color:var(--mute);font-variant-numeric:tabular-nums}
+.ch-kick b{font-weight:600;color:var(--gold-ink)}
+.ch-brief>.ch-quote{grid-column:text-start/mr-end;grid-row:1}
+.ch-quote{margin:0;padding:2px 0 2px var(--sp-4h);margin-left:calc(var(--sp-4h) * -1 - 2px);border-left:2px solid var(--gold);font:italic 400 19px/1.45 var(--f-display);letter-spacing:-.006em;color:var(--ink);white-space:pre-wrap;max-width:44em}
+.ch-brief>.ch-when{grid-column:ml;grid-row:1;justify-self:end;margin-top:6px;font-size:var(--fs-chrome);color:var(--mute);font-variant-numeric:tabular-nums;white-space:nowrap;
+ opacity:0;filter:blur(1.5px);transition:opacity var(--sb-out) var(--sb-ease),filter var(--sb-out) var(--sb-ease)}
+.ch-brief:hover .ch-when{opacity:1;filter:blur(0);transition-duration:var(--sb-in)}
+
+/* ---- the run, as nodes. The margin holds the time and one phrase (what is happening now, then the verdict); the
+   nodes run across the text and the right margin: icons in small glass rings on hairline edges. Waiting is faint,
+   working is a breathing gold ring on a gold edge, done is settled ink; sources are gold dots under their desk.
+   Select a node for its card: the same glass as the sheet's menus, fast in, soft out. ---- */
+.ch-a>.ch-run{grid-column:bleed}
+.ch-run{position:relative;z-index:3;align-items:center;margin:0 0 var(--sp-7)}  /* its card opens over the page below */
+.ch-runm{grid-column:ml;justify-self:end;display:flex;flex-direction:column;align-items:flex-end;gap:3px;max-width:230px;text-align:right}
+.ch-runm .t{font-size:var(--fs-chrome);color:var(--soft);font-variant-numeric:tabular-nums}
+.ch-runm .now{font:italic 400 var(--fs-chrome-2)/1.35 var(--f-display);color:var(--mute)}
+.ch-run>.ch-graph{grid-column:text-start/mr-end}
+.ch-graph{position:relative;height:var(--gh,84px)}  /* its height is eased by the field's own loop (chat-next.js easeH), so its captions know it */  /* the field grows with what it holds, eased */
+.ch-graph .edges{position:absolute;inset:0;width:100%;height:100%;overflow:visible;pointer-events:none}
+.ch-graph path{fill:none;stroke:var(--line-3);stroke-width:1;stroke-linecap:round;transition:stroke var(--sb-move) var(--sb-ease),opacity var(--sb-in) var(--ease-inout)}
+.ch-graph path.done{stroke:color-mix(in srgb,var(--ink) 34%,transparent)}
+.ch-graph path.on{stroke:color-mix(in srgb,var(--gold) 70%,transparent)}
+.ch-graph path.src{stroke:color-mix(in srgb,var(--gold) 38%,transparent)}
+.ch-graph path.lead{stroke:color-mix(in srgb,var(--gold) 80%,transparent);stroke-width:1px!important;stroke-dasharray:2 3}
+.ch-graph .pulse{fill:var(--gold);opacity:0}
+/* the web's threads: the call from a desk to Exa (dotted, gold while it searches), and the evidence Exa brought, carried
+   down to the Arbiter as it weighs (a finer dotted thread) */
+.ch-graph path.call{stroke:color-mix(in srgb,var(--gold) 42%,transparent);stroke-dasharray:1.5 2.5}
+.ch-graph path.call.on{stroke:color-mix(in srgb,var(--gold) 85%,transparent)}
+.ch-graph path.ev{stroke:var(--line-3);stroke-dasharray:1 3.5}
+.ch-graph path.ev.done{stroke:color-mix(in srgb,var(--ink) 24%,transparent)}
+.ch-graph path.ev.on{stroke:color-mix(in srgb,var(--gold) 60%,transparent)}
+/* focus: a node's conversation stays; the rest of the field steps back */
+.ch-graph.focus path:not(.hot):not(.lead){opacity:.4}
+.ch-graph.focus .ch-node:not(.hot) .nb,.ch-graph.focus .ch-sat:not(.hot){opacity:.62}
+.ch-graph.focus path.hot{transition-duration:var(--sb-in)}
+/* the words on a cable: what passes along it, under its lowest point; fast in, soft out */
+.ch-wire{position:absolute;left:0;top:0;padding:1px 5px;border-radius:4px;background:color-mix(in srgb,var(--bg) 86%,transparent);
+ font:400 10px/1.35 var(--f-body);color:var(--mute);white-space:nowrap;font-variant-numeric:tabular-nums;pointer-events:none;
+ opacity:0;filter:blur(3px);transition:opacity var(--sb-out) var(--sb-dock-close),filter var(--sb-out) var(--sb-dock-close)}
+.ch-wire.wait{opacity:0!important}
+.ch-wire{text-shadow:0 0 3px var(--bg),0 0 3px var(--bg),0 0 6px var(--bg);transition:opacity var(--sb-out) var(--sb-dock-close),filter var(--sb-out) var(--sb-dock-close)}
+.ch-wire.show.dup{opacity:0}
+.ch-wire.show{opacity:1;filter:blur(0);transition-duration:var(--sb-in);transition-timing-function:var(--sb-ease)}
+.ch-graph .nodes{position:absolute;inset:0}
+.ch-node{all:unset;position:absolute;left:0;top:0;width:28px;height:28px;margin:-14px 0 0 -14px;border-radius:50%;cursor:pointer;-webkit-tap-highlight-color:transparent}
+.ch-node .nb{position:absolute;inset:calc(14px * (1 - var(--s,1)));display:grid;will-change:transform;place-items:center;border-radius:50%;color:var(--mute);
+ background:var(--panel);box-shadow:var(--ch-rim),inset 0 0 0 var(--rule-hair) var(--line-3),0 1px 2px rgba(var(--sb-shc),calc(var(--sb-sha) * .18));transform:none;
+ transition:color var(--sb-out) var(--sb-ease),box-shadow var(--sb-out) var(--sb-ease),opacity var(--sb-in) var(--ease-inout),transform var(--sb-move) var(--sb-ease)}
+.ch-node .nb svg{width:calc(13px * var(--s,1));height:calc(13px * var(--s,1));stroke-width:calc(1.2 / var(--s,1))}
+/* LAYA's gates (the Arbiter staffing and weighing, the check) are rounded squares: decisions in code; the workers are
+   circles. Exa is the smallest node, in gold ink */
+.ch-node.gate .nb,.ch-node.gate .nb::after{border-radius:32%}
+.ch-node[data-k="exa"] .nb{color:var(--gold-ink)}
+.ch-node .nb::after{content:"";position:absolute;inset:-4px;border-radius:50%;box-shadow:0 0 0 1px var(--gold);opacity:0;pointer-events:none}
+.ch-node[data-st="q"] .nb,.ch-node[data-st="stop"] .nb{opacity:.45}
+.ch-node[data-st="run"] .nb{color:var(--ink);box-shadow:var(--ch-rim),inset 0 0 0 1px var(--gold),0 1px 2px rgba(var(--sb-shc),calc(var(--sb-sha) * .18))}
+.ch-node[data-st="run"] .nb::after{animation:breathe var(--t-loop) var(--ease-inout) infinite}
+.ch-node[data-st="done"] .nb{color:var(--ink);box-shadow:var(--ch-rim),inset 0 0 0 var(--rule-hair) color-mix(in srgb,var(--ink) 40%,transparent),0 1px 2px rgba(var(--sb-shc),calc(var(--sb-sha) * .18))}
+.ch-node[data-st="fail"] .nb,.ch-node[data-st="warn"] .nb{color:var(--bad);box-shadow:inset 0 0 0 1px color-mix(in srgb,var(--bad) 60%,transparent)}
+.ch-node:hover .nb,.ch-node[aria-expanded="true"] .nb{transform:scale(1.1);color:var(--ink);transition-duration:var(--sb-in)}
+.ch-node.drag{cursor:grabbing}
+.ch-node.drag .nb{transform:scale(1.12);box-shadow:var(--ch-rim),inset 0 0 0 1px var(--gold),0 8px 22px -10px rgba(var(--sb-shc),calc(var(--sb-sha) * 1.2))}
+.ch-node:focus-visible .nb{outline:var(--rule) solid var(--gold);outline-offset:2px}
+/* the node's name, after a beat on hover */
+
+.ch-sat{position:absolute;left:0;top:0;width:7px;height:7px;margin:-3.5px 0 0 -3.5px;border-radius:50%;background:var(--gold);box-shadow:0 0 0 2px color-mix(in srgb,var(--gold) 18%,transparent);transition:opacity var(--sb-in) var(--ease-inout)}
+.ch-qry{position:absolute;left:0;top:0;width:14px;height:6px;margin:-3px 0 0 -7px;border-radius:3px;background:var(--gold-wash);box-shadow:inset 0 0 0 1px var(--gold);transition:opacity var(--sb-out) var(--sb-ease)}
+.ch-qry::after{content:attr(data-tip);position:absolute;left:50%;bottom:calc(100% + 6px);padding:2px 6px;border-radius:5px;background:color-mix(in srgb,var(--ink) 90%,transparent);color:var(--bg);font:400 var(--fs-chrome)/1.3 var(--f-body);white-space:nowrap;pointer-events:none;opacity:0;transform:translate(-50%,3px);transition:opacity var(--sb-out) var(--sb-ease),transform var(--sb-out) var(--sb-ease)}
+.ch-qry:hover::after{opacity:1;transform:translate(-50%,0);transition-duration:var(--sb-in);transition-delay:.2s}
+.ch-sat::after{content:attr(data-tip);position:absolute;left:50%;bottom:calc(100% + 6px);padding:2px 6px;border-radius:5px;background:color-mix(in srgb,var(--ink) 90%,transparent);color:var(--bg);
+ font:400 var(--fs-chrome)/1.3 var(--f-body);white-space:nowrap;pointer-events:none;opacity:0;transform:translate(-50%,3px);transition:opacity var(--sb-out) var(--sb-ease),transform var(--sb-out) var(--sb-ease)}
+.ch-sat:hover::after{opacity:1;transform:translate(-50%,0);transition-duration:var(--sb-in);transition-delay:.2s}
+/* the node's card */
+.ch-npop{position:absolute;z-index:4;max-height:420px;overflow:auto;scrollbar-width:thin;padding:var(--sp-3) var(--sp-3h) var(--sp-3);border-radius:12px;text-align:left;
+ background:var(--ch-sheen),var(--panel);
+ box-shadow:var(--ch-rim),inset 0 0 0 var(--rule-hair) var(--line-3),0 1px 2px rgba(var(--sb-shc),calc(var(--sb-sha) * .2)),0 18px 44px -20px rgba(var(--sb-shc),calc(var(--sb-sha) * 1.1))}
+.ch-npop[hidden]{display:none}
+/* in the left margin, the card is the page's inspector: its width is the margin's, right-aligned to the text, joined to
+   its node by a gold hairline; the run's time and phrase step aside while it is open */
+.ch-npop.side{max-height:none}
+.ch-runm{transition:opacity var(--sb-out) var(--sb-ease),filter var(--sb-out) var(--sb-ease)}
+.ch-run.carded .ch-runm{opacity:0;filter:blur(2px)}
+.ch-npop header{display:flex;align-items:center;gap:var(--sp-2);margin-bottom:var(--sp-2)}
+.ch-npop header svg{width:14px;height:14px;color:var(--ink)}
+.ch-npop header b{font-weight:600;font-size:var(--fs-micro);letter-spacing:var(--tracked);text-transform:uppercase;color:var(--ink)}
+.ch-npop header span{margin-left:auto;font:italic 400 var(--fs-chrome-2) var(--f-display);color:var(--gold-ink)}
+.ch-npop .lede{margin:0;font:400 15px/1.35 var(--f-display);color:var(--ink)}
+.ch-npop .task{margin:2px 0 0;font-size:var(--fs-chrome-2);color:var(--soft)}
+.ch-npop .m{margin:var(--sp-2) 0 0;font-size:var(--fs-chrome);color:var(--mute);font-variant-numeric:tabular-nums}
+.ch-npop .out{margin:var(--sp-2) 0 0;padding-top:var(--sp-2);border-top:var(--rule-hair) solid var(--line-2);font-size:var(--fs-chrome-2);line-height:1.5;color:var(--soft);white-space:pre-wrap}
+.ch-npop .th{margin:var(--sp-2) 0 0;padding:0;list-style:none}
+.ch-npop .th li{margin:0 0 3px;font:italic 400 var(--fs-chrome-2)/1.45 var(--f-display);color:var(--soft)}
+.ch-npop .hits{margin:var(--sp-2) 0 0;padding-left:var(--sp-3);font-size:var(--fs-chrome);color:var(--bad)}
+.ch-npop .staff,.ch-npop .claims,.ch-npop .qs{margin:var(--sp-2) 0 0;padding:var(--sp-1) 0 0;list-style:none;border-top:var(--rule-hair) solid var(--line-2)}
+.ch-npop .staff li,.ch-npop .claims li,.ch-npop .qs li{display:flex;gap:var(--sp-2);align-items:baseline;padding:3px 0;font-size:var(--fs-chrome-2);line-height:1.4;color:var(--soft)}
+.ch-npop .staff i{flex:none;width:20px;font:italic 400 var(--fs-chrome) var(--f-display);color:var(--gold-ink)}
+.ch-npop .staff b{flex:none;font-weight:600;color:var(--ink)}
+.ch-npop .qs i,.ch-npop .claims em{flex:none;width:70px;font:600 var(--fs-micro) var(--f-body);letter-spacing:var(--tracked);text-transform:uppercase;font-style:normal;color:var(--mute)}
+.ch-npop .claims .supported em,.ch-npop .claims .derived em{color:var(--gold-ink)}
+.ch-npop .claims .conflict em{color:var(--bad)}
+.ch-npop .hits small{display:block;color:var(--mute)}
+.ch-npop .src{margin:var(--sp-2) 0 0;padding:var(--sp-1) 0 0;list-style:none;border-top:var(--rule-hair) solid var(--line-2)}
+.ch-npop .src a{display:flex;align-items:flex-start;gap:var(--sp-2);padding:4px 6px;margin:0 -6px;border-radius:6px;color:var(--text);text-decoration:none;transition:background var(--sb-out) var(--sb-ease)}
+.ch-npop .src a:hover{background:var(--line);transition-duration:calc(var(--sb-in) * .5)}
+.ch-npop .src a:focus-visible{outline:var(--rule) solid var(--gold)}
+.ch-npop .src i{flex:none;display:grid;place-items:center;width:16px;height:16px;margin-top:1px;border-radius:50%;background:var(--gold-wash);color:var(--gold-ink);font:600 9px/1 var(--f-body);font-style:normal}
+.ch-npop .src span{display:flex;flex-direction:column;min-width:0;font-size:var(--fs-chrome-2);line-height:1.3}
+.ch-npop .src small{font-size:var(--fs-chrome);color:var(--mute)}
+/* a block waiting below the fold, to flow in as it scrolls into view */
+.ch-pre{opacity:0}
+.calm .ch-pre{opacity:1}
+
+/* ---- the answer, laid out as the master template lays out a page, on the grid ---- */
+.ch-doc{font-size:var(--ch-fs);line-height:var(--ch-lh);color:var(--text)}
+.ch-doc p{margin:0 0 var(--sp-3)}
+.ch-doc b{font-weight:600;color:var(--ink)}
+/* a section: its Roman numeral hangs large in the left margin, gold, in the display italic; its title in the text
+   column; the rule under them runs the full width, and the gold lead-in on it marks where the text begins */
+.ch-sec{margin:0 0 var(--sp-6)}
+.ch-mk{position:relative;align-items:end;margin-bottom:var(--sp-3);border-bottom:var(--rule-hair) solid var(--line-3)}
+.ch-mk .n{grid-column:ml;grid-row:1;justify-self:end;padding-bottom:var(--sp-2);font:italic 400 24px/1 var(--f-display);color:var(--gold-ink);font-feature-settings:"onum" 1}
+.ch-mk h2{grid-column:text;grid-row:1;margin:0;padding-bottom:var(--sp-2);font:400 18px/1.3 var(--f-display);letter-spacing:-.008em;color:var(--ink)}
+.ch-mk::after{content:"";grid-column:text;grid-row:1;align-self:end;justify-self:start;width:var(--lead-in);height:var(--rule);margin-bottom:calc(var(--rule-hair) * -1);background:var(--gold)}
+.ch-doc ul{margin:0 0 var(--sp-3);padding:0;list-style:none}
+.ch-doc li{position:relative;padding-left:var(--sp-4);margin-bottom:var(--sp-1h)}
+.ch-doc li::before{content:"";position:absolute;left:2px;top:.78em;width:5px;height:var(--rule);background:var(--gold)}
+/* tables: the template's schedule. A strong rule over the tracked-caps head, hairlines between rows, tabular figures
+   right-aligned; a total row carries the strong rule and the ink. A table of more than three columns extends into the
+   right margin. */
+.ch-dt{width:100%;border-collapse:collapse;margin:var(--sp-2) 0 var(--sp-4);font-size:var(--fs-ui);font-variant-numeric:tabular-nums}
+.ch-sec>.ch-dt.wide{grid-column:text-start/mr-end}
+.ch-dt th{padding:var(--sp-1h) var(--sp-2);border-top:var(--rule) solid var(--ch-strong);border-bottom:var(--rule-hair) solid var(--ch-strong);font-size:var(--fs-micro);font-weight:600;letter-spacing:var(--tracked);text-transform:uppercase;color:var(--ink);text-align:left}
+.ch-dt td{padding:var(--sp-2) var(--sp-2);border-bottom:var(--rule-hair) solid var(--line-2);color:var(--text);vertical-align:top}
+.ch-dt tbody tr:nth-child(even) td{background:color-mix(in srgb,var(--line) 55%,transparent)}
+.ch-dt .num{text-align:right;white-space:nowrap}
+.ch-dt tr.total td{border-top:var(--rule) solid var(--ch-strong);border-bottom:var(--rule) solid var(--ch-strong);background:none;color:var(--ink);font-weight:600}
+.ch-dt th:first-child,.ch-dt td:first-child{padding-left:0}
+.ch-dt th:last-child,.ch-dt td:last-child{padding-right:0}
+
+/* ---- exhibits: each one's label, caption and note hang in the left margin, level with its top; the exhibit itself
+   spans the text column and the right margin ---- */
+.ch-ex{margin:var(--sp-8) 0 0}
+.ch-ex>.ch-exh{grid-column:ml;justify-self:end;text-align:right;padding-top:var(--sp-2)}
+.ch-exh{font-size:var(--fs-micro);letter-spacing:var(--tracked);text-transform:uppercase;color:var(--mute)}
+/* figures: the template's price block, set large across the text and the margin between a strong rule and a hairline */
+.ch-ex>.ch-figs{grid-column:text-start/mr-end}
+.ch-figs{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));border-top:var(--rule) solid var(--ch-strong);border-bottom:var(--rule-hair) solid var(--line-3);margin-bottom:var(--sp-7)}
+.ch-figs>div{padding:var(--sp-3h) var(--sp-4) var(--sp-4) 0}
+.ch-figs>div+div{padding-left:var(--sp-4);border-left:var(--rule-hair) solid var(--line-3)}
+.ch-figs b{display:block;font:400 28px/1.1 var(--f-display);letter-spacing:-.016em;color:var(--ink);font-variant-numeric:tabular-nums}
+.ch-figs span{display:block;margin-top:var(--sp-2);font-size:var(--fs-micro);letter-spacing:var(--tracked);text-transform:uppercase;color:var(--soft)}
+.ch-figs em{display:block;margin-top:2px;font:italic 400 var(--fs-chrome) var(--f-display);color:var(--mute)}
+.ch-fig{margin:0 0 var(--sp-7)}
+.ch-fig>.ch-fcap{grid-column:ml;grid-row:1;justify-self:end;text-align:right;max-width:220px}
+.ch-fig>:not(.ch-fcap){grid-column:text-start/mr-end;grid-row:1}
+.ch-fcap{display:flex;flex-direction:column;align-items:flex-end;gap:2px;padding-top:var(--sp-1)}
+.ch-fcap .f{font:italic 400 var(--fs-chrome-2) var(--f-display);color:var(--gold-ink)}
+.ch-fcap b{font:400 14px/1.3 var(--f-display);color:var(--ink)}
+.ch-fcap small{font-size:var(--fs-micro);letter-spacing:var(--tracked);text-transform:uppercase;color:var(--mute)}
+.ch-fcap .ch-note{margin-top:var(--sp-2)}
+.ch-chart{display:block;width:100%;min-height:184px;overflow:visible}
+.ch-chart .grid line{stroke:var(--line-2);stroke-width:1;vector-effect:non-scaling-stroke}
+.ch-chart .base{stroke:var(--ch-strong);stroke-width:1;vector-effect:non-scaling-stroke}
+.ch-chart .bar{fill:var(--ch-bar);transform-box:fill-box;transform-origin:50% 100%}
+.ch-chart text{font:400 10px var(--f-body);fill:var(--mute);font-variant-numeric:tabular-nums}
+.ch-chart text.v{fill:var(--soft)}
+.ch-fig .ch-dt{margin-top:0}
+.ch-note{margin:var(--sp-1h) 0 0;font:italic 400 var(--fs-chrome-2)/1.5 var(--f-display);color:var(--mute)}
+.ch-dots{display:inline-flex;gap:3px;vertical-align:middle}
+.ch-dots i{width:5px;height:5px;border-radius:var(--r-round);box-shadow:inset 0 0 0 1px var(--line-3)}
+.ch-dots i.on{background:var(--gold);box-shadow:inset 0 0 0 1px var(--gold)}
+.ch-dt tr.pick td:first-child{color:var(--ink)}
+.ch-dt tr.pick td:first-child em{margin-left:var(--sp-1h);font:italic 400 var(--fs-chrome) var(--f-display);color:var(--soft)}
+.ch-src{margin:0 0 var(--sp-2);padding:var(--sp-1) 0 0;list-style:none;counter-reset:s}
+.ch-doc .ch-src li{counter-increment:s;display:flex;align-items:baseline;gap:var(--sp-2);margin:0;padding:3px 0;font-size:var(--fs-ui);color:var(--text)}
+.ch-doc .ch-src li::before{content:counter(s)".";position:static;width:auto;min-width:14px;height:auto;background:none;font:italic 400 var(--fs-chrome-2) var(--f-display);color:var(--gold-ink)}
+.ch-src em{font:italic 400 var(--fs-chrome) var(--f-display);color:var(--mute)}
+.ch-src em.ok{color:var(--soft)}
+/* the colophon: a full-width rule; when it was filed in the margin, its length under the text, its actions at the far
+   edge, as words */
+.ch-colo{align-items:center;margin-top:var(--sp-6);padding-top:var(--sp-2h);border-top:var(--rule-hair) solid var(--line-3);font-size:var(--fs-micro);letter-spacing:var(--tracked);text-transform:uppercase;color:var(--mute);font-variant-numeric:tabular-nums}
+.ch-colo>:first-child{grid-column:ml;justify-self:end}
+.ch-colo>:nth-child(2){grid-column:text}
+.ch-colo .acts{grid-column:mr;justify-self:end;display:flex;gap:2px}
+.ch-act{all:unset;position:relative;padding:3px 6px;border-radius:var(--sb-r-sm);color:var(--mute);cursor:pointer;transition:color var(--sb-out) var(--sb-ease),background var(--sb-out) var(--sb-ease)}
+.ch-act:hover{color:var(--ink);background:var(--line);transition-duration:calc(var(--sb-in) * .5)}
+.ch-act:focus-visible{outline:var(--rule) solid var(--gold)}
+.ch-act.done{color:var(--gold-ink)}
+
+/* a document opened from the tree: its kind and date in the margin, its title large in the text column over the lead-in */
+.ch-dochead{margin:0 0 var(--sp-6)}
+.ch-dochead>.ch-kick{grid-column:ml;grid-row:1;justify-self:end;flex-direction:column;align-items:flex-end;gap:2px;margin-top:10px}
+.ch-dochead>h2{grid-column:text-start/mr-end;grid-row:1;margin:0 0 var(--sp-3);font:400 var(--fs-h2)/1.25 var(--f-display);letter-spacing:-.01em;color:var(--ink)}
+.ch-dochead>.ch-lead{grid-row:2;margin:0}
+
+/* narrow panes: the margins fold into the text column and everything reads in one column, as before */
+@container ch (max-width:899px){
+ .ch-col{column-gap:0;grid-template-columns:[bleed-start ml-start text-start mr-start] minmax(0,1fr) [bleed-end ml-end text-end mr-end]}
+ .ch-brief>.ch-when{display:none}
+ .ch-mk{display:flex;align-items:baseline;gap:var(--sp-3)}
+ .ch-mk::after{position:absolute;left:0;bottom:calc(var(--rule-hair) * -1)}
+ .ch-mk .n{font-size:16px}
+ .ch-ex>.ch-exh,.ch-fig>.ch-fcap,.ch-dochead>.ch-kick{justify-self:start;text-align:left}
+ .ch-fcap{flex-direction:row;flex-wrap:wrap;align-items:baseline;gap:var(--sp-2);margin-bottom:var(--sp-2)}
+ .ch-fig>:not(.ch-fcap){grid-row:auto}
+ .ch-dochead>.ch-kick{flex-direction:row}
+ .ch-dochead>h2{grid-row:auto}
+ .ch-runm{flex-direction:row;justify-self:start;gap:var(--sp-2);max-width:none;margin-bottom:var(--sp-2)}
+ .ch-colo{display:flex;gap:var(--sp-3)}
+ .ch-colo .acts{margin-left:auto}
+}
+
+/* words ink in as they stream: each one surfaces out of a small blur, on the one curve (chat-next.js) */
+.ch-w{display:inline}
+@media (max-width:760px){.ch-scroll{padding:var(--sp-4) var(--sp-4) 88px}.ch-sheet{width:calc(100% - var(--sp-4) * 2)}.ch-sign{left:var(--sp-4)}.ch-when{display:none}}
+
+/* ---- the prompt rail (chat-next.js, "the prompt rail"): a dot per prompt on the right edge, the one being read a gold
+   pill; a card beside the mark under the pointer; a tab that pulls out the outline. Dots and pills cross-fade (opacity
+   only); the card slides with `translate`. Nothing here contains the composer sheet, so its live glass is untouched. ---- */
+.ch-rail{position:absolute;right:8px;top:50%;translate:0 -50%;z-index:2;width:24px;display:flex;flex-direction:column;align-items:center;max-height:calc(100% - 140px);
+ opacity:0;visibility:hidden;transition:opacity var(--sb-out) var(--sb-ease),visibility 0s linear var(--sb-out)}
+.ch-rail.on{opacity:1;visibility:visible;transition:opacity var(--sb-in) var(--sb-ease)}
+.ch-rt{all:unset;display:grid;place-items:center;width:22px;height:22px;margin-bottom:4px;border-radius:50%;color:var(--mute);cursor:pointer;transition:color var(--sb-out) var(--sb-ease),background var(--sb-out) var(--sb-ease)}
+.ch-rt svg{width:12px;height:12px}.ch-rt:hover,.ch-rt.on{color:var(--ink);background:var(--line);transition-duration:var(--sb-in)}
+.ch-rt:focus-visible,.ch-pl:focus-visible,.ch-rm:focus-visible{outline:var(--rule) solid var(--gold);outline-offset:1px}
+.ch-rt[data-tip]::after{display:none}
+.ch-rp{display:flex;flex-direction:column;align-items:center}
+.ch-pl{all:unset;position:relative;display:block;width:24px;height:14px;cursor:pointer;-webkit-tap-highlight-color:transparent}
+.ch-pl i{position:absolute;left:50%;top:50%;translate:-50% -50%;display:block;transition:opacity var(--sb-move) var(--sb-ease),background var(--sb-move) var(--sb-ease)}
+.ch-pl .d{width:4px;height:4px;border-radius:50%;background:color-mix(in srgb,var(--ink) 30%,transparent)}
+.ch-pl .p{width:12px;height:4px;border-radius:2px;background:var(--gold);opacity:0}
+.ch-pl.on .p{opacity:1}.ch-pl.on .d{opacity:0}
+.ch-pl:hover:not(.on) .p{opacity:.5;background:var(--ink)}.ch-pl:hover:not(.on) .d{opacity:0}
+.ch-pl.done:not(.on) .d{background:color-mix(in srgb,var(--ink) 36%,transparent)}
+.ch-pl.live .d{background:var(--gold)}
+.ch-pl.live::after{content:"";position:absolute;left:50%;top:50%;width:10px;height:10px;margin:-5px 0 0 -5px;border-radius:50%;box-shadow:0 0 0 1px var(--gold);opacity:0;animation:breathe var(--t-loop) var(--ease-inout) infinite;pointer-events:none}
+.ch-pl.stop:not(.on) .d,.ch-pl.warn:not(.on) .d{background:var(--bad)}
+.ch-rm{all:unset;display:block;padding:2px 0;font:400 9px/1 var(--f-body);color:var(--mute);font-variant-numeric:tabular-nums;cursor:pointer}.ch-rm:hover{color:var(--ink)}
+.ch-peek{position:absolute;right:40px;top:0;z-index:4;width:min(264px,calc(100% - 80px));pointer-events:none;transition:translate var(--sb-move) var(--sb-ease)}
+.ch-peek[hidden]{display:none}
+.ch-peek .pk,.ch-outline{border-radius:12px;background:var(--ch-sheen),var(--panel);
+ box-shadow:var(--ch-rim),inset 0 0 0 var(--rule-hair) var(--line-3),0 1px 2px rgba(var(--sb-shc),calc(var(--sb-sha) * .2)),0 18px 40px -18px rgba(var(--sb-shc),calc(var(--sb-sha) * 1.1))}
+.ch-peek .pk{padding:var(--sp-2h) var(--sp-3)}
+.ch-peek small{display:block;font:400 var(--fs-chrome) var(--f-body);color:var(--mute);font-variant-numeric:tabular-nums}
+.ch-peek p{margin:3px 0 0;font:italic 400 14px/1.4 var(--f-display);color:var(--ink);display:-webkit-box;-webkit-line-clamp:5;-webkit-box-orient:vertical;overflow:hidden}
+.ch-peek em{display:block;margin-top:var(--sp-1h);font:400 var(--fs-chrome) var(--f-body);font-style:normal;color:var(--mute)}
+.ch-peek em.warn,.ch-peek em.stop{color:var(--bad)}
+.ch-outline{position:absolute;right:40px;top:48px;bottom:132px;z-index:4;width:min(320px,calc(100% - 80px));display:flex;flex-direction:column;overflow:hidden}
+.ch-outline[hidden]{display:none}
+.ch-outline header{display:flex;align-items:baseline;gap:var(--sp-2);padding:var(--sp-3) var(--sp-3h) var(--sp-2)}
+.ch-outline header b{font-weight:600;font-size:var(--fs-micro);letter-spacing:var(--tracked);text-transform:uppercase;color:var(--ink)}
+.ch-outline header span{margin-left:auto;font:italic 400 var(--fs-chrome-2) var(--f-display);color:var(--gold-ink)}
+.ch-ofw{display:flex;align-items:center;gap:var(--sp-2);margin:0 var(--sp-3) var(--sp-2);padding:0 var(--sp-2);height:26px;border-radius:7px;background:var(--line);color:var(--mute)}
+.ch-ofw[hidden]{display:none}.ch-ofw svg{width:12px;height:12px;flex:none}
+.ch-ofw input{all:unset;flex:1;min-width:0;font:400 var(--fs-chrome-2) var(--f-body);color:var(--ink)}.ch-ofw:focus-within{box-shadow:0 0 0 var(--rule) var(--gold)}
+.ch-ol{flex:1;min-height:0;overflow:auto;scrollbar-width:thin;padding:0 0 var(--sp-2)}
+.ch-or{all:unset;box-sizing:border-box;display:grid;grid-template-columns:22px 1fr 8px;gap:1px var(--sp-2);width:100%;padding:7px var(--sp-3h);cursor:pointer;transition:background var(--sb-out) var(--sb-ease)}
+.ch-or[hidden]{display:none}.ch-or:hover,.ch-or:focus-visible{background:var(--line);transition-duration:calc(var(--sb-in) * .5)}.ch-or:focus-visible{outline:var(--rule) solid var(--gold);outline-offset:-2px}
+.ch-or .n{font:italic 400 var(--fs-chrome-2) var(--f-display);font-style:italic;color:var(--mute);text-align:right}.ch-or.on .n{color:var(--gold-ink)}
+.ch-or .t{font-size:var(--fs-chrome-2);line-height:1.35;color:var(--text);display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.ch-or .s{width:5px;height:5px;margin-top:5px;border-radius:50%;background:color-mix(in srgb,var(--ink) 30%,transparent)}.ch-or .s.live{background:var(--gold)}.ch-or .s.stop,.ch-or .s.warn{background:var(--bad)}
+.ch-or .m{grid-column:2/4;font-size:var(--fs-chrome);color:var(--mute);font-variant-numeric:tabular-nums}
+.ch-or.on .t{color:var(--ink)}
+@media (max-width:760px){.ch-rail,.ch-peek,.ch-outline{display:none}}
+.calm .ch-rail,.calm .ch-rail.on{transition-duration:1ms}.calm .ch-pl i,.calm .ch-peek{transition-duration:1ms}.calm .ch-pl.live::after{animation:none;opacity:.7}
+
+/* ---- the thinking bar (chat-next.js, "the thinking bar") ---- */
+.ch-run{grid-template-rows:auto auto}
+.ch-runm{grid-row:1/3;align-self:start;margin-top:5px}
+.ch-run>.ch-think{grid-column:text-start/mr-end;grid-row:1;position:relative;margin-bottom:var(--sp-2)}
+.ch-run>.ch-graph{grid-row:2}
+.ch-runm .now{white-space:nowrap;overflow:hidden;max-width:230px;text-overflow:ellipsis}
+.ch-tb{all:unset;box-sizing:border-box;display:flex;align-items:center;gap:var(--sp-2);width:100%;height:30px;padding:0 var(--sp-2h) 0 var(--sp-2);border-radius:9px;cursor:pointer;
+ background:var(--ch-sheen),color-mix(in srgb,var(--panel) 72%,transparent);box-shadow:var(--ch-rim),inset 0 0 0 var(--rule-hair) var(--line-3);color:var(--soft);
+ transition:background var(--sb-out) var(--sb-ease),box-shadow var(--sb-out) var(--sb-ease)}
+.ch-tb:hover{background:var(--ch-sheen),var(--panel);transition-duration:var(--sb-in)}
+.ch-tb:focus-visible{outline:var(--rule) solid var(--gold);outline-offset:2px}
+.ch-tb .ic{flex:none;display:grid;place-items:center;width:20px;height:20px;border-radius:50%;color:var(--ink);box-shadow:inset 0 0 0 var(--rule-hair) color-mix(in srgb,var(--ink) 34%,transparent)}
+.ch-tb .ic svg{width:12px;height:12px}
+.ch-think:not(.done) .ch-tb .ic{box-shadow:inset 0 0 0 1px var(--gold)}
+.ch-tb .who{flex:none;display:flex;align-items:baseline;gap:var(--sp-1h);font-size:var(--fs-chrome-2);white-space:nowrap}
+.ch-tb .who b{font-weight:600;color:var(--ink)}.ch-tb .who i{font-style:normal;color:var(--mute)}
+.ch-tb .mdl{flex:none;font:600 9px/1 var(--f-body);letter-spacing:var(--tracked);text-transform:uppercase;font-style:normal;color:var(--gold-ink);padding:3px 6px;border-radius:5px;background:var(--gold-wash);white-space:nowrap}
+.ch-tb .mdl[hidden],.ch-tb .more[hidden]{display:none}
+.ch-tb .say{flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font:italic 400 13px/1.2 var(--f-display);color:var(--soft)}
+.ch-tb .more{flex:none;font:500 10px/1 var(--f-body);color:var(--gold-ink);padding:3px 5px;border-radius:9px;background:var(--gold-wash)}
+.ch-tb .vit{flex:none;display:flex;gap:var(--sp-2);font-size:var(--fs-chrome);color:var(--mute);font-variant-numeric:tabular-nums;white-space:nowrap}
+.ch-tb .vit .rt:empty,.ch-tb .vit .tk:empty{display:none}
+.ch-tb .chev{flex:none;width:12px;height:12px;color:var(--mute);transition:transform var(--sb-move) var(--sb-ease)}
+.ch-think.open .chev{transform:rotate(180deg)}
+.ch-think.done .say{font-style:normal;font-size:var(--fs-chrome-2)}
+.ch-tlog{position:absolute;left:0;right:0;top:calc(100% + 4px);z-index:5;max-height:min(300px,60vh);overflow:auto;scrollbar-width:thin;padding:var(--sp-1) 0;border-radius:12px;
+ background:var(--ch-sheen),var(--panel);box-shadow:var(--ch-rim),inset 0 0 0 var(--rule-hair) var(--line-3),0 1px 2px rgba(var(--sb-shc),calc(var(--sb-sha) * .2)),0 18px 40px -18px rgba(var(--sb-shc),calc(var(--sb-sha) * 1.1))}
+.ch-tlog[hidden]{display:none}
+.ch-tlog ol{margin:0;padding:0;list-style:none}
+.ch-tlog li{display:grid;grid-template-columns:40px 18px 1fr auto;gap:0 var(--sp-2);align-items:baseline;padding:4px var(--sp-3);font-size:var(--fs-chrome-2);line-height:1.45;color:var(--soft)}
+.ch-tlog li time{font-size:var(--fs-chrome);color:var(--mute);font-variant-numeric:tabular-nums;text-align:right}
+.ch-tlog li .ic{display:grid;place-items:center;align-self:center;color:var(--mute)}.ch-tlog li .ic svg{width:12px;height:12px}
+.ch-tlog li .tx b{font-weight:600;color:var(--ink)}
+.ch-tlog li .rt{font:600 9px/1 var(--f-body);letter-spacing:var(--tracked);text-transform:uppercase;font-style:normal;color:var(--gold-ink)}
+.ch-tlog li.nw .s{font-style:italic;font-family:var(--f-display);color:var(--ink)}
+.ch-tlog li.nw .ic{color:var(--gold-ink)}
+.ch-think .sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+.calm .ch-tb,.calm .ch-tb .chev{transition-duration:1ms}
+@media (max-width:760px){.ch-tb .who i,.ch-tb .vit .rt,.ch-tb .vit .tk{display:none}.ch-run>.ch-think{grid-column:bleed}}
+
+/* ---- nodes (N4): a name under the node that is working, hovered, in focus, or new (for 2.6 s); a count badge; clearer states ---- */
+.ch-node .nm{position:absolute;left:50%;top:calc(100% + 1px);translate:-50% 0;font:500 10px/12px var(--f-body);color:var(--soft);white-space:nowrap;pointer-events:none;
+ opacity:0;filter:blur(2px);transition:opacity var(--sb-out) var(--sb-ease),filter var(--sb-out) var(--sb-ease)}
+.ch-node:hover .nm,.ch-node.hot .nm,.ch-node.intro .nm,.ch-node[data-st="run"] .nm,.ch-node:focus-visible .nm{opacity:1;filter:blur(0);transition-duration:var(--sb-in)}
+.ch-node[aria-expanded="true"] .nm{opacity:0}
+.ch-node[data-n]::before{content:attr(data-n);position:absolute;right:-4px;top:-4px;z-index:1;min-width:13px;height:13px;padding:0 3px;box-sizing:border-box;border-radius:7px;display:grid;place-items:center;
+ font:600 9px/1 var(--f-body);font-variant-numeric:tabular-nums;color:var(--gold-ink);background:var(--gold-wash);box-shadow:0 0 0 1.5px var(--bg);pointer-events:none}
+.ch-node[data-st="fail"]::before,.ch-node[data-st="warn"]::before{color:var(--bg);background:var(--bad)}
+@keyframes chspin{to{transform:rotate(360deg)}}
+.ch-node[data-st="run"] .nb::before{content:"";position:absolute;inset:-5px;border-radius:50%;border:1.5px solid transparent;border-top-color:var(--gold);animation:chspin 1.5s linear infinite;pointer-events:none}
+.ch-node.gate[data-st="run"] .nb::before{border-radius:32%}
+.ch-node[data-st="stop"] .nb{box-shadow:var(--ch-rim),inset 0 0 0 1px color-mix(in srgb,var(--ink) 40%,transparent);outline:1px dashed color-mix(in srgb,var(--ink) 38%,transparent);outline-offset:2px}
+.calm .ch-node[data-st="run"] .nb::before{animation:none;border-top-color:var(--gold);border-right-color:var(--gold)}
+.calm .ch-node .nm{filter:none;transition-duration:1ms}
+
+/* ---- replay (N5): a log header with the speeds, and a scrubber under the bar ---- */
+.ch-tlh{display:flex;align-items:center;gap:var(--sp-1h);padding:var(--sp-1h) var(--sp-3) var(--sp-1);border-bottom:var(--rule-hair) solid var(--line-2);margin-bottom:var(--sp-1)}
+.ch-tlh[hidden]{display:none}
+.ch-tlh span{font-weight:600;font-size:var(--fs-micro);letter-spacing:var(--tracked);text-transform:uppercase;color:var(--mute);margin-right:var(--sp-1)}
+.ch-tlh button{all:unset;padding:2px 7px;border-radius:6px;font:500 var(--fs-chrome) var(--f-body);color:var(--soft);cursor:pointer;font-variant-numeric:tabular-nums;transition:background var(--sb-out) var(--sb-ease),color var(--sb-out) var(--sb-ease)}
+.ch-tlh button:hover,.ch-tlh button:focus-visible{background:var(--line);color:var(--ink);transition-duration:calc(var(--sb-in) * .5)}.ch-tlh button:focus-visible{outline:var(--rule) solid var(--gold)}
+.ch-tlh button.stop{margin-left:auto;color:var(--gold-ink)}.ch-tlh button[hidden]{display:none}
+.ch-scrub{position:absolute;left:var(--sp-2h);right:var(--sp-2h);bottom:-9px;width:calc(100% - var(--sp-2h) * 2);height:12px;margin:0;appearance:none;background:transparent;cursor:pointer}
+.ch-scrub[hidden]{display:none}
+.ch-scrub::-webkit-slider-runnable-track{height:2px;border-radius:1px;background:var(--line-3)}
+.ch-scrub::-webkit-slider-thumb{appearance:none;width:10px;height:10px;margin-top:-4px;border-radius:50%;background:var(--gold);box-shadow:0 0 0 2px var(--bg)}
+.ch-scrub::-moz-range-track{height:2px;border-radius:1px;background:var(--line-3)}.ch-scrub::-moz-range-thumb{width:10px;height:10px;border:0;border-radius:50%;background:var(--gold)}
+.ch-scrub:focus-visible{outline:var(--rule) solid var(--gold);outline-offset:4px}
+
+/* ---- cards in one layout (N6): asked / model / took / confidence; a copy button; and narrow panes ---- */
+.ch-npop .sl{display:grid;grid-template-columns:auto 1fr;gap:2px var(--sp-2h);margin:var(--sp-2) 0 0;font-size:var(--fs-chrome-2);line-height:1.4}
+.ch-npop .sl dt{color:var(--mute);font-size:var(--fs-chrome)}.ch-npop .sl dd{margin:0;color:var(--soft)}
+.ch-npop .cp{all:unset;margin-top:var(--sp-2);padding:2px 8px;border-radius:6px;font:500 var(--fs-chrome) var(--f-body);color:var(--soft);cursor:pointer;box-shadow:inset 0 0 0 var(--rule-hair) var(--line-3);transition:background var(--sb-out) var(--sb-ease),color var(--sb-out) var(--sb-ease)}
+.ch-npop .cp:hover,.ch-npop .cp:focus-visible{background:var(--line);color:var(--ink);transition-duration:calc(var(--sb-in) * .5)}.ch-npop .cp:focus-visible{outline:var(--rule) solid var(--gold)}
+@container ch (max-width:560px){.ch-wire,.ch-node .nm{display:none}.ch-tb .mdl{display:none}}
+.ch-node[data-k="exa"] .nm{left:calc(100% + 3px);top:50%;translate:0 -50%}

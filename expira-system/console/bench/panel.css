@@ -1,0 +1,40 @@
+/* bench: the tuning panel. Its own sizes, so tuning the console never moves the panel. */
+#bn{position:fixed;right:12px;bottom:12px;z-index:200;width:312px;max-height:calc(100vh - 24px);display:flex;flex-direction:column;background:var(--panel);color:var(--text);border:.5px solid var(--line-3);border-radius:8px;box-shadow:var(--e3);font:400 11px/1.4 var(--f-body);-webkit-font-smoothing:antialiased}
+#bn *{box-sizing:border-box}
+#bn .bn-h{display:flex;align-items:center;gap:8px;padding:9px 10px 8px 12px;border-bottom:.5px solid var(--line-2);cursor:pointer;user-select:none}
+#bn .bn-h b{font-weight:500;letter-spacing:.14em;text-transform:uppercase;font-size:9.5px;color:var(--ink)}
+#bn .bn-h span{color:var(--mute);font-size:10.5px}
+#bn .bn-h i{margin-left:auto;font-style:normal;color:var(--mute);font-size:13px;line-height:1}
+#bn.min .bn-b{display:none}
+#bn.min .bn-h{border-bottom:0}
+#bn .bn-b{overflow-y:auto;padding:4px 12px 12px}
+#bn .bn-sec{margin-top:10px}
+#bn .bn-cap{font-size:9.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--mute);margin:0 0 5px}
+#bn .bn-acts{display:flex;flex-wrap:wrap;gap:4px}
+#bn button{font:inherit;color:var(--text);background:transparent;border:.5px solid var(--line-2);border-radius:4px;padding:4px 8px;cursor:pointer}
+#bn button:hover{border-color:var(--line-3);color:var(--ink)}
+#bn button.on{background:var(--ink);border-color:var(--ink);color:var(--bg)}
+#bn button kbd{font:inherit;color:var(--mute);margin-left:5px}
+#bn button.on kbd{color:inherit;opacity:.7}
+#bn .bn-seg{display:flex;gap:0}
+#bn .bn-seg button{border-radius:0;margin-left:-.5px}
+#bn .bn-seg button:first-child{border-radius:4px 0 0 4px}
+#bn .bn-seg button:last-child{border-radius:0 4px 4px 0}
+#bn .bn-row{display:grid;grid-template-columns:86px 1fr 52px;align-items:center;gap:8px;padding:3px 0}
+#bn .bn-row.cv{grid-template-columns:86px 1fr 34px}
+#bn .bn-row label{color:var(--soft);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+#bn .bn-row.ch label{color:var(--gold-ink)}
+#bn .bn-row.ch label::after{content:" •"}
+#bn .bn-row output{text-align:right;font-variant-numeric:tabular-nums;color:var(--ink)}
+#bn input[type=range]{width:100%;accent-color:var(--gold);margin:0}
+#bn input[type=text]{width:100%;min-width:0;font:10.5px/1.3 ui-monospace,SFMono-Regular,Menlo,monospace;color:var(--ink);background:var(--well);border:.5px solid var(--line-2);border-radius:4px;padding:3px 5px}
+#bn input[type=text]:focus{outline:none;border-color:var(--gold)}
+#bn svg.bn-cv{width:34px;height:24px;overflow:visible}
+#bn svg.bn-cv path{fill:none;stroke:var(--ink);stroke-width:1.2}
+#bn svg.bn-cv rect{fill:none;stroke:var(--line-2);stroke-width:.5}
+#bn .bn-out{display:flex;align-items:center;gap:4px;margin-top:12px;padding-top:10px;border-top:.5px solid var(--line-2)}
+#bn .bn-out span{flex:1;color:var(--soft)}
+#bn pre{margin:6px 0 0;padding:6px 8px;background:var(--well);border-radius:4px;font:10.5px/1.5 ui-monospace,SFMono-Regular,Menlo,monospace;color:var(--ink);white-space:pre-wrap;word-break:break-all;user-select:all}
+#bn pre:empty{display:none}
+#bn .bn-note{color:var(--mute);margin-top:6px}
+@media (max-width:600px){#bn{left:8px;right:8px;bottom:8px;width:auto;max-height:55vh}}

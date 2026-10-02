@@ -207,7 +207,7 @@ The seam error is at most about one frame of travel, because the compositor can 
 
 **Themes.** Keyframes contain **no colours**, only transforms, opacities and clip geometry. Surfaces, hairlines, shadows and the gold all come from CSS tokens defined separately for light and dark. That makes theme switching mid-animation safe and stops the v39 tint layer from coming back. If Duke wants the gold meniscus, it goes in as one more layer: an absolutely positioned 1px inset gold ring inside the shell, with `opacity = smooth(.2,.45,p)·(1−smooth(.75,.95,p))`. As a pure function of `p`, it cannot fight the others.
 
-**Geometry.** Before the first frame of an open *from rest*, read `getBoundingClientRect()` once; never read layout during the animation (DESIGN_ENGINE §4). The click point is stored with the open, and the close drains back to that same stored point even when the close is triggered by Esc or an outside click (canon: "drains back to the same point"). If an open interrupts a close mid-flight, the origin is not re-measured.
+**Geometry.** Before the first frame of an open *from rest*, read `getBoundingClientRect()` once; never read layout during the animation (DESIGN_ENGINE §5). The click point is stored with the open, and the close drains back to that same stored point even when the close is triggered by Esc or an outside click (canon: "drains back to the same point"). If an open interrupts a close mid-flight, the origin is not re-measured.
 
 ```js
 // pour-core.js: one critically damped progress p in [0,1] drives every layer.
