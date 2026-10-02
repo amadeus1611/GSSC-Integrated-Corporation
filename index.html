@@ -1855,7 +1855,9 @@ function frame(t){
   // ---- the guide: where you are, how far through it, what comes next
   // in the breathing space between sections, the guide stays with the section just finished
   let ci = 0; secR.forEach((r, i) => { if (r.top <= vh * .45) ci = i; });
-  const cr = secR[ci], cp = clamp((vh * .45 - cr.top) / cr.height);
+  // the last section ends with the page, so its bottom can never rise above the viewport's bottom edge: measure it to there,
+  // or the bar would stall short of full at the very bottom
+  const cr = secR[ci], cp = clamp((vh * .45 - cr.top) / (ci === secR.length - 1 ? Math.max(1, cr.height - vh * .55) : cr.height));
   // progress goes to the two elements that draw it, never to a container (a custom property restyles everything under it)
   setVar(mrP, '--gp', cp.toFixed(3)); if (vw <= 860) setVar(gBar, '--gp', cp.toFixed(3)); setNav(secs[ci].id);
   guide.el.classList.toggle('gone', vw <= 860 && (colTop < vh - 40 || sheet.classList.contains('open')));   // the colophon and the index are never covered
